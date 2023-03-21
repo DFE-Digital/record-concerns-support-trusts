@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.Authorization;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,15 +21,20 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ILogger<ClosedPageModel> _logger;
+		private TelemetryClient _telemetry;
 		
 		public List<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 		
-		public ClosedPageModel(ICaseSummaryService caseSummaryService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<ClosedPageModel> logger)
+		public ClosedPageModel(ICaseSummaryService caseSummaryService, 
+			IClaimsPrincipalHelper claimsPrincipalHelper,
+			ILogger<ClosedPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_caseSummaryService = caseSummaryService;
-			_claimsPrincipalHelper = claimsPrincipalHelper;
-			_logger = logger;
+			_caseSummaryService = Guard.Against.Null(caseSummaryService);
+			_claimsPrincipalHelper =Guard.Against.Null( claimsPrincipalHelper);
+			_logger =Guard.Against.Null( logger);
+			_telemetry = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task OnGetAsync()
@@ -35,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
-		        
+		        _telemetry.TrackEvent($"VIEW CLOSED User {GetUserName()} is accessing and viewing closed cases");
 				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(GetUserName());
 			}
 			catch (Exception ex)
