@@ -6,6 +6,10 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Tests.Helpers;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +20,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,6 +29,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class DetailsPageModelTests
 	{
+		private static ConcurrentQueue<ITelemetry> TelemetryItems { get; } = new ConcurrentQueue<ITelemetry>();
+		
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()
 		{
@@ -323,13 +330,26 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger)
+			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+		}
+		
+		
+		private static TelemetryClient CreateMockTelemetryClient()
+		{
+			var telemetryConfiguration = new TelemetryConfiguration
+			{
+				ConnectionString = "InstrumentationKey=" + Guid.NewGuid().ToString(),
+				TelemetryChannel = new StubTelemetryChannel(TelemetryItems.Enqueue)
+			};
+
+			// TODO: Add telemetry initializers and processors if/as necessary.
+			return new TelemetryClient(telemetryConfiguration);
 		}
 	}
 }
