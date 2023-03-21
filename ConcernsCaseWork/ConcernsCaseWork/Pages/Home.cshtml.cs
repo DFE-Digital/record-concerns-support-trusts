@@ -6,9 +6,12 @@ using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,7 +27,7 @@ namespace ConcernsCaseWork.Pages
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-		
+		private TelemetryClient _telemetry;
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
 		public HomePageModel(
@@ -32,13 +35,15 @@ namespace ConcernsCaseWork.Pages
 			ITeamsModelService teamsService,
 			ICaseSummaryService caseSummaryService,
 			IUserStateCachedService userStateCache,
-			IClaimsPrincipalHelper claimsPrincipalHelper)
+			IClaimsPrincipalHelper claimsPrincipalHelper,
+			TelemetryClient telemetryClient)
 		{
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_caseSummaryService = Guard.Against.Null(caseSummaryService);
+			_telemetry = Guard.Against.Null(telemetryClient);
 		}
 
 		public async Task<ActionResult> OnGetAsync()
@@ -79,9 +84,10 @@ namespace ConcernsCaseWork.Pages
 		private async Task RecordUserSignIn(Models.Teams.ConcernsTeamCaseworkModel team)
 		{
 			var userState = await _userStateCache.GetData(GetUserName());
-
+			
 			if (userState is not null && !String.IsNullOrWhiteSpace(userState.UserName))
 			{
+				_telemetry.TrackEvent($"HOME User logging in {userState.UserName} and accessing home page ");
 				return;
 			}
 
