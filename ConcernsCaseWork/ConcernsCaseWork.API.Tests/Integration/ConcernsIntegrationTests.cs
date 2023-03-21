@@ -57,6 +57,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 1)
                 .With(c => c.RatingId = 2)
+                .With(c => c.TrustCompaniesHouseNumber = "12345678")
                 .Build();
 
 
@@ -288,7 +289,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
                 Territory = Territory.Midlands_And_West__SouthWest,
                 StatusId = 2,
-                RatingId =  1
+                RatingId =  1,
+				TrustCompaniesHouseNumber = "12345678"
             };
 
             AddConcernsCase(currentConcernsCase);
@@ -299,6 +301,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 	            .With(cr => cr.Description = "")
 	            .With(cr => cr.CrmEnquiry = "")
 	            .With(cr => cr.ReasonAtReview = "")
+	            .With(cr => cr.TrustCompaniesHouseNumber = "87654321")
                 .With(cr => cr.RatingId = 1).Build();
 
             var expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -332,6 +335,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.DirectionOfTravel = new string('a', 101);
 			request.ReasonAtReview = new string('a', 201);
 			request.CreatedBy = new string('a', 255);
+			request.TrustCompaniesHouseNumber = new string('1', 9);
 
 
 			var result = await _client.PatchAsync($"/v2/concerns-cases/1", request.ConvertToJson());
@@ -348,6 +352,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
 			error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 200.");
 			error.Should().Contain("The field CreatedBy must be a string with a maximum length of 254.");
+			error.Should().Contain("The field TrustCompaniesHouseNumber must be a string with a maximum length of 8.");
 		}
 
 		[Fact]
@@ -378,7 +383,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
                 Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
-                RatingId = caseRating.Id
+                RatingId = caseRating.Id,
             };
 
             AddConcernsCase(concernsCase);
@@ -837,7 +842,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     Territory = Territory.Midlands_And_West__East_Midlands,
                     StatusId = 2,
-                    RatingId = 3
+                    RatingId = 3,
+                    TrustCompaniesHouseNumber = _randomGenerator.NextString(8,8)
                 };
 
                 AddConcernsCase(concernsCase);

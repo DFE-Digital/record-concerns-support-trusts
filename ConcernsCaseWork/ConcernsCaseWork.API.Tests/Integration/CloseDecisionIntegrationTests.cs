@@ -180,7 +180,7 @@ public class CloseDecisionIntegrationTests
 			StatusId = 1
 		};
 
-		using (var ctxt = GetContext())
+		await using (var ctxt = GetContext())
 		{
 			ctxt.ConcernsCase.Add(cCase);
 			await ctxt.SaveChangesAsync();
@@ -194,8 +194,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.Outcome = null;
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();
@@ -209,8 +209,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.Outcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome();
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();
@@ -224,8 +224,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.ClosedAt = DateTimeOffset.Now;
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();

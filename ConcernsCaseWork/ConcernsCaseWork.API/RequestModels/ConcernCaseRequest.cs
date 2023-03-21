@@ -1,5 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Enums;
+using JetBrains.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ConcernsCaseWork.API.RequestModels
 {
@@ -49,5 +51,10 @@ namespace ConcernsCaseWork.API.RequestModels
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
+        
+        [StringLength(8)]
+        [AllowNull]
+        [CanBeNull]
+        public string? TrustCompaniesHouseNumber { get; set; }        
     }
 }

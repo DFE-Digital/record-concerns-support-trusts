@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 1
 			};
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			var result = context.ConcernsCase.Add(toAdd);
 			await context.SaveChangesAsync();

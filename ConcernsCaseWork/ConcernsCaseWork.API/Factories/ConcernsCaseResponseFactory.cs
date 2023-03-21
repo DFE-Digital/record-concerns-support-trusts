@@ -29,7 +29,8 @@ namespace ConcernsCaseWork.API.Factories
                 Urn = concernsCase.Urn,
                 StatusId = concernsCase.StatusId,
                 RatingId = concernsCase.RatingId,
-                Territory = concernsCase.Territory
+                Territory = concernsCase.Territory,
+                TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber
             };
         }
     }
