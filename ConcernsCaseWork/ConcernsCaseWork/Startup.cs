@@ -50,7 +50,6 @@ namespace ConcernsCaseWork
 				options.Conventions.AddPageRoute("/case/management/action/Nti/addConditions", "/case/{urn:long}/management/action/nti/conditions");
 
 
-
 				// TODO:
 				// Consider adding: options.Conventions.AuthorizeFolder("/");
 			}).AddViewOptions(options =>
@@ -116,8 +115,8 @@ namespace ConcernsCaseWork
 			{
 				options.ConstraintMap.Add("fpEditModes", typeof(FinancialPlanEditModeConstraint));
 			});
-            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-        }
+			services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
@@ -133,9 +132,10 @@ namespace ConcernsCaseWork
 			else
 			{
 				app.UseExceptionHandler("/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
 			}
+
+			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+			app.UseHsts();
 
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
@@ -150,11 +150,7 @@ namespace ConcernsCaseWork
 			app.UseHttpsRedirection();
 
 			//For Azure AD redirect uri to remain https
-			var forwardOptions = new ForwardedHeadersOptions
-			{
-				ForwardedHeaders = ForwardedHeaders.All,
-				RequireHeaderSymmetry = false
-			};
+			var forwardOptions = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All, RequireHeaderSymmetry = false };
 			forwardOptions.KnownNetworks.Clear();
 			forwardOptions.KnownProxies.Clear();
 			app.UseForwardedHeaders(forwardOptions);
@@ -165,7 +161,6 @@ namespace ConcernsCaseWork
 			app.UseSession();
 
 			app.UseRouting();
-
 
 
 			app.UseAuthentication();
@@ -208,6 +203,7 @@ namespace ConcernsCaseWork
 			{
 				policyBuilder.RequireClaim(ClaimTypes.Role, allowedRoles.Split(','));
 			}
+
 			return policyBuilder;
 		}
 	}
