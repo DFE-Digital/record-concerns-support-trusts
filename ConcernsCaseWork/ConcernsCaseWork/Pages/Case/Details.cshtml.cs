@@ -1,14 +1,18 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -21,6 +25,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly IUserStateCachedService _userStateCache;
+		private TelemetryClient _telemetry;
 		
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -29,12 +34,16 @@ namespace ConcernsCaseWork.Pages.Case
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
-			ILogger<DetailsPageModel> logger)
+			ILogger<DetailsPageModel> logger,
+			TelemetryClient telemetryClient
+			)
 		{
-			_trustModelService = trustModelService;
-			_caseModelService = caseModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_telemetry = Guard.Against.Null(telemetryClient);
+			
 		}
 		
 		public async Task OnGetAsync()
@@ -74,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.CaseHistory = caseHistory;
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
-				
+				_telemetry.TrackEvent($"CREATE CASE: user {userState.UserName} has created case no {caseUrn}:Case Model: {JsonSerializer.Serialize(createCaseModel)}");
 				return RedirectToPage("management/index", new { urn = caseUrn });
 			}
 			catch (Exception ex)
@@ -100,7 +109,7 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-
+				_telemetry.TrackEvent($"CREATE CASE:user {userState.UserName} loading the page");
 				return Page();
 			}
 			catch (Exception ex)
