@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		
+		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		
