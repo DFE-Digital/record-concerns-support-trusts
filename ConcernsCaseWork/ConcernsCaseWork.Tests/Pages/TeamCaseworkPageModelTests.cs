@@ -203,7 +203,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(IsAuthenticated);
 
-				return new TeamCaseworkPageModel(MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object)
+				return new TeamCaseworkPageModel(MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object,null)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
@@ -258,7 +258,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new TeamCaseworkPageModel(mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper)
+			return new TeamCaseworkPageModel(mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper,null)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
