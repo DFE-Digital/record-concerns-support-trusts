@@ -202,4 +202,40 @@ describe("Creating a case", () =>
             .hasEmptyNextSteps()
             .hasEmptyCaseHistory();
     });
+
+    const searchTerm =
+		"Accrington St Christopher's Church Of England High School";
+		let term = ""
+	const searchTermForSchool = "school";
+
+    it("User searches for a valid Trust and selects it", () => {
+
+        createCasePage
+            .createCase()
+            .withTrustName(searchTerm)
+            .selectOption()
+            .confirmOption();
+
+		Logger.Log("Should display the Concern details of the specified Trust");
+		createConcernPage
+            .hasTrustSummaryDetails(searchTerm)
+            .cancel();
+	});
+
+    it('Should display an error if no trust is selected', () => {
+		createCasePage
+            .createCase()
+            .withTrustName("A")
+            .confirmOption()
+            .hasValidationError("Select a trust");
+    });
+
+	it('Should display a warning if too many results', () => {
+		createCasePage
+            .createCase()
+            .withTrustName(searchTermForSchool)
+            .shouldNotHaveVisibleLoader()
+            .hasTooManyResultsWarning("There are a large number of search results. Try a more specific search term.");
+    });
+    
 });
