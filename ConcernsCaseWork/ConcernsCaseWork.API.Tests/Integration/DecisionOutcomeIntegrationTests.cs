@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var result = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionToAdd.DecisionId}/outcome", request.ConvertToJson());
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			var decision = context.Decisions
 				.Include(d => d.Outcome)
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			var decision = context.Decisions
 				.Include(d => d.Outcome)
@@ -332,7 +332,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 1
 			};
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			var result = context.ConcernsCase.Add(toAdd);
 			await context.SaveChangesAsync();
@@ -344,7 +344,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			var decisionToAdd = Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			decisionToAdd.ConcernsCaseId = concernsCaseId;
 			context.Decisions.Add(decisionToAdd);

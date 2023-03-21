@@ -25,5 +25,6 @@ namespace ConcernsCaseWork.API.ResponseModels
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
+        public string TrustCompaniesHouseNumber { get; set; }
     }
 }
