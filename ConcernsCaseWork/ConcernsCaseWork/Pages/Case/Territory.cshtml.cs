@@ -7,6 +7,7 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+		private TelemetryClient _telemetryClient;
 
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
@@ -37,12 +39,14 @@ namespace ConcernsCaseWork.Pages.Case
 		public SelectTerritoryPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			ILogger<SelectTerritoryPageModel> logger, 
-			IClaimsPrincipalHelper claimsPrincipalHelper)
+			IClaimsPrincipalHelper claimsPrincipalHelper,
+			TelemetryClient telemetryClient)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task OnGetAsync()
@@ -126,7 +130,7 @@ namespace ConcernsCaseWork.Pages.Case
 			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-		
+			_telemetryClient.TrackEvent($"CREATE CASE: {userState.UserName} accessing territory page");
 			return Page();
 		}
 		

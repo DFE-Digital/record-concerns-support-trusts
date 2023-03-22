@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
+using Microsoft.ApplicationInsights;
 
 namespace ConcernsCaseWork.Pages.Case
 {
@@ -26,7 +27,8 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
-
+		private TelemetryClient _telemetry;
+		
 		private const int _searchQueryMinLength = 3;
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
@@ -35,13 +37,18 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public FindTrustModel FindTrustModel { get; set; }
 
-		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger, IClaimsPrincipalHelper claimsPrincipalHelper)
+		public IndexPageModel(ITrustModelService trustModelService,
+			IUserStateCachedService userStateCache,
+			ILogger<IndexPageModel> logger,
+			IClaimsPrincipalHelper claimsPrincipalHelper,
+			TelemetryClient telemetryClient)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			FindTrustModel = new();
+			_telemetry = telemetryClient;
 		}
 
 		public async Task<ActionResult> OnPost()
@@ -67,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
 				userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 				userState.CreateCaseModel = new CreateCaseModel();
-
+				_telemetry.TrackEvent($"CREATE CASE: {userState.UserName} Accessing case index page");
 				await _userStateCache.StoreData(GetUserName(), userState);
 				return Redirect(Url.Page("Concern/Index"));
 			}

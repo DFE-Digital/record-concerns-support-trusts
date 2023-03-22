@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	public class ClosedPageModelTests
 	{
 		
-		private static ConcurrentQueue<ITelemetry> TelemetryItems { get; } = new ConcurrentQueue<ITelemetry>();
+		
 		
 		[Test]
 		public async Task WhenOnGetAsync_Returns_ClosedCases()
@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
-			var telemetryClient = CreateMockTelemetryClient();
+			var telemetryClient = MockTelemetry.CreateMockTelemetryClient();
 			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>()))
 				.Throws<Exception>();
 
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			var telemetryClient = CreateMockTelemetryClient();
+			var telemetryClient = MockTelemetry.CreateMockTelemetryClient();
 			return new ClosedPageModel(mockCaseSummaryService, Mock.Of<IClaimsPrincipalHelper>(),mockLogger,telemetryClient)
 			{
 				PageContext = pageContext,
@@ -116,16 +116,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		}
 		
 		
-		private static TelemetryClient CreateMockTelemetryClient()
-		{
-			var telemetryConfiguration = new TelemetryConfiguration
-			{
-				ConnectionString = "InstrumentationKey=" + Guid.NewGuid().ToString(),
-				TelemetryChannel = new StubTelemetryChannel(TelemetryItems.Enqueue)
-			};
-
-			// TODO: Add telemetry initializers and processors if/as necessary.
-			return new TelemetryClient(telemetryConfiguration);
-		}
+		
 	}
 }
