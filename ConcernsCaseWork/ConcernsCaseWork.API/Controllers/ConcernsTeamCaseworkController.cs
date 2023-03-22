@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet("owners/{ownerId}")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> GetTeam(string ownerId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> GetTeam(string ownerId, CancellationToken cancellationToken = default)
         {
             return await LogAndInvoke(async () =>
             {
@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet("owners")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<string[]>>> GetTeamOwners(CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiSingleResponseV2<string[]>>> GetTeamOwners(CancellationToken cancellationToken = default)
         {
             return await LogAndInvoke(async () =>
             {
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet("owners/open-cases")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<string[]>>> GetOwnersOfOpenCases(CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiSingleResponseV2<string[]>>> GetOwnersOfOpenCases(CancellationToken cancellationToken = default)
         {
 	        return await LogAndInvoke(async () =>
 	        {
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.API.Controllers
         public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> Put(
 	        [StringLength(300)]string ownerId,
             [FromBody] ConcernsCaseworkTeamUpdateRequest updateModel,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             return await LogAndInvoke(async () =>
             {
