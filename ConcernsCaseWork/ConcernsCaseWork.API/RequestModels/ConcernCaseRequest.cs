@@ -55,6 +55,6 @@ namespace ConcernsCaseWork.API.RequestModels
         [StringLength(8)]
         [AllowNull]
         [CanBeNull]
-        public string? TrustCompaniesHouseNumber { get; set; }        
+        public string TrustCompaniesHouseNumber { get; set; }        
     }
 }
