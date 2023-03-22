@@ -239,6 +239,6 @@ public class CloseDecisionIntegrationTests
 	private ConcernsDbContext GetContext() => _apiTestFixture.GetContext();
 
 	private record HttpErrorMessage(int StatusCode, string Message);
-
+	
 	private record ValidationErrors(string Type, string Title, int Status, string TraceId, Dictionary<string, string[]> Errors);
 }
