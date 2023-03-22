@@ -36,7 +36,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Territory = Territory.National_Operations,
                 Urn = 109,
                 StatusId = 123,
-                RatingId = 345
+                RatingId = 345,
+                TrustCompaniesHouseNumber = "12345678"
             };
 
             var expected = new ConcernsCaseResponse
@@ -61,7 +62,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Territory = concernsCase.Territory,
                 Urn = concernsCase.Urn,
                 StatusId = concernsCase.StatusId,
-                RatingId = concernsCase.RatingId
+                RatingId = concernsCase.RatingId,
+                TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber
             };
 
             var result = ConcernsCaseResponseFactory.Create(concernsCase);

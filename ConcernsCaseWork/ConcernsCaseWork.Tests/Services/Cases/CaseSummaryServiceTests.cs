@@ -21,7 +21,6 @@ public class CaseSummaryServiceTests
 {
 	private readonly IFixture _fixture = new Fixture();
 
-	#region Active by Caseworker
 	[Test]
 	public async Task GetActiveCaseSummariesByCaseworker_WhenNoCases_ReturnsEmptyList()
 	{
@@ -283,10 +282,7 @@ public class CaseSummaryServiceTests
 		result.Count.Should().Be(1);
 		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
-	
-	#endregion
-	
-	#region Active by Caseworker's team members
+
 	[Test]
 	public async Task GetActiveCaseSummariesForTeamMembers_WhenNoCases_ReturnsEmptyList()
 	{
@@ -522,10 +518,7 @@ public class CaseSummaryServiceTests
 		result.Count.Should().Be(1);
 		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
-	
-	#endregion
-	
-	#region Closed by Caseworker
+
 	[Test]
 	public async Task GetClosedCaseSummariesByCaseworker_WhenNoCases_ReturnsEmptyList()
 	{
@@ -725,9 +718,6 @@ public class CaseSummaryServiceTests
 		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
-	#endregion
-	
-	#region Closed by Trust
 	[Test]
 	public async Task GetClosedCaseSummariesByTrust_WhenNoCases_ReturnsEmptyList()
 	{
@@ -926,9 +916,6 @@ public class CaseSummaryServiceTests
 		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
-	#endregion
-	
-	#region Active by Trust
 	[Test]
 	public async Task GetActiveCaseSummariesByTrust_WhenNoCases_ReturnsEmptyList()
 	{
@@ -1165,8 +1152,6 @@ public class CaseSummaryServiceTests
 		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 
-	#endregion
-	
 	private List<ActiveCaseSummaryDto> BuildListActiveCaseSummaryDtos()
 		=> _fixture.CreateMany<ActiveCaseSummaryDto>().ToList();
 	

@@ -57,7 +57,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DirectionOfTravel = request.DirectionOfTravel,
                 Territory = request.Territory,
                 StatusId = request.StatusId,
-                RatingId = request.RatingId
+                RatingId = request.RatingId,
+                TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber
             };
 
             var result = ConcernsCaseFactory.Create(request);
