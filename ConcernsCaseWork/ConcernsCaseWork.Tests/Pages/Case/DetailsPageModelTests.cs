@@ -330,7 +330,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,CreateMockTelemetryClient())
+			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -340,16 +340,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		}
 		
 		
-		private static TelemetryClient CreateMockTelemetryClient()
-		{
-			var telemetryConfiguration = new TelemetryConfiguration
-			{
-				ConnectionString = "InstrumentationKey=" + Guid.NewGuid().ToString(),
-				TelemetryChannel = new StubTelemetryChannel(TelemetryItems.Enqueue)
-			};
-
-			// TODO: Add telemetry initializers and processors if/as necessary.
-			return new TelemetryClient(telemetryConfiguration);
-		}
+		
 	}
 }

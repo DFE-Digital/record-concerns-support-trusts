@@ -1,7 +1,9 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using System;
+using System.Collections.Concurrent;
 
 namespace ConcernsCaseWork.Tests.Helpers;
 
@@ -20,9 +22,24 @@ internal sealed class StubTelemetryChannel : ITelemetryChannel
 		private TelemetryClient _telemetryClient;
 		public ComponentUnderTest(TelemetryClient telemetryClient) => _telemetryClient = telemetryClient;
 		
-		// public void Test()
-		// {
-		// 	using var operation = _telemetryClient.StartOperation<RequestTelemetry>("ItWorks");
-		// }
+		
+	}
+	
+	
+}
+
+public static class MockTelemetry
+{
+	private static ConcurrentQueue<ITelemetry> TelemetryItems { get; } = new ConcurrentQueue<ITelemetry>();
+	public static TelemetryClient CreateMockTelemetryClient()
+	{
+		var telemetryConfiguration = new TelemetryConfiguration
+		{
+			ConnectionString = "InstrumentationKey=" + Guid.NewGuid().ToString(),
+			TelemetryChannel = new StubTelemetryChannel(TelemetryItems.Enqueue)
+		};
+
+			
+		return new TelemetryClient(telemetryConfiguration);
 	}
 }

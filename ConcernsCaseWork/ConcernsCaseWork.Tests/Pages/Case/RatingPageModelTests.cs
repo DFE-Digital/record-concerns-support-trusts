@@ -6,6 +6,7 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -402,7 +403,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService, mockLogger, mockClaimsPrincipalHelper.Object)
+			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService,
+				mockLogger, mockClaimsPrincipalHelper.Object,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,

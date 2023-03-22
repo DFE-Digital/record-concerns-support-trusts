@@ -6,6 +6,7 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -339,7 +340,7 @@ public class SelectTerritoryPageModelTests
 	{
 		(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 		
-		return new SelectTerritoryPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger, mockClaimsPrincipalHelper)
+		return new SelectTerritoryPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger, mockClaimsPrincipalHelper, MockTelemetry.CreateMockTelemetryClient())
 		{
 			PageContext = pageContext,
 			TempData = tempData,
