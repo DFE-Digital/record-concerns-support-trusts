@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -10,6 +11,7 @@ using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,6 +31,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IActionsModelService _actionsModelService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ViewClosedPageModel> _logger;
+		private readonly TelemetryClient _telemetryClient;
 		
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -40,14 +43,16 @@ namespace ConcernsCaseWork.Pages.Case
 			IRecordModelService recordModelService,
 			IActionsModelService actionsModelService,
 			IStatusCachedService statusCachedService,
-			ILogger<ViewClosedPageModel> logger)
+			ILogger<ViewClosedPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_caseModelService = caseModelService;
-			_trustModelService = trustModelService;
-			_recordModelService = recordModelService;
-			_actionsModelService = actionsModelService;
-			_statusCachedService = statusCachedService;
-			_logger = logger;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_recordModelService = Guard.Against.Null(recordModelService);
+			_actionsModelService = Guard.Against.Null(actionsModelService);
+			_statusCachedService = Guard.Against.Null(statusCachedService);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -73,6 +78,7 @@ namespace ConcernsCaseWork.Pages.Case
 				CaseModel.RecordsModel = recordsModel;
 
 				CaseActions = (await _actionsModelService.GetActionsSummary(caseUrn)).ClosedActions;
+				_telemetryClient.TrackEvent($"VIEW CLOSED: {userName} is viewing closed cases");
 			}
 			catch (Exception ex)
 			{
