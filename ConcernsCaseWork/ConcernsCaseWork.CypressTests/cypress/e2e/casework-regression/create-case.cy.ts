@@ -5,6 +5,7 @@ import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import caseManagementPage from "cypress/pages/caseMangementPage";
+import concernsApi from "cypress/api/concernsApi";
 
 describe("Creating a case", () =>
 {
@@ -136,6 +137,14 @@ describe("Creating a case", () =>
             .hasDeEscalationPoint("This is the de-escalation point")
             .hasNextSteps("This is the next steps")
             .hasCaseHistory("This is the case history");
+
+        Logger.Log("Verify the means of referral is set");
+        caseManagementPage.getCaseIDText().then((caseId) => {
+            concernsApi.get(parseInt(caseId))
+                .then(response => {
+                    expect(response[0].meansOfReferralId).to.eq(2);
+                });
+        });
     });
 
     it(("Should create a case with only required fields"), () => {
