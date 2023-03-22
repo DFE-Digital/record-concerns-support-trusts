@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,17 +21,20 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
+		private TelemetryClient _telemetryClient;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		
 		public AddPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
-			ILogger<AddPageModel> logger)
+			ILogger<AddPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_trustModelService = trustModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task OnGetAsync()
@@ -71,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-
+				_telemetryClient.TrackEvent($"CREATE CASE: Concerns user {userState.UserName} adding a concern");
 				Page();
 			}
 			catch (Exception ex)
