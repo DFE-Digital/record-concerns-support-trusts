@@ -7,6 +7,7 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -32,7 +33,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger, mockClaimsPrincipalHelper.Object)
+			return new IndexPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger, mockClaimsPrincipalHelper.Object, MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
