@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> Create(CreateFinancialPlanRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Create(CreateFinancialPlanRequest request, CancellationToken cancellationToken = default)
         {
             var createdFP = _createFinancialPlanUseCase.Execute(request);
             var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);
@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("{financialPlanId}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> GetFinancialPlanById(long financialPlanId)
+        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> GetFinancialPlanById(long financialPlanId, CancellationToken cancellationToken = default)
         {
             var fp = _getFinancialPlanByIdUseCase.Execute(financialPlanId);
             var response = new ApiSingleResponseV2<FinancialPlanResponse>(fp);
@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("case/{caseUrn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<FinancialPlanResponse>>> GetFinancialPlansByCaseId(int caseUrn)
+        public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanResponse>>>> GetFinancialPlansByCaseId(int caseUrn, CancellationToken cancellationToken = default)
         {
             var fps = _getFinancialPlansByCaseUseCase.Execute(caseUrn);
             var response = new ApiSingleResponseV2<List<FinancialPlanResponse>>(fps);
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetAllStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null);
             var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("closure-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetClosureStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetClosureStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null).Where(s => s.IsClosedStatus).ToList();
             var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
@@ -91,7 +91,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("open-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetOpenStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetOpenStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null).Where(s => !s.IsClosedStatus).ToList();
             var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> Patch(PatchFinancialPlanRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Patch(PatchFinancialPlanRequest request, CancellationToken cancellationToken = default)
         {
             var createdFP = _patchFinancialPlanUseCase.Execute(request);
             var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);

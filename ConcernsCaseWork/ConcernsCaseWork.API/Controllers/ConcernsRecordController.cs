@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Create(ConcernsRecordRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Create(ConcernsRecordRequest request, CancellationToken cancellationToken = default)
         {
             var createdConcernsRecord = _createConcernsRecord.Execute(request);
             var response = new ApiSingleResponseV2<ConcernsRecordResponse>(createdConcernsRecord);
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpPatch("{id}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Update(int id, ConcernsRecordRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Update(int id, ConcernsRecordRequest request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to update Concerns Record {id}");
             var updatedAcademyConcernsRecord = _updateConcernsRecord.Execute(id, request);
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet("case/urn/{urn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiResponseV2<ConcernsRecordResponse>> GetByCaseUrn(int urn, int page = 1, int count = 50)
+        public async Task<ActionResult<ApiResponseV2<ConcernsRecordResponse>>> GetByCaseUrn(int urn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to get Concerns Case {urn}");
             var records = _getConcernsRecordsByCaseUrn.Execute(urn);

@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiResponseV2<ConcernsTypeResponse>> Index()
+        public async Task<ActionResult<ApiResponseV2<ConcernsTypeResponse>>> Index(CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to get Concerns Types");
             var types = _indexConcernsTypes.Execute();
