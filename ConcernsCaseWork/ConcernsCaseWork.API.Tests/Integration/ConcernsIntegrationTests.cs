@@ -91,24 +91,18 @@ public class ConcernsIntegrationTests : IDisposable
 
 		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
 
-		HttpResponseMessage response;
-		try
-		{
-			response = await _client.SendAsync(httpRequestMessage);
-		}
-		catch (Exception ex)
-		{
-			;
-			throw;
-		}
-
+		// call API
+		var  response = await _client.SendAsync(httpRequestMessage);
+		
 		response.StatusCode.Should().Be(HttpStatusCode.Created);
 		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
 		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
-		expected.Data.Urn = createdCase.Urn;
+
+		createdCase.Should().NotBeNull();
+		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
@@ -151,10 +145,11 @@ public class ConcernsIntegrationTests : IDisposable
 		response.StatusCode.Should().Be(HttpStatusCode.Created);
 		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
 		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
-		expected.Data.Urn = createdCase.Urn;
+		createdCase.Should().NotBeNull();
+		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
@@ -194,7 +189,7 @@ public class ConcernsIntegrationTests : IDisposable
 	[Fact]
 	public async Task CanGetConcernCaseByUrn()
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
 		SetupConcernsCaseTestData("mockUkprn");
 		ConcernsCase concernsCase = context.ConcernsCase.First();
@@ -235,6 +230,7 @@ public class ConcernsIntegrationTests : IDisposable
 		ApiResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
 
 		result.Data.Count(d => d.Urn == concernsCase.Urn).Should().Be(1);
+		result.Data.Should().BeEquivalentTo(expected.Data);
 	}
 
 	[Fact]
@@ -247,7 +243,7 @@ public class ConcernsIntegrationTests : IDisposable
 		HttpRequestMessage httpRequestMessage = new() { Method = HttpMethod.Get, RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}") };
 		PagingResponse expectedPaging = new() { Page = 1, RecordCount = concernsCases.Count };
 
-		List<ConcernsCaseResponse> expectedConcernsCaseResponse = concernsCases.Select(c => ConcernsCaseResponseFactory.Create(c)).ToList();
+		List<ConcernsCaseResponse> expectedConcernsCaseResponse = concernsCases.Select(ConcernsCaseResponseFactory.Create).ToList();
 
 		ApiResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse, expectedPaging);
 
@@ -257,6 +253,7 @@ public class ConcernsIntegrationTests : IDisposable
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 		content.Data.Count(d => d.Urn == concernsCases[0].Urn).Should().Be(1);
 		content.Data.Count(d => d.Urn == concernsCases[1].Urn).Should().Be(1);
+		content.Data.Should().BeEquivalentTo(expected.Data);
 	}
 
 	[Fact]
@@ -409,7 +406,7 @@ public class ConcernsIntegrationTests : IDisposable
 	[Fact]
 	public async Task CanCreateNewConcernRecord()
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
 		ConcernsRating caseRating = context.ConcernsRatings.First();
 
@@ -465,7 +462,8 @@ public class ConcernsIntegrationTests : IDisposable
 		ApiSingleResponseV2<ConcernsRecordResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
 
 		ConcernsRecord createdRecord = context.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
-		expected.Data.Id = createdRecord.Id;
+		createdRecord.Should().NotBeNull();
+		expected.Data.Id = createdRecord!.Id;
 
 		result.Should().BeEquivalentTo(expected);
 	}
@@ -514,11 +512,11 @@ public class ConcernsIntegrationTests : IDisposable
 			RatingId = 3
 		};
 
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
-		ConcernsType concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
-		ConcernsRating concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
-		ConcernsMeansOfReferral concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
+		ConcernsType concernsType = context.ConcernsTypes.First(t => t.Id == 3);
+		ConcernsRating concernsRating = context.ConcernsRatings.First(r => r.Id == 1);
+		ConcernsMeansOfReferral concernsMeansOfReferral = context.ConcernsMeansOfReferrals.First(r => r.Id == 1);
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
 
@@ -612,10 +610,10 @@ public class ConcernsIntegrationTests : IDisposable
 
 		AddConcernsCaseToDatabase(concernsCase);
 
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
-		ConcernsType concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
-		ConcernsRating concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
+		ConcernsType concernsType = context.ConcernsTypes.First(t => t.Id == 3);
+		ConcernsRating concernsRating = context.ConcernsRatings.First(r => r.Id == 1);
 
 		ConcernsMeansOfReferral currentMeansOfReferral = hasCurrentMeansOfReferral
 			? context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
@@ -696,7 +694,7 @@ public class ConcernsIntegrationTests : IDisposable
 
 		AddConcernsCaseToDatabase(concernsCase);
 
-		using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = _testFixture.GetContext();
 
 		ConcernsRating concernsRating = context.ConcernsRatings.FirstOrDefault();
 		ConcernsType concernsType = context.ConcernsTypes.FirstOrDefault();
@@ -782,7 +780,7 @@ public class ConcernsIntegrationTests : IDisposable
 
 		List<ConcernsCase> ownedOpenConcernsCases = new();
 
-		foreach (int i in Enumerable.Range(1, 5))
+		foreach (var _ in Enumerable.Range(1, 5))
 		{
 			ConcernsCase ownedOpenConcernsCase = new()
 			{
