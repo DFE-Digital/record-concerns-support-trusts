@@ -95,4 +95,12 @@ export default class CreateConcernPage {
         return this;
     }
 
+    public cancel(): this
+    {
+        Logger.Log("Click cancel button");
+        cy.getByTestId("cancel-button").click();
+
+        return this;
+    }
+
 }
