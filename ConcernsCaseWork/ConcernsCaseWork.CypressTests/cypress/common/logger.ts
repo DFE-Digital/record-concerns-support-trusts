@@ -1,7 +1,11 @@
+import { EnvLog } from "cypress/constants/cypressConstants";
+
 export class Logger
 {
     public static Log(message: string)
     {
-        cy.task("log", message);
+        if (Cypress.env(EnvLog)) {
+            cy.task("log", message);
+        }
     }
 }
