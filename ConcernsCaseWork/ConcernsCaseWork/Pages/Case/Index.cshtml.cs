@@ -13,9 +13,11 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.ApplicationInsights;
+using System.Text.Json;
 
 namespace ConcernsCaseWork.Pages.Case
 {
@@ -74,7 +76,13 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
 				userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 				userState.CreateCaseModel = new CreateCaseModel();
-				_telemetry.TrackEvent($"CREATE CASE: {userState.UserName} Accessing case index page");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = "Case index page access",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				await _userStateCache.StoreData(GetUserName(), userState);
 				return Redirect(Url.Page("Concern/Index"));
 			}
