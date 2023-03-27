@@ -8,6 +8,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases.Create;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
@@ -27,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ICreateCaseService _createCaseService;
 		private const int _notesMaxLength = 2000;
+		private TelemetryClient _telemetryClient;
 		
 		public int NotesMaxLength => _notesMaxLength;
 		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
@@ -45,11 +48,13 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public AddSrmaPageModel(
 			IClaimsPrincipalHelper claimsPrincipalHelper, 
 			ICreateCaseService createCaseService, 
-			ILogger<AddSrmaPageModel> logger)
+			ILogger<AddSrmaPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_createCaseService = Guard.Against.Null(createCaseService);
 			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 
 		public IActionResult OnGet()
@@ -84,7 +89,13 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				var srma = CreateSrma();
 				
 				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName, srma);
-				
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CREATE NON CONCERNS CASE",
+					EventDescription = $"Adding a SRMA {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(srma),
+					EventUserName = userName
+				});
 				return Redirect($"/case/{caseUrn}/management");
 			}
 			catch (Exception ex)
