@@ -1,6 +1,6 @@
-import { Logger } from "../../../common/logger";
-import { CookieBanner } from "../../../pages/cookieBanner";
-import { CookiesPage } from "../../../pages/cookiesPage";
+import { Logger } from "../../common/logger";
+import { CookieBanner } from "../../pages/cookieBanner";
+import { CookiesPage } from "../../pages/cookiesPage";
 
 describe("Testing cookies on the site", () => 
 {

@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open --browser edge",
-    "cy:run": "npm run clean:reports && cypress run --browser edge",
-    "cy:basic": "cypress run --browser edge", 
-    "cy:run:parallel": "npm run clean:reports && cypress-parallel -s cy:basic -t 2 -d './cypress/e2e/casework-regression/test-run/*.cy.ts' -r mochawesome -o 'reportDir=./cypress/reports/mocha,overwrite=false,html=false'",
+    "cy:run": "npm run clean:reports && npm run cy:run:only",
+    "cy:run:only": "cypress run --browser edge",
+    "cy:ci": "npm run clean:reports && npm run cy:parallel",
+    "cy:parallel": "cypress-parallel -s cy:run:only -t 2 -d './cypress/e2e' -r mochawesome -o 'reportDir=./cypress/reports/mocha,overwrite=false,html=false'",
     "cy:notify": "cypress-slack-reporter",
     "clean:reports": "rm -rf cypress/reports/mocha/*.json",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
