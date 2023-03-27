@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -86,7 +87,13 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
-				_telemetryClient.TrackEvent($"CREATE CASE: user {userState.UserName} adding a rating {rating.Name}");
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = $"Rating added {rating.Name}",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
 				
@@ -134,7 +141,13 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
-				_telemetryClient.TrackEvent($"CREATE CASE: user {userState.UserName} adding a rating");
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = "Rating being added",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				return Page();
 			}
 			catch (Exception ex)

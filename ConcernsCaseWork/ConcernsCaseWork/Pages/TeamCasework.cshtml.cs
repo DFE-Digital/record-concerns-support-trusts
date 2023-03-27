@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -86,7 +87,13 @@ namespace ConcernsCaseWork.Pages
 
 			if (userState is not null && !String.IsNullOrWhiteSpace(userState.UserName))
 			{
-				_telemetry.TrackEvent($"VIEW TEAMWORK User accessing team casework {userState.UserName}");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "VIEW TEAMWORK",
+					EventDescription = "User accessing team casework",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				return;
 			}
 

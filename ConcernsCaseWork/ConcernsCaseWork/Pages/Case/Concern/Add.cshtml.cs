@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -76,7 +77,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				_telemetryClient.TrackEvent($"CREATE CASE: Concerns user {userState.UserName} adding a concern");
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = "Adding a concern",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				Page();
 			}
 			catch (Exception ex)
