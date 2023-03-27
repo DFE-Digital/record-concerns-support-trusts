@@ -168,7 +168,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					RatingId = 1
 				};
 		
-		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null)
+		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null, string trustCompaniesHouseNumber = null)
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseDto(
@@ -189,7 +189,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				1,
 				2,
-				Fixture.Create<Territory>()
+				Fixture.Create<Territory>(), 
+				trustCompaniesHouseNumber?? Fixture.CreateMany<char>(8).ToString()
 			);
 		}
 		

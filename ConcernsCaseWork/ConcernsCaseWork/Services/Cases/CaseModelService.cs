@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
+	// They are very similarly named and it is not obvious which of the two to use.
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IStatusCachedService _statusCachedService;
