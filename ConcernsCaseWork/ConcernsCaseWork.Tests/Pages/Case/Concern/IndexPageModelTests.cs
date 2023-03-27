@@ -10,6 +10,7 @@ using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -412,7 +413,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			
 			return new IndexPageModel(mockTrustModelService, cachedService, mockTypeModelService, 
 				mockRatingModelService, mockMeansOfReferralModelService, claimsPrincipalHelper, 
-				mockLogger)
+				mockLogger,
+				MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
