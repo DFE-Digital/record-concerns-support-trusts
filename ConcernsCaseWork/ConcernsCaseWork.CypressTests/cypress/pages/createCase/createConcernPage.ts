@@ -64,10 +64,6 @@ export default class CreateConcernPage {
         return this;
     }
 
-
-    
-
-
     public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);
 
@@ -82,6 +78,15 @@ export default class CreateConcernPage {
     public addConcern(): this
     {
         Logger.Log("Click add concern button");
+        cy.getByTestId("add-concern-button").click();
+
+        return this;
+    }
+
+    public addAnotherConcern(): this
+    {
+        Logger.Log("Adding another concern");
+
         cy.getByTestId("add-concern-button").click();
 
         return this;

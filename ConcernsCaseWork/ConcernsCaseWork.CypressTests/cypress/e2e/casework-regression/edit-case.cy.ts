@@ -81,7 +81,7 @@ describe("Editing a case", () =>
         caseManagementPage
             .hasRiskToTrust("Red Plus")
             .hasDirectionOfTravel("Deteriorating")
-            .hasConcerns("Red")
+            .hasConcerns("Financial: Deficit", ["Red"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue");
 
@@ -111,7 +111,7 @@ describe("Editing a case", () =>
 
         addDetailsPage
             .hasRating("Red")
-            .withRating("Red-Plus")
+            .withRating("Amber-Green")
             .apply();
 
         Logger.Log("Edit a territory")
@@ -224,12 +224,11 @@ describe("Editing a case", () =>
             .withCaseHistory("New case history")
             .apply();
         
-
         Logger.Log("Verify detailes have been changed")
         caseManagementPage
             .hasRiskToTrust("Red")
             .hasDirectionOfTravel("Improving")
-            .hasConcerns("Red Plus")
+            .hasConcerns("Financial: Deficit", ["Amber", "Green"])
             .hasTerritory("North and UTC - North West")
             .hasIssue("New Issue")
             .hasCurrentStatus("New Status")
