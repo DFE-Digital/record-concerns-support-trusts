@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -130,7 +131,13 @@ namespace ConcernsCaseWork.Pages.Case
 			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-			_telemetryClient.TrackEvent($"CREATE CASE: {userState.UserName} accessing territory page");
+			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+			{
+				EventName = "CREATE CASE",
+				EventDescription = "Accessing territory page",
+				EventPayloadJson = "",
+				EventUserName = userState.UserName
+			});
 			return Page();
 		}
 		

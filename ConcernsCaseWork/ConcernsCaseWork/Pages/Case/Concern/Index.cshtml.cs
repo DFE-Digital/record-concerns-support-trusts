@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -143,7 +144,14 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
-				_telemetryClient.TrackEvent($"ADD CONCERN: {userState.UserName} adding a concern: {json} ");
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "ADD CONCERN",
+					EventDescription = "Adding a concern",
+					EventPayloadJson = json,
+					EventUserName = userState.UserName
+				});
+				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
 				
@@ -205,7 +213,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
-			_telemetryClient.TrackEvent($"ADD CONCERN: {userState.UserName} Loading add concern page");
+			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+			{
+				EventName = "ADD CONCERN",
+				EventDescription = "Loading add concern page",
+				EventPayloadJson = "",
+				EventUserName = userState.UserName
+			});
 			return Page();
 		}
 		

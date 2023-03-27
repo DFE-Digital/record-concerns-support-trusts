@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -42,7 +43,13 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
-		        _telemetry.TrackEvent($"VIEW CLOSED User {GetUserName()} is accessing and viewing closed cases");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "VIEW CLOSED",
+					EventDescription = "Accessing and viewing closed cases.",
+					EventPayloadJson = "",
+					EventUserName = GetUserName()
+				});
 				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(GetUserName());
 			}
 			catch (Exception ex)

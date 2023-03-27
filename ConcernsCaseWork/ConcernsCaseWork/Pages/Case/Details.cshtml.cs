@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -83,7 +84,13 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.CaseHistory = caseHistory;
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
-				_telemetry.TrackEvent($"CREATE CASE: user {userState.UserName} has created case no {caseUrn}:Case Model: {JsonSerializer.Serialize(createCaseModel)}");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = $"Case created {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(createCaseModel),
+					EventUserName = userState.UserName
+				});
 				return RedirectToPage("management/index", new { urn = caseUrn });
 			}
 			catch (Exception ex)
@@ -109,7 +116,13 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				_telemetry.TrackEvent($"CREATE CASE:user {userState.UserName} loading the page");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = "Loading the page",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				return Page();
 			}
 			catch (Exception ex)

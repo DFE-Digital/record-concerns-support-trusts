@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -87,7 +88,13 @@ namespace ConcernsCaseWork.Pages
 			
 			if (userState is not null && !String.IsNullOrWhiteSpace(userState.UserName))
 			{
-				_telemetry.TrackEvent($"HOME User logging in {userState.UserName} and accessing home page ");
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "HOME",
+					EventDescription = "User logging in and accessing home page.",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				return;
 			}
 
