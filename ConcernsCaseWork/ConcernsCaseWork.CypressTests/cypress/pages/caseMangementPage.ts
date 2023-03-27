@@ -186,6 +186,14 @@ class CaseManagementPage {
         return this;
     }
 
+    public addAnotherConcern(): this
+    {
+        Logger.Log("Adding another concern");
+        cy.getByTestId("add-additional-concern").click();
+
+        return this;
+    }
+
     public editRiskToTrust(): this {
         Logger.Log("Editing the risk to trust");
         this.getEditRiskToTrust().click();
@@ -591,18 +599,30 @@ class CaseManagementPage {
         return this;
     }
 
-    public hasConcerns(value: string): this
+    public hasConcerns(concern: string, ratingTags: Array<string>): this
     {
-        Logger.Log(`Has concerns ${value}`);
+        Logger.Log(`Has concerns ${concern}`);
 
-        cy.getByTestId(`concerns_Field`).should("contain.text", value);
+        cy.getByTestId(`concerns_Field`).should("contain.text", concern);
+
+        let concernsRow = cy.getByTestId("concerns_Field").contains(concern);
+
+        let parentRow = concernsRow.parent();
+
+        parentRow.find("td").eq(1).then((element) =>
+        {
+            ratingTags.forEach(rating =>
+            {
+                expect(element.text()).to.contain(rating);
+            });
+        });
 
         return this;
     }
 
     public hasTerritory(value: string): this
     {
-        Logger.Log(`Has territort ${value}`);
+        Logger.Log(`Has territory ${value}`);
 
         cy.getByTestId(`territory_Field`).should("contain.text", value);
 

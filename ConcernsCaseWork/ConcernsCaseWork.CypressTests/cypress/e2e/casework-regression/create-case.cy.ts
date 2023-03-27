@@ -129,7 +129,7 @@ describe("Creating a case", () =>
         caseManagementPage
             .hasTrust("Ashton West End Primary Academy")
             .hasRiskToTrust("Red Plus")
-            .hasConcerns("Financial: Deficit")
+            .hasConcerns("Financial: Deficit", ["Red", "Amber"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue")
             .hasCurrentStatus("This is the current status")
@@ -202,7 +202,7 @@ describe("Creating a case", () =>
         caseManagementPage
             .hasTrust("Ashton West End Primary Academy")
             .hasRiskToTrust("Red Plus")
-            .hasConcerns("Financial: Deficit")
+            .hasConcerns("Financial: Deficit", ["Red", "Amber"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue")
             .hasEmptyCurrentStatus()
@@ -214,7 +214,6 @@ describe("Creating a case", () =>
 
     const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
-		let term = ""
 	const searchTermForSchool = "school";
 
     it("User searches for a valid Trust and selects it", () => {
@@ -246,5 +245,62 @@ describe("Creating a case", () =>
             .shouldNotHaveVisibleLoader()
             .hasTooManyResultsWarning("There are a large number of search results. Try a more specific search term.");
     });
-    
+
+    it("Should create additional concerns", () =>
+    {
+        Logger.Log("Create a case");
+        createCasePage
+            .createCase()
+            .withTrustName("Ashton West End Primary Academy")
+            .selectOption()
+            .confirmOption();
+
+        Logger.Log("Create a valid concern");
+        createConcernPage
+            .withConcernType("Irregularity")
+            .withSubConcernType("Irregularity: Suspected fraud")
+            .withRating("Red-Plus")
+            .withMeansOfRefferal("Internal")
+            .addConcern();
+
+        Logger.Log("Adding another concern during case creation");
+        createConcernPage
+            .addAnotherConcern()
+            .withConcernType("Governance and compliance")
+            .withSubConcernType("Governance and compliance: Compliance")
+            .withRating("Amber-Green")
+            .withMeansOfRefferal("External")
+            .addConcern()
+            .nextStep();
+
+        Logger.Log("Populate risk to trust");
+        addDetailsPage
+            .withRating("Red-Plus")
+            .nextStep();
+
+        Logger.Log("Populate territory");
+        addTerritoryPage
+            .withTerritory("North and UTC - North East")
+            .nextStep();
+
+        Logger.Log("Add concern details with valid text limit");
+        addConcernDetailsPage
+            .withIssue("This is an issue")
+            .createCase();
+
+        Logger.Log("Add another concern after case creation");
+        caseManagementPage.addAnotherConcern();
+
+        createConcernPage
+            .withConcernType("Irregularity")
+            .withSubConcernType("Irregularity: Irregularity")
+            .withRating("Red-Amber")
+            .withMeansOfRefferal("External")
+            .addConcern();
+
+        caseManagementPage
+            .hasConcerns("Irregularity: Suspected fraud", ["Red Plus"])
+            .hasConcerns("Governance and compliance: Compliance", ["Amber", "Green"])
+            .hasConcerns("Irregularity: Irregularity", ["Red", "Amber"]);
+    });
 });
