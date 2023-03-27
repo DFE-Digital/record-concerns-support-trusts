@@ -1,10 +1,11 @@
-import { defineConfig } from 'cypress'
+const { defineConfig } = require('cypress')
 
-export default defineConfig({
+module.exports = defineConfig({
   defaultCommandTimeout: 20000,
   pageLoadTimeout: 20000,
   watchForFileChanges: false,
   chromeWebSecurity: false,
+  numTestsKeptInMemory: 2,
   video: false,
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
@@ -16,6 +17,9 @@ export default defineConfig({
       html: false,
       json: true,
     },
+  },
+  "env": {
+    "CYPRESS_PARALLEL": true
   },
   e2e: {
     // We've imported your old cypress plugins here.

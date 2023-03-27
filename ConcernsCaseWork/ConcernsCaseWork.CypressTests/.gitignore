@@ -1,2 +1,5 @@
 cypress/videos
 cypress.env.json
+runner-results
+multi-reporter-config.json
+parallel-weights.json
