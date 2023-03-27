@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -78,7 +79,14 @@ namespace ConcernsCaseWork.Pages.Case
 				CaseModel.RecordsModel = recordsModel;
 
 				CaseActions = (await _actionsModelService.GetActionsSummary(caseUrn)).ClosedActions;
-				_telemetryClient.TrackEvent($"VIEW CLOSED: {userName} is viewing closed cases");
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "VIEW CLOSED",
+					EventDescription = "Viewing closed cases",
+					EventPayloadJson = "",
+					EventUserName = userName
+				});
+				
 			}
 			catch (Exception ex)
 			{
