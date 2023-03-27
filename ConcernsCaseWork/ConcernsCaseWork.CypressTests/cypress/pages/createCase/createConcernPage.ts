@@ -65,7 +65,7 @@ export default class CreateConcernPage {
     }
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.Log(`Has Validation error ${message}`);
 
 		cy.getById("errorSummary").should(
 			"contain.text",

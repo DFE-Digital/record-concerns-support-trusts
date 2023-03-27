@@ -19,7 +19,7 @@ export class ViewDecisionPage
 	}
 
     public hasCrmEnquiry(crmNumber: string): this {
-		cy.task("log", `Has CRM enquiry ${crmNumber}`);
+		Logger.Log(`Has CRM enquiry ${crmNumber}`);
 
 		cy.getByTestId("crm-enquiry-text").should("contain.text", crmNumber);
 
@@ -27,7 +27,7 @@ export class ViewDecisionPage
 	}
 
 	public hasRetrospectiveRequest(retrospectiveRequest: string): this {
-		cy.task("log", `Has retrospective request ${retrospectiveRequest}`);
+		Logger.Log(`Has retrospective request ${retrospectiveRequest}`);
 
 		cy.getByTestId("retrospective-request-text").should(
 			"contain.text",
@@ -38,7 +38,7 @@ export class ViewDecisionPage
 	}
 
 	public hasSubmissionRequired(submissionRequired: string): this {
-		cy.task("log", `Has Submission Required ${submissionRequired}`);
+		Logger.Log(`Has Submission Required ${submissionRequired}`);
 
 		cy.getByTestId("submission-required-text").should(
 			"contain.text",
@@ -49,7 +49,7 @@ export class ViewDecisionPage
 	}
 
 	public hasSubmissionLink(submissionLink: string): this {
-		cy.task("log", `Has Submission link ${submissionLink}`);
+		Logger.Log(`Has Submission link ${submissionLink}`);
 
 		cy.getByTestId("submission-link-text").should(
 			"contain.text",
@@ -60,7 +60,7 @@ export class ViewDecisionPage
 	}
 
 	public hasDateESFAReceivedRequest(dateESFAReceivedRequest: string): this {
-		cy.task("log", `Has Date ESFA Received Request ${dateESFAReceivedRequest}`);
+		Logger.Log(`Has Date ESFA Received Request ${dateESFAReceivedRequest}`);
 
 		cy.getByTestId("date-esfa-received-text").should(
 			"contain.text",
@@ -71,7 +71,7 @@ export class ViewDecisionPage
 	}
 
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
-		cy.task("log", `Has total Amount Requested ${totalAmountRequested}`);
+		Logger.Log(`Has total Amount Requested ${totalAmountRequested}`);
 
 		cy.getByTestId("amount-requested-text").should(
 			"contain.text",
@@ -82,7 +82,7 @@ export class ViewDecisionPage
 	}
 
 	public hasTypeOfDecision(typeOfDecision: string): this {
-		cy.task("log", `Has type of decision  ${typeOfDecision}`);
+		Logger.Log(`Has type of decision  ${typeOfDecision}`);
 
 
 		cy.getByTestId("decision-type-text").should(
@@ -94,7 +94,7 @@ export class ViewDecisionPage
 	}
 
 	public hasSupportingNotes(supportingNotes: string): this {
-		cy.task("log", `Has Supporting Notes ${supportingNotes}`);
+		Logger.Log(`Has Supporting Notes ${supportingNotes}`);
 
 		cy.getByTestId("supporting-notes-text").should(
 			"contain.text",
@@ -105,7 +105,7 @@ export class ViewDecisionPage
 	}
 
 	public hasActionEdit(): this {
-		cy.task("log", `Has Edit Action`);
+		Logger.Log(`Has Edit Action`);
 
 		cy.getByTestId("edit-decision-text").should(
 			"contain.text",

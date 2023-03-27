@@ -1,7 +1,9 @@
+import { Logger } from "../../../common/logger";
+
 export class EditDecisionPage
 {
     public withCrmEnquiry(crmNumber: string): this {
-		cy.task("log", `With Crm enquiry ${crmNumber}`);
+		Logger.Log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);
 
@@ -9,7 +11,7 @@ export class EditDecisionPage
 	}
 
 	public withRetrospectiveRequest(isRetrospectiveRequest: boolean): this {
-		cy.task("log", `With retrospective request ${isRetrospectiveRequest}`);
+		Logger.Log(`With retrospective request ${isRetrospectiveRequest}`);
 
 		if (isRetrospectiveRequest) {
 			cy.getById("retrospective-approval").click();
@@ -21,7 +23,7 @@ export class EditDecisionPage
 	}
 
 	public withSubmissionRequired(isSubmissionRequired: Boolean): this {
-		cy.task("log", `With Submission Required ${isSubmissionRequired}`);
+		Logger.Log(`With Submission Required ${isSubmissionRequired}`);
 
 		if (isSubmissionRequired) {
 			cy.getById("submission-required").click();
@@ -33,7 +35,7 @@ export class EditDecisionPage
 	}
 
 	public withSubmissionLink(submissionLink: string): this {
-		cy.task("log", `With Submission link ${submissionLink}`);
+		Logger.Log(`With Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").clear().type(submissionLink);
 
@@ -74,7 +76,7 @@ export class EditDecisionPage
 		return this;
 	}
 	public withTypeOfDecisionID(typeOfDecisionID: string): this {
-		cy.task("log", `With type of decision to pick ${typeOfDecisionID}`);
+		Logger.Log(`With type of decision to pick ${typeOfDecisionID}`);
 
 		cy.getById(typeOfDecisionID).click();
 
@@ -82,7 +84,7 @@ export class EditDecisionPage
 	}
 
 	public withTotalAmountRequested(totalAmountRequested: string): this {
-		cy.task("log", `With total Amount Requested ${totalAmountRequested}`);
+		Logger.Log(`With total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-amount-request").clear().type(totalAmountRequested);
 
@@ -91,7 +93,7 @@ export class EditDecisionPage
 
 
 	public withSupportingNotes(supportingNotes: string): this {
-		cy.task("log", `With Supporting Notes ${supportingNotes}`);
+		Logger.Log(`With Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").clear().type(supportingNotes);
 
@@ -99,7 +101,7 @@ export class EditDecisionPage
 	}
 
 	public withSupportingNotesExceedingLimit(): this {
-		cy.task("log", `With Supporting Notes exceeding limit`);
+		Logger.Log(`With Supporting Notes exceeding limit`);
 
 		cy.getById("case-decision-notes").clear().invoke("val", "x 1".repeat(1001));
 
@@ -113,7 +115,7 @@ export class EditDecisionPage
 	}
 
 	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.Log(`Has Validation error ${message}`);
 
 		cy.get("#decision-error-list").should(
 			"contain.text",

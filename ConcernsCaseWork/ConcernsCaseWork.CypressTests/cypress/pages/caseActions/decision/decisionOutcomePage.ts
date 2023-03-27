@@ -1,7 +1,9 @@
+import { Logger } from "../../../common/logger";
+
 export class DecisionOutcomePage {
 	
 	public withDecisionOutcomeStatus(decisionOutcomeID: string): this {
-		cy.task("log", `With decision outcome status ${decisionOutcomeID}`);
+		Logger.Log(`With decision outcome status ${decisionOutcomeID}`);
 
 		cy.getByTestId(decisionOutcomeID).click();
 
@@ -9,7 +11,7 @@ export class DecisionOutcomePage {
 	}
 	
 	public withTotalAmountApproved(totalAmountApproved: string): this {
-		cy.task("log", `With total Amount Approved ${totalAmountApproved}`);
+		Logger.Log(`With total Amount Approved ${totalAmountApproved}`);
 
 		cy.getByTestId("total-amount-approved").clear().type(totalAmountApproved);
 
@@ -87,7 +89,7 @@ export class DecisionOutcomePage {
 	}
 
 	public withDecisionAuthouriser(authoriserID: string): this {
-		cy.task("log", `With decision authouriser to pick ${authoriserID}`);
+		Logger.Log(`With decision authouriser to pick ${authoriserID}`);
 
 		cy.getByTestId(authoriserID).click();
 
@@ -95,7 +97,7 @@ export class DecisionOutcomePage {
 	}
 
 	public withBusinessArea(businessAreaID: string): this {
-		cy.task("log", `With decision business area consulted to pick ${businessAreaID}`);
+		Logger.Log(`With decision business area consulted to pick ${businessAreaID}`);
 
 		cy.getByTestId(businessAreaID).click();
 
@@ -110,7 +112,7 @@ export class DecisionOutcomePage {
 	}
 	
 	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.Log(`Has Validation error ${message}`);
 
 		cy.get("#decision-error-list").should(
 			"contain.text",
@@ -121,7 +123,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDecisionOutcomeStatus(decisionOutcomeID: string): this {
-		cy.task("log", `Has decision outcome status ${decisionOutcomeID}`);
+		Logger.Log(`Has decision outcome status ${decisionOutcomeID}`);
 
 		cy.getByTestId(decisionOutcomeID).should('have.value', decisionOutcomeID);
 
@@ -129,7 +131,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasTotalAmountApproved(totalAmountApproved: string): this {
-		cy.task("log", `Total amount approved ${totalAmountApproved}`);
+		Logger.Log(`Total amount approved ${totalAmountApproved}`);
 
 		cy.getByTestId("total-amount-approved").should(
 			"contain.value",
@@ -140,7 +142,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDecisionMadeDay(decisionMadeDay: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeDay}`);
+		Logger.Log(`Decision Made Date ${decisionMadeDay}`);
 
 		cy.getByTestId("dtr-day-decision-made").should(
 			"contain.value",
@@ -151,7 +153,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDecisionMadeMonth(decisionMadeMonth: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeMonth}`);
+		Logger.Log(`Decision Made Date ${decisionMadeMonth}`);
 
 		cy.getByTestId("dtr-month-decision-made").should(
 			"contain.value",
@@ -162,7 +164,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDecisionMadeYear(decisionMadeYear: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeYear}`);
+		Logger.Log(`Decision Made Date ${decisionMadeYear}`);
 
 		cy.getByTestId("dtr-year-decision-made").should(
 			"contain.value",
@@ -173,7 +175,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDateEffectiveFromDay(dateEffectiveFromDay: string): this {
-		cy.task("log", `Date Effective From Day ${dateEffectiveFromDay}`);
+		Logger.Log(`Date Effective From Day ${dateEffectiveFromDay}`);
 
 		cy.getByTestId("dtr-day-take-effect").should(
 			"contain.value",
@@ -184,7 +186,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDateEffectiveFromMonth(dateEffectiveFromMonth: string): this {
-		cy.task("log", `Date Effective From Month ${dateEffectiveFromMonth}`);
+		Logger.Log(`Date Effective From Month ${dateEffectiveFromMonth}`);
 
 		cy.getByTestId("dtr-month-take-effect").should(
 			"contain.value",
@@ -195,7 +197,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDateEffectiveFromYear(dateEffectiveFromYear: string): this {
-		cy.task("log", `Date Effective From Year ${dateEffectiveFromYear}`);
+		Logger.Log(`Date Effective From Year ${dateEffectiveFromYear}`);
 
 		cy.getByTestId("dtr-year-take-effect").should(
 			"contain.value",
@@ -206,7 +208,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasDecisionAuthouriser(authoriserID: string): this {
-		cy.task("log", `Has authoriser ${authoriserID}`);
+		Logger.Log(`Has authoriser ${authoriserID}`);
 
 		cy.getByTestId(authoriserID).should('have.value', authoriserID);
 
@@ -214,7 +216,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasBusinessArea(businessAreaID: string): this {
-		cy.task("log", `Has Business Area ${businessAreaID}`);
+		Logger.Log(`Has Business Area ${businessAreaID}`);
 
 		cy.getByTestId(businessAreaID).should('have.value', businessAreaID);
 

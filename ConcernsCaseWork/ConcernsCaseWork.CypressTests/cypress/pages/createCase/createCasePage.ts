@@ -52,7 +52,7 @@ export class CreateCasePage
     }
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.Log(`Has Validation error ${message}`);
 
 		cy.getById("errorSummary").should(
 			"contain.text",
@@ -63,7 +63,7 @@ export class CreateCasePage
 	}
 
     public shouldNotHaveVisibleLoader(): this {
-		cy.task("log", `Should not have visible loader}`);
+		Logger.Log(`Should not have visible loader}`);
 
 		cy.get('.ccms-loader').should('not.be.visible');
 
@@ -71,7 +71,7 @@ export class CreateCasePage
 	}
 
     public hasTooManyResultsWarning(message: string): this {
-		cy.task("log", `Has too many results warning ${message}`);
+		Logger.Log(`Has too many results warning ${message}`);
 
 		cy.getById("tooManyResultsWarning").should(
 			"contain.text",
