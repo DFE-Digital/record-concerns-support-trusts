@@ -8,6 +8,7 @@ using ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
 using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -35,7 +36,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				_ = new AddSrmaPageModel(
 					null,
 					Mock.Of<ICreateCaseService>(),
-					Mock.Of<ILogger<AddSrmaPageModel>>()));
+					Mock.Of<ILogger<AddSrmaPageModel>>(),
+					MockTelemetry.CreateMockTelemetryClient()));
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
 		}
@@ -47,7 +49,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				_ = new AddSrmaPageModel(
 					Mock.Of<IClaimsPrincipalHelper>(),
 					Mock.Of<ICreateCaseService>(),
-					null));
+					null,
+					MockTelemetry.CreateMockTelemetryClient()));
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
 		}
@@ -59,7 +62,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				_ = new AddSrmaPageModel(
 					Mock.Of<IClaimsPrincipalHelper>(),
 					null,
-					Mock.Of<ILogger<AddSrmaPageModel>>()));
+					Mock.Of<ILogger<AddSrmaPageModel>>(),
+					MockTelemetry.CreateMockTelemetryClient()));
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'createCaseService')"));
 		}
@@ -193,7 +197,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Statuses_ShouldContainOpenStatuses()
 		{
 			// arrange
-			var sut = new AddSrmaPageModel(Mock.Of<IClaimsPrincipalHelper>(), Mock.Of<ICreateCaseService>(), Mock.Of<ILogger<AddSrmaPageModel>>());
+			var sut = new AddSrmaPageModel(Mock.Of<IClaimsPrincipalHelper>(), Mock.Of<ICreateCaseService>(), 
+				Mock.Of<ILogger<AddSrmaPageModel>>(),MockTelemetry.CreateMockTelemetryClient());
 			
 			// act
 			var result = sut.SRMAStatuses.Select(s => s.Id).ToArray();
@@ -213,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			return new AddSrmaPageModel(mockClaimsPrincipleService.Object, mockCreateCaseService.Object, mockLogger.Object)
+			return new AddSrmaPageModel(mockClaimsPrincipleService.Object, mockCreateCaseService.Object, mockLogger.Object,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
