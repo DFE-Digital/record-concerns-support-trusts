@@ -41,7 +41,7 @@ jobs:
             authKey: 'Hello'
 
         - name: view cypress file
-          run: cat ./ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress.env.json
+          run: cat ./cypress.env.json
 
         - name: Run cypress
           run: npm run cy:run -- --spec=./cypress/e2e/casework-regression/home-page.cy.ts
