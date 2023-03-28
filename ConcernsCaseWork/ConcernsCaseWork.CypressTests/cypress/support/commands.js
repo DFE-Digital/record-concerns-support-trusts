@@ -31,6 +31,7 @@ import "cypress-axe";
 import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
 import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
+import {AuthenticationComponent} from  "../auth/authenticationComponent";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -64,12 +65,12 @@ Cypress.Commands.add("login", (params) => {
 
 	// Intercept all browser requests and add our special auth header
 	// Means we don't have to use azure to authenticate 
-	new AuthenticationInterceptor().register(params);
+	//new AuthenticationInterceptor().register(params);
 
 	// Old method of using azure to login
-	// const username = Cypress.env("username");
-	// const password = Cypress.env("password");
-	// new AuthenticationComponent().login(username, password);
+	const username = Cypress.env("username");
+	const password = Cypress.env("password");
+	new AuthenticationComponent().login(username, password);
 
 	cy.visit("/");
 });
