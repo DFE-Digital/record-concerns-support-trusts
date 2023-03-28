@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
 
-			await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
+			_ = await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -79,7 +79,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			AssertDecision(result, decisionRequest);
 
-			result.Outcome.Status.Should().Be(outcomeRequest.Status);
+			result.Should().NotBeNull();
+			result.Outcome.Should().NotBeNull();
+			result.Outcome!.Status.Should().Be(outcomeRequest.Status);
 			result.Outcome.Authorizer.Should().Be(outcomeRequest.Authorizer);
 			result.Outcome.TotalAmount.Should().Be(100);
 			result.Outcome.DecisionMadeDate.Should().Be(_decisionMadeDate);
@@ -106,7 +108,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 1
 			};
 
-			using var context = _testFixture.GetContext();
+			await using var context = _testFixture.GetContext();
 
 			var result = context.ConcernsCase.Add(toAdd);
 			await context.SaveChangesAsync();
@@ -119,12 +121,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.TotalAmount = 100;
 			request.DecisionMadeDate = _decisionMadeDate;
 			request.DecisionEffectiveFromDate = _decisionEffectiveDate;
-
+		
 			var postResult = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}/outcome", request.ConvertToJson());
 			postResult.StatusCode.Should().Be(HttpStatusCode.Created);
-
+		
 			var response = await postResult.Content.ReadFromJsonAsync<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>();
-
+		
 			return response.Data;
 		}
 

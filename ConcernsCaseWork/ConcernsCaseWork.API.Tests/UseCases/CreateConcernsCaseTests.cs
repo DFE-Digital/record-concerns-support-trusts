@@ -38,7 +38,8 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.Territory = Territory.North_And_Utc__North_West)
                 .With(c => c.StatusId = 2)
-                .With( c => c.RatingId = 4)
+                .With(c => c.RatingId = 4)
+                .With(c => c.TrustUkprn = "12345678")
                 .Build();
             
             var createdConcernsCase = ConcernsCaseFactory.Create(createRequest);
