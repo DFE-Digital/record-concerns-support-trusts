@@ -11,8 +11,8 @@ public static class AppInsightsHelper
 	public static void LogEvent(TelemetryClient client, AppInsightsModel model)
 	{
 		var payload = model.EventPayloadJson;
-		client.TrackTrace($"{JsonSerializer.Serialize(model)}" );
-		
+		model.EventPayloadJson = "";
+		client.TrackTrace(payload);
 		client.TrackEvent($"{model.EventName} : {model.EventDescription} : {model.EventUserName}");
 	}
 }
