@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open --browser edge",
-    "cy:run": "npm run clean:reports && npm run cy:run:only",
+    "cy:run": "npm run clean:reports && cypress run --browser edge",
     "cy:run:only": "cypress run --browser edge",
     "cy:parallel": "cypress-parallel -s cy:run:only -t 2 -d './cypress/e2e' -r mochawesome -o 'reportDir=./cypress/reports/mocha,overwrite=false,html=false' -a '--env' -a 'username=hello,password=bob'",
     "cy:notify": "cypress-slack-reporter",
