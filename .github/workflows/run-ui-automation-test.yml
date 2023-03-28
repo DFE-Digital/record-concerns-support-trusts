@@ -33,19 +33,6 @@ jobs:
             USERNAME: 'banana'
           run: |
             echo '{ "username": "'"USERNAME"'" }' > cypress.env.json
-            
-
-        # - name: Create cypress env
-        #   uses: schdck/create-env-json@v2
-        #   id: create-env
-        #   with:
-        #     file-name: './ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress.env.json'
-        #     username: 'User'
-        #     password: 'Password'
-        #     url: 'Endpoint'
-        #     api: 'Api'
-        #     apiKey: 'Hello'
-        #     authKey: 'Hello'
 
         - name: view cypress file
           run: cat ./cypress.env.json
