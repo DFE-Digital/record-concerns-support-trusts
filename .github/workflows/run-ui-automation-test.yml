@@ -32,7 +32,7 @@ jobs:
           uses: schdck/create-env-json@v2
           id: create-env
           with:
-            file-name: './CocnernsCaseWork/ConcernsCaseWork.CypressTests/cypress.env.json'
+            file-name: './ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress.env.json'
             username: ${{ secrets.USERNAME }}
             password: ${{ secrets.PASSWORD }}
             url: ${{ secrets.AZURE_ENDPOINT }}
