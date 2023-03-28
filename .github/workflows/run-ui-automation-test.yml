@@ -32,7 +32,7 @@ jobs:
           env:
             USERNAME: 'banana'
           run: |
-            echo '{ "username": "'"USERNAME""'" }' > cypress.env.json
+            echo '{ "username": "'"USERNAME"'" }' > cypress.env.json
             
 
         # - name: Create cypress env
