@@ -1,7 +1,7 @@
 ## 19.0.0
 
 * Added Companies House Number to concerns cases. Each new concerns case will store the Companies House Number of the associated Trust (existing cases will be updated in retrospect).
-[To be completed]
+* Updated wording on the page that is displayed when the user does not have access to the system.
 
 ---
 
