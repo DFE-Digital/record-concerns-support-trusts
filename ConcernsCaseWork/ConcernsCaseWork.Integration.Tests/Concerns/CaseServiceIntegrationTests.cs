@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
-			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
+			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn, trustSummaryDto.CompaniesHouseNumber);
 			var caseDto = await PostCase(serviceScope, createCaseDto);
 
 			// act
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
-			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
+			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn, trustSummaryDto.CompaniesHouseNumber);
 			var postCaseDto = await PostCase(serviceScope, createCaseDto);
 
 			// act
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
-			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
+			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn, trustSummaryDto.CompaniesHouseNumber);
 			var postCaseDto = await PostCase(serviceScope, createCaseDto);
 
 			// act
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
-			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
+			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn, trustSummaryDto.CompaniesHouseNumber);
 			var postCaseDto = await PostCase(serviceScope, createCaseDto);
 
 			// Update case properties

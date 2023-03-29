@@ -2,19 +2,21 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class TrustDetailsDto
+	public class TrustDetailsDto
 	{
 		[JsonProperty("giasData")]
-		public GiasDataDto GiasData { get; }
+		public virtual GiasDataDto GiasData { get; set; }
 		
 		[JsonProperty("ifdData")]
-		public IfdDataDto IfdData { get; }
+		public virtual IfdDataDto IfdData { get; set; }
 		
 		[JsonProperty("establishments")]
-		public List<EstablishmentDto> Establishments { get; } 
+		public virtual List<EstablishmentDto> Establishments { get; set; } 
 
 		[JsonConstructor]
 		public TrustDetailsDto(GiasDataDto giasData, IfdDataDto ifdData, List<EstablishmentDto> establishments) => 
 			(GiasData, IfdData, Establishments) = (giasData, ifdData, establishments);
+
+		protected TrustDetailsDto() {}
 	}
 }
