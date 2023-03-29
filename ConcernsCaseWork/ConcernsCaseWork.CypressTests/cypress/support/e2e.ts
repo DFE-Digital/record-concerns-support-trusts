@@ -15,9 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import { AuthenticationInterceptorParams } from 'cypress/auth/authenticationInterceptor';
-import { CaseworkerClaim, EnvApiKey, EnvAuthKey, EnvUrl, EnvUsername } from 'cypress/constants/cypressConstants';
 import './commands'
-import './utils'
 
 declare global {
     namespace Cypress {
@@ -26,29 +24,19 @@ declare global {
             getById(id: string): Chainable<Element>;
             waitForJavascript(): Chainable<Element>;
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;
-            storeSessionData(): Chainable<Element>;
             selectMoR(): Chainable<Element>;
             createCase(): Chainable<Element>;
             randomSelectTrust(): Chainable<Element>;
             selectConcernType(): Chainable<Element>;
-            addActionItemToCase(): Chainable<Element>;
             selectRiskToTrust(): Chainable<Element>;
             selectTerritory(): Chainable<Element>;
             enterConcernDetails(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
-            visitPage(slug: string): Chainable<Element>;
-            editRiskToTrust(cta: string, rag: string): Chainable<Element>;
             selectConcern(expectedNumberOfRagStatus: number, ragStatus: string): Chainable<number>;
             validateCreateCaseDetailsComponent(): Chainable<Element>;
             validateCreateCaseInitialDetails(): Chainable<Element>;
-            validateCaseManagPage(): Chainable<Element>;
-            closeAllOpenConcerns(): Chainable<Element>;
-            closeSRMA(): Chainable<Element>;
-            checkForExistingCase(force: boolean): Chainable<Element>;
-            createSRMA(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
             basicCreateCase(): Chainable<number>;
-            checkForExistingCase(): Chainable<Element>;
         }
     }
 

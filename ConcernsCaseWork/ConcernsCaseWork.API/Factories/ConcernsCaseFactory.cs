@@ -1,4 +1,5 @@
 using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.Data.Migrations;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories
@@ -28,7 +29,8 @@ namespace ConcernsCaseWork.API.Factories
                 CaseHistory = request.CaseHistory,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId,
-                Territory = request.Territory
+                Territory = request.Territory,
+                TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber
             };
         }
         
@@ -61,7 +63,7 @@ namespace ConcernsCaseWork.API.Factories
             original.StatusId = toMerge.StatusId;
             original.RatingId = toMerge.RatingId;
             original.Territory = toMerge.Territory;
-
+            original.TrustCompaniesHouseNumber = toMerge.TrustCompaniesHouseNumber ?? original.TrustCompaniesHouseNumber; // doesn't for it to become null
             return original;
         }
     }

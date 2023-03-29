@@ -5,6 +5,6 @@ namespace ConcernsCaseWork.Services.Cases.Create;
 
 public interface ICreateCaseService
 {
-	Task<long> CreateNonConcernsCase(string userName);
-	Task<long> CreateNonConcernsCase(string userName, SRMAModel srmaModel);
+	Task<long> CreateNonConcernsCase(string userName,string trustUkPrn, string trustCompaniesHouseNumber);
+	Task<long> CreateNonConcernsCase(string userName,string trustUkPrn, string trustCompaniesHouseNumber, SRMAModel srmaModel);
 }

@@ -180,7 +180,7 @@ public class CloseDecisionIntegrationTests
 			StatusId = 1
 		};
 
-		using (var ctxt = GetContext())
+		await using (var ctxt = GetContext())
 		{
 			ctxt.ConcernsCase.Add(cCase);
 			await ctxt.SaveChangesAsync();
@@ -194,8 +194,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.Outcome = null;
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();
@@ -209,8 +209,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.Outcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome();
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();
@@ -224,8 +224,8 @@ public class CloseDecisionIntegrationTests
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
 		decision.ClosedAt = DateTimeOffset.Now;
-		
-		using (var ctxt = GetContext())
+
+		await using (var ctxt = GetContext())
 		{
 			ctxt.Decisions.Add(decision);
 			await ctxt.SaveChangesAsync();
@@ -239,6 +239,6 @@ public class CloseDecisionIntegrationTests
 	private ConcernsDbContext GetContext() => _apiTestFixture.GetContext();
 
 	private record HttpErrorMessage(int StatusCode, string Message);
-
+	
 	private record ValidationErrors(string Type, string Title, int Status, string TraceId, Dictionary<string, string[]> Errors);
 }

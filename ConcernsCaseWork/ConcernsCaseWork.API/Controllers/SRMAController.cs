@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> Create(CreateSRMARequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> Create(CreateSRMARequest request, CancellationToken cancellationToken = default)
         {
             var createdSRMA = _createSRMAUseCase.Execute(request);
             var response = new ApiSingleResponseV2<SRMAResponse>(createdSRMA);
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> GetSRMAById(int srmaId)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> GetSRMAById(int srmaId, CancellationToken cancellationToken = default)
         {
             var srma = _getSRMAByIdUseCase.Execute(srmaId);
             var response = new ApiSingleResponseV2<SRMAResponse>(srma);
@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("case/{caseUrn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ICollection<SRMAResponse>>> GetSRMAsByCase(int caseUrn)
+        public async Task<ActionResult<ApiSingleResponseV2<ICollection<SRMAResponse>>>> GetSRMAsByCase(int caseUrn, CancellationToken cancellationToken = default)
         {
             var srmas = _getSRMAsByCaseIdUseCase.Execute(caseUrn);
             var response = new ApiSingleResponseV2<ICollection<SRMAResponse>>(srmas);
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-status")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateStatus(int srmaId, SRMAStatus status)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateStatus(int srmaId, SRMAStatus status, CancellationToken cancellationToken = default)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-reason")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateReason(int srmaId, SRMAReasonOffered reason)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateReason(int srmaId, SRMAReasonOffered reason, CancellationToken cancellationToken = default)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-offered-date")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateOfferedDate(int srmaId, string offeredDate)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateOfferedDate(int srmaId, string offeredDate, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -145,7 +145,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-notes")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateNotes(int srmaId, [StringLength(2000)] string notes)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateNotes(int srmaId, [StringLength(2000)] string notes, CancellationToken cancellationToken = default)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
@@ -165,7 +165,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-visit-dates")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateVisitDates(int srmaId, string startDate, string endDate)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateVisitDates(int srmaId, string startDate, string endDate, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -194,7 +194,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-date-accepted")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateAccepted(int srmaId, string acceptedDate)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateDateAccepted(int srmaId, string acceptedDate, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-date-report-sent")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateReportSent(int srmaId, string dateReportSent)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateDateReportSent(int srmaId, string dateReportSent, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -250,7 +250,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-closed-date")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateClosed(int srmaId)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateDateClosed(int srmaId, CancellationToken cancellationToken = default)
         {
             try
             {

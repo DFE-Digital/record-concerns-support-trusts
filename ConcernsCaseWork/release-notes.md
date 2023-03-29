@@ -1,5 +1,21 @@
-# [NEXT Release] 18.0.0
+## 19.0.0
 
+* Added Companies House Number to concerns cases. Each new concerns case will store the Companies House Number of the associated Trust (existing cases will be updated in retrospect).
+[To be completed]
+
+---
+
+## 18.0.1
+* CSS styling fix on the Re-Assign page.
+* Changed 'Edit' link to 'Change' on the Case/Management/Index page
+
+---
+
+## 18.0.0
+* Re-Assign Cases to other users
+* Trust Financial Forecast Enhancements
+* Small UI and usability enhancements
+* Added integration points for Microsoft Graph API
 
 ---
 

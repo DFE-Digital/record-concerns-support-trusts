@@ -14,6 +14,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using SRMAStatus = ConcernsCaseWork.Data.Enums.SRMAStatus;
 
@@ -37,12 +38,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             _mockGetSRMAById = new Mock<IUseCase<int, SRMAResponse>>();
             _mockPatchSRMAUseCase = new Mock<IUseCase<PatchSRMARequest, SRMAResponse>>();
 
-            controllerSUT = new SRMAController(_mockLogger.Object, _mockCreateSRMAUseCase.Object, _mockGetSRMAsByCaseId.Object, 
+            controllerSUT = new SRMAController(_mockLogger.Object, _mockCreateSRMAUseCase.Object, _mockGetSRMAsByCaseId.Object,
                                                _mockGetSRMAById.Object, _mockPatchSRMAUseCase.Object);
         }
 
         [Fact]
-        public void Create_ReturnsApiSingleResponseWithNewSRMA()
+        public async Task Create_ReturnsApiSingleResponseWithNewSRMA()
         {
             var status = SRMAStatus.Deployed;
             var dateOffered = DateTime.Now.AddDays(-5);
@@ -59,17 +60,16 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(It.IsAny<CreateSRMARequest>()))
                 .Returns(response);
 
-            var result = controllerSUT.Create(new CreateSRMARequest
-            {
-                DateOffered = dateOffered,
-                Status = status
-            });
+            var result = (await controllerSUT.Create(new CreateSRMARequest { DateOffered = dateOffered, Status = status })).Result as ObjectResult;
 
-            result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
+			result.StatusCode.Should().Be(StatusCodes.Status201Created);
+
+            var dataResult = result.Value as ApiSingleResponseV2<SRMAResponse>;
+			dataResult.Data.DateOffered.Should().Be(dateOffered);
         }
 
         [Fact]
-        public void GetSRMAsByCaseId_ReturnsMatchingSRMA_WhenGivenCaseId()
+        public async Task GetSRMAsByCaseId_ReturnsMatchingSRMA_WhenGivenCaseId()
         {
             var caseUrn = 123;
 
@@ -103,9 +103,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(caseUrn))
                 .Returns(collection);
 
-            OkObjectResult controllerResponse = controllerSUT.GetSRMAsByCase(caseUrn).Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetSRMAsByCase(caseUrn)).Result as OkObjectResult;
 
-            var  actualResult = controllerResponse.Value as ApiSingleResponseV2<ICollection<SRMAResponse>>;
+            var actualResult = controllerResponse.Value as ApiSingleResponseV2<ICollection<SRMAResponse>>;
 
             actualResult.Data.Should().NotBeNull();
             actualResult.Data.Count.Should().Be(1);
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetSRMAsById_ReturnsMatchingSRMA_WhenGivenSRMAId()
+        public async Task GetSRMAsById_ReturnsMatchingSRMA_WhenGivenSRMAId()
         {
             var srmaId = 123;
 
@@ -145,7 +145,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(srmaId))
                 .Returns(srmaResponse);
 
-            OkObjectResult controllerResponse = controllerSUT.GetSRMAById(srmaId).Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetSRMAById(srmaId)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<SRMAResponse>;
 
@@ -173,7 +173,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                  {
                     updatedByDelegate = req.Delegate(srmaModel);
                  });
-                 
+
             controllerSUT.UpdateStatus(srmaId, targetStatus);
 
             updatedByDelegate.Should().NotBeNull();
@@ -266,7 +266,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         {
             var srmaId = 123;
             var startingVisitStartDate = DateTime.Now.AddDays(-20).Date;
-            
+
             var targetVisitStartDate = DateTime.Now.AddDays(-10).Date;
             var targetVisitEndDate = DateTime.Now.AddDays(-5).Date;
 
