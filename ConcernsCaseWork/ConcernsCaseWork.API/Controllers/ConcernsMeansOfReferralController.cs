@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiResponseV2<ConcernsMeansOfReferralResponse>> Index()
+        public async Task<ActionResult<ApiResponseV2<ConcernsMeansOfReferralResponse>>> Index(CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Attempting to get Concerns Means of Referrals");
             var meansOfReferrals = _indexConcernsMeansOfReferrals.Execute();

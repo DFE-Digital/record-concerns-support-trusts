@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> Create(CreateNTIWarningLetterRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>>> Create(CreateNTIWarningLetterRequest request, CancellationToken cancellationToken = default)
         {
             var createdWarningLetter = _createNtiWarningLetterUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NTIWarningLetterResponse>(createdWarningLetter);
@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("{warningLetterId}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> GetNTIWarningLetterById(long warningLetterId)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>>> GetNTIWarningLetterById(long warningLetterId, CancellationToken cancellationToken = default)
         {
             var warningLetter = _getNtiWarningLetterByIdUseCase.Execute(warningLetterId);
             var response = new ApiSingleResponseV2<NTIWarningLetterResponse>(warningLetter);
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("case/{caseUrn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterResponse>>> GetNtiWarningLetterByCaseUrn(int caseUrn)
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterResponse>>>> GetNtiWarningLetterByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
         {
             var warningLetters = _getNtiWarningLetterByCaseUrnUseCase.Execute(caseUrn);
             var response = new ApiSingleResponseV2<List<NTIWarningLetterResponse>>(warningLetters);
@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> Patch(PatchNTIWarningLetterRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>>> Patch(PatchNTIWarningLetterRequest request, CancellationToken cancellationToken = default)
         {
             var createdWarningLetter = _patchNTIWarningLetterUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NTIWarningLetterResponse>(createdWarningLetter);
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterStatus>>> GetAllStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIWarningLetterStatus>>(statuses);
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-reasons")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterReason>>> GetAllReasons()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterReason>>>> GetAllReasons(CancellationToken cancellationToken = default)
         {
             var reasons = _getAllReasons.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIWarningLetterReason>>(reasons);
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-conditions")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterCondition>>> GetAllConditions()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterCondition>>>> GetAllConditions(CancellationToken cancellationToken = default)
         {
             var conditions = _getAllConditions.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIWarningLetterCondition>>(conditions);
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-condition-types")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterConditionType>>> GetAllConditionTypes()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterConditionType>>>> GetAllConditionTypes(CancellationToken cancellationToken = default)
         {
             var conditionTypes = _getAllConditionTypes.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIWarningLetterConditionType>>(conditionTypes);

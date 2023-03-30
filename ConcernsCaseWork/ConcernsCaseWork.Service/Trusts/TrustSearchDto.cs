@@ -2,30 +2,32 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class TrustSearchDto
+	public class TrustSearchDto
 	{		
 		[JsonProperty("ukprn")]
-		public string UkPrn { get; }
+		public virtual string UkPrn { get; set; }
 		
 		[JsonProperty("urn")]
-		public string Urn { get; }
+		public virtual string Urn { get; set; }
 		
 		[JsonProperty("groupName")]
-		public string GroupName { get; }
+		public virtual string GroupName { get; set; }
 		
 		[JsonProperty("companiesHouseNumber")]
-		public string CompaniesHouseNumber { get; }
+		public virtual string CompaniesHouseNumber { get; set; }
 		
 		[JsonProperty("trustType")]
-		public string TrustType { get; }
+		public virtual string TrustType { get; set; }
 		
 		[JsonProperty("trustAddress")]
-		public GroupContactAddressDto GroupContactAddress { get; }
+		public virtual GroupContactAddressDto GroupContactAddress { get; set; }
 
 		[JsonConstructor]
 		public TrustSearchDto(string ukprn, string urn, string groupName, 
 			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress) => 
 			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress) = 
 			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress);
+		
+		protected TrustSearchDto() { }
 	}
 }

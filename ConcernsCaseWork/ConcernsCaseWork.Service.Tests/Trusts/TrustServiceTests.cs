@@ -62,8 +62,6 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		[Test]
 		public void WhenGetTrustsByPagination_ThrowsException()
 		{
-			// TODO: Work out what this test is supposed to actualyly do
-
 			// arrange
 			var tramsApiEndpoint = "https://localhost";
 

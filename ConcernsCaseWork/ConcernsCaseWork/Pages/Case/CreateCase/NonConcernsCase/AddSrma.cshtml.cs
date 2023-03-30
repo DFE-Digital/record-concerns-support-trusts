@@ -7,6 +7,8 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +25,11 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddSrmaPageModel : AbstractPageModel
 	{
+		private readonly ITrustService _trustService;
 		private readonly ILogger<AddSrmaPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ICreateCaseService _createCaseService;
+		private readonly IUserStateCachedService _cachedService;
 		private const int _notesMaxLength = 2000;
 		
 		public int NotesMaxLength => _notesMaxLength;
@@ -45,11 +49,15 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public AddSrmaPageModel(
 			IClaimsPrincipalHelper claimsPrincipalHelper, 
 			ICreateCaseService createCaseService, 
-			ILogger<AddSrmaPageModel> logger)
+			ILogger<AddSrmaPageModel> logger,
+			IUserStateCachedService cachedService,
+			ITrustService trustService)
 		{
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_createCaseService = Guard.Against.Null(createCaseService);
 			_logger = Guard.Against.Null(logger);
+			_cachedService = Guard.Against.Null(cachedService);
+			_trustService = Guard.Against.Null(trustService);
 		}
 
 		public IActionResult OnGet()
@@ -83,7 +91,12 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				var userName = GetUserName();
 				var srma = CreateSrma();
 				
-				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName, srma);
+				var state = await _cachedService.GetData(userName);
+
+				var trust = await _trustService.GetTrustByUkPrn(state.TrustUkPrn);
+				_ = trust ?? throw new NullReferenceException($"Trust information not returned for UKPRN:'{state.TrustUkPrn}', cannot continue with method execution");
+				
+				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName, trust.GiasData.UkPrn, trust.GiasData.CompaniesHouseNumber, srma);
 				
 				return Redirect($"/case/{caseUrn}/management");
 			}

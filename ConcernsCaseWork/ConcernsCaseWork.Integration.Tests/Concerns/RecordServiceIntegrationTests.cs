@@ -139,7 +139,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			return await recordService.PostRecordByCaseUrn(createRecordDto);
 		}
 
-		private async Task<string> FetchRandomTrustUkprn(IServiceScope serviceScope)
+		private async Task<(string trustUkPrn, string companiesHouseNumber)> FetchRandomTrustKey(IServiceScope serviceScope)
 		{
 			const string searchParameter = "Senior";
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
@@ -152,14 +152,14 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var random = new Random();
 			int index = random.Next(apiWrapperTrusts.Trusts.Count);
 
-			return apiWrapperTrusts.Trusts[index].UkPrn;
+			return (apiWrapperTrusts.Trusts[index].UkPrn, apiWrapperTrusts.Trusts[index].CompaniesHouseNumber);
 		}
 		
 		private async Task<long> FetchRandomCaseUrn(IServiceScope serviceScope)
 		{
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
-			var trustUkprn = await FetchRandomTrustUkprn(serviceScope);
-			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustUkprn);
+			var trustKey = await FetchRandomTrustKey(serviceScope);
+			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustKey.trustUkPrn, trustKey.companiesHouseNumber);
 			var caseDto = await caseService.PostCase(createCaseDto);
 
 			return caseDto.Urn;

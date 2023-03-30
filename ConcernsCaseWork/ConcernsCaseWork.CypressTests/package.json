@@ -6,9 +6,10 @@
   "scripts": {
     "cy:open": "cypress open --browser edge",
     "cy:run": "npm run clean:reports && cypress run --browser edge",
-    "clean:reports": "rm -rf cypress/reports/mocha/*.json",
-    "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> cypress/reports/report.json",
-    "create:html:report": "marge  ./cypress/reports/report.json -f report -o mochareports",
+    "cy:notify": "cypress-slack-reporter",
+    "clean:reports": "rm -rf cypress/reports/*.json",
+    "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
+    "create:html:report": "marge  mochareports/report.json -f report -o mochareports",
     "generate:html:report": "npm run combine:reports && npm run create:html:report"
   },
   "keywords": [
@@ -24,6 +25,7 @@
     "cypress-axe": "^1.4.0",
     "cypress-localstorage-commands": "^1.6.1",
     "cypress-multi-reporters": "^1.5.0",
+    "cypress-slack-reporter": "^1.5.3",
     "mocha": "^9.2.2",
     "mochawesome": "^7.0.1",
     "mochawesome-merge": "^4.2.1",

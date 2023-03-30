@@ -31,6 +31,8 @@ namespace ConcernsCaseWork.Data.Models
 
         public Territory? Territory { get; set; }
 
+        public string? TrustCompaniesHouseNumber { get; set; }
+        
         public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
         public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }

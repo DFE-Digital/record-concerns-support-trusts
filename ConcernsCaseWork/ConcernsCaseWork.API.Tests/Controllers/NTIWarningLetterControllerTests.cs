@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
@@ -48,7 +49,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void Create_ReturnsApiSingleResponseWithNewNTIWarningLetter()
+        public async Task Create_ReturnsApiSingleResponseWithNewNTIWarningLetter()
         {
             var createdAt = DateTime.Now;
             var caseUrn = 544;
@@ -64,7 +65,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(It.IsAny<CreateNTIWarningLetterRequest>()))
                 .Returns(response);
 
-            var result = controllerSUT.Create(new CreateNTIWarningLetterRequest
+            var result = await controllerSUT.Create(new CreateNTIWarningLetterRequest
             {
                 CaseUrn = caseUrn,
                 CreatedAt = createdAt
@@ -74,7 +75,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllStatuses_ReturnsAllStatuses()
+        public async Task GetAllStatuses_ReturnsAllStatuses()
         {
             var noOfStatuses = 5;
 
@@ -87,7 +88,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(statuses);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllStatuses().Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterStatus>>;
 
@@ -97,7 +98,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllReasons_ReturnsAllReasons()
+        public async Task GetAllReasons_ReturnsAllReasons()
         {
             var noOfReasons = 8;
 
@@ -110,7 +111,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(reasons);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllReasons().Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterReason>>;
 
@@ -120,7 +121,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllConditions_ReturnsAllConditions()
+        public async Task GetAllConditions_ReturnsAllConditions()
         {
             var noOfConditions = 7;
 
@@ -133,7 +134,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(conditions);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllConditions().Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetAllConditions()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterCondition>>;
 
@@ -143,7 +144,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllConditionTypes_ReturnsAllConditionTypes()
+        public async Task GetAllConditionTypes_ReturnsAllConditionTypes()
         {
             var noOfConditionTypes = 4;
 
@@ -156,7 +157,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(conditionTypes);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllConditionTypes().Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetAllConditionTypes()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterConditionType>>;
 
@@ -166,7 +167,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetNTIWarningLetterByCaseUrn_ReturnsMatchingNTIWarningLetter_WhenGivenCaseUrn()
+        public async Task GetNTIWarningLetterByCaseUrn_ReturnsMatchingNTIWarningLetter_WhenGivenCaseUrn()
         {
             var caseUrn = 544;
 
@@ -203,7 +204,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(caseUrn))
                 .Returns(collection);
 
-            OkObjectResult controllerResponse = controllerSUT.GetNtiWarningLetterByCaseUrn(caseUrn).Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetNtiWarningLetterByCaseUrn(caseUrn)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterResponse>>;
 
@@ -213,7 +214,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetNTIWarningLetterByID_ReturnsMatchingNTIWarningLetter_WhenGivenId()
+        public async Task GetNTIWarningLetterByID_ReturnsMatchingNTIWarningLetter_WhenGivenId()
         {
             var warningLetterId = 455;
 
@@ -233,7 +234,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(warningLetterId))
                 .Returns(warningLetterResponse);
 
-            OkObjectResult controllerResponse = controllerSUT.GetNTIWarningLetterById(warningLetterId).Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.GetNTIWarningLetterById(warningLetterId)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<NTIWarningLetterResponse>;
 
@@ -242,7 +243,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void PatchNTIWarningLetter_ReturnsUpdatedNTIWarningLetter()
+        public async Task PatchNTIWarningLetter_ReturnsUpdatedNTIWarningLetter()
         {
             var warningLetterId = 544;
             var newNotes = "updated notes";
@@ -272,7 +273,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(request))
                 .Returns(response);
 
-            OkObjectResult controllerResponse = controllerSUT.Patch(request).Result as OkObjectResult;
+            var controllerResponse = (await controllerSUT.Patch(request)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<NTIWarningLetterResponse>;
 
