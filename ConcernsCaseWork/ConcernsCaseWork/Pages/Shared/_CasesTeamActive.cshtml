@@ -29,7 +29,7 @@
 	@if (Model.Count == 0)
 	{
 		<tr class="govuk-table__row tr__large">
-			<td class="govuk-table__cell__cases govuk-oneline-row">
+			<td class="govuk-table__cell__cases govuk-oneline-row" data-testid="no-cases">
 				<span>There are no cases available.</span>
 			</td>
 		</tr>
@@ -38,8 +38,8 @@
 	{
 		foreach (var activeCase in Model)
 		{
-			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell">
+                <tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
+				<td class="govuk-table__cell" data-testid="case-id">
 					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
 				</td>
 				<td class="govuk-table__cell">
@@ -100,7 +100,7 @@
 				</td>
 			}
 					
-				<td class="govuk-table__cell">
+				<td class="govuk-table__cell" data-testid="created-by">
 					@activeCase.CreatedBy
 				</td>
 			</tr>
