@@ -1,4 +1,4 @@
-import { EnvApi, EnvApiKey, EnvUsername } from "../constants/cypressConstants";
+import { EnvApi, EnvUsername } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
 import { CreateCaseRequest, CreateCaseResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper } from "./apiDomain";
 
