@@ -76,7 +76,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		[Test]
 		public void WhenMapCaseDto_CaseArchived_Returns_CaseModel()
 		{
-			// arrange
 			var caseDto = CaseFactory.BuildCaseDto();
 			caseDto.Urn = 1234567;
 
