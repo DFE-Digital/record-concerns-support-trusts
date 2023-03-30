@@ -49,5 +49,7 @@ namespace ConcernsCaseWork.Redis.Models
 		public Territory? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
+		
+		public string TrustCompaniesHouseNumber { get; set; }
 	}
 }

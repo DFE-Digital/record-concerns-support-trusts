@@ -1,3 +1,10 @@
+## 19.0.0
+
+* Added Companies House Number to concerns cases. Each new concerns case will store the Companies House Number of the associated Trust (existing cases will be updated in retrospect).
+* Updated wording on the page that is displayed when the user does not have access to the system.
+
+---
+
 ## 18.0.1
 * CSS styling fix on the Re-Assign page.
 * Changed 'Edit' link to 'Change' on the Case/Management/Index page

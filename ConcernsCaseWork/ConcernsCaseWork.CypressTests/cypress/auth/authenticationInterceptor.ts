@@ -2,7 +2,7 @@ import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername } from "../constants/c
 
 export class AuthenticationInterceptor {
 
-    register() {
+    register(params?: AuthenticationInterceptorParams) {
         cy.intercept(
             {
                 url: Cypress.env(EnvUrl) + "/**",
@@ -14,10 +14,14 @@ export class AuthenticationInterceptor {
                 req.headers = {
                     ...req.headers,
                     'Authorization': `Bearer ${Cypress.env(EnvAuthKey)}`,
-                    "x-user-context-role-0": CaseworkerClaim,
+                    "x-user-context-role-0": params?.role ? params.role : CaseworkerClaim,
                     "x-user-context-name": Cypress.env(EnvUsername)
                 };
             }
         ).as("AuthInterceptor");
     }
+}
+
+export type AuthenticationInterceptorParams = {
+    role?: string
 }

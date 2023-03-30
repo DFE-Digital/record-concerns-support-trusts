@@ -61,4 +61,23 @@ export class CreateCasePage
 
 		return this;
 	}
+
+    public shouldNotHaveVisibleLoader(): this {
+		cy.task("log", `Should not have visible loader}`);
+
+		cy.get('.ccms-loader').should('not.be.visible');
+
+		return this;
+	}
+
+    public hasTooManyResultsWarning(message: string): this {
+		cy.task("log", `Has too many results warning ${message}`);
+
+		cy.getById("tooManyResultsWarning").should(
+			"contain.text",
+			message
+		);
+
+		return this;
+	}
 }

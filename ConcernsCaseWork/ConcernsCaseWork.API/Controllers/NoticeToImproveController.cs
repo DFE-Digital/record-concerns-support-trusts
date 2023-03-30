@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> Create(CreateNoticeToImproveRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> Create(CreateNoticeToImproveRequest request, CancellationToken cancellationToken = default)
         {
             var createdNoticeToImprove = _createNoticeToImproveUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NoticeToImproveResponse>(createdNoticeToImprove);
@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("{noticeToImproveId}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> GetNoticeToImproveById(long noticeToImproveId)
+        public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> GetNoticeToImproveById(long noticeToImproveId, CancellationToken cancellationToken = default)
         {
             var warningLetter = _getNoticeToImproveByIdUseCase.Execute(noticeToImproveId);
             var response = new ApiSingleResponseV2<NoticeToImproveResponse>(warningLetter);
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("case/{caseUrn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NoticeToImproveResponse>>> GetNoticesToImproveByCaseUrn(int caseUrn)
+        public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveResponse>>>> GetNoticesToImproveByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
         {
             var noticesToImprove = _getNoticeToImproveByCaseUrnUseCase.Execute(caseUrn);
             var response = new ApiSingleResponseV2<List<NoticeToImproveResponse>>(noticesToImprove);
@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> Patch(PatchNoticeToImproveRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> Patch(PatchNoticeToImproveRequest request, CancellationToken cancellationToken = default)
         {
             var createdNoticeToImprove = _patchNoticeToImproveUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NoticeToImproveResponse>(createdNoticeToImprove);
@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NoticeToImproveStatus>>> GetAllStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null);
             var response = new ApiSingleResponseV2<List<NoticeToImproveStatus>>(statuses);
@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-reasons")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NoticeToImproveReason>>> GetAllReasons()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveReason>>>> GetAllReasons(CancellationToken cancellationToken = default)
         {
             var reasons = _getAllReasons.Execute(null);
             var response = new ApiSingleResponseV2<List<NoticeToImproveReason>>(reasons);
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-conditions")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NoticeToImproveCondition>>> GetAllConditions()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveCondition>>>> GetAllConditions(CancellationToken cancellationToken = default)
         {
             var conditions = _getAllConditions.Execute(null);
             var response = new ApiSingleResponseV2<List<NoticeToImproveCondition>>(conditions);
@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-condition-types")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NoticeToImproveConditionType>>> GetAllConditionTypes()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveConditionType>>>> GetAllConditionTypes(CancellationToken cancellationToken = default)
         {
             var conditionTypes = _getAllConditionTypes.Execute(null);
             var response = new ApiSingleResponseV2<List<NoticeToImproveConditionType>>(conditionTypes);

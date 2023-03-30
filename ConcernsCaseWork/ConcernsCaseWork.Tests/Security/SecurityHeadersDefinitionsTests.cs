@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Tests.Security
 
 			// assert
 			Assert.That(headerPolicyCollection, Is.Not.Null);
-			Assert.That(headerPolicyCollection.Count, Is.EqualTo(isDev ? 10 : 11));
+			Assert.That(headerPolicyCollection.Count, Is.EqualTo(11));
 
 			Assert.That(headerPolicyCollection.ContainsKey("X-Frame-Options"), Is.True);
 			headerPolicyCollection.TryGetValue("X-Frame-Options", out var xFrameOptions);
