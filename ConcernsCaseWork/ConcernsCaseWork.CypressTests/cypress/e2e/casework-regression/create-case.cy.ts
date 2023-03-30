@@ -6,6 +6,7 @@ import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import concernsApi from "cypress/api/concernsApi";
+import caseApi from "cypress/api/caseApi";
 
 describe("Creating a case", () =>
 {
@@ -143,6 +144,13 @@ describe("Creating a case", () =>
             concernsApi.get(parseInt(caseId))
                 .then(response => {
                     expect(response[0].meansOfReferralId).to.eq(2);
+                });
+        });
+        Logger.Log("Verify Trust Companise House Number is set on the API");
+        caseManagementPage.getCaseIDText().then((caseId) => {
+            caseApi.get(parseInt(caseId))
+                .then(response => {
+                    expect(response[0].trustCompaniseHouseNumber).to.eq("09388819");
                 });
         });
     });
