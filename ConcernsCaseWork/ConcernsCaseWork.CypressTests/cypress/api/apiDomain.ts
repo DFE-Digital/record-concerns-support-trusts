@@ -33,6 +33,7 @@ export type PatchCaseRequest =
 {
     urn: number;
     createdBy: string;
+    trustCompaniseHouseNumber: string;
 }
 
 export type PatchCaseResponse =
