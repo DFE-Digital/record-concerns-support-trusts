@@ -7,9 +7,11 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -22,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 	public class CreateCaseServiceTests
 	{
 		private readonly IFixture _fixture = new Fixture();
-		
+
 		[Test]
 		public async Task WhenCreateCase_WithTrustUkPrn_CallsThePostCaseEndpointAndWipesCachedData()
 		{
@@ -39,22 +41,19 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
-				
+
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
+			var trustCompaniesHouseNumber = _fixture.CreateMany<char>(8).ToString();
 			var expectedNewCaseUrn = _fixture.Create<long>();
 			var createdAndUpdatedDate = DateTimeOffset.Now;
-			
-			var initialUserState = new UserState(userName)
-			{
-				TrustUkPrn = trustUkPrn,
-				CreateCaseModel = null
-			};
-	
+
+			var initialUserState = new UserState(userName) { TrustUkPrn = trustUkPrn, CreateCaseModel = null };
+
 			mockUserStateCachedService
 				.Setup(s => s.GetData(userName))
 				.ReturnsAsync(() => initialUserState);
-			
+
 			mockUserStateCachedService
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
@@ -71,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CreatedBy = userName,
 						Description = null,
 						CrmEnquiry = null,
-						TrustUkPrn = trustUkPrn, 
+						TrustUkPrn = trustUkPrn,
 						ReasonAtReview = null,
 						DeEscalation = DateTimeOffset.MinValue,
 						Issue = null,
@@ -83,42 +82,41 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
 						StatusId = statusDto.Id,
-						RatingId = ratingDto.Id 
+						RatingId = ratingDto.Id
 					});
-			
+
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
-				);
+			);
 
 			// act
-			var createdCaseUrn = await createCaseService.CreateNonConcernsCase(userName);
+			var createdCaseUrn = await createCaseService.CreateNonConcernsCase(userName, trustUkPrn, trustCompaniesHouseNumber);
 
 			// assert
 			Assert.That(createdCaseUrn, Is.EqualTo(expectedNewCaseUrn));
-			
+
 			mockCaseService
-				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
+				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c =>
 						c.Issue == null
-                      && c.CaseAim == null
-                      && c.CreatedAt >= createdAndUpdatedDate
-                      && c.CreatedBy == userName
-                      && c.CrmEnquiry == null
-                      && c.CurrentStatus == null
-                      && c.DeEscalation == DateTimeOffset.MinValue
-                      && c.NextSteps == null
-                      && c.RatingId == ratingDto.Id
-                      && c.ReviewAt == DateTimeOffset.MinValue
-                      && c.StatusId == statusDto.Id
-                      && c.UpdatedAt >= createdAndUpdatedDate
-                      && c.DeEscalationPoint == null
-                      && c.DirectionOfTravel == null
-                      && c.ReasonAtReview == null
-                      && c.TrustUkPrn == trustUkPrn)), 
+						&& c.CaseAim == null
+						&& c.CreatedAt >= createdAndUpdatedDate
+						&& c.CreatedBy == userName
+						&& c.CrmEnquiry == null
+						&& c.CurrentStatus == null
+						&& c.DeEscalation == DateTimeOffset.MinValue
+						&& c.NextSteps == null
+						&& c.RatingId == ratingDto.Id
+						&& c.ReviewAt == DateTimeOffset.MinValue
+						&& c.StatusId == statusDto.Id
+						&& c.UpdatedAt >= createdAndUpdatedDate
+						&& c.DeEscalationPoint == null
+						&& c.DirectionOfTravel == null
+						&& c.ReasonAtReview == null
+						&& c.TrustUkPrn == trustUkPrn)),
 					Times.Once);
 
 			mockLogger.VerifyLogInformationWasCalled("CreateNonConcernsCase");
@@ -126,9 +124,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			mockLogger.VerifyNoOtherCalls();
 		}
 		
-		[Test]
-		[TestCase(null)]
-		public void WhenCreateCase_WithNullTrustUkPrn_ErrorsAndDoesNotTryToCreateCase(string trustUkPrn)
+		[TestCase(null, "12345678", "12345678")]
+		[TestCase("john.smith", null, "12345678")]
+		[TestCase("john.smith", "12345678", null)]
+		public async Task WhenCreateCase_WithNullTrustUkPrn_ErrorsAndDoesNotTryToCreateCase(string userName, string companiesHouseNumber, string trustUkPrn)
 		{
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
@@ -137,50 +136,47 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
+			var mockTrustService = new Mock<ITrustService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
 			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
-				
-			var userName = "some.user";
 			
-			mockUserStateCachedService
-				.Setup(s => s.GetData(userName))
-				.ReturnsAsync(() => new UserState(userName)
-				{
-					TrustUkPrn = trustUkPrn,
-					CreateCaseModel = null
-				});
-			
-			mockUserStateCachedService
-				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
-				.Verifiable();
+			var mockTrust = new Mock<TrustDetailsDto>();
+			mockTrust.Setup(x => x.GiasData.UkPrn).Returns(trustUkPrn);
+			mockTrust.Setup(x => x.GiasData.CompaniesHouseNumber).Returns(companiesHouseNumber);
+			mockTrustService.Setup(x => x.GetTrustByUkPrn(trustUkPrn)).ReturnsAsync(mockTrust.Object);
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object);
 
 			// act
-			var result = Assert.ThrowsAsync<Exception>(async () => await createCaseService.CreateNonConcernsCase(userName));
-
-			// assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.Message, Is.EqualTo("Cached TrustUkPrn is not set"));
+			Func<Task> act = async () => await createCaseService.CreateNonConcernsCase(userName, trustUkPrn, companiesHouseNumber);
 			
-			mockUserStateCachedService.Verify(s => s.GetData(userName), Times.Once);
-			mockUserStateCachedService.Verify(s => s.StoreData(userName, It.IsAny<UserState>()), Times.Never);
+			// Assert
+			if (userName is null)
+			{
+				await act.Should().ThrowAsync<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'userName')");
+			}
+			else if (trustUkPrn is null)
+			{
+				await act.Should().ThrowAsync<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'trustUkPrn')");
+			}
+			else if (companiesHouseNumber is null)
+			{
+				await act.Should().ThrowAsync<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'trustCompaniesHouseNumber')");
+			}
 
-			mockLogger.VerifyLogInformationWasCalled("CreateNonConcernsCase");
-			mockLogger.VerifyLogErrorWasCalled("Cached TrustUkPrn is not set");
-			mockLogger.VerifyNoOtherCalls();
+			mockUserStateCachedService.Verify(s => s.GetData(userName), Times.Never);
+			mockUserStateCachedService.Verify(s => s.StoreData(userName, It.IsAny<UserState>()), Times.Never);
 		}
-		
+
 		[Test]
 		public void WhenCreateCase_ThrowsException_LogsAndRethrowsException()
 		{
@@ -197,22 +193,19 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
-				
+
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
+			var trustCompaniesHouseNumber = _fixture.CreateMany<char>(8).ToString();
 			var expectedNewCaseUrn = _fixture.Create<long>();
 			var createdAndUpdatedDate = DateTimeOffset.Now;
-			
-			var initialUserState = new UserState(userName)
-			{
-				TrustUkPrn = trustUkPrn,
-				CreateCaseModel = null
-			};
-	
+
+			var initialUserState = new UserState(userName) { TrustUkPrn = trustUkPrn, CreateCaseModel = null };
+
 			mockUserStateCachedService
 				.Setup(s => s.GetData(userName))
 				.ReturnsAsync(() => initialUserState);
-			
+
 			mockUserStateCachedService
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
@@ -229,7 +222,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CreatedBy = userName,
 						Description = null,
 						CrmEnquiry = null,
-						TrustUkPrn = trustUkPrn, 
+						TrustUkPrn = trustUkPrn,
 						ReasonAtReview = null,
 						DeEscalation = DateTimeOffset.MinValue,
 						Issue = null,
@@ -241,36 +234,35 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
 						StatusId = statusDto.Id,
-						RatingId = ratingDto.Id 
+						RatingId = ratingDto.Id
 					});
 
 			mockSrmaService.Setup(s => s.SaveSRMA(It.IsAny<SRMAModel>())).Throws(new Exception("some error happened"));
-			
+
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
-				);
+			);
 
 			var srmaModel = new SRMAModel();
 
 			// act
-			var result = Assert.ThrowsAsync<Exception>(() => createCaseService.CreateNonConcernsCase(userName, srmaModel));
+			var result = Assert.ThrowsAsync<Exception>(() => createCaseService.CreateNonConcernsCase(userName, trustUkPrn, trustCompaniesHouseNumber, srmaModel));
 
 			// assert
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result.Message, Is.EqualTo("some error happened"));
 
-			mockLogger.VerifyLogInformationWasCalled(Times.Exactly(2) ,"CreateNonConcernsCase");
+			mockLogger.VerifyLogInformationWasCalled(Times.Exactly(2), "CreateNonConcernsCase");
 			mockLogger.VerifyLogErrorWasCalled("Exception - some error happened");
 			mockLogger.VerifyNoOtherCalls();
-			
+
 			mockSrmaService.Verify(s => s.SaveSRMA(srmaModel), Times.Once);
 		}
-				
+
 		[Test]
 		public async Task WhenCreateCase_WithSRMA_CreatesACaseAndSrma()
 		{
@@ -287,22 +279,19 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
-				
+
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
+			var trustCompaniesHouseNumber = _fixture.CreateMany<char>(8).ToString();
 			var expectedNewCaseUrn = _fixture.Create<long>();
 			var createdAndUpdatedDate = DateTimeOffset.Now;
-			
-			var initialUserState = new UserState(userName)
-			{
-				TrustUkPrn = trustUkPrn,
-				CreateCaseModel = null
-			};
-	
+
+			var initialUserState = new UserState(userName) { TrustUkPrn = trustUkPrn, CreateCaseModel = null };
+
 			mockUserStateCachedService
 				.Setup(s => s.GetData(userName))
 				.ReturnsAsync(() => initialUserState);
-			
+
 			mockUserStateCachedService
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
@@ -319,7 +308,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CreatedBy = userName,
 						Description = null,
 						CrmEnquiry = null,
-						TrustUkPrn = trustUkPrn, 
+						TrustUkPrn = trustUkPrn,
 						ReasonAtReview = null,
 						DeEscalation = DateTimeOffset.MinValue,
 						Issue = null,
@@ -331,34 +320,33 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
 						StatusId = statusDto.Id,
-						RatingId = ratingDto.Id 
+						RatingId = ratingDto.Id
 					});
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
-				);
+			);
 
 			var srmaModel = new SRMAModel();
 
 			// act
-			var createdCaseUrn = await createCaseService.CreateNonConcernsCase(userName, srmaModel);
+			var createdCaseUrn = await createCaseService.CreateNonConcernsCase(userName, trustUkPrn, trustCompaniesHouseNumber, srmaModel);
 
 			// assert
 			Assert.That(createdCaseUrn, Is.EqualTo(expectedNewCaseUrn));
 
-			mockLogger.VerifyLogInformationWasCalled(Times.Exactly(2) ,"CreateNonConcernsCase");
+			mockLogger.VerifyLogInformationWasCalled(Times.Exactly(2), "CreateNonConcernsCase");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
-			
+
 			mockSrmaService.Verify(s => s.SaveSRMA(srmaModel), Times.Once);
-			
+
 			mockCaseService
-				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
+				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c =>
 						c.Issue == null
 						&& c.CaseAim == null
 						&& c.CreatedAt >= createdAndUpdatedDate
@@ -374,7 +362,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						&& c.DeEscalationPoint == null
 						&& c.DirectionOfTravel == null
 						&& c.ReasonAtReview == null
-						&& c.TrustUkPrn == trustUkPrn)), 
+						&& c.TrustUkPrn == trustUkPrn)),
 					Times.Once);
 		}
 	}
