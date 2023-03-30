@@ -2,19 +2,21 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class IfdDataDto
+	public class IfdDataDto
 	{
 		[JsonProperty("trustType")]
-		public string TrustType { get; }
+		public virtual string TrustType { get; set; }
 
 		[JsonProperty("trustContactPhoneNumber")]
-		public string TrustContactPhoneNumber { get; }
+		public virtual string TrustContactPhoneNumber { get; set; }
 
 		[JsonProperty("trustAddress")]
-		public GroupContactAddressDto GroupContactAddress { get; }
+		public virtual GroupContactAddressDto GroupContactAddress { get; set; }
 		
 		[JsonConstructor]
 		public IfdDataDto(string trustType, string trustContactPhoneNumber, GroupContactAddressDto groupContactAddress) => 
 			(TrustType, TrustContactPhoneNumber, GroupContactAddress) = (trustType, trustContactPhoneNumber, groupContactAddress);
+		
+		protected IfdDataDto() { }
 	}
 }

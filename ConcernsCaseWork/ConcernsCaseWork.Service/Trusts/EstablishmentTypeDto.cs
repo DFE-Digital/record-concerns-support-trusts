@@ -2,17 +2,19 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class EstablishmentTypeDto
+	public class EstablishmentTypeDto
 	{
 		[JsonProperty("name")]
-		public string Name { get; }
+		public virtual string Name { get; set; }
 		
 		[JsonProperty("code")]
-		public string Code { get; }
+		public virtual string Code { get; set; }
 		
 		[JsonConstructor]
 		public EstablishmentTypeDto(string name, string code) => 
 			(Name, Code) = 
 			(name, code);
+		
+		protected EstablishmentTypeDto() { }
 	}
 }
