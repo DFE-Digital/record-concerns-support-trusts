@@ -43,6 +43,14 @@ class HomePage {
 
         return this;
     }
+
+    public selectColleagues(): this
+    {
+        Logger.Log("Selecting colleagues");
+        cy.getByTestId("select-colleagues").click();
+
+        return this;
+    }
 }
 
 export default new HomePage();
