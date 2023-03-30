@@ -1,5 +1,3 @@
-import concernsApi from "./concernsApi";
-
 export type ResponseWrapper<T> =
 {
     data: T;
