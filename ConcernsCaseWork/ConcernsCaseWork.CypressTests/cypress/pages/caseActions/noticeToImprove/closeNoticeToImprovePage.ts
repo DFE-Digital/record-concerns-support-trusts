@@ -4,7 +4,7 @@ export class CloseNoticeToImprovePage {
     public withDayClosed(value: string): this {
         Logger.Log(`With day closed ${value}`);
 
-        cy.getById(`dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-date-nti-closed`).clear().type(value);
 
         return this;
     }
@@ -12,7 +12,7 @@ export class CloseNoticeToImprovePage {
     public withMonthClosed(value: string): this {
         Logger.Log(`With month closed ${value}`);
 
-        cy.getById(`dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-date-nti-closed`).clear().type(value);
 
         return this;
     }
@@ -20,7 +20,7 @@ export class CloseNoticeToImprovePage {
     public withYearClosed(value: string): this {
         Logger.Log(`With year closed ${value}`);
 
-        cy.getById(`dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-date-nti-closed`).clear().type(value);
 
         return this;
     }
@@ -52,9 +52,9 @@ export class CloseNoticeToImprovePage {
     public clearDateFields(): this {
         Logger.Log(`Clearing date fields`);
 
-        cy.getById('dtr-day').clear();
-        cy.getById('dtr-month').clear();
-        cy.getById('dtr-year').clear();
+        cy.getById('dtr-day-date-nti-closed').clear();
+        cy.getById('dtr-month-date-nti-closed').clear();
+        cy.getById('dtr-year-date-nti-closed').clear();
 
         return this;
     }
@@ -62,7 +62,7 @@ export class CloseNoticeToImprovePage {
     public close(): this {
         Logger.Log("Confirming Close of Notice To Improve");
 
-        cy.getById("add-nti-wl-button").click();
+        cy.getById("close-nti-button").click();
 
         return this;
     }

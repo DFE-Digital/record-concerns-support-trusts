@@ -244,7 +244,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withDayLifted("22")
             .lift()
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError("Date NTI lifted: Please enter a complete date DD MM YYYY");
 
         liftNtiPage.clearDateFields();
         cy.waitForJavascript();
@@ -252,7 +252,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withNotesExceedingLimit()
             .lift()
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
 
         Logger.Log("Filling out NTI lifted");
         liftNtiPage
@@ -282,7 +282,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withDayClosed("22")
             .close()
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError("Date NTI closed: Please enter a complete date DD MM YYYY");
 
         closeNtiPage.clearDateFields();
         cy.waitForJavascript();
@@ -290,7 +290,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
 
         closeNtiPage
             .withDayClosed("15")
