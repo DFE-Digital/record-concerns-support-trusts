@@ -21,7 +21,7 @@ describe("User interactions via Create Case route", () => {
 		});
 	});
 
-	it("Should allow you to select a list of colleagues on team casework", () =>
+	it("Should allow you to view your team members cases", () =>
 	{
 		cy.visit("/TeamCasework");
 		homePage.selectColleagues();
