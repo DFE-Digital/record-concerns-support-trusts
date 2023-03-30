@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Service.Cases
 		/// Deteriorating, unchanged, improved
 		/// </summary>
 		public string DirectionOfTravel { get; init; }
-		public long Urn { get; init; }
+		public long Urn { get; set; }
 		public long StatusId { get; init; }
 		public long RatingId { get; set; }
 		public string CaseHistory { get; set; }
