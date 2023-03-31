@@ -66,7 +66,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile.gpaas-azure-migration
+          file: Dockerfile
           build-args: COMMIT_SHA=${{ needs.set-env.outputs.checked-out-sha }}
           tags: |
             ${{ secrets.AZURE_ACR_URL }}/${{ env.DOCKER_IMAGE }}:${{ needs.set-env.outputs.branch }}
@@ -166,7 +166,7 @@ jobs:
 
       - name: Generate report
         if: always()
-        run: | 
+        run: |
           mkdir mochareports
           npm run generate:html:report
 
@@ -180,5 +180,5 @@ jobs:
       - name: Report results
         if: always()
         run: npm run cy:notify -- --custom-text="See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
-        env: 
+        env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
