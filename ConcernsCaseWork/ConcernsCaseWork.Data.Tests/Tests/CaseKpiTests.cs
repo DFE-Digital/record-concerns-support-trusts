@@ -176,6 +176,10 @@ public class CaseKpiTests : DatabaseTestFixture
 	
 	private List<CaseKpi> GetKpiResults(int caseId, int previousMaxKpiId)
 	{
+		// Give the trigger a chance to run
+		// Otherwise we could try and get the KPI before the trigger has fired
+		Thread.Sleep(100);
+
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
