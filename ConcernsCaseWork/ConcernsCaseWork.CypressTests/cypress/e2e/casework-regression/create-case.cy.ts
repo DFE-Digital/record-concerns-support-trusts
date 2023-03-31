@@ -8,20 +8,18 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import concernsApi from "cypress/api/concernsApi";
 import caseApi from "cypress/api/caseApi";
 
-describe("Creating a case", () =>
-{
-	const createCasePage = new CreateCasePage();
+describe("Creating a case", () => {
+    const createCasePage = new CreateCasePage();
     const createConcernPage = new CreateConcernPage();
     const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-    
-	beforeEach(() => {
-		cy.login();
-	});
 
-    it("Should validate adding a case", () =>
-    {
+    beforeEach(() => {
+        cy.login();
+    });
+
+    it.only("Should validate adding a case", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
@@ -67,9 +65,9 @@ describe("Creating a case", () =>
         addDetailsPage
             .nextStep()
             .hasValidationError("Select risk rating");
-        
+
         cy.waitForJavascript();
-        
+
         Logger.Log("Populate risk to trust");
         addDetailsPage
             .withRating("Red-Plus")
@@ -150,7 +148,7 @@ describe("Creating a case", () =>
         caseManagementPage.getCaseIDText().then((caseId) => {
             caseApi.get(parseInt(caseId))
                 .then(response => {
-                    expect(response[0].trustCompaniseHouseNumber).to.eq("09388819");
+                    expect(response.trustCompaniseHouseNumber).to.eq("09388819");
                 });
         });
     });
@@ -221,8 +219,8 @@ describe("Creating a case", () =>
     });
 
     const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
-	const searchTermForSchool = "school";
+        "Accrington St Christopher's Church Of England High School";
+    const searchTermForSchool = "school";
 
     it("User searches for a valid Trust and selects it", () => {
 
@@ -232,30 +230,29 @@ describe("Creating a case", () =>
             .selectOption()
             .confirmOption();
 
-		Logger.Log("Should display the Concern details of the specified Trust");
-		createConcernPage
+        Logger.Log("Should display the Concern details of the specified Trust");
+        createConcernPage
             .hasTrustSummaryDetails(searchTerm)
             .cancel();
-	});
+    });
 
     it('Should display an error if no trust is selected', () => {
-		createCasePage
+        createCasePage
             .createCase()
             .withTrustName("A")
             .confirmOption()
             .hasValidationError("Select a trust");
     });
 
-	it('Should display a warning if too many results', () => {
-		createCasePage
+    it('Should display a warning if too many results', () => {
+        createCasePage
             .createCase()
             .withTrustName(searchTermForSchool)
             .shouldNotHaveVisibleLoader()
             .hasTooManyResultsWarning("There are a large number of search results. Try a more specific search term.");
     });
 
-    it("Should create additional concerns", () =>
-    {
+    it("Should create additional concerns", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
