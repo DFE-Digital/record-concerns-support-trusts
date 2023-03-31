@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
@@ -254,6 +255,7 @@ namespace ConcernsCaseWork.Extensions
 		{
 			services.Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache));
 			services.Configure<TrustSearchOptions>(configuration.GetSection(TrustSearchOptions.Cache));
+			services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Site));
 		}
 	}
 }

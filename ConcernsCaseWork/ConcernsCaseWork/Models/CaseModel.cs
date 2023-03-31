@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Models
 		public DateTimeOffset ReviewAt { get; set; }
 
 		public DateTimeOffset? ClosedAt { get; set; }
-		
+
 		/// <summary>
 		/// Case owner from azure AD some unique identifier
 		/// </summary>
@@ -26,9 +26,9 @@ namespace ConcernsCaseWork.Models
 		public string Description { get; set; }
 
 		public string CrmEnquiry { get; set; }
-		
+
 		public string TrustUkPrn { get; set; }
-		
+
 		public string ReasonAtReview { get; set; }
 
 		public DateTimeOffset DeEscalation { get; set; }
@@ -38,9 +38,9 @@ namespace ConcernsCaseWork.Models
 		public string CurrentStatus { get; set; } = string.Empty;
 
 		public string CaseAim { get; set; } = string.Empty;
-		
+
 		public string DeEscalationPoint { get; set; } = string.Empty;
-		
+
 		public string NextSteps { get; set; } = string.Empty;
 
 		/// <summary>
@@ -51,23 +51,25 @@ namespace ConcernsCaseWork.Models
 		public long Urn { get; set; }
 
 		public long RatingId { get; set; }
-		
+
 		public RatingModel RatingModel { get; set; }
-		
+
 		public long StatusId { get; set; }
-		
+
 		public string StatusName { get; set; } = string.Empty;
 
 		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();
-		
+
 		public string PreviousUrl { get; set; }
-		
+
 		public string CaseHistory { get; set; }
-		
+
 		public Territory? Territory { get; set; }
-		
+
 		public bool ShowUpdateMessage { get; set; }
-		
+
 		public bool ShowValidationMessage { get; set; }
+
+		public bool IsArchived { get;set; }
 	}
 }
