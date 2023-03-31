@@ -19,7 +19,7 @@ describe("Creating a case", () => {
         cy.login();
     });
 
-    it.only("Should validate adding a case", () => {
+    it("Should validate adding a case", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
