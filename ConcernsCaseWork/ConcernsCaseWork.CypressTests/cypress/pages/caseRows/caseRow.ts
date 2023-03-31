@@ -54,6 +54,22 @@ export class CaseRow {
         return this;
     }
 
+    public hasOwner(value: string): this
+    {
+        Logger.Log(`Has owner ${value}`);
+        
+        cy.wrap(this.element)
+        .within(() => 
+        {
+            cy.getByTestId("created-by").should(($element: any) =>
+            {
+                expect($element.text().toLowerCase()).to.include(value.toLocaleLowerCase());
+            });
+        })
+
+        return this;
+    }
+
     public select(): this {
         Logger.Log(`Selecting case`);
 
