@@ -148,7 +148,7 @@ describe("Creating a case", () => {
         caseManagementPage.getCaseIDText().then((caseId) => {
             caseApi.get(parseInt(caseId))
                 .then(response => {
-                    expect(response.trustCompaniseHouseNumber).to.eq("09388819");
+                    expect(response.trustCompaniesHouseNumber).to.eq("09388819");
                 });
         });
     });

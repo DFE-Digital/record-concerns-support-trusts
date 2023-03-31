@@ -27,7 +27,7 @@ export type CreateCaseResponse =
 {
     urn: number;
     createdBy: string;
-    trustCompaniseHouseNumber: string;
+    trustCompaniesHouseNumber: string;
 };
 
 export type PatchCaseRequest =
