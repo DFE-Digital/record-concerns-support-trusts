@@ -1,5 +1,3 @@
-import concernsApi from "./concernsApi";
-
 export type ResponseWrapper<T> =
 {
     data: T;
@@ -27,6 +25,7 @@ export type CreateCaseResponse =
 {
     urn: number;
     createdBy: string;
+    trustCompaniesHouseNumber: string;
 };
 
 export type PatchCaseRequest =
