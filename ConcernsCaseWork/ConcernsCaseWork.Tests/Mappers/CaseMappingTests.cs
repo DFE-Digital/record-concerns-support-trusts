@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 
@@ -42,6 +43,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			// arrange
 			var caseDto = CaseFactory.BuildCaseDto();
+			caseDto.Urn = 22134234;
 
 			// act
 			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
@@ -68,6 +70,18 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
 			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 			Assert.That(caseModel.Territory, Is.EqualTo(caseDto.Territory));
+			caseModel.IsArchived.Should().BeFalse();
+		}
+
+		[Test]
+		public void WhenMapCaseDto_CaseArchived_Returns_CaseModel()
+		{
+			var caseDto = CaseFactory.BuildCaseDto();
+			caseDto.Urn = 1234567;
+
+			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
+
+			caseModel.IsArchived.Should().BeTrue();
 		}
 		
 		[Test]
