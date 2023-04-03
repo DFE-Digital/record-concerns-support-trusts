@@ -1,31 +1,132 @@
 SELECT
-	concerns.ConcernsCase.Id AS CaseId,
-	concerns.ConcernsCase.CreatedAt AS CaseCreated,
-	TrustRisk.Name AS TrustRisk,
-	concerns.ConcernsCase.TrustCompaniesHouseNumber AS CompaniesHouseNumber,
-	concerns.ConcernsCase.UpdatedAt AS CaseLastUpdated,
-	concerns.ConcernsCase.NextSteps AS NextSteps,
-	concerns.ConcernsCase.Issue AS Issue,
-	STRING_AGG(ConcernRisk.Name, ', ') AS ConcernRisks
+	cc.Id AS CaseId,
+	cc.CreatedAt AS CaseCreated,
+	trust_risk.Name AS TrustRisk,
+	cc.TrustCompaniesHouseNumber AS CompaniesHouseNumber,
+	cc.UpdatedAt AS CaseLastUpdated,
+	cc.NextSteps AS NextSteps,
+	cc.Issue AS Issue,
+	STRING_AGG(ct.Name + ': ' + concerns_risk.Name, ', ') AS ConcernRisks,
+	COALESCE(nti_status.Name, nti_wl_status.Name) AS NtiStatus,
+	COALESCE(nti.DateStarted, nti_uc.CreatedAt, nti_wl.DateLetterSent) AS DateIssued
 FROM
-	concerns.ConcernsCase WITH(NOLOCK)
-INNER JOIN
-	concerns.ConcernsRating AS TrustRisk WITH(NOLOCK)
+	concerns.ConcernsCase cc WITH(NOLOCK)
+LEFT OUTER JOIN
+	concerns.ConcernsRating AS trust_risk WITH(NOLOCK)
 ON
-	TrustRisk.Id = concerns.ConcernsCase.RatingId
-INNER JOIN
-	concerns.ConcernsRecord WITH(NOLOCK)
+	cc.RatingId = trust_risk.Id
+LEFT OUTER JOIN
+	concerns.ConcernsRecord concerns_record WITH(NOLOCK)
 ON
-	concerns.ConcernsRecord.CaseId = concerns.ConcernsCase.Id
-INNER JOIN
-	concerns.ConcernsRating AS ConcernRisk WITH(NOLOCK)
+	cc.Id = concerns_record.CaseId
+	AND concerns_record.ClosedAt IS NULL
+LEFT OUTER JOIN
+	concerns.ConcernsRating AS concerns_risk WITH(NOLOCK)
 ON
-	ConcernRisk.Id = concerns.ConcernsRecord.RatingId
+	concerns_record.RatingId = concerns_risk.Id
+LEFT OUTER JOIN
+	concerns.ConcernsType ct WITH(NOLOCK)
+ON
+	concerns_record.TypeId = ct.Id
+LEFT OUTER JOIN 
+	concerns.NoticeToImproveCase nti WITH(NOLOCK) 
+ON 
+	cc.Id = nti.CaseUrn
+	AND nti.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NoticeToImproveStatus nti_status WITH(NOLOCK) 
+ON 
+	nti.StatusId = nti_status.Id
+LEFT OUTER JOIN 
+	concerns.NTIUnderConsiderationCase nti_uc WITH(NOLOCK) 
+ON 
+	cc.Id = nti_uc.CaseUrn
+	AND nti_uc.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NTIWarningLetterCase nti_wl WITH(NOLOCK) 
+ON 
+	cc.Id = nti_wl.CaseUrn
+	AND nti_wl.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NTIWarningLetterStatus nti_wl_status WITH(NOLOCK) 
+ON 
+	nti_wl.StatusId = nti_wl_status.Id
 GROUP BY
-	concerns.ConcernsCase.Id,
-	concerns.ConcernsCase.CreatedAt,
-	TrustRisk.Name,
-	concerns.ConcernsCase.TrustCompaniesHouseNumber,
-	concerns.ConcernsCase.UpdatedAt,
-	concerns.ConcernsCase.NextSteps,
-	concerns.ConcernsCase.Issue
+	cc.Id,
+	cc.CreatedAt,
+	trust_risk.Name,
+	cc.TrustCompaniesHouseNumber,
+	cc.UpdatedAt,
+	cc.NextSteps,
+	cc.Issue,
+	nti_status.Name,
+	nti_wl_status.Name,
+	nti.DateStarted,
+	nti_uc.CreatedAt,
+	nti_wl.DateLetterSent
+	
+SELECT
+	cc.Id AS CaseId,
+	cc.CreatedAt AS CaseCreated,
+	trust_risk.Name AS TrustRisk,
+	cc.TrustCompaniesHouseNumber AS CompaniesHouseNumber,
+	cc.UpdatedAt AS CaseLastUpdated,
+	cc.NextSteps AS NextSteps,
+	cc.Issue AS Issue,
+	STRING_AGG(concern_risk.Name, ', ') AS ConcernRisks
+FROM
+	concerns.ConcernsCase cc WITH(NOLOCK)
+LEFT OUTER JOIN
+	concerns.ConcernsRating AS trust_risk WITH(NOLOCK)
+ON
+	cc.RatingId = trust_risk.Id
+LEFT OUTER JOIN
+	concerns.ConcernsRecord concern_record WITH(NOLOCK)
+ON
+	cc.Id = concern_record.CaseId
+LEFT OUTER JOIN
+	concerns.ConcernsRating AS concern_risk WITH(NOLOCK)
+ON
+	concern_record.RatingId = concern_risk.Id
+GROUP BY
+	cc.Id,
+	cc.CreatedAt,
+	trust_risk.Name,
+	cc.TrustCompaniesHouseNumber,
+	cc.UpdatedAt,
+	cc.NextSteps,
+	cc.Issue
+	
+	
+SELECT
+	cc.Id AS CaseId,
+	nti_status.Name AS Nti,
+	CASE WHEN nti_uc.Id IS NOT NULL THEN 'Open' 
+	END AS Nti_Uc,
+	nti_wl_status.Name AS Nti_Wl,
+	COALESCE(nti.DateStarted, nti_uc.CreatedAt, nti_wl.DateLetterSent) AS DateIssued
+FROM
+	concerns.ConcernsCase cc WITH(NOLOCK)
+LEFT OUTER JOIN 
+	concerns.NoticeToImproveCase nti WITH(NOLOCK) 
+ON 
+	cc.Id = nti.CaseUrn
+	AND nti.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NoticeToImproveStatus nti_status WITH(NOLOCK) 
+ON 
+	nti.StatusId = nti_status.Id
+LEFT OUTER JOIN 
+	concerns.NTIUnderConsiderationCase nti_uc WITH(NOLOCK) 
+ON 
+	cc.Id = nti_uc.CaseUrn
+	AND nti_uc.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NTIWarningLetterCase nti_wl WITH(NOLOCK) 
+ON 
+	cc.Id = nti_wl.CaseUrn
+	AND nti_wl.ClosedAt IS NULL
+LEFT OUTER JOIN 
+	concerns.NTIWarningLetterStatus nti_wl_status WITH(NOLOCK) 
+ON 
+	nti_wl.StatusId = nti_wl_status.Id
