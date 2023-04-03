@@ -2,28 +2,30 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class GroupContactAddressDto
+	public class GroupContactAddressDto
 	{
 		[JsonProperty("street")]
-		public string Street { get; }
+		public virtual string Street { get; set; }
 			
 		[JsonProperty("locality")]
-		public string Locality { get; }
+		public virtual string Locality { get; set; }
 			
 		[JsonProperty("additionalLine")]
-		public string AdditionalLine { get; }
+		public virtual string AdditionalLine { get; set; }
 			
 		[JsonProperty("town")]
-		public string Town { get; }
+		public virtual string Town { get; set; }
 			
 		[JsonProperty("county")]
-		public string County { get; }
+		public virtual string County { get; set; }
 			
 		[JsonProperty("postcode")]
-		public string Postcode { get; }
+		public virtual string Postcode { get; set; }
 			
 		[JsonConstructor]
 		public GroupContactAddressDto(string street, string locality, string additionalLine, string town, string county, string postcode) => 
 			(Street, Locality, AdditionalLine, Town, County, Postcode) = (street, locality, additionalLine, town, county, postcode);
+		
+		protected GroupContactAddressDto() { }
 	}
 }
