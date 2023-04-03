@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class LiftPageModel : EditableNTIPageModel
+	public class LiftPageModel : CloseNtiBasePage
 	{
 		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<LiftPageModel> _logger;

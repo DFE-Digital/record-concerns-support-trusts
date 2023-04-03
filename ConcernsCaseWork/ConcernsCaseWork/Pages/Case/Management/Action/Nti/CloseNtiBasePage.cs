@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 
 [BindProperties]
-public class EditableNTIPageModel : AbstractPageModel
+public class CloseNtiBasePage : AbstractPageModel
 {
 	[BindProperty(SupportsGet = true, Name="Urn")] public int CaseUrn { get; set; }
 	[BindProperty(SupportsGet = true, Name = "ntiId")] public int NTIId { get; set; }
@@ -58,7 +58,7 @@ public class EditableNTIPageModel : AbstractPageModel
 		{
 			Text = new ValidateableString()
 			{
-				MaxLength = NTIConstants.MaxNotesLength,
+				MaxLength = NtiConstants.MaxNotesLength,
 				StringContents = contents,
 				DisplayName = "Finalise notes (optional)"
 			}
