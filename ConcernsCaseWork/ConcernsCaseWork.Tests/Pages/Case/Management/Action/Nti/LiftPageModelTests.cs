@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
@@ -51,23 +52,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1); 
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NTIId = 1;
 
 			// act
 			await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("LiftPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-
 			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
 		}
 		
@@ -86,25 +77,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn); 
-			routeData.Add("ntiId", ntiId);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NTIId = ntiId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("LiftPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-
 			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
-			
+
 			Assert.Multiple(() =>
 			{
 				Assert.That(response, Is.InstanceOf<RedirectResult>());
@@ -143,9 +124,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NTIId = 1;
 
 			var fixture = new Fixture();
 			var createdString = fixture.Create<StringLengthValidatedType>();
@@ -177,9 +157,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NTIId = 1;
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -215,9 +194,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NTIId = 1;
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -235,6 +213,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			Assert.That(page, Is.Not.Null);
 			mockNtiModelService.Verify(n => n.PatchNtiAsync(It.IsAny<NtiModel>()), Times.Once);
 		}
+
+
+
 
 		private static LiftPageModel SetupCancelPageModel(
 			Mock<INtiModelService> mockNtiModelService,
