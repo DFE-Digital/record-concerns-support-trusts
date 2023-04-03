@@ -7,7 +7,7 @@
     "cy:open": "cypress open --browser edge",
     "cy:run": "npm run clean:reports && cypress run --browser edge",
     "cy:notify": "cypress-slack-reporter",
-    "clean:reports": "rm -rf cypress/reports/*.json",
+    "clean:reports": "rm -rf cypress/reports/mocha/*.json",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
     "create:html:report": "marge  mochareports/report.json -f report -o mochareports",
     "generate:html:report": "npm run combine:reports && npm run create:html:report"
