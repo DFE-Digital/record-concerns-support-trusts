@@ -3,7 +3,7 @@ services:
   webapi:
     build:
       context: .
-      dockerfile: Dockerfile.gpaas-azure-migration
+      dockerfile: Dockerfile
     command: /bin/bash -c "./docker-entrypoint.sh dotnet ConcernsCaseWork.dll"
     ports:
       - 80:80/tcp

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using ConcernsCaseWork.Configuration;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -13,6 +14,7 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -34,12 +36,15 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.ClosedCasesSummaryPage);
+
+		public string CaseArchivePassword { get; set; }
 		
 		public ViewClosedPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
 			IActionsModelService actionsModelService,
 			IStatusCachedService statusCachedService,
+			IOptions<SiteOptions> siteOptions,
 			ILogger<ViewClosedPageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -47,6 +52,7 @@ namespace ConcernsCaseWork.Pages.Case
 			_recordModelService = recordModelService;
 			_actionsModelService = actionsModelService;
 			_statusCachedService = statusCachedService;
+            CaseArchivePassword = siteOptions.Value.CaseArchivePassword;
 			_logger = logger;
 		}
 		
