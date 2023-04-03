@@ -1,7 +1,9 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +22,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
+		private readonly ITrustService _trustService;
 		private readonly IUserStateCachedService _userStateCache;
 		
 		public CreateCaseModel CreateCaseModel { get; private set; }
@@ -29,12 +32,14 @@ namespace ConcernsCaseWork.Pages.Case
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
-			ILogger<DetailsPageModel> logger)
+			ILogger<DetailsPageModel> logger,
+			ITrustService trustService)
 		{
-			_trustModelService = trustModelService;
-			_caseModelService = caseModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_trustService = Guard.Against.Null(trustService);
 		}
 		
 		public async Task OnGetAsync()
@@ -64,15 +69,18 @@ namespace ConcernsCaseWork.Pages.Case
 				// Complete create case model
 				var userState = await GetUserState();
 				
+				// get the trust being used for the case
+				var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+				
 				var createCaseModel = userState.CreateCaseModel;
 				createCaseModel.Issue = issue;
 				createCaseModel.CurrentStatus = currentStatus;
 				createCaseModel.NextSteps = nextSteps;
 				createCaseModel.CaseAim = caseAim;
 				createCaseModel.DeEscalationPoint = deEscalationPoint;
-				createCaseModel.TrustUkPrn = userState.TrustUkPrn;
+				createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
 				createCaseModel.CaseHistory = caseHistory;
-					
+				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				
 				return RedirectToPage("management/index", new { urn = caseUrn });

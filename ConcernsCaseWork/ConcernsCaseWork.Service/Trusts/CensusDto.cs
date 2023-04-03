@@ -2,14 +2,16 @@
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class CensusDto
+	public class CensusDto
 	{
 		[JsonProperty("numberOfPupils")]
-		public string NumberOfPupils { get; }
+		public virtual string NumberOfPupils { get; set; }
 
 		[JsonConstructor]
 		public CensusDto(string numberOfPupils) =>
 			(NumberOfPupils) =
 			(numberOfPupils);
+
+		protected CensusDto() { }
 	}
 }
