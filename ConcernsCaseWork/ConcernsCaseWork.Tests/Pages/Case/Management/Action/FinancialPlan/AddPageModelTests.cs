@@ -52,29 +52,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		}
 
 		[Test]
-		public async Task WhenOnPostAsync_MissingCaseUrn_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-	
-		[Test]
 		public async Task WhenOnPostAsync_WithValidDatePlanRequested_Succeeds()
 		{
 			// arrange

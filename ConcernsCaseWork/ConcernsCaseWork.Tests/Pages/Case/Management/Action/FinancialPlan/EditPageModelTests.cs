@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -38,29 +40,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
+
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
 
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::EditPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
-			Assert.IsInstanceOf<PageResult>(response);
-			Assert.IsNotNull(pageModel.FinancialPlanModel);
-			Assert.AreEqual(pageModel.FinancialPlanModel.Id, financialPlanId);
-			Assert.AreEqual(pageModel.FinancialPlanModel.CaseUrn, caseUrn);			
-			
+			Assert.IsInstanceOf<PageResult>(response);		
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
 		
@@ -80,24 +69,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				.ReturnsAsync(financialPlan);
 			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
+
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::EditPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			Assert.Multiple(() =>
 			{
 				Assert.That(response, Is.InstanceOf<RedirectResult>());
@@ -105,67 +84,27 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			});
 		}
-		
+
 		[Test]
-		[TestCase("1", "")]
-		[TestCase("", "1")]
-		[TestCase("", "")]
-		public async Task WhenOnPostAsync_EmptyRouteValues_ThrowsException_ReturnsPage(string urn, string financialId)
+		public async Task WhenOnPostAsync_Invalid_DatePlanRequested_ThrowsException_ReturnsPage()
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-				
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", urn);
-			routeData.Add("financialplanid", financialId);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-				
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
-		}
-		
-		[Test]
-		public async Task WhenOnPostAsync_Invalid_DatePlanRequested_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
 			
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
+			var caseUrn = 1;
+			var financialPlanId = 2;
 				
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-			routeData.Add("editMode", "edit");
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-plan-requested", new StringValues("00") },
-					{ "dtr-month-plan-requested", new StringValues("00") },
-					{ "dtr-year-plan-requested", new StringValues("0000") },
-				});
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
+			pageModel.DatePlanRequested = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel()
+			{
+				Day = "32",
+				Month = "01",
+				Year = "3023"
+			} };
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -173,36 +112,31 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Plan requested 00-00-0000 is an invalid date"));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
-		public async Task WhenOnPostAsync_Partial_DatePlanRequested_FormData_ThrowsException_ReturnsPage()
+		public async Task WhenOnPostAsync_Partial_DatePlanRequested_ThrowsException_ReturnsPage()
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-			
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
-			
+
+			var caseUrn = 1;
+			var financialPlanId = 2;
+
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-			routeData.Add("editMode", "edit");
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
+			pageModel.DatePlanRequested = new OptionalDateTimeUiComponent("", "", "")
+			{
+				Date = new OptionalDateModel()
 				{
-					{ "dtr-day-plan-requested", new StringValues("02") },
-					{ "dtr-month-plan-requested", new StringValues("04") },
-				});
+					Day = "14",
+					Month = "01",
+				}
+			};
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -210,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Plan requested 02-04- is an invalid date"));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 		
 		[Test]
@@ -220,8 +154,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
+			var caseUrn = 1;
+			var financialPlanId = 2;
 			
 			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
 			
@@ -231,21 +165,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
-			var day = 2;
-			var month = 4;
-			var year = 2022;
+			var dateRequested = new DateTime(2022, 04, 02);
+			pageModel.DatePlanRequested = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(dateRequested) };
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-plan-requested", new StringValues($"0{day}") },
-					{ "dtr-month-plan-requested", new StringValues($"0{month}") },
-					{ "dtr-year-plan-requested", new StringValues(year.ToString()) }
-				});
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -253,100 +178,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 					fpm.ClosedAt == null && 
-					fpm.DatePlanRequested == new DateTime(year, month, day) &&
+					fpm.DatePlanRequested == dateRequested &&
 					fpm.DateViablePlanReceived == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
-		
-		[Test]
-		public async Task WhenOnPostAsync_WithValidDateViablePlanReceived_Succeeds()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
 			
-			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(existingFinancialPlanModel);
-			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-
-			var day = 28;
-			var month = 12;
-			var year = 2024;
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-viable-plan", new StringValues(day.ToString()) },
-					{ "dtr-month-viable-plan", new StringValues(month.ToString()) },
-					{ "dtr-year-viable-plan", new StringValues(year.ToString()) }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
-				fpm.ClosedAt == null && 
-				fpm.DatePlanRequested == null)), Times.Once);
-			
-			Assert.IsNotNull(pageResponse);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
-		}
-		
-		[Test]
-		public async Task WhenOnPostAsync_WithValidStatus_Succeeds()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
-			
-			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(existingFinancialPlanModel);
-			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", statuses.First().Name }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
-				fpm.ClosedAt == null)), Times.Once);
-			
-			Assert.IsNotNull(pageResponse);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
-		}
-				
 		[Test]
 		public async Task WhenOnPostAsync_ValidRequest_SetsUpdatedAt()
 		{
@@ -354,27 +192,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
+			var caseUrn = 1;
+			var financialPlanId = 2;
 			
 			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(existingFinancialPlanModel);
-			
+				
 
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "notes", "Notes" }
-				});
+			pageModel.Notes.Text.StringContents = "notes";
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -402,8 +231,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-
-			result.FinancialPlanModel = new FinancialPlanModel();
 
 			return result;
 		}
