@@ -66,7 +66,7 @@ export class EditSrmaPage {
     public withDayAccepted(value: string): this {
         Logger.Log(`With day accepted ${value}`);
 
-        cy.getById(`dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-date-accepted`).clear().type(value);
 
         return this;
     }
@@ -74,7 +74,7 @@ export class EditSrmaPage {
     public withMonthAccepted(value: string): this {
         Logger.Log(`With month accepted ${value}`);
 
-        cy.getById(`dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-date-accepted`).clear().type(value);
 
         return this;
     }
@@ -82,7 +82,7 @@ export class EditSrmaPage {
     public withYearAccepted(value: string): this {
         Logger.Log(`With year accepted ${value}`);
 
-        cy.getById(`dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-date-accepted`).clear().type(value);
 
         return this;
     }

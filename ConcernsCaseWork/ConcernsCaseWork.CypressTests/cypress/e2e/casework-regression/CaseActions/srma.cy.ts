@@ -77,14 +77,13 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayAccepted("22")
             .save()
-            .hasValidationError("22-- is an invalid date");
+            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withDayAccepted("22")
             .withMonthAccepted("22")
             .withYearAccepted("2022")
             .save()
-            .hasValidationError("22-22-2022 is an invalid date");
+            .hasValidationError("Date: 22-22-2022 is an invalid date");
 
         editSrmaPage
             .withDayAccepted("22")
