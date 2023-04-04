@@ -8,12 +8,16 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.CoreTypes;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : FinancialPlanBasePageModel
+	public class EditPageModel : FPlanBasePage
 	{
 		private readonly ILogger<EditPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
@@ -27,29 +31,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				var caseUrn = GetRequestedCaseUrn();
-				var financialPlanId = GetRequestedFinancialPlanId();
-				
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
+				var financialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(CaseUrn, financialPlanId);
 
-				if (FinancialPlanModel.IsClosed)
+				if (financialPlanModel.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+					return Redirect($"/case/{CaseUrn}/management/action/financialplan/{financialPlanId}/closed");
 				}
+
+				LoadPageComponents(financialPlanModel);
+
 			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["FinancialPlan.Message"] = ex.Message;
-			}
+
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::EditPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
 			
 			return Page();
@@ -57,40 +58,47 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnPostAsync");
-			
+			_logger.LogMethodEntered();
+
 			try
 			{
-				var caseUrn = GetRequestedCaseUrn();
-				var financialPlanId = GetRequestedFinancialPlanId();
+				if (!ModelState.IsValid)
+				{
+					ResetPageComponentsOnValidationError();
+					return Page();
+				}
 
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
 					Id = financialPlanId,
-					CaseUrn = caseUrn,
-					StatusId = FinancialPlanModel.Status?.Id,
-					DatePlanRequested = GetRequestedPlanRequestedDate(),
-					Notes = FinancialPlanModel.Notes,
+					CaseUrn = CaseUrn,
+					DatePlanRequested = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
+					Notes = Notes.Text.StringContents,
 					UpdatedAt = DateTime.Now
 				};
 
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel);
+				return Redirect($"/case/{CaseUrn}/management");
 
-				return Redirect($"/case/{caseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["FinancialPlan.Message"] = ex.Message;
-				
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
+		}
+
+		private void LoadPageComponents(FinancialPlanModel financialPlanModel)
+		{
+			if (financialPlanModel.DatePlanRequested.HasValue)
+			{
+				DatePlanRequested.Date = new OptionalDateModel((DateTime)financialPlanModel.DatePlanRequested);
+			}
+
+			Notes.Text.StringContents = financialPlanModel.Notes;
 		}
 	}
 }
