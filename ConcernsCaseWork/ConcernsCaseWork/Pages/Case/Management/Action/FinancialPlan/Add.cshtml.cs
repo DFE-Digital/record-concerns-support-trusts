@@ -1,25 +1,36 @@
-﻿using ConcernsCaseWork.Redis.FinancialPlan;
+﻿using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
+using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
+using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
-using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : FinancialPlanBasePageModel
+	public class AddPageModel : FPlanBasePage
 	{
-		private readonly ILogger<AddPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private readonly ILogger<AddPageModel> _logger;
 
-		public AddPageModel(IFinancialPlanModelService financialPlanModelService, ILogger<AddPageModel> logger)
+		public AddPageModel(
+			IFinancialPlanModelService financialPlanModelService,
+			ILogger<AddPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
 			_logger = logger;
@@ -27,57 +38,44 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::AddPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
-			try
-			{
-				FinancialPlanModel = new FinancialPlanModel();
-
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::FinancialPlan::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-				var caseUrn = GetRequestedCaseUrn();
-				var planRequestedDate = GetRequestedPlanRequestedDate();
-				var currentUser = GetLoggedInUserName();
+				if (!ModelState.IsValid) 
+				{
+					ResetPageComponentsOnValidationError();
+					return Page();
+				}
 
 				var now = DateTime.Now;
 				var model = new CreateFinancialPlanModel
 				{
-					CaseUrn = caseUrn,
+					CaseUrn = CaseUrn,
 					CreatedAt = now,
 					UpdatedAt = now,
-					DatePlanRequested = planRequestedDate,
-					CreatedBy = currentUser,
-					Notes = FinancialPlanModel.Notes
+					DatePlanRequested = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
+					CreatedBy = User.Identity.Name.GetValueOrNullIfWhitespace(),
+					Notes = Notes.Text.StringContents
 				};
 
 				await _financialPlanModelService.PostFinancialPlanByCaseUrn(model);
 
-				return Redirect($"/case/{caseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["FinancialPlan.Message"] = ex.Message;
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
-			
 			return Page();
 		}
 	}
