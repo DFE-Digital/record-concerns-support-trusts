@@ -90,7 +90,7 @@ export class EditSrmaPage {
     public withStartDayOfVisit(value: string): this {
         Logger.Log(`With start day of visit ${value}`);
 
-        cy.getById(`start-dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-start`).clear().type(value);
 
         return this;
     }
@@ -98,7 +98,7 @@ export class EditSrmaPage {
     public withStartMonthOfVisit(value: string): this {
         Logger.Log(`With start month of visit ${value}`);
 
-        cy.getById(`start-dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-start`).clear().type(value);
 
         return this;
     }
@@ -106,7 +106,7 @@ export class EditSrmaPage {
     public withStartYearOfVisit(value: string): this {
         Logger.Log(`With start year of visit ${value}`);
 
-        cy.getById(`start-dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-start`).clear().type(value);
 
         return this;
     }
@@ -114,7 +114,7 @@ export class EditSrmaPage {
     public withEndDayOfVisit(value: string): this {
         Logger.Log(`With end day of visit ${value}`);
 
-        cy.getById(`end-dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-end`).clear().type(value);
 
         return this;
     }
@@ -122,7 +122,7 @@ export class EditSrmaPage {
     public withEndMonthOfVisit(value: string): this {
         Logger.Log(`With end month of visit ${value}`);
 
-        cy.getById(`end-dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-end`).clear().type(value);
 
         return this;
     }
@@ -130,7 +130,7 @@ export class EditSrmaPage {
     public withEndYearOfVisit(value: string): this {
         Logger.Log(`With end year of visit ${value}`);
 
-        cy.getById(`end-dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-end`).clear().type(value);
 
         return this;
     }

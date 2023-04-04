@@ -66,9 +66,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			{
 				_logger.LogMethodEntered();
 
-				if (!ModelState.IsValid)
+				if (!ModelState.IsValid) 
 				{
 					ResetOnValidationError();
+					return Page();
+				}
+
+				if (EndIsBeforeStart())
+				{
+					ResetOnValidationError();
+					ModelState.AddModelError("EndIsBeforeStart", "Please ensure end date is same as or after start date.");
 					return Page();
 				}
 
@@ -84,6 +91,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			return Page();
 		}
 
+		private bool EndIsBeforeStart()
+		{
+			return EndDate.Date.ToDateTime() < StartDate.Date.ToDateTime();
+		}
+
 		private void LoadPageComponents(SRMAModel model)
 		{
 			if (model.DateVisitStart.HasValue)
@@ -96,12 +108,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private void ResetOnValidationError()
 		{
 			StartDate = BuidStartDateComponent(StartDate.Date);
-			EndDate = BuidStartDateComponent(EndDate.Date);
+			EndDate = BuidEndDateComponent(EndDate.Date);
 		}
 
 		private static OptionalDateTimeUiComponent BuidStartDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("start-date", nameof(StartDate), "")
+			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start")
 			{
 				Date = date
 			};
@@ -109,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private static OptionalDateTimeUiComponent BuidEndDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("end-date", nameof(EndDate), "")
+			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End")
 			{
 				Date = date
 			};

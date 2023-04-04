@@ -98,32 +98,26 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withStartDayOfVisit("22")
             .save()
-            .hasValidationError("Start date 22-- is an invalid date");
+            .hasValidationError("Start: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withStartDayOfVisit("22")
             .withStartMonthOfVisit("22")
             .withStartYearOfVisit("2022")
             .save()
-            .hasValidationError("Start date 22-22-2022 is an invalid date");
+            .hasValidationError("Start: 22-22-2022 is an invalid date");
 
         setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("11")
             .save()
-            .hasValidationError("End date 11-- is an invalid date");
-
-        setValidStartDateOfVisit();
+            .hasValidationError("End: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withEndDayOfVisit("11")
             .withEndMonthOfVisit("33")
             .withEndYearOfVisit("2021")
             .save()
-            .hasValidationError("End date 11-33-2021 is an invalid date");
-
-        setValidStartDateOfVisit();
+            .hasValidationError("End: 11-33-2021 is an invalid date");
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -131,8 +125,6 @@ describe("Testing the SRMA case action", () =>
             .withEndYearOfVisit("2021")
             .save()
             .hasValidationError("Please ensure end date is same as or after start date.");
-
-        setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("15")
