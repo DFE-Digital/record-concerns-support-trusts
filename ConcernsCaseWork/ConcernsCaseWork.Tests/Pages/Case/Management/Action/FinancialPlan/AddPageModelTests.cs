@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.Models;
@@ -46,15 +48,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::AddPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			Assert.IsInstanceOf<PageResult>(response);
 		}
 
@@ -80,71 +73,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
-		[Test]
-		public async Task WhenOnPostAsync_Invalid_DatePlanRequested_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-			
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-plan-requested", new StringValues("00") },
-					{ "dtr-month-plan-requested", new StringValues("00") },
-					{ "dtr-year-plan-requested", new StringValues("0000") },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Plan requested 00-00-0000 is an invalid date"));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Partial_RequestedDate_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-			
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-			
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-plan-requested", new StringValues("02") },
-					{ "dtr-month-plan-requested", new StringValues("04") },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Plan requested 02-04- is an invalid date"));
-		}
-		
+	
 		[Test]
 		public async Task WhenOnPostAsync_WithValidDatePlanRequested_Succeeds()
 		{
@@ -153,81 +82,23 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			var caseUrn = 1L;
-			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-			
+			var caseUrn = 1;
+			var dateRequested = new DateTime(2022, 04, 02);
+
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			var day = 2;
-			var month = 4;
-			var year = 2022;
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-plan-requested", new StringValues($"0{day}") },
-					{ "dtr-month-plan-requested", new StringValues($"0{month}") },
-					{ "dtr-year-plan-requested", new StringValues(year.ToString()) }
-				});
+			pageModel.CaseUrn = caseUrn;
+			pageModel.DatePlanRequested   = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(dateRequested) };
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm =>
-					fpm.DatePlanRequested == new DateTime(year, month, day))), Times.Once);
+					fpm.DatePlanRequested == dateRequested)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
-		
-		[Test]
-		public async Task WhenOnPostAsync_WithValidDateViablePlanReceived_Succeeds()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			var caseUrn = 1L;
-			
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			var day = 28;
-			var month = 12;
-			var year = 2024;
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-viable-plan", new StringValues(day.ToString()) },
-					{ "dtr-month-viable-plan", new StringValues(month.ToString()) },
-					{ "dtr-year-viable-plan", new StringValues(year.ToString()) }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			mockFinancialPlanModelService.Verify(f => 
-				f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm => 
-						fpm.DatePlanRequested == null)), Times.Once);
-			
-			Assert.IsNotNull(pageResponse);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
-		}
-		
 				
 		[Test]
 		public async Task WhenOnPostAsync_SetsUpdatedAtValue_Succeeds()
@@ -238,22 +109,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			var caseUrn = 1L;
-			
+			var caseUrn = 1;
+			var dateRequested = new DateTime(2022, 03, 03);
+
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-viable-plan", "28" },
-					{ "dtr-month-viable-plan", "12" },
-					{ "dtr-year-viable-plan", "2024" }
-				});
-			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.DatePlanRequested = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(dateRequested) };
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -285,8 +147,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-
-			result.FinancialPlanModel = new FinancialPlanModel();
 
 			return result;
 		}
