@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				
 				if (model.IsClosed)
 				{
-					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/ closed");
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
 
 				LoadPageComponents(model);
