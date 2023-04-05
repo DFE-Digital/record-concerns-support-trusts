@@ -12,6 +12,8 @@ namespace ConcernsCaseWork.Models.Validatable
 		public string Month { get; set; }
 		public string Year { get; set; }
 
+		public bool? Required { get; set;}
+
 		public OptionalDateModel() { }
 		
 		public OptionalDateModel(DateTime dateTime)
@@ -24,7 +26,7 @@ namespace ConcernsCaseWork.Models.Validatable
 		public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-			=> Validate(DisplayName ?? validationContext.DisplayName);
+		=> Validate(DisplayName ?? validationContext.DisplayName);
 
 		public IEnumerable<ValidationResult> Validate(string displayName)
 		{
@@ -33,6 +35,12 @@ namespace ConcernsCaseWork.Models.Validatable
 			var dateValues = new List<string>() { Day, Month, Year };
 			dateValues.RemoveAll(d => d == null);
 
+			if (dateValues.Count == 0 && Required == true)
+			{
+				result.Add(new ValidationResult($"{displayName}: Please enter a date", new[]{ displayName }));
+				return result;
+			}
+
 			if (dateValues.Count == 0)
 			{
 				return result;
@@ -40,13 +48,13 @@ namespace ConcernsCaseWork.Models.Validatable
 
 			if (dateValues.Count != 3)
 			{
-				result.Add(new ValidationResult($"{displayName}: Please enter a complete date DD MM YYYY",new []{ displayName } ));
+				result.Add(new ValidationResult($"{displayName}: Please enter a complete date DD MM YYYY", new []{ displayName } ));
 				return result;
 			}
 
 			if (!DateTimeHelper.TryParseExact(ToString(), out _))
 			{
-				result.Add(new ValidationResult($"{displayName}: {ToString()} is an invalid date",new []{ displayName }));
+				result.Add(new ValidationResult($"{displayName}: {ToString()} is an invalid date", new []{ displayName }));
 			}
 
 			return result;

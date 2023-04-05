@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				_logger.LogMethodEntered();
 
 				var model = await _srmaModelService.GetSRMAById(SrmaId);
-				
+
 				if (model.IsClosed)
 				{
 					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
@@ -68,13 +68,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 					return Page();
 				}
 
-				if (DateOffered.Date.IsEmpty())
-				{
-					ResetOnValidationError();
-					ModelState.AddModelError("DateOffered.Date.Day", "Date: Please enter date trust was contacted");
-					return Page();
-				}
-
 				await _srmaModelService.SetOfferedDate(SrmaId, DateOffered.Date.ToDateTime());
 				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
@@ -94,14 +87,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private void LoadPageComponents(SRMAModel model)
 		{
-			DateOffered.Date = new OptionalDateModel(model.DateOffered);
+			DateOffered.Date = new OptionalDateModel(model.DateOffered)
+			{
+				Required = true
+			};
 		}
 
 		private static OptionalDateTimeUiComponent BuidDateOfferedComponent([CanBeNull] OptionalDateModel date = default)
 		{
+			var dateToSet = date ?? new OptionalDateModel();
+			dateToSet.Required = true;
+
 			return new OptionalDateTimeUiComponent("date-offered", nameof(DateOffered), "")
 			{
-				Date = date
+				Date = dateToSet
 			};
 		}
 	}

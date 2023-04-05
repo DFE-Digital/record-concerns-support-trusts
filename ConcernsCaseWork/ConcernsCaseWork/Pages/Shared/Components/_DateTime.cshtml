@@ -2,6 +2,8 @@
 @{
 	var errors = Model.Date?.Validate();
 	var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+
+    var required = Model.Date?.Required == true ? "true" : "false";
 }
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
@@ -63,6 +65,7 @@
 				</div>
 			</div>
 			<input type="hidden" name="@(Model.Name).Date.DisplayName" value="@Model.Heading" />
+            <input type="hidden" name="@(Model.Name).Date.Required" value="@required" />
 		</div>
 	</fieldset>
 </div>
