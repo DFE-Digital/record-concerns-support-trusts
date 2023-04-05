@@ -138,14 +138,14 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayReportSentToTrust("22")
             .save()
-            .hasValidationError("22-- is an invalid date");
+            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
             .withMonthReportSentToTrust("44")
             .withYearReportSentToTrust("2021")
             .save()
-            .hasValidationError("05-44-2021 is an invalid date");
+            .hasValidationError("Date: 05-44-2021 is an invalid date");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
@@ -193,7 +193,7 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Empty");
     });
 
-    it.only("Should edit an existing configured SRMA", () =>
+    it("Should edit an existing configured SRMA", () =>
     {
         fullConfigureSrma("Trust Considering");
 
@@ -217,12 +217,17 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayTrustContacted("11")
             .save()
-            .hasValidationError("Date: Please enter a complete date DD MM YYYY")
+            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withDayTrustContacted("11")
-            .withMonthTrustContacted("05")
+            .withMonthTrustContacted("22")
             .withYearTrustContacted("2021")
+            .save()
+            .hasValidationError("Date: 11-22-2021 is an invalid date");
+
+        editSrmaPage
+            .withMonthTrustContacted("05")
             .save();
 
         viewSrmaPage.addReason();

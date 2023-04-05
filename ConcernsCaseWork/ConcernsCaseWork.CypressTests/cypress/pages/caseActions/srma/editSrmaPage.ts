@@ -147,7 +147,7 @@ export class EditSrmaPage {
     public withDayReportSentToTrust(value: string): this {
         Logger.Log(`With day report sent to trust ${value}`);
 
-        cy.getById(`dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-date-report-sent`).clear().type(value);
 
         return this;
     }
@@ -155,7 +155,7 @@ export class EditSrmaPage {
     public withMonthReportSentToTrust(value: string): this {
         Logger.Log(`With month report sent to trust ${value}`);
 
-        cy.getById(`dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-date-report-sent`).clear().type(value);
 
         return this;
     }
@@ -163,7 +163,7 @@ export class EditSrmaPage {
     public withYearReportSentToTrust(value: string): this {
         Logger.Log(`With year report sent to trust ${value}`);
 
-        cy.getById(`dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-date-report-sent`).clear().type(value);
 
         return this;
     }
@@ -310,7 +310,7 @@ export class EditSrmaPage {
     public hasDayReportSentToTrust(value: string): this {
         Logger.Log(`Has day report sent to trust ${value}`);
 
-        cy.getById(`dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-date-report-sent`).should("contain.value", value);
 
         return this;
     }
@@ -318,7 +318,7 @@ export class EditSrmaPage {
     public hasMonthReportSentToTrust(value: string): this {
         Logger.Log(`Has month report sent to trust ${value}`);
 
-        cy.getById(`dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-date-report-sent`).should("contain.value", value);
 
         return this;
     }
@@ -326,7 +326,7 @@ export class EditSrmaPage {
     public hasYearReportSentToTrust(value: string): this {
         Logger.Log(`Has year report sent to trust ${value}`);
 
-        cy.getById(`dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-date-report-sent`).should("contain.value", value);
 
         return this;
     }

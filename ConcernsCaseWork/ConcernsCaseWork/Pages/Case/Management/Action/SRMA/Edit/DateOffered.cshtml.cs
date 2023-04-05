@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph.IdentityGovernance.AccessReviews.Definitions.Item.Instances.Item.ResetDecisions;
 using System;
 using System.Threading.Tasks;
 
