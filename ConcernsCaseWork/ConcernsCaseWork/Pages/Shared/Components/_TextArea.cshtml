@@ -1,7 +1,9 @@
+
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Models.TextAreaUiComponent
 @{
-	var nonce = Context.GetNonce();
+    var nonce = Context.GetNonce();
+    var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
 }
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
@@ -15,7 +17,7 @@
 			</div>
 		</div>
 	</fieldset>
-	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@Model.Heading" />
+	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@displayName" />
 	<input type="hidden" name="@(Model.Name).Text.MaxLength" value="@Model.Text.MaxLength" />
 </div>
 
