@@ -12,7 +12,7 @@ export class EditSrmaPage {
     public withDayTrustContacted(day: string): this {
         Logger.Log(`With day trust contacted ${day}`);
 
-        cy.getById("dtr-day").clear().type(day);
+        cy.getByTestId("dtr-day-date-offered").clear().type(day);
 
         return this;
     }
@@ -20,7 +20,7 @@ export class EditSrmaPage {
     public withMonthTrustContacted(month: string): this {
         Logger.Log(`With month trust contacted ${month}`);
 
-        cy.getById("dtr-month").clear().type(month);
+        cy.getByTestId("dtr-month-date-offered").clear().type(month);
 
         return this;
     }
@@ -28,7 +28,16 @@ export class EditSrmaPage {
     public withYearTrustContacted(year: string): this {
         Logger.Log(`With year trust contacted ${year}`);
 
-        cy.getById("dtr-year").clear().type(year);
+        cy.getByTestId("dtr-year-date-offered").clear().type(year);
+
+        return this;
+    }
+
+    public clearDateTrustContacted(): this
+    {
+        cy.getByTestId("dtr-day-date-offered").clear();
+        cy.getByTestId("dtr-month-date-offered").clear();
+        cy.getByTestId("dtr-year-date-offered").clear();
 
         return this;
     }
@@ -197,7 +206,7 @@ export class EditSrmaPage {
     public hasDayTrustContacted(value: string): this {
         Logger.Log(`Has day trust contacted ${value}`);
 
-        cy.getById(`dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-date-offered`).should("contain.value", value);
 
         return this;
     }
@@ -205,7 +214,7 @@ export class EditSrmaPage {
     public hasMonthTrustContacted(value: string): this {
         Logger.Log(`Has month trust contacted ${value}`);
 
-        cy.getById(`dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-date-offered`).should("contain.value", value);
 
         return this;
     }
@@ -213,7 +222,7 @@ export class EditSrmaPage {
     public hasYearTrustContacted(value: string): this {
         Logger.Log(`Has year trust contacted ${value}`);
 
-        cy.getById(`dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-date-offered`).should("contain.value", value);
 
         return this;
     }
@@ -229,7 +238,7 @@ export class EditSrmaPage {
     public hasDayAccepted(value: string): this {
         Logger.Log(`Has day accepted ${value}`);
 
-        cy.getById(`dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-date-accepted`).should("contain.value", value);
 
         return this;
     }
@@ -237,7 +246,7 @@ export class EditSrmaPage {
     public hasMonthAccepted(value: string): this {
         Logger.Log(`Has month trust contacted ${value}`);
 
-        cy.getById(`dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-date-accepted`).should("contain.value", value);
 
         return this;
     }
@@ -245,7 +254,7 @@ export class EditSrmaPage {
     public hasYearAccepted(value: string): this {
         Logger.Log(`Has year trust contacted ${value}`);
 
-        cy.getById(`dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-date-accepted`).should("contain.value", value);
 
         return this;
     }
@@ -253,7 +262,7 @@ export class EditSrmaPage {
     public hasStartDayOfVisit(value: string): this {
         Logger.Log(`Has start day of visit ${value}`);
 
-        cy.getById(`start-dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-start`).should("contain.value", value);
 
         return this;
     }
@@ -261,7 +270,7 @@ export class EditSrmaPage {
     public hasStartMonthOfVisit(value: string): this {
         Logger.Log(`Has start month of visit ${value}`);
 
-        cy.getById(`start-dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-start`).should("contain.value", value);
 
         return this;
     }
@@ -269,7 +278,7 @@ export class EditSrmaPage {
     public hasStartYearOfVisit(value: string): this {
         Logger.Log(`Has start year of visit ${value}`);
 
-        cy.getById(`start-dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-start`).should("contain.value", value);
 
         return this;
     }
@@ -277,7 +286,7 @@ export class EditSrmaPage {
     public hasEndDayOfVisit(value: string): this {
         Logger.Log(`Has end day of visit ${value}`);
 
-        cy.getById(`end-dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-end`).should("contain.value", value);
 
         return this;
     }
@@ -285,7 +294,7 @@ export class EditSrmaPage {
     public hasEndMonthOfVisit(value: string): this {
         Logger.Log(`Has end month of visit ${value}`);
 
-        cy.getById(`end-dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-end`).should("contain.value", value);
 
         return this;
     }
@@ -293,7 +302,7 @@ export class EditSrmaPage {
     public hasEndYearOfVisit(value: string): this {
         Logger.Log(`Has end year of visit ${value}`);
 
-        cy.getById(`end-dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-end`).should("contain.value", value);
 
         return this;
     }

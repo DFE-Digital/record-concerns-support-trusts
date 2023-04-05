@@ -193,7 +193,7 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Empty");
     });
 
-    it("Should edit an existing configured SRMA", () =>
+    it.only("Should edit an existing configured SRMA", () =>
     {
         fullConfigureSrma("Trust Considering");
 
@@ -207,7 +207,17 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .hasDayTrustContacted("22")
             .hasMonthTrustContacted("10")
-            .hasYearTrustContacted("2022")
+            .hasYearTrustContacted("2022");
+
+        editSrmaPage
+            .clearDateTrustContacted()
+            .save()
+            .hasValidationError("Date: Please enter date trust was contacted");
+
+        editSrmaPage
+            .withDayTrustContacted("11")
+            .save()
+            .hasValidationError("Date: Please enter a complete date DD MM YYYY")
 
         editSrmaPage
             .withDayTrustContacted("11")
