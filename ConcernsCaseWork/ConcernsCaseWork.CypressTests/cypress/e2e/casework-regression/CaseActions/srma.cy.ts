@@ -206,7 +206,7 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Empty");
     });
 
-    it.only("Should edit an existing configured SRMA", () =>
+    it("Should edit an existing configured SRMA", () =>
     {
         fullConfigureSrma("TrustConsidering");
 
