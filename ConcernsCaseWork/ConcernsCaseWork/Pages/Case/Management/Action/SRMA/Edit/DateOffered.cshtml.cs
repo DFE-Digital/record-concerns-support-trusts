@@ -4,7 +4,6 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
 
 		[BindProperty]
-		public OptionalDateTimeUiComponent DateOffered { get; set; } = BuidDateOfferedComponent();
+		public OptionalDateTimeUiComponent DateOffered { get; set; }
 
 		public EditDateOfferedPageModel(ISRMAService srmaService, ILogger<EditDateOfferedPageModel> logger)
 		{
@@ -68,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 					return Page();
 				}
 
-				await _srmaModelService.SetOfferedDate(SrmaId, DateOffered.Date.ToDateTime());
+				await _srmaModelService.SetOfferedDate(SrmaId, DateOffered.Date.ToDateTime().Value);
 				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
 			catch (Exception ex)
@@ -82,26 +81,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private void ResetOnValidationError()
 		{
-			DateOffered = BuidDateOfferedComponent(DateOffered.Date);
+			DateOffered = BuildDateOfferedComponent(DateOffered.Date);
 		}
 
 		private void LoadPageComponents(SRMAModel model)
 		{
-			DateOffered.Date = new OptionalDateModel(model.DateOffered)
-			{
-				Required = true
-			};
+            DateOffered = BuildDateOfferedComponent(new OptionalDateModel(model.DateOffered));
 		}
 
-		private static OptionalDateTimeUiComponent BuidDateOfferedComponent([CanBeNull] OptionalDateModel date = default)
+		private static OptionalDateTimeUiComponent BuildDateOfferedComponent(OptionalDateModel date)
 		{
-			var dateToSet = date ?? new OptionalDateModel();
-			dateToSet.Required = true;
+            date.Required = true;
 
 			return new OptionalDateTimeUiComponent("date-offered", nameof(DateOffered), "")
 			{
-				Date = dateToSet
-			};
+				Date = date
+            };
 		}
 	}
 }

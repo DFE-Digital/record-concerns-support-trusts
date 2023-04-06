@@ -67,6 +67,14 @@ namespace ConcernsCaseWork.Models.Validatable
 
 		public override string ToString() => $"{Day}-{Month}-{Year}";
 
-		public DateTime ToDateTime() => DateTimeHelper.ParseExact(this.ToString());
+		public DateTime? ToDateTime() 
+		{
+			if (this.IsEmpty())
+			{
+				return null;
+			}
+
+			return DateTimeHelper.ParseExact(this.ToString());
+		}
 	}
 }

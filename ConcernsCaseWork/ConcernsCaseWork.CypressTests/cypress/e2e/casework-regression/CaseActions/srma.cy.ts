@@ -181,6 +181,19 @@ describe("Testing the SRMA case action", () =>
                 row.hasCreatedDate(toDisplayDate(now))
 				row.select();
 			});
+        
+        Logger.Log("Check the individual edit pages can handle empty inputs");
+        viewSrmaPage.addDateAccepted();
+        editSrmaPage.save();
+
+        viewSrmaPage.addDateOfVisit();
+        editSrmaPage.save();
+
+        viewSrmaPage.addDateReportSentToTrust();
+        editSrmaPage.save();
+
+        viewSrmaPage.addNotes();
+        editSrmaPage.save();
 
         viewSrmaPage
             .hasDateOpened(toDisplayDate(now))
@@ -212,7 +225,7 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .clearDateTrustContacted()
             .save()
-            .hasValidationError("Date: Please enter date trust was contacted");
+            .hasValidationError("Date: Please enter a date");
 
         editSrmaPage
             .withDayTrustContacted("11")
