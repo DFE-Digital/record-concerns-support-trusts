@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using AutoFixture;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;
 using ConcernsCaseWork.Services.Cases;
@@ -18,6 +20,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 	[Parallelizable(ParallelScope.All)]
 	public class EditDateOfferedPageModelTests
 	{
+		private Fixture _fixture;
+
+		public EditDateOfferedPageModelTests()
+		{
+			_fixture = new();
+		}
+
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsPage()
 		{
@@ -84,6 +93,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 			pageModel.CaseId = (int)srmaModel.CaseUrn;
 			pageModel.SrmaId = (int)srmaModel.Id;
 
+			pageModel.DateOffered = _fixture.Create<OptionalDateTimeUiComponent>();
 			pageModel.DateOffered.Date = new OptionalDateModel(new DateTime(2022, 4, 7));
 
 			var pageResponse = await pageModel.OnPostAsync();
