@@ -355,9 +355,7 @@ export class EditSrmaPage {
     }
 
     private getStatus(status: string) {
-        const id = status.split(" ").join("");
-
-        return cy.getByTestId(id);
+        return cy.getByTestId(status);
     }
 
     private getReason(reason: string) {

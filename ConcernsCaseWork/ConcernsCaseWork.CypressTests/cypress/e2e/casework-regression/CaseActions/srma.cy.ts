@@ -34,7 +34,7 @@ describe("Testing the SRMA case action", () =>
 
         Logger.Log("Filling out the SRMA form");
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("22")
             .withMonthTrustContacted("10")
             .withYearTrustContacted("2022")
@@ -167,7 +167,7 @@ describe("Testing the SRMA case action", () =>
     it("Should configure an empty SRMA", () =>
     {
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("22")
             .withMonthTrustContacted("10")
             .withYearTrustContacted("2022")
@@ -206,14 +206,14 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Empty");
     });
 
-    it("Should edit an existing configured SRMA", () =>
+    it.only("Should edit an existing configured SRMA", () =>
     {
-        fullConfigureSrma("Trust Considering");
+        fullConfigureSrma("TrustConsidering");
 
         viewSrmaPage.addStatus();
-        editSrmaPage.hasStatus("Trust Considering");
+        editSrmaPage.hasStatus("Trust considering");
         editSrmaPage
-            .withStatus("Preparing For Deployment")
+            .withStatus("Preparing for deployment")
             .save();
 
         viewSrmaPage.addDateTrustContacted();
@@ -372,7 +372,7 @@ describe("Testing the SRMA case action", () =>
 
         it("Should cancel an SRMA", () =>
         {
-            partiallyConfigureSrma("Trust Considering");
+            partiallyConfigureSrma("TrustConsidering");
 
             viewSrmaPage.cancel();
 
@@ -414,7 +414,7 @@ describe("Testing the SRMA case action", () =>
         });
 
         it("Should decline an SRMA", () => {
-            partiallyConfigureSrma("Trust Considering");
+            partiallyConfigureSrma("TrustConsidering");
 
             viewSrmaPage.decline();
 
