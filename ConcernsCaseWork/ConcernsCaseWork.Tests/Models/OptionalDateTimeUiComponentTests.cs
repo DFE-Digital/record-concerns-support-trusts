@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Models
 
 			// Assert
 			result.Should().HaveCount(1);
-			result.First().ErrorMessage.Should().Be("Date: Please enter a complete date DD MM YYYY");
+			result.First().ErrorMessage.Should().Be("Display Name: Please enter a complete date DD MM YYYY");
 		}
 	}
 }
