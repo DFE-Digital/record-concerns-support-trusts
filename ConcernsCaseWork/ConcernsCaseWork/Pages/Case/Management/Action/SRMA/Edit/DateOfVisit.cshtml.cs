@@ -115,7 +115,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start")
 			{
-				Date = date
+				Date = date,
+				DisplayName = "Start"
 			};
 		}
 
@@ -123,7 +124,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End")
 			{
-				Date = date
+				Date = date,
+				DisplayName = "End"
 			};
 		}
 	}

@@ -93,7 +93,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			return new OptionalDateTimeUiComponent("date-accepted", nameof(DateAccepted), "")
 			{
-				Date = date
+				Date = date,
+				DisplayName = "Date accepted"
 			};
 		}
 	}

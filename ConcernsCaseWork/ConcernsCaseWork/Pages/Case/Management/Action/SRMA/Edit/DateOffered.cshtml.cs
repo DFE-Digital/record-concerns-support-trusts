@@ -91,11 +91,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private static OptionalDateTimeUiComponent BuildDateOfferedComponent(OptionalDateModel date)
 		{
-            date.Required = true;
-
 			return new OptionalDateTimeUiComponent("date-offered", nameof(DateOffered), "")
 			{
-				Date = date
+				Date = date,
+				Required = true,
+				DisplayName = "Date trust was contacted"
             };
 		}
 	}

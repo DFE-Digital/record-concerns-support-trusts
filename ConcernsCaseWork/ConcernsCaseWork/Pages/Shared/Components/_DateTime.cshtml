@@ -1,9 +1,10 @@
 @model ConcernsCaseWork.Models.OptionalDateTimeUiComponent
 @{
-	var errors = Model.Date?.Validate();
-	var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+    var errors = Model.Validate();
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
 
-    var required = Model.Date?.Required == true ? "true" : "false";
+    var required = Model.Required == true ? "true" : "false";
+    var displayName = !string.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : Model.Heading;
 }
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
@@ -64,8 +65,8 @@
 						name="@(Model.Name).Date.Year"/>
 				</div>
 			</div>
-			<input type="hidden" name="@(Model.Name).Date.DisplayName" value="@Model.Heading" />
-            <input type="hidden" name="@(Model.Name).Date.Required" value="@required" />
+            <input type="hidden" name="@(Model.Name).DisplayName" value="@displayName" />
+            <input type="hidden" name="@(Model.Name).Required" value="@required" />
 		</div>
 	</fieldset>
 </div>

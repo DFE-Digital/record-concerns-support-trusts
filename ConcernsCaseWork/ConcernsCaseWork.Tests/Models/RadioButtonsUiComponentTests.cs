@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using FluentAssertions;
 using NUnit.Framework;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace ConcernsCaseWork.Tests.Models
 			var results = component.Validate(new ValidationContext(component));
 
 			// Assert
-			Assert.That(results, Has.Exactly(1).InstanceOf<ValidationResult>());
-			Assert.That(results.First().ErrorMessage, Is.EqualTo("Reason: Please enter a value"));
+			results.Should().HaveCount(1);
+			results.First().ErrorMessage.Should().Be("Reason: Please enter a value");
 		}
 
 		[Test]
@@ -31,7 +32,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var results = component.Validate(new ValidationContext(component));
 
 			// Assert
-			Assert.That(results, Is.Empty);
+			results.Should().BeEmpty();
 		}
 
 		[Test]
@@ -44,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var results = component.Validate(new ValidationContext(component));
 
 			// Assert
-			Assert.That(results, Is.Empty);
+			results.Should().BeEmpty();
 		}
 	}
 }

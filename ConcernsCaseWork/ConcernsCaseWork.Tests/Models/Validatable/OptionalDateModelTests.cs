@@ -47,24 +47,6 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 		}
 
 		[Test]
-		public void When_DateIsEmptyAndRequired_Returns_ValiationError()
-		{
-			var model = new OptionalDateModel()
-			{
-				Required = true
-			};
-
-			var result = model.Validate(_validationContext);
-
-			var expected = new List<ValidationResult>()
-			{
-				new ValidationResult("Test Date: Please enter a date", new []{ "Test Date" })
-			};
-
-			result.Should().BeEquivalentTo(expected);
-		}
-
-		[Test]
 		public void When_NotAllFieldsFilled_Returns_CompleteDateValidationError()
 		{
 			var model = new OptionalDateModel()

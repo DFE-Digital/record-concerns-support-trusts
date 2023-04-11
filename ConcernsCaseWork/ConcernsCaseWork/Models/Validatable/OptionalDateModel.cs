@@ -12,8 +12,6 @@ namespace ConcernsCaseWork.Models.Validatable
 		public string Month { get; set; }
 		public string Year { get; set; }
 
-		public bool? Required { get; set;}
-
 		public OptionalDateModel() { }
 		
 		public OptionalDateModel(DateTime dateTime)
@@ -34,12 +32,6 @@ namespace ConcernsCaseWork.Models.Validatable
 
 			var dateValues = new List<string>() { Day, Month, Year };
 			dateValues.RemoveAll(d => d == null);
-
-			if (dateValues.Count == 0 && Required == true)
-			{
-				result.Add(new ValidationResult($"{displayName}: Please enter a date", new[]{ displayName }));
-				return result;
-			}
 
 			if (dateValues.Count == 0)
 			{

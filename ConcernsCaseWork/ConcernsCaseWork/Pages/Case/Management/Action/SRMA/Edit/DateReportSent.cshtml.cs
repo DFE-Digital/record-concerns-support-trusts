@@ -92,7 +92,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			return new OptionalDateTimeUiComponent("date-report-sent", nameof(DateReportSent), "")
 			{
-				Date = date
+				Date = date,
+				DisplayName = "Date report sent"
 			};
 		}
 	}

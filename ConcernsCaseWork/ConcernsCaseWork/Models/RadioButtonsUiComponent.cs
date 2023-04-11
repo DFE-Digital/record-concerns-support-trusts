@@ -8,8 +8,6 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 	public IEnumerable<SimpleRadioItem> RadioItems { get; set; } = new List<SimpleRadioItem>();
 	public int? SelectedId { get; set; }
 
-	public bool Required { get; set; }
-
 	public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

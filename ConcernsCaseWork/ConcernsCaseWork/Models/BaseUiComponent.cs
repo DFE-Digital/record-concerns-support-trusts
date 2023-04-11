@@ -7,4 +7,6 @@ public record BaseUiComponent(string ElementRootId, string Name, string Heading)
 	/// This is different from the heading because the heading might not be suitable, if it contains words or punctuation
 	/// </summary>
 	public string DisplayName { get; set; }
+
+	public bool? Required { get; set; }
 }

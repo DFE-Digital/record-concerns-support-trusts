@@ -76,13 +76,13 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayAccepted("22")
             .save()
-            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
+            .hasValidationError("Date accepted: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withMonthAccepted("22")
             .withYearAccepted("2022")
             .save()
-            .hasValidationError("Date: 22-22-2022 is an invalid date");
+            .hasValidationError("Date accepted: 22-22-2022 is an invalid date");
 
         editSrmaPage
             .withDayAccepted("22")
@@ -137,14 +137,14 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayReportSentToTrust("22")
             .save()
-            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
+            .hasValidationError("Date report sent: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
             .withMonthReportSentToTrust("44")
             .withYearReportSentToTrust("2021")
             .save()
-            .hasValidationError("Date: 05-44-2021 is an invalid date");
+            .hasValidationError("Date report sent: 05-44-2021 is an invalid date");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
@@ -224,19 +224,19 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .clearDateTrustContacted()
             .save()
-            .hasValidationError("Date: Please enter a date");
+            .hasValidationError("Date trust was contacted: Please enter a date");
 
         editSrmaPage
             .withDayTrustContacted("11")
             .save()
-            .hasValidationError("Date: Please enter a complete date DD MM YYYY");
+            .hasValidationError("Date trust was contacted: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withDayTrustContacted("11")
             .withMonthTrustContacted("22")
             .withYearTrustContacted("2021")
             .save()
-            .hasValidationError("Date: 11-22-2021 is an invalid date");
+            .hasValidationError("Date trust was contacted: 11-22-2021 is an invalid date");
 
         editSrmaPage
             .withMonthTrustContacted("05")
