@@ -95,11 +95,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
-				new (Enums.SRMAStatus.TrustConsidering.Description(), (int)Enums.SRMAStatus.TrustConsidering),
-				new (Enums.SRMAStatus.PreparingForDeployment.Description(), (int)Enums.SRMAStatus.PreparingForDeployment),
-				new (Enums.SRMAStatus.Deployed.Description(), (int)Enums.SRMAStatus.Deployed),
+				new (Enums.SRMAStatus.TrustConsidering.Description(), (int)Enums.SRMAStatus.TrustConsidering){ TestId = Enums.SRMAStatus.TrustConsidering.ToString() },
+				new (Enums.SRMAStatus.PreparingForDeployment.Description(), (int)Enums.SRMAStatus.PreparingForDeployment) { TestId = Enums.SRMAStatus.PreparingForDeployment.ToString() },
+				new (Enums.SRMAStatus.Deployed.Description(), (int)Enums.SRMAStatus.Deployed) { TestId = Enums.SRMAStatus.Deployed.ToString() },
 			},
-			SelectedId = selectedId
+			SelectedId = selectedId,
+			DisplayName = "Status"
 		};
 	}
 }

@@ -210,9 +210,9 @@ describe("Testing the SRMA case action", () =>
         fullConfigureSrma("TrustConsidering");
 
         viewSrmaPage.addStatus();
-        editSrmaPage.hasStatus("Trust considering");
+        editSrmaPage.hasStatus("TrustConsidering");
         editSrmaPage
-            .withStatus("Preparing for deployment")
+            .withStatus("PreparingForDeployment")
             .save();
 
         viewSrmaPage.addDateTrustContacted();
