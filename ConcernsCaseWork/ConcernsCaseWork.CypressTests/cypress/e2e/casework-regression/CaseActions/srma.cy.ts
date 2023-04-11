@@ -63,12 +63,11 @@ describe("Testing the SRMA case action", () =>
         viewSrmaPage.addReason();
         editSrmaPage
             .save()
-            .hasValidationError("Select status")
+            .hasValidationError("Reason: Please enter a value");
 
         editSrmaPage
             .withReason("Regions Group Intervention")
-        cy.waitForJavascript();
-        editSrmaPage.save();
+            .save();
 
         Logger.Log("Configure date accepted");
         viewSrmaPage
