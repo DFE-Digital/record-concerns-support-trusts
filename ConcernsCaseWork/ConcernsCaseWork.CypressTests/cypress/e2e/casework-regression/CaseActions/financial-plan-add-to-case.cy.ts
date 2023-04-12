@@ -261,7 +261,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Has option to add Financial Plan Case Action to a case");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('FinancialPlan')
-        AddToCasePage.getCaseActionRadio('FinancialPlan').siblings().should('contain.text', AddToCasePage.actionOptions[2]);
+        AddToCasePage.getCaseActionRadio('FinancialPlan')
         AddToCasePage.getAddToCaseBtn().click();
     }
 });

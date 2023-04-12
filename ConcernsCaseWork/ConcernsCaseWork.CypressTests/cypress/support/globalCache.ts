@@ -1,9 +1,9 @@
 export class GlobalCache {
-    getItem(key) {
+    getItem(key: string) {
         return cy.task("getGlobalCacheItem", key);
     }
 
-    setItem(name, value) {
+    setItem(name: string, value: string) {
         return cy.task("setGlobalCacheItem", { name, value });
     }
 }
