@@ -8,7 +8,10 @@ using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
@@ -86,16 +89,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		}
 
 		private static RadioButtonsUiComponent BuildSrmaStatusComponent(int? selectedId = null)
-		=> new(ElementRootId: "srma-status", Name: nameof(SRMAStatus), "")
 		{
-			RadioItems = new SimpleRadioItem[]
+			var enumValues = new List<SRMAStatus>()
 			{
-				new (Enums.SRMAStatus.TrustConsidering.Description(), (int)Enums.SRMAStatus.TrustConsidering){ TestId = Enums.SRMAStatus.TrustConsidering.ToString() },
-				new (Enums.SRMAStatus.PreparingForDeployment.Description(), (int)Enums.SRMAStatus.PreparingForDeployment) { TestId = Enums.SRMAStatus.PreparingForDeployment.ToString() },
-				new (Enums.SRMAStatus.Deployed.Description(), (int)Enums.SRMAStatus.Deployed) { TestId = Enums.SRMAStatus.Deployed.ToString() },
-			},
-			SelectedId = selectedId,
-			DisplayName = "Status"
-		};
+				Enums.SRMAStatus.TrustConsidering,
+				Enums.SRMAStatus.PreparingForDeployment,
+				Enums.SRMAStatus.Deployed
+			};
+
+			var radioItems = enumValues.Select(v =>
+			{
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
+
+			return new(ElementRootId: "srma-status", Name: nameof(SRMAStatus), "")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "Status"
+			};
+		}
 	}
 }

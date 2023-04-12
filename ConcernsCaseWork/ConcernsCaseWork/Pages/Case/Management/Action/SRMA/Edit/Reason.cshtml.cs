@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
@@ -86,17 +88,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		}
 
 		private static RadioButtonsUiComponent BuildSrmaReasonComponent(int? selectedId = null)
-		=> new(ElementRootId: "srma-reason-offered", Name: nameof(SRMAReasonOffered), "")
 		{
-			RadioItems = new SimpleRadioItem[]
+			var enumValues = new List<SRMAReasonOffered>()
 			{
-				new (Enums.SRMAReasonOffered.OfferLinked.Description(), (int)Enums.SRMAReasonOffered.OfferLinked){ TestId = Enums.SRMAReasonOffered.OfferLinked.ToString() },
-				new (Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight.Description(), (int)Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight) { TestId = Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight.ToString() },
-				new (Enums.SRMAReasonOffered.RegionsGroupIntervention.Description(), (int)Enums.SRMAReasonOffered.RegionsGroupIntervention) { TestId = Enums.SRMAReasonOffered.RegionsGroupIntervention.ToString() },
-			},
-			SelectedId = selectedId,
-			Required = true,
-			DisplayName = "Reason"
-		};
+				Enums.SRMAReasonOffered.OfferLinked,
+				Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
+				Enums.SRMAReasonOffered.RegionsGroupIntervention
+			};
+
+			var radioItems = enumValues.Select(v =>
+			{
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
+
+			return new(ElementRootId: "srma-reason-offered", Name: nameof(SRMAReasonOffered), "")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "Reason"
+			};
+		} 
 	}
 }
