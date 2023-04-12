@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : FPlanBasePage
+	public class EditPageModel : FinancialPlanBasePageModel
 	{
 		private readonly ILogger<EditPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
@@ -94,9 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private void LoadPageComponents(FinancialPlanModel financialPlanModel)
 		{
 			if (financialPlanModel.DatePlanRequested.HasValue)
-			{
 				DatePlanRequested.Date = new OptionalDateModel((DateTime)financialPlanModel.DatePlanRequested);
-			}
 
 			Notes.Text.StringContents = financialPlanModel.Notes;
 		}

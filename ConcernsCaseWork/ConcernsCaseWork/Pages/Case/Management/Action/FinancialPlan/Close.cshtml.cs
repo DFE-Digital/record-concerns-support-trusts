@@ -11,6 +11,12 @@ using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Mappers;
 using System.Linq;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
+using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.CoreTypes;
+using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -32,29 +38,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::ClosePageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				var caseUrn = GetRequestedCaseUrn();
-				var financialPlanId = GetRequestedFinancialPlanId();
-				var loggedInUserName = GetLoggedInUserName();
-				
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
-				
-				if (FinancialPlanModel.IsClosed)
+
+				var financialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(CaseUrn, financialPlanId);
+
+				if (financialPlanModel.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+					return Redirect($"/case/{CaseUrn}/management/action/financialplan/{financialPlanId}/closed");
 				}
-				
-				var currentStatusName = FinancialPlanModel.Status?.Name;
-				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
+
+				LoadPageComponents(financialPlanModel);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
 			
 			return Page();
@@ -62,86 +64,56 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::ClosePageModel::OnPostAsync");
-			
+			_logger.LogMethodEntered();
+
 			try
 			{
-				var caseUrn = GetRequestedCaseUrn();
-				var financialPlanId = GetRequestedFinancialPlanId();
+				if (!ModelState.IsValid)
+				{
+					ResetPageComponentsOnValidationError();
+					return Page();
+				}
 
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
-
-				var statusName = GetRequestedStatus();
-				var status = await GetRequiredStatusByNameAsync(statusName);
-				var notes = GetRequestedNotes();
-				var planRequested = FinancialPlanModel?.DatePlanRequested;
-				var planReceived = GetRequestedViablePlanReceivedDate();
+				var financialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(CaseUrn, financialPlanId);
 
 				var now = DateTime.Now;
+
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
 					Id = financialPlanId,
-					CaseUrn = caseUrn,
-					StatusId = status.Id,
-					Notes = notes,
-					DatePlanRequested = planRequested,
-					DateViablePlanReceived = planReceived,
+					CaseUrn = CaseUrn,
+					StatusId = FinancialPlanClosureStatus.SelectedId,
+					Notes = Notes.Text.StringContents,
+					//DatePlanRequested = planRequested,
+					DateViablePlanReceived = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
 					ClosedAt = now,
 					UpdatedAt = now
 				};
 
+
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel);
-	
-				return Redirect($"/case/{caseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["FinancialPlan.Message"] = ex.Message;
-				
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId());
-				
-				var currentStatusName = FinancialPlanModel.Status?.Name;
-				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
-		
 
 
-		protected async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
+		private void LoadPageComponents(FinancialPlanModel financialPlanModel)
 		{
-			return await _financialPlanStatusCachedService.GetClosureFinancialPlansStatusesAsync();
-		}
+			if (financialPlanModel.DateViablePlanReceived.HasValue)
+			{
+				DateViablePlanReceived.Date = new OptionalDateModel((DateTime)financialPlanModel.DateViablePlanReceived);
+			}
 
-		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
-		{
-			var status = (await GetAvailableStatusesAsync())
-				.FirstOrDefault(s => s.Name.Equals(statusName));
-
-			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
-		}
-
-		protected async Task<IEnumerable<RadioItem>> GetStatusOptionsAsync(string selectedStatusName = null)
-			=> (await GetAvailableStatusesAsync())
-				.Select(s => new RadioItem
-				{
-					Id = s.Name,
-					Text = s.Description,
-					IsChecked = selectedStatusName == s.Name
-				});
-
-		protected async Task<FinancialPlanStatusModel> GetRequiredStatusByNameAsync(string statusName)
-		{
-			var status = await GetOptionalStatusByNameAsync(statusName);
-			return status ?? throw new InvalidOperationException($"Please select a reason for closing the Financial Plan");
+			Notes.Text.StringContents = financialPlanModel.Notes;
 		}
 	}
 }

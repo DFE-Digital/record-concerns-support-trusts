@@ -15,7 +15,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`With plan requested day ${day}`);
 
-        cy.getById("dtr-day-plan-requested").clear().type(day);
+        cy.getById("dtr-day-date-plan-requested").clear().type(day);
 
         return this;
     }
@@ -24,7 +24,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`With plan requested month ${month}`);
 
-        cy.getById("dtr-month-plan-requested").clear().type(month);
+        cy.getById("dtr-month-date-plan-requested").clear().type(month);
 
         return this;
     }
@@ -33,7 +33,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`With plan requested year ${year}`);
 
-        cy.getById("dtr-year-plan-requested").clear().type(year);
+        cy.getById("dtr-year-date-plan-requested").clear().type(year);
 
         return this;
     }
@@ -42,9 +42,9 @@ export class EditFinancialPlanPage
     {
         Logger.Log("Clearing plan requested date");
 
-        cy.getById("dtr-day-plan-requested").clear();
-        cy.getById("dtr-month-plan-requested").clear();
-        cy.getById("dtr-year-plan-requested").clear();
+        cy.getById("dtr-day-date-plan-requested").clear();
+        cy.getById("dtr-month-date-plan-requested").clear();
+        cy.getById("dtr-year-date-plan-requested").clear();
 
         return this;
     }
@@ -112,7 +112,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`Has entered plan requested day ${day}`);
 
-        cy.getById("dtr-day-plan-requested").should("have.value", day);
+        cy.getById("dtr-day-date-plan-requested").should("have.value", day);
 
         return this;
     }
@@ -121,7 +121,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`Has entered plan requested month ${month}`);
 
-        cy.getById("dtr-month-plan-requested").should("have.value", month);
+        cy.getById("dtr-month-date-plan-requested").should("have.value", month);
 
         return this;
     }
@@ -130,7 +130,7 @@ export class EditFinancialPlanPage
     {
         Logger.Log(`Has entered plan requested year ${year}`);
 
-        cy.getById("dtr-year-plan-requested").should("have.value", year);
+        cy.getById("dtr-year-date-plan-requested").should("have.value", year);
 
         return this;
     }
