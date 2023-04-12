@@ -307,10 +307,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState) new UserState("testing"));
 			mockUserStateCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object,mockUserStateCachedService.Object,true);
-
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
@@ -327,7 +326,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			// assert
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
-			Assert.That(redirectResult.Url, Is.Not.Null);
+			Assert.That(redirectResult.Url,Is.EqualTo("/") );
 			
 			// Verify ILogger
 			mockLogger.Verify(
@@ -339,7 +338,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
 
 		[Test]
