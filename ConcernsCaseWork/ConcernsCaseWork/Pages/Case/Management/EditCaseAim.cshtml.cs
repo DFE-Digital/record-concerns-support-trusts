@@ -1,10 +1,16 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -15,13 +21,20 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCaseAimPageModel> _logger;
+		private TelemetryClient _telemetryClient;
+		
+		
 		
 		public CaseModel CaseModel { get; private set; }
 		
-		public EditCaseAimPageModel(ICaseModelService caseModelService, ILogger<EditCaseAimPageModel> logger)
+		public EditCaseAimPageModel(ICaseModelService caseModelService, ILogger<EditCaseAimPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_caseModelService = caseModelService;
-			_logger = logger;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
+			
+
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
@@ -68,7 +81,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					UpdatedAt = DateTimeOffset.Now,
 					CaseAim = caseAim
 				};
-
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CASE CLOSED",
+					EventDescription = $"Case has been closed {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
+					EventUserName = User.Identity.Name
+				});
 				await _caseModelService.PatchCaseAim(patchCaseModel);
 					
 				return Redirect(url);
@@ -103,5 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				return Page();
 			}
 		}
+		
+		
 	}
 }
