@@ -1,20 +1,18 @@
-using ConcernsCaseWork.Constants;
+using AutoFixture;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit;
@@ -22,6 +20,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit;
 [Parallelizable(ParallelScope.All)]
 public class EditSrmaStatusPageModelTests
 {
+	Fixture _fixture;
+
+	public EditSrmaStatusPageModelTests()
+	{
+		_fixture = new();
+	}
+
 	[Test] 
 	public async Task WhenOnGetAsync_ReturnsPage()
 	{
@@ -35,9 +40,8 @@ public class EditSrmaStatusPageModelTests
 			.ReturnsAsync(srmaModel);
 
 		var pageModel = SetupEditSrmaStatusPageModel(mockSrmaModelService.Object, mockLogger.Object);
-		var routeData = pageModel.RouteData.Values;
-		routeData.Add("caseUrn", srmaModel.CaseUrn); 
-		routeData.Add("srmaId", srmaModel.Id); 
+		pageModel.CaseId = (int)srmaModel.CaseUrn;
+		pageModel.SrmaId = (int)srmaModel.Id;
 
 		// act
 		var pageResponse = await pageModel.OnGetAsync();
@@ -49,7 +53,6 @@ public class EditSrmaStatusPageModelTests
 			var page = pageResponse as PageResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.SRMA, Is.Not.Null);
 		});
 
 		mockLogger.VerifyLogErrorWasNotCalled();
@@ -68,9 +71,8 @@ public class EditSrmaStatusPageModelTests
 			.ReturnsAsync(srmaModel);
 
 		var pageModel = SetupEditSrmaStatusPageModel(mockSrmaModelService.Object, mockLogger.Object);
-		var routeData = pageModel.RouteData.Values;
-		routeData.Add("caseUrn", srmaModel.CaseUrn); 
-		routeData.Add("srmaId", srmaModel.Id); 
+		pageModel.CaseId = (int)srmaModel.CaseUrn;
+		pageModel.SrmaId = (int)srmaModel.Id;
 
 		// act
 		var pageResponse = await pageModel.OnGetAsync();
@@ -89,105 +91,28 @@ public class EditSrmaStatusPageModelTests
 	}
 
 	[Test]
-	public async Task WhenOnGetAsync_MissingRouteData_ReturnsPageWithValidationErrors()
+	public async Task WhenOnPostAsync_RouteData_RequestForm_Return_To_SRMA_Page()
 	{
 		// arrange 
 		var mockSrmaModelService = new Mock<ISRMAService>();
 		var mockLogger = new Mock<ILogger<EditSRMAStatusPageModel>>();
-
-		var pageModel = SetupEditSrmaStatusPageModel(mockSrmaModelService.Object, mockLogger.Object);
-
-		// act 
-		var pageResponse = await pageModel.OnGetAsync();
-
-		// assert
-		Assert.Multiple(() =>
-		{
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.SRMA);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-			Assert.That(pageModel.TempData["SRMA.Message"], Is.TypeOf<List<string>>());
-			
-			var validationErrors = ((List<string>)pageModel.TempData["SRMA.Message"]);
-			Assert.That(validationErrors.Contains("Invalid case Id"));
-			Assert.That(validationErrors.Contains("SRMA Id not found"));
-			Assert.That(validationErrors.Count, Is.EqualTo(2));
-		
-			mockSrmaModelService.Verify(s =>
-				s.GetSRMAById(It.IsAny<long>()), Times.Never);
-		});
-	}
-
-	[Test]
-	public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
-	{
-		// arrange 
-		var mockSrmaModelService = new Mock<ISRMAService>();
-		var mockLogger = new Mock<ILogger<EditSRMAStatusPageModel>>();
-
-		var pageModel = SetupEditSrmaStatusPageModel(mockSrmaModelService.Object, mockLogger.Object);
-
-		// act 
-		var pageResponse = await pageModel.OnPostAsync("");
-
-		// assert
-		Assert.Multiple(() =>
-		{
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.SRMA);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-			
-			mockSrmaModelService.Verify(s =>
-				s.GetSRMAById(It.IsAny<long>()), Times.Never);
-		});
-	}
-
-	[Test]
-	[TestCase(SRMAStatus.Cancelled)]
-	[TestCase(SRMAStatus.Complete)]
-	[TestCase(SRMAStatus.Declined)]
-	[TestCase(SRMAStatus.Deployed)]
-	[TestCase(SRMAStatus.TrustConsidering)]
-	[TestCase(SRMAStatus.PreparingForDeployment)]
-	public async Task WhenOnPostAsync_RouteData_RequestForm_Return_To_SRMA_Page(SRMAStatus status)
-	{
-		// arrange 
-		var mockSrmaModelService = new Mock<ISRMAService>();
-		var mockLogger = new Mock<ILogger<EditSRMAStatusPageModel>>();
-
 		var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
-
 		var pageModel = SetupEditSrmaStatusPageModel(mockSrmaModelService.Object, mockLogger.Object);
-		var routeData = pageModel.RouteData.Values;
-		routeData.Add("caseUrn", srmaModel.CaseUrn);
-		routeData.Add("srmaId", srmaModel.Id);
+		pageModel.CaseId = (int)srmaModel.CaseUrn;
+		pageModel.SrmaId = (int)srmaModel.Id;
 
-		pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "status", new StringValues(status.ToString()) }
-			});
+		pageModel.SRMAStatus = _fixture.Create<RadioButtonsUiComponent>();
+		pageModel.SRMAStatus.SelectedId = (int)SRMAStatus.TrustConsidering;
 
-		var pageResponse = await pageModel.OnPostAsync(""); // This url parameter doesn't look to be used?
+		var pageResponse = await pageModel.OnPostAsync();
 
-		// assert
 		Assert.Multiple(() =>
 		{
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
 			var page = pageResponse as RedirectResult;
-
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.Url, Is.EqualTo($"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}"));
-			
+
 			mockLogger.VerifyLogErrorWasNotCalled();
 		});
 	}

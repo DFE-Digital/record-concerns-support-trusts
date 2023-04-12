@@ -1,16 +1,57 @@
 ﻿# Stage 1
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ARG ASPNET_IMAGE_TAG=6.0.9-bullseye-slim
+ARG NODEJS_IMAGE_TAG=16-bullseye
+ARG COMMIT_SHA=not-set
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
+
+ARG COMMIT_SHA
+
 WORKDIR /build
 
-# Copy csproj and restore as distinct layers
-COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj .
+ENV DEBIAN_FRONTEND=noninteractive
+
 COPY ConcernsCaseWork/. .
 
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app
+RUN dotnet restore ConcernsCaseWork
+RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 
-# Stage 2
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+RUN dotnet new tool-manifest
+RUN dotnet tool install dotnet-ef
+
+RUN mkdir -p /app/SQL
+RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
+RUN touch /app/SQL/DbMigrationScript.sql
+
+RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
+
+COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY ./script/set-appsettings-release-tag.sh /app/set-appsettings-release-tag.sh
+
+# Stage 2 - Build assets
+FROM node:${NODEJS_IMAGE_TAG} as build
+COPY --from=publish /app /app
+WORKDIR /app/wwwroot
+RUN npm install
+RUN npm run build
+
+# Stage 3 - Final
+FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
+
+ARG COMMIT_SHA
+
+RUN apt-get update
+RUN apt-get install unixodbc curl gnupg jq -y
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list | tee /etc/apt/sources.list.d/msprod.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install msodbcsql18 mssql-tools18 -y
+
+COPY --from=build /app /app
 WORKDIR /app
-COPY --from=build /app .
-ENTRYPOINT ["dotnet", "ConcernsCaseWork.dll"]
+RUN chmod +x ./docker-entrypoint.sh
+RUN chmod +x ./set-appsettings-release-tag.sh
+RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
+RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
+
+EXPOSE 80/tcp

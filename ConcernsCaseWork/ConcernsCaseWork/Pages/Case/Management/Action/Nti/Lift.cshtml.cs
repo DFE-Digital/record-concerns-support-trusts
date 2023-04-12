@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
