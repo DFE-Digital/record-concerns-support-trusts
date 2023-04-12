@@ -83,8 +83,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				};
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
-					EventName = "CASE CLOSED",
-					EventDescription = $"Case has been closed {caseUrn}",
+					EventName = "EDIT case aim",
+					EventDescription = $"Case aim has been changed {caseUrn}",
 					EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
 					EventUserName = User.Identity.Name
 				});
