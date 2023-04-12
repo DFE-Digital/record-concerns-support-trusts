@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : FPlanBasePage
+	public class AddPageModel : FinancialPlanBasePageModel
 	{
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly ILogger<AddPageModel> _logger;

@@ -231,7 +231,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
             .save()
-            .hasValidationError("Plan requested 06-- is an invalid date");
+            .hasValidationError("Date financial plan requested: Please enter a complete date DD MM YYYY");
 
         Logger.Log("Check fields were not cleared on error");
 
@@ -246,14 +246,14 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanRequestedMonth("22")
             .withPlanRequestedYear("22")
             .save()
-            .hasValidationError("Plan requested 06-22-22 is an invalid date");
+            .hasValidationError("Date financial plan requested: 06-22-22 is an invalid date");
 
         Logger.Log("Notes exceeding character limit");
 
         editFinancialPlanPage
                 .withNotesWithLines()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");                
+                .hasValidationError("Notes (optional): Exceeds maximum allowed length (2000 characters)");                
     }
 
     function addFinancialPlanToCase()

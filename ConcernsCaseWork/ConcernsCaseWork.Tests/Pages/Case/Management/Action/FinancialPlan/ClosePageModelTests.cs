@@ -39,8 +39,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -60,44 +59,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 
-			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
-				.ReturnsAsync(validStatuses);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-
-			Assert.IsNull(pageModel.FinancialPlanModel);
 			
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::ClosePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			Assert.IsInstanceOf<PageResult>(response);
-			Assert.IsNotNull(pageModel.FinancialPlanModel);
-			Assert.That(financialPlanId, Is.EqualTo(pageModel.FinancialPlanModel.Id));
-			Assert.That(caseUrn, Is.EqualTo(pageModel.FinancialPlanModel.CaseUrn));
-			Assert.IsNotNull(pageModel.FinancialPlanStatuses);
-			Assert.That(pageModel.FinancialPlanStatuses.Count(), Is.EqualTo(2));
-			
-			Assert.IsFalse(pageModel.FinancialPlanStatuses.Any(s => s.IsChecked));
-
-			var testStatus1 = pageModel.FinancialPlanStatuses.First();
-			Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus1.Text));
-			Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus1.Id));
-		
-			var testStatus2 = pageModel.FinancialPlanStatuses.Last();
-			Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus2.Text));
-			Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus2.Id));
 			
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
@@ -111,7 +81,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
@@ -121,28 +90,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlan);
 
-			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
-				.ReturnsAsync(validStatuses);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
 
-			Assert.IsNull(pageModel.FinancialPlanModel);
-			
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::ClosePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			Assert.Multiple(() =>
 			{
 				Assert.That(response, Is.InstanceOf<RedirectResult>());
@@ -152,40 +107,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		}
 
 		[Test]
-		[TestCase("1", "")]
-		[TestCase("", "1")]
-		[TestCase("", "")]
-		public async Task WhenOnPostAsync_EmptyRouteValues_ThrowsException_ReturnsPage(string urn, string financialId)
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", urn);
-			routeData.Add("financialplanid", financialId);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-			
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
-		}
-
-		[Test]
-		[TestCaseSource(nameof(GetListValidStatusNames))]
-		public async Task WhenOnPostAsync_Valid_Calls_Patch_Method(string statusName)
+		public async Task WhenOnPostAsync_Valid_Calls_Patch_Method()
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
@@ -197,23 +119,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			var financialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 
-			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
-				.ReturnsAsync(GetListValidStatuses());
 
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlanModel);
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", 2);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", statusName}
-				});
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -230,6 +143,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 				fpm.ClosedAt != null)), Times.Once);
 		}
+
 		[Test]
 		public async Task WhenOnPostAsync_Valid_SetsUpdatedAt()
 		{
@@ -237,22 +151,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-			
+
+			var caseUrn = 1;
+			var financialPlanId = 2;
+
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
 				.ReturnsAsync(GetListValidStatuses());
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", GetListValidStatusNames().First()}
-				});
-			
-			var caseUrn = 1;
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", 2);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.financialPlanId = financialPlanId;
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -270,50 +179,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				fpm.UpdatedAt > DateTime.Now.AddMinutes(-1) && fpm.UpdatedAt <= DateTime.Now)), Times.Once);
 		}
 		
-		
-		[Test]
-		public async Task WhenOnPostAsync_WithEmptyStatus_ReturnsError()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-			
-			var caseUrn = 1;
-			var financialPlanId = 2;
-			
-			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
-				.ReturnsAsync(GetListValidStatuses());
-			
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId, null));
-
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", ""}
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Please select a reason for closing the Financial Plan"));
-			
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
-		}
-
 		private static ClosePageModel SetupClosePageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
 			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
