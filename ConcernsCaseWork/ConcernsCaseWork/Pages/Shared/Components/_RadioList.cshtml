@@ -1,9 +1,15 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Models.RadioButtonsUiComponent
 
 @{
     var required = Model.Required == true ? "true" : "false";
-    var errors = Model.Validate();
-	var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+
+    var modelPath = $"{Model.Name}.{Model.DisplayName}";
+    ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
+
+    var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { Model.DisplayName })); ;
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
 }
 
 <div class="govuk-form-group">
