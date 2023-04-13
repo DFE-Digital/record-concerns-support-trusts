@@ -84,8 +84,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CaseUrn = CaseUrn,
 					StatusId = FinancialPlanClosureStatus.SelectedId,
 					Notes = Notes.Text.StringContents,
-					//DatePlanRequested = planRequested,
-					DateViablePlanReceived = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
+					DatePlanRequested = financialPlanModel.DatePlanRequested,
+					DateViablePlanReceived = !DateViablePlanReceived.Date?.IsEmpty() ?? false ? DateViablePlanReceived.Date?.ToDateTime() : null,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
 					ClosedAt = now,
 					UpdatedAt = now
