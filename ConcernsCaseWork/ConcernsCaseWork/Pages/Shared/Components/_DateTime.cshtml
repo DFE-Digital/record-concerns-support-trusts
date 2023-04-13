@@ -1,10 +1,17 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Models.OptionalDateTimeUiComponent
 @{
-    var errors = Model.Validate();
-    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
-
     var required = Model.Required == true ? "true" : "false";
     var displayName = !string.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : Model.Heading;
+
+    var modelPath = $"{Model.Name}.{displayName}";
+    ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
+
+    var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { displayName }));
+
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+
 }
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
