@@ -15,7 +15,7 @@ export class CloseFinancialPlanPage
     {
         Logger.Log(`With plan received day ${day}`);
 
-        cy.getById("dtr-day-date-viable-plan-received").clear().type(day);
+        cy.getByTestId("dtr-day-date-viable-plan-received").clear().type(day);
 
         return this;
     }
@@ -24,7 +24,7 @@ export class CloseFinancialPlanPage
     {
         Logger.Log(`With plan received month ${month}`);
 
-        cy.getById("dtr-month-date-viable-plan-received").clear().type(month);
+        cy.getByTestId("dtr-month-date-viable-plan-received").clear().type(month);
 
         return this;
     }
@@ -33,7 +33,7 @@ export class CloseFinancialPlanPage
     {
         Logger.Log(`With plan received year ${year}`);
 
-        cy.getById("dtr-year-date-viable-plan-received").clear().type(year);
+        cy.getByTestId("dtr-year-date-viable-plan-received").clear().type(year);
 
         return this;
     }
@@ -59,9 +59,9 @@ export class CloseFinancialPlanPage
     {
         Logger.Log("Clearing plan received date");
 
-        cy.getById("dtr-day-viable-plan").clear();
-        cy.getById("dtr-month-viable-plan").clear();
-        cy.getById("dtr-year-viable-plan").clear();
+        cy.getByTestId("dtr-day-date-viable-plan-received").clear();
+        cy.getByTestId("dtr-month-date-viable-plan-received").clear();
+        cy.getByTestId("dtr-year-date-viable-plan-received").clear();
 
         return this;
     }

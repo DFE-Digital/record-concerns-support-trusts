@@ -27,7 +27,7 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 	{
 		FinancialPlanClosureStatus = BuildFinancialPlanClosureStatusComponent(FinancialPlanClosureStatus.SelectedId);
 		DatePlanRequested = BuildDatePlanRequestedComponent(DatePlanRequested.Date);
-		DateViablePlanReceived = BuildDatePlanRequestedComponent(DateViablePlanReceived.Date);
+		DateViablePlanReceived = BuildDateViablePlanReceivedComponent(DateViablePlanReceived.Date);
 		Notes = BuildNotesComponent(Notes.Text.StringContents);
 	}
 
@@ -40,6 +40,8 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 					new (API.Contracts.Enums.FinancialPlanClosureStatus.Abandoned.Description(), (int)API.Contracts.Enums.FinancialPlanClosureStatus.Abandoned),
 			},
 		SelectedId = selectedId,
+		Required = true,
+		DisplayName = "Reason for closure"
 	};
 
 	private static OptionalDateTimeUiComponent BuildDatePlanRequestedComponent([CanBeNull] OptionalDateModel selectedDate = default)

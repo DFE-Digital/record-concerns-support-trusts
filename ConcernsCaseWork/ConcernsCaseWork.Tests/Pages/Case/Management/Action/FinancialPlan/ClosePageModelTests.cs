@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -84,9 +86,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
+			var now = DateTime.Now;
 			var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
-			financialPlan.ClosedAt = DateTime.Now;
-							
+			financialPlan.ClosedAt = now;
+
+
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlan);
 
@@ -128,6 +132,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			pageModel.CaseUrn = caseUrn;
 			pageModel.financialPlanId = financialPlanId;
 
+
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
@@ -157,6 +162,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
 				.ReturnsAsync(GetListValidStatuses());
+
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
+				.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId));
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
