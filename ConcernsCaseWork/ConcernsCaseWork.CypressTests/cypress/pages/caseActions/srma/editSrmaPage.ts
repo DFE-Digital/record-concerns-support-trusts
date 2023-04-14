@@ -166,7 +166,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is complete");
 
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }
@@ -175,7 +175,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is cancelled");
         
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }
@@ -184,7 +184,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is declined");
         
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }
