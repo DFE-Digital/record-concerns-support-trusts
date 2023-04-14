@@ -53,7 +53,7 @@ export class EditSrmaPage {
     public withNotesExceedingLimit(): this {
         Logger.Log(`With notes exceeding limit`);
 
-        cy.getById('srma-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('srma-notes').clear().invoke("val", "x 1".repeat(666) + "\n".repeat(3));
 
         return this;
     }
