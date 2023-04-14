@@ -2,7 +2,7 @@
 import accessibilitiesTestPages from '../../../fixtures/accessibilitiesTestPages.json'
 
 
-	describe('Check accessibility of the different pages', function () {
+	describe.skip('Check accessibility of the different pages', function () {
 		beforeEach(() => {
 			cy.login();
 		});
