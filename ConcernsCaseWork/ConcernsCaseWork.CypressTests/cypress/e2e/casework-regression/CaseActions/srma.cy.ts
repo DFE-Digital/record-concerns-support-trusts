@@ -337,7 +337,7 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");
+                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
             cy.waitForJavascript();
 
