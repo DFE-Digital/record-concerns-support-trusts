@@ -1,5 +1,7 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -17,7 +19,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<EditDateOfferedPageModel> _logger;
 
-		public SRMAModel SRMAModel { get; set; }
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+
+		[BindProperty]
+		public OptionalDateTimeUiComponent DateOffered { get; set; }
 
 		public EditDateOfferedPageModel(ISRMAService srmaService, ILogger<EditDateOfferedPageModel> logger)
 		{
@@ -29,21 +35,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditDateOfferedPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				(long caseUrn, long srmaId) = GetRouteData();
+				var model = await _srmaModelService.GetSRMAById(SrmaId);
 
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
-				
-				if (SRMAModel.IsClosed)
+				if (model.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
+
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditDateOfferedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -51,54 +57,46 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		public async Task<ActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditDateOfferedPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				(caseUrn, srmaId) = GetRouteData();
-
-				var dtr_day = Request.Form["dtr-day"].ToString();
-				var dtr_month = Request.Form["dtr-month"].ToString();
-				var dtr_year = Request.Form["dtr-year"].ToString();
-
-				var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-
-				if (!DateTimeHelper.TryParseExact(dtString, out DateTime dt))
+				if (!ModelState.IsValid)
 				{
-					throw new InvalidOperationException($"{dtString} is an invalid date");
+					ResetOnValidationError();
+					return Page();
 				}
 
-				await _srmaModelService.SetOfferedDate(srmaId, dt);
-				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
-				return Page();
+				await _srmaModelService.SetOfferedDate(SrmaId, DateOffered.Date.ToDateTime().Value);
+				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditDateOfferedPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 
-		private (long caseUrn, long srmaId) GetRouteData()
+		private void ResetOnValidationError()
 		{
-			var caseUrnValue = RouteData.Values["caseUrn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
+			DateOffered = BuildDateOfferedComponent(DateOffered.Date);
+		}
 
-			var srmaIdValue = RouteData.Values["srmaId"];
-			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
-				throw new Exception("srmaId is null or invalid to parse");
+		private void LoadPageComponents(SRMAModel model)
+		{
+            DateOffered = BuildDateOfferedComponent(new OptionalDateModel(model.DateOffered));
+		}
 
-			return (caseUrn, srmaId);
+		private static OptionalDateTimeUiComponent BuildDateOfferedComponent(OptionalDateModel date)
+		{
+			return new OptionalDateTimeUiComponent("date-offered", nameof(DateOffered), "")
+			{
+				Date = date,
+				Required = true,
+				DisplayName = "Date trust was contacted"
+            };
 		}
 	}
 }

@@ -1,4 +1,7 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -16,8 +19,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<EditNotesPageModel> _logger;
 
-		public SRMAModel SRMAModel { get; set; }
-		public int NotesMaxLength => 2000;
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
 
 		public EditNotesPageModel(ISRMAService srmaModelService, ILogger<EditNotesPageModel> logger)
 		{
@@ -29,21 +35,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditNotesPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				(long caseUrn, long srmaId) = GetRouteData();
-
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				var model = await _srmaModelService.GetSRMAById(SrmaId);
 				
-				if (SRMAModel.IsClosed)
+				if (model.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
+
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditNotesPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -51,39 +57,43 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		public async Task<ActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditNotesPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				(caseUrn, srmaId) = GetRouteData();
-				var srmaNotes = Request.Form["srma-notes"].ToString();
+				if (!ModelState.IsValid)
+				{
+					Notes = BuildNotesComponent(Notes.Text.StringContents);
+					return Page();
+				}
 
-				await _srmaModelService.SetNotes(srmaId, srmaNotes);
-				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
+				await _srmaModelService.SetNotes(SrmaId, Notes.Text.StringContents);
+				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditNotesPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 
-		private (long caseUrn, long srmaId) GetRouteData()
+		private void LoadPageComponents(SRMAModel model)
 		{
-			var caseUrnValue = RouteData.Values["caseUrn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			var srmaIdValue = RouteData.Values["srmaId"];
-			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
-				throw new Exception("srmaId is null or invalid to parse");
-
-			return (caseUrn, srmaId);
+			Notes.Text.StringContents = model.Notes;
 		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("srma-notes", nameof(Notes), "")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
 	}
 }

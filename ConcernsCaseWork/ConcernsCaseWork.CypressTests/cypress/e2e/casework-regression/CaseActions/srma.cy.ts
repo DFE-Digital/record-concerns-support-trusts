@@ -26,15 +26,15 @@ describe("Testing the SRMA case action", () =>
     {
         Logger.Log("Checking SRMA validation");
         editSrmaPage
-            .withNotesWithLines()
+            .withNotesExceedingLimit()
             .save()
-            .hasValidationError("Select status")
-            .hasValidationError("Enter a valid date")
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Status: Please enter a value")
+            .hasValidationError("Date trust was contacted: Please enter a date")
+            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
         Logger.Log("Filling out the SRMA form");
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("22")
             .withMonthTrustContacted("10")
             .withYearTrustContacted("2022")
@@ -63,12 +63,11 @@ describe("Testing the SRMA case action", () =>
         viewSrmaPage.addReason();
         editSrmaPage
             .save()
-            .hasValidationError("Select status")
+            .hasValidationError("Reason: Please enter a value");
 
         editSrmaPage
             .withReason("Regions Group Intervention")
-        cy.waitForJavascript();
-        editSrmaPage.save();
+            .save();
 
         Logger.Log("Configure date accepted");
         viewSrmaPage
@@ -77,14 +76,13 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayAccepted("22")
             .save()
-            .hasValidationError("22-- is an invalid date");
+            .hasValidationError("Date accepted: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withDayAccepted("22")
             .withMonthAccepted("22")
             .withYearAccepted("2022")
             .save()
-            .hasValidationError("22-22-2022 is an invalid date");
+            .hasValidationError("Date accepted: 22-22-2022 is an invalid date");
 
         editSrmaPage
             .withDayAccepted("22")
@@ -99,32 +97,26 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withStartDayOfVisit("22")
             .save()
-            .hasValidationError("Start date 22-- is an invalid date");
+            .hasValidationError("Start: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withStartDayOfVisit("22")
             .withStartMonthOfVisit("22")
             .withStartYearOfVisit("2022")
             .save()
-            .hasValidationError("Start date 22-22-2022 is an invalid date");
+            .hasValidationError("Start: 22-22-2022 is an invalid date");
 
         setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("11")
             .save()
-            .hasValidationError("End date 11-- is an invalid date");
-
-        setValidStartDateOfVisit();
+            .hasValidationError("End: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
-            .withEndDayOfVisit("11")
             .withEndMonthOfVisit("33")
             .withEndYearOfVisit("2021")
             .save()
-            .hasValidationError("End date 11-33-2021 is an invalid date");
-
-        setValidStartDateOfVisit();
+            .hasValidationError("End: 11-33-2021 is an invalid date");
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -132,8 +124,6 @@ describe("Testing the SRMA case action", () =>
             .withEndYearOfVisit("2021")
             .save()
             .hasValidationError("Please ensure end date is same as or after start date.");
-
-        setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -147,14 +137,14 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayReportSentToTrust("22")
             .save()
-            .hasValidationError("22-- is an invalid date");
+            .hasValidationError("Date report sent: Please enter a complete date DD MM YYYY");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
             .withMonthReportSentToTrust("44")
             .withYearReportSentToTrust("2021")
             .save()
-            .hasValidationError("05-44-2021 is an invalid date");
+            .hasValidationError("Date report sent: 05-44-2021 is an invalid date");
 
         editSrmaPage
             .withDayReportSentToTrust("05")
@@ -176,7 +166,7 @@ describe("Testing the SRMA case action", () =>
     it("Should configure an empty SRMA", () =>
     {
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("22")
             .withMonthTrustContacted("10")
             .withYearTrustContacted("2022")
@@ -190,6 +180,19 @@ describe("Testing the SRMA case action", () =>
                 row.hasCreatedDate(toDisplayDate(now))
 				row.select();
 			});
+        
+        Logger.Log("Check the individual edit pages can handle empty inputs");
+        viewSrmaPage.addDateAccepted();
+        editSrmaPage.save();
+
+        viewSrmaPage.addDateOfVisit();
+        editSrmaPage.save();
+
+        viewSrmaPage.addDateReportSentToTrust();
+        editSrmaPage.save();
+
+        viewSrmaPage.addNotes();
+        editSrmaPage.save();
 
         viewSrmaPage
             .hasDateOpened(toDisplayDate(now))
@@ -204,24 +207,39 @@ describe("Testing the SRMA case action", () =>
 
     it("Should edit an existing configured SRMA", () =>
     {
-        fullConfigureSrma("Trust Considering");
+        fullConfigureSrma("TrustConsidering");
 
         viewSrmaPage.addStatus();
-        editSrmaPage.hasStatus("Trust Considering");
+        editSrmaPage.hasStatus("TrustConsidering");
         editSrmaPage
-            .withStatus("Preparing For Deployment")
+            .withStatus("PreparingForDeployment")
             .save();
 
         viewSrmaPage.addDateTrustContacted();
         editSrmaPage
             .hasDayTrustContacted("22")
             .hasMonthTrustContacted("10")
-            .hasYearTrustContacted("2022")
+            .hasYearTrustContacted("2022");
+
+        editSrmaPage
+            .clearDateTrustContacted()
+            .save()
+            .hasValidationError("Date trust was contacted: Please enter a date");
 
         editSrmaPage
             .withDayTrustContacted("11")
-            .withMonthTrustContacted("05")
+            .save()
+            .hasValidationError("Date trust was contacted: Please enter a complete date DD MM YYYY");
+
+        editSrmaPage
+            .withDayTrustContacted("11")
+            .withMonthTrustContacted("22")
             .withYearTrustContacted("2021")
+            .save()
+            .hasValidationError("Date trust was contacted: 11-22-2021 is an invalid date");
+
+        editSrmaPage
+            .withMonthTrustContacted("05")
             .save();
 
         viewSrmaPage.addReason();
@@ -280,7 +298,7 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
         .withNotesExceedingLimit()
         .save()
-        .hasValidationError("Notes must be 2000 characters or less");
+        .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
         cy.waitForJavascript();
 
@@ -319,7 +337,7 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");
+                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
             cy.waitForJavascript();
 
@@ -353,7 +371,7 @@ describe("Testing the SRMA case action", () =>
 
         it("Should cancel an SRMA", () =>
         {
-            partiallyConfigureSrma("Trust Considering");
+            partiallyConfigureSrma("TrustConsidering");
 
             viewSrmaPage.cancel();
 
@@ -395,7 +413,7 @@ describe("Testing the SRMA case action", () =>
         });
 
         it("Should decline an SRMA", () => {
-            partiallyConfigureSrma("Trust Considering");
+            partiallyConfigureSrma("TrustConsidering");
 
             viewSrmaPage.decline();
 

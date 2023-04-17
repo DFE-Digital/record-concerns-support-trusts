@@ -1,6 +1,8 @@
 ## 20.0.0
 
-[Next release]
+* Improved the hint text for reassign case owner to make instructions clearer
+* Improved validation on the NTI close page to validate the date closed and retain the information if an incorrect input is received
+* Added a link to the case archive on the closed case page, for cases that have been migrated from DaRT
 
 ---
 
