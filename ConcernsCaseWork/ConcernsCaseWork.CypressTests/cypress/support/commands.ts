@@ -4,6 +4,7 @@ import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
 import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 //import {AuthenticationComponent} from  "../auth/authenticationComponent";
+import { Logger } from "cypress/common/logger";
 
 Cypress.Commands.add("getByTestId", (id) => {
 	cy.get(`[data-testid="${id}"]`);
