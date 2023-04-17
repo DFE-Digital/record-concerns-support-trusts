@@ -50,16 +50,10 @@ export class EditSrmaPage {
         return this;
     }
 
-    public withNotesWithLines() {
-        Logger.Log(`With notes that has lines`);
-        cy.getById('srma-notes').clear().invoke("val", "x 1 \n".repeat(400));
-        return this;
-    }
-
     public withNotesExceedingLimit(): this {
         Logger.Log(`With notes exceeding limit`);
 
-        cy.getById('srma-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('srma-notes').clear().invoke("val", "x 1".repeat(666) + "\n".repeat(3));
 
         return this;
     }
@@ -172,7 +166,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is complete");
 
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }
@@ -181,7 +175,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is cancelled");
         
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }
@@ -190,7 +184,7 @@ export class EditSrmaPage {
     {
         Logger.Log("Confirming the SRMA is declined");
         
-        cy.getById("confirmChk").check();
+        cy.getById("srma-confirm-check").check();
 
         return this;
     }

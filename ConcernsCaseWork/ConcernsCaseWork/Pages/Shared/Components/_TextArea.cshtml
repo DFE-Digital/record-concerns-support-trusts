@@ -8,16 +8,14 @@
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
 		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
-            <div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
-                <h2 class="govuk-heading-m">@Model.Heading</h2>
-                @{
-                    if (!string.IsNullOrEmpty(Model.HintText))
-                    {
-                        <div class="govuk-hint">@Model.HintText</div>
-                    }
+			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
+				<h2 class="govuk-heading-m">@Model.Heading</h2>
+                @if (!string.IsNullOrEmpty(Model.HintText))
+                {
+                    <div class="govuk-hint">@Model.HintText</div>
                 }
-                <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-describedby="@Model.ElementRootId-info">@Model.Text.StringContents</textarea>
-            </div>
+				<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-describedby="@Model.ElementRootId-info">@Model.Text.StringContents</textarea>
+			</div>
 			<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 				You can enter up to @Model.Text.MaxLength characters
 			</div>
@@ -28,7 +26,7 @@
 </div>
 
 <script type="application/javascript" nonce="@nonce">
-	$(function () {	
-		autoResizer();
+	$(function () {
+        autoResizer();
 	});
 </script>
