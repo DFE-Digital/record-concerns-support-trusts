@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Models.Validatable
 		public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-			=> Validate(DisplayName ?? validationContext.DisplayName);
+		=> Validate(DisplayName ?? validationContext.DisplayName);
 
 		public IEnumerable<ValidationResult> Validate(string displayName)
 		{
@@ -40,13 +40,13 @@ namespace ConcernsCaseWork.Models.Validatable
 
 			if (dateValues.Count != 3)
 			{
-				result.Add(new ValidationResult($"{displayName}: Please enter a complete date DD MM YYYY",new []{ displayName } ));
+				result.Add(new ValidationResult($"{displayName}: Please enter a complete date DD MM YYYY", new []{ displayName } ));
 				return result;
 			}
 
 			if (!DateTimeHelper.TryParseExact(ToString(), out _))
 			{
-				result.Add(new ValidationResult($"{displayName}: {ToString()} is an invalid date",new []{ displayName }));
+				result.Add(new ValidationResult($"{displayName}: {ToString()} is an invalid date", new []{ displayName }));
 			}
 
 			return result;
@@ -59,6 +59,14 @@ namespace ConcernsCaseWork.Models.Validatable
 
 		public override string ToString() => $"{Day}-{Month}-{Year}";
 
-		public DateTime ToDateTime() => DateTimeHelper.ParseExact(this.ToString());
+		public DateTime? ToDateTime() 
+		{
+			if (this.IsEmpty())
+			{
+				return null;
+			}
+
+			return DateTimeHelper.ParseExact(this.ToString());
+		}
 	}
 }
