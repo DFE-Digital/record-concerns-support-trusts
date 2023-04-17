@@ -12,7 +12,7 @@ describe('Check accessibility of the different pages', function () {
         {
             Logger.Log(link);
             cy.visit(link);
-            // cy.excuteAccessibilityTests();
+            cy.excuteAccessibilityTests();
         });
     })
 })
