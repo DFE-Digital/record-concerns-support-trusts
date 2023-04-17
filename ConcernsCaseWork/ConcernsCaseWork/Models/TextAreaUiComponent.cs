@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Models;
 
-public record TextAreaUiComponent(string ElementRootId, string Name, string Heading, string HintText = "") : BaseUiComponent(ElementRootId, Name, Heading)
+public record TextAreaUiComponent(string ElementRootId, string Name, string Heading) : BaseUiComponent(ElementRootId, Name, Heading)
 {
 	public ValidateableString Text { get; set; }
 

@@ -1,22 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.Redis.FinancialPlan;
+using ConcernsCaseWork.Services.FinancialPlan;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.FinancialPlan;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
-using ConcernsCaseWork.Mappers;
-using System.Linq;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
-using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.CoreTypes;
-using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -26,13 +17,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	{
 		private readonly ILogger<ClosePageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
 		public ClosePageModel(
-			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<ClosePageModel> logger)
+			IFinancialPlanModelService financialPlanModelService, ILogger<ClosePageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
-			_financialPlanStatusCachedService = financialPlanStatusService;
 			_logger = logger;
 		}
 

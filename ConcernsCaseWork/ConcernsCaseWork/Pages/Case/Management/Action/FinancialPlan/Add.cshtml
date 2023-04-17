@@ -3,8 +3,10 @@
 @using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders;
 @{
     ViewData[ViewDataConstants.Title] = "Add financial plan";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -45,6 +47,13 @@
                         <partial name="_Cancel" />
                     </div>
                 </form>
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        var submitButton = $('#add-financial-plan-button')[0];
+                        disableOnSubmit(submitButton);
+                    });
+                </script>
             }
 
         </div>
