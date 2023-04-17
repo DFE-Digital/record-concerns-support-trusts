@@ -57,8 +57,9 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 		};
 
 	private static TextAreaUiComponent BuildNotesComponent(string contents = "")
-		=> new("financial-plan-notes", nameof(Notes), "Notes (optional)", "Case owners can record any information they want that feels relevant to the action")
+		=> new("financial-plan-notes", nameof(Notes), "Notes (optional)")
 		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
 			Text = new ValidateableString()
 			{
 				MaxLength = FinancialPlanConstants.MaxNotesLength,

@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				{
 					Id = financialPlanId,
 					CaseUrn = CaseUrn,
-					DatePlanRequested = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
+					DatePlanRequested = DatePlanRequested.Date?.ToDateTime(),
 					Notes = Notes.Text.StringContents,
 					UpdatedAt = DateTime.Now
 				};
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private void LoadPageComponents(FinancialPlanModel financialPlanModel)
 		{
 			if (financialPlanModel.DatePlanRequested.HasValue)
-				DatePlanRequested.Date = new OptionalDateModel((DateTime)financialPlanModel.DatePlanRequested);
+				DatePlanRequested.Date = new OptionalDateModel(financialPlanModel.DatePlanRequested.Value);
 
 			Notes.Text.StringContents = financialPlanModel.Notes;
 		}

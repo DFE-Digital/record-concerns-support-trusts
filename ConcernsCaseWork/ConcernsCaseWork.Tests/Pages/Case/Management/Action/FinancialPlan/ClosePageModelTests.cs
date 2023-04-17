@@ -31,11 +31,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -52,7 +51,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
@@ -82,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
@@ -127,7 +126,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlanModel);
 
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			pageModel.CaseUrn = caseUrn;
 			pageModel.financialPlanId = financialPlanId;
@@ -166,7 +165,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId));
 
-			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			pageModel.CaseUrn = caseUrn;
 			pageModel.financialPlanId = financialPlanId;
@@ -189,13 +188,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		
 		private static ClosePageModel SetupClosePageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
-			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
 			ILogger<ClosePageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new ClosePageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
+			return new ClosePageModel(mockFinancialPlanModelService, mockLogger)
 			{
 				PageContext = pageContext, TempData = tempData, Url = new UrlHelper(actionContext), MetadataProvider = pageContext.ViewData.ModelMetadata
 			};

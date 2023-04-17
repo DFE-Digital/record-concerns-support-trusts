@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CaseUrn = CaseUrn,
 					CreatedAt = now,
 					UpdatedAt = now,
-					DatePlanRequested = !DatePlanRequested.Date?.IsEmpty() ?? false ? DatePlanRequested.Date?.ToDateTime() : null,
+					DatePlanRequested = DatePlanRequested.Date?.ToDateTime(),
 					CreatedBy = User.Identity.Name.GetValueOrNullIfWhitespace(),
 					Notes = Notes.Text.StringContents
 				};
