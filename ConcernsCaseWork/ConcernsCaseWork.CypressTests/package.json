@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "axe-core": "^4.6.1",
+    "axe-core": "^4.6.3",
     "cypress": "^12.7.0",
     "cypress-axe": "^1.4.0",
     "cypress-localstorage-commands": "^1.6.1",
