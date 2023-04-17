@@ -251,7 +251,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Notes exceeding character limit");
 
         editFinancialPlanPage
-                .withNotesWithLines()
+                .withNotesExceedingLimit()
                 .save()
                 .hasValidationError("Notes (optional): Exceeds maximum allowed length (2000 characters)");                
     }
