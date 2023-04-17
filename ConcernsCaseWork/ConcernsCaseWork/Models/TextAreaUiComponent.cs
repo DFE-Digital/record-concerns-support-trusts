@@ -6,6 +6,8 @@ namespace ConcernsCaseWork.Models;
 public record TextAreaUiComponent(string ElementRootId, string Name, string Heading, string HintText = "") : BaseUiComponent(ElementRootId, Name, Heading)
 {
 	public ValidateableString Text { get; set; }
+
+	public string? HintText { get; set; }
 }
 
 public class ValidateableString : IValidatableObject

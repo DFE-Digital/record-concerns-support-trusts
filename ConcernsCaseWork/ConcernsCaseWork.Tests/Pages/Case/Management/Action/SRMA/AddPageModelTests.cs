@@ -1,20 +1,20 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Data.Enums;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
@@ -28,215 +28,44 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		{
 			_fixture = new Fixture();
 		}
-		
-		[Test]
-		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			// act
-			pageModel.OnGet();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-		}
 
 		[Test]
 		public void WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
+			var caseUrn = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
+			pageModel.CaseUrn = caseUrn;
 
 			// act
-			pageModel.OnGet();
+			var result = pageModel.OnGet();
+
+			result.Should().BeAssignableTo<PageResult>();
 
 			// assert
 			mockLogger.VerifyLogErrorWasNotCalled();
-			
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::AddPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Missing_Status_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("") }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Invalid_SRMA_Status_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("random") }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Invalid_Date_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("PreparingForDeployment") },
-					{ "dtr-day", new StringValues("00") },
-					{ "dtr-month", new StringValues("00") },
-					{ "dtr-year", new StringValues("0000") },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["SRMA.Message"], Is.EqualTo("SRMA offered date is not valid 00-00-0000"));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Invalid_NotesLength_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var exceededNotesLength = "1".PadLeft(2001);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("PreparingForDeployment") },
-					{ "dtr-day", new StringValues("13") },
-					{ "dtr-month", new StringValues("04") },
-					{ "dtr-year", new StringValues("2022") },
-					{ "srma-notes", new StringValues(exceededNotesLength) },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
 		public async Task WhenOnPostAsync_FormData_IsValid_SRMA_Is_Created_ReturnsToManagementPage()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("PreparingForDeployment") },
-					{ "dtr-day", new StringValues("13") },
-					{ "dtr-month", new StringValues("04") },
-					{ "dtr-year", new StringValues("2022") },
-					{ "srma-notes", new StringValues("Test Data") },
-				});
+			pageModel.CaseUrn = 1;
+			pageModel.SRMAStatus = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.SRMAStatus.SelectedId = (int)SRMAStatus.TrustConsidering;
+			pageModel.DateOffered = _fixture.Create<OptionalDateTimeUiComponent>();
+			pageModel.DateOffered.Date = new OptionalDateModel(new DateTime(2020, 1, 2));
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -247,7 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			Assert.IsEmpty(pageModel.TempData);
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.Url, Is.EqualTo($"/case/{caseUrn}/management"));
+			Assert.That(page.Url, Is.EqualTo($"/case/1/management"));
 		}
 
 		private static AddPageModel SetupAddPageModel(

@@ -11,8 +11,8 @@ describe('Check accessibility of the different pages', function () {
         it(`Validate accessibility on ${link}`, () =>
         {
             Logger.Log(link);
-            // cy.visit(link);
-            // cy.excuteAccessibilityTests();
+            cy.visit(link);
+            cy.excuteAccessibilityTests();
         });
     })
 })
