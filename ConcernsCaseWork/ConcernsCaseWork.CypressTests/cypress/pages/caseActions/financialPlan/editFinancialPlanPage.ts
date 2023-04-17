@@ -63,15 +63,7 @@ export class EditFinancialPlanPage
     public withNotesExceedingLimit(): this {
 		cy.task("log", `With Notes exceeding limit`);
 
-		cy.getById("financial-plan-notes").clear().invoke("val", "x".repeat(2001));
-
-		return this;
-	}
-
-    public withNotesWithLines(): this {
-		cy.task("log", `With Notes that has lines`);
-
-		cy.getById("financial-plan-notes").clear().invoke("val", "x 1 \n".repeat(400));
+		cy.getById('financial-plan-notes').clear().invoke("val", "x 1".repeat(666) + "\n".repeat(3));
 
 		return this;
 	}
