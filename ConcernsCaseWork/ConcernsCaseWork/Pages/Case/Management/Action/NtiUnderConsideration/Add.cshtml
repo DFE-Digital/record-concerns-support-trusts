@@ -20,21 +20,7 @@
             }
             else
             {
-                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
-                @if (!string.IsNullOrEmpty((string)TempData.Peek("NTI-UC.Message")))
-                {
-                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-                        <div class="govuk-error-summary__body">
-                            <ul class="govuk-list govuk-error-summary__list">
-                                <li>
-                                    <a href="#">@TempData["NTI-UC.Message"]</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                }
+	            <partial name="Shared/_ValidationErrors" />
 
                 <h1 class="govuk-heading-l">
                     <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
@@ -77,7 +63,7 @@
                     </div>
 
                     @* Notes *@
-                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@AddPageModel.NotesMaxLength">
+                    @*<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@AddPageModel.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Notes (optional)</h2>
                             <div class="govuk-hint">Case owners can record any information they want that feels relevant to the action</div>
@@ -86,8 +72,10 @@
                         <div id="nti-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                             You can enter up to @AddPageModel.NotesMaxLength characters
                         </div>
-                    </div>
-
+                    </div>*@
+                    
+                    <partial name="Components/_TextArea" model="Model.Notes" />
+                    
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-uc-button">
                             Save and return to case overview

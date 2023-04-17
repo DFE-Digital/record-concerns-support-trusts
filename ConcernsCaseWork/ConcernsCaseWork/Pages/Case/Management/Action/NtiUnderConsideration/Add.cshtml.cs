@@ -28,6 +28,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public IEnumerable<RadioItem> NTIReasonsToConsider;
 
 		public long CaseUrn { get; private set; }
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+
 
 		public AddPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -128,5 +131,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			return nti;
 		}
+		
+		private void LoadPageComponents()
+		{
+			
+			Notes = BuildNotesComponent();
+		}
+		
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("nti-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString()
+				{
+					MaxLength = 2000,
+					StringContents = contents,
+					DisplayName = "Notes"
+				}
+			};
 	}
 }
