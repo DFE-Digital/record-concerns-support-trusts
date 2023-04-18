@@ -252,7 +252,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withNotesExceedingLimit()
             .lift()
-            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError("Notes must be 2000 characters or less");
 
         Logger.Log("Filling out NTI lifted");
         liftNtiPage
@@ -290,7 +290,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError("Notes must be 2000 characters or less");
 
         closeNtiPage
             .withDayClosed("15")
