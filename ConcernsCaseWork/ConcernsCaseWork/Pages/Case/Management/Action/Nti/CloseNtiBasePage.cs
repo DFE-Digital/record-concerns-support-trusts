@@ -59,7 +59,7 @@ public class CloseNtiBasePage : AbstractPageModel
 			{
 				MaxLength = NtiConstants.MaxNotesLength,
 				StringContents = contents,
-				DisplayName = "Finalise notes (optional)"
+				DisplayName = "Notes"
 			}
 		};
 }
