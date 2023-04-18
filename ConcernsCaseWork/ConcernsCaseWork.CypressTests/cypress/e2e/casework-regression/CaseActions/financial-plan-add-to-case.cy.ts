@@ -166,7 +166,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withReasonForClosure("Abandoned")
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Notes (optional): Exceeds maximum allowed length (2000 characters).")
+            .hasValidationError("Notes must be 2000 characters or less")
 
         Logger.Log("Ensure a valid date must be entered");
         closeFinancialPlanPage
@@ -253,7 +253,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         editFinancialPlanPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes (optional): Exceeds maximum allowed length (2000 characters)");                
+                .hasValidationError("Notes must be 2000 characters or less");                
     }
 
     function addFinancialPlanToCase()
