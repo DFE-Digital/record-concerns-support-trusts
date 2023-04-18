@@ -136,6 +136,17 @@ describe("Testing the NTI warning letter action", () =>
             .hasNotes("Empty");
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiWarningLetterPage
+           .save();
+
+        addNtiWarningLetterToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     it("Should be able to close an NTI warning letter", () =>
     {
         createConfiguredNtiWarningLetter();
