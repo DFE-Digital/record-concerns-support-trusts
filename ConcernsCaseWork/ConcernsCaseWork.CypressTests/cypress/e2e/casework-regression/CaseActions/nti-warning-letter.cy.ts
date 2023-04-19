@@ -136,7 +136,7 @@ describe("Testing the NTI warning letter action", () =>
             .hasNotes("Empty");
     });
 
-    it.only("Should be able to close an NTI warning letter", () =>
+    it("Should be able to close an NTI warning letter", () =>
     {
         createConfiguredNtiWarningLetter();
 
@@ -161,10 +161,8 @@ describe("Testing the NTI warning letter action", () =>
             .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
         closeNtiWarningLetterPage
-            .withReason("Conditions met")
+            .withReason("ConditionsMet")
             .withNotes("This is my final notes")
-
-        cy.waitForJavascript();
         
         closeNtiWarningLetterPage.close();
 

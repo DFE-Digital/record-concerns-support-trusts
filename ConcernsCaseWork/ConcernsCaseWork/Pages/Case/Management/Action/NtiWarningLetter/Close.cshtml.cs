@@ -129,7 +129,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				RadioItems = radioItems,
 				SelectedId = selectedId,
 				DisplayName = "Status",
-				Required = true
+				Required = true,
+				ErrorTextForRequiredField = "Please select a reason for closing the Warning letter"
 			};
 		}
 

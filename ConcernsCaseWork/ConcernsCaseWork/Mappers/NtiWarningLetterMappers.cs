@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Mappers
 
 			if (model.ClosedAt.HasValue)
 			{
-				status = model.ClosedStatus.PastTenseName;
+				status =  model.ClosedStatus?.PastTenseName ?? "";
 			}
 
 			var result = new ActionSummaryModel()
