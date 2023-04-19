@@ -27,6 +27,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public long CaseUrn { get; private set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
+		[BindProperty] public TextAreaUiComponent Notes { get; set; }
+
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
 			INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService,
@@ -47,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				
+
 				if (NtiModel.IsClosed)
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
@@ -72,9 +74,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiUcId = ExtractNtiUcIdFromRoute();
-				
+
 				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				
+
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
 				freshNti.Notes = ntiWithUpdatedValues.Notes;
@@ -132,49 +134,45 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			var statuses = await _ntiStatusesCachedService.GetAllStatuses();
 			return statuses.Select(s => new RadioItem
 			{
-				Id = Convert.ToString(s.Id),
-				Text = s.Name,
-				IsChecked = false   // all statuses are unchecked when close page is opened
+				Id = Convert.ToString(s.Id), Text = s.Name, IsChecked = false // all statuses are unchecked when close page is opened
 			});
 		}
 
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var statusId = GetRequestedStatusId();
-			var notes = GetRequestedNotes();
+			var notes =Notes.Text.StringContents;
 			var id = ExtractNtiUcIdFromRoute();
-
-			var nti = new NtiUnderConsiderationModel()
-			{
-				Id = id,
-				CaseUrn = CaseUrn,
-				Notes = notes,
-				ClosedStatusId = statusId
-			};
-			
+			var nti = new NtiUnderConsiderationModel() { Id = id, CaseUrn = CaseUrn, Notes = notes, ClosedStatusId = statusId };
 			return nti;
 		}
-		
+
 		private int GetRequestedStatusId()
 		{
 			var status = Request.Form["status"];
-			return int.TryParse(status, out var statusId) 
-				? statusId 
+			return int.TryParse(status, out var statusId)
+				? statusId
 				: throw new InvalidOperationException($"Please select a reason for closing NTI under consideration");
 		}
-
-		private string GetRequestedNotes()
+		
+		private void LoadPageComponents()
 		{
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
-			if (string.IsNullOrEmpty(notes)) return null;
-			
-			if (notes.Length > NotesMaxLength)
-			{
-				throw new InvalidOperationException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-			}
-
-			return notes;
+			Notes = BuildNotesComponent();
 		}
+
+		private TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("nti-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString() { MaxLength = NotesMaxLength, StringContents = contents, DisplayName = "Notes" }
+			};
+		
+		private void ResetOnValidationError()
+		{
+			
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
+
+
 	}
 }
