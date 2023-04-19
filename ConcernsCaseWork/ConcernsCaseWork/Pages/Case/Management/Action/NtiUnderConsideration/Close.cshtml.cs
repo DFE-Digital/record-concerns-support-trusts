@@ -21,13 +21,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 
-		public int NotesMaxLength => 2000;
+		public  int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> NTIStatuses;
+		private static int _max;
 
 		public long CaseUrn { get; private set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
-		[BindProperty] public TextAreaUiComponent Notes { get; set; }
+		[BindProperty] 
+		public TextAreaUiComponent Notes { get; set; }//= BuildNotesComponent();
 
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -37,7 +39,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			_ntiModelService = ntiModelService;
 			_ntiStatusesCachedService = ntiStatusesCachedService;
 			_logger = logger;
+			_max = NotesMaxLength;
 		}
+		
 
 		public async Task<IActionResult> OnGetAsync()
 		{
@@ -46,23 +50,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
-
+			
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-
 				if (NtiModel.IsClosed)
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
 				}
-
+				LoadPageComponents();
+				Notes.Text.StringContents = NtiModel.Notes;
 				NTIStatuses = await GetStatusesForUiAsync();
-
 				return Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::NTI-UC::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
@@ -72,19 +74,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
+				if (!ModelState.IsValid)
+				{
+					ResetOnValidationError();
+					return Page();
+				}
 				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiUcId = ExtractNtiUcIdFromRoute();
-
 				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
-
 				freshNti.Notes = ntiWithUpdatedValues.Notes;
 				freshNti.ClosedStatusId = ntiWithUpdatedValues.ClosedStatusId;
 				freshNti.ClosedAt = DateTime.Now; // Note that we should probably be using UTC? Keeping this consistent with other areas which mostly use DateTime.Now. 
-
 				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
-
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (InvalidOperationException ex)
@@ -160,11 +162,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			Notes = BuildNotesComponent();
 		}
 
-		private TextAreaUiComponent BuildNotesComponent(string contents = "")
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 			=> new("nti-notes", nameof(Notes), "Notes (optional)")
 			{
 				HintText = "Case owners can record any information they want that feels relevant to the action",
-				Text = new ValidateableString() { MaxLength = NotesMaxLength, StringContents = contents, DisplayName = "Notes" }
+				Text = new ValidateableString() { MaxLength = _max, StringContents = contents, DisplayName = "Notes" }
 			};
 		
 		private void ResetOnValidationError()
