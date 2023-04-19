@@ -24,6 +24,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		
 		public const int NotesMaxLength = 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
+		
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
 
 		public long CaseUrn { get; private set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
@@ -51,9 +54,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
 				}
-
+				LoadPageComponents();
+				Notes.Text.StringContents = NtiModel.Notes;
 				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel);
-
 				return Page();
 			}
 			catch (Exception ex)
@@ -69,11 +72,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
+				
+				if (!ModelState.IsValid)
+				{
+					ResetOnValidationError();
+					return Page();
+				}
+				
 				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
-
 				var freshFromDb = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id); // this db call is necessary as the API is only designed to simply patch the whole nti
-
 				freshFromDb.NtiReasonsForConsidering = ntiWithUpdatedValues.NtiReasonsForConsidering;
 				freshFromDb.Notes = ntiWithUpdatedValues.Notes;
 				
@@ -139,25 +147,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			var nti = new NtiUnderConsiderationModel() { 
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,
+				Notes =  Notes.Text.StringContents
 			};
-
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new InvalidUserInputException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-				else
-				{
-					nti.Notes = notes;
-				}
-			}
-
 			return nti;
 		}
+		
+		private void LoadPageComponents()
+		{
+			Notes = BuildNotesComponent();
+		}
+		
+		private TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("nti-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString()
+				{
+					MaxLength = NotesMaxLength,
+					StringContents = contents,
+					DisplayName = "Notes"
+				}
+			};
+		
+		private void ResetOnValidationError()
+		{
+			
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
+
 	}
 }

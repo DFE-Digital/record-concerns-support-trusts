@@ -71,6 +71,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				if (!ModelState.IsValid)
 				{
 					ResetOnValidationError();
+					var data = PopulateNtiFromRequest();
+					NTIReasonsToConsider = GetReasons();
+					
+					ExtractCaseUrnFromRoute();
 					return Page();
 				}
 				
