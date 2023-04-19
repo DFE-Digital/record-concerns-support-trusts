@@ -9,8 +9,6 @@ namespace ConcernsCaseWork.Models
 
 		public string Text { get; set; }
 
-		public string ErrorTextForRequiredField { get; set; }
-
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			var result = new List<ValidationResult>();
