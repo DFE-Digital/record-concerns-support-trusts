@@ -14,6 +14,11 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
+using ConcernsCaseWork.Models.Validatable;
+using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -37,14 +42,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public bool IsReturningFromConditions { get; set; }
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> Statuses { get; private set; }
 		public IEnumerable<RadioItem> Reasons { get; private set; }
 
-		public NtiWarningLetterModel WarningLetter { get; set; }
+		[BindProperty]
+		public RadioButtonsUiComponent NtiWarningLetterStatus { get; set; } = BuildStatusComponent();
 
-		public long CaseUrn { get; private set; }
+		[BindProperty]
+		public OptionalDateTimeUiComponent SentDate { get; set; } = BuildDateSentComponent();
 
-		public long? WarningLetterId { get; set; }
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
+
+		public NtiWarningLetterModel? WarningLetter { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "warningLetterId")]
+		public int? WarningLetterId { get; set; }
 
 		public string CancelLinkUrl { get; set; }
 
@@ -63,17 +78,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-WL::AddPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
+				WarningLetter = new NtiWarningLetterModel();
+
 				if (!IsReturningFromConditions) // this is a fresh request, not a return from the conditions page.
 				{
 					ContinuationId = string.Empty;
 				}
-
-				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
 
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
@@ -92,30 +106,30 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					return Redirect($"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId}");
 				}
 
-				Statuses = await GetStatuses();
-				Reasons = await GetReasons();
-
-				CancelLinkUrl = WarningLetterId.HasValue ? @$"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId.Value}" 
-														 : @$"/case/{CaseUrn}/management/action";
+				await LoadComponents(WarningLetter);
 
 				TempData.Keep(nameof(ContinuationId));
-				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				if (!ModelState.IsValid)
+				{
+					await ResetOnValidationError();
+					return Page();
+				}
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
 				{
@@ -128,12 +142,42 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
+		}
+
+		private void SetupPage()
+		{
+			CancelLinkUrl = WarningLetterId.HasValue ? @$"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId.Value}"
+							 : @$"/case/{CaseUrn}/management/action";
+		}
+
+		private async Task LoadComponents(NtiWarningLetterModel warningLetterModel)
+		{
+			SetupPage();
+
+			NtiWarningLetterStatus.SelectedId = warningLetterModel.Status?.Id;
+			Notes.Text.StringContents = warningLetterModel.Notes;
+
+			if (warningLetterModel.SentDate.HasValue)
+			{
+				SentDate.Date = new OptionalDateModel(warningLetterModel.SentDate.Value);
+			}
+
+			Reasons = await GetReasons();
+		}
+
+		private async Task ResetOnValidationError()
+		{
+			SetupPage();
+
+			NtiWarningLetterStatus = BuildStatusComponent(NtiWarningLetterStatus.SelectedId);
+			SentDate = BuildDateSentComponent(SentDate.Date);
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+			Reasons = await GetReasons();
 		}
 
 		private async Task<RedirectResult> HandleContinue()
@@ -215,33 +259,47 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			return ntiWarningLetterModel;
 		}
 
-		private void ExtractCaseUrnFromRoute()
+		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
+			var enumValues = new List<NtiWarningLetterStatus>()
 			{
-				CaseUrn = caseUrn;
-			}
-			else
+				API.Contracts.NtiWarningLetter.NtiWarningLetterStatus.PreparingWarningLetter,
+				API.Contracts.NtiWarningLetter.NtiWarningLetterStatus.SentToTrust
+			};
+
+			var radioItems = enumValues.Select(v =>
 			{
-				throw new InvalidOperationException("CaseUrn not found in the route");
-			}
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
+
+			return new(ElementRootId: "status", Name: nameof(NtiWarningLetterStatus), "Current status")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "Status",
+			};
 		}
 
-		private void ExtractWarningLetterIdFromRoute()
+		private static OptionalDateTimeUiComponent BuildDateSentComponent(OptionalDateModel? date = null)
 		{
-			WarningLetterId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
+			return new OptionalDateTimeUiComponent("date-sent", nameof(SentDate), "Date warning letter sent")
+			{
+				Date = date,
+				DisplayName = "Date warning letter sent"
+			};
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetStatuses()
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("nti-notes", nameof(Notes), "")
 		{
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Where(s => !s.IsClosingState).Select(s => new RadioItem
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
 			{
-				Id = Convert.ToString(s.Id),
-				Text = s.Name,
-				IsChecked = WarningLetter?.Status?.Id == s.Id
-			});
-		}
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
 
 		private async Task<IEnumerable<RadioItem>> GetReasons()
 		{
@@ -277,30 +335,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private NtiWarningLetterModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
-			var status = Request.Form["status"];
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var sentDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-			}
 
 			var nti = new NtiWarningLetterModel()
 			{
 				CaseUrn = CaseUrn,
 				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
-				Status = int.TryParse(status, out int statusId) ? new NtiWarningLetterStatusModel { Id = statusId } : null,
+				Status = NtiWarningLetterStatus.SelectedId.HasValue ? new NtiWarningLetterStatusModel { Id = NtiWarningLetterStatus.SelectedId.Value } : null,
 				Conditions = new List<NtiWarningLetterConditionModel>(),
-				Notes = notes,
-				SentDate = sentDate,
+				Notes = Notes.Text.StringContents,
+				SentDate = SentDate.Date.ToDateTime(),
 				CreatedAt = DateTime.Now,
 				UpdatedAt = DateTime.Now
 			};
