@@ -33,6 +33,13 @@ describe("Testing the NTI warning letter action", () =>
             .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).")
             .hasValidationError("Date warning letter sent: Please enter a complete date DD MM YYYY");
 
+        editNtiWarningLetterPage
+            .withNotes("This is a test")
+            .withMonthSent("20")
+            .withYearSent("2022")
+            .save()
+            .hasValidationError("Date warning letter sent: 22-20-2022 is an invalid date")
+
         createConfiguredNtiWarningLetter();
 
 		actionSummaryTable
