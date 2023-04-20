@@ -5,7 +5,7 @@
     var nonce = Context.GetNonce();
     var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
 }
-<div class="govuk-form-group">
+<div class="govuk-form-group" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
 		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
 			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
