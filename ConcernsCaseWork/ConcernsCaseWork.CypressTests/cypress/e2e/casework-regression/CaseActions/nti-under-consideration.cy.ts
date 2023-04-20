@@ -31,7 +31,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
             editNtiUnderConsiderationPage
                 .withReason("Cash flow problems")
@@ -66,7 +66,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
             editNtiUnderConsiderationPage
                 .clearReasons()
@@ -138,7 +138,7 @@ describe("Testing the NTI under consideration", () =>
                 .withStatus("No further action being taken")
                 .withNotesExceedingLimit()
                 .close()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
             Logger.Log("Filling out the close form");
 

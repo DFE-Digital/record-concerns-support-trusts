@@ -50,7 +50,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
-			
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
 				if (NtiModel.IsClosed)
@@ -74,9 +73,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
+				var status = Request.Form["status"];
+				var success = int.TryParse(status, out var result);
+				if (!success)
+				{
+					ModelState.AddModelError("options", "Please select a reason for closing NTI under consideration");	
+				}
 				if (!ModelState.IsValid)
 				{
 					ResetOnValidationError();
+					NtiModel =PopulateNtiFromRequest();
+					Notes.Text.StringContents = NtiModel.Notes;
+					NTIStatuses = await GetStatusesForUiAsync();
 					return Page();
 				}
 				CaseUrn = ExtractCaseUrnFromRoute();
