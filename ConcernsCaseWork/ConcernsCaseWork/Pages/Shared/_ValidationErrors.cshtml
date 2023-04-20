@@ -1,3 +1,4 @@
+@using ConcernsCaseWork.Models;
 @using Microsoft.AspNetCore.Mvc.ModelBinding
 @model ConcernsCaseWork.Pages.Base.AbstractPageModel
 
@@ -11,7 +12,19 @@
 					.Where(s => s.Value?.ValidationState == ModelValidationState.Invalid)
 					.Select(e => new { e.Key, Msg = string.Join("<br />", e.Value.Errors.Select(errs => errs?.ErrorMessage)) }))
 				{
-					<li><p class="govuk govuk-error-message">@error.Msg</p></li>			
+                    var propertyName = error.Key.Split(".").First();
+
+                    object selectedProperty = Model.GetType().GetProperty(propertyName)?.GetValue(Model);
+
+                    var containerId = "";
+
+                    if (selectedProperty is BaseUiComponent)
+                    {
+                        var component = selectedProperty as BaseUiComponent;
+                        containerId = $"container-{component.ElementRootId}";
+                    }
+
+                    <li><a class="govuk govuk-error-message scrollable-error" data-scroll-to="@containerId">@error.Msg</a></li>
 				}
 			</ul>
 		</div>
