@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 
 		public const int NotesMaxLength = 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider;
+		public List<RadioItem> NTIReasonsToConsider;
 
 		public long CaseUrn { get; private set; }
 		private int _max;
@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{
 				LoadPageComponents();
-				NTIReasonsToConsider = GetReasons();
+				NTIReasonsToConsider = GetReasons().ToList();
 				ExtractCaseUrnFromRoute();
 			}
 			catch (Exception ex)
@@ -72,8 +72,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					ResetOnValidationError();
 					var data = PopulateNtiFromRequest();
-					NTIReasonsToConsider = GetReasons();
-					
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					NTIReasonsToConsider = GetReasons().ToList();
+					foreach (var check in NTIReasonsToConsider)
+					{
+						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						{
+							check.IsChecked = true;
+						}
+					}
 					ExtractCaseUrnFromRoute();
 					return Page();
 				}

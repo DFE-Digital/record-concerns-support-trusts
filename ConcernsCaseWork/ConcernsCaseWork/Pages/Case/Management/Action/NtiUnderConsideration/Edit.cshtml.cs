@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly ILogger<EditPageModel> _logger;
 		
 		public const int NotesMaxLength = 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
+		public List<RadioItem> NTIReasonsToConsiderForUI;
 		
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
@@ -46,7 +46,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
-				
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
 				
@@ -56,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				}
 				LoadPageComponents();
 				Notes.Text.StringContents = NtiModel.Notes;
-				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel);
+				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
 				return Page();
 			}
 			catch (Exception ex)
@@ -76,6 +75,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				if (!ModelState.IsValid)
 				{
 					ResetOnValidationError();
+					ResetOnValidationError();
+					var data = PopulateNtiFromRequest();
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
+					foreach (var check in NTIReasonsToConsiderForUI)
+					{
+						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						{
+							check.IsChecked = true;
+						}
+					}
+					ExtractCaseUrnFromRoute();
 					return Page();
 				}
 				
