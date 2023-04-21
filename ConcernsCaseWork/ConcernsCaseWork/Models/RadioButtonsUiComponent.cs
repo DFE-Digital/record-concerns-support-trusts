@@ -19,7 +19,7 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 
 		if (Required == true && SelectedId == null)
 		{
-			result.Add(new ValidationResult($"{displayName}: Please enter a value", new[] { displayName }));
+			result.Add(new ValidationResult($"Select {displayName}", new[] { displayName }));
 		}
 
 		return result;

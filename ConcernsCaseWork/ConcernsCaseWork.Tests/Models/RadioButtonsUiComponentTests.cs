@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Tests.Models
 
 			// Assert
 			results.Should().HaveCount(1);
-			results.First().ErrorMessage.Should().Be("Reason: Please enter a value");
+			results.First().ErrorMessage.Should().Be("Select Reason");
 		}
 
 		[Test]
