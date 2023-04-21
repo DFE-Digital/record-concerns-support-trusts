@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				RadioItems = radioItems,
 				SelectedId = selectedId,
 				Required = true,
-				DisplayName = "Reason"
+				DisplayName = "SRMA reason"
 			};
 		} 
 	}

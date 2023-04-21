@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
-				DisplayName = "Status",
+				DisplayName = "SRMA status",
 				Required = true
 			};
 		}
