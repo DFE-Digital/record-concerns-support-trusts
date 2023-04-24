@@ -6,6 +6,7 @@ import { CloseFinancialPlanPage } from "../../../pages/caseActions/financialPlan
 import CaseManagementPage from "../../../pages/caseMangementPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -166,7 +167,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withReasonForClosure("Abandoned")
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Notes must be 2000 characters or less")
+            .hasValidationError(NotesError)
 
         Logger.Log("Ensure a valid date must be entered");
         closeFinancialPlanPage
@@ -253,7 +254,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         editFinancialPlanPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");                
+                .hasValidationError(NotesError);                
     }
 
     function addFinancialPlanToCase()

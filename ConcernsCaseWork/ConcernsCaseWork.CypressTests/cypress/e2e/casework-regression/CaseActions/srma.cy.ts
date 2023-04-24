@@ -5,6 +5,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the SRMA case action", () =>
 {
@@ -30,7 +31,7 @@ describe("Testing the SRMA case action", () =>
             .save()
             .hasValidationError("Status: Please enter a value")
             .hasValidationError("Date trust was contacted: Please enter a date")
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError(NotesError);
 
         Logger.Log("Filling out the SRMA form");
         editSrmaPage
@@ -314,7 +315,7 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
         .withNotesExceedingLimit()
         .save()
-        .hasValidationError("Notes must be 2000 characters or less");
+        .hasValidationError(NotesError);
 
         editSrmaPage.withNotes("Editing the notes field")
             .save();
@@ -349,7 +350,7 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");
+                .hasValidationError(NotesError);
 
             editSrmaPage
                 .withNotes("Resolved notes")
