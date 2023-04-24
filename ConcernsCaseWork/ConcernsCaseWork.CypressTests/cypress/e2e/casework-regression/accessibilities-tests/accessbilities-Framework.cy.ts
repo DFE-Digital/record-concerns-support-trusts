@@ -3,7 +3,6 @@ import { Logger } from "cypress/common/logger";
 
 describe('Check accessibility of the different pages', function () {
     beforeEach(() => {
-        Logger.Log("Logging in");
         cy.login();
     });
 
@@ -12,7 +11,7 @@ describe('Check accessibility of the different pages', function () {
         {
             Logger.Log(link);
             cy.visit(link);
-            // cy.excuteAccessibilityTests();
+            cy.excuteAccessibilityTests();
         });
     })
 })

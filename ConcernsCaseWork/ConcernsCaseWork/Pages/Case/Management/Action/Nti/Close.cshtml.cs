@@ -1,16 +1,9 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
-using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Service.Helpers;
-using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
