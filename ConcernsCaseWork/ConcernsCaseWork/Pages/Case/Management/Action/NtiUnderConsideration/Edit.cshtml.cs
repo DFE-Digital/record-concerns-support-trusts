@@ -12,6 +12,7 @@ using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -27,7 +28,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
-
+		
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
 		public long CaseUrn { get; private set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
@@ -45,10 +47,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			try
 			{
-				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				
 				if (NtiModel.IsClosed)
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
@@ -60,9 +60,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 		}
@@ -71,10 +70,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				
 				if (!ModelState.IsValid)
 				{
-					ResetOnValidationError();
 					ResetOnValidationError();
 					var data = PopulateNtiFromRequest();
 					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
@@ -86,18 +83,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 							check.IsChecked = true;
 						}
 					}
-					ExtractCaseUrnFromRoute();
 					return Page();
 				}
 				
-				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 				var freshFromDb = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id); // this db call is necessary as the API is only designed to simply patch the whole nti
 				freshFromDb.NtiReasonsForConsidering = ntiWithUpdatedValues.NtiReasonsForConsidering;
 				freshFromDb.Notes = ntiWithUpdatedValues.Notes;
-				
 				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
-
 				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
 			}
 			catch (InvalidUserInputException ex)
