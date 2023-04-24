@@ -27,7 +27,7 @@ public record OptionalDateTimeUiComponent(string ElementRootId, string Name, str
 
 		if (Required == true && (Date == null || Date.IsEmpty()))
 		{
-			result.Add(new ValidationResult($"{displayName}: Please enter a date", new[] { displayName }));
+			result.Add(new ValidationResult($"Enter {displayName.ToLower()}", new[] { displayName }));
 		}
 
 		if (Date != null)
