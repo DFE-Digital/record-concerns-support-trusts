@@ -8,7 +8,7 @@ import { LiftNoticeToImprovePage } from "../../../pages/caseActions/noticeToImpr
 import { CloseNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing case action NTI", () =>
 {
@@ -245,7 +245,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withDayLifted("22")
             .lift()
-            .hasValidationError("Date NTI lifted: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI lifted"));
 
         liftNtiPage.clearDateFields();
         cy.waitForJavascript();
@@ -283,7 +283,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withDayClosed("22")
             .close()
-            .hasValidationError("Date NTI closed: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI closed"));
 
         closeNtiPage.clearDateFields();
         cy.waitForJavascript();

@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				SelectedId = selectedId,
 				DisplayName = "Status",
 				Required = true,
-				ErrorTextForRequiredField = "Please select a reason for closing the Warning letter"
+				ErrorTextForRequiredField = "Please select a reason for closing the warning letter"
 			};
 		}
 
