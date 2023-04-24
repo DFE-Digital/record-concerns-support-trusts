@@ -16,61 +16,61 @@ namespace ConcernsCaseWork.Services.Cases.Create;
 public class CreateCaseService : ICreateCaseService
 {
 	private readonly ILogger<CreateCaseService> _logger;
-	private readonly IUserStateCachedService _userStateCachedService;
 	private readonly IStatusCachedService _statusCachedService;
 	private readonly ICaseService _caseService;
 	private readonly IRatingCachedService _ratingCachedService;
 	private readonly ISRMAService _srmaService;
 
 	public CreateCaseService(
-		ILogger<CreateCaseService> logger, 
-		IUserStateCachedService userStateCachedService, 
-		IStatusCachedService statusCachedService, 
-		ICaseService caseService, 
+		ILogger<CreateCaseService> logger,
+		IStatusCachedService statusCachedService,
+		ICaseService caseService,
 		IRatingCachedService ratingCachedService,
 		ISRMAService srmaService)
 	{
 		_srmaService = Guard.Against.Null(srmaService);
 		_ratingCachedService = Guard.Against.Null(ratingCachedService);
 		_statusCachedService = Guard.Against.Null(statusCachedService);
-		_userStateCachedService = Guard.Against.Null(userStateCachedService);
 		_caseService = Guard.Against.Null(caseService);
 		_logger = Guard.Against.Null(logger);
 	}
 
-	public async Task<long> CreateNonConcernsCase(string userName)
+	public async Task<long> CreateNonConcernsCase(string userName, string trustUkPrn, string trustCompaniesHouseNumber)
 	{
 		_logger.LogMethodEntered();
+
+		Guard.Against.NullOrEmpty(userName);
+		Guard.Against.NullOrEmpty(trustUkPrn);
+		Guard.Against.NullOrEmpty(trustCompaniesHouseNumber);
 		
 		try
 		{
-			var trustUkPrn = await GetSelectedTrustUkPrn(userName);
-			
 			var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 			var ratingDto = await _ratingCachedService.GetDefaultRating();
 
 			var createdAndUpdatedDate = DateTime.Now;
 
 			var dto = new CreateCaseDto(
-				createdAndUpdatedDate, 
-				createdAndUpdatedDate, 
+				createdAndUpdatedDate,
+				createdAndUpdatedDate,
 				DateTime.MinValue,
-				userName, 
-				null, 
-				trustUkPrn, 
-				null, 
-				DateTimeOffset.MinValue, 
-				null, 
-				null, 
-				null, 
-				null, 
-				null, 
-				null, 
+				userName,
+				null,
+				trustUkPrn,
+				null,
+				DateTimeOffset.MinValue,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
 				null,
 				statusDto.Id,
 				ratingDto.Id,
-				null);
-			
+				null,
+				trustCompaniesHouseNumber);
+
 			var newCase = await _caseService.PostCase(dto);
 			return newCase.Urn;
 		}
@@ -81,19 +81,19 @@ public class CreateCaseService : ICreateCaseService
 			throw;
 		}
 	}
-	
-	public async Task<long> CreateNonConcernsCase(string userName, SRMAModel srmaModel)
+
+	public async Task<long> CreateNonConcernsCase(string userName, string trustUkPrn, string trustCompaniesHouseNumber, SRMAModel srmaModel)
 	{
 		_logger.LogMethodEntered();
-		
+
 		try
 		{
-			var caseUrn = await CreateNonConcernsCase(userName);
-			
+			var caseUrn = await CreateNonConcernsCase(userName, trustUkPrn, trustCompaniesHouseNumber);
+
 			srmaModel.CaseUrn = caseUrn;
-			
+
 			await _srmaService.SaveSRMA(srmaModel);
-			
+
 			return caseUrn;
 		}
 		catch (Exception ex)
@@ -102,15 +102,5 @@ public class CreateCaseService : ICreateCaseService
 
 			throw;
 		}
-	}
-	
-	private async Task<string> GetSelectedTrustUkPrn(string userName)
-	{
-		var userState = await _userStateCachedService.GetData(userName) ?? new UserState(userName);
-			
-		if (string.IsNullOrEmpty(userState.TrustUkPrn))
-			throw new Exception("Cached TrustUkPrn is not set");
-		
-		return userState.TrustUkPrn;
 	}
 }

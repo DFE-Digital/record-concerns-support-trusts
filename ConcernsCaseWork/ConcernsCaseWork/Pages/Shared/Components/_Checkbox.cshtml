@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@using System.ComponentModel.DataAnnotations;
+@model ConcernsCaseWork.Models.CheckboxUiComponent
+@{
+    var required = Model.Required == true ? "true" : "false";
+    var displayName = !string.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : Model.Heading;
+
+    var modelPath = $"{Model.Name}.{displayName}";
+    ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
+
+    var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { displayName }));
+
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+}
+
+<div class="govuk-form-group @errorClass">
+    <partial name="Components/_ValidationErrorDetail" model="@errors" />
+
+    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+        <div class="govuk-checkboxes__item">
+            <input 
+                class="govuk-checkboxes__input" 
+                id="@Model.ElementRootId" 
+                data-testid="@Model.ElementRootId" 
+                name="@(Model.Name).Checked" 
+                value="true"
+                @(Model.Checked ? "checked" : "")
+                type="checkbox">
+            <label class="govuk-label govuk-checkboxes__label" for="@(Model.Name).Checked">
+                @Model.Text
+            </label>
+            <input name="@(Model.Name).Checked" type="hidden" value="false">
+        </div>
+    </div>
+    <input type="hidden" name="@(Model.Name).DisplayName" value="@displayName" />
+    <input type="hidden" name="@(Model.Name).Required" value="@required" />
+    <input type="hidden" name="@(Model.Name).ErrorTextForRequiredField" value="@Model.ErrorTextForRequiredField" />
+</div>

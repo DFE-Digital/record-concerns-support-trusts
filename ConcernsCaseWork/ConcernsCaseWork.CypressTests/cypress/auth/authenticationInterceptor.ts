@@ -15,7 +15,7 @@ export class AuthenticationInterceptor {
                     ...req.headers,
                     'Authorization': `Bearer ${Cypress.env(EnvAuthKey)}`,
                     "x-user-context-role-0": params?.role ? params.role : CaseworkerClaim,
-                    "x-user-context-name": Cypress.env(EnvUsername)
+                    "x-user-context-name": params?.username ? params.username : Cypress.env(EnvUsername)
                 };
             }
         ).as("AuthInterceptor");
@@ -23,5 +23,6 @@ export class AuthenticationInterceptor {
 }
 
 export type AuthenticationInterceptorParams = {
-    role?: string
+    role?: string;
+    username?: string;
 }

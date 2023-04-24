@@ -1,20 +1,19 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
@@ -27,22 +26,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public ResolvePageModelTests()
 		{
 			_fixture = new Fixture();
-		}
-		
-		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
-
-			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -61,34 +44,22 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId); 
-			routeData.Add("resolution", "complete"); 
+			pageModel.CaseId = 1;
+			pageModel.SrmaId = 1;
+			pageModel.Resolution = "complete";
 
 			// act
-			await pageModel.OnGetAsync();
+			var result = await pageModel.OnGetAsync();
 
-			// assert
-			Assert.IsNotNull(pageModel.SRMAModel);
-
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::ResolvePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			result.Should().BeAssignableTo<PageResult>();
 		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_AndSrmaIsClosed_RedirectsToClosedPage()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
-			
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -98,11 +69,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId); 
-			routeData.Add("resolution", "complete"); 
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "complete";
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -111,26 +80,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			Assert.Multiple(() =>
 			{
 				Assert.That(response, Is.InstanceOf<RedirectResult>());
-				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/srma/{srmaId}"));
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseId}/management/action/srma/{srmaId}"));
 				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			});
-
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::ResolvePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 		}
 
 		[Test]
 		public async Task WhenOnGetAsync_Invalid_SRMA_Resolution_ThrowsException_ReturnPage()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -141,10 +101,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "invalid");
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "invalid";
 
 			// act
 			await pageModel.OnGetAsync();
@@ -157,8 +116,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnGetAsync_SRMA_Resolution_Is_Complete_ReturnsPageModel()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -169,10 +128,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "complete");
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "complete";
 
 			// act
 			await pageModel.OnGetAsync();
@@ -186,8 +144,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnGetAsync_SRMA_Resolution_Is_Canceled_ReturnsPageModel()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -198,10 +156,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "cancel");
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "cancel";
 
 			// act
 			await pageModel.OnGetAsync();
@@ -215,8 +172,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnGetAsync_SRMA_Resolution_Is_Declined_ReturnsPageModel()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -227,10 +184,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "decline");
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "decline";
 
 			// act
 			await pageModel.OnGetAsync();
@@ -241,30 +197,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		}
 
 		[Test]
-		public async Task WhenOnPostAsync_MissingSrmaId_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
-
-			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
-
-			// act
-			await pageModel.OnPostAsync();
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
 		public async Task WhenOnPostAsync_ReturnsPageModel()
 		{
 			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
+			var caseId = 1;
+			var srmaId = 1;
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
 
@@ -279,16 +216,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "complete");
+			pageModel.CaseId = caseId;
+			pageModel.SrmaId = srmaId;
+			pageModel.Resolution = "complete";
 
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "srma-notes", new StringValues("srma-notes") }
-				});
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -296,50 +228,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			// assert
 			Assert.NotNull(pageResponseInstance);
-			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseUrn}/management"));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_NotesTooLongThrowsExceptionReturnsPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var srmaId = _fixture.Create<long>();
-			var notes = "1".PadLeft(2001);
-			
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
-
-			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
-
-			mockSrmaService.Setup(s => s.SetNotes(It.IsAny<long>(), It.IsAny<string>()));
-			mockSrmaService.Setup(s => s.SetStatus(It.IsAny<long>(), It.IsAny<SRMAStatus>()));
-
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-				.ReturnsAsync(srmaModel);
-			
-			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("srmaId", srmaId);
-			routeData.Add("resolution", "complete");
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "srma-notes", new StringValues(notes) }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-			var pageResponseInstance = pageResponse as RedirectResult;
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-
+			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseId}/management"));
 		}
 
 		private static ResolvePageModel SetupResolvePageModel(

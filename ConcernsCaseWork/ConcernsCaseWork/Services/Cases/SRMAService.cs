@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Services.Cases
 			await _srmaProvider.SetStatus(srmaId, (SRMAStatus)status);
 		}
 
-		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
+		public async Task SetVisitDates(long srmaId, DateTime? startDate, DateTime? endDate)
 		{
 			await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);
 		}

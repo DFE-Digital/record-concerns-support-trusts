@@ -1,6 +1,15 @@
+## 20.0.0
+
+* Improved the hint text for reassign case owner to make instructions clearer
+* Improved validation on the NTI close page to validate the date closed and retain the information if an incorrect input is received
+* Added a link to the case archive on the closed case page, for cases that have been migrated from DaRT
+
+---
+
 ## 19.0.0
 
-[To be completed]
+* Added Companies House Number to concerns cases. Each new concerns case will store the Companies House Number of the associated Trust (existing cases will be updated in retrospect).
+* Updated wording on the page that is displayed when the user does not have access to the system.
 
 ---
 
