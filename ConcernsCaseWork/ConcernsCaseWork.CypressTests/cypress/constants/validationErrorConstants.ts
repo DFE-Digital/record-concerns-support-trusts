@@ -1,0 +1,1 @@
+export const NotesError = "Notes must be 2000 characters or less";
