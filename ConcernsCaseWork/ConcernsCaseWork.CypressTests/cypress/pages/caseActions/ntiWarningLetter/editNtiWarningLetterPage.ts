@@ -4,7 +4,7 @@ export class EditNtiWarningLetterPage {
     public withStatus(value: string): this {
         Logger.Log(`With status ${value}`);
 
-        cy.getByTestId(`status-${value}`).check();
+        cy.getByTestId(`${value}`).check();
 
         return this;
     }
@@ -12,7 +12,7 @@ export class EditNtiWarningLetterPage {
     public withDaySent(value: string): this {
         Logger.Log(`With day sent ${value}`);
 
-        cy.getById(`dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-date-sent`).clear().type(value);
 
         return this;
     }
@@ -20,7 +20,7 @@ export class EditNtiWarningLetterPage {
     public withMonthSent(value: string): this {
         Logger.Log(`With month sent ${value}`);
 
-        cy.getById(`dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-date-sent`).clear().type(value);
 
         return this;
     }
@@ -28,7 +28,7 @@ export class EditNtiWarningLetterPage {
     public withYearSent(value: string): this {
         Logger.Log(`With year sent ${value}`);
 
-        cy.getById(`dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-date-sent`).clear().type(value);
 
         return this;
     }
@@ -68,7 +68,7 @@ export class EditNtiWarningLetterPage {
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 
-        cy.getByTestId(`status-${value}`).should("be.checked");
+        cy.getByTestId(`${value}`).should("be.checked");
 
         return this;
     }
@@ -76,7 +76,7 @@ export class EditNtiWarningLetterPage {
     public hasDaySent(value: string): this {
         Logger.Log(`Has day sent ${value}`);
 
-        cy.getById(`dtr-day`).should("contain.value", value);
+        cy.getById(`dtr-day-date-sent`).should("contain.value", value);
 
         return this;
     }
@@ -84,7 +84,7 @@ export class EditNtiWarningLetterPage {
     public hasMonthSent(value: string): this {
         Logger.Log(`Has month sent ${value}`);
 
-        cy.getById(`dtr-month`).should("contain.value", value);
+        cy.getById(`dtr-month-date-sent`).should("contain.value", value);
 
         return this;
     }
@@ -92,7 +92,7 @@ export class EditNtiWarningLetterPage {
     public hasYearSent(value: string): this {
         Logger.Log(`Has year sent ${value}`);
 
-        cy.getById(`dtr-year`).should("contain.value", value);
+        cy.getById(`dtr-year-date-sent`).should("contain.value", value);
 
         return this;
     }
