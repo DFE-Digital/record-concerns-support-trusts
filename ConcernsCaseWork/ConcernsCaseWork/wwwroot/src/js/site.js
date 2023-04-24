@@ -20,14 +20,23 @@ function setScrollableErrorElements() {
 
 	var elements = $('.scrollable-error');
 
-	if (elements.length > 0) {
-		elements.click(function () {
-			var id = $(this).data('scroll-to');
+	elements.each(function(){
+		var id = $(this).data('scroll-to');
 
-			var element = document.getElementById(id);
-			element.scrollIntoView({ behavior: 'smooth' });
+		$(this).click(function () {
+			onScrollInvoked(id);
 		});
-	}
+
+		$(this).keydown(function (event) {
+			if (event.key == "Enter")
+				onScrollInvoked(id);
+		});
+	});
+}
+
+function onScrollInvoked(id) {
+	var element = document.getElementById(id);
+	element.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Write your JavaScript code.
