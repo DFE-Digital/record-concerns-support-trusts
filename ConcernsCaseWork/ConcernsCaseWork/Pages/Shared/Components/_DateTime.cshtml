@@ -10,7 +10,10 @@
 
     var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { displayName }));
 
-    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+    var hasErrors = errors?.Any() ?? false;
+
+    var bannerErrorClass = hasErrors ? "govuk-form-group--error" : string.Empty;
+    var inputErrorClass = hasErrors ? "govuk-input--error" : string.Empty;
 
 }
 <div class="govuk-form-group" id="container-@Model.ElementRootId">
@@ -25,13 +28,12 @@
 		
 		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
 			<div class="govuk-date-input__item">
-				<div class="govuk-form-group @errorClass">
+				<div class="govuk-form-group @bannerErrorClass">
                     <label class="govuk-label govuk-date-input__label" aria-label="@displayName Day" for="dtr-day-@Model.ElementRootId">
 						Day
 					</label>
-					<input
-						class="govuk-input govuk-date-input__input govuk-input--width-4" 
-						id="dtr-day-@Model.ElementRootId"
+					<input class="govuk-input govuk-date-input__input govuk-input--width-4 @inputErrorClass"
+                           id="dtr-day-@Model.ElementRootId"
 						data-testid="dtr-day-@Model.ElementRootId"
 						type="text" 
 						maxlength="2" 
@@ -46,7 +48,7 @@
 						Month
 					</label>
 					<input 
-						class="govuk-input govuk-date-input__input govuk-input--width-4"
+						class="govuk-input govuk-date-input__input govuk-input--width-4 @inputErrorClass"
 						id="dtr-month-@Model.ElementRootId"
 						data-testid="dtr-month-@Model.ElementRootId"
 						type="text" 
@@ -62,7 +64,7 @@
 						Year
 					</label>
 					<input
-						class="govuk-input govuk-date-input__input govuk-input--width-4" 
+						class="govuk-input govuk-date-input__input govuk-input--width-4 @inputErrorClass" 
 						id="dtr-year-@Model.ElementRootId"
 						data-testid="dtr-year-@Model.ElementRootId"
 						type="text" 

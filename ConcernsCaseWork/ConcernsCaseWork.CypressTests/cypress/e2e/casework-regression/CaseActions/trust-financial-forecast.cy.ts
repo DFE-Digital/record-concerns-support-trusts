@@ -35,7 +35,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withYearTrustResponded("2024")
 			.withNotesExceedingLimit()
 			.save()
-			.hasValidationError("Supporting notes: Exceeds maximum allowed length (2000 characters).")
+			.hasValidationError("Supporting notes must be 2000 characters or less")
 			.hasValidationError("When did the trust respond?: 27-30-2024 is an invalid date")
 			.hasValidationError("When did SFSO initial review happen?: 90-60-2023 is an invalid date"); 
 
@@ -203,7 +203,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 		closeTFFPage
 			.withNotesExceedingLimit()
 			.close()
-			.hasValidationError("Finalise notes: Exceeds maximum allowed length (2000 characters).")
+			.hasValidationError("Finalise notes must be 2000 characters or less")
 
 		Logger.Log("Close with valid values");
 		closeTFFPage
