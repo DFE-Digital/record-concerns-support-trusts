@@ -23,6 +23,9 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("trustUkprn")]
 		public string TrustUkPrn { get; }
 		
+		[JsonProperty("trustCompaniesHouseNumber")]
+		public string TrustCompaniesHouseNumber { get;  }
+
 		[JsonProperty("reasonAtReview")]
 		public string ReasonAtReview { get; }
 
@@ -67,12 +70,12 @@ namespace ConcernsCaseWork.Service.Cases
 			string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId, Territory? territory) => 
+			long ratingId, Territory? territory, string trustCompaniesHouseNumber) => 
 			(CreatedAt, UpdatedAt, ReviewAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
-				StatusId, RatingId, Territory) = 
+				StatusId, RatingId, Territory, TrustCompaniesHouseNumber) = 
 			(createdAt, updatedAt, reviewAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
-				statusId, ratingId, territory);
+				statusId, ratingId, territory, trustCompaniesHouseNumber);
 	}
 }

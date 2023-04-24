@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Configuration;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
@@ -17,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -273,7 +275,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockActionsModelService, mockStatusCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient())
+			Mock <IOptions<SiteOptions>> options = new Mock<IOptions<SiteOptions>>();
+			options.Setup(m => m.Value).Returns(_fixture.Create<SiteOptions>());
+
+			//return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockActionsModelService, mockStatusCachedService, options.Object, mockLogger)
+			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockActionsModelService, mockStatusCachedService, options.Object,mockLogger,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext, TempData = tempData, Url = new UrlHelper(actionContext), MetadataProvider = pageContext.ViewData.ModelMetadata
 			};

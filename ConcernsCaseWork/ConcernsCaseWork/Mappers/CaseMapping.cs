@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Status;
+using MoreLinq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -27,7 +28,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.DirectionOfTravel,
 				createCaseModel.StatusId,
 				createCaseModel.RatingId,
-				createCaseModel.Territory);
+				createCaseModel.Territory,
+				createCaseModel.TrustCompaniesHouseNumber);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)
@@ -55,7 +57,8 @@ namespace ConcernsCaseWork.Mappers
 				Urn = caseDto.Urn,
 				StatusId = caseDto.StatusId,
 				StatusName = status,
-				RatingId = caseDto.RatingId
+				RatingId = caseDto.RatingId,
+				IsArchived = caseDto.Urn.ToString().StartsWith("1")
 			};
 		}
 

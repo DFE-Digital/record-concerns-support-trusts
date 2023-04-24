@@ -24,21 +24,8 @@ declare global {
             getById(id: string): Chainable<Element>;
             waitForJavascript(): Chainable<Element>;
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;
-            selectMoR(): Chainable<Element>;
-            createCase(): Chainable<Element>;
-            randomSelectTrust(): Chainable<Element>;
-            selectConcernType(): Chainable<Element>;
-            selectRiskToTrust(): Chainable<Element>;
-            selectTerritory(): Chainable<Element>;
-            enterConcernDetails(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
-            selectConcern(expectedNumberOfRagStatus: number, ragStatus: string): Chainable<number>;
-            validateCreateCaseDetailsComponent(): Chainable<Element>;
-            validateCreateCaseInitialDetails(): Chainable<Element>;
-            addConcernsDecisionsAddToCase(): Chainable<Element>;
             basicCreateCase(): Chainable<number>;
         }
     }
-
-	
 }

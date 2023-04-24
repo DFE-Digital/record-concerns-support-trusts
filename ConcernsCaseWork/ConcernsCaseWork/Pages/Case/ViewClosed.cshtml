@@ -8,6 +8,7 @@
 @{
     ViewData["Title"] = "View Closed case";
     var nonce = HttpContext.GetNonce();
+    var caseArchiveLink = "https://educationgovuk.sharepoint.com/:x:/r/sites/efaak/_layouts/15/Doc.aspx?sourcedoc=%7BDDBFCD6E-2A56-4575-85C1-2A5B716B9C3E%7D&file=SFSO%20Case%20Archive.xlsx";
 }
 
 @section BeforeMain {
@@ -35,6 +36,19 @@
 
                 <h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
                 <span class="govuk-tag ragtag ragtag__grey">Closed</span>
+
+                @if (Model.CaseModel.IsArchived)
+                {
+                    <div class="govuk-warning-text govuk-!-margin-top-6">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This case may have further concerns, decisions and details not shown here. Check the <a href="@caseArchiveLink">SFSO case archive</a>  (spreadsheet).
+                        <br />
+                        <span>Password: @Model.CaseArchivePassword</span>
+                    </strong>
+                    </div>
+                }
 
                 <dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-3">
 

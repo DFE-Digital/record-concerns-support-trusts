@@ -12,7 +12,7 @@ export class LiftNoticeToImprovePage {
     public withDayLifted(value: string): this {
         Logger.Log(`With day lifted ${value}`);
 
-        cy.getById(`dtr-day`).clear().type(value);
+        cy.getById(`dtr-day-date-nti-lifted`).clear().type(value);
 
         return this;
     }
@@ -20,7 +20,7 @@ export class LiftNoticeToImprovePage {
     public withMonthLifted(value: string): this {
         Logger.Log(`With month lifted ${value}`);
 
-        cy.getById(`dtr-month`).clear().type(value);
+        cy.getById(`dtr-month-date-nti-lifted`).clear().type(value);
 
         return this;
     }
@@ -28,7 +28,7 @@ export class LiftNoticeToImprovePage {
     public withYearLifted(value: string): this {
         Logger.Log(`With year lifted ${value}`);
 
-        cy.getById(`dtr-year`).clear().type(value);
+        cy.getById(`dtr-year-date-nti-lifted`).clear().type(value);
 
         return this;
     }
@@ -68,9 +68,9 @@ export class LiftNoticeToImprovePage {
     public clearDateFields(): this {
         Logger.Log(`Clearing date fields`);
 
-        cy.getById('dtr-day').clear();
-        cy.getById('dtr-month').clear();
-        cy.getById('dtr-year').clear();
+        cy.getById('dtr-day-date-nti-lifted').clear();
+        cy.getById('dtr-month-date-nti-lifted').clear();
+        cy.getById('dtr-year-date-nti-lifted').clear();
 
         return this;
     }

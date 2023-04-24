@@ -1,9 +1,11 @@
 ﻿using Ardalis.GuardClauses;
+using Ardalis.GuardClauses;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
@@ -25,6 +27,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
+		private readonly ITrustService _trustService;
 		private readonly IUserStateCachedService _userStateCache;
 		private TelemetryClient _telemetry;
 		
@@ -36,13 +39,14 @@ namespace ConcernsCaseWork.Pages.Case
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
 			ILogger<DetailsPageModel> logger,
-			TelemetryClient telemetryClient
-			)
+			TelemetryClient telemetryClient,
+			ITrustService trustService)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
+			_trustService = Guard.Against.Null(trustService);
 			_telemetry = Guard.Against.Null(telemetryClient);
 			
 		}
@@ -74,15 +78,18 @@ namespace ConcernsCaseWork.Pages.Case
 				// Complete create case model
 				var userState = await GetUserState();
 				
+				// get the trust being used for the case
+				var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+				
 				var createCaseModel = userState.CreateCaseModel;
 				createCaseModel.Issue = issue;
 				createCaseModel.CurrentStatus = currentStatus;
 				createCaseModel.NextSteps = nextSteps;
 				createCaseModel.CaseAim = caseAim;
 				createCaseModel.DeEscalationPoint = deEscalationPoint;
-				createCaseModel.TrustUkPrn = userState.TrustUkPrn;
+				createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
 				createCaseModel.CaseHistory = caseHistory;
-					
+				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
 				{

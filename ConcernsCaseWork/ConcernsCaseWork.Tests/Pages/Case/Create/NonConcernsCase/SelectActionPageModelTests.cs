@@ -2,7 +2,9 @@ using AutoFixture;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
@@ -87,17 +89,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var mockLogger = new Mock<ILogger<SelectActionPageModel>>();
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockTrustService = new Mock<ITrustService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var userName = _fixture.Create<string>();
 			var caseUrn = _fixture.Create<long>();
 			var expectedUrl = "/case/create/nonconcerns/srma";
-
+			var expectedUkPrn = _fixture.Create<string>();
+			var expectedTrustCompaniesHouseNumber = _fixture.CreateMany<char>(8).ToString();
+			var mockTrustDetailsDto = new Mock<TrustDetailsDto>();
+			
+			mockUserService.Setup(x => x.GetData(userName)).ReturnsAsync(new UserState(userName) { TrustUkPrn = expectedUkPrn });
+			mockTrustService.Setup(x => x.GetTrustByUkPrn(expectedUkPrn)).ReturnsAsync(mockTrustDetailsDto.Object);
+			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
 
-			mockCreateCaseService.Setup(s => s.CreateNonConcernsCase(userName)).ReturnsAsync(caseUrn);
+			mockCreateCaseService.Setup(s => s.CreateNonConcernsCase(userName, expectedUkPrn, expectedTrustCompaniesHouseNumber)).ReturnsAsync(caseUrn);
 
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
 			sut.SelectedAction = SelectActionPageModel.Actions.SRMA;

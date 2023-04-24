@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Configuration;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
@@ -16,6 +17,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -38,6 +40,8 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.ClosedCasesSummaryPage);
+
+		public string CaseArchivePassword { get; set; }
 		
 		public ViewClosedPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -45,7 +49,8 @@ namespace ConcernsCaseWork.Pages.Case
 			IActionsModelService actionsModelService,
 			IStatusCachedService statusCachedService,
 			ILogger<ViewClosedPageModel> logger,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient,
+			IOptions<SiteOptions> siteOptions)
 		{
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -54,6 +59,7 @@ namespace ConcernsCaseWork.Pages.Case
 			_statusCachedService = Guard.Against.Null(statusCachedService);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
+			CaseArchivePassword = siteOptions.Value.CaseArchivePassword;
 		}
 		
 		public async Task<IActionResult> OnGetAsync()

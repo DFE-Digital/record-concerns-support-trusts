@@ -3,6 +3,8 @@ import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisi
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
+import CaseManagementPage from "../../../pages/caseMangementPage";
+import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
@@ -13,15 +15,20 @@ describe("User can add case actions to an existing case", () => {
 	const closeDecisionPage = new CloseDecisionPage();
 	const decisionOutcomePage = new DecisionOutcomePage();
 
-	let now;
+	let now: Date;
 	
 	beforeEach(() => {
 		cy.login();
 		now = new Date();
+
+		cy.basicCreateCase();
+
+		CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Decision');
+        AddToCasePage.getAddToCaseBtn().click();
 	});
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
-		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
 		editDecisionPage
@@ -114,7 +121,6 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	it("Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
-		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Adding note on the decision that will be closing ");
 		editDecisionPage
@@ -226,8 +232,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("When Decisions is empty, View Behavior", function () {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage.save();
 
 		Logger.Log("Selecting Decision from open actions");
@@ -256,8 +260,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Edit a decision outcome ", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 
@@ -342,8 +344,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Create a decision outcome, checking validation and view it was created correctly", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 
@@ -428,8 +428,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Create a decision outcome with only status, should set status but all other labels should be empty", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 

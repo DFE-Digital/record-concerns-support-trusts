@@ -30,7 +30,6 @@ import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import caseActionTable from "cypress/pages/caseRows/caseActionTable";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
@@ -293,7 +292,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         AddToCasePage.getAddToCaseBtn().click();
 
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("05")
             .withMonthTrustContacted("06")
             .withYearTrustContacted("2022")
