@@ -6,7 +6,7 @@ import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningL
 import { CloseNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/closeNtiWarningLetterPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the NTI warning letter action", () =>
 {
@@ -32,14 +32,14 @@ describe("Testing the NTI warning letter action", () =>
             .withDaySent("22")
             .save()
             .hasValidationError(NotesError)
-            .hasValidationError("Date warning letter sent: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date warning letter sent"));
 
         editNtiWarningLetterPage
             .withNotes("This is a test")
             .withMonthSent("20")
             .withYearSent("2022")
             .save()
-            .hasValidationError("Date warning letter sent: 22-20-2022 is an invalid date")
+            .hasValidationError(DateInvalidError.replace("{0}", "Date warning letter sent"))
 
         createConfiguredNtiWarningLetter();
 
@@ -176,7 +176,7 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Please select a reason for closing the Warning letter")
+            .hasValidationError("Please select a reason for closing the warning letter")
             .hasValidationError(NotesError);
 
         closeNtiWarningLetterPage
