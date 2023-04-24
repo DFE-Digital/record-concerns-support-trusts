@@ -16,7 +16,7 @@
     var inputErrorClass = hasErrors ? "govuk-input--error" : string.Empty;
 
 }
-<div class="govuk-form-group" id="container-@Model.ElementRootId">
+<div class="govuk-form-group @bannerErrorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
 		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
 			<h2 class="govuk-heading-m" id="@(Model.Name).Date.@Model.Heading">
@@ -28,7 +28,7 @@
 		
 		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
 			<div class="govuk-date-input__item">
-				<div class="govuk-form-group @bannerErrorClass">
+				<div class="govuk-form-group">
                     <label class="govuk-label govuk-date-input__label" aria-label="@displayName Day" for="dtr-day-@Model.ElementRootId">
 						Day
 					</label>
