@@ -26,7 +26,7 @@
 		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
 			<div class="govuk-date-input__item">
 				<div class="govuk-form-group @errorClass">
-					<label class="govuk-label govuk-date-input__label" for="dtr-day-@Model.ElementRootId">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Day" for="dtr-day-@Model.ElementRootId">
 						Day
 					</label>
 					<input
@@ -42,7 +42,7 @@
 			</div>
 			<div class="govuk-date-input__item">
 				<div class="govuk-form-group">
-					<label class="govuk-label govuk-date-input__label" for="dtr-month-@Model.ElementRootId">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Month" for="dtr-month-@Model.ElementRootId">
 						Month
 					</label>
 					<input 
@@ -58,7 +58,7 @@
 			</div>
 			<div class="govuk-date-input__item">
 				<div class="govuk-form-group">
-					<label class="govuk-label govuk-date-input__label" for="dtr-year-@Model.ElementRootId">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Year" for="dtr-year-@Model.ElementRootId">
 						Year
 					</label>
 					<input
