@@ -6,7 +6,7 @@ import { CloseFinancialPlanPage } from "../../../pages/caseActions/financialPlan
 import CaseManagementPage from "../../../pages/caseMangementPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -160,7 +160,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Ensure user must select a reason for closing the financial plan");
         closeFinancialPlanPage
             .close()
-            .hasValidationError("Reason for closure: Please enter a value");
+            .hasValidationError("Select Reason for closure");
 
         Logger.Log("Ensure notes cannot exceed 2000 characters");
         closeFinancialPlanPage
@@ -177,7 +177,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanReceivedYear("2020")
             .withNotes("Edited Notes!")
             .close()
-            .hasValidationError("Date viable plan received: 32-13-2020 is an invalid date")
+            .hasValidationError(DateInvalidError.replace("{0}", "Date viable plan received"));
 
         Logger.Log("Close a valid financial plan");
         closeFinancialPlanPage
@@ -232,7 +232,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
             .save()
-            .hasValidationError("Date financial plan requested: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date financial plan requested"));
 
         Logger.Log("Check fields were not cleared on error");
 
@@ -247,7 +247,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanRequestedMonth("22")
             .withPlanRequestedYear("22")
             .save()
-            .hasValidationError("Date financial plan requested: 06-22-22 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Date financial plan requested"));
 
         Logger.Log("Notes exceeding character limit");
 
