@@ -8,6 +8,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -50,7 +51,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasValidationError(
 				"Date ESFA received request: Please enter a complete date DD MM YYYY"
 			)
-			.hasValidationError("Notes must be 2000 characters or less");
+			.hasValidationError(NotesError);
 
 		Logger.Log("Creating Decision");
 		editDecisionPage

@@ -64,7 +64,7 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 			{
 				MaxLength = FinancialPlanConstants.MaxNotesLength,
 				StringContents = contents,
-				DisplayName = "Notes (optional)"
+				DisplayName = "Notes"
 			}
 		};
 }

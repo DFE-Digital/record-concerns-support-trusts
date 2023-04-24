@@ -1,14 +1,28 @@
 
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
 @using NetEscapades.AspNetCore.SecurityHeaders
+@using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Models.TextAreaUiComponent
 @{
     var nonce = Context.GetNonce();
     var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
+
+    var modelPath = $"{Model.Name}.Text.{displayName}";
+    ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
+
+    var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { displayName })); ;
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
 }
 <div class="govuk-form-group" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
+        <h2 class="govuk-heading-m">@Model.Heading</h2>
+        @if (!string.IsNullOrEmpty(Model.HintText))
+        {
+            <div class="govuk-hint">@Model.HintText</div>
+        }
 		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
-			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
+			<div class="govuk-form-group @errorClass" id="@(Model.Name).Text.@Model.Heading">
+                <partial name="Components/_ValidationErrorDetail" model="@errors" />
 				<h2 class="govuk-heading-m">@Model.Heading</h2>
                 @if (!string.IsNullOrEmpty(Model.HintText))
                 {

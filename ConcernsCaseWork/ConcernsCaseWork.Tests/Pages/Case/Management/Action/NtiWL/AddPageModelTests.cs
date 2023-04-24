@@ -1,11 +1,15 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,23 +29,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests
 	{
-		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		private Fixture _fixture;
+
+		public AddPageModelTests()
 		{
-			// arrange
-
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
+			_fixture = new Fixture();
 		}
 
 		[Test]
@@ -55,30 +47,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			pageModel.CaseUrn = 1;
 
 			// act
-			await pageModel.OnGetAsync();
+			var result = await pageModel.OnGetAsync();
 
-			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-WL::AddPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			result.Should().BeAssignableTo<PageResult>();
 		}
 
 		[Test]
 		public async Task WhenOnGetAsync_When_NTI_WL_Is_Already_Closed_RedirectsToIndexPage()
 		{
 			// arrange
-			var caseUrn = 9823;
-			var warningLetterId = 4849;
-			
 			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
@@ -92,9 +72,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn); 
-			routeData.Add("warningLetterId", warningLetterId);
-
+			pageModel.CaseUrn = 1;
+			pageModel.WarningLetterId = 1;
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -103,32 +82,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			Assert.Multiple(() =>
 			{
 				Assert.That(response, Is.InstanceOf<RedirectResult>());
-				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/ntiwarningletter/{warningLetterId}"));
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/1/management/action/ntiwarningletter/1"));
 				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			});
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
-			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync(String.Empty);
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
@@ -160,16 +116,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger, mockNtiWLConditionsService);
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			pageModel.CaseUrn = 1;
+
+			pageModel.NtiWarningLetterStatus = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.NtiWarningLetterStatus.SelectedId = 1;
+
+			pageModel.SentDate = _fixture.Create<OptionalDateTimeUiComponent>();
+			pageModel.SentDate.Date = new OptionalDateModel() { Day = "2", Month = "9", Year = "2022" };
+
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 			new Dictionary<string, StringValues>
 			{
-				{ "reason", new StringValues("1") },
-				{ "status", new StringValues("1") },
-				{ "dtr-day", new StringValues("2") },
-				{ "dtr-month", new StringValues("9") },
-				{ "dtr-year", new StringValues("2022") }
+				{ "reason", new StringValues("1") }
 			});
 
 			// act
