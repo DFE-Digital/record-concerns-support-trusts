@@ -32,6 +32,7 @@ locals {
   cdn_frontdoor_enable_rate_limiting            = var.cdn_frontdoor_enable_rate_limiting
   cdn_frontdoor_rate_limiting_threshold         = var.cdn_frontdoor_rate_limiting_threshold
   key_vault_access_users                        = toset(var.key_vault_access_users)
+  key_vault_access_ipv4                         = var.key_vault_access_ipv4
   tfvars_filename                               = var.tfvars_filename
   enable_event_hub                              = var.enable_event_hub
   enable_monitoring                             = var.enable_monitoring
