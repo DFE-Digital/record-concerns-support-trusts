@@ -30,8 +30,15 @@ describe("Testing the NTI warning letter action", () =>
             .withNotesExceedingLimit()
             .withDaySent("22")
             .save()
-            .hasValidationError("Notes must be 2000 characters or less")
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).")
+            .hasValidationError("Date warning letter sent: Please enter a complete date DD MM YYYY");
+
+        editNtiWarningLetterPage
+            .withNotes("This is a test")
+            .withMonthSent("20")
+            .withYearSent("2022")
+            .save()
+            .hasValidationError("Date warning letter sent: 22-20-2022 is an invalid date")
 
         createConfiguredNtiWarningLetter();
 
@@ -61,7 +68,7 @@ describe("Testing the NTI warning letter action", () =>
         viewNtiWarningLetterPage.edit();
 
         editNtiWarningLetterPage
-            .hasStatus("Sent to trust")
+            .hasStatus("SentToTrust")
             .hasDaySent("22")
             .hasMonthSent("10")
             .hasYearSent("2022")
@@ -71,7 +78,7 @@ describe("Testing the NTI warning letter action", () =>
 
         editNtiWarningLetterPage
             .clearReasons()
-            .withStatus("Preparing warning letter")
+            .withStatus("PreparingWarningLetter")
             .withDaySent("10")
             .withMonthSent("02")
             .withYearSent("2020")
@@ -158,13 +165,11 @@ describe("Testing the NTI warning letter action", () =>
             .withNotesExceedingLimit()
             .close()
             .hasValidationError("Please select a reason for closing the Warning letter")
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
 
         closeNtiWarningLetterPage
-            .withReason("Conditions met")
+            .withReason("ConditionsMet")
             .withNotes("This is my final notes")
-
-        cy.waitForJavascript();
         
         closeNtiWarningLetterPage.close();
 
@@ -202,7 +207,7 @@ describe("Testing the NTI warning letter action", () =>
     {
         Logger.Log("Filling out the form");
         editNtiWarningLetterPage
-            .withStatus("Sent to trust")
+            .withStatus("SentToTrust")
             .withDaySent("22")
             .withMonthSent("10")
             .withYearSent("2022")

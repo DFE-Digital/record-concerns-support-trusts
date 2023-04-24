@@ -1,21 +1,17 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
@@ -23,21 +19,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 	[Parallelizable(ParallelScope.All)]
 	public class ClosePageModelTests
 	{
-		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		private Fixture _fixture;
+
+		public ClosePageModelTests()
 		{
-			// arrange
-			Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
-			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockNtiWarningLetterStatusesCachedService, mockLogger);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
+			_fixture = new Fixture();
 		}
 
 		[Test]
@@ -45,36 +31,23 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		{
 			// arrange
 			var mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockNtiWarningLetterStatusesCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockLogger);
 						
 			var ntiModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel();
 
 			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterId(It.IsAny<long>()))
 				.ReturnsAsync(ntiModel);
 
-			mockNtiWarningLetterStatusesCachedService.Setup(s => s.GetAllStatusesAsync()).ReturnsAsync(new List<NtiWarningLetterStatusDto>());
-
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1); 
-			routeData.Add("ntiWLId", 1); 
+			pageModel.CaseUrn = 1;
+			pageModel.WarningLetterId = 1;
 
 			// act
-			await pageModel.OnGetAsync();
+			var result = await pageModel.OnGetAsync();
 
-			// assert
-			mockLogger.VerifyLogErrorWasNotCalled();
-			
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-WL::ClosePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			result.Should().BeAssignableTo<PageResult>();
 		}
 		
 		[Test]
@@ -85,32 +58,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var warningLetterId = 4849;
 
 			Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockNtiWarningLetterStatusesCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockLogger);
 			
 			var ntiModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel(DateTime.Now);
 
 			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterId(warningLetterId))
 				.ReturnsAsync(ntiModel);
 
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn); 
-			routeData.Add("ntiWLId", warningLetterId); 
+			pageModel.CaseUrn = caseUrn;
+			pageModel.WarningLetterId = warningLetterId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
-
-			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-WL::ClosePageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 			
 			Assert.Multiple(() =>
 			{
@@ -121,68 +82,45 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		}
 
 		[Test]
-		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
+		public async Task WhenOnPostAsync_ReturnsPage()
 		{
 			// arrange
 			Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockNtiWarningLetterStatusesCachedService, mockLogger);
+			var warningLetterId = 1;
+
+			var ntiModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel(DateTime.Now);
+
+			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterId(warningLetterId))
+				.ReturnsAsync(ntiModel);
+
+			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockLogger);
+
+			pageModel.CaseUrn = 1;
+			pageModel.WarningLetterId = warningLetterId;
+
+			pageModel.NtiWarningLetterStatus = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.NtiWarningLetterStatus.SelectedId = 1;
+
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
+			var pageRedirectResult = pageResponse as RedirectResult;
 
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_ValidatesStatus_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
-			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiWarningLetterModelService, mockNtiWarningLetterStatusesCachedService, mockLogger);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiWLId", 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "status", new StringValues("Invalid value") }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
+			pageRedirectResult.Url.Should().Be("/case/1/management");
 		}
 
 		private static ClosePageModel SetupAddPageModel(
 			Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService,
-			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService,
 			Mock<ILogger<ClosePageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new ClosePageModel(mockNtiWarningLetterModelService.Object, mockNtiWarningLetterStatusesCachedService.Object, mockLogger.Object)
+			return new ClosePageModel(mockNtiWarningLetterModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
