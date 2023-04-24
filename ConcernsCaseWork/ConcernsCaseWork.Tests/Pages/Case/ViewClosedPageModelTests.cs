@@ -278,8 +278,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Mock <IOptions<SiteOptions>> options = new Mock<IOptions<SiteOptions>>();
 			options.Setup(m => m.Value).Returns(_fixture.Create<SiteOptions>());
 
-			//return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockActionsModelService, mockStatusCachedService, options.Object, mockLogger)
-			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockActionsModelService, mockStatusCachedService, options.Object,mockLogger,MockTelemetry.CreateMockTelemetryClient())
+			//return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService,
+			//mockRecordModelService, mockActionsModelService,
+			//mockStatusCachedService, options.Object, mockLogger)
+			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, 
+				mockRecordModelService, mockActionsModelService, mockStatusCachedService 
+				,mockLogger,MockTelemetry.CreateMockTelemetryClient(),options.Object)
 			{
 				PageContext = pageContext, TempData = tempData, Url = new UrlHelper(actionContext), MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
