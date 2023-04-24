@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 
-		public  int NotesMaxLength => 2000;
+		
 		public IEnumerable<RadioItem> NTIStatuses;
 		private static int _max;
 
@@ -39,7 +40,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			_ntiModelService = ntiModelService;
 			_ntiStatusesCachedService = ntiStatusesCachedService;
 			_logger = logger;
-			_max = NotesMaxLength;
+			_max = NtiConstants.MaxNotesLength;
 		}
 		
 

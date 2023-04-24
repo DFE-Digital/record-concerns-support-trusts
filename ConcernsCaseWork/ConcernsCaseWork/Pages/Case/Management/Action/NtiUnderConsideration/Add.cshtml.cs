@@ -14,6 +14,7 @@ using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -28,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public const int NotesMaxLength = 2000;
 		public List<RadioItem> NTIReasonsToConsider;
 
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
 		public long CaseUrn { get; private set; }
 		private int _max;
 		
@@ -52,13 +54,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				LoadPageComponents();
 				NTIReasonsToConsider = GetReasons().ToList();
-				ExtractCaseUrnFromRoute();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGet::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -81,24 +81,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 							check.IsChecked = true;
 						}
 					}
-					ExtractCaseUrnFromRoute();
 					return Page();
 				}
-				
-				ExtractCaseUrnFromRoute();
 				var newNti = PopulateNtiFromRequest();
 				await _ntiModelService.CreateNti(newNti);
 				return Redirect($"/case/{CaseUrn}/management");
 			}
-			catch (InvalidUserInputException ex)
-			{
-				TempData["NTI-UC.Message"] = ex.Message;
-				return RedirectToPage();
-			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
