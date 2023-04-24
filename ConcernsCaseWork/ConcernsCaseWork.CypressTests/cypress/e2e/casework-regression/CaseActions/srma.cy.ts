@@ -5,6 +5,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the SRMA case action", () =>
 {
@@ -16,7 +17,7 @@ describe("Testing the SRMA case action", () =>
 		cy.login();
         now = new Date();
 
-        cy.basicCreateCase();
+        cy.basicCreateCase()
 
         addSrmaToCase();
 	});
@@ -30,7 +31,7 @@ describe("Testing the SRMA case action", () =>
             .save()
             .hasValidationError("Status: Please enter a value")
             .hasValidationError("Date trust was contacted: Please enter a date")
-            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError(NotesError);
 
         Logger.Log("Filling out the SRMA form");
         editSrmaPage
@@ -204,6 +205,22 @@ describe("Testing the SRMA case action", () =>
             .hasDateReportSentToTrust("Empty")
             .hasNotes("Empty");
     });
+    
+    it("Should only let one srma be open per case", () =>
+    {
+        editSrmaPage
+            .withStatus("TrustConsidering")
+            .withDayTrustContacted("22")
+            .withMonthTrustContacted("10")
+            .withYearTrustContacted("2022")
+            .withNotes("This is my notes")
+            .save();
+
+        addSrmaToCase();
+
+        AddToCasePage
+            .hasValidationError("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
+    });
 
     it("Should edit an existing configured SRMA", () =>
     {
@@ -298,9 +315,7 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
         .withNotesExceedingLimit()
         .save()
-        .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
-
-        cy.waitForJavascript();
+        .hasValidationError(NotesError);
 
         editSrmaPage.withNotes("Editing the notes field")
             .save();
@@ -332,14 +347,10 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .confirmComplete();
 
-            cy.waitForJavascript();
-
             editSrmaPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
-
-            cy.waitForJavascript();
+                .hasValidationError(NotesError);
 
             editSrmaPage
                 .withNotes("Resolved notes")
@@ -381,8 +392,6 @@ describe("Testing the SRMA case action", () =>
                 .save()
                 .hasValidationError("Confirm SRMA action was cancelled");
             
-            cy.waitForJavascript();
-
             editSrmaPage
                 .confirmCancelled()
                 .withNotes("Cancelled notes")
@@ -423,8 +432,6 @@ describe("Testing the SRMA case action", () =>
                 .save()
                 .hasValidationError("Confirm SRMA action was declined by trust");
             
-            cy.waitForJavascript();
-
             editSrmaPage
                 .confirmDeclined()
                 .withNotes("Declined notes")

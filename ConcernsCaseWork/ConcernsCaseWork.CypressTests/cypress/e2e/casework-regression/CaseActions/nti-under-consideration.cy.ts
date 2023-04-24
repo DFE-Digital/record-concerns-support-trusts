@@ -107,6 +107,17 @@ describe("Testing the NTI under consideration", () =>
         });
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiUnderConsiderationPage
+           .save();
+
+        addNtiUnderConsiderationToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     describe("When closing an NTI under consideration", () =>
     {
         it("Should be able to close the NTI under consideration", () =>

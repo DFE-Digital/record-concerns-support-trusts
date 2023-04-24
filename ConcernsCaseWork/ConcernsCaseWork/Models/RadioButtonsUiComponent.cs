@@ -19,7 +19,9 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 
 		if (Required == true && SelectedId == null)
 		{
-			result.Add(new ValidationResult($"Select {displayName}", new[] { displayName }));
+			var requiredErrorText = !string.IsNullOrEmpty(ErrorTextForRequiredField) ? ErrorTextForRequiredField : $"Select {displayName}";
+
+			result.Add(new ValidationResult(requiredErrorText, new[] { displayName }));
 		}
 
 		return result;

@@ -22,7 +22,26 @@ namespace ConcernsCaseWork.Tests.Models
 			results.First().ErrorMessage.Should().Be("Select Reason");
 		}
 
-		[Test]
+        [Test]
+        public void Validate_RequiredIsTrueAndSelectedIdIsNullAndCustomError_ReturnsValidationError()
+        {
+            // Arrange
+            var component = new RadioButtonsUiComponent("rootId", "name", "Reason") 
+            { 
+                Required = true, 
+                DisplayName = "Reason",
+                ErrorTextForRequiredField = "This is a custom error"
+            };
+
+            // Act
+            var results = component.Validate(new ValidationContext(component));
+
+            // Assert
+            results.Should().HaveCount(1);
+            results.First().ErrorMessage.Should().Be("This is a custom error");
+        }
+
+        [Test]
 		public void Validate_RequiredIsFalseAndSelectedIdIsNull_ReturnsNoValidationErrors()
 		{
 			// Arrange
