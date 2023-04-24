@@ -6,6 +6,7 @@ import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningL
 import { CloseNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/closeNtiWarningLetterPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the NTI warning letter action", () =>
 {
@@ -30,7 +31,7 @@ describe("Testing the NTI warning letter action", () =>
             .withNotesExceedingLimit()
             .withDaySent("22")
             .save()
-            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).")
+            .hasValidationError(NotesError)
             .hasValidationError("Date warning letter sent: Please enter a complete date DD MM YYYY");
 
         editNtiWarningLetterPage
@@ -143,6 +144,17 @@ describe("Testing the NTI warning letter action", () =>
             .hasNotes("Empty");
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiWarningLetterPage
+           .save();
+
+        addNtiWarningLetterToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     it("Should be able to close an NTI warning letter", () =>
     {
         createConfiguredNtiWarningLetter();
@@ -165,7 +177,7 @@ describe("Testing the NTI warning letter action", () =>
             .withNotesExceedingLimit()
             .close()
             .hasValidationError("Please select a reason for closing the Warning letter")
-            .hasValidationError("Notes: Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError(NotesError);
 
         closeNtiWarningLetterPage
             .withReason("ConditionsMet")
