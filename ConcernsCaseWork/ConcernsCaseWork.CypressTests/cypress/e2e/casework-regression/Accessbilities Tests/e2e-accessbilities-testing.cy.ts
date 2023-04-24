@@ -18,7 +18,7 @@ describe("Creating a case", () => {
         cy.login();
     });
 
-    it.only("Accessbility check for adding a case journey", () => {
+    it("Accessbility check for adding a case journey", () => {
         Logger.Log("Accessbility check for Create a case Journey page");
         createCasePage
             .createCase()

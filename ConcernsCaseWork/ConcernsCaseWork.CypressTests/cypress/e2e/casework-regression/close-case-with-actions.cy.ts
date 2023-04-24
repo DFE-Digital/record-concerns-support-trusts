@@ -196,7 +196,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             viewNtiWarningLetterPage.close();
             closeNtiWarningLetterPage
-                .withReason("Cancel warning letter")
+                .withReason("CancelWarningLetter")
                 .close();
 
             closeConcern();
