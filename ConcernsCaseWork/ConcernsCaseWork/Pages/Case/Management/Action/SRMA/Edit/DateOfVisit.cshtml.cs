@@ -115,19 +115,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private static OptionalDateTimeUiComponent BuidStartDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start")
+			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start date")
 			{
 				Date = date,
-				DisplayName = "Start"
+				DisplayName = "Start date"
 			};
 		}
 
 		private static OptionalDateTimeUiComponent BuidEndDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End")
+			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End date")
 			{
 				Date = date,
-				DisplayName = "End"
+				DisplayName = "End date"
 			};
 		}
 	}
