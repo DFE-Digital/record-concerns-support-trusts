@@ -14,6 +14,22 @@ CaseAim(1000);
 DeEscalationPoint(1000);
 NextSteps(4000);
 
+setScrollableErrorElements();
+
+function setScrollableErrorElements() {
+
+	var elements = $('.scrollable-error');
+
+	if (elements.length > 0) {
+		elements.click(function () {
+			var id = $(this).data('scroll-to');
+
+			var element = document.getElementById(id);
+			element.scrollIntoView({ behavior: 'smooth' });
+		});
+	}
+}
+
 // Write your JavaScript code.
 window.showGlobalError = function() {
 	$("#moj-banner-error").removeClass("govuk-!-display-none");
