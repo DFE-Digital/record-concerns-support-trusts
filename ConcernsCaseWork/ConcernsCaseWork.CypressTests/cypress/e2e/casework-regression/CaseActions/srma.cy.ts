@@ -5,7 +5,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the SRMA case action", () =>
 {
@@ -29,8 +29,8 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withNotesExceedingLimit()
             .save()
-            .hasValidationError("Status: Please enter a value")
-            .hasValidationError("Date trust was contacted: Please enter a date")
+            .hasValidationError("Select SRMA status")
+            .hasValidationError("Enter date trust was contacted")
             .hasValidationError(NotesError);
 
         Logger.Log("Filling out the SRMA form");
@@ -64,7 +64,7 @@ describe("Testing the SRMA case action", () =>
         viewSrmaPage.addReason();
         editSrmaPage
             .save()
-            .hasValidationError("Reason: Please enter a value");
+            .hasValidationError("Select SRMA reason");
 
         editSrmaPage
             .withReason("Regions Group Intervention")
@@ -77,13 +77,13 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayAccepted("22")
             .save()
-            .hasValidationError("Date accepted: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date accepted"));
 
         editSrmaPage
             .withMonthAccepted("22")
             .withYearAccepted("2022")
             .save()
-            .hasValidationError("Date accepted: 22-22-2022 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Date accepted"));
 
         editSrmaPage
             .withDayAccepted("22")
@@ -98,33 +98,34 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withStartDayOfVisit("22")
             .save()
-            .hasValidationError("Start: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Start date"));
 
         editSrmaPage
             .withStartMonthOfVisit("22")
             .withStartYearOfVisit("2022")
             .save()
-            .hasValidationError("Start: 22-22-2022 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Start date"));
 
         setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("11")
             .save()
-            .hasValidationError("End: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "End date"));
 
         editSrmaPage
             .withEndMonthOfVisit("33")
             .withEndYearOfVisit("2021")
             .save()
-            .hasValidationError("End: 11-33-2021 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "End date"));
 
         editSrmaPage
             .withEndDayOfVisit("15")
             .withEndMonthOfVisit("01")
             .withEndYearOfVisit("2021")
             .save()
-            .hasValidationError("Please ensure end date is same as or after start date.");
+            .hasValidationError("Start date must be the same as or come before the end date")
+            .hasValidationError("End date must be the same as or come after the start date");
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -138,14 +139,14 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withDayReportSentToTrust("22")
             .save()
-            .hasValidationError("Date report sent: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date report sent"));
 
         editSrmaPage
             .withDayReportSentToTrust("05")
             .withMonthReportSentToTrust("44")
             .withYearReportSentToTrust("2021")
             .save()
-            .hasValidationError("Date report sent: 05-44-2021 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Date report sent"));
 
         editSrmaPage
             .withDayReportSentToTrust("05")
@@ -241,19 +242,19 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .clearDateTrustContacted()
             .save()
-            .hasValidationError("Date trust was contacted: Please enter a date");
+            .hasValidationError("Enter date trust was contacted");
 
         editSrmaPage
             .withDayTrustContacted("11")
             .save()
-            .hasValidationError("Date trust was contacted: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date trust was contacted"));
 
         editSrmaPage
             .withDayTrustContacted("11")
             .withMonthTrustContacted("22")
             .withYearTrustContacted("2021")
             .save()
-            .hasValidationError("Date trust was contacted: 11-22-2021 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Date trust was contacted"));
 
         editSrmaPage
             .withMonthTrustContacted("05")
