@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Test Date: Please enter a complete date DD MM YYYY", new []{ "Test Date" })
+				new ValidationResult("Test Date must be a complete date. For example, 17 5 2022", new []{ "Test Date" })
 			};
 
 			result.Should().BeEquivalentTo(expected);
@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Test Date: 22-22-2022 is an invalid date", new []{ "Test Date" })
+				new ValidationResult("Test Date must be a date that exists. For example, 17 5 2022", new []{ "Test Date" })
 			};
 
 			result.Should().BeEquivalentTo(expected);
