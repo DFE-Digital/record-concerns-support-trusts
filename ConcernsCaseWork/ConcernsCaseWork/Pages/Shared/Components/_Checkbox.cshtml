@@ -13,7 +13,7 @@
     var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
 }
 
-<div class="govuk-form-group @errorClass">
+<div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
     <partial name="Components/_ValidationErrorDetail" model="@errors" />
 
     <div class="govuk-checkboxes" data-module="govuk-checkboxes">

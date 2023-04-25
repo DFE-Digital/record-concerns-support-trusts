@@ -6,6 +6,7 @@ import CaseManagementPage from "../../../pages/caseMangementPage";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateInvalidError } from "cypress/constants/validationErrorConstants";
 
 
 describe("User can add trust financial forecast to an existing case", () => {
@@ -36,8 +37,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withNotesExceedingLimit()
 			.save()
 			.hasValidationError("Supporting notes must be 2000 characters or less")
-			.hasValidationError("When did the trust respond?: 27-30-2024 is an invalid date")
-			.hasValidationError("When did SFSO initial review happen?: 90-60-2023 is an invalid date"); 
+			.hasValidationError(DateInvalidError.replace("{0}", "When did the trust respond?"))
+			.hasValidationError(DateInvalidError.replace("{0}", "When did SFSO initial review happen?"))
 
 		Logger.Log("Create a TFF will all values");
 		editTFFPage

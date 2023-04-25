@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿
+using ConcernsCaseWork.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -40,13 +41,13 @@ namespace ConcernsCaseWork.Models.Validatable
 
 			if (dateValues.Count != 3)
 			{
-				result.Add(new ValidationResult($"{displayName}: Please enter a complete date DD MM YYYY", new []{ displayName } ));
+				result.Add(new ValidationResult($"{displayName} must be a complete date. For example, 17 5 2022", new []{ displayName } ));
 				return result;
 			}
 
 			if (!DateTimeHelper.TryParseExact(ToString(), out _))
 			{
-				result.Add(new ValidationResult($"{displayName}: {ToString()} is an invalid date", new []{ displayName }));
+				result.Add(new ValidationResult($"{displayName} must be a date that exists. For example, 17 5 2022", new []{ displayName }));
 			}
 
 			return result;

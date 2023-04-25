@@ -16,7 +16,7 @@
     var inputErrorClass = hasErrors ? "govuk-input--error" : string.Empty;
 
 }
-<div class="govuk-form-group">
+<div class="govuk-form-group @bannerErrorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
 		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
 			<h2 class="govuk-heading-m" id="@(Model.Name).Date.@Model.Heading">
@@ -28,8 +28,8 @@
 		
 		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
 			<div class="govuk-date-input__item">
-				<div class="govuk-form-group @bannerErrorClass">
-					<label class="govuk-label govuk-date-input__label" for="dtr-day-@Model.ElementRootId">
+				<div class="govuk-form-group">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Day" for="dtr-day-@Model.ElementRootId">
 						Day
 					</label>
 					<input class="govuk-input govuk-date-input__input govuk-input--width-4 @inputErrorClass"
@@ -44,7 +44,7 @@
 			</div>
 			<div class="govuk-date-input__item">
 				<div class="govuk-form-group">
-					<label class="govuk-label govuk-date-input__label" for="dtr-month-@Model.ElementRootId">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Month" for="dtr-month-@Model.ElementRootId">
 						Month
 					</label>
 					<input 
@@ -60,7 +60,7 @@
 			</div>
 			<div class="govuk-date-input__item">
 				<div class="govuk-form-group">
-					<label class="govuk-label govuk-date-input__label" for="dtr-year-@Model.ElementRootId">
+                    <label class="govuk-label govuk-date-input__label" aria-label="@displayName Year" for="dtr-year-@Model.ElementRootId">
 						Year
 					</label>
 					<input
