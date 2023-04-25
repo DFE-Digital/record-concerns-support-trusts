@@ -29,8 +29,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public const int NotesMaxLength = 2000;
 		public List<RadioItem> NTIReasonsToConsider;
 
-		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")] 
+		public long CaseUrn { get;  set; }
 		private int _max;
 		
 		[BindProperty]

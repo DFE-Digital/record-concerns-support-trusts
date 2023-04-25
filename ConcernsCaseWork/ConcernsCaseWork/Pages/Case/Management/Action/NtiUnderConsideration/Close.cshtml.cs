@@ -1,4 +1,8 @@
 ﻿using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
@@ -21,16 +25,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
-
-		
-		public IEnumerable<RadioItem> NTIStatuses;
 		private static int _max;
 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")] 
+		public long CaseUrn { get;  set; }
+		
+		[BindProperty(SupportsGet = true, Name = "ntiUCId")] 
+		public int NtiId { get; set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		[BindProperty] 
-		public TextAreaUiComponent Notes { get; set; }//= BuildNotesComponent();
+		public TextAreaUiComponent Notes { get; set; }
+		
+		[BindProperty]
+		public RadioButtonsUiComponent NTIClosedStatus { get; set; }
 
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -50,22 +58,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			try
 			{
-				CaseUrn = ExtractCaseUrnFromRoute();
-				var ntiUcId = ExtractNtiUcIdFromRoute();
-				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(NtiId);
 				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
+					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{NtiId}");
 				}
 				LoadPageComponents();
 				Notes.Text.StringContents = NtiModel.Notes;
-				NTIStatuses = await GetStatusesForUiAsync();
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 		}
@@ -74,101 +79,45 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				var status = Request.Form["status"];
-				var success = int.TryParse(status, out var result);
-				if (!success)
-				{
-					ModelState.AddModelError("options", "Please select a reason for closing NTI under consideration");	
-				}
+				
 				if (!ModelState.IsValid)
 				{
 					ResetOnValidationError();
-					NtiModel =PopulateNtiFromRequest();
-					Notes.Text.StringContents = NtiModel.Notes;
-					NTIStatuses = await GetStatusesForUiAsync();
 					return Page();
 				}
-				CaseUrn = ExtractCaseUrnFromRoute();
-				var ntiUcId = ExtractNtiUcIdFromRoute();
-				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				var ntiWithUpdatedValues = PopulateNtiFromRequest();
-				freshNti.Notes = ntiWithUpdatedValues.Notes;
-				freshNti.ClosedStatusId = ntiWithUpdatedValues.ClosedStatusId;
-				freshNti.ClosedAt = DateTime.Now; // Note that we should probably be using UTC? Keeping this consistent with other areas which mostly use DateTime.Now. 
+				var freshNti = await _ntiModelService.GetNtiUnderConsideration(NtiId);
+				freshNti.Notes =Notes.Text.StringContents;
+				freshNti.ClosedStatusId = NTIClosedStatus.SelectedId;
+				freshNti.ClosedAt = DateTime.Now; 
 				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (InvalidOperationException ex)
 			{
-				TempData["NTI-UC.Message"] = ex.Message;
-
-				var ntiUcId = ExtractNtiUcIdFromRoute();
-				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				NTIStatuses = await GetStatusesForUiAsync();
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(NtiId);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 
-		private long ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				return caseUrn;
-			}
-			else
-			{
-				throw new Exception("CaseUrn not found in the route");
-			}
-		}
-
-		private long ExtractNtiUcIdFromRoute()
-		{
-			if (TryGetRouteValueInt64("ntiUCId", out var ntiUcId))
-			{
-				return ntiUcId;
-			}
-			else
-			{
-				throw new Exception("NtiUcId not found in the route");
-			}
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetStatusesForUiAsync()
-		{
-			var statuses = await _ntiStatusesCachedService.GetAllStatuses();
-			return statuses.Select(s => new RadioItem
-			{
-				Id = Convert.ToString(s.Id), Text = s.Name, IsChecked = false // all statuses are unchecked when close page is opened
-			});
-		}
-
-		private NtiUnderConsiderationModel PopulateNtiFromRequest()
-		{
-			var statusId = GetRequestedStatusId();
-			var notes =Notes.Text.StringContents;
-			var id = ExtractNtiUcIdFromRoute();
-			var nti = new NtiUnderConsiderationModel() { Id = id, CaseUrn = CaseUrn, Notes = notes, ClosedStatusId = statusId };
-			return nti;
-		}
-
-		private int GetRequestedStatusId()
-		{
-			var status = Request.Form["status"];
-			return int.TryParse(status, out var statusId)
-				? statusId
-				: throw new InvalidOperationException($"Please select a reason for closing NTI under consideration");
-		}
 		
 		private void LoadPageComponents()
 		{
 			Notes = BuildNotesComponent();
+			NTIClosedStatus = BuildStatusComponent();
+		}
+
+		
+		private void ResetOnValidationError()
+		{
+			
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+			NTIClosedStatus = BuildStatusComponent(NTIClosedStatus.SelectedId);
 		}
 
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
@@ -177,13 +126,28 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				HintText = "Case owners can record any information they want that feels relevant to the action",
 				Text = new ValidateableString() { MaxLength = _max, StringContents = contents, DisplayName = "Notes" }
 			};
-		
-		private void ResetOnValidationError()
+
+		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			
-			Notes = BuildNotesComponent(Notes.Text.StringContents);
+			var enumValues = new List<NtiClosedStatus>()
+			{
+				Enums.NtiClosedStatus.ToBeEscalated,
+				Enums.NtiClosedStatus.NoFurtherAction
+			};
+
+			var radioItems = enumValues.Select(v =>
+			{
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
+
+			return new(ElementRootId: "nti-status", Name: nameof(NtiClosedStatus), "What is the status of the NTI?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "Status",
+				Required = true,
+				ErrorTextForRequiredField = "Please select a reason for closing NTI under consideration"
+			};
 		}
-
-
 	}
 }

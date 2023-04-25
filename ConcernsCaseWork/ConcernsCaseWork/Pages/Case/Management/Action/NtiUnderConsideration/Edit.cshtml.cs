@@ -29,8 +29,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
 		
-		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")] 
+		public long CaseUrn { get;  set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public EditPageModel(
