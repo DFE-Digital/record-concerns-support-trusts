@@ -37,12 +37,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public string CaseHistory { get; set; }
 		
 		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper,
-			ILogger<EditCaseHistoryPageModel> logger, TelemetryClient telemetryClient)
+			ILogger<EditCaseHistoryPageModel> logger)
 		{
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = logger;
-			_telemetryClient = Guard.Against.Null(telemetryClient);
+			
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
