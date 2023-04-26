@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::ClosePageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
@@ -91,10 +91,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				freshNti.ClosedAt = DateTime.Now; 
 				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
 				return Redirect($"/case/{CaseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				NtiModel = await _ntiModelService.GetNtiUnderConsideration(NtiId);
 			}
 			catch (Exception ex)
 			{

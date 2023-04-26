@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::EditPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
@@ -106,18 +106,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 
 			return Page();
-		}
-
-		private long ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				return caseUrn;
-			}
-			else
-			{
-				throw new Exception("CaseUrn not found in the route");
-			}
 		}
 
 		private long ExtractNtiUcIdFromRoute()
