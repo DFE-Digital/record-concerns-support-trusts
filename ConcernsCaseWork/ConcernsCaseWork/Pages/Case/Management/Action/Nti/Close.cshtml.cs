@@ -1,28 +1,23 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Service.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ClosePageModel : AbstractPageModel
+	public class ClosePageModel : CloseNtiBasePage
 	{
 		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<ClosePageModel> _logger;
 
-		public int NotesMaxLength => 2000;
-
-		public NtiModel Nti { get; set; }
+		public NtiModel NtiModel { get; set; }
 
 		public ClosePageModel(
 			INtiModelService ntiModelService,
@@ -34,118 +29,66 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation($"{nameof(ClosePageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				long ntiId = 0;
-				long caseUrn = 0;
+				NtiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
 
-				(caseUrn, ntiId) = GetRouteData();
-
-				Nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
-				
-				if (Nti.IsClosed)
+				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/nti/{ntiId}");
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NTIId}");
 				}
+
+				LoadPageComponents(NtiModel);
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Case::NTI::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
-		}
-
-		private (long caseUrn, long ntiId) GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			var ntiWLIdValue = RouteData.Values["ntiId"];
-			if (ntiWLIdValue == null || !long.TryParse(ntiWLIdValue.ToString(), out long ntiId) || ntiId == 0)
-				throw new Exception("ntiId is null or invalid to parse");
-
-			return (caseUrn, ntiId);
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-				long caseUrn = 0;
-				long ntiId = 0;
+				if (!ModelState.IsValid) 
+				{
+					ResetClosePageComponentsOnValidationError();
+					return Page();
+				}
 
-				(caseUrn, ntiId) = GetRouteData();
+				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
 
-				ValidateForm();
+				ntiModel.Notes = Notes.Text.StringContents;
+				ntiModel.DateNTIClosed = !DateNTIClosed.Date?.IsEmpty() ?? false ? DateNTIClosed.Date?.ToDateTime() : null;
+				ntiModel.ClosedStatusId = (int)NTIStatus.Closed;
+				ntiModel.ClosedAt = DateTime.Now;
 
-				var nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
-				var updated = UpdateNti(nti);
-				await _ntiModelService.PatchNtiAsync(nti);
-				 
-				return Redirect($"/case/{caseUrn}/management");
+				await _ntiModelService.PatchNtiAsync(ntiModel);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
-			}
+				_logger.LogErrorMsg(ex);
 
+				SetErrorMessage(ErrorOnPostPage);
+			}
 			return Page();
 		}
 
-		private NtiModel UpdateNti(NtiModel nti)
+		private void LoadPageComponents(NtiModel nti)
 		{
-			var notes = Request.Form["nti-notes"].ToString();
-
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var date = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
-
-			nti.Notes = notes;
-			nti.ClosedAt = DateTime.Now;
-			nti.DateNTIClosed = date;
-			nti.ClosedStatusId = (int)NTIStatus.Closed;
-
-			return nti;
+			Notes.Text.StringContents = nti.Notes;
 		}
 
-		private void ValidateForm()
-		{
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-
-			if (!AreAllEmpty(dtr_day, dtr_month, dtr_year))
-			{
-				var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-				if (!DateTimeHelper.TryParseExact(dtString, out _))
-				{
-					throw new Exception("Date provided is invalid.");
-				}
-			}
-
-			var notes = Request.Form["nti-notes"].ToString();
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-			}
-		}
-
-		private bool AreAllEmpty(params string[] args)
-		{
-			return args.All(s => string.IsNullOrEmpty(s));
-		}
 	}
 }

@@ -1,5 +1,8 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -10,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Graph.Models.TermStore;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -26,14 +30,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnGetAsync_WithNtiId_Calls_API()
 		{
 			// arrange
-			var ntiId = 123L;
+			var ntiId = 123;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = 1;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = 1;
+			pageModel.NTIId = ntiId;
 
 			// act
 			await pageModel.OnGetAsync();
@@ -48,7 +52,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnGetAsync_WhenNtiIsClosed_RedirectsToClosedPage()
 		{
 			// arrange
-			var ntiId = 123L;
+			var ntiId = 123;
 			var caseUrn = 765;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
@@ -59,8 +63,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>()))
 				.ReturnsAsync(ntiModel);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NTIId = ntiId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -82,8 +86,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnPostAsync_CallsAPI_WithUpdatedValues()
 		{
 			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
+			var caseUrn = 111;
+			var ntiId = 123;
 			var closureNotes = "closure notes";
 			var closedDate = new DateTime(2022, 03, 03);
 
@@ -94,17 +98,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NTIId = ntiId;
+			pageModel.Notes = new TextAreaUiComponent("", "", "") { Text = new ValidateableString() { StringContents = closureNotes } };
+			pageModel.DateNTIClosed  = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(closedDate) };
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-					{ "nti-notes", new StringValues(closureNotes) },
-					{ "dtr-day", new StringValues(closedDate.Day.ToString()) },
-					{ "dtr-month", new StringValues(closedDate.Month.ToString()) },
-					{ "dtr-year", new StringValues(closedDate.Year.ToString()) }
-			});
+
 
 			// act
 			await pageModel.OnPostAsync();
@@ -122,146 +121,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 					&& nti.ClosedStatusId == (int)NTIStatus.Closed
 				)),
 				Times.Once());
-		}
-
-		[Test]
-		[TestCase("2022", "03", "04", true)]
-		[TestCase("", "", "", true)]
-		[TestCase("2022", "03", "31", true)]
-		[TestCase("", "03", "04", false)]
-		[TestCase("2022", "", "04", false)]
-		[TestCase("2022", "04", "", false)]
-		[TestCase("2022", "02", "30", false)]
-		public async Task OnPostAsync_CorrectlyValidatesDates(string year, string month, string day, bool isValid)
-		{
-			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			mockNtiModelService.Setup(ms => ms.GetNtiByIdAsync(ntiId)).Returns(Task.FromResult(new NtiModel { Id = ntiId }));
-
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
-
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-					{ "dtr-day", new StringValues(day) },
-					{ "dtr-month", new StringValues(month) },
-					{ "dtr-year", new StringValues(year) }
-			});
-
-			// act
-			await pageModel.OnPostAsync();
-
-			// assert
-			if (isValid)
-			{
-				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-			}
-			else
-			{
-				Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			}
-		}
-
-		[Test]
-		[TestCase("")]
-		[TestCase("Valid notes")]
-		public async Task OnPostAsync_ValidNotes_AcceptedWithoutError(string validNotes)
-		{
-			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			mockNtiModelService.Setup(ms => ms.GetNtiByIdAsync(ntiId)).Returns(Task.FromResult(new NtiModel { Id = ntiId }));
-
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
-
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "nti-notes", new StringValues(validNotes) }
-			});
-
-			// act
-			await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-		}
-
-
-		[Test]
-		public async Task OnPostAsync_ValidNotes_AcceptedWithoutError()
-		{
-			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			mockNtiModelService.Setup(ms => ms.GetNtiByIdAsync(ntiId)).Returns(Task.FromResult(new NtiModel { Id = ntiId }));
-
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
-
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
-
-			var validNotes = GenereateString(pageModel.NotesMaxLength);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "nti-notes", new StringValues(validNotes) }
-			});
-
-			// act
-			await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-		}
-
-
-		[Test]
-		public async Task OnPostAsync_InValidNotes_ValidationError()
-		{
-			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-			mockNtiModelService.Setup(ms => ms.GetNtiByIdAsync(ntiId)).Returns(Task.FromResult(new NtiModel { Id = ntiId }));
-
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
-
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
-
-			var invalidNotes = GenereateString(pageModel.NotesMaxLength + 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "nti-notes", new StringValues(invalidNotes) }
-			});
-
-			// act
-			await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 		}
 
 		private static ClosePageModel SetupClosePageModel(Mock<INtiModelService> mockNtiModelService,

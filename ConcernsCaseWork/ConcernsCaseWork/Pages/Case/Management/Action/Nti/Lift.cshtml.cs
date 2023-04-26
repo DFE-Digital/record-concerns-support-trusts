@@ -1,26 +1,21 @@
-﻿using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Service.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class LiftPageModel : AbstractPageModel
+	public class LiftPageModel : CloseNtiBasePage
 	{
 		private readonly INtiModelService _ntiModelService;
-
 		private readonly ILogger<LiftPageModel> _logger;
-
-		public int NotesMaxLength => 2000;
 
 		public NtiModel NtiModel { get; set; }
 
@@ -34,103 +29,67 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation($"{nameof(LiftPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				long ntiId = 0;
-				long caseUrn = 0;
+				NtiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
 
-				(caseUrn, ntiId) = GetRouteData();
-
-				NtiModel = await _ntiModelService.GetNtiByIdAsync(ntiId);
-				
 				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/nti/{ntiId}");
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NTIId}");
 				}
+
+				LoadPageComponents(NtiModel);
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(LiftPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 		}
 
-		private (long caseUrn, long ntiId) GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			var ntiIdValue = RouteData.Values["ntiId"];
-			if (ntiIdValue == null || !long.TryParse(ntiIdValue.ToString(), out long ntiId) || ntiId == 0)
-				throw new Exception("ntiId is null or invalid to parse");
-
-			return (caseUrn, ntiId);
-		}
-
 		public async Task<IActionResult> OnPostAsync()
 		{
-			_logger.LogInformation($"{nameof(LiftPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				long caseUrn = 0;
-				long ntiId = 0;
-
-				(caseUrn, ntiId) = GetRouteData();
-
-				var submissionDecisionId = Request.Form["submission-decision-id"].ToString();
-				var dtr_day = Request.Form["dtr-day"];
-				var dtr_month = Request.Form["dtr-month"];
-				var dtr_year = Request.Form["dtr-year"];
-				var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-				var notes = Request.Form["nti-notes"].ToString();
-				DateTime? dateLifted = null;
-
-				//How the string will appear if no dates were ented 
-				if (dtString != "--")
+				if (!ModelState.IsValid) 
 				{
-					if (!DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate))
-					{
-						throw new Exception($"{dtString} was unable to be parsed as a date");
-					}
-
-					dateLifted = parsedDate;
+					ResetLiftPageComponentsOnValidationError();
+					return Page();
 				}
 
-				if (!string.IsNullOrEmpty(notes))
-				{
-					if (notes.Length > NotesMaxLength)
-					{
-						throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-					}
-				}
+				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
 
-				var ntiModel = await _ntiModelService.GetNtiByIdAsync(ntiId);
-				ntiModel.Notes = notes;
-				ntiModel.SumissionDecisionId = submissionDecisionId;
-				ntiModel.DateNTILifted = dateLifted;
+				ntiModel.Notes = Notes.Text.StringContents;
+				ntiModel.SumissionDecisionId = DecisionID.Text.StringContents;
+				ntiModel.DateNTILifted = !DateNTILifted.Date?.IsEmpty() ?? false ? DateNTILifted.Date?.ToDateTime() : null;
 				ntiModel.ClosedStatusId = (int)NTIStatus.Lifted;
 				ntiModel.ClosedAt = DateTime.Now;
 
 				await _ntiModelService.PatchNtiAsync(ntiModel);
 
-				return Redirect($"/case/{caseUrn}/management");
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(LiftPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
-
 			return Page();
 		}
+
+		private void LoadPageComponents(NtiModel nti)
+		{
+			Notes.Text.StringContents = nti.Notes;
+		}
+
 	}
 }

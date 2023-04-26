@@ -3,9 +3,12 @@ import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisi
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
+import CaseManagementPage from "../../../pages/caseMangementPage";
+import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -13,15 +16,20 @@ describe("User can add case actions to an existing case", () => {
 	const closeDecisionPage = new CloseDecisionPage();
 	const decisionOutcomePage = new DecisionOutcomePage();
 
-	let now;
+	let now: Date;
 	
 	beforeEach(() => {
 		cy.login();
 		now = new Date();
+
+		cy.basicCreateCase();
+
+		CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Decision');
+        AddToCasePage.getAddToCaseBtn().click();
 	});
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
-		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
 		editDecisionPage
@@ -30,7 +38,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("2022")
 			.save()
 			.hasValidationError(
-				"Date ESFA received request: 23-25-2022 is an invalid date"
+				DateInvalidError.replace("{0}", "Date ESFA received request")
 			);
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
@@ -41,9 +49,9 @@ describe("User can add case actions to an existing case", () => {
 			.withSupportingNotesExceedingLimit()
 			.save()
 			.hasValidationError(
-				"Date ESFA received request: Please enter a complete date DD MM YYYY"
+				DateIncompleteError.replace("{0}", "Date ESFA received request")
 			)
-			.hasValidationError("Notes must be 2000 characters or less");
+			.hasValidationError(NotesError);
 
 		Logger.Log("Creating Decision");
 		editDecisionPage
@@ -114,7 +122,6 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	it("Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
-		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Adding note on the decision that will be closing ");
 		editDecisionPage
@@ -226,8 +233,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("When Decisions is empty, View Behavior", function () {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage.save();
 
 		Logger.Log("Selecting Decision from open actions");
@@ -256,8 +261,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Edit a decision outcome ", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 
@@ -342,8 +345,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Create a decision outcome, checking validation and view it was created correctly", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 
@@ -374,8 +375,8 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionTakeEffectMonth("22")
 			.withDecisionTakeEffectYear("2023")
 			.saveDecisionOutcome()
-			.hasValidationError("Date decision made: 24-13-2022 is an invalid date")
-			.hasValidationError("Date decision effective: 12-22-2023 is an invalid date")
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision made"))
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision effective"))
 
 		Logger.Log("Checking an incomplete dates");
 		decisionOutcomePage
@@ -386,8 +387,8 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionTakeEffectMonth("06")
 			.withDecisionTakeEffectYear("")
 			.saveDecisionOutcome()
-			.hasValidationError("Date decision made: Please enter a complete date DD MM YYYY")
-			.hasValidationError("Date decision effective: Please enter a complete date DD MM YYYY");
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision made"))
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision effective"));
 
 		Logger.Log("Create Decision Outcome");
 		decisionOutcomePage
@@ -428,8 +429,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it("Create a decision outcome with only status, should set status but all other labels should be empty", () => {
 		Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
-
 		editDecisionPage
 			.save();
 

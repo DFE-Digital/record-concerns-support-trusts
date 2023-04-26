@@ -1,9 +1,14 @@
 ﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -17,7 +22,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<EditDateOfVisitPageModel> _logger;
 
-		public SRMAModel SRMAModel { get; set; }
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+
+		[BindProperty]
+		public OptionalDateTimeUiComponent StartDate { get; set; } = BuidStartDateComponent();
+
+		[BindProperty]
+		public OptionalDateTimeUiComponent EndDate { get; set; } = BuidEndDateComponent();
 
 		public EditDateOfVisitPageModel(ISRMAService srmaModelService, ILogger<EditDateOfVisitPageModel> logger)
 		{
@@ -29,21 +41,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditDateOfVisitPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				(long caseUrn, long srmaId) = GetRouteData();
-
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				var model = await _srmaModelService.GetSRMAById(SrmaId);
 				
-				if (SRMAModel.IsClosed)
+				if (model.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
+
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditDateOfVisitPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -51,91 +63,72 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		public async Task<ActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditDateOfVisitPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				(caseUrn, srmaId) = GetRouteData();
+				if (!ModelState.IsValid) 
+				{
+					ResetOnValidationError();
+					return Page();
+				}
 
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				if (EndIsBeforeStart())
+				{
+					ResetOnValidationError();
+					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Start date must be the same as or come before the end date");
+					ModelState.AddModelError($"{nameof(EndDate)}.{EndDate.DisplayName}", "End date must be the same as or come after the start date");
+					return Page();
+				}
 
-				var start_dtr_day = Request.Form["start-dtr-day"].ToString();
-				var start_dtr_month = Request.Form["start-dtr-month"].ToString();
-				var start_dtr_year = Request.Form["start-dtr-year"].ToString();
-
-				var end_dtr_day = Request.Form["end-dtr-day"].ToString();
-				var end_dtr_month = Request.Form["end-dtr-month"].ToString();
-				var end_dtr_year = Request.Form["end-dtr-year"].ToString();
-
-				var start_dtString = $"{start_dtr_day}-{start_dtr_month}-{start_dtr_year}";
-				var end_dtString = string.IsNullOrEmpty(end_dtr_day) && string.IsNullOrEmpty(end_dtr_month) && string.IsNullOrEmpty(end_dtr_year) ? 
-					String.Empty : $"{end_dtr_day}-{end_dtr_month}-{end_dtr_year}";
-
-				ValidateDatesOfVisit(start_dtString, end_dtString);
-				var visitDates = ParseVisitDates(start_dtString, end_dtString);
-
-				await _srmaModelService.SetVisitDates(srmaId, visitDates.startDate, visitDates.endDate);
-				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
+				await _srmaModelService.SetVisitDates(SrmaId, StartDate.Date.ToDateTime(), EndDate.Date.ToDateTime());
+				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditDateOfVisitPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 
-		private (long caseUrn, long srmaId) GetRouteData()
+		private bool EndIsBeforeStart()
 		{
-			var caseUrnValue = RouteData.Values["caseUrn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			var srmaIdValue = RouteData.Values["srmaId"];
-			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
-				throw new Exception("srmaId is null or invalid to parse");
-
-			return (caseUrn, srmaId);
+			return EndDate.Date.ToDateTime() < StartDate.Date.ToDateTime();
 		}
-	
-		private void ValidateDatesOfVisit(string startDateString, string endDateString)
+
+		private void LoadPageComponents(SRMAModel model)
 		{
-			if (!DateTimeHelper.TryParseExact(startDateString, out DateTime start_dt))
-				throw new InvalidOperationException($"Start date {startDateString} is an invalid date");
+			if (model.DateVisitStart.HasValue)
+				StartDate.Date = new OptionalDateModel(model.DateVisitStart.Value);
 
-			if (!string.IsNullOrEmpty(endDateString))
-			{
-				if (!DateTimeHelper.TryParseExact(endDateString, out DateTime end_dt))
-					throw new InvalidOperationException($"End date {endDateString} is an invalid date");
-
-				if (end_dt < start_dt)
-					throw new InvalidOperationException($"Please ensure end date is same as or after start date.");
-			}
+			if (model.DateVisitEnd.HasValue)
+				EndDate.Date = new OptionalDateModel(model.DateVisitEnd.Value);
 		}
-	
-		private (DateTime startDate, DateTime? endDate) ParseVisitDates(string startDateString, string endDateString)
+
+		private void ResetOnValidationError()
 		{
-			DateTime start_date;
-			DateTime end_date;
-			DateTime? end_dt = null;
+			StartDate = BuidStartDateComponent(StartDate.Date);
+			EndDate = BuidEndDateComponent(EndDate.Date);
+		}
 
-			DateTimeHelper.TryParseExact(startDateString, out start_date);
-
-			if (!string.IsNullOrEmpty(endDateString))
+		private static OptionalDateTimeUiComponent BuidStartDateComponent([CanBeNull] OptionalDateModel date = default)
+		{
+			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start date")
 			{
-				DateTimeHelper.TryParseExact(endDateString, out end_date);
-				end_dt = end_date;
-			}
+				Date = date,
+				DisplayName = "Start date"
+			};
+		}
 
-			return (start_date, end_dt);
+		private static OptionalDateTimeUiComponent BuidEndDateComponent([CanBeNull] OptionalDateModel date = default)
+		{
+			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End date")
+			{
+				Date = date,
+				DisplayName = "End date"
+			};
 		}
 	}
 }

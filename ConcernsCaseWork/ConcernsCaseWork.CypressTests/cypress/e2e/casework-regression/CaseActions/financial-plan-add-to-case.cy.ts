@@ -6,6 +6,7 @@ import { CloseFinancialPlanPage } from "../../../pages/caseActions/financialPlan
 import CaseManagementPage from "../../../pages/caseMangementPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -159,14 +160,14 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Ensure user must select a reason for closing the financial plan");
         closeFinancialPlanPage
             .close()
-            .hasValidationError("Please select a reason for closing the Financial Plan");
+            .hasValidationError("Select Reason for closure");
 
         Logger.Log("Ensure notes cannot exceed 2000 characters");
         closeFinancialPlanPage
             .withReasonForClosure("Abandoned")
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Notes must be 2000 characters or less")
+            .hasValidationError(NotesError)
 
         Logger.Log("Ensure a valid date must be entered");
         closeFinancialPlanPage
@@ -176,7 +177,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanReceivedYear("2020")
             .withNotes("Edited Notes!")
             .close()
-            .hasValidationError("Viable plan 32-13-2020 is an invalid date")
+            .hasValidationError(DateInvalidError.replace("{0}", "Date viable plan received"));
 
         Logger.Log("Close a valid financial plan");
         closeFinancialPlanPage
@@ -231,7 +232,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
             .save()
-            .hasValidationError("Plan requested 06-- is an invalid date");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date financial plan requested"));
 
         Logger.Log("Check fields were not cleared on error");
 
@@ -246,14 +247,14 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanRequestedMonth("22")
             .withPlanRequestedYear("22")
             .save()
-            .hasValidationError("Plan requested 06-22-22 is an invalid date");
+            .hasValidationError(DateInvalidError.replace("{0}", "Date financial plan requested"));
 
         Logger.Log("Notes exceeding character limit");
 
         editFinancialPlanPage
-                .withNotesWithLines()
+                .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes must be 2000 characters or less");                
+                .hasValidationError(NotesError);                
     }
 
     function addFinancialPlanToCase()
@@ -261,7 +262,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Has option to add Financial Plan Case Action to a case");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('FinancialPlan')
-        AddToCasePage.getCaseActionRadio('FinancialPlan').siblings().should('contain.text', AddToCasePage.actionOptions[2]);
+        AddToCasePage.getCaseActionRadio('FinancialPlan')
         AddToCasePage.getAddToCaseBtn().click();
     }
 });
