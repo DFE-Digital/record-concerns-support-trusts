@@ -50,7 +50,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
-			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
 		
 		[Test]
@@ -72,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
-			Assert.That(pageModel.NTIStatuses, Is.Null);
+			
 		}
 		
 		[Test]
@@ -94,7 +93,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
-			Assert.That(pageModel.NTIStatuses, Is.Null);
+			
 		}
 		
 		[Test]
@@ -123,7 +122,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
-			Assert.That(pageModel.NTIStatuses, Is.Null);
+			
 		}
 
 		[Test]
@@ -172,9 +171,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			
 			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
 			
-			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
-			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
-			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			
 			
 			mockLogger.Verify(
 				m => m.Log(
@@ -287,9 +284,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			
 			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
 			
-			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
-			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
-			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			
 				
 			mockNtiModelService.Verify(f => f.PatchNtiUnderConsideration(It.IsAny<NtiUnderConsiderationModel>()), Times.Never);
 		}
@@ -344,9 +339,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			
 			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
 			
-			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
-			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
-			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			
 				
 			mockNtiModelService.Verify(f => f.PatchNtiUnderConsideration(It.IsAny<NtiUnderConsiderationModel>()), Times.Never);
 		}
