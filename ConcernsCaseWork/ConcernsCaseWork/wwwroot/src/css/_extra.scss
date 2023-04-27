@@ -1502,13 +1502,15 @@ span.summary-validation-symbol {
   padding: 4px 4px 2px;
 }
 
+.scrollable-error {
+	cursor: pointer
+}
 /* ==========================================================================
    #RICH TEXT EDITOR
    ========================================================================== */
-
 .moj-rich-text-editor__toolbar {
-  @include govuk-clearfix;
-  margin-bottom: govuk-spacing(2);
+	@include govuk-clearfix;
+	margin-bottom: govuk-spacing(2);
 }
 
 .moj-rich-text-editor__toolbar-button {

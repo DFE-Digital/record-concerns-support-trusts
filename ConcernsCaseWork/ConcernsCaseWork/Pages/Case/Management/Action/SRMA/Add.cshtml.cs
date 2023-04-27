@@ -1,7 +1,10 @@
 ﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -22,8 +25,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ISRMAService _srmaModelService;
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
-		
+
+		[BindProperty]
+		public RadioButtonsUiComponent SRMAStatus { get; set; }
+
+		[BindProperty]
+		public OptionalDateTimeUiComponent DateOffered { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int CaseUrn { get; set; }
 
@@ -36,128 +47,122 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public IActionResult OnGet()
 		{
-			_logger.LogInformation("Case::Action::SRMA::AddPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				GetRouteData();
+				LoadPageComponents();
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
-		}
-
-		public async Task<IActionResult> OnPostAsync()
-		{
-			try
-			{
-				var caseUrn = GetRouteData();
-
-				ValidateSRMA();
-
-				var srma = CreateSRMA(caseUrn);
-				await _srmaModelService.SaveSRMA(srma);
-
-				return Redirect($"/case/{srma.CaseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
 		}
 
-		private IEnumerable<RadioItem> GetStatuses()
+		public async Task<IActionResult> OnPostAsync()
 		{
-			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
-			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Cancelled && s != SRMAStatus.Complete)
-						   .Select(s => new RadioItem
-						   {
-							   Id = s.ToString(),
-							   Text = EnumHelper.GetEnumDescription(s)
-						   });
-		}
+			_logger.LogMethodEntered();
 
-		private long GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			return caseUrn;
-		}
-
-		private void ValidateSRMA()
-		{
-			var status = Request.Form["status"];
-
-			if (string.IsNullOrEmpty(status))
+			try
 			{
-				throw new Exception("SRMA status not selected");
-			}
-
-			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase: true, out SRMAStatus srmaStatus))
-			{
-				throw new Exception($"Can't parse SRMA status {srmaStatus}");
-			}
-
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-
-			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
-			{
-				throw new InvalidOperationException($"SRMA offered date is not valid {dtString}");
-			}
-
-			var srma_notes = Request.Form["srma-notes"];
-
-			if (!string.IsNullOrEmpty(srma_notes))
-			{
-				var notes = srma_notes.ToString();
-				if (notes.Length > NotesMaxLength)
+				if (!ModelState.IsValid)
 				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+					ResetOnValidationError();
+					return Page();
 				}
+
+				var srma = CreateSRMA(CaseUrn);
+				await _srmaModelService.SaveSRMA(srma);
+
+				return Redirect($"/case/{srma.CaseUrn}/management");
 			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
+			}
+
+			return Page();
 		}
+
+		private void LoadPageComponents()
+		{
+			SRMAStatus = BuildStatusComponent();
+			DateOffered = BuildDateOfferedComponent(new OptionalDateModel());
+			Notes = BuildNotesComponent();
+		}
+
+		private void ResetOnValidationError()
+		{
+			SRMAStatus = BuildStatusComponent(SRMAStatus.SelectedId);
+			DateOffered = BuildDateOfferedComponent(DateOffered.Date);
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
+
+		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
+		{
+			var enumValues = new List<SRMAStatus>()
+			{
+				Enums.SRMAStatus.TrustConsidering,
+				Enums.SRMAStatus.PreparingForDeployment,
+				Enums.SRMAStatus.Deployed
+			};
+
+			var radioItems = enumValues.Select(v =>
+			{
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
+
+			return new(ElementRootId: "srma-status", Name: nameof(SRMAStatus), "What is the status of the SRMA?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "SRMA status",
+				Required = true
+			};
+		}
+
+		private static OptionalDateTimeUiComponent BuildDateOfferedComponent(OptionalDateModel date)
+		{
+			return new OptionalDateTimeUiComponent("date-offered", nameof(DateOffered), "When was the trust contacted?")
+			{
+				Date = date,
+				Required = true,
+				DisplayName = "Date trust was contacted"
+			};
+		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("srma-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString()
+				{
+					MaxLength = 2000,
+					StringContents = contents,
+					DisplayName = "Notes"
+				}
+			};
 
 		private SRMAModel CreateSRMA(long caseUrn)
 		{
-			var status = Request.Form["status"];
-			var notes = Request.Form["srma-notes"].ToString();
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var dateOffered = DateTimeHelper.ParseExact(dtString);
 			var now = DateTime.Now;
 			var createdBy = User.Identity.Name;
 
 			var srma = new SRMAModel(
 				0,
 				caseUrn,
-				dateOffered,
+				DateOffered.Date.ToDateTime().Value,
 				null,
 				null,
 				null,
 				null,
-				Enum.Parse<SRMAStatus>(status),
-				notes,
+				(SRMAStatus)SRMAStatus.SelectedId,
+				Notes.Text.StringContents,
 				SRMAReasonOffered.Unknown,
 				now,
 				now,

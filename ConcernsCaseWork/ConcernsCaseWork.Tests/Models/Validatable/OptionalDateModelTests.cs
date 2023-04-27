@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.Validatable;
 using FluentAssertions;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Test Date: Please enter a complete date DD MM YYYY", new []{ "Test Date" })
+				new ValidationResult("Test Date must be a complete date. For example, 17 5 2022", new []{ "Test Date" })
 			};
 
 			result.Should().BeEquivalentTo(expected);
@@ -77,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Test Date: 22-22-2022 is an invalid date", new []{ "Test Date" })
+				new ValidationResult("Test Date must be a date that exists. For example, 17 5 2022", new []{ "Test Date" })
 			};
 
 			result.Should().BeEquivalentTo(expected);
@@ -102,6 +103,31 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 			};
 
 			model.IsEmpty().Should().BeFalse();
+		}
+
+		[Test]
+		public void ToDateTime_When_DateIsEmpty_Returns_Null()
+		{
+			var model = new OptionalDateModel();
+
+			model.ToDateTime().Should().BeNull();
+		}
+
+		[Test]
+		public void ToDateTime_When_DateIsPopulated_Returns_ExpectedDate()
+		{
+			var model = new OptionalDateModel()
+			{
+				Day = "6",
+				Month = "4",
+				Year = "2023"
+			};
+
+			var result = model.ToDateTime().Value;
+
+			result.Day.Should().Be(6);
+			result.Month.Should().Be(4);
+			result.Year.Should().Be(2023);
 		}
 	}
 }

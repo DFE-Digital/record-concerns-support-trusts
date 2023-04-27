@@ -1,6 +1,9 @@
 ﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -22,7 +25,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public SrmaCloseTextModel CloseTextModel { get; set; }
 
-		public SRMAModel SRMAModel { get; set; }
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
+
+		[BindProperty]
+		public CheckboxUiComponent Confirm { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "urn")] public int CaseId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "resolution")] public string Resolution { get; set; }
 
 		public ResolvePageModel(
 			ISRMAService srmaModelService, ILogger<ResolvePageModel> logger)
@@ -35,24 +47,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::ResolvePageModel::OnGetAsync");
-				(long caseUrn, long srmaId, string resolution) = GetRouteData();
+				_logger.LogMethodEntered();
 
-				// TODO - get SRMA by case ID and SRMA ID
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				var model = await _srmaModelService.GetSRMAById(SrmaId);
 
-				if (SRMAModel.IsClosed)
+				if (model.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 				}
 
-				SetupPage(resolution);
+				SetupPage(Resolution);
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::ResolvePageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -62,76 +72,92 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			try
 			{
-				(long caseUrn, long srmaId, string resolution) = GetRouteData();
+				SetupPage(Resolution);
 
-				SetupPage(resolution);
-
-				SRMAStatus resolvedStatus;
-
-				switch (resolution)
+				if (!ModelState.IsValid)
 				{
-					case SrmaConstants.ResolutionComplete:
-						resolvedStatus = SRMAStatus.Complete;
-						break;
-					case SrmaConstants.ResolutionCancelled:
-						resolvedStatus = SRMAStatus.Cancelled;
-						break;
-					case SrmaConstants.ResolutionDeclined:
-						resolvedStatus = SRMAStatus.Declined;
-						break;
-					default:
-						throw new Exception("resolution value is null or invalid to parse");
+					ResetOnValidationError();
+					return Page();
 				}
 
-				var srmaNotes = Request.Form["srma-notes"].ToString();
-				if (!string.IsNullOrEmpty(srmaNotes))
-				{
-					if (srmaNotes.Length > 2000)
-					{
-						throw new Exception("Notes provided exceed maximum allowed length 2000 characters).");
-					}
-				}
+				SRMAStatus resolvedStatus = GetStatus();
 
-				await _srmaModelService.SetNotes(srmaId, srmaNotes);
-				await _srmaModelService.SetStatus(srmaId, resolvedStatus);
-				await _srmaModelService.SetDateClosed(srmaId);
+				await _srmaModelService.SetNotes(SrmaId, Notes.Text.StringContents);
+				await _srmaModelService.SetStatus(SrmaId, resolvedStatus);
+				await _srmaModelService.SetDateClosed(SrmaId);
 
-				return Redirect($"/case/{caseUrn}/management");
+				return Redirect($"/case/{CaseId}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::ResolvePageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
+
+			return Page();
 		}
 
-		private (long caseUrn, long srmaId, string resolution) GetRouteData()
+		private SRMAStatus GetStatus()
 		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
+			SRMAStatus resolvedStatus;
 
-			var srmaIdValue = RouteData.Values["srmaId"];
-			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
-				throw new Exception("srmaId is null or invalid to parse");
-
-			var validResolutions = new List<string>() { SrmaConstants.ResolutionComplete, SrmaConstants.ResolutionDeclined, SrmaConstants.ResolutionCancelled };
-			var resolutionValue = RouteData.Values["resolution"]?.ToString();
-
-			if (string.IsNullOrEmpty(resolutionValue) || !validResolutions.Contains(resolutionValue))
+			switch (Resolution)
 			{
-				throw new Exception("resolution value is null or invalid to parse");
+				case SrmaConstants.ResolutionComplete:
+					resolvedStatus = SRMAStatus.Complete;
+					break;
+				case SrmaConstants.ResolutionCancelled:
+					resolvedStatus = SRMAStatus.Cancelled;
+					break;
+				case SrmaConstants.ResolutionDeclined:
+					resolvedStatus = SRMAStatus.Declined;
+					break;
+				default:
+					throw new Exception("resolution value is null or invalid to parse");
 			}
 
-			return (caseUrn, srmaId, resolutionValue);
+			return resolvedStatus;
+		}
+
+		private void LoadPageComponents(SRMAModel model)
+		{
+			Notes.Text.StringContents = model.Notes;
+			Confirm = BuildConfirmComponent(CloseTextModel);
+		}
+
+		private void ResetOnValidationError()
+		{
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+			Confirm = BuildConfirmComponent(CloseTextModel, Confirm.Checked);
 		}
 
 		private void SetupPage(string resolution)
 		{
 			CloseTextModel = CaseActionsMapping.ToSrmaCloseText(resolution);
 			ViewData[ViewDataConstants.Title] = CloseTextModel.Title;
+		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("srma-notes", nameof(Notes), "Finalise notes (optional)")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
+
+		private static CheckboxUiComponent BuildConfirmComponent (SrmaCloseTextModel closedTextModel, bool confirmed = false)
+		{
+			return new CheckboxUiComponent("srma-confirm-check", nameof(Confirm), "")
+			{
+				Checked = confirmed,
+				Required = true,
+				Text = closedTextModel.ConfirmText,
+				ErrorTextForRequiredField = closedTextModel.ConfirmText
+			};
 		}
 	}
 }

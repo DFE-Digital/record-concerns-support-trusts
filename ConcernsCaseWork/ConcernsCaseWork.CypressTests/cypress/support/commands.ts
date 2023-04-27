@@ -4,6 +4,7 @@ import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
 import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 //import {AuthenticationComponent} from  "../auth/authenticationComponent";
+import { Logger } from "cypress/common/logger";
 
 Cypress.Commands.add("getByTestId", (id) => {
 	cy.get(`[data-testid="${id}"]`);
@@ -38,10 +39,14 @@ Cypress.Commands.add("login", (params) => {
 
 //This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
 Cypress.Commands.add("excuteAccessibilityTests", () => {
+	Logger.Log("Executing the command");
 	const wcagStandards = ["wcag22aa"];
 	const impactLevel = ["critical", "minor", "moderate", "serious"];
 	const continueOnFail = false;
+	Logger.Log("Inject Axe");
 	cy.injectAxe();
+
+	Logger.Log("Checking accessibility");
 	cy.checkA11y(
 		undefined,
 		{
@@ -54,6 +59,8 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 		undefined,
 		continueOnFail
 	);
+
+	Logger.Log("Command finished");
 });
 
 Cypress.Commands.add("basicCreateCase", () => {

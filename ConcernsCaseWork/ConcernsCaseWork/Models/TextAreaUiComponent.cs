@@ -6,6 +6,8 @@ namespace ConcernsCaseWork.Models;
 public record TextAreaUiComponent(string ElementRootId, string Name, string Heading) : BaseUiComponent(ElementRootId, Name, Heading)
 {
 	public ValidateableString Text { get; set; }
+
+	public string? HintText { get; set; }
 }
 
 public class ValidateableString : IValidatableObject
@@ -23,7 +25,7 @@ public class ValidateableString : IValidatableObject
 
 		if (MaxLength > 0 && StringContents?.Length > MaxLength)
 		{
-			result.Add(new ValidationResult($"{displayName}: Exceeds maximum allowed length ({MaxLength} characters).", new[] { displayName }));
+			result.Add(new ValidationResult($"{displayName} must be {MaxLength} characters or less", new[] { displayName }));
 		}
 
 		return result;

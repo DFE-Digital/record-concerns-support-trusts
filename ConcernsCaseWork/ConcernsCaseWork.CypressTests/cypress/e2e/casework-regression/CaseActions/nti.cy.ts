@@ -8,6 +8,7 @@ import { LiftNoticeToImprovePage } from "../../../pages/caseActions/noticeToImpr
 import { CloseNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateIncompleteError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing case action NTI", () =>
 {
@@ -43,7 +44,7 @@ describe("Testing case action NTI", () =>
         editNtiPage
             .withNotesWithLines()
             .save()
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError(NotesError);
           
         configureNtiWithConditions();
 
@@ -214,7 +215,7 @@ describe("Testing case action NTI", () =>
         cancelNtiPage
             .withNotesExceedingLimit()
             .cancel()
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError(NotesError);
 
         cy.waitForJavascript();
 
@@ -244,7 +245,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withDayLifted("22")
             .lift()
-            .hasValidationError("Date NTI lifted: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI lifted"));
 
         liftNtiPage.clearDateFields();
         cy.waitForJavascript();
@@ -252,7 +253,7 @@ describe("Testing case action NTI", () =>
         liftNtiPage
             .withNotesExceedingLimit()
             .lift()
-            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError(NotesError);
 
         Logger.Log("Filling out NTI lifted");
         liftNtiPage
@@ -282,7 +283,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withDayClosed("22")
             .close()
-            .hasValidationError("Date NTI closed: Please enter a complete date DD MM YYYY");
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI closed"));
 
         closeNtiPage.clearDateFields();
         cy.waitForJavascript();
@@ -290,7 +291,7 @@ describe("Testing case action NTI", () =>
         closeNtiPage
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Finalise notes (optional): Exceeds maximum allowed length (2000 characters).");
+            .hasValidationError(NotesError);
 
         closeNtiPage
             .withDayClosed("15")
