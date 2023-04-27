@@ -21,20 +21,18 @@
         <!-- Trust summary and records -->
         <dl class="govuk-summary-list">
             <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
-            <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
-            <partial name="_RatingSummary" model="Model.CreateCaseModel" />
             <partial name="_TerritorySummary" model="Model.CreateCaseModel.Territory" />
         </dl>
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <partial name="_ValidationErrors" />
 
                 <!-- FORM -->
                 <form role="form" method="post" id="case-details-form" novalidate>
 
                     <!-- Q Case History -->
-                    <partial name="_CaseHistory" />
+                    <partial name="Components/_TextArea" model="Model.CaseHistory" />
 
                     <div class="govuk-button-group">
                         <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
@@ -51,7 +49,7 @@
         <script type="application/javascript" nonce="@nonce">
             $(function () {
                 var submitButton = $('#create-case-button')[0];
-                disableOnSubmitWithJsValidationCheck(validator, submitButton);
+                disableOnSubmit(submitButton);
 
                 autoResizer();
             });

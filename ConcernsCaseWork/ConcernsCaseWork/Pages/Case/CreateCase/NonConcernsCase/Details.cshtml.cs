@@ -29,6 +29,9 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 
+		[BindProperty]
+		public TextAreaUiComponent CaseHistory { get; set; }
+
 		public DetailsPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache,
@@ -42,12 +45,24 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			_trustService = Guard.Against.Null(trustService);
 		}
 
-		public async Task OnGetAsync()
+		public async Task<ActionResult> OnGetAsync()
 		{
 			_logger.LogMethodEntered();
 
-			// Fetch UI data
-			await LoadPage();
+			try
+			{
+				await LoadPageData();
+				LoadComponents();
+
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
+			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -56,12 +71,15 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			{
 				_logger.LogMethodEntered();
 
-				var caseHistory = Request.Form["case-history"];
+				if (!ModelState.IsValid)
+				{
+					await LoadPageData();
+					ResetOnValidationError();
 
-				// Complete create case model
-				var userState = await GetUserState();
+					return Page();
+				}
 
-				var createCaseModel = await BuildCreateCaseModel(userState);
+				var createCaseModel = await BuildCreateCaseModel();
 
 				var newCaseId = await _caseModelService.PostCase(createCaseModel);
 
@@ -76,29 +94,27 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			return Page();
 		}
 
-		private async Task<ActionResult> LoadPage()
+		private async Task LoadPageData()
 		{
-			try
-			{
-				var userState = await GetUserState();
-				var trustUkPrn = userState.TrustUkPrn;
+			var userState = await GetUserState();
+			var trustUkPrn = userState.TrustUkPrn;
 
-				if (string.IsNullOrEmpty(trustUkPrn))
-					throw new Exception("Cache TrustUkprn is null");
+			if (string.IsNullOrEmpty(trustUkPrn))
+				throw new Exception("Cache TrustUkprn is null");
 
-				CreateCaseModel = userState.CreateCaseModel;
-				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			CreateCaseModel = userState.CreateCaseModel;
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+		}
 
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
-			}
+		private void LoadComponents()
+		{
+			CaseHistory = BuildCaseHistoryComponent();
+		}
 
-			return Page();
+		private void ResetOnValidationError()
+		{
+			CaseHistory = BuildCaseHistoryComponent(CaseHistory.Text.StringContents);
 		}
 
 		private async Task<UserState> GetUserState()
@@ -110,11 +126,25 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			return userState;
 		}
 
-		private async Task<CreateCaseModel> BuildCreateCaseModel(UserState userState)
+		private TextAreaUiComponent BuildCaseHistoryComponent(string contents = "")
+		=> new("case-history", nameof(CaseHistory), "Case history (optional)")
 		{
+			HintText = "You can record any information that gives you additional context to the case",
+			Text = new ValidateableString()
+			{
+				MaxLength = 4300,
+				StringContents = contents,
+				DisplayName = "Case history"
+			}
+		};
+
+		private async Task<CreateCaseModel> BuildCreateCaseModel()
+		{
+			var userState = await GetUserState();
+
 			var result = userState.CreateCaseModel;
 
-			var caseHistory = Request.Form["case-history"];
+			var caseHistory = CaseHistory.Text.StringContents;
 
 			// get the trust being used for the case
 			var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
