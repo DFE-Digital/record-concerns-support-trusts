@@ -96,7 +96,7 @@
                             <td class="govuk-table__cell govuk-table__header__right"></td>
                         </tr>
 
-                        @if (Model.IsConcernsCase)
+                        @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
@@ -132,11 +132,12 @@
                                 </td>
                             </tr>
                         }
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Concerns</th>
-                            <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
-                                @if (Model.CaseModel.RecordsModel.Any())
-                                {
+                        @if (Model.CaseModel.IsConcernsCase())
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+                                <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
+
                                     <table class="govuk-table">
                                         <tbody class="govuk-table__body">
                                             @foreach (var concern in Model.CaseModel.RecordsModel)
@@ -187,17 +188,18 @@
                                             }
                                         </tbody>
                                     </table>
-                                }
-                                <div class="govuk-o-grid__item--one-half">
-                                    @if (Model.IsEditableCase)
-                                    {
-                                        <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add concern</a>
-                                    }
-                                </div>
 
-                            </td>
-                            <td class="govuk-table__cell__no_border"></td>
-                        </tr>
+                                    <div class="govuk-o-grid__item--one-half">
+                                        @if (Model.IsEditableCase)
+                                        {
+                                            <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add concern</a>
+                                        }
+                                    </div>
+
+                                </td>
+                                <td class="govuk-table__cell__no_border"></td>
+                            </tr>
+                        }
 
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
@@ -252,7 +254,7 @@
                 <h2 class="govuk-heading-m">Case details</h2>
 
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion">
-                    @if (Model.IsConcernsCase)
+                    @if (Model.CaseModel.IsConcernsCase())
                     {
 
                         @* Issue *@
