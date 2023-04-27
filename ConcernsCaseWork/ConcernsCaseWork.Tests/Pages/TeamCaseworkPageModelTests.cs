@@ -9,6 +9,7 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -203,7 +204,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(IsAuthenticated);
 
-				return new TeamCaseworkPageModel(MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object,null)
+				return new TeamCaseworkPageModel(MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object,MockTelemetry.CreateMockTelemetryClient())
 				{
 					PageContext = pageContext,
 					TempData = tempData,
@@ -258,7 +259,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new TeamCaseworkPageModel(mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper,null)
+			return new TeamCaseworkPageModel(mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
