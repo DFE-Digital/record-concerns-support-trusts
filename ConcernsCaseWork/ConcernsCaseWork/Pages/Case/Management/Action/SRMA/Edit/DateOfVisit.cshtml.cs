@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				if (EndDateHasNoStartDate())
 				{
 					ResetOnValidationError();
-					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Start date must be the entered if an end date has been entered");
+					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Dates of visit must include a start date");
 					return Page();
 				}
 
