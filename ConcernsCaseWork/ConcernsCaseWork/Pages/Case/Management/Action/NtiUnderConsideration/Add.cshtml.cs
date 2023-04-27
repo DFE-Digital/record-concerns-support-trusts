@@ -54,6 +54,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				LoadPageComponents();
 				NTIReasonsToConsider = GetReasons().ToList();
+				if (CaseUrn == 0)
+				{
+					throw(new InvalidOperationException("Invalid CaseUrn "));
+				}
 			}
 			catch (Exception ex)
 			{
