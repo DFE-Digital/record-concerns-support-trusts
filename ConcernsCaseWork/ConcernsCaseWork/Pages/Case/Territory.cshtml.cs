@@ -75,6 +75,11 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await GetUserState();
 				userState.CreateCaseModel.Territory = Territory;
 				await _userStateCache.StoreData(GetUserName(), userState);
+
+				if (userState.CreateCaseModel.CreateRecordsModel.Count == 0)
+				{
+					return Redirect("/case/create/nonconcerns/details");
+				}
 				
 				return RedirectToPage("details");
 			}

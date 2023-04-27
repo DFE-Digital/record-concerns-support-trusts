@@ -51,9 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.UserContex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCasework.UserContext.Tests", "ConcernsCasework.UserContext.Tests\ConcernsCasework.UserContext.Tests.csproj", "{CE84113F-049F-42B2-BD9B-F5F45243BA32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service.AzureAd", "ConcernsCaseWork.Service.AzureAd\ConcernsCaseWork.Service.AzureAd.csproj", "{57CC92E3-603E-483E-8F07-F8BDE36ED449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Service.AzureAd", "ConcernsCaseWork.Service.AzureAd\ConcernsCaseWork.Service.AzureAd.csproj", "{57CC92E3-603E-483E-8F07-F8BDE36ED449}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service.AzureAd.Tests", "ConcernsCaseWork.Service.AzureAd.Tests\ConcernsCaseWork.Service.AzureAd.Tests.csproj", "{82135801-42F2-4E96-9D17-BA9AF5CB08FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Service.AzureAd.Tests", "ConcernsCaseWork.Service.AzureAd.Tests\ConcernsCaseWork.Service.AzureAd.Tests.csproj", "{82135801-42F2-4E96-9D17-BA9AF5CB08FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

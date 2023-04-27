@@ -81,7 +81,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 				case CaseTypes.Concern:
 					return Redirect("/case/concern/index");
 				case CaseTypes.NonConcern:
-					return Redirect("/case/create/nonconcerns");
+					return Redirect("/case/territory");
 			}
 		}
 		catch (Exception ex)
