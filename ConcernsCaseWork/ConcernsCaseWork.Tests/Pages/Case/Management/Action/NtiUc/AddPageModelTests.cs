@@ -1,8 +1,12 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,6 +26,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests
 	{
+		private readonly IFixture _fixture;
+
+
+		public AddPageModelTests()
+		{
+			_fixture = new Fixture();
+		}
+		
+		
 		[Test]
 		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
@@ -44,25 +57,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
-
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+			var caseUrn = 1;
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			pageModel.CaseUrn = caseUrn;
 
 			// act
-			pageModel.OnGet();
+			var result = pageModel.OnGet();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-UC::AddPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			result.Should().BeAssignableTo<PageResult>();
+			mockLogger.VerifyLogErrorWasNotCalled();
+				
 		}
 
 		[Test]
@@ -70,9 +77,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
-
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -95,31 +102,41 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
-
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+			var caseUrn = 1;
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-
+			pageModel.CaseUrn = caseUrn;
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
+			pageModel.Notes.Text.StringContents = GenereateString(notesLength);
+			pageModel.NTIReasonsToConsider = new List<RadioItem>()
 			{
-				{ "nti-notes", new StringValues(GenereateString(notesLength)) }
-			});
+				new RadioItem()
+				{
+					Text = "Test",
+					Description = "Test",
+					Id = "1",
+					IsChecked = true
+					
+				}
+			};
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "reason", pageModel.NTIReasonsToConsider.First().Id},
+					{ "nti-notes", pageModel.Notes.Text.StringContents}
+				});
+			
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
 			// assert
-			if (isValid)
-			{
-				Assert.That(pageModel.TempData["NTI-UC.Message"], Is.Null);
-			}
-			else
-			{
-				Assert.That(pageModel.TempData["NTI-UC.Message"], Is.Not.Null);
-			}
+			Assert.That(pageResponse,Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
+			Assert.IsEmpty(pageModel.TempData);
+			Assert.That(page, Is.Not.Null);
+			Assert.That(page.Url, Is.EqualTo($"/case/1/management"));
 		}
 
 		private string GenereateString(int length)
