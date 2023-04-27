@@ -42,6 +42,19 @@ export class EditSrmaPage {
         return this;
     }
 
+    public clearDateOfVisit(): this
+    {
+        cy.getByTestId("dtr-day-start").clear();
+        cy.getByTestId("dtr-month-start").clear();
+        cy.getByTestId("dtr-year-start").clear();
+
+        cy.getByTestId("dtr-day-end").clear();
+        cy.getByTestId("dtr-month-end").clear();
+        cy.getByTestId("dtr-year-end").clear();
+
+        return this;
+    }
+
     public withNotes(notes: string) {
         Logger.Log(`With notes ${notes}`);
 
