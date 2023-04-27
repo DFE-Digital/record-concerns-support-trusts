@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
@@ -60,7 +59,7 @@ public class CloseNtiBasePage : AbstractPageModel
 			{
 				MaxLength = NtiConstants.MaxNotesLength,
 				StringContents = contents,
-				DisplayName = "Finalise notes (optional)"
+				DisplayName = "Notes"
 			}
 		};
 }

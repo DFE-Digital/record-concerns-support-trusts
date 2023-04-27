@@ -196,7 +196,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             viewNtiWarningLetterPage.close();
             closeNtiWarningLetterPage
-                .withReason("Cancel warning letter")
+                .withReason("CancelWarningLetter")
                 .close();
 
             closeConcern();
@@ -292,7 +292,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         AddToCasePage.getAddToCaseBtn().click();
 
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("05")
             .withMonthTrustContacted("06")
             .withYearTrustContacted("2022")

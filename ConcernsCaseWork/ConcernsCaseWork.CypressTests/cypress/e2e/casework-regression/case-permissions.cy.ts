@@ -92,7 +92,7 @@ describe("Testing permissions on cases and case actions", () => {
             .addCaseAction("Srma");
 
         editSrmaPage
-            .withStatus("Trust Considering")
+            .withStatus("TrustConsidering")
             .withDayTrustContacted("05")
             .withMonthTrustContacted("06")
             .withYearTrustContacted("2022")

@@ -1,16 +1,16 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using FluentAssertions;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.Service.Nti;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -213,6 +213,20 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
 			actionSummary.RawClosedDate.Should().Be(testData.ClosedAt);
+		}
+
+		[Test]
+		public void WhenMapDbModelToActionSummary_WhenActionIsClosedWithNoStatus_ReturnsEmpty()
+		{
+			// Validation should catch this test case, but just in case, we have to handle it
+			// Closed status is optional, so the database and api will not stop someone from closing a case without a status
+			// The client should catch this, but just in case there is a regression, we should handle it
+			var model = _fixture.Create<NtiWarningLetterModel>();
+			model.ClosedStatus = null;
+
+			var actionSummary = model.ToActionSummary();
+
+			actionSummary.StatusName.Should().Be("");
 		}
 
 		[TestCaseSource(nameof(GetStatusTestCases))]
