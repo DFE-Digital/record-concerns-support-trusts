@@ -54,3 +54,22 @@ To execute the tests in headless mode, run the following (the output will log to
 ```
 npm run cy:run
 ```
+
+### Security testing with ZAP
+
+The Cypress tests can also be run, proxied via [OWASP ZAP](https://zaproxy.org) for passive security scanning of the application.
+
+These can be run using the configured `docker-compose.yml`, which will spin up containers for the ZAP daemon and the Cypress tests, including all networking required. You will need to update any config in the file before running e.g. api keys. The command for this is
+
+`docker-compose -f docker-compose.yml --exit-code-from cypress`
+
+Alternatively, you can run the Cypress tests against an existing ZAP proxy by setting the environment configuration
+
+```
+HTTP_PROXY="<zap-daemon-url>"
+NO_PROXY="<list-of-urls-to-ignore>"
+```
+
+and setting the runtime variables
+
+`zapReport=true,zapApiKey=<zap-api-key>,zapUrl="<zap-daemon-url>"`
