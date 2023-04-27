@@ -378,7 +378,7 @@ describe("Testing the SRMA case action", () =>
             .withEndMonthOfVisit("03")
             .withEndYearOfVisit("2023")
             .save()
-            .hasValidationError("Start date must be the entered if an end date has been entered");
+            .hasValidationError("Dates of visit must include a start date");
 
 
         Logger.Log("Shows error when end date is before start date");
