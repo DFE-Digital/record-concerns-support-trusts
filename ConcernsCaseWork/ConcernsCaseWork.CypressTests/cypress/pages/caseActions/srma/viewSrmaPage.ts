@@ -229,7 +229,13 @@ export class ViewSrmaPage {
     public hasDateOfVisit(value: string): this {
         Logger.Log(`Has date of visit ${value}`);
 
-        cy.getByTestId(`date-of-visit`).should("contain.text", value);
+        cy.getByTestId('date-of-visit')
+                .invoke('text')
+                .then((text) => {
+                    //remove any leading and trailing white space characters
+                    const trimmedText = text.trim().replace(/\s+/g, ' ').replace(/^\s-\s/, '')
+                    expect(value).to.equal(trimmedText);
+                });
 
         return this;
     }

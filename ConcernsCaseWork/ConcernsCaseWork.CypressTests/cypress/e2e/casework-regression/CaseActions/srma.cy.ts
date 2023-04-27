@@ -331,6 +331,85 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Editing the notes field");
     });
 
+    it("Should show correct empty label order dependant on dates of visit", () => { 
+        Logger.Log("Filling out the SRMA form");
+        editSrmaPage
+            .withStatus("TrustConsidering")
+            .withDayTrustContacted("22")
+            .withMonthTrustContacted("10")
+            .withYearTrustContacted("2022")
+            .withNotes("This is my notes")
+            .save();
+
+        Logger.Log("Add optional SRMA fields on the view page");
+		actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("Trust considering")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+
+        Logger.Log("With just a start date");
+        editSrmaPage
+            .withStartDayOfVisit("05")
+            .withStartMonthOfVisit("07")
+            .withStartYearOfVisit("2023")
+            .save();
+
+        Logger.Log("Shows empty label for end date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("05 July 2023 - Empty"); 
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+    
+        Logger.Log("Shows error when end date is entered with no start date");
+        editSrmaPage
+            .clearDateOfVisit()
+            .withEndDayOfVisit("29")
+            .withEndMonthOfVisit("03")
+            .withEndYearOfVisit("2023")
+            .save()
+            .hasValidationError("Start date must be the entered if an end date has been entered");
+
+
+        Logger.Log("Shows error when end date is before start date");
+        editSrmaPage
+            .clearDateOfVisit()
+            .withStartDayOfVisit("06")
+            .withStartMonthOfVisit("08")
+            .withStartYearOfVisit("2023")
+            .withEndDayOfVisit("29")
+            .withEndMonthOfVisit("03")
+            .withEndYearOfVisit("2023")
+            .save()
+            .hasValidationError("End date must be the same as or come after the start date")
+            .hasValidationError("Start date must be the same as or come before the end date");
+
+        Logger.Log("Entering valid dates");
+            editSrmaPage
+                .clearDateOfVisit()
+                .withStartDayOfVisit("03")
+                .withStartMonthOfVisit("03")
+                .withStartYearOfVisit("2023")
+                .withEndDayOfVisit("29")
+                .withEndMonthOfVisit("03")
+                .withEndYearOfVisit("2023")
+                .save();
+
+        Logger.Log("Shows correct date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("03 March 2023 - 29 March 2023"); 
+    })
+
     describe("Closing an SRMA", () =>
     {
         it("Should be able to resolve an SRMA", () =>
