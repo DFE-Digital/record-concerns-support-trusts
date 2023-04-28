@@ -144,7 +144,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 {
                     row
                         .hasName("NTI Under Consideration")
-                        .hasStatus("NoFurtherAction")
+                        .hasStatus("No further action being taken")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
                 })
