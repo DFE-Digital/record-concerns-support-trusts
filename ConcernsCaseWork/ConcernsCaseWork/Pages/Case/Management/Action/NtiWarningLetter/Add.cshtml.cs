@@ -1,4 +1,5 @@
 ﻿
+using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
@@ -16,7 +17,6 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.Models.Validatable;
 using Microsoft.Graph.Models;
 

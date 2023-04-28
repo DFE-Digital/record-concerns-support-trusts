@@ -1,3 +1,4 @@
+using AutoFixture;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case;
@@ -23,6 +24,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case;
 [Parallelizable(ParallelScope.All)]
 public class SelectTerritoryPageModelTests
 {
+	private Fixture _fixture;
+
+	public SelectTerritoryPageModelTests()
+	{
+		_fixture = new();
+	}
+
 	[Test]
 	public async Task WhenOnGetAsync_ReturnsPage()
 	{
@@ -214,6 +222,7 @@ public class SelectTerritoryPageModelTests
 		var mockTrustModelService = new Mock<ITrustModelService>();
 		
 		var expected = CaseFactory.BuildCreateCaseModel();
+		expected.CreateRecordsModel = _fixture.CreateMany<CreateRecordModel>().ToList();
 		var username = "testuser";
 		var userState = new UserState(username) { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
@@ -231,6 +240,34 @@ public class SelectTerritoryPageModelTests
 		
 		Assert.That(page, Is.Not.Null);
 		Assert.That(page.PageName, Is.EqualTo("details"));
+	}
+
+	[Test]
+	public async Task WhenOnPost_NonConcernsCase_RedirectToNonConcernsDetailsPage()
+	{
+		// arrange
+		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		var mockLogger = new Mock<ILogger<SelectTerritoryPageModel>>();
+		var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+		var mockTrustModelService = new Mock<ITrustModelService>();
+
+		var expected = CaseFactory.BuildCreateCaseModel();
+		var username = "testuser";
+		var userState = new UserState(username) { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+		mockUserStateCachedService.Setup(c => c.GetData(username)).ReturnsAsync(userState);
+		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
+
+		var sut = SetupTerritoryModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+
+		var pageResponse = await sut.OnPostAsync();
+
+		// assert
+		Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+		var page = pageResponse as RedirectResult;
+
+		Assert.That(page, Is.Not.Null);
+		Assert.That(page.Url, Is.EqualTo("/case/create/nonconcerns/details"));
 	}
 	
 	[Test]

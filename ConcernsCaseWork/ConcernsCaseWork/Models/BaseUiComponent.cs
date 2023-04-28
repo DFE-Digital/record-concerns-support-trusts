@@ -11,5 +11,4 @@ public record BaseUiComponent(string ElementRootId, string Name, string Heading)
 	public bool? Required { get; set; }
 
 	public string ErrorTextForRequiredField { get; set; }
-
 }

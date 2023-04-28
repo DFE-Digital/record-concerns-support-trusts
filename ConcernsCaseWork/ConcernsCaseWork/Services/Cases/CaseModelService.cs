@@ -269,27 +269,7 @@ namespace ConcernsCaseWork.Services.Cases
 				createCaseModel.StatusId = statusDto.Id;
 				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
-				// Create records
-				var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel => 
-				{
-					var currentDate = DateTimeOffset.Now;
-					var createRecordDto = new CreateRecordDto(
-						currentDate, 
-						currentDate,
-						currentDate, 
-						recordModel.Type, 
-						recordModel.SubType, 
-						recordModel.TypeDisplay, 
-						newCase.Urn, 
-						recordModel.TypeId, 
-						recordModel.RatingId, 
-						statusDto.Id,
-						recordModel.MeansOfReferralId);
-					
-					return _recordService.PostRecordByCaseUrn(createRecordDto);
-				});
-
-				await Task.WhenAll(recordTasks);
+				await PostConcerns(createCaseModel, newCase.Urn);
 				
 				return newCase.Urn;
 			}
@@ -318,6 +298,31 @@ namespace ConcernsCaseWork.Services.Cases
 
 				throw;
 			}
+		}
+
+		private async Task PostConcerns(CreateCaseModel createCaseModel, long newCaseId)
+		{
+			// Create records
+			var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel =>
+			{
+				var currentDate = DateTimeOffset.Now;
+				var createRecordDto = new CreateRecordDto(
+					currentDate,
+					currentDate,
+					currentDate,
+					recordModel.Type,
+					recordModel.SubType,
+					recordModel.TypeDisplay,
+					newCaseId,
+					recordModel.TypeId,
+					recordModel.RatingId,
+					createCaseModel.StatusId,
+					recordModel.MeansOfReferralId);
+
+				return _recordService.PostRecordByCaseUrn(createRecordDto);
+			});
+
+			await Task.WhenAll(recordTasks);
 		}
 	}
 }

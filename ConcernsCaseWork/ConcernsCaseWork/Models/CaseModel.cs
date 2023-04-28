@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Models
 {
@@ -71,5 +72,10 @@ namespace ConcernsCaseWork.Models
 		public bool ShowValidationMessage { get; set; }
 
 		public bool IsArchived { get;set; }
+
+		public bool IsConcernsCase()
+		{
+			return RecordsModel.Any();
+		}
 	}
 }
