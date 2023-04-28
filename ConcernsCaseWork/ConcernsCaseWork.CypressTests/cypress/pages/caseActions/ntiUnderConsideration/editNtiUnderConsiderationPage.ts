@@ -21,7 +21,7 @@ export class EditNtiUnderConsiderationPage {
         Logger.Log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
-
+		
         return this;
     }
 
