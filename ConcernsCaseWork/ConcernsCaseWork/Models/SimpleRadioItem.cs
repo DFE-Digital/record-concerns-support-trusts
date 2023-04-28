@@ -8,4 +8,6 @@ public record SimpleRadioItem(string Label, int Id)
 	/// Recommended to use the enum string value
 	/// </summary>
 	public string? TestId { get; set; }
+
+	public string? HintText { get; set; }
 }
