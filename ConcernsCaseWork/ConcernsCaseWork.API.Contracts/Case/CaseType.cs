@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
 	{
 		[Description("A concern or multiple concerns")]
 		Concerns = 1,
-		[Description("Non-concern related action(s) or decision(s)")]
+		[Description("Actions or decisions not related to a concern")]
 		NonConcerns = 2,
 		ExConcerns = 3
 	}
