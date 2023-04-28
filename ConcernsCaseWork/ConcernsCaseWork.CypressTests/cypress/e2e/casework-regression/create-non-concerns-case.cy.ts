@@ -3,14 +3,19 @@ import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import { SelectCaseTypePage } from "cypress/pages/createCase/selectCaseTypePage";
+import { EnvUsername } from "cypress/constants/cypressConstants";
 
 describe("Creating a case", () => {
+    let email: string;
+    let name: string;
     const selectCaseTypePage = new SelectCaseTypePage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
     beforeEach(() => {
         cy.login();
         cy.visit(Cypress.env('url') + '/case/create');
+        email = Cypress.env(EnvUsername);
+        name = email.split("@")[0];
     });
 
     it("Should validate adding a case", () => {
@@ -27,7 +32,6 @@ describe("Creating a case", () => {
         selectCaseTypePage
             .confirmOption()
             .hasTrustSummaryDetails("Select Case type")
-        cy.waitForJavascript();
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage
@@ -54,5 +58,11 @@ describe("Creating a case", () => {
             .hasTrust(trustName)
             .hasTerritory(territory)
             .hasCaseHistory(caseHistoryData);
+
+        Logger.Log("Verify case owner - who created the case");
+        
+        caseManagementPage
+            .hasCaseOwner(name);
+            
     });
 });
