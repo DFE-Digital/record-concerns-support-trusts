@@ -28,7 +28,7 @@ describe("Creating a case", () => {
             .selectOption()
             .confirmOption();
 
-        Logger.Log("Attempt to create an invalid create case type");
+        Logger.Log("Attempt to create an invalid create case type and validating error");
         selectCaseTypePage
             .confirmOption()
             .hasTrustSummaryDetails("Select Case type")
