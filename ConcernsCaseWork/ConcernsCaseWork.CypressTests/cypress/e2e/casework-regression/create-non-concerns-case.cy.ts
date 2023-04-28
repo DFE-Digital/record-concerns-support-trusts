@@ -4,6 +4,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import { SelectCaseTypePage } from "cypress/pages/createCase/selectCaseTypePage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
+import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 
 describe("Creating a case", () => {
     let email: string;
@@ -11,6 +12,7 @@ describe("Creating a case", () => {
     const selectCaseTypePage = new SelectCaseTypePage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
+    const createCasePage = new CreateCasePage();
     beforeEach(() => {
         cy.login();
         cy.visit(Cypress.env('url') + '/case/create');
@@ -23,26 +25,26 @@ describe("Creating a case", () => {
         const territory = "North and UTC - North East";
         const caseHistoryData = "This is the case history";
         Logger.Log("Create a case");
-        selectCaseTypePage
+        createCasePage
             .withTrustName(trustName)
             .selectOption()
             .confirmOption();
 
-        Logger.Log("Attempt to create an invalid create case type and validating error");
+        Logger.Log("You must select a case error");
         selectCaseTypePage
-            .confirmOption()
-            .hasTrustSummaryDetails("Select Case type")
+            .continue()
+            .hasValidationError("Select Case type")
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage
-            .withNonConcernCaseType("NonConcerns")
-            .addConcern();
+            .withCaseType("NonConcerns")
+            .continue();
         Logger.Log("Populate territory");
         addTerritoryPage
             .withTerritory(territory)
             .nextStep();
 
-        Logger.Log("Validate unpopulated concern details");
+        Logger.Log("Validate adding concern details errors");
         addConcernDetailsPage
             .withCaseHistoryExceedingLimit()
             .createCase()
@@ -57,12 +59,9 @@ describe("Creating a case", () => {
         caseManagementPage
             .hasTrust(trustName)
             .hasTerritory(territory)
-            .hasCaseHistory(caseHistoryData);
-
-        Logger.Log("Verify case owner - who created the case");
-        
-        caseManagementPage
+            .hasCaseHistory(caseHistoryData)
             .hasCaseOwner(name);
-            
+
+
     });
 });
