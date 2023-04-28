@@ -43,7 +43,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
-		public bool IsConcernsCase { get; set; }
 		public bool IsEditableCase { get; private set; }
 		
 		[TempData]
@@ -104,7 +103,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
-				SetIsConcernsCase();
 
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
@@ -166,11 +164,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return false;
-		}
-
-		private void SetIsConcernsCase()
-		{
-			IsConcernsCase = CaseModel.RecordsModel.Any();
 		}
 	}
 }

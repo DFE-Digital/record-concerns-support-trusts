@@ -41,7 +41,13 @@
 							@radioItem.Label
 						</span>
 					</label>
-				</div>
+                    @if (!string.IsNullOrEmpty(radioItem.HintText))
+                    {
+                        <div class="govuk-hint govuk-radios__hint">
+                            @radioItem.HintText
+                        </div>
+                    }
+                </div>
 			}
 		</div>
 	</fieldset>
