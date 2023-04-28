@@ -9,15 +9,17 @@
 <div class="govuk-width-container">
     <partial name="_BannerError" />
 
-    <span class="govuk-caption-l">Create case</span>
-    <h1 class="govuk-heading-l">Case details</h1>
-
     @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
     {
         <partial name="_Error" />
     }
     else
     {
+        <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">Create case</span>
+        <h1 class="govuk-heading-l">Case details</h1>
+
         <!-- Trust summary and records -->
         <dl class="govuk-summary-list">
             <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
@@ -26,7 +28,6 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <partial name="_ValidationErrors" />
 
                 <!-- FORM -->
                 <form role="form" method="post" id="case-details-form" novalidate>

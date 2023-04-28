@@ -365,7 +365,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         viewNtiUnderConsiderationPage.close();
         closeNtiUnderConsiderationPage
-            .withStatus("No further action being taken")
+            .withStatus("NoFurtherAction")
             .close();
 
         Logger.Log("Completing decision");

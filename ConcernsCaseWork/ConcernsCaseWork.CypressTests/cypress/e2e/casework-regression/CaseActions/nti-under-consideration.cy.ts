@@ -6,6 +6,7 @@ import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnd
 import { CloseNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/closeNtiUnderConsiderationPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import {NotesError} from "../../../constants/validationErrorConstants";
 
 describe("Testing the NTI under consideration", () =>
 {
@@ -31,7 +32,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             editNtiUnderConsiderationPage
                 .withReason("Cash flow problems")
@@ -66,7 +67,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             editNtiUnderConsiderationPage
                 .clearReasons()
@@ -146,15 +147,15 @@ describe("Testing the NTI under consideration", () =>
                 .hasValidationError("Please select a reason for closing NTI under consideration");
 
             closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
+                .withStatus("NoFurtherAction")
                 .withNotesExceedingLimit()
                 .close()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             Logger.Log("Filling out the close form");
 
             closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
+                .withStatus("NoFurtherAction")
                 .withNotes("These are my final notes")
                 .close();
 

@@ -13,9 +13,6 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	
-	<span class="govuk-caption-l">Create case</span>
-    <h1 class="govuk-heading-l">SFSO territory</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -23,13 +20,16 @@
 	}
 	else
 	{
+        <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">Create case</span>
+        <h1 class="govuk-heading-l">SFSO territory</h1>
+
 		<dl class="govuk-summary-list">
 			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
 			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
 			<partial name="_RatingSummary" model="Model.CreateCaseModel"/>
 		</dl>
-	
-		<partial name="_ValidationErrors"/>
 
 		<form role="form" method="post" id="case-territory-form" novalidate>
 			
