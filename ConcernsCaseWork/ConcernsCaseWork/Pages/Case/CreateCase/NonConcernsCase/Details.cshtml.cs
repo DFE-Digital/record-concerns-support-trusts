@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				if (!ModelState.IsValid)
 				{
 					await LoadPageData();
-					ResetOnValidationError();
+					LoadComponents();
 
 					return Page();
 				}
@@ -109,12 +109,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 
 		private void LoadComponents()
 		{
-			CaseHistory = BuildCaseHistoryComponent();
-		}
-
-		private void ResetOnValidationError()
-		{
-			CaseHistory = BuildCaseHistoryComponent(CaseHistory.Text.StringContents);
+			CaseHistory = BuildCaseHistoryComponent(CaseHistory?.Text.StringContents);
 		}
 
 		private async Task<UserState> GetUserState()
@@ -147,7 +142,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			var caseHistory = CaseHistory.Text.StringContents;
 
 			// get the trust being used for the case
-			var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+			var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
 
 			result.TrustUkPrn = trust.GiasData.UkPrn;
 			result.CaseHistory = caseHistory;
