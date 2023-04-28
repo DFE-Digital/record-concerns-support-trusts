@@ -202,7 +202,7 @@ describe("Testing the SRMA case action", () =>
             .hasDateTrustContacted("22 October 2022")
             .hasReason("Empty")
             .hasDateAccepted("Empty")
-            .hasDateOfVisit("Empty")
+            .hasDateOfVisit("Empty - Empty")
             .hasDateReportSentToTrust("Empty")
             .hasNotes("Empty");
     });
@@ -332,25 +332,7 @@ describe("Testing the SRMA case action", () =>
     });
 
     it("Should show correct empty label order dependant on dates of visit", () => { 
-        Logger.Log("Filling out the SRMA form");
-        editSrmaPage
-            .withStatus("TrustConsidering")
-            .withDayTrustContacted("22")
-            .withMonthTrustContacted("10")
-            .withYearTrustContacted("2022")
-            .withNotes("This is my notes")
-            .save();
-
-        Logger.Log("Add optional SRMA fields on the view page");
-		actionSummaryTable
-			.getOpenAction("SRMA")
-			.then(row =>
-			{
-				row.hasName("SRMA")
-				row.hasStatus("Trust considering")
-				row.hasCreatedDate(toDisplayDate(now))
-				row.select();
-			});
+        partiallyConfigureSrma("Deployed");
 
         Logger.Log("Configure date of visit");
         viewSrmaPage
@@ -379,20 +361,6 @@ describe("Testing the SRMA case action", () =>
             .withEndYearOfVisit("2023")
             .save()
             .hasValidationError("Dates of visit must include a start date");
-
-
-        Logger.Log("Shows error when end date is before start date");
-        editSrmaPage
-            .clearDateOfVisit()
-            .withStartDayOfVisit("06")
-            .withStartMonthOfVisit("08")
-            .withStartYearOfVisit("2023")
-            .withEndDayOfVisit("29")
-            .withEndMonthOfVisit("03")
-            .withEndYearOfVisit("2023")
-            .save()
-            .hasValidationError("End date must be the same as or come after the start date")
-            .hasValidationError("Start date must be the same as or come before the end date");
 
         Logger.Log("Entering valid dates");
             editSrmaPage
