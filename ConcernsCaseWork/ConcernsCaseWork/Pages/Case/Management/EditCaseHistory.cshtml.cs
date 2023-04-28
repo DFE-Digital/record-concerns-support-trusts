@@ -1,12 +1,17 @@
-﻿using ConcernsCaseWork.Authorization;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -18,6 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCaseHistoryPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+		private TelemetryClient _telemetryClient;
 
 		[BindProperty(SupportsGet = true)]
 		public string ReferrerUrl => $"/case/{CaseUrn}/management";
@@ -30,11 +36,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[MaxLength(4300, ErrorMessage = "Case history must be 4300 characters or less")]
 		public string CaseHistory { get; set; }
 		
-		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<EditCaseHistoryPageModel> logger)
+		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper,
+			ILogger<EditCaseHistoryPageModel> logger)
 		{
-			_caseModelService = caseModelService;
-			_claimsPrincipalHelper = claimsPrincipalHelper;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = logger;
+			
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
@@ -74,7 +82,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				
 				var userName = GetUserName();
 				await _caseModelService.PatchCaseHistory((long)CaseUrn, userName, CaseHistory);
-					
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)

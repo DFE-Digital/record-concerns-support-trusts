@@ -144,7 +144,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 {
                     row
                         .hasName("NTI Under Consideration")
-                        .hasStatus("No further action being taken")
+                        .hasStatus("NoFurtherAction")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
                 })
@@ -365,7 +365,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         viewNtiUnderConsiderationPage.close();
         closeNtiUnderConsiderationPage
-            .withStatus("No further action being taken")
+            .withStatus("NoFurtherAction")
             .close();
 
         Logger.Log("Completing decision");
