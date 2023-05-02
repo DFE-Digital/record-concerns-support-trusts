@@ -73,6 +73,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 					return Page();
 				}
 
+				if (EndDateHasNoStartDate())
+				{
+					ResetOnValidationError();
+					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Dates of visit must include a start date");
+					return Page();
+				}
+
 				if (EndIsBeforeStart())
 				{
 					ResetOnValidationError();
@@ -96,6 +103,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private bool EndIsBeforeStart()
 		{
 			return EndDate.Date.ToDateTime() < StartDate.Date.ToDateTime();
+		}
+
+		private bool EndDateHasNoStartDate()
+		{
+			return !EndDate.Date.IsEmpty() && StartDate.Date.IsEmpty();
 		}
 
 		private void LoadPageComponents(SRMAModel model)
