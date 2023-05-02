@@ -202,7 +202,7 @@ describe("Testing the SRMA case action", () =>
             .hasDateTrustContacted("22 October 2022")
             .hasReason("Empty")
             .hasDateAccepted("Empty")
-            .hasDateOfVisit("Empty")
+            .hasDateOfVisit("Empty - Empty")
             .hasDateReportSentToTrust("Empty")
             .hasNotes("Empty");
     });
@@ -330,6 +330,53 @@ describe("Testing the SRMA case action", () =>
             .hasDateReportSentToTrust("16 August 2022")
             .hasNotes("Editing the notes field");
     });
+
+    it("Should show correct empty label order dependant on dates of visit", () => { 
+        partiallyConfigureSrma("Deployed");
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+
+        Logger.Log("With just a start date");
+        editSrmaPage
+            .withStartDayOfVisit("05")
+            .withStartMonthOfVisit("07")
+            .withStartYearOfVisit("2023")
+            .save();
+
+        Logger.Log("Shows empty label for end date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("05 July 2023 - Empty"); 
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+    
+        Logger.Log("Shows error when end date is entered with no start date");
+        editSrmaPage
+            .clearDateOfVisit()
+            .withEndDayOfVisit("29")
+            .withEndMonthOfVisit("03")
+            .withEndYearOfVisit("2023")
+            .save()
+            .hasValidationError("Dates of visit must include a start date");
+
+        Logger.Log("Entering valid dates");
+            editSrmaPage
+                .clearDateOfVisit()
+                .withStartDayOfVisit("03")
+                .withStartMonthOfVisit("03")
+                .withStartYearOfVisit("2023")
+                .withEndDayOfVisit("29")
+                .withEndMonthOfVisit("03")
+                .withEndYearOfVisit("2023")
+                .save();
+
+        Logger.Log("Shows correct date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("03 March 2023 - 29 March 2023"); 
+    })
 
     describe("Closing an SRMA", () =>
     {
