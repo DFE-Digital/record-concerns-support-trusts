@@ -1,10 +1,14 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -15,13 +19,16 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCurrentStatusPageModel> _logger;
+		private TelemetryClient _telemetryClient;
 		
 		public CaseModel CaseModel { get; private set; }
 		
-		public EditCurrentStatusPageModel(ICaseModelService caseModelService, ILogger<EditCurrentStatusPageModel> logger)
+		public EditCurrentStatusPageModel(ICaseModelService caseModelService, ILogger<EditCurrentStatusPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_caseModelService = caseModelService;
-			_logger = logger;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
@@ -68,7 +75,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					UpdatedAt = DateTimeOffset.Now,
 					CurrentStatus = currentStatus
 				};
-
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "EDIT case aim",
+					EventDescription = $"Case aim has been changed {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
+					EventUserName = User.Identity.Name
+				});
 				await _caseModelService.PatchCurrentStatus(patchCaseModel);
 					
 				return Redirect(url);

@@ -7,6 +7,10 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Tests.Helpers;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,6 +21,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,6 +30,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class DetailsPageModelTests
 	{
+		private static ConcurrentQueue<ITelemetry> TelemetryItems { get; } = new ConcurrentQueue<ITelemetry>();
+		
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()
 		{
@@ -349,7 +356,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger, mockTrustService)
+			//return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient())
+			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient() ,mockTrustService)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
