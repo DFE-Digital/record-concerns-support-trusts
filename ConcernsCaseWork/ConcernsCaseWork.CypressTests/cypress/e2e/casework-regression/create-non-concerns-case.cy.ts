@@ -5,6 +5,8 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import { SelectCaseTypePage } from "cypress/pages/createCase/selectCaseTypePage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
+import CaseManagementPage from "../../pages/caseMangementPage";
+import AddToCasePage from "../../pages/caseActions/addToCasePage";
 
 describe("Creating a case", () => {
     let email: string;
@@ -33,7 +35,7 @@ describe("Creating a case", () => {
         Logger.Log("You must select a case error");
         selectCaseTypePage
             .continue()
-            .hasValidationError("Select Case type")
+            .hasValidationError("Select case type")
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage
@@ -62,6 +64,13 @@ describe("Creating a case", () => {
             .hasCaseHistory(caseHistoryData)
             .hasCaseOwner(name);
 
-
+        Logger.Log("Verify case actions for non concerns");
+        CaseManagementPage.getAddToCaseBtn().click();
+        
+        AddToCasePage.hasActions([
+            "Decision", 
+            "SRMA (School Resource Management Adviser)", 
+            "TFF (Trust Financial Forecast)"
+        ]);
     });
 });

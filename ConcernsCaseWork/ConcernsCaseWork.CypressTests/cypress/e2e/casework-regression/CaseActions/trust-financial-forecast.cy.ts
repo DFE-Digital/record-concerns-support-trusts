@@ -83,9 +83,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		addTFFToCase();
 
-		cy
-			.getByTestId("error-text")
-			.should("contain.text", "There is already an open trust financial forecast action linked to this case. Please resolve that before opening another one.");
+		AddToCasePage
+			.hasValidationError("There is already an open trust financial forecast action linked to this case. Please resolve that before opening another one.");
 	});
 
 	it("Creating a TFF with empty values", function () {
