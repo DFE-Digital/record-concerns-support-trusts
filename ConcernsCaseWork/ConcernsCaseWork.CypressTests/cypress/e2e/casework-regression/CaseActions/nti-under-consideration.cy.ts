@@ -6,6 +6,7 @@ import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnd
 import { CloseNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/closeNtiUnderConsiderationPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import {NotesError} from "../../../constants/validationErrorConstants";
 
 describe("Testing the NTI under consideration", () =>
 {
@@ -31,7 +32,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             editNtiUnderConsiderationPage
                 .withReason("Cash flow problems")
@@ -66,7 +67,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             editNtiUnderConsiderationPage
                 .clearReasons()
@@ -107,6 +108,17 @@ describe("Testing the NTI under consideration", () =>
         });
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiUnderConsiderationPage
+           .save();
+
+        addNtiUnderConsiderationToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     describe("When closing an NTI under consideration", () =>
     {
         it("Should be able to close the NTI under consideration", () =>
@@ -135,15 +147,15 @@ describe("Testing the NTI under consideration", () =>
                 .hasValidationError("Please select a reason for closing NTI under consideration");
 
             closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
+                .withStatus("NoFurtherAction")
                 .withNotesExceedingLimit()
                 .close()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
 
             Logger.Log("Filling out the close form");
 
             closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
+                .withStatus("NoFurtherAction")
                 .withNotes("These are my final notes")
                 .close();
 

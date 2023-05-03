@@ -14,6 +14,7 @@ export default class CreateConcernPage {
         return this;
     }
 
+   
     public withSubConcernType(value: string): this
     {
         Logger.Log(`With subConcernType ${value}`);

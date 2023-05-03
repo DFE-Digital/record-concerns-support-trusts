@@ -25,7 +25,7 @@ public class ValidateableString : IValidatableObject
 
 		if (MaxLength > 0 && StringContents?.Length > MaxLength)
 		{
-			result.Add(new ValidationResult($"{displayName}: Exceeds maximum allowed length ({MaxLength} characters).", new[] { displayName }));
+			result.Add(new ValidationResult($"{displayName} must be {MaxLength} characters or less", new[] { displayName }));
 		}
 
 		return result;
