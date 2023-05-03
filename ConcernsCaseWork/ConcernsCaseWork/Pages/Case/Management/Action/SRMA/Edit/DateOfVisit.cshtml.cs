@@ -8,6 +8,7 @@ using ConcernsCaseWork.Services.Cases;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -72,10 +73,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 					return Page();
 				}
 
+				if (EndDateHasNoStartDate())
+				{
+					ResetOnValidationError();
+					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Dates of visit must include a start date");
+					return Page();
+				}
+
 				if (EndIsBeforeStart())
 				{
 					ResetOnValidationError();
-					ModelState.AddModelError("EndIsBeforeStart", "Please ensure end date is same as or after start date.");
+					ModelState.AddModelError($"{nameof(StartDate)}.{StartDate.DisplayName}", "Start date must be the same as or come before the end date");
+					ModelState.AddModelError($"{nameof(EndDate)}.{EndDate.DisplayName}", "End date must be the same as or come after the start date");
 					return Page();
 				}
 
@@ -96,6 +105,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			return EndDate.Date.ToDateTime() < StartDate.Date.ToDateTime();
 		}
 
+		private bool EndDateHasNoStartDate()
+		{
+			return !EndDate.Date.IsEmpty() && StartDate.Date.IsEmpty();
+		}
+
 		private void LoadPageComponents(SRMAModel model)
 		{
 			if (model.DateVisitStart.HasValue)
@@ -113,19 +127,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		private static OptionalDateTimeUiComponent BuidStartDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start")
+			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start date")
 			{
 				Date = date,
-				DisplayName = "Start"
+				DisplayName = "Start date"
 			};
 		}
 
 		private static OptionalDateTimeUiComponent BuidEndDateComponent([CanBeNull] OptionalDateModel date = default)
 		{
-			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End")
+			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End date")
 			{
 				Date = date,
-				DisplayName = "End"
+				DisplayName = "End date"
 			};
 		}
 	}

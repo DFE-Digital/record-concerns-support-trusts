@@ -218,5 +218,13 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		}
 	}
 
-	private static string GetDisplayUserName(string userName) => userName.Contains('@') ? userName[..userName.IndexOf('@')].Replace(".", " ").ToTitle() : userName;
+	private static string GetDisplayUserName(string userName)
+	{
+		if (userName == null)
+		{
+			return userName;
+		}
+
+		return userName.Contains('@') ? userName[..userName.IndexOf('@')].Replace(".", " ").ToTitle() : userName;
+	}
 }

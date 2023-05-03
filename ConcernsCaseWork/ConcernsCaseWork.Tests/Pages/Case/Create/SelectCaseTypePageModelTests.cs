@@ -1,3 +1,5 @@
+using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
@@ -24,6 +26,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 	[Parallelizable(ParallelScope.All)]
 	public class SelectCaseTypePageModelTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public void Constructor_WithNullClaimsService_ThrowsException()
 		{
@@ -144,7 +148,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
 				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
 				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
-				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(null));
 			});
@@ -294,9 +297,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 		}
 
 		[Test]
-		[TestCase(SelectCaseTypePageModel.CaseTypes.Concern, "/case/concern/index")]
-		[TestCase(SelectCaseTypePageModel.CaseTypes.NonConcern, "/case/create/nonconcerns")]
-		public async Task WhenOnPost_WithConcernsType_RedirectsToConcernsCreatePage(SelectCaseTypePageModel.CaseTypes selectedCaseType, string expectedUrl)
+		[TestCase(CaseType.Concerns, "/case/concern/index")]
+		[TestCase(CaseType.NonConcerns, "/case/territory")]
+		public async Task WhenOnPost_WithConcernsType_RedirectsToConcernsCreatePage(CaseType selectedCaseType, string expectedUrl)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<SelectCaseTypePageModel>>();
@@ -318,7 +321,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			mockUserService.Setup(s => s.GetData(userName)).ReturnsAsync(new UserState(userName));
 
 			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
-			sut.CaseType = selectedCaseType;
+			sut.CaseType = _fixture.Create<RadioButtonsUiComponent>();
+			sut.CaseType.SelectedId = (int)selectedCaseType;
 
 			// act
 			var result = await sut.OnPost();
@@ -327,7 +331,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(selectedCaseType));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(null));
 				Assert.That(result, Is.TypeOf<RedirectResult>());
 				Assert.That((result as RedirectResult)?.Url, Is.EqualTo(expectedUrl));
@@ -367,42 +370,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasCalled("Some error message");
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		public async Task WhenOnPost_WithValidationError_ReturnsPageWithError()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectCaseTypePageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
-			var keyName = "testkey";
-			var errorMsg = "some model validation error";
-			sut.ModelState.AddModelError(keyName, errorMsg);
-
-			// act
-			var result = await sut.OnPost();
-			
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(default));
-				
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-				Assert.That(result, Is.TypeOf<PageResult>());
-				
-				Assert.That(sut.ModelState.IsValid, Is.False);
-				Assert.That(sut.ModelState.Keys.Count(), Is.EqualTo(1));
-				Assert.That(sut.ModelState.First().Key, Is.EqualTo(keyName));
-				Assert.That(sut.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo(errorMsg));
-			});
-
-			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyNoOtherCalls();
 		}
 

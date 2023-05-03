@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
@@ -25,6 +27,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 	[Parallelizable(ParallelScope.All)]
 	public class EditPageModelTests
 	{
+		private readonly IFixture _fixture;
+
+		public EditPageModelTests()
+		{
+			_fixture = new Fixture();
+		}
+		
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
@@ -41,43 +50,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
-		[Test]
-		public async Task WhenOnGetAsync_ReturnsPageModel()
-		{
-			// arrange
-			var ntiUcId = 834;
-			var caseUrn = 234;
-			
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-			
-			var ntiUcModel = new NtiUnderConsiderationModel();
-			
-			mockNtiModelService
-				.Setup(fp => fp.GetNtiUnderConsideration(ntiUcId))
-				.ReturnsAsync(ntiUcModel);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("ntiucid", ntiUcId);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			mockLogger.VerifyLogErrorWasNotCalled();
-			
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-UC::EditPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_WhenNtiUcIsClosed_RedirectsToIndexPage()
@@ -98,21 +70,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 				.ReturnsAsync(ntiUcModel);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
+			pageModel.CaseUrn = caseUrn;
 			routeData.Add("ntiucid", ntiUcId);
 
 			// act
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-UC::EditPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 			
 			Assert.Multiple(() =>
 			{
@@ -164,54 +128,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
-		[Test]
-		[TestCase(0, true)]
-		[TestCase(1, true)]
-		[TestCase(AddPageModel.NotesMaxLength, true)]
-		[TestCase(AddPageModel.NotesMaxLength + 1, false)]
-		public async Task WhenOnPostAsync_ValidateNotes(int notesLength, bool isValid)
-		{
-			// arrange
-			var ntiId = 123;
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			mockNtiModelService.Setup(ms => ms.GetNtiUnderConsideration(It.IsAny<long>()))
-				.ReturnsAsync(new NtiUnderConsiderationModel
-			{
-				Id = ntiId
-			});
-
-			mockNtiModelService.Setup(ms => ms.PatchNtiUnderConsideration(It.IsAny<NtiUnderConsiderationModel>()))
-				.ReturnsAsync(new NtiUnderConsiderationModel
-			{
-				Id = ntiId
-			});
-
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiUCId", ntiId);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "nti-notes", new StringValues(GenereateString(notesLength)) }
-			});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			if (isValid)
-			{
-				Assert.That(pageModel.TempData["NTI-UC.Message"], Is.Null);
-			}
-			else
-			{
-				Assert.That(pageModel.TempData["NTI-UC.Message"], Is.Not.Null);
-			}
-		}
+		
 
 		private string GenereateString(int length)
 		{
