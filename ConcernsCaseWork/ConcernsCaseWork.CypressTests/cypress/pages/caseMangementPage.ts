@@ -472,7 +472,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Adding case action ${action}`);
         this.getAddCaseAction().click();
-        cy.get(`[value=${action}]`).check();
+        cy.getByTestId(action).check();
         cy.getByTestId("add-action-to-case").click();
 
         return this;

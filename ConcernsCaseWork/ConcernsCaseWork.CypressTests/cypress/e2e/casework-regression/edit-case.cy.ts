@@ -244,6 +244,6 @@ describe("Editing a case", () =>
 
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.getAddToCaseBtn().click();
-        AddToCasePage.hasValidationError("Please select an action to add.");
+        AddToCasePage.hasValidationError("Select an action or decision");
     });
 });
