@@ -33,11 +33,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			try
 			{
-				NtiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
+				NtiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
 				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{CaseUrn}/management/action/nti/{NTIId}");
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
 				LoadPageComponents(NtiModel);
@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					return Page();
 				}
 
-				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
+				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
 				ntiModel.Notes = Notes.Text.StringContents;
 				ntiModel.SumissionDecisionId = DecisionID.Text.StringContents;
