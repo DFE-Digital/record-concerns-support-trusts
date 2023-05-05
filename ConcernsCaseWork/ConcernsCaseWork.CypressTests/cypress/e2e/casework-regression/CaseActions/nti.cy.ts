@@ -8,7 +8,7 @@ import { LiftNoticeToImprovePage } from "../../../pages/caseActions/noticeToImpr
 import { CloseNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { DateIncompleteError, NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing case action NTI", () =>
 {
@@ -30,21 +30,19 @@ describe("Testing case action NTI", () =>
 
     it("Should be able to add a new NTI", () =>
     {
-        Logger.Log("Incomplete issue date");
+        Logger.Log("Form validation");
         editNtiPage
-            .clearDateFields()
             .withDayIssued("22")
             .save()
-            .hasValidationError("Please enter a complete date (DD MM YYYY)")
-        
-        editNtiPage.clearDateFields();
-        cy.waitForJavascript();
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI issued"));
 
-        Logger.Log("Notes Exceeding allowed limit")
         editNtiPage
-            .withNotesWithLines()
+            .withMonthIssued("22")
+            .withYearIssued("2022")
+            .withNotesExceedingLimit()
             .save()
-            .hasValidationError(NotesError);
+            .hasValidationError(NotesError)
+            .hasValidationError(DateInvalidError.replace("{0}", "Date NTI issued"));
           
         configureNtiWithConditions();
 
@@ -217,8 +215,6 @@ describe("Testing case action NTI", () =>
             .cancel()
             .hasValidationError(NotesError);
 
-        cy.waitForJavascript();
-
         cancelNtiPage
             .withNotes("This is my final notes")
             .cancel();
@@ -247,12 +243,13 @@ describe("Testing case action NTI", () =>
             .lift()
             .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI lifted"));
 
-        liftNtiPage.clearDateFields();
-        cy.waitForJavascript();
-
         liftNtiPage
+            .withDayLifted("22")
+            .withMonthLifted("22")
+            .withYearLifted("2022")
             .withNotesExceedingLimit()
             .lift()
+            .hasValidationError(DateInvalidError.replace("{0}", "Date NTI lifted"))
             .hasValidationError(NotesError);
 
         Logger.Log("Filling out NTI lifted");
@@ -285,12 +282,13 @@ describe("Testing case action NTI", () =>
             .close()
             .hasValidationError(DateIncompleteError.replace("{0}", "Date NTI closed"));
 
-        closeNtiPage.clearDateFields();
-        cy.waitForJavascript();
-
         closeNtiPage
+            .withDayClosed("22")
+            .withMonthClosed("22")
+            .withYearClosed("2022")
             .withNotesExceedingLimit()
             .close()
+            .hasValidationError(DateInvalidError.replace("{0}", "Date NTI closed"))
             .hasValidationError(NotesError);
 
         closeNtiPage
