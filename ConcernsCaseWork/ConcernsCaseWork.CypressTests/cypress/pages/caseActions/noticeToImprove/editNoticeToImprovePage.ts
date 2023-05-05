@@ -13,7 +13,7 @@ export class EditNoticeToImprovePage {
     public withDayIssued(value: string): this {
         Logger.Log(`With day issued ${value}`);
 
-        cy.getById('dtr-day').clear().type(value);
+        cy.getById('dtr-day-date-issued').clear().type(value);
 
         return this;
     }
@@ -21,7 +21,7 @@ export class EditNoticeToImprovePage {
     public withMonthIssued(value: string): this {
         Logger.Log(`With month issued ${value}`);
 
-        cy.getById('dtr-month').clear().type(value);
+        cy.getById('dtr-month-date-issued').clear().type(value);
 
         return this;
     }
@@ -29,7 +29,7 @@ export class EditNoticeToImprovePage {
     public withYearIssued(value: string): this {
         Logger.Log(`With year issued ${value}`);
 
-        cy.getById('dtr-year').clear().type(value);
+        cy.getById('dtr-year-date-issued').clear().type(value);
 
         return this;
     }
@@ -46,14 +46,6 @@ export class EditNoticeToImprovePage {
         Logger.Log(`With notes ${value}`);
 
         cy.getById('nti-notes').clear().type(value);
-
-        return this;
-    }
-
-    public withNotesWithLines(): this {
-        Logger.Log(`With notes that has a new line`);
-
-        cy.getById('nti-notes').clear().invoke("val", "x 1 \n".repeat(400));
 
         return this;
     }
@@ -133,7 +125,7 @@ export class EditNoticeToImprovePage {
     public hasDayIssued(value: string): this {
         Logger.Log(`Has day issued ${value}`);
 
-        cy.getById('dtr-day').should("have.value", value);
+        cy.getById('dtr-day-date-issued').should("have.value", value);
 
         return this;
     }
@@ -141,7 +133,7 @@ export class EditNoticeToImprovePage {
     public hasMonthIssued(value: string): this {
         Logger.Log(`Has month issued ${value}`);
 
-        cy.getById('dtr-month').should("have.value", value);
+        cy.getById('dtr-month-date-issued').should("have.value", value);
 
         return this;
     }
@@ -149,7 +141,7 @@ export class EditNoticeToImprovePage {
     public hasYearIssued(value: string): this {
         Logger.Log(`Has year issued ${value}`);
 
-        cy.getById('dtr-year').should("have.value", value);
+        cy.getById('dtr-year-date-issued').should("have.value", value);
 
         return this;
     }
