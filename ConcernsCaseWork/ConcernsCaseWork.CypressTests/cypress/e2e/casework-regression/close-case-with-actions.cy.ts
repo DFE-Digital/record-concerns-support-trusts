@@ -111,6 +111,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             closeCaseCheckingValidation();
             verifyClosedCaseDetails();
+            
 
             Logger.Log("Verifying the closed case action is displayed");
             viewClosedCasePage
