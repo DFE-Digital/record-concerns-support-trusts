@@ -33,7 +33,10 @@ describe("Creating a case", () => {
         Logger.Log("You must select a case error");
         selectCaseTypePage
             .continue()
-            .hasValidationError("Select Case type")
+            .hasValidationError("Select Case type");
+
+        Logger.Log("Checking accessibility on select case type");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage
@@ -49,6 +52,9 @@ describe("Creating a case", () => {
             .withCaseHistoryExceedingLimit()
             .createCase()
             .hasValidationError("Case history must be 4300 characters or less");
+
+        Logger.Log("Checking accessibility on non concerns confirmation page");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Add concern case details with valid text limit");
         addConcernDetailsPage
