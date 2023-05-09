@@ -43,11 +43,17 @@ describe("User interactions via Create Case route", () => {
 				row.hasOwner(name);
 			});
 
+		Logger.Log("Checking accessibility on team casework");
+		cy.excuteAccessibilityTests();	
+
 		homePage.selectColleagues();
 		teamCaseworkPage
 			.deselectAllTeamMembers()
 			.save();
 
 		teamCaseworkPage.hasNoCases();
+
+		Logger.Log("Checking accessibility on team casework with no cases");
+		cy.excuteAccessibilityTests();	
 	});
 });

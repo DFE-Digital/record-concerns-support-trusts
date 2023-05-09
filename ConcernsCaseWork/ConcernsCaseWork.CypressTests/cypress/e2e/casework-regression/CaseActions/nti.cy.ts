@@ -43,6 +43,9 @@ describe("Testing case action NTI", () =>
             .save()
             .hasValidationError(NotesError)
             .hasValidationError(DateInvalidError.replace("{0}", "Date NTI issued"));
+
+        Logger.Log("Checking accessibility on Add NTI");
+        cy.excuteAccessibilityTests();
           
         configureNtiWithConditions();
 
@@ -73,6 +76,9 @@ describe("Testing case action NTI", () =>
             .hasConditions("Trustee contact details")
             .hasConditions("Qualified Floating Charge (QFC)")
             .hasNotes("Nti notes data");
+
+        Logger.Log("Checking accessibility on View NTI");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should handle editing an existing NTI", () =>
@@ -98,6 +104,9 @@ describe("Testing case action NTI", () =>
             .hasReasonIssued("Cash flow problems")
             .hasReasonIssued("Risk of insolvency")
             .hasNotes("Nti notes data");
+
+        Logger.Log("Checking accessibility on Edit NTI");
+        cy.excuteAccessibilityTests();
 
         editNtiPage
             .editConditions()
@@ -215,6 +224,9 @@ describe("Testing case action NTI", () =>
             .cancel()
             .hasValidationError(NotesError);
 
+        Logger.Log("Checking accessibility on Cancel NTI");
+        cy.excuteAccessibilityTests();
+
         cancelNtiPage
             .withNotes("This is my final notes")
             .cancel();
@@ -251,6 +263,9 @@ describe("Testing case action NTI", () =>
             .lift()
             .hasValidationError(DateInvalidError.replace("{0}", "Date NTI lifted"))
             .hasValidationError(NotesError);
+
+        Logger.Log("Checking accessibility on Lift NTI");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Filling out NTI lifted");
         liftNtiPage
@@ -290,6 +305,9 @@ describe("Testing case action NTI", () =>
             .close()
             .hasValidationError(DateInvalidError.replace("{0}", "Date NTI closed"))
             .hasValidationError(NotesError);
+
+        Logger.Log("Checking accessibility on Close NTI");
+        cy.excuteAccessibilityTests();
 
         closeNtiPage
             .withDayClosed("15")
@@ -335,7 +353,12 @@ describe("Testing case action NTI", () =>
             .withFraudAndIrregularity("Off-payroll payments")
             .withStandardConditions("Financial returns")
             .withStandardConditions("Trustee contact details")
-            .withAdditionalFinancialSupportConditions("Qualified Floating Charge (QFC)")
+            .withAdditionalFinancialSupportConditions("Qualified Floating Charge (QFC)");
+
+        Logger.Log("Checking accessibility on Add NTI conditions");
+        cy.excuteAccessibilityTests();
+
+        editNtiPage
             .saveConditions();
 
         editNtiPage.save();
@@ -376,5 +399,8 @@ describe("Testing case action NTI", () =>
                 .cannotClose()
                 .cannotCancel()
                 .cannotLift();
+
+            Logger.Log("Checking accessibility on View Closed NTI");
+            cy.excuteAccessibilityTests();
     }
 });

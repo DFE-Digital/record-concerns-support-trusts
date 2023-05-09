@@ -34,6 +34,9 @@ describe("Testing the NTI under consideration", () =>
                 .save()
                 .hasValidationError(NotesError);
 
+            Logger.Log("Checking accessibility on Add NTI under consideration");
+            cy.excuteAccessibilityTests();
+
             editNtiUnderConsiderationPage
                 .withReason("Cash flow problems")
                 .withReason("Safeguarding")
@@ -69,6 +72,9 @@ describe("Testing the NTI under consideration", () =>
                 .save()
                 .hasValidationError(NotesError);
 
+            Logger.Log("Checking accessibility on Edit NTI under consideration");
+            cy.excuteAccessibilityTests();
+
             editNtiUnderConsiderationPage
                 .clearReasons()
                 .withReason("Governance concerns")
@@ -81,7 +87,10 @@ describe("Testing the NTI under consideration", () =>
                 .hasReasonCount(2)
                 .hasReason("Governance concerns")
                 .hasReason("Risk of insolvency")
-                .hasNotes("Edited my notes"); 
+                .hasNotes("Edited my notes");
+
+            Logger.Log("Checking accessibility on View NTI under consideration");
+            cy.excuteAccessibilityTests();
         });
     });
 
@@ -143,14 +152,13 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.Log("Validating the close page")
             closeNtiUnderConsiderationPage
-                .close()
-                .hasValidationError("Please select a reason for closing NTI under consideration");
-
-            closeNtiUnderConsiderationPage
-                .withStatus("NoFurtherAction")
                 .withNotesExceedingLimit()
                 .close()
+                .hasValidationError("Please select a reason for closing NTI under consideration")
                 .hasValidationError(NotesError);
+
+            Logger.Log("Checking accessibility on Close NTI under consideration");
+            cy.excuteAccessibilityTests();
 
             Logger.Log("Filling out the close form");
 
@@ -180,6 +188,9 @@ describe("Testing the NTI under consideration", () =>
                 .hasNotes("These are my final notes")
                 .cannotEdit()
                 .cannotClose();
+
+            Logger.Log("Checking accessibility on View Closed NTI under consideration");
+            cy.excuteAccessibilityTests();
         });
     });
 
