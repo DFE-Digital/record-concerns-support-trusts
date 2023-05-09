@@ -31,8 +31,7 @@ import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 
-describe("Testing closing of cases when there are case actions and concerns", () =>
-{
+describe("Testing closing of cases when there are case actions and concerns", () => {
     let caseId: string;
     let trustName: string;
     let now: Date;
@@ -41,7 +40,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
     const closeFinancialPlanPage = new CloseFinancialPlanPage();
 
-    const editDecisionPage =  new EditDecisionPage();
+    const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
     const closeDecisionPage = new CloseDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
@@ -59,7 +58,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
     const editNtiPage = new EditNoticeToImprovePage();
     const viewNtiPage = new ViewNoticeToImprovePage();
-    const closeNtiPage =  new CloseNoticeToImprovePage();
+    const closeNtiPage = new CloseNoticeToImprovePage();
 
     const editTffPage = new EditTrustFinancialForecastPage();
     const viewTffPage = new ViewTrustFinancialForecastPage();
@@ -68,7 +67,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const viewClosedCasePage = new ViewClosedCasePage();
 
     beforeEach(() => {
-		cy.login();
+        cy.login();
         now = new Date();
 
         cy.basicCreateCase()
@@ -76,17 +75,17 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 caseId = id + "";
                 return CaseManagementPage.getTrust()
             })
-            .then((trust: string) =>
-            {
+            .then((trust: string) => {
                 trustName = trust.trim();
             });
-	});
+    });
 
-    describe("When we have case actions and concerns that have not been closed", () =>
-    {
-        it("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () =>
-        {
+    describe("When we have case actions and concerns that have not been closed", () => {
+        it("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () => {
             addAllAllowedCaseActions();
+
+            Logger.Log("Checking accessibility on case management");
+            cy.excuteAccessibilityTests();
 
             Logger.Log("Validating an error is displayed for each type of case action")
 
@@ -100,11 +99,16 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .hasClosedCaseValidationError("Resolve Concerns")
                 .hasClosedCaseValidationError("Resolve Trust Financial Forecast");
 
+            Logger.Log("Checking accessibility on case management error page");
+            cy.excuteAccessibilityTests();
+
             CaseManagementPage.getBackBtn().click();
+
 
             resolveAllAllowedCaseActions();
 
             closeConcern();
+
             closeCaseCheckingValidation();
             verifyClosedCaseDetails();
 
@@ -118,8 +122,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Verifying the closed case actions details are displayed");
             actionTable
                 .getRowByAction("SRMA")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("SRMA")
                         .hasStatus("SRMA cancelled")
@@ -129,8 +132,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             actionTable
                 .getRowByAction("Financial Plan")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("Financial Plan")
                         .hasStatus("Viable plan received")
@@ -140,8 +142,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             actionTable
                 .getRowByAction("NTI Under Consideration")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("NTI Under Consideration")
                         .hasStatus("No further action being taken")
@@ -151,8 +152,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             actionTable
                 .getRowByAction("Decision: No Decision Types")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("Decision: No Decision Types")
                         .hasStatus("Approved")
@@ -162,8 +162,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             actionTable
                 .getRowByAction("Trust Financial Forecast (TFF)")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("Trust Financial Forecast (TFF)")
                         .hasStatus("Completed")
@@ -172,8 +171,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 })
         });
 
-        it("Should raise a validation error for NTI warning letter and only close when the action resolved", () =>
-        {
+        it("Should raise a validation error for NTI warning letter and only close when the action resolved", () => {
             Logger.Log("Adding NTI warning letter");
 
             CaseManagementPage.getAddToCaseBtn().click();
@@ -188,11 +186,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Completing NTI Warning Letter");
             actionSummaryTable
-            .getOpenAction("NTI Warning Letter")
-            .then(row =>
-            {
-                row.select();
-            });
+                .getOpenAction("NTI Warning Letter")
+                .then(row => {
+                    row.select();
+                });
 
             viewNtiWarningLetterPage.close();
             closeNtiWarningLetterPage
@@ -206,8 +203,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Verifying the closed case action is displayed");
             actionTable
                 .getRowByAction("NTI Warning Letter")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("NTI Warning Letter")
                         .hasStatus("Cancelled")
@@ -216,8 +212,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 })
         });
 
-        it("Should raise a validation error for Notice To Improve and only close when the action is resolved", () =>
-        {
+        it("Should raise a validation error for Notice To Improve and only close when the action is resolved", () => {
             Logger.Log("Adding Notice To Improve");
             CaseManagementPage.getAddToCaseBtn().click();
             AddToCasePage.addToCase('Nti')
@@ -232,8 +227,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Completing Notice To Improve");
             actionSummaryTable
                 .getOpenAction("NTI")
-                .then(row =>
-                {
+                .then(row => {
                     row.select();
                 });
 
@@ -247,8 +241,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Verifying the closed case action is displayed");
             actionTable
                 .getRowByAction("NTI")
-                .then((row) =>
-                {
+                .then((row) => {
                     row
                         .hasName("NTI")
                         .hasStatus("Closed")
@@ -258,8 +251,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         });
     });
 
-    function addAllAllowedCaseActions()
-    {
+    function addAllAllowedCaseActions() {
         Logger.Log("Adding all allowed case actions");
 
         Logger.Log("Creating a financial plan");
@@ -276,8 +268,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         actionSummaryTable
             .getOpenAction("Decision: No Decision Types")
-            .then(row =>
-            {
+            .then(row => {
                 row.select();
             });
 
@@ -313,15 +304,13 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         editTffPage.save();
     }
 
-    function resolveAllAllowedCaseActions()
-    {
+    function resolveAllAllowedCaseActions() {
         Logger.Log("Resolving all actions");
 
         Logger.Log("Completing SRMA");
         actionSummaryTable
             .getOpenAction("SRMA")
-            .then(row =>
-            {
+            .then(row => {
                 row.select();
             });
 
@@ -331,7 +320,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         editSrmaPage
             .withReason("Offer Linked")
             .save();
-        
+
         viewSrmaPage
             .cancel();
 
@@ -342,8 +331,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Completing Financial Plan");
         actionSummaryTable
             .getOpenAction("Financial Plan")
-            .then(row =>
-            {
+            .then(row => {
                 row.select();
             });
 
@@ -358,8 +346,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Completing NTI Under Consideration");
         actionSummaryTable
             .getOpenAction("NTI Under Consideration")
-            .then(row =>
-            {
+            .then(row => {
                 row.select();
             });
 
@@ -371,8 +358,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Completing decision");
         actionSummaryTable
             .getOpenAction("Decision: No Decision Types")
-            .then(row =>
-            {
+            .then(row => {
                 row.select();
             });
 
@@ -381,36 +367,41 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         Logger.Log("Completing Trust financial forecast");
         actionSummaryTable
-        .getOpenAction("Trust Financial Forecast (TFF)")
-        .then(row =>
-        {
-            row.select();
-        });
+            .getOpenAction("Trust Financial Forecast (TFF)")
+            .then(row => {
+                row.select();
+            });
 
         viewTffPage.close();
         closeTffPage.close();
     }
 
-    function closeConcern()
-    {
+    function closeConcern() {
         Logger.Log("Closing concern");
         CaseManagementPage.editConcern();
         EditConcernPage
-            .closeConcern()
+            .closeConcern();
+
+        Logger.Log("Checking accessibility on closing concern");
+        cy.excuteAccessibilityTests();
+
+        EditConcernPage
             .confirmCloseConcern();
     }
 
-    function closeCaseCheckingValidation()
-    {
-        CaseManagementPage.getCaseIDText().then((caseId) =>
-        {
+    function closeCaseCheckingValidation() {
+        CaseManagementPage.getCaseIDText().then((caseId) => {
             Logger.Log("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
+
 
             Logger.Log("Validating that a rationale for closure must be entered");
             CaseManagementPage.getCloseCaseBtn().click();
             CaseManagementPage.hasValidationError("You have not recorded rationale for closure");
             cy.waitForJavascript();
+
+            Logger.Log("Checking accessibility on Close case");
+            cy.excuteAccessibilityTests();
 
             Logger.Log("Validating rationale for closure is 200 characters");
             CaseManagementPage.withRationaleForClosureExceedingLimit();
@@ -424,13 +415,15 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Viewing case is closed");
             HomePage.getClosedCasesBtn().click();
             ClosedCasePage.getClosedCase(caseId);
+            
+            Logger.Log("Checking accessibility on the closed case view");
+            cy.excuteAccessibilityTests();
+
         });
     }
 
-    function closeCase()
-    {
-        CaseManagementPage.getCaseIDText().then((caseId) =>
-        {
+    function closeCase() {
+        CaseManagementPage.getCaseIDText().then((caseId) => {
             Logger.Log("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
 
@@ -439,28 +432,36 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Viewing case is closed");
             HomePage.getClosedCasesBtn().click();
+            
+
+            Logger.Log("Checking accessibility on closed case");
+            cy.excuteAccessibilityTests();
+
             ClosedCasePage.getClosedCase(caseId);
         });
     }
 
-    function verifyClosedCaseDetails()
-    {
+    function verifyClosedCaseDetails() {
         Logger.Log("Validate Closed Case row has correct details");
         caseworkTable
-                .getRowByCaseId(caseId)
-                .then((row) =>
-                {
-                    row
-                        .hasCaseId(caseId)
-                        .hasCreatedDate(toDisplayDate(now))
-                        .hasClosedDate(toDisplayDate(now))
-                        .hasTrust(trustName)
-                        .hasConcern("Governance and compliance: Compliance")
-                        .select();
-                })
+            .getRowByCaseId(caseId)
+            .then((row) => {
+                row
+                    .hasCaseId(caseId)
+                    .hasCreatedDate(toDisplayDate(now))
+                    .hasClosedDate(toDisplayDate(now))
+                    .hasTrust(trustName)
+                    .hasConcern("Governance and compliance: Compliance")
+
+                Logger.Log("Checking accessibility on Closed Case Details");
+                cy.excuteAccessibilityTests();
+
+                row.select();
+
+            })
 
 
-        
+
 
         Logger.Log("Validate Closed Case has correct details");
         viewClosedCasePage
@@ -473,5 +474,8 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .hasNextSteps("next steps")
             .hasCaseHistory("case history")
             .hasRationaleForClosure("Closing case");
+            
+            Logger.Log("Checking accessibility on close case details");
+            cy.excuteAccessibilityTests();
     }
 });
