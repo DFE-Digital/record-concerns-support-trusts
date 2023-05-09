@@ -98,9 +98,6 @@ describe("User can add case actions to an existing case", () => {
 			.cannotCloseDecision()
 			.editDecision();
 
-		Logger.Log("Checking accessibility on Edit Decision");
-		cy.excuteAccessibilityTests();
-
 		Logger.Log("Editing Decision");
 		editDecisionPage
 			.withCrmEnquiry("777")
@@ -113,6 +110,11 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
+
+		Logger.Log("Checking accessibility on Edit Decision");
+		cy.excuteAccessibilityTests();
+
+		editDecisionPage
 			.save();
 
 		Logger.Log("Viewing Edited Decision");
