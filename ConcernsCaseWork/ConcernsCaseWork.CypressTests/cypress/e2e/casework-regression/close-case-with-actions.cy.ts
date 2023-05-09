@@ -434,7 +434,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Viewing case is closed");
             HomePage.getClosedCasesBtn().click();
             
-
             Logger.Log("Checking accessibility on closed case");
             cy.excuteAccessibilityTests();
 
@@ -459,10 +458,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
                 row.select();
 
-            })
-
-
-
+            });
 
         Logger.Log("Validate Closed Case has correct details");
         viewClosedCasePage
