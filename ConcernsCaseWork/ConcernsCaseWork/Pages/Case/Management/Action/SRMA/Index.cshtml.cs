@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -22,11 +21,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
-		public readonly string ReasonErrorMessage = "Add reason for SRMA";
-		public readonly string DateAcceptedErrorMessage = "Enter date trust accepted SRMA";
-		public readonly string DateVisitErrorMessage = "Enter dates of visit";
-		public readonly string DateReportErrorMessage = "Enter date report sent to trust";
-
+		public readonly string ReasonErrorKey = "Reason";
+		public readonly string DateAcceptedErrorKey = "DateAccepted";
+		public readonly string DatesOfVisitErrorKey = "DatesOfVisit";
+		public readonly string DateReportSentToTrustErrorKey = "DateReportSentToTrust";
 
 		public SRMAModel SRMAModel { get; set; }
 		public string DeclineCompleteButtonLabel { get; private set; }
@@ -68,7 +66,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostComplete()
+		public async Task<ActionResult> OnPost(string action)
+		{
+			switch (action)
+			{
+				case "complete":
+					return await OnPostComplete();
+				case "declined":
+					return await OnPostDeclined();
+				case "cancelled":
+					return await OnPostCancelled();
+				default:
+					throw new Exception($"Unrecognised action {action}");
+			}
+		}
+
+		private async Task<ActionResult> OnPostComplete()
 		{
 			_logger.LogMethodEntered();
 
@@ -83,7 +96,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					return Page();
 				}
 
-				return Redirect("resolve/complete");
+				return RedirectToSrmaAction("complete");
 			}
 			catch (Exception ex)
 			{
@@ -94,7 +107,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostDecline()
+		private ActionResult RedirectToSrmaAction(string action)
+		{
+			return Redirect($"/case/{CaseUrn}/management/action/srma/{SrmaId}/resolve/{action}");
+		}
+
+		private async Task<ActionResult> OnPostDeclined()
 		{
 			_logger.LogMethodEntered();
 
@@ -109,7 +127,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					return Page();
 				}
 
-				return Redirect("resolve/decline");
+				return RedirectToSrmaAction("decline");
 			}
 			catch (Exception ex)
 			{
@@ -120,7 +138,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostCancel()
+		private async Task<ActionResult> OnPostCancelled()
 		{
 			_logger.LogMethodEntered();
 
@@ -135,7 +153,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					return Page();
 				}
 
-				return Redirect("resolve/cancel");
+				return RedirectToSrmaAction("cancel");
 			}
 			catch (Exception ex)
 			{
@@ -161,7 +179,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			if (model.Reason.Equals(SRMAReasonOffered.Unknown))
 			{
-				ModelState.AddModelError("Reason", ReasonErrorMessage);
+				ModelState.AddModelError("Reason", "Add reason for SRMA");
 			}
 		}
 	
@@ -169,24 +187,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			PerformReasonValidation(model);
 
-			if (!model.Status.Equals(SRMAStatus.Deployed))
-			{
-				return;
-			}
-
 			if (!model.DateAccepted.HasValue)
 			{
-				ModelState.AddModelError("DateAccepted", DateAcceptedErrorMessage);
+				ModelState.AddModelError("DateAccepted", "Enter date trust accepted SRMA");
 			}
 
 			if (!model.DateVisitStart.HasValue || !model.DateVisitEnd.HasValue)
 			{
-				ModelState.AddModelError("DatesOfVisit", DateVisitErrorMessage);
+				ModelState.AddModelError("DatesOfVisit", "Enter dates of visit");
 			}
 
 			if (!model.DateReportSentToTrust.HasValue)
 			{
-				ModelState.AddModelError("DateReportSentToTrust", DateReportErrorMessage);
+				ModelState.AddModelError("DateReportSentToTrust", "Enter date report sent to trust");
 			}
 		}
 	}
