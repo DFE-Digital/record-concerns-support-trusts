@@ -72,9 +72,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				case "complete":
 					return await OnPostComplete();
-				case "declined":
+				case "decline":
 					return await OnPostDeclined();
-				case "cancelled":
+				case "cancel":
 					return await OnPostCancelled();
 				default:
 					throw new Exception($"Unrecognised action {action}");
