@@ -1,4 +1,6 @@
 
+import { Logger } from "../../common/logger";
+
 describe('Footer links direct to the correct pages from Active Casework page', () => {
     beforeEach(() => {
         cy.login();
