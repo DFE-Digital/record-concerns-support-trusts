@@ -53,6 +53,9 @@ describe("User can add case actions to an existing case", () => {
 			)
 			.hasValidationError(NotesError);
 
+		Logger.Log("Checking accessibility on Create Decision");
+		cy.excuteAccessibilityTests();
+
 		Logger.Log("Creating Decision");
 		editDecisionPage
 			.withCrmEnquiry("444")
@@ -75,7 +78,7 @@ describe("User can add case actions to an existing case", () => {
 			{
 				row.hasName("Decision: Multiple Decision Types")
 				row.hasStatus("In progress")
-				row.hasCreatedDate(toDisplayDate(now))
+				row.hasCreatedDate(toDisplayDate(now));
 				row.select();
 			});
 
@@ -107,6 +110,11 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
+
+		Logger.Log("Checking accessibility on Edit Decision");
+		cy.excuteAccessibilityTests();
+
+		editDecisionPage
 			.save();
 
 		Logger.Log("Viewing Edited Decision");
@@ -184,6 +192,9 @@ describe("User can add case actions to an existing case", () => {
 			.closeDecision()
 			.hasValidationError("Supporting Notes must be 2000 characters or less");
 
+		Logger.Log("Checking accessibility on Closed Decision");
+		cy.excuteAccessibilityTests();
+
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
@@ -229,6 +240,9 @@ describe("User can add case actions to an existing case", () => {
 			.cannotCloseDecision()
 			.cannotEditDecision()
 			.cannotEditDecisionOutcome();
+
+		Logger.Log("Checking accessibility on View Closed Decision");
+		cy.excuteAccessibilityTests();
 	});
 
 	it("When Decisions is empty, View Behavior", function () {
@@ -315,6 +329,8 @@ describe("User can add case actions to an existing case", () => {
 			.hasBusinessArea("Capital")
 			.hasBusinessArea("FinancialProviderMarketOversight");
 
+		Logger.Log("Checking accessibility on Edit Decision Outcome");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Edit Decision Outcome");
 		decisionOutcomePage
@@ -377,6 +393,9 @@ describe("User can add case actions to an existing case", () => {
 			.saveDecisionOutcome()
 			.hasValidationError(DateInvalidError.replace("{0}", "Date decision made"))
 			.hasValidationError(DateInvalidError.replace("{0}", "Date decision effective"))
+
+		Logger.Log("Checking accessibility on Add Decision Outcome");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Checking an incomplete dates");
 		decisionOutcomePage
