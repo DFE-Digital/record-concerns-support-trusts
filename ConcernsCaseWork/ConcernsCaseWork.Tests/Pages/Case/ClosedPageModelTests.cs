@@ -4,6 +4,13 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.W3C;
+using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -12,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,6 +29,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class ClosedPageModelTests
 	{
+		
+		
+		
 		[Test]
 		public async Task WhenOnGetAsync_Returns_ClosedCases()
 		{
@@ -70,11 +81,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
-			
+			var telemetryClient = MockTelemetry.CreateMockTelemetryClient();
 			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>()))
 				.Throws<Exception>();
 
-			var pageModel = SetupClosedPageModel(mockCaseSummaryService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosedPageModel(mockCaseSummaryService.Object, mockLogger.Object ,true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -90,11 +101,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		}
 
 		private static ClosedPageModel SetupClosedPageModel(
-			ICaseSummaryService mockCaseSummaryService, ILogger<ClosedPageModel> mockLogger, bool isAuthenticated = false)
+			ICaseSummaryService mockCaseSummaryService, ILogger<ClosedPageModel> mockLogger,bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-			
-			return new ClosedPageModel(mockCaseSummaryService, Mock.Of<IClaimsPrincipalHelper>(), mockLogger)
+
+			var telemetryClient = MockTelemetry.CreateMockTelemetryClient();
+			return new ClosedPageModel(mockCaseSummaryService, Mock.Of<IClaimsPrincipalHelper>(),mockLogger,telemetryClient)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -102,5 +114,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
+		
+		
+		
 	}
 }

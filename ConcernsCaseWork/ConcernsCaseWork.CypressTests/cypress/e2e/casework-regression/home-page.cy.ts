@@ -31,5 +31,8 @@ describe("Home page tests", () => {
 		cy.get('[href="/case"').should('be.visible');
 		cy.get('[href="/trust"').should('be.visible');
 		cy.get('[href="/case/closed"').should('be.visible');
+
+		Logger.Log("Checking accessibility on home page");
+        cy.excuteAccessibilityTests();	
 	});
 });

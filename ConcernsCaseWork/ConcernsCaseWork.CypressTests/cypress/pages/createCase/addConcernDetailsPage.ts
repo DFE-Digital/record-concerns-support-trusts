@@ -158,8 +158,7 @@ export default class AddConcernDetailsPage {
 
     public withCaseHistory(value: string): this {
         Logger.Log(`With case history ${value}`);
-
-        cy.getByTestId(`case-history`).clear().type(value);
+        cy.getByTestId(`case-history`).click({ force: true }).clear().type(value);
 
         return this;
     }

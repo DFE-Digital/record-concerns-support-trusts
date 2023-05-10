@@ -12,6 +12,7 @@ using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -23,9 +24,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly ILogger<EditPageModel> _logger;
 		
 		public const int NotesMaxLength = 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
-
-		public long CaseUrn { get; private set; }
+		public List<RadioItem> NTIReasonsToConsiderForUI;
+		
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+		
+		[BindProperty(SupportsGet = true, Name = "Urn")] 
+		public long CaseUrn { get;  set; }
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public EditPageModel(
@@ -38,29 +43,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::EditPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				CaseUrn = ExtractCaseUrnFromRoute();
-				
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
-				
 				if (NtiModel.IsClosed)
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
 				}
-
-				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel);
-
+				LoadPageComponents();
+				Notes.Text.StringContents = NtiModel.Notes;
+				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 		}
@@ -69,16 +70,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				CaseUrn = ExtractCaseUrnFromRoute();
+				if (!ModelState.IsValid)
+				{
+					ResetOnValidationError();
+					var data = PopulateNtiFromRequest();
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
+					foreach (var check in NTIReasonsToConsiderForUI)
+					{
+						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						{
+							check.IsChecked = true;
+						}
+					}
+					return Page();
+				}
+				
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
-
 				var freshFromDb = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id); // this db call is necessary as the API is only designed to simply patch the whole nti
-
 				freshFromDb.NtiReasonsForConsidering = ntiWithUpdatedValues.NtiReasonsForConsidering;
 				freshFromDb.Notes = ntiWithUpdatedValues.Notes;
-				
 				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
-
 				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
 			}
 			catch (InvalidUserInputException ex)
@@ -94,18 +106,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 
 			return Page();
-		}
-
-		private long ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				return caseUrn;
-			}
-			else
-			{
-				throw new Exception("CaseUrn not found in the route");
-			}
 		}
 
 		private long ExtractNtiUcIdFromRoute()
@@ -139,25 +139,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			var nti = new NtiUnderConsiderationModel() { 
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,
+				Notes =  Notes.Text.StringContents
 			};
-
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new InvalidUserInputException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-				else
-				{
-					nti.Notes = notes;
-				}
-			}
-
 			return nti;
 		}
+		
+		private void LoadPageComponents()
+		{
+			Notes = BuildNotesComponent();
+		}
+		
+		private TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("nti-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString()
+				{
+					MaxLength = NotesMaxLength,
+					StringContents = contents,
+					DisplayName = "Notes"
+				}
+			};
+		
+		private void ResetOnValidationError()
+		{
+			
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
+
 	}
 }

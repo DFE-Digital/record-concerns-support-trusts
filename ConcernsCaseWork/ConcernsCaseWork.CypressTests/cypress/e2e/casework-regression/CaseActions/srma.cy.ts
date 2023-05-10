@@ -33,6 +33,9 @@ describe("Testing the SRMA case action", () =>
             .hasValidationError("Enter date trust was contacted")
             .hasValidationError(NotesError);
 
+        Logger.Log("Checking accessibility on Add SRMA");
+        cy.excuteAccessibilityTests();
+
         Logger.Log("Filling out the SRMA form");
         editSrmaPage
             .withStatus("TrustConsidering")
@@ -59,12 +62,18 @@ describe("Testing the SRMA case action", () =>
             .cancel()
             .hasValidationError("Enter the reason");
 
+        Logger.Log("Checking accessibility on View SRMA");
+        cy.excuteAccessibilityTests();
+
         Logger.Log("Configure reason");
 
         viewSrmaPage.addReason();
         editSrmaPage
             .save()
             .hasValidationError("Select SRMA reason");
+
+        Logger.Log("Checking accessibility on Add SRMA Reason");
+        cy.excuteAccessibilityTests();
 
         editSrmaPage
             .withReason("Regions Group Intervention")
@@ -85,6 +94,9 @@ describe("Testing the SRMA case action", () =>
             .save()
             .hasValidationError(DateInvalidError.replace("{0}", "Date accepted"));
 
+        Logger.Log("Checking accessibility on Add SRMA Date accepted");
+        cy.excuteAccessibilityTests();
+
         editSrmaPage
             .withDayAccepted("22")
             .withMonthAccepted("05")
@@ -97,27 +109,24 @@ describe("Testing the SRMA case action", () =>
 
         editSrmaPage
             .withStartDayOfVisit("22")
+            .withEndDayOfVisit("11")
             .save()
-            .hasValidationError(DateIncompleteError.replace("{0}", "Start date"));
+            .hasValidationError(DateIncompleteError.replace("{0}", "Start date"))
+            .hasValidationError(DateIncompleteError.replace("{0}", "End date"));
 
         editSrmaPage
             .withStartMonthOfVisit("22")
             .withStartYearOfVisit("2022")
-            .save()
-            .hasValidationError(DateInvalidError.replace("{0}", "Start date"));
-
-        setValidStartDateOfVisit();
-
-        editSrmaPage
-            .withEndDayOfVisit("11")
-            .save()
-            .hasValidationError(DateIncompleteError.replace("{0}", "End date"));
-
-        editSrmaPage
             .withEndMonthOfVisit("33")
             .withEndYearOfVisit("2021")
             .save()
+            .hasValidationError(DateInvalidError.replace("{0}", "Start date"))
             .hasValidationError(DateInvalidError.replace("{0}", "End date"));
+
+        Logger.Log("Checking accessibility on Add Dates of visit");
+        cy.excuteAccessibilityTests();
+
+        setValidStartDateOfVisit();
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -148,6 +157,9 @@ describe("Testing the SRMA case action", () =>
             .save()
             .hasValidationError(DateInvalidError.replace("{0}", "Date report sent"));
 
+        Logger.Log("Checking accessibility on Add SRMA Date report sent");
+        cy.excuteAccessibilityTests();
+
         editSrmaPage
             .withDayReportSentToTrust("05")
             .withMonthReportSentToTrust("12")
@@ -163,6 +175,9 @@ describe("Testing the SRMA case action", () =>
             .hasDateOfVisit("22 July 2021 - 15 August 2021")
             .hasDateReportSentToTrust("05 December 2021")
             .hasNotes("This is my notes");
+
+        Logger.Log("Checking accessibility on View SRMA");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should configure an empty SRMA", () =>
@@ -202,7 +217,7 @@ describe("Testing the SRMA case action", () =>
             .hasDateTrustContacted("22 October 2022")
             .hasReason("Empty")
             .hasDateAccepted("Empty")
-            .hasDateOfVisit("Empty")
+            .hasDateOfVisit("Empty - Empty")
             .hasDateReportSentToTrust("Empty")
             .hasNotes("Empty");
     });
@@ -318,6 +333,9 @@ describe("Testing the SRMA case action", () =>
         .save()
         .hasValidationError(NotesError);
 
+        Logger.Log("Checking accessibility on Add SRMA Notes");
+        cy.excuteAccessibilityTests();
+
         editSrmaPage.withNotes("Editing the notes field")
             .save();
 
@@ -331,6 +349,53 @@ describe("Testing the SRMA case action", () =>
             .hasNotes("Editing the notes field");
     });
 
+    it("Should show correct empty label order dependant on dates of visit", () => { 
+        partiallyConfigureSrma("Deployed");
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+
+        Logger.Log("With just a start date");
+        editSrmaPage
+            .withStartDayOfVisit("05")
+            .withStartMonthOfVisit("07")
+            .withStartYearOfVisit("2023")
+            .save();
+
+        Logger.Log("Shows empty label for end date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("05 July 2023 - Empty"); 
+
+        Logger.Log("Configure date of visit");
+        viewSrmaPage
+            .addDateOfVisit();
+    
+        Logger.Log("Shows error when end date is entered with no start date");
+        editSrmaPage
+            .clearDateOfVisit()
+            .withEndDayOfVisit("29")
+            .withEndMonthOfVisit("03")
+            .withEndYearOfVisit("2023")
+            .save()
+            .hasValidationError("Dates of visit must include a start date");
+
+        Logger.Log("Entering valid dates");
+            editSrmaPage
+                .clearDateOfVisit()
+                .withStartDayOfVisit("03")
+                .withStartMonthOfVisit("03")
+                .withStartYearOfVisit("2023")
+                .withEndDayOfVisit("29")
+                .withEndMonthOfVisit("03")
+                .withEndYearOfVisit("2023")
+                .save();
+
+        Logger.Log("Shows correct date of visit");
+        viewSrmaPage
+            .hasDateOfVisit("03 March 2023 - 29 March 2023"); 
+    })
+
     describe("Closing an SRMA", () =>
     {
         it("Should be able to resolve an SRMA", () =>
@@ -342,16 +407,16 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage.hasNotes("This is my notes");
 
             editSrmaPage
+                .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Confirm SRMA action is complete");
+                .hasValidationError("Confirm SRMA action is complete")
+                .hasValidationError(NotesError);
+
+            Logger.Log("Checking accessibility on Resolve SRMA");
+            cy.excuteAccessibilityTests();
 
             editSrmaPage
                 .confirmComplete();
-
-            editSrmaPage
-                .withNotesExceedingLimit()
-                .save()
-                .hasValidationError(NotesError);
 
             editSrmaPage
                 .withNotes("Resolved notes")
@@ -379,6 +444,9 @@ describe("Testing the SRMA case action", () =>
                 .hasDateOfVisit("22 July 2021 - 15 August 2021")
                 .hasDateReportSentToTrust("05 December 2021")
                 .hasNotes("Resolved notes");
+
+            Logger.Log("Checking accessibility on View Closed SRMA");
+            cy.excuteAccessibilityTests();
         });
 
         it("Should cancel an SRMA", () =>
@@ -392,6 +460,9 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .save()
                 .hasValidationError("Confirm SRMA action was cancelled");
+
+            Logger.Log("Checking accessibility on Cancel SRMA");
+            cy.excuteAccessibilityTests();
             
             editSrmaPage
                 .confirmCancelled()
@@ -432,6 +503,9 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .save()
                 .hasValidationError("Confirm SRMA action was declined by trust");
+
+            Logger.Log("Checking accessibility on Decline SRMA");
+            cy.excuteAccessibilityTests();
             
             editSrmaPage
                 .confirmDeclined()
