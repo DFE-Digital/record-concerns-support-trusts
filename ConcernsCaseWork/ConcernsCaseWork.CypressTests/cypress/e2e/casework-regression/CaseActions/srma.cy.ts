@@ -23,7 +23,7 @@ describe("Testing the SRMA case action", () =>
 	});
 
 
-    it.only("Should create an SRMA action", () => 
+    it("Should create an SRMA action", () => 
     {
         Logger.Log("Checking SRMA validation");
         editSrmaPage
