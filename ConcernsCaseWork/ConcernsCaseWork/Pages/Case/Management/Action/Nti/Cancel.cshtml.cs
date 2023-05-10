@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -19,9 +20,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private readonly ILogger<CancelPageModel> _logger;
 
-		public int NotesMaxLength => 2000;
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
 
-		public NtiModel NtiModel { get; set; }
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "NtiId")]
+		public long NtiId { get; set; }
 
 		public CancelPageModel(
 			INtiModelService ntiModelService,
@@ -33,84 +39,80 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation($"{nameof(CancelPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				long ntiId = 0;
-				long caseUrn = 0;
+				var model = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
-				(caseUrn, ntiId) = GetRouteData();
-
-				NtiModel = await _ntiModelService.GetNtiByIdAsync(ntiId);
-					
-				if (NtiModel.IsClosed)
+				if (model.IsClosed)
 				{
-					return Redirect($"/case/{caseUrn}/management/action/nti/{ntiId}");
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
-				return Page();
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(CancelPageModel)}::{LoggingHelpers.EchoCallerName()}");
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-		}
 
-		private (long caseUrn, long ntiId) GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-
-			var ntiIdValue = RouteData.Values["ntiId"];
-			if (ntiIdValue == null || !long.TryParse(ntiIdValue.ToString(), out long ntiId) || ntiId == 0)
-				throw new Exception("ntiId is null or invalid to parse");
-
-			return (caseUrn, ntiId);
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			_logger.LogInformation($"{nameof(CancelPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				long caseUrn = 0;
-				long ntiId = 0;
-
-				(caseUrn, ntiId) = GetRouteData();
-
-				var notes = Request.Form["nti-notes"].ToString();
-
-				if (!string.IsNullOrEmpty(notes))
+				if (!ModelState.IsValid)
 				{
-					if (notes.Length > NotesMaxLength)
-					{
-						throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-					}
+					LoadPageComponents();
+					return Page();
 				}
 
-				var ntiModel = await _ntiModelService.GetNtiByIdAsync(ntiId);
-				ntiModel.Notes = notes;
+				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
+				ntiModel.Notes = Notes.Text.StringContents;
 				ntiModel.ClosedStatusId = (int)NTIStatus.Cancelled;
 				ntiModel.ClosedAt = DateTime.Now;
 
 				await _ntiModelService.PatchNtiAsync(ntiModel);
 
-				return Redirect($"/case/{caseUrn}/management");
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(CancelPageModel)}::{LoggingHelpers.EchoCallerName()}");
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
+
+		private void LoadPageComponents(NtiModel model)
+		{
+			LoadPageComponents();
+
+			Notes.Text.StringContents = model.Notes;
+		}
+
+		private void LoadPageComponents()
+		{
+			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("nti-notes", nameof(Notes), "Finalise notes (optional)")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
 	}
 }

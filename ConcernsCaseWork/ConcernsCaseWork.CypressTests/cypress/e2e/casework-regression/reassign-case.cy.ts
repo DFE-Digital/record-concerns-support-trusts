@@ -59,12 +59,18 @@ describe("Testing reassigning cases", () =>
                 .withCaseOwner("fghhj")
                 .hasNoCaseOwnerResults();
 
+        Logger.Log("Checking accessibility on edit case owner");
+        cy.excuteAccessibilityTests();	
+
         Logger.Log("We cannot set a blank case owner");
         editCaseMangementPage
             .clearCaseOwner()
             .save()
             .hasValidationError("A valid case owner must be selected")
             .hasCaseOwner(email);
+
+        Logger.Log("Checking accessibility on edit case owner");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("We do not get a notification if we do not change the case owner");
         editCaseMangementPage.save();

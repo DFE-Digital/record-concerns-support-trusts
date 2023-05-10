@@ -1,6 +1,8 @@
 using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -11,7 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase;
@@ -27,11 +30,10 @@ public class SelectCaseTypePageModel : AbstractPageModel
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
-		
+
 	[BindProperty]
-	[Required(ErrorMessage = "Case Type must be selected")]
-	public CaseTypes? CaseType { get; set; }
-	
+	public RadioButtonsUiComponent CaseType { get; set; }
+
 	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 	public SelectCaseTypePageModel(ITrustModelService trustModelService,
@@ -52,12 +54,12 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		try
 		{
 			await SetTrustAddress();
+			LoadPageComponents();
 		}
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-  
-			TempData["Error.Message"] = ErrorOnGetPage;
+			SetErrorMessage(ErrorOnGetPage);
 		}
 
 		return Page();
@@ -71,37 +73,70 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		{
 			if (!ModelState.IsValid)
 			{
+				await SetTrustAddress();
+				LoadPageComponents();
+
 				return Page();
 			}
 			
-			await ResetUserState();
+			await CreateCasePlaceholder();
 
-			switch (CaseType)
+			var selectedCaseType = (CaseType)CaseType.SelectedId;
+
+			switch (selectedCaseType)
 			{
-				case CaseTypes.Concern:
+				case API.Contracts.Case.CaseType.Concerns:
 					return Redirect("/case/concern/index");
-				case CaseTypes.NonConcern:
-					return Redirect("/case/create/nonconcerns");
+				case API.Contracts.Case.CaseType.NonConcerns:
+					return Redirect("/case/territory");
+				default:
+					throw new Exception($"Unrecognised case type {selectedCaseType}");
 			}
 		}
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-			
-			TempData["Error.Message"] = ErrorOnPostPage;
+			SetErrorMessage(ErrorOnPostPage);
 		}
 		
 		return Page();
-		
-		async Task ResetUserState()
-		{
-			var userName = GetUserName();
-			var userState = await _cachedUserService.GetData(userName);
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedUserService.StoreData(userName, userState);
-		}
 	}
-	
+
+	private RadioButtonsUiComponent BuildCaseTypeComponent(int? selectedId = null)
+	{
+		var enumValues = new[]
+		{
+			new { CaseType = API.Contracts.Case.CaseType.Concerns, HintText = "This includes narrative, actions or decisions related to any new concern(s)" },
+			new { CaseType = API.Contracts.Case.CaseType.NonConcerns, HintText = "For example, a proactive School Resource Management Adviser (SRMA)" }
+		};
+
+		var radioItems = enumValues.Select(v =>
+		{
+			return new SimpleRadioItem(v.CaseType.Description(), (int)v.CaseType) { TestId = v.CaseType.ToString(), HintText = v.HintText };
+		}).ToArray();
+
+		return new(ElementRootId: "case-type", Name: nameof(CaseType), "What are you recording?")
+		{
+			RadioItems = radioItems,
+			SelectedId = selectedId,
+			Required = true,
+			DisplayName = "Case type"
+		};
+	}
+
+	private void LoadPageComponents()
+	{
+		CaseType = BuildCaseTypeComponent(CaseType?.SelectedId);
+	}
+
+	private async Task CreateCasePlaceholder()
+	{
+		var userName = GetUserName();
+		var userState = await _cachedUserService.GetData(userName);
+		userState.CreateCaseModel = new CreateCaseModel();
+		await _cachedUserService.StoreData(userName, userState);
+	}
+
 	private async Task SetTrustAddress()
 	{
 		var userName = GetUserName();
@@ -122,10 +157,4 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	}
 
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
-
-	public enum CaseTypes
-	{
-		Concern,
-		NonConcern
-	}
 }

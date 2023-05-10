@@ -1,49 +1,26 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
+using Microsoft.Graph.Models;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 {
-	public class StringLengthValidatedType
-	{
-		[MinLength(2001)]
-		public string Notes { get; set; }
-	}
-
 	[Parallelizable(ParallelScope.All)]
 	public class CancelPageModelTests
 	{
-		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
-
-			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-		}
+		private static Fixture _fixture = new();
 
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsPageModel()
@@ -59,23 +36,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1); 
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NtiId = 1;
 
 			// act
-			await pageModel.OnGetAsync();
+			var pageResult = await pageModel.OnGetAsync();
 
-			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("CancelPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-
-			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
+			pageResult.Should().BeAssignableTo<PageResult>();
 		}
 		
 		[Test]
@@ -95,23 +62,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn); 
-			routeData.Add("ntiId", ntiId);
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NtiId = ntiId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
-
-			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("CancelPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-
-			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
 			
 			Assert.Multiple(() =>
 			{
@@ -119,61 +74,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/nti/{ntiId}"));
 				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			});
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
-
-			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_ValidatesNotes_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
-
-			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiId", 1);
-
-			var fixture = new Fixture();
-			var createdString = fixture.Create<StringLengthValidatedType>();
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "nti-notes", new StringValues(createdString.Notes) }
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
@@ -190,14 +90,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiId", 1);
+			pageModel.CaseUrn = 1;
+			pageModel.NtiId = 1;
 
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "nti-notes", new StringValues("valid string") }
-				});
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();

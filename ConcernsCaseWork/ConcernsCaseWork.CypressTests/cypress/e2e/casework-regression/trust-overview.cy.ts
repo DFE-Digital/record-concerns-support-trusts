@@ -36,7 +36,9 @@ describe("Trust overview ", () =>
                 .trustUKPRNIsNotEmpty()
                 .trustCompanyHouseNumberIsNotEmpty()
 
-            
+            Logger.Log("Checking accessibility on Trust Overview");
+            cy.excuteAccessibilityTests();	
+
             Logger.Log("Checking case details are present on the trust overview page");
             caseworkTable
                 .getRowByCaseId(caseId)
