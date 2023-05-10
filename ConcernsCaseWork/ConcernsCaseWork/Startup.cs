@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System;
 using System.Reflection;
@@ -56,6 +57,8 @@ namespace ConcernsCaseWork
 			{
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
 			});
+
+			services.AddFeatureManagement();
 
 			// Configuration options
 			services.AddConfigurationOptions(Configuration);
