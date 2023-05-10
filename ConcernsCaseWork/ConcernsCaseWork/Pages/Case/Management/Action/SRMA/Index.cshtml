@@ -1,6 +1,7 @@
 ﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/{handler?}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.IndexPageModel
 
+@using ConcernsCaseWork.Enums;
 @using ConcernsCaseWork.Helpers;
 @using ConcernsCaseWork.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -33,25 +34,29 @@
     else
     {
 
-        @if (TempData["SRMA.Message"] != null)
-        {
-            reasonError = srmaValidationErrors.Contains(Model.ReasonErrorMessage);
-            dateAcceptedError = srmaValidationErrors.Contains(Model.DateAcceptedErrorMessage);
-            dateVisitError = srmaValidationErrors.Contains(Model.DateVisitErrorMessage);
-            dateReportSentError = srmaValidationErrors.Contains(Model.DateReportErrorMessage);
+        <partial name="_ValidationErrors" />
 
-            <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-                <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-                <div class="govuk-error-summary__body">
-                    <ul class="govuk-list govuk-error-summary__list">
-                        @foreach (var msg in srmaValidationErrors)
-                        {
-                            <li class="govuk-error-message">@msg</li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        }
+        @*
+    @if (TempData["SRMA.Message"] != null)
+    {
+    reasonError = srmaValidationErrors.Contains(Model.ReasonErrorMessage);
+    dateAcceptedError = srmaValidationErrors.Contains(Model.DateAcceptedErrorMessage);
+    dateVisitError = srmaValidationErrors.Contains(Model.DateVisitErrorMessage);
+    dateReportSentError = srmaValidationErrors.Contains(Model.DateReportErrorMessage);
+
+    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+    <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+    <ul class="govuk-list govuk-error-summary__list">
+    @foreach (var msg in srmaValidationErrors)
+    {
+    <li class="govuk-error-message">@msg</li>
+    }
+    </ul>
+    </div>
+    </div>
+    }
+    *@
 
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
@@ -169,7 +174,8 @@
                             }
                             else
                             {
-                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart);
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart)
+                                ;
                             }
 
                             <text> - </text>
@@ -180,7 +186,8 @@
                             }
                             else
                             {
-                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd);
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd)
+                                ;
                             }
                         }
                     </td>
@@ -240,12 +247,33 @@
         if (Model.SRMAModel.IsEditable)
         {
             <div class="govuk-button-group">
-                <a data-prevent-double-click="true" asp-page-handler="DeclineComplete" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
-                    @Model.DeclineCompleteButtonLabel
-                </a>
-                <a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="cancel-srma-button">
-                    SRMA cancelled
-                </a>
+
+                <form method="post">
+
+                    @if (Model.SRMAModel.Status == SRMAStatus.Deployed)
+                    {
+                        <form method="post" asp-page-handler="Complete">
+                            <button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-srma-button">
+                                SRMA complete
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Decline">
+                            <button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="decline-srma-button">
+                                SRMA declined
+                            </button>
+                        </form>
+                    }
+
+                    <form method="post" asp-page-handler="Cancel">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="cancel-srma-button">
+                            SRMA cancelled
+                        </button>
+                    </form>
+
+                </form>
             </div>
         }
     }
