@@ -18,6 +18,7 @@ locals {
   enable_mssql_database                         = var.enable_mssql_database
   mssql_server_admin_password                   = var.mssql_server_admin_password
   mssql_database_name                           = var.mssql_database_name
+  mssql_firewall_ipv4_allow_list                = var.mssql_firewall_ipv4_allow_list
   redis_cache_sku                               = var.redis_cache_sku
   redis_cache_capacity                          = var.redis_cache_capacity
   enable_cdn_frontdoor                          = var.enable_cdn_frontdoor
