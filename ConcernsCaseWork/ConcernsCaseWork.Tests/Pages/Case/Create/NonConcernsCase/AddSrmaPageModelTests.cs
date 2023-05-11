@@ -12,13 +12,13 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -42,7 +42,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<ICreateCaseService>(),
 					Mock.Of<ILogger<AddSrmaPageModel>>(),
 					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ITrustService>()));
+					Mock.Of<ITrustService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
+					
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
 		}
@@ -56,7 +58,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<ICreateCaseService>(),
 					null,
 					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ITrustService>()));
+					Mock.Of<ITrustService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
+					
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
 		}
@@ -70,7 +74,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					null,
 					Mock.Of<ILogger<AddSrmaPageModel>>(),
 					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ITrustService>()));
+					Mock.Of<ITrustService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
+					
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'createCaseService')"));
 		}
@@ -216,7 +222,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Statuses_ShouldContainOpenStatuses()
 		{
 			// arrange
-			var sut = new AddSrmaPageModel(Mock.Of<IClaimsPrincipalHelper>(), Mock.Of<ICreateCaseService>(), Mock.Of<ILogger<AddSrmaPageModel>>(), Mock.Of<IUserStateCachedService>() ,Mock.Of<ITrustService>());
+			var sut = new AddSrmaPageModel(Mock.Of<IClaimsPrincipalHelper>(), Mock.Of<ICreateCaseService>(),
+				Mock.Of<ILogger<AddSrmaPageModel>>(), Mock.Of<IUserStateCachedService>(), Mock.Of<ITrustService>(), MockTelemetry.CreateMockTelemetryClient());
+			
+			
+			
+			//var sut = new AddSrmaPageModel(Mock.Of<IClaimsPrincipalHelper>(), 
+			//		Mock.Of<ICreateCaseService>(), Mock.Of<ILogger<AddSrmaPageModel>>(), Mock.Of<IUserStateCachedService>() ,Mock.Of<ITrustService>());
 			
 			// act
 			var result = sut.SRMAStatuses.Select(s => s.Id).ToArray();
@@ -238,7 +250,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			return new AddSrmaPageModel(mockClaimsPrincipleService.Object, mockCreateCaseService.Object, mockLogger.Object, mockUserStateCachedService.Object, mockTrustService.Object)
+			return new AddSrmaPageModel(mockClaimsPrincipleService.Object, mockCreateCaseService.Object, mockLogger.Object, mockUserStateCachedService.Object, mockTrustService.Object,MockTelemetry.CreateMockTelemetryClient())
+			
 			{
 				PageContext = pageContext,
 				TempData = tempData,

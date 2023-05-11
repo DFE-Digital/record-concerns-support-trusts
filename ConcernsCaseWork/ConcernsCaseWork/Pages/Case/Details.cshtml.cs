@@ -1,4 +1,6 @@
 ﻿using Ardalis.GuardClauses;
+using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -6,11 +8,14 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -24,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly ITrustService _trustService;
 		private readonly IUserStateCachedService _userStateCache;
+		private TelemetryClient _telemetry;
 		
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -33,6 +39,7 @@ namespace ConcernsCaseWork.Pages.Case
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
 			ILogger<DetailsPageModel> logger,
+			TelemetryClient telemetryClient,
 			ITrustService trustService)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -40,6 +47,8 @@ namespace ConcernsCaseWork.Pages.Case
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
 			_trustService = Guard.Against.Null(trustService);
+			_telemetry = Guard.Against.Null(telemetryClient);
+			
 		}
 		
 		public async Task OnGetAsync()
@@ -82,7 +91,13 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.CaseHistory = caseHistory;
 				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
-				
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = $"Case created {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(createCaseModel),
+					EventUserName = userState.UserName
+				});
 				return RedirectToPage("management/index", new { urn = caseUrn });
 			}
 			catch (Exception ex)
@@ -108,7 +123,13 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-
+				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				{
+					EventName = "CREATE CASE",
+					EventDescription = "Loading the page",
+					EventPayloadJson = "",
+					EventUserName = userState.UserName
+				});
 				return Page();
 			}
 			catch (Exception ex)

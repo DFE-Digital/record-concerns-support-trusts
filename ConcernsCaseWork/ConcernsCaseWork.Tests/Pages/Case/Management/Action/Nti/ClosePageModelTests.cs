@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = 1;
-			pageModel.NTIId = ntiId;
+			pageModel.NtiId = ntiId;
 
 			// act
 			await pageModel.OnGetAsync();
@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				.ReturnsAsync(ntiModel);
 
 			pageModel.CaseUrn = caseUrn;
-			pageModel.NTIId = ntiId;
+			pageModel.NtiId = ntiId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -99,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = caseUrn;
-			pageModel.NTIId = ntiId;
+			pageModel.NtiId = ntiId;
 			pageModel.Notes = new TextAreaUiComponent("", "", "") { Text = new ValidateableString() { StringContents = closureNotes } };
 			pageModel.DateNTIClosed  = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(closedDate) };
 

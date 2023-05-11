@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -36,10 +38,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public IEnumerable<RadioItem> Statuses { get; private set; }
 		public IEnumerable<RadioItem> Reasons { get; private set; }
 
+		[BindProperty]
+		public OptionalDateTimeUiComponent DateIssued { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+
 		public NtiModel Nti { get; set; }
 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public int CaseUrn { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "NtiId")]
 		public long? NtiId { get; set; }
 
 		public string CancelLinkUrl { get; set; }
@@ -58,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI::AddPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
@@ -66,9 +76,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				{
 					ContinuationId = string.Empty;
 				}
-
-				ExtractCaseUrnFromRoute();
-				ExtractNtiIdFromRoute();
 
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
@@ -87,30 +94,28 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
-				Statuses = await GetStatuses();
-				Reasons = await GetReasons();
-			
-				CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}" 
-														 : @$"/case/{CaseUrn}/management/action";
+				await LoadPageComponents(Nti);
 
 				TempData.Keep(nameof(ContinuationId));
-				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
 			try
 			{
-				ExtractCaseUrnFromRoute();
-				ExtractNtiIdFromRoute();
+				if (!ModelState.IsValid)
+				{
+					await LoadPageComponents();
+					return Page();
+				}
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
 				{
@@ -123,13 +128,67 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
+
+		private async Task SetupPage()
+		{
+			Statuses = await GetStatuses();
+			Reasons = await GetReasons();
+
+			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
+										 : @$"/case/{CaseUrn}/management/action";
+		}
+
+		private async Task LoadPageComponents(NtiModel model)
+		{
+			await LoadPageComponents();
+
+			if (model == null)
+			{
+				return;
+			}
+
+			Notes.Text.StringContents = model.Notes;
+
+			if (model.DateStarted.HasValue)
+			{
+				DateIssued.Date = new OptionalDateModel(model.DateStarted.Value);
+			}
+		}
+
+		private async Task LoadPageComponents()
+		{
+			await SetupPage();
+
+			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
+			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+		}
+
+		private static OptionalDateTimeUiComponent BuildDateIssuedComponent(OptionalDateModel? date = null)
+		{
+			return new OptionalDateTimeUiComponent("date-issued", nameof(DateIssued), "Date NTI issued")
+			{
+				Date = date,
+				DisplayName = "Date NTI issued"
+			};
+		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("nti-notes", nameof(Notes), "Notes (optional)")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
 
 		private async Task<RedirectResult> HandleContinue()
 		{
@@ -199,23 +258,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private void ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				CaseUrn = caseUrn;
-			}
-			else
-			{
-				throw new InvalidOperationException("CaseUrn not found in the route");
-			}
-		}
-
-		private void ExtractNtiIdFromRoute()
-		{
-			NtiId = TryGetRouteValueInt64("NtiId", out var ntiId) ? (long?)ntiId : null;
-		}
-
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
 		{
 			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
@@ -262,20 +304,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		{
 			var reasons = Request.Form["reason"];
 			var status = Request.Form["status"];
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-			}
 
 			var nti = new NtiModel()
 			{
@@ -283,8 +311,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				Reasons = reasons.Select(r => new NtiReasonModel { Id = int.Parse(r) }).ToArray(),
 				Status = int.TryParse(status, out int statusId) ? new NtiStatusModel { Id = statusId } : null,
 				Conditions = Array.Empty<NtiConditionModel>(),
-				Notes = notes,
-				DateStarted = dateStarted,
+				Notes = Notes.Text.StringContents,
+				DateStarted = DateIssued.Date.ToDateTime(),
 				CreatedAt = DateTime.Now,
 				UpdatedAt = DateTime.Now
 			};
