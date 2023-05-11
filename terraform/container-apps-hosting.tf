@@ -30,13 +30,14 @@ module "azure_container_apps_hosting" {
   redis_cache_sku      = local.redis_cache_sku
   redis_cache_capacity = local.redis_cache_capacity
 
-  enable_cdn_frontdoor                    = local.enable_cdn_frontdoor
-  cdn_frontdoor_custom_domains            = local.cdn_frontdoor_custom_domains
-  cdn_frontdoor_host_redirects            = local.cdn_frontdoor_host_redirects
-  cdn_frontdoor_host_add_response_headers = local.cdn_frontdoor_host_add_response_headers
-  cdn_frontdoor_health_probe_path         = local.cdn_frontdoor_health_probe_path
-  cdn_frontdoor_enable_rate_limiting      = local.cdn_frontdoor_enable_rate_limiting
-  cdn_frontdoor_rate_limiting_threshold   = local.cdn_frontdoor_rate_limiting_threshold
+  enable_cdn_frontdoor                      = local.enable_cdn_frontdoor
+  cdn_frontdoor_custom_domains              = local.cdn_frontdoor_custom_domains
+  cdn_frontdoor_host_redirects              = local.cdn_frontdoor_host_redirects
+  cdn_frontdoor_host_add_response_headers   = local.cdn_frontdoor_host_add_response_headers
+  cdn_frontdoor_health_probe_path           = local.cdn_frontdoor_health_probe_path
+  cdn_frontdoor_enable_rate_limiting        = local.cdn_frontdoor_enable_rate_limiting
+  cdn_frontdoor_rate_limiting_threshold     = local.cdn_frontdoor_rate_limiting_threshold
+  cdn_frontdoor_origin_host_header_override = local.cdn_frontdoor_origin_host_header_override
 
   enable_dns_zone      = local.enable_dns_zone
   dns_zone_domain_name = local.dns_zone_domain_name

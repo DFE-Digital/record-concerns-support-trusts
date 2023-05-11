@@ -236,4 +236,9 @@ variable "mssql_firewall_ipv4_allow_list" {
   description = "A list of IPv4 Addresses that require remote access to the MSSQL Server"
   type        = list(string)
   default     = []
+
+variable "cdn_frontdoor_origin_host_header_override" {
+  description = "Manually specify the host header that the CDN sends to the target. Defaults to the recieved host header. Set to null to set it to the host_name (`cdn_frontdoor_origin_fqdn_override`)"
+  type        = string
+  default     = ""
 }
