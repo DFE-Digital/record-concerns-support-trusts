@@ -18,6 +18,7 @@ locals {
   enable_mssql_database                         = var.enable_mssql_database
   mssql_server_admin_password                   = var.mssql_server_admin_password
   mssql_database_name                           = var.mssql_database_name
+  mssql_firewall_ipv4_allow_list                = var.mssql_firewall_ipv4_allow_list
   redis_cache_sku                               = var.redis_cache_sku
   redis_cache_capacity                          = var.redis_cache_capacity
   enable_cdn_frontdoor                          = var.enable_cdn_frontdoor
@@ -31,6 +32,8 @@ locals {
   cdn_frontdoor_health_probe_path               = var.cdn_frontdoor_health_probe_path
   cdn_frontdoor_enable_rate_limiting            = var.cdn_frontdoor_enable_rate_limiting
   cdn_frontdoor_rate_limiting_threshold         = var.cdn_frontdoor_rate_limiting_threshold
+  cdn_frontdoor_origin_fqdn_override            = var.cdn_frontdoor_origin_fqdn_override
+  cdn_frontdoor_origin_host_header_override     = var.cdn_frontdoor_origin_host_header_override
   key_vault_access_users                        = toset(var.key_vault_access_users)
   key_vault_access_ipv4                         = var.key_vault_access_ipv4
   tfvars_filename                               = var.tfvars_filename
