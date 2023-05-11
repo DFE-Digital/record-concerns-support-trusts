@@ -10,9 +10,10 @@ module "azure_container_apps_hosting" {
 
   enable_container_registry = local.enable_container_registry
 
-  enable_mssql_database       = local.enable_mssql_database
-  mssql_server_admin_password = local.mssql_server_admin_password
-  mssql_database_name         = local.mssql_database_name
+  enable_mssql_database          = local.enable_mssql_database
+  mssql_server_admin_password    = local.mssql_server_admin_password
+  mssql_database_name            = local.mssql_database_name
+  mssql_firewall_ipv4_allow_list = local.mssql_firewall_ipv4_allow_list
 
   image_name = local.image_name
 
