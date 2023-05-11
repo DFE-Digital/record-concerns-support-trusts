@@ -162,24 +162,36 @@
                     </th>
                     <td class="govuk-table__cell" data-testid="date-of-visit">
                         @{
+
                             if (IsEmpty(Model.SRMAModel.DateVisitStart))
                             {
                                 RenderEmptyLabel();
                             }
                             else
                             {
-                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart)
-                                if (!IsEmpty(Model.SRMAModel.DateVisitEnd))
-                                {
-                                    <text> - </text>
-                                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd)
-                                }
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart);
+                            }
+
+                            <text> - </text>
+
+                            if (IsEmpty(Model.SRMAModel.DateVisitEnd))
+                            {
+                                RenderEmptyLabel();
+                            }
+                            else
+                            {
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd);
                             }
                         }
                     </td>
                     <td class="govuk-table__cell govuk-table__header__right">
                         @{
-                            RenderLink(Model.SRMAModel.DateVisitStart, "SRMA dates of visit", $@"{Request.Path}\visitdates");
+                            if (Model.SRMAModel.IsEditable)
+                            {
+                                <a class="govuk-link" href="@Request.Path\visitdates" aria-label="Change SRMA dates of visit" data-testid="SRMA dates of visit">
+                                    <span>@((Model.SRMAModel.DateVisitStart.HasValue || Model.SRMAModel.DateVisitEnd.HasValue) ? "Change" : "Add")</span>
+                                </a>
+                            }
                         }
                     </td>
                 </tr>
