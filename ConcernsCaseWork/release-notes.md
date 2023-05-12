@@ -5,7 +5,7 @@
 * Improved error messages by adding create context to guide the users across a number of pages
 * Added hyperlinks to error message summaries 
 * Added feature flag for non concerns page
-* Refactoring of accesibility automated tests
+* Added ability to show SRMA dates within summary table
 ---
 ## 20.0.0
 
