@@ -59,9 +59,38 @@ npm run cy:run
 
 The Cypress tests can also be run, proxied via [OWASP ZAP](https://zaproxy.org) for passive security scanning of the application.
 
-These can be run using the configured `docker-compose.yml`, which will spin up containers for the ZAP daemon and the Cypress tests, including all networking required. You will need to update any config in the file before running e.g. api keys. The command for this is
+These can be run using the configured `docker-compose.yml`, which will spin up containers for the ZAP daemon and the Cypress tests, including all networking required. You will need to update any config in the file before running
+
+Create a `.env` file for docker, this file needs to include
+
+- all of your required cypress configuration
+- HTTP_PROXY e.g. http://zap:8080
+- ZAP_API_KEY, can be any random guid
+
+Example env:
+
+```
+URL=<Enter URL>
+USERNAME=<Enter username>
+API=<Enter API>
+API_KEY=<Enter API key>
+AUTH_KEY=<Enter auth key>
+HTTP_PROXY=http://zap:8080
+ZAP_API_KEY=<Enter random guid>
+
+```
+
+**Note**: You might have trouble running this locally because of docker thinking localhost is the container and not your machine
+
+To run docker compose use:
 
 `docker-compose -f docker-compose.yml --exit-code-from cypress`
+
+**Note**: `--exit-code-from cypress` tells the container to quit when cypress finishes
+
+You can also exclude URLs from being intercepted by using the NO_PROXY setting
+
+e.g. NO_PROXY=google.com,yahoo.co.uk
 
 Alternatively, you can run the Cypress tests against an existing ZAP proxy by setting the environment configuration
 
