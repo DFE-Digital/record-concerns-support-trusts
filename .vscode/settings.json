@@ -1,6 +1,0 @@
-{
-    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj",
-    "githubPullRequests.ignoredPullRequestBranches": [
-        "develop"
-    ]
-}
