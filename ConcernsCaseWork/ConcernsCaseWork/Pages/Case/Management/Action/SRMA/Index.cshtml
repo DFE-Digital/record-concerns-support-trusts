@@ -172,8 +172,11 @@
                         @{
                             if (Model.SRMAModel.IsEditable)
                             {
-                                <a class="govuk-link" href="@Request.Path\visitdates" aria-label="Change SRMA dates of visit" data-testid="SRMA dates of visit">
-                                    <span>@((Model.SRMAModel.DateVisitStart.HasValue || Model.SRMAModel.DateVisitEnd.HasValue) ? "Change" : "Add")</span>
+                                var linkName = (Model.SRMAModel.DateVisitStart.HasValue || Model.SRMAModel.DateVisitEnd.HasValue) ? "Change" : "Add";
+                                var ariaLabel = $"{linkName} SRMA dates of visit";
+
+                                <a class="govuk-link" href="@Request.Path\visitdates" aria-label="@ariaLabel" data-testid="SRMA dates of visit">
+                                    <span>@linkName</span>
                                 </a>
                             }
                         }
@@ -279,9 +282,12 @@
     {
         if (Model.SRMAModel.IsEditable)
         {
-            var ariaLabel = "Change " + fieldName;
+            var linkName = IsEmpty(value) ? "Add" : "Change";
+
+            var ariaLabel = $"{linkName} {fieldName}";
+
             <a class="govuk-link" href="@url" aria-label="@ariaLabel" data-testid="@fieldName">
-                @(IsEmpty(value) ? "Add" : "Change")
+                @linkName
                 <span class="govuk-visually-hidden">@fieldName</span>
             </a>
         }
