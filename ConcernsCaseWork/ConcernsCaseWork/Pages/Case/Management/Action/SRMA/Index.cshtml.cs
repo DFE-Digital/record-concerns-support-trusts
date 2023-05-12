@@ -1,7 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -34,8 +32,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		[BindProperty(Name = "srmaId", SupportsGet = true)]
 		public int SrmaId { get; set; }
-
-		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
