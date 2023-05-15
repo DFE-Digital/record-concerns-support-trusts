@@ -238,6 +238,18 @@ variable "mssql_firewall_ipv4_allow_list" {
   default     = []
 }
 
+variable "mssql_azuread_admin_username" {
+  description = "Username of a User within Azure AD that you want to assign as the SQL Server Administrator"
+  type        = string
+  default     = ""
+}
+
+variable "mssql_azuread_admin_object_id" {
+  description = "Object ID of a User within Azure AD that you want to assign as the SQL Server Administrator"
+  type        = string
+  default     = ""
+}
+
 variable "cdn_frontdoor_origin_host_header_override" {
   description = "Manually specify the host header that the CDN sends to the target. Defaults to the recieved host header. Set to null to set it to the host_name (`cdn_frontdoor_origin_fqdn_override`)"
   type        = string
