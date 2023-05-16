@@ -5,153 +5,124 @@
 @using ConcernsCaseWork.Helpers;
 
 @{
-	var nonce = HttpContext.GetNonce();
+    var nonce = HttpContext.GetNonce();
 
-	var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+    var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
+    </div>
 }
 
-	<div class="govuk-width-container">
-		<partial name="_BannerError" />
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
 
-		<div class="govuk-grid-row">
-			<div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
                 <partial name="_ValidationErrors" />
 
-				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-					Decision
-				</h1>
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+                    Decision
+                </h1>
 
-				<form role="form" method="post" id="add-decision-form" novalidate>
+                <form role="form" method="post" id="add-decision-form" novalidate>
 
-					<input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
+                    <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
 
-					@* CRM Enquiry Number *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
-							</legend>
+                    @* CRM Enquiry Number *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
+                            </legend>
 
-							<div id="crm-enquiry-hint" class="govuk-hint">
-								If yes, paste the CRM enquiry number below. If no, leave the field blank
-							</div>
+                            <div id="crm-enquiry-hint" class="govuk-hint">
+                                If yes, paste the CRM enquiry number below. If no, leave the field blank
+                            </div>
 
-							<input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
-						</fieldset>
-					</div>
+                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
+                        </fieldset>
+                    </div>
 
-					@* Retrospective Approval *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">Is this a request that requires retrospective approval?</h2>
-							</legend>
-							<div id="retrospective-approval-hint" class="govuk-hint">
-								Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
-							</div>
-							<div class="govuk-radios" data-module="govuk-radios">
-								@{
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is this a request that requires retrospective approval?</h2>
+                            </legend>
+                            <div id="retrospective-approval-hint" class="govuk-hint">
+                                Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
+                            </div>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    var retrospectiveApprovalYesChecked = Model.Decision.RetrospectiveApproval.HasValue && Model.Decision.RetrospectiveApproval.Value ? "checked" : "";
+                                    var retrospectiveApprovalNoChecked = Model.Decision.RetrospectiveApproval.HasValue && !Model.Decision.RetrospectiveApproval.Value ? "checked" : "";
+                                }
 
-									<div class="govuk-radios__item">
-										@{
-											if (Model.Decision.RetrospectiveApproval.HasValue)
-											{
-												<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true" checked="@(Model.Decision.RetrospectiveApproval.Value)">
-											}
-											else
-											{
-												<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true">
-											}
-										}
+                                <div class="govuk-radios__item">
 
-										<label class="govuk-label govuk-radios__label" for="retrospective-approval">
-											<span>
-												Yes
-											</span>
-										</label>
-									</div>
+                                    <input class="govuk-radios__input" id="retrospective-approval-yes" name="Decision.RetrospectiveApproval" type="radio" value="true" @retrospectiveApprovalYesChecked>
 
-									<div class="govuk-radios__item">
+                                    <label class="govuk-label govuk-radios__label" for="retrospective-approval-yes">
+                                        <span>
+                                            Yes
+                                        </span>
+                                    </label>
+                                </div>
 
-										@{
-											if (Model.Decision.RetrospectiveApproval.HasValue)
-											{
-												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false" checked="@(!Model.Decision.RetrospectiveApproval.Value)">
-											}
-											else
-											{
-												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false">
-											}
-										}
+                                <div class="govuk-radios__item">
 
-										<label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
-											<span>
-												No
-											</span>
-										</label>
-									</div>
-								}
+                                    <input class="govuk-radios__input" id="retrospective-approval-no" name="Decision.RetrospectiveApproval" type="radio" value="false" @retrospectiveApprovalNoChecked>
 
-							</div>
-						</fieldset>
-					</div>
+                                    <label class="govuk-label govuk-radios__label" for="retrospective-approval-no">
+                                        <span>
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
 
-					@* Submission required *@
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">Is a submission required?</h2>
-							</legend>
-							<div id="submission-required-hint" class="govuk-hint">
-								Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
-							</div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Submission required *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is a submission required?</h2>
+                            </legend>
+                            <div id="submission-required-hint" class="govuk-hint">
+                                Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
+                            </div>
                             <div class="govuk-radios" data-module="govuk-radios">
                                 <div class="govuk-radios__item">
 
                                     @{
-                                        if (Model.Decision.SubmissionRequired.HasValue)
-                                        {
-                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
-                                        }
-                                        else
-                                        {
-                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" value="true">
-                                        }
+                                        var submissionRequiredYesChecked = Model.Decision.SubmissionRequired.HasValue && Model.Decision.SubmissionRequired.Value ? "checked" : "";
+                                        var submissionRequiredNoChecked = Model.Decision.SubmissionRequired.HasValue && !Model.Decision.SubmissionRequired.Value ? "checked" : "";
                                     }
 
-                                    <label class="govuk-label govuk-radios__label" for="submission-required">
+                                    <input class="govuk-radios__input" id="submission-required-yes" name="Decision.SubmissionRequired" type="radio" value="true" @submissionRequiredYesChecked>
+
+                                    <label class="govuk-label govuk-radios__label" for="submission-required-yes">
                                         Yes
                                     </label>
                                 </div>
-       
+
                                 <div class="govuk-radios__item">
 
-                                    @{
-                                        if (Model.Decision.SubmissionRequired.HasValue)
-                                        {
-                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
-                                        }
-                                        else
-                                        {
-                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
-                                        }
-                                    }
+                                    <input class="govuk-radios__input" id="submission-required-no" name="Decision.SubmissionRequired" type="radio" value="false" @submissionRequiredNoChecked>
 
-                                    <label class="govuk-label govuk-radios__label" for="submission-required-1">
+                                    <label class="govuk-label govuk-radios__label" for="submission-required-no">
                                         <span>
                                             No
                                         </span>
@@ -166,75 +137,65 @@
                                 </div>
                             </div>
 
-						</fieldset>
-					</div>
+                        </fieldset>
+                    </div>
 
-					@* Date request received *@
+                    @* Date request received *@
                     <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
 
-					@* Types *@
-					<div class="govuk-form-group govuk-!-margin-top-6">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">What type of decision is it?</h2>
-							</legend>
+                    @* Types *@
+                    <div class="govuk-form-group govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What type of decision is it?</h2>
+                            </legend>
 
                             <div id="decision-type-hint" class="govuk-hint">
                                 Select all types that apply. Find decisions by type at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Home.aspx" target="_blank">SFSO Knowledge (opens in a new tab)</a> for more information.
                             </div>
-							<br>
+                            <br>
 
-							@foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
-							{
-								var isChecked = Model.Decision.DecisionTypes.Contains(decisionTypeCheckbox.DecisionType);
+                            @foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
+                            {
+                                var isChecked = Model.Decision.DecisionTypes.Contains(decisionTypeCheckbox.DecisionType);
 
-								<div class="govuk-checkboxes__item">
-									<input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionType" name="Decision.DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionType" checked="@isChecked">
-									<label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionType">
-										@EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionType)
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionType" name="Decision.DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionType" checked="@isChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionType">
+                                        @EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionType)
 
 
-										<div id="@decisionTypeCheckbox.DecisionType-hint" class="govuk-hint">
-											@decisionTypeCheckbox.Hint
-										</div>
-									</label>
-								</div>
-							}
-						</fieldset>
-					</div>
+                                        <div id="@decisionTypeCheckbox.DecisionType-hint" class="govuk-hint">
+                                            @decisionTypeCheckbox.Hint
+                                        </div>
+                                    </label>
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
 
-					@* Total amount requested *@
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">What was the total amount requested? </h2>
-							</legend>
-							<div id="total-amount-request-hint" class="govuk-hint">
-								If no amount was requested, enter £0.
-							</div>
-							<div class="govuk-input__wrapper">
-								<div class="govuk-input__prefix" aria-hidden="true">£</div>
-								<input 
-									class="govuk-input govuk-input--width-6" 
-									id="total-amount-request" 
-									name="Decision.TotalAmountRequested" 
-									type="text" 
-									value="@Model.Decision.TotalAmountRequested">
-							</div>
-						</fieldset>
-					</div>
+                    @* Total amount requested *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What was the total amount requested? </h2>
+                            </legend>
+                            <div id="total-amount-request-hint" class="govuk-hint">
+                                If no amount was requested, enter £0.
+                            </div>
+                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                <input class="govuk-input govuk-input--width-6"
+                                       id="total-amount-request"
+                                       name="Decision.TotalAmountRequested"
+                                       type="text"
+                                       value="@Model.Decision.TotalAmountRequested">
+                            </div>
+                        </fieldset>
+                    </div>
 
-					@* Notes *@
-					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
-                        <div class="govuk-form-group">
-                            <h2 class="govuk-heading-m">Supporting notes (optional)</h2>
-                            <div class="govuk-hint">Case owners can record any information they want that feels relevant to the action</div>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="Decision.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@Model.Decision.SupportingNotes</textarea>
-                        </div>
-						<div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to @Model.NotesMaxLength characters
-						</div>
-					</div>
+                    @* Notes *@
+                    <partial name="Components/_TextArea" model="Model.Notes" />
 
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
@@ -243,45 +204,45 @@
 
                         <partial name="_Cancel" />
                     </div>
-				</form>
+                </form>
 
-				<script type="application/javascript" nonce="@nonce">
+                <script type="application/javascript" nonce="@nonce">
 
-					function formatCurrency(element) {
+                    function formatCurrency(element) {
 
-						let currencyFormatter = new Intl.NumberFormat("en-GB", {
-							style: "currency",
-							currency: "GBP"
-						});
+                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
+                            style: "currency",
+                            currency: "GBP"
+                        });
 
-						const onlyNumbersRegex = /[^\d\.]/g;
+                        const onlyNumbersRegex = /[^\d\.]/g;
 
-						const amount = element.val().replace(onlyNumbersRegex, "");
+                        const amount = element.val().replace(onlyNumbersRegex, "");
 
-						const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
-						element.val(formattedCurrency);
-					}
+                        const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
+                        element.val(formattedCurrency);
+                    }
 
-					$(function () {
+                    $(function () {
 
-						$totalAmountRequestedObj = $('#total-amount-request');
+                        $totalAmountRequestedObj = $('#total-amount-request');
 
-						$(document).ready(function() {
-							formatCurrency($totalAmountRequestedObj);
-						}); 
+                        $(document).ready(function() {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
 
-						$totalAmountRequestedObj.focusout(function () {
-							formatCurrency($totalAmountRequestedObj);
-						});
+                        $totalAmountRequestedObj.focusout(function () {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
 
                         var submitButton = $('#add-decision-button')[0];
                         disableOnSubmit(submitButton);
 
-						autoResizer();
-					});
-				</script>
-			}
+                        autoResizer();
+                    });
+                </script>
+            }
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>

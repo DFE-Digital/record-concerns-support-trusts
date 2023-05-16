@@ -10,7 +10,7 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
-describe("User can add case actions to an existing case", () => {
+describe("User can add decisions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
 	const closeDecisionPage = new CloseDecisionPage();
@@ -59,14 +59,14 @@ describe("User can add case actions to an existing case", () => {
 		Logger.Log("Creating Decision");
 		editDecisionPage
 			.withCrmEnquiry("444")
-			.withRetrospectiveRequest(false)
-			.withSubmissionRequired(true)
+			.withRetrospectiveRequest("no")
+			.withSubmissionRequired("yes")
 			.withSubmissionLink("www.gov.uk")
 			.withDateESFADay("21")
 			.withDateESFAMonth("04")
 			.withDateESFAYear("2022")
-			.withTypeOfDecisionID("NoticeToImprove")
-			.withTypeOfDecisionID("Section128")
+			.withTypeOfDecision("NoticeToImprove")
+			.withTypeOfDecision("Section128")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
@@ -100,14 +100,27 @@ describe("User can add case actions to an existing case", () => {
 
 		Logger.Log("Editing Decision");
 		editDecisionPage
+			.hasCrmEnquiry("444")
+			.hasRetrospectiveRequest("no")
+			.hasSubmissionRequired("yes")
+			.hasSubmissionLink("www.gov.uk")
+			.hasDateESFADay("21")
+			.hasDateESFAMonth("04")
+			.hasDateESFAYear("2022")
+			.hasTotalAmountRequested("140,000.00")
+			.hasTypeOfDecision("NoticeToImprove")
+			.hasTypeOfDecision("Section128")
+			.hasSupportingNotes("These are some supporting notes!")
+
+		editDecisionPage
 			.withCrmEnquiry("777")
-			.withRetrospectiveRequest(false)
-			.withSubmissionRequired(true)
+			.withRetrospectiveRequest("no")
+			.withSubmissionRequired("yes")
 			.withSubmissionLink("www.google.uk")
 			.withDateESFADay("22")
 			.withDateESFAMonth("03")
 			.withDateESFAYear("2022")
-			.withTypeOfDecisionID("QualifiedFloatingCharge")
+			.withTypeOfDecision("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
 
@@ -134,14 +147,14 @@ describe("User can add case actions to an existing case", () => {
 		Logger.Log("Adding note on the decision that will be closing ");
 		editDecisionPage
 			.withCrmEnquiry("444")
-			.withRetrospectiveRequest(false)
-			.withSubmissionRequired(true)
+			.withRetrospectiveRequest("no")
+			.withSubmissionRequired("yes")
 			.withSubmissionLink("www.gov.uk")
 			.withDateESFADay("21")
 			.withDateESFAMonth("04")
 			.withDateESFAYear("2022")
-			.withTypeOfDecisionID("NoticeToImprove")
-			.withTypeOfDecisionID("Section128")
+			.withTypeOfDecision("NoticeToImprove")
+			.withTypeOfDecision("Section128")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("This is a test")
 			.save();
