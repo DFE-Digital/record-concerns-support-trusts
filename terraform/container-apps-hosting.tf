@@ -14,6 +14,8 @@ module "azure_container_apps_hosting" {
   mssql_server_admin_password    = local.mssql_server_admin_password
   mssql_database_name            = local.mssql_database_name
   mssql_firewall_ipv4_allow_list = local.mssql_firewall_ipv4_allow_list
+  mssql_azuread_admin_username   = local.mssql_azuread_admin_username
+  mssql_azuread_admin_object_id  = local.mssql_azuread_admin_object_id
 
   image_name = local.image_name
 
