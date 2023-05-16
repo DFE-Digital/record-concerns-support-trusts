@@ -28,22 +28,7 @@
 			}
 			else
 			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
-				@if (TempData["Decision.Message"] != null)
-				{
-					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-						<div class="govuk-error-summary__body">
-							<ul id="decision-error-list" class="govuk-list govuk-error-summary__list">
-								@foreach (var msg in decisionsValidationErrors)
-								{
-									<li class="govuk-error-message">@msg</li>
-								}
-							</ul>
-						</div>
-					</div>
-				}
+                <partial name="_ValidationErrors" />
 
 				<h1 class="govuk-heading-l">
 					<span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
@@ -185,40 +170,7 @@
 					</div>
 
 					@* Date request received *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
-						<fieldset class="govuk-fieldset">
-							<h2 class="govuk-heading-m">When did ESFA (Education and Skills Funding Agency) receive the request? </h2>
-							<div class="govuk-date-input" id="dtr-request-received">
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-day-request-received">
-											Day
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
-										   name="ReceivedRequestDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Day:00}")" />
-									</div>
-								</div>
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-month-request-received">
-											Month
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
-										   name="ReceivedRequestDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Month:00}")" />
-									</div>
-								</div>
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-year-request-received">
-											Year
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
-										   name="ReceivedRequestDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Year}")" />
-									</div>
-								</div>
-							</div>
-						</fieldset>
-					</div>
+                    <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
 
 					@* Types *@
 					<div class="govuk-form-group govuk-!-margin-top-6">
@@ -292,9 +244,6 @@
                         <partial name="_Cancel" />
                     </div>
 				</form>
-
-
-
 
 				<script type="application/javascript" nonce="@nonce">
 

@@ -115,7 +115,7 @@ export class EditDecisionPage
 	public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);
 
-		cy.get("#decision-error-list").should(
+		cy.getById("errorSummary").should(
 			"contain.text",
 			message
 		);
