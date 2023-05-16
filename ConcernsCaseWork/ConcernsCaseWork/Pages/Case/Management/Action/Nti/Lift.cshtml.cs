@@ -1,16 +1,9 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Service.Helpers;
-using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -40,11 +33,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			try
 			{
-				NtiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
+				NtiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
 				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{CaseUrn}/management/action/nti/{NTIId}");
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
 				LoadPageComponents(NtiModel);
@@ -72,7 +65,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					return Page();
 				}
 
-				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NTIId);
+				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
 				ntiModel.Notes = Notes.Text.StringContents;
 				ntiModel.SumissionDecisionId = DecisionID.Text.StringContents;

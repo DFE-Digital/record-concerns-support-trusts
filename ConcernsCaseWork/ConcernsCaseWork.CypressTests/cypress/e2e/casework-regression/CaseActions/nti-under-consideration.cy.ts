@@ -6,6 +6,7 @@ import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnd
 import { CloseNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/closeNtiUnderConsiderationPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import {NotesError} from "../../../constants/validationErrorConstants";
 
 describe("Testing the NTI under consideration", () =>
 {
@@ -31,7 +32,10 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
+
+            Logger.Log("Checking accessibility on Add NTI under consideration");
+            cy.excuteAccessibilityTests();
 
             editNtiUnderConsiderationPage
                 .withReason("Cash flow problems")
@@ -66,7 +70,10 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError(NotesError);
+
+            Logger.Log("Checking accessibility on Edit NTI under consideration");
+            cy.excuteAccessibilityTests();
 
             editNtiUnderConsiderationPage
                 .clearReasons()
@@ -80,7 +87,10 @@ describe("Testing the NTI under consideration", () =>
                 .hasReasonCount(2)
                 .hasReason("Governance concerns")
                 .hasReason("Risk of insolvency")
-                .hasNotes("Edited my notes"); 
+                .hasNotes("Edited my notes");
+
+            Logger.Log("Checking accessibility on View NTI under consideration");
+            cy.excuteAccessibilityTests();
         });
     });
 
@@ -107,6 +117,17 @@ describe("Testing the NTI under consideration", () =>
         });
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiUnderConsiderationPage
+           .save();
+
+        addNtiUnderConsiderationToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     describe("When closing an NTI under consideration", () =>
     {
         it("Should be able to close the NTI under consideration", () =>
@@ -131,19 +152,18 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.Log("Validating the close page")
             closeNtiUnderConsiderationPage
-                .close()
-                .hasValidationError("Please select a reason for closing NTI under consideration");
-
-            closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
                 .withNotesExceedingLimit()
                 .close()
-                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+                .hasValidationError("Please select a reason for closing NTI under consideration")
+                .hasValidationError(NotesError);
+
+            Logger.Log("Checking accessibility on Close NTI under consideration");
+            cy.excuteAccessibilityTests();
 
             Logger.Log("Filling out the close form");
 
             closeNtiUnderConsiderationPage
-                .withStatus("No further action being taken")
+                .withStatus("NoFurtherAction")
                 .withNotes("These are my final notes")
                 .close();
 
@@ -168,6 +188,9 @@ describe("Testing the NTI under consideration", () =>
                 .hasNotes("These are my final notes")
                 .cannotEdit()
                 .cannotClose();
+
+            Logger.Log("Checking accessibility on View Closed NTI under consideration");
+            cy.excuteAccessibilityTests();
         });
     });
 

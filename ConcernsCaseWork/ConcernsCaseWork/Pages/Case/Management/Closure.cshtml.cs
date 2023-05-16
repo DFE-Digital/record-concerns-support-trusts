@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -19,10 +21,14 @@ using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Decisions;
+using Microsoft.ApplicationInsights;
+using System.Text.Json;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -43,7 +49,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseActionValidator _caseActionValidator;
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<ClosurePageModel> _logger;
-
+		private TelemetryClient _telemetryClient;
+		private readonly IUserStateCachedService _userStateCache;
+	
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
@@ -61,21 +69,25 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IDecisionService decisionService,
 			ITrustFinancialForecastService trustFinancialForecastService,
 			ICaseActionValidator caseActionValidator,
-			ILogger<ClosurePageModel> logger)
+			ILogger<ClosurePageModel> logger,
+			IUserStateCachedService cachedService,
+			TelemetryClient telemetryClient)
 		{
-			_caseModelService = caseModelService;
-			_trustModelService = trustModelService;
-			_recordModelService = recordModelService;
-			_statusCachedService = statusCachedService;
-			_srmaModelService = srmaModelService;
-			_financialPlanModelService = financialPlanModelService;
-			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
-			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiModelService = ntiModelService;
-			_decisionService = decisionService;
-			_trustFinancialForecastService = trustFinancialForecastService;
-			_caseActionValidator = caseActionValidator;
-			_logger = logger;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_recordModelService = Guard.Against.Null(recordModelService);
+			_statusCachedService = Guard.Against.Null(statusCachedService);
+			_srmaModelService = Guard.Against.Null(srmaModelService);
+			_financialPlanModelService = Guard.Against.Null(financialPlanModelService);
+			_ntiUnderConsiderationModelService = Guard.Against.Null(ntiUnderConsiderationModelService);
+			_ntiWarningLetterModelService = Guard.Against.Null(ntiWarningLetterModelService);
+			_ntiModelService = Guard.Against.Null(ntiModelService);
+			_decisionService = Guard.Against.Null(decisionService);
+			_trustFinancialForecastService = Guard.Against.Null(trustFinancialForecastService);
+			_caseActionValidator = Guard.Against.Null(caseActionValidator);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_userStateCache = Guard.Against.Null(cachedService);
 		}
 		
 		public async Task OnGetAsync()
@@ -116,7 +128,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			try
 			{
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
-
+				var userState = await GetUserState();
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 				{
@@ -140,7 +152,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 						StatusName = StatusEnum.Close.ToString(),
 						ReasonAtReview = caseOutcomes
 					};
-
+					AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+					{
+						EventName = "CASE CLOSED",
+						EventDescription = $"Case has been closed {caseUrn}",
+						EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
+						EventUserName = userState.UserName
+					});
 					await _caseModelService.PatchClosure(patchCaseModel);
 				}
 					
@@ -212,6 +230,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var result = apiDecisions.Select(d => DecisionMapping.ToDecisionSummaryModel(d)).ToList();
 
 			return result;
+		}
+		private async Task<UserState> GetUserState()
+		{
+			var userState = await _userStateCache.GetData(User.Identity.Name);
+			if (userState is null)
+				throw new Exception("Cache CaseStateData is null");
+			
+			return userState;
 		}
 	}
 }

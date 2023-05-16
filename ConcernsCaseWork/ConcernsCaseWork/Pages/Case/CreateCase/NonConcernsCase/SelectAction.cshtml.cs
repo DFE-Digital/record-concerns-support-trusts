@@ -6,6 +6,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases.Create;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ public class SelectActionPageModel : AbstractPageModel
 	private readonly ILogger<SelectActionPageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private readonly ICreateCaseService _createCaseService;
+	private TelemetryClient _telemetryClient;
 
 	[BindProperty] 
 	[Required(ErrorMessage = "Select an action")] 
@@ -33,18 +35,20 @@ public class SelectActionPageModel : AbstractPageModel
 		IUserStateCachedService cachedService,
 		ILogger<SelectActionPageModel> logger,
 		IClaimsPrincipalHelper claimsPrincipalHelper,
-		ICreateCaseService createCaseService)
+		ICreateCaseService createCaseService,
+		TelemetryClient telemetryClient)
 	{
 		_createCaseService = Guard.Against.Null(createCaseService);
 		_cachedService = Guard.Against.Null(cachedService);
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+		_telemetryClient = Guard.Against.Null(telemetryClient);
 	}
 	
 	public ActionResult OnGet()
 	{
 		_logger.LogMethodEntered();
-
+		
 		return Page();
 	}
 	

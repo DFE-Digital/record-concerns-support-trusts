@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
@@ -12,7 +11,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 public class CloseNtiBasePage : AbstractPageModel
 {
 	[BindProperty(SupportsGet = true, Name="Urn")] public int CaseUrn { get; set; }
-	[BindProperty(SupportsGet = true, Name = "ntiId")] public int NTIId { get; set; }
+	[BindProperty(SupportsGet = true, Name = "ntiId")] public int NtiId { get; set; }
 	public OptionalDateTimeUiComponent DateNTILifted { get; set; } = BuildDateNTILiftedComponent();
 	public OptionalDateTimeUiComponent DateNTIClosed { get; set; } = BuildDateNTIClosedComponent();
 	public TextBoxUiComponent DecisionID { get; set; } = BuildDecisionIDComponent();
@@ -60,7 +59,7 @@ public class CloseNtiBasePage : AbstractPageModel
 			{
 				MaxLength = NtiConstants.MaxNotesLength,
 				StringContents = contents,
-				DisplayName = "Finalise notes (optional)"
+				DisplayName = "Notes"
 			}
 		};
 }

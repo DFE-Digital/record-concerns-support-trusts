@@ -36,28 +36,7 @@
 				</div>
 			</dl>
 
-			<h2 class="govuk-heading-m">What are you recording?</h2>
-
-			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.CaseType)">
-				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.Concern">
-					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
-						A concern or multiple concerns
-					</label>
-					<div class="govuk-hint govuk-radios__hint">
-						This includes narrative, actions or decisions related to any new concern(s)
-					</div>
-				</div>
-				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.NonConcern">
-					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="non-concerncase-option">
-						Non-concern related action(s) or decision(s)
-					</label>
-					<div class="govuk-hint govuk-radios__hint">
-						For example, a proactive School Resource Management Adviser (SRMA)
-					</div>
-				</div>
-			</div>
+            <partial name="Components/_RadioList" model="Model.CaseType" />
 
 			<div class="govuk-button-group">
 				<button data-prevent-double-click="true"

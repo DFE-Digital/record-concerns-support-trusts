@@ -31,7 +31,7 @@ public class StringValidatableTests
 
 		// assert
 		result.Should().HaveCount(1);
-		result.Single().ErrorMessage.Should().Be("Supporting Notes: Exceeds maximum allowed length (10 characters).");
+		result.Single().ErrorMessage.Should().Be("Supporting Notes must be 10 characters or less");
 	}
 
 	[Test]

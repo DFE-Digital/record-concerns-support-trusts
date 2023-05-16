@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @{
     ViewData[ViewDataConstants.Title] = "Lift NTI";
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@Model.CaseUrn}/management/action/nti/{Model.NtiId}";
 }
 
 <div class="govuk-width-container">

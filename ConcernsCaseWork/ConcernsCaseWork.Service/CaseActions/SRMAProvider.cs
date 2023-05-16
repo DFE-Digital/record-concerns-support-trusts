@@ -213,7 +213,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 		}
 
-		public async Task<SRMADto> SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
+		public async Task<SRMADto> SetVisitDates(long srmaId, DateTime? startDate, DateTime? endDate)
 		{
 			try
 			{
