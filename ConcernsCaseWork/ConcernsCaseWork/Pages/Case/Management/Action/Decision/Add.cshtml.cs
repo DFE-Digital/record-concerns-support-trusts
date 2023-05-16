@@ -31,7 +31,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public OptionalDateTimeUiComponent ReceivedRequestDate { get; set; }
 
-		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseUrn { get; set; }
@@ -83,7 +84,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime();
+				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
+				Decision.SupportingNotes = Notes.Text.StringContents;
 
 				if (DecisionId.HasValue)
 				{
@@ -117,6 +119,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				Month = model.ReceivedRequestDate?.Month.ToString("00"),
 				Year = model.ReceivedRequestDate?.Year.ToString()
 			};
+
+			Notes.Text.StringContents = model.SupportingNotes;
 		}
 
 		private void LoadPageComponents()
@@ -124,6 +128,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			SetupPage();
 
 			ReceivedRequestDate = BuildReceivedRequestDateComponent(ReceivedRequestDate?.Date);
+			Notes = BuildNotesComponent(Notes?.Text.StringContents);
 		}
 
 		private void SetupPage()
@@ -222,6 +227,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				DisplayName = "Date ESFA received request"
 			};
 		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("case-decision-notes", nameof(Notes), "Supporting notes (optional)")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action",
+			Text = new ValidateableString()
+			{
+				MaxLength = DecisionConstants.MaxSupportingNotesLength,
+				StringContents = contents,
+				DisplayName = "Notes"
+			}
+		};
 	}
 
 	public class DecisionTypeCheckBox
