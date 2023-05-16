@@ -1,22 +1,38 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+@using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Models.RadioButtonsUiComponent
-<div class="govuk-form-group">
+
+@{
+    var required = Model.Required == true ? "true" : "false";
+
+    var modelPath = $"{Model.Name}.{Model.DisplayName}";
+    ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
+
+    var errors = modelState?.Errors.Select(e => new ValidationResult(e.ErrorMessage, new[] { Model.DisplayName })); ;
+    var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+}
+
+<div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
-		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
 			<h2 class="govuk-heading-m">
 				@Model.Heading
 			</h2>
 		</legend>
+
 		<div class="govuk-radios" data-module="govuk-radios">
+            <partial name="Components/_ValidationErrorDetail" model="@errors" />
 			@foreach (var radioItem in Model.RadioItems)
 			{
 				var isChecked = Model.SelectedId == radioItem.Id ? "checked" : "";
+                var testId = !string.IsNullOrEmpty(radioItem.TestId) ? radioItem.TestId : radioItem.Label;
 				
 				<div class="govuk-radios__item">
 					<input class="govuk-radios__input" 
 					       id="@radioItem.Id" 
 					       name="@Model.Name.@nameof(Model.SelectedId)" 
 					       type="radio" 
-					       data-testid="@radioItem.Label" 
+					       data-testid="@testId" 
 					       value="@radioItem.Id"
 					       @isChecked />
 
@@ -25,8 +41,17 @@
 							@radioItem.Label
 						</span>
 					</label>
-				</div>
+                    @if (!string.IsNullOrEmpty(radioItem.HintText))
+                    {
+                        <div class="govuk-hint govuk-radios__hint">
+                            @radioItem.HintText
+                        </div>
+                    }
+                </div>
 			}
 		</div>
 	</fieldset>
+    <input type="hidden" name="@(Model.Name).DisplayName" value="@Model.DisplayName" />
+    <input type="hidden" name="@(Model.Name).Required" value="@required" />
+    <input type="hidden" name="@(Model.Name).ErrorTextForRequiredField" value="@Model.ErrorTextForRequiredField" />
 </div>

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
@@ -18,15 +19,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class EditSRMAReasonOfferedPageModel : AbstractPageModel
 	{
-		private readonly ISRMAService srmaService;
+		private readonly ISRMAService _srmaService;
 		private readonly ILogger<EditSRMAReasonOfferedPageModel> _logger;
 
-		public SRMAModel SRMA { get; set; }
-		public IEnumerable<RadioItem> Reasons { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent SRMAReasonOffered { get; set; }
 
 		public EditSRMAReasonOfferedPageModel(ISRMAService srmaService, ILogger<EditSRMAReasonOfferedPageModel> logger)
 		{
-			this.srmaService = srmaService;
+			this._srmaService = srmaService;
 			_logger = logger;
 		}
 
@@ -34,119 +38,76 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditSRMAReasonOfferedPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var validationResponse = ValidateInputsForGet();
-				if (validationResponse.validationErrors.Any())
-				{
-					TempData["SRMA.Message"] = validationResponse.validationErrors;
-				}
-				else
-				{
-					SRMA = await srmaService.GetSRMAById(validationResponse.srmaId);
+				var model = await _srmaService.GetSRMAById(SrmaId);
 					
-					if (SRMA.IsClosed)
-					{
-						return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}/closed");
-					}
-					
-					Reasons = GetReasons();
+				if (model.IsClosed)
+				{
+					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
+
+				LoadPageComponents(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditSRMAReasonOfferedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostAsync(string url)
+		public async Task<ActionResult> OnPostAsync()
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditSRMAReasonOfferedPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				var validationResponse = ValidateInputsForPost();
-
-				if (validationResponse.validationErrors.Count() > 0)
+				if (!ModelState.IsValid)
 				{
-					TempData["SRMA.Message"] = validationResponse.validationErrors;
+					SRMAReasonOffered = BuildSrmaReasonComponent(SRMAReasonOffered.SelectedId);
 					return Page();
 				}
 
-				await srmaService.SetReason(validationResponse.srmaId, validationResponse.reason);
-				return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}");
+				await _srmaService.SetReason(SrmaId, (SRMAReasonOffered)SRMAReasonOffered.SelectedId);
+				return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditSRMAReasonOfferedPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 
-		private (List<string> validationErrors, long srmaId, long caseId) ValidateInputsForGet()
+		private void LoadPageComponents(SRMAModel model)
 		{
-			var validationErrors = new List<string>();
-
-			var caseUrnStr = Convert.ToString(RouteData.Values["caseUrn"]);
-			if (!long.TryParse(caseUrnStr, out long caseUrn))
-			{
-				validationErrors.Add("Invalid case Id");
-			}
-
-			var srmaIdStr = Convert.ToString(RouteData.Values["srmaId"]);
-			if (!long.TryParse(srmaIdStr, out long srmaId))
-			{
-				validationErrors.Add("SRMA Id not found");
-			}
-
-			return (validationErrors, srmaId, caseUrn);
+			SRMAReasonOffered = BuildSrmaReasonComponent((int)model.Reason);
 		}
 
-		private (List<string> validationErrors, long srmaId, SRMAReasonOffered reason, long caseId) ValidateInputsForPost()
+		private static RadioButtonsUiComponent BuildSrmaReasonComponent(int? selectedId = null)
 		{
-			var validationErrors = new List<string>();
-			SRMAReasonOffered srmaReason = SRMAReasonOffered.Unknown;
-
-			var caseUrnStr = Convert.ToString(RouteData.Values["caseUrn"]);
-			if (!long.TryParse(caseUrnStr, out long caseUrn))
+			var enumValues = new List<SRMAReasonOffered>()
 			{
-				validationErrors.Add("Invalid case Id");
-			}
+				Enums.SRMAReasonOffered.OfferLinked,
+				Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
+				Enums.SRMAReasonOffered.RegionsGroupIntervention
+			};
 
-			var srmaIdStr = Convert.ToString(RouteData.Values["srmaId"]);
-			if (!long.TryParse(srmaIdStr, out long srmaId))
+			var radioItems = enumValues.Select(v =>
 			{
-				validationErrors.Add("SRMA Id not found");
-			}
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
 
-			var reason = Convert.ToString(Request.Form["reason"]);
-			if (string.IsNullOrEmpty(reason))
+			return new(ElementRootId: "srma-reason-offered", Name: nameof(SRMAReasonOffered), "")
 			{
-				validationErrors.Add("A reason not selected");
-			}
-			else if (!Enum.TryParse<SRMAReasonOffered>(reason, out srmaReason))
-			{
-				validationErrors.Add("Invalid reason");
-			}
-
-			return (validationErrors, srmaId, srmaReason, caseUrn);
-		}
-
-		private IEnumerable<RadioItem> GetReasons()
-		{
-			var reasons = (SRMAReasonOffered[])Enum.GetValues(typeof(SRMAReasonOffered));
-			return reasons.Where(r => r != SRMAReasonOffered.Unknown)
-						   .Select(r => new RadioItem
-						   {
-							   Id = r.ToString(),
-							   Text = EnumHelper.GetEnumDescription(r),
-							   IsChecked = r == SRMA.Reason
-						   });
-		}
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "SRMA reason"
+			};
+		} 
 	}
 }

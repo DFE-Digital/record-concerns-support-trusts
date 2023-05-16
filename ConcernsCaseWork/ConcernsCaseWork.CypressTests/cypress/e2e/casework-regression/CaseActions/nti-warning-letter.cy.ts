@@ -6,6 +6,7 @@ import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningL
 import { CloseNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/closeNtiWarningLetterPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("Testing the NTI warning letter action", () =>
 {
@@ -30,8 +31,18 @@ describe("Testing the NTI warning letter action", () =>
             .withNotesExceedingLimit()
             .withDaySent("22")
             .save()
-            .hasValidationError("Notes must be 2000 characters or less")
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError(NotesError)
+            .hasValidationError(DateIncompleteError.replace("{0}", "Date warning letter sent"));
+
+        editNtiWarningLetterPage
+            .withNotes("This is a test")
+            .withMonthSent("20")
+            .withYearSent("2022")
+            .save()
+            .hasValidationError(DateInvalidError.replace("{0}", "Date warning letter sent"));
+
+        Logger.Log("Checking accessibility on Add NTI warning letter");
+        cy.excuteAccessibilityTests();
 
         createConfiguredNtiWarningLetter();
 
@@ -61,7 +72,7 @@ describe("Testing the NTI warning letter action", () =>
         viewNtiWarningLetterPage.edit();
 
         editNtiWarningLetterPage
-            .hasStatus("Sent to trust")
+            .hasStatus("SentToTrust")
             .hasDaySent("22")
             .hasMonthSent("10")
             .hasYearSent("2022")
@@ -69,9 +80,12 @@ describe("Testing the NTI warning letter action", () =>
             .hasReason("Risk of insolvency")
             .hasNotes("This is my notes");
 
+        Logger.Log("Checking accessibility on Edit NTI warning letter");
+        cy.excuteAccessibilityTests();
+
         editNtiWarningLetterPage
             .clearReasons()
-            .withStatus("Preparing warning letter")
+            .withStatus("PreparingWarningLetter")
             .withDaySent("10")
             .withMonthSent("02")
             .withYearSent("2020")
@@ -111,6 +125,9 @@ describe("Testing the NTI warning letter action", () =>
             .hasConditionCount(1)
             .hasCondition("Scheme of delegation")
             .hasNotes("My edited notes");
+
+        Logger.Log("Checking accessibility on View NTI warning letter");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should create an empty NTI warning letter", () =>
@@ -136,6 +153,17 @@ describe("Testing the NTI warning letter action", () =>
             .hasNotes("Empty");
     });
 
+    it("Should only let nti be open per case", () =>
+    {
+        editNtiWarningLetterPage
+           .save();
+
+        addNtiWarningLetterToCase();
+
+       AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+    });
+
     it("Should be able to close an NTI warning letter", () =>
     {
         createConfiguredNtiWarningLetter();
@@ -157,14 +185,15 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage
             .withNotesExceedingLimit()
             .close()
-            .hasValidationError("Please select a reason for closing the Warning letter")
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Please select a reason for closing the warning letter")
+            .hasValidationError(NotesError);
+
+        Logger.Log("Checking accessibility on Close NTI warning letter");
+        cy.excuteAccessibilityTests();
 
         closeNtiWarningLetterPage
-            .withReason("Conditions met")
+            .withReason("ConditionsMet")
             .withNotes("This is my final notes")
-
-        cy.waitForJavascript();
         
         closeNtiWarningLetterPage.close();
 
@@ -196,13 +225,15 @@ describe("Testing the NTI warning letter action", () =>
             .cannotEdit()
             .cannotClose();
 
+        Logger.Log("Checking accessibility on View Closed NTI warning letter");
+        cy.excuteAccessibilityTests();
     });
 
     function createConfiguredNtiWarningLetter()
     {
         Logger.Log("Filling out the form");
         editNtiWarningLetterPage
-            .withStatus("Sent to trust")
+            .withStatus("SentToTrust")
             .withDaySent("22")
             .withMonthSent("10")
             .withYearSent("2022")
@@ -215,8 +246,12 @@ describe("Testing the NTI warning letter action", () =>
             .withCondition("Trust financial plan")
             .withCondition("Action plan")
             .withCondition("Lines of accountability")
-            .withCondition("Publishing requirements (compliance with)")
-            .saveConditions();
+            .withCondition("Publishing requirements (compliance with)");
+
+        editNtiWarningLetterPage.saveConditions();
+
+        Logger.Log("Checking accessibility on NTI warning letter conditions");
+        cy.excuteAccessibilityTests();
 
         editNtiWarningLetterPage.save();
     }

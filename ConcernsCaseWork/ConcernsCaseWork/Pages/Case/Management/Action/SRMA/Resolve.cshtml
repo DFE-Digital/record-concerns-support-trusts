@@ -1,10 +1,12 @@
 ﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/resolve/{resolution}"
+@using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ResolvePageModel
 
 @{
     var nonce = HttpContext.GetNonce();
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["urn"]}/management/action/srma/{@RouteData.Values["srmaId"]}";
 }
 
 <div class="govuk-width-container">
@@ -19,7 +21,7 @@
             }
             else
             {
-                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <partial name="_ValidationErrors" />
 
                 <h1 class="govuk-heading-l">
                     @Model.CloseTextModel.Header
@@ -35,27 +37,9 @@
 
                 <form role="form" method="post" id="resolve-srma-form">
 
-                    <div class="govuk-form-group">
-                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="confirmChk" name="confirmChk" type="checkbox">
-                                <label class="govuk-label govuk-checkboxes__label" for="confirmChk">
-                                    @Model.CloseTextModel.ConfirmText
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <partial name="Components/_Checkbox" model="Model.Confirm" />
 
-                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="2000">
-                        <div class="govuk-form-group">
-                            <h2 class="govuk-heading-m">Finalise notes (optional)</h2>
-                            <div class="govuk-hint">Case owners can record any information they want that feels relevant to the action</div>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info">@Model.SRMAModel.Notes</textarea>
-                        </div>
-                        <div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to 2000 characters
-                        </div>
-                    </div>
+                    <partial name="Components/_TextArea" model="Model.Notes" />
 
                     <p class="govuk-body">@Model.CloseTextModel.ButtonHint</p>
 
@@ -70,19 +54,6 @@
 
                 <script type="application/javascript" nonce="@nonce">
                     $(function () {
-
-                        let validator = formValidator($("#resolve-srma-form")[0]);
-
-                        validator.addValidator('confirmChk', [{
-                            method: function() {
-                                let checkbox = $('input[name="confirmChk"]:checked');
-                                return checkbox.length > 0;
-                            },
-                            message: '@Model.CloseTextModel.ConfirmText'
-                        }]);
-
-                        addSRMANotesValidator(validator);
-
                         autoResizer();
                     });
                 </script>

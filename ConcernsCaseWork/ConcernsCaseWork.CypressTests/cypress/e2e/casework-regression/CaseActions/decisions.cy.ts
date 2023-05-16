@@ -8,6 +8,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -37,7 +38,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("2022")
 			.save()
 			.hasValidationError(
-				"Date ESFA received request: 23-25-2022 is an invalid date"
+				DateInvalidError.replace("{0}", "Date ESFA received request")
 			);
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
@@ -48,9 +49,12 @@ describe("User can add case actions to an existing case", () => {
 			.withSupportingNotesExceedingLimit()
 			.save()
 			.hasValidationError(
-				"Date ESFA received request: Please enter a complete date DD MM YYYY"
+				DateIncompleteError.replace("{0}", "Date ESFA received request")
 			)
-			.hasValidationError("Notes must be 2000 characters or less");
+			.hasValidationError(NotesError);
+
+		Logger.Log("Checking accessibility on Create Decision");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Creating Decision");
 		editDecisionPage
@@ -74,7 +78,7 @@ describe("User can add case actions to an existing case", () => {
 			{
 				row.hasName("Decision: Multiple Decision Types")
 				row.hasStatus("In progress")
-				row.hasCreatedDate(toDisplayDate(now))
+				row.hasCreatedDate(toDisplayDate(now));
 				row.select();
 			});
 
@@ -106,6 +110,11 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
+
+		Logger.Log("Checking accessibility on Edit Decision");
+		cy.excuteAccessibilityTests();
+
+		editDecisionPage
 			.save();
 
 		Logger.Log("Viewing Edited Decision");
@@ -183,6 +192,9 @@ describe("User can add case actions to an existing case", () => {
 			.closeDecision()
 			.hasValidationError("Supporting Notes must be 2000 characters or less");
 
+		Logger.Log("Checking accessibility on Closed Decision");
+		cy.excuteAccessibilityTests();
+
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
@@ -228,6 +240,9 @@ describe("User can add case actions to an existing case", () => {
 			.cannotCloseDecision()
 			.cannotEditDecision()
 			.cannotEditDecisionOutcome();
+
+		Logger.Log("Checking accessibility on View Closed Decision");
+		cy.excuteAccessibilityTests();
 	});
 
 	it("When Decisions is empty, View Behavior", function () {
@@ -314,6 +329,8 @@ describe("User can add case actions to an existing case", () => {
 			.hasBusinessArea("Capital")
 			.hasBusinessArea("FinancialProviderMarketOversight");
 
+		Logger.Log("Checking accessibility on Edit Decision Outcome");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Edit Decision Outcome");
 		decisionOutcomePage
@@ -374,8 +391,11 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionTakeEffectMonth("22")
 			.withDecisionTakeEffectYear("2023")
 			.saveDecisionOutcome()
-			.hasValidationError("Date decision made: 24-13-2022 is an invalid date")
-			.hasValidationError("Date decision effective: 12-22-2023 is an invalid date")
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision made"))
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision effective"))
+
+		Logger.Log("Checking accessibility on Add Decision Outcome");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Checking an incomplete dates");
 		decisionOutcomePage
@@ -386,8 +406,8 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionTakeEffectMonth("06")
 			.withDecisionTakeEffectYear("")
 			.saveDecisionOutcome()
-			.hasValidationError("Date decision made: Please enter a complete date DD MM YYYY")
-			.hasValidationError("Date decision effective: Please enter a complete date DD MM YYYY");
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision made"))
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision effective"));
 
 		Logger.Log("Create Decision Outcome");
 		decisionOutcomePage
