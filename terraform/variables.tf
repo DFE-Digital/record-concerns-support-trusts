@@ -231,3 +231,33 @@ variable "mssql_database_name" {
   description = "The name of the MSSQL database to create. Must be set if `enable_mssql_database` is true"
   type        = string
 }
+
+variable "mssql_firewall_ipv4_allow_list" {
+  description = "A list of IPv4 Addresses that require remote access to the MSSQL Server"
+  type        = list(string)
+  default     = []
+}
+
+variable "mssql_azuread_admin_username" {
+  description = "Username of a User within Azure AD that you want to assign as the SQL Server Administrator"
+  type        = string
+  default     = ""
+}
+
+variable "mssql_azuread_admin_object_id" {
+  description = "Object ID of a User within Azure AD that you want to assign as the SQL Server Administrator"
+  type        = string
+  default     = ""
+}
+
+variable "cdn_frontdoor_origin_host_header_override" {
+  description = "Manually specify the host header that the CDN sends to the target. Defaults to the recieved host header. Set to null to set it to the host_name (`cdn_frontdoor_origin_fqdn_override`)"
+  type        = string
+  default     = null
+}
+
+variable "cdn_frontdoor_origin_fqdn_override" {
+  description = "Manually specify the hostname that the CDN Front Door should target. Defaults to the Container App FQDN"
+  type        = string
+  default     = ""
+}
