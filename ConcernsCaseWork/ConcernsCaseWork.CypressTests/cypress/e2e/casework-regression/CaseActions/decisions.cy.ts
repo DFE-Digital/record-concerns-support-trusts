@@ -205,7 +205,7 @@ describe("User can add decisions to an existing case", () => {
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
 			.closeDecision()
-			.hasValidationError("Supporting Notes must be 2000 characters or less");
+			.hasValidationError("Supporting notes must be 2000 characters or less");
 
 		Logger.Log("Checking accessibility on Closed Decision");
 		cy.excuteAccessibilityTests();
@@ -239,7 +239,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.gov.uk")
 			.hasDateESFAReceivedRequest("21 April 2022")
-			.hasTotalAmountRequested("£140,000")
+			.hasTotalAmountRequested("£140,000.00")
 			.hasTypeOfDecision("Notice to Improve (NTI)")
 			.hasTypeOfDecision("Section 128 (S128)")
 			.hasSupportingNotes("This is a test for closed decision")
