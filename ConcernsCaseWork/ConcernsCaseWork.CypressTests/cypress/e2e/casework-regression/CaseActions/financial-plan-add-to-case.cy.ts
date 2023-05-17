@@ -27,6 +27,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         checkFormValidation();
 
+        Logger.Log("Checking accessibility on Add financial plan");
+		cy.excuteAccessibilityTests();
+
         Logger.Log("Configuring a valid financial plan");
 
         editFinancialPlanPage
@@ -53,6 +56,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasDateOpened(toDisplayDate(now))
             .hasPlanRequestedDate("06 July 2022")
             .hasNotes("Notes!");
+
+        Logger.Log("Checking accessibility on View financial plan");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should handle an empty form", () =>
@@ -104,6 +110,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasPlanRequestedMonth("07")
             .hasPlanRequestedYear("2022")
             .hasNotes("Notes!");
+
+        Logger.Log("Checking accessibility on Edit financial plan");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Changing the financial plan");
 
@@ -157,27 +166,19 @@ describe("User can add Financial Plan case action to an existing case", () => {
         viewFinancialPlanPage
             .close();
 
-        Logger.Log("Ensure user must select a reason for closing the financial plan");
+        Logger.Log("Checking validation");
         closeFinancialPlanPage
-            .close()
-            .hasValidationError("Select Reason for closure");
-
-        Logger.Log("Ensure notes cannot exceed 2000 characters");
-        closeFinancialPlanPage
-            .withReasonForClosure("Abandoned")
-            .withNotesExceedingLimit()
-            .close()
-            .hasValidationError(NotesError)
-
-        Logger.Log("Ensure a valid date must be entered");
-        closeFinancialPlanPage
-            .withReasonForClosure("Abandoned")
             .withPlanReceivedDay("32")
             .withPlanReceivedMonth("13")
             .withPlanReceivedYear("2020")
-            .withNotes("Edited Notes!")
+            .withNotesExceedingLimit()
             .close()
+            .hasValidationError("Select Reason for closure")
+            .hasValidationError(NotesError)
             .hasValidationError(DateInvalidError.replace("{0}", "Date viable plan received"));
+
+        Logger.Log("Checking accessibility on Close financial plan");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Close a valid financial plan");
         closeFinancialPlanPage
@@ -208,6 +209,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasPlanRequestedDate("09 February 2023")
             .hasPlanReceivedDate("10 February 2023")
             .hasNotes("Edited Notes!");
+
+        Logger.Log("Checking accessibility on View Closed financial plan");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should only let one financial plan be created per case", () => 
@@ -221,6 +225,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         AddToCasePage
             .hasValidationError("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
+
+        Logger.Log("Checking accessibility on Creating a duplicate financial plan");
+        cy.excuteAccessibilityTests();
     });
 
     function checkFormValidation()
@@ -246,15 +253,10 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("22")
             .withPlanRequestedYear("22")
+            .withNotesExceedingLimit()
             .save()
-            .hasValidationError(DateInvalidError.replace("{0}", "Date financial plan requested"));
-
-        Logger.Log("Notes exceeding character limit");
-
-        editFinancialPlanPage
-                .withNotesExceedingLimit()
-                .save()
-                .hasValidationError(NotesError);                
+            .hasValidationError(DateInvalidError.replace("{0}", "Date financial plan requested"))
+            .hasValidationError(NotesError);             
     }
 
     function addFinancialPlanToCase()

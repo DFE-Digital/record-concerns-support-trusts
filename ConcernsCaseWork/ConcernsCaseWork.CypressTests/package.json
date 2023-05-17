@@ -6,6 +6,7 @@
   "scripts": {
     "cy:open": "cypress open --browser edge",
     "cy:run": "npm run clean:reports && cypress run --browser edge",
+    "cy:zap": "npm run clean:reports && cypress run --browser electron",
     "cy:notify": "cypress-slack-reporter",
     "clean:reports": "rm -rf cypress/reports/mocha/*.json",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
@@ -31,6 +32,7 @@
     "mochawesome-merge": "^4.2.1",
     "mochawesome-report-generator": "^6.0.1",
     "puppeteer": "^19.1.0",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "zaproxy": "^1.0.1"
   }
 }

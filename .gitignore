@@ -518,3 +518,6 @@ backend.vars
 ## Dependencies
 /Brewfile.lock.json
 /terraform/Brewfile.lock.json
+
+## ZAP Report
+ZAP-Report.*

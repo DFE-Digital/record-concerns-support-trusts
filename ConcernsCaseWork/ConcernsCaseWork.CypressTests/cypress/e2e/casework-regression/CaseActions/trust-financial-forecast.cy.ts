@@ -38,7 +38,10 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.save()
 			.hasValidationError("Supporting notes must be 2000 characters or less")
 			.hasValidationError(DateInvalidError.replace("{0}", "When did the trust respond?"))
-			.hasValidationError(DateInvalidError.replace("{0}", "When did SFSO initial review happen?"))
+			.hasValidationError(DateInvalidError.replace("{0}", "When did SFSO initial review happen?"));
+
+		Logger.Log("Checking accessibility on Add TFF");
+		cy.excuteAccessibilityTests();
 
 		Logger.Log("Create a TFF will all values");
 		editTFFPage
@@ -74,6 +77,9 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.hasTrustResponse("Satisfactory")
 			.hasSRMABeenOffered("Yes")
 			.hasNotes("Supporting notes");
+
+			Logger.Log("Checking accessibility on View TFF");
+			cy.excuteAccessibilityTests();	
 	});
 
 	it("Should only let one financial forecast be open per case", () =>
@@ -112,7 +118,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
 	it("Edit a TFF", function () {
-		Logger.Log("Create a TFF with empty values");
+		Logger.Log("Create a TFF values");
 		editTFFPage
 			.withForecastingTool("Current year - Spring")
 			.withDayReviewHappened("26")
@@ -136,6 +142,21 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		viewTFFPage
 			.edit();
+
+		editTFFPage
+			.hasForecastingTool("Current year - Spring")
+			.hasDayReviewHappened("26")
+			.hasMonthReviewHappened("01")
+			.hasYearReviewHappened("2023")
+			.hasDayTrustResponded("27")
+			.hasMonthTrustResponded("02")
+			.hasYearTrustResponded("2024")
+			.hasTrustResponseSatisfactory("Satisfactory")
+			.hasSRMAOffered("Yes")
+			.hasNotes("Supporting notes");
+
+		Logger.Log("Checking accessibility on Edit TFF");
+		cy.excuteAccessibilityTests();	
 
 		Logger.Log("Edit a TFF will all values");
 		editTFFPage
@@ -203,7 +224,10 @@ describe("User can add trust financial forecast to an existing case", () => {
 		closeTFFPage
 			.withNotesExceedingLimit()
 			.close()
-			.hasValidationError("Finalise notes must be 2000 characters or less")
+			.hasValidationError("Finalise notes must be 2000 characters or less");
+
+		Logger.Log("Checking accessibility on Close TFF");
+		cy.excuteAccessibilityTests();	
 
 		Logger.Log("Close with valid values");
 		closeTFFPage
@@ -234,6 +258,9 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.hasNotes("Even more important notes")
 			.cannotEdit()
 			.cannotClose();
+
+		Logger.Log("Checking accessibility on View Closed TFF");
+		cy.excuteAccessibilityTests();	
 	});
 
 	function addTFFToCase()
