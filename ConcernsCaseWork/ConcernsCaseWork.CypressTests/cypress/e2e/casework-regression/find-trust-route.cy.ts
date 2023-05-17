@@ -1,4 +1,4 @@
-const { Logger } = require("../../common/logger");
+import { Logger } from "../../common/logger";
 
 describe("User interactions via Find Trust route", () => {
 	beforeEach(() => {
