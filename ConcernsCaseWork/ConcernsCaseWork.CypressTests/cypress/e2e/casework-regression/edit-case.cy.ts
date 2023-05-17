@@ -91,7 +91,12 @@ describe("Editing a case", () =>
              .editRiskToTrust();
 
         editRiskToTrust
-            .hasRiskToTrust("Red-Plus")
+            .hasRiskToTrust("Red-Plus");
+
+        Logger.Log("Checking accessibility on edit risk to trust");
+        cy.excuteAccessibilityTests();
+        
+        editRiskToTrust
             .withRiskToTrust("Red")
             .apply();
 
@@ -100,17 +105,26 @@ describe("Editing a case", () =>
             .editDirectionOfTravel();
 
         editDirectionOfTravel
-            .hasDirectionOfTravel("Deteriorating")
+            .hasDirectionOfTravel("Deteriorating");
+
+        Logger.Log("Checking accessibility on direction of travel");
+        cy.excuteAccessibilityTests();
+
+        editDirectionOfTravel
             .withDirectionOfTravel("Improving")
             .apply();
-
 
         Logger.Log("Edit a concern");
         caseManagementPage
             .editConcern();
 
         addDetailsPage
-            .hasRating("Red")
+            .hasRating("Red");
+
+        Logger.Log("Checking accessibility on edit concern");
+        cy.excuteAccessibilityTests();
+
+        addDetailsPage
             .withRating("Amber-Green")
             .apply();
 
@@ -119,7 +133,12 @@ describe("Editing a case", () =>
             .editTerritory();
 
         addTerritoryPage
-            .hasTerritory("North_And_Utc__North_East")
+            .hasTerritory("North_And_Utc__North_East");
+
+        Logger.Log("Checking accessibility on edit territory");
+        cy.excuteAccessibilityTests();
+
+        addTerritoryPage
             .withTerritory("North_And_Utc__North_West")
             .apply();
 
@@ -134,6 +153,9 @@ describe("Editing a case", () =>
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
+
+        Logger.Log("Checking accessibility on edit issue");
+        cy.excuteAccessibilityTests();
 
         cy.waitForJavascript();
 
@@ -150,6 +172,9 @@ describe("Editing a case", () =>
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Current status must be 4000 characters or less");
+
+        Logger.Log("Checking accessibility on edit current status");
+        cy.excuteAccessibilityTests();
 
         cy.waitForJavascript();
 
@@ -168,6 +193,9 @@ describe("Editing a case", () =>
             .apply()
             .hasValidationError("Case aim must be 1000 characters or less");
 
+        Logger.Log("Checking accessibility on edit case aim");
+        cy.excuteAccessibilityTests();
+
         cy.waitForJavascript();
 
         editCaseAimPage
@@ -183,6 +211,9 @@ describe("Editing a case", () =>
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("De-escalation point must be 1000 characters or less");
+
+        Logger.Log("Checking accessibility on edit de-escalation point");
+        cy.excuteAccessibilityTests();
 
         cy.waitForJavascript();
 
@@ -201,6 +232,9 @@ describe("Editing a case", () =>
             .apply()
             .hasValidationError("Next steps must be 4000 characters or less");
 
+        Logger.Log("Checking accessibility on edit next steps");
+        cy.excuteAccessibilityTests();
+
         cy.waitForJavascript();
 
         editNextStepsPage
@@ -217,6 +251,9 @@ describe("Editing a case", () =>
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Case history must be 4300 characters or less");
+
+        Logger.Log("Checking accessibility on edit case history");
+        cy.excuteAccessibilityTests();
 
         cy.waitForJavascript();
 
@@ -244,6 +281,9 @@ describe("Editing a case", () =>
 
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.getAddToCaseBtn().click();
-        AddToCasePage.hasValidationError("Select an action or decision");
+        AddToCasePage.hasValidationError("Please select an action to add.");
+
+        Logger.Log("Checking accessibility on when a not selecting a case action");
+        cy.excuteAccessibilityTests();
     });
 });

@@ -1,5 +1,7 @@
-﻿using ConcernsCaseWork.Authorization;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -15,10 +17,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ConcernsCaseWork.Service.Cases;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -33,6 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+		private TelemetryClient _telemetryClient;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -47,15 +53,17 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			IRatingModelService ratingModelService,
 			IMeansOfReferralModelService meansOfReferralService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
-			ILogger<IndexPageModel> logger)
+			ILogger<IndexPageModel> logger,
+			TelemetryClient telemetryClient)
 		{
-			_ratingModelService = ratingModelService;
-			_trustModelService = trustModelService;
-			_typeModelService = typeModelService;
-			_cachedService = cachedService;
-			_meansOfReferralService = meansOfReferralService;
-			_claimsPrincipalHelper = claimsPrincipalHelper;
-			_logger = logger;
+			_ratingModelService = Guard.Against.Null(ratingModelService);
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_typeModelService =  Guard.Against.Null(typeModelService);
+			_cachedService = Guard.Against.Null(cachedService);
+			_meansOfReferralService = Guard.Against.Null(meansOfReferralService);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -134,8 +142,15 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					MeansOfReferralId = long.Parse(meansOfReferral)
 				};
-				
+				string json = JsonSerializer.Serialize(createRecordModel);
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "ADD CONCERN",
+					EventDescription = "Adding a concern",
+					EventPayloadJson = json,
+					EventUserName = userState.UserName
+				});
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
@@ -198,7 +213,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
-		
+			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+			{
+				EventName = "ADD CONCERN",
+				EventDescription = "Loading add concern page",
+				EventPayloadJson = "",
+				EventUserName = userState.UserName
+			});
 			return Page();
 		}
 		

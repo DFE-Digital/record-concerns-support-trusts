@@ -39,7 +39,10 @@ describe("Testing the NTI warning letter action", () =>
             .withMonthSent("20")
             .withYearSent("2022")
             .save()
-            .hasValidationError(DateInvalidError.replace("{0}", "Date warning letter sent"))
+            .hasValidationError(DateInvalidError.replace("{0}", "Date warning letter sent"));
+
+        Logger.Log("Checking accessibility on Add NTI warning letter");
+        cy.excuteAccessibilityTests();
 
         createConfiguredNtiWarningLetter();
 
@@ -76,6 +79,9 @@ describe("Testing the NTI warning letter action", () =>
             .hasReason("Cash flow problems")
             .hasReason("Risk of insolvency")
             .hasNotes("This is my notes");
+
+        Logger.Log("Checking accessibility on Edit NTI warning letter");
+        cy.excuteAccessibilityTests();
 
         editNtiWarningLetterPage
             .clearReasons()
@@ -119,6 +125,9 @@ describe("Testing the NTI warning letter action", () =>
             .hasConditionCount(1)
             .hasCondition("Scheme of delegation")
             .hasNotes("My edited notes");
+
+        Logger.Log("Checking accessibility on View NTI warning letter");
+        cy.excuteAccessibilityTests();
     });
 
     it("Should create an empty NTI warning letter", () =>
@@ -179,6 +188,9 @@ describe("Testing the NTI warning letter action", () =>
             .hasValidationError("Please select a reason for closing the warning letter")
             .hasValidationError(NotesError);
 
+        Logger.Log("Checking accessibility on Close NTI warning letter");
+        cy.excuteAccessibilityTests();
+
         closeNtiWarningLetterPage
             .withReason("ConditionsMet")
             .withNotes("This is my final notes")
@@ -213,6 +225,8 @@ describe("Testing the NTI warning letter action", () =>
             .cannotEdit()
             .cannotClose();
 
+        Logger.Log("Checking accessibility on View Closed NTI warning letter");
+        cy.excuteAccessibilityTests();
     });
 
     function createConfiguredNtiWarningLetter()
@@ -232,8 +246,12 @@ describe("Testing the NTI warning letter action", () =>
             .withCondition("Trust financial plan")
             .withCondition("Action plan")
             .withCondition("Lines of accountability")
-            .withCondition("Publishing requirements (compliance with)")
-            .saveConditions();
+            .withCondition("Publishing requirements (compliance with)");
+
+        editNtiWarningLetterPage.saveConditions();
+
+        Logger.Log("Checking accessibility on NTI warning letter conditions");
+        cy.excuteAccessibilityTests();
 
         editNtiWarningLetterPage.save();
     }

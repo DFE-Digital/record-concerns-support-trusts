@@ -10,6 +10,7 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases.Create;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
@@ -31,6 +33,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		private readonly ICreateCaseService _createCaseService;
 		private readonly IUserStateCachedService _cachedService;
 		private const int _notesMaxLength = 2000;
+		private TelemetryClient _telemetryClient;
 		
 		public int NotesMaxLength => _notesMaxLength;
 		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
@@ -51,11 +54,13 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			ICreateCaseService createCaseService, 
 			ILogger<AddSrmaPageModel> logger,
 			IUserStateCachedService cachedService,
-			ITrustService trustService)
+			ITrustService trustService,
+			TelemetryClient telemetryClient)
 		{
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_createCaseService = Guard.Against.Null(createCaseService);
 			_logger = Guard.Against.Null(logger);
+			_telemetryClient = Guard.Against.Null(telemetryClient);
 			_cachedService = Guard.Against.Null(cachedService);
 			_trustService = Guard.Against.Null(trustService);
 		}
@@ -91,13 +96,20 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				var userName = GetUserName();
 				var srma = CreateSrma();
 				
+			
+				
 				var state = await _cachedService.GetData(userName);
 
 				var trust = await _trustService.GetTrustByUkPrn(state.TrustUkPrn);
 				_ = trust ?? throw new NullReferenceException($"Trust information not returned for UKPRN:'{state.TrustUkPrn}', cannot continue with method execution");
-				
 				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName, trust.GiasData.UkPrn, trust.GiasData.CompaniesHouseNumber, srma);
-				
+				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
+				{
+					EventName = "CREATE NON CONCERNS CASE",
+					EventDescription = $"Adding a SRMA {caseUrn}",
+					EventPayloadJson = JsonSerializer.Serialize(srma),
+					EventUserName = userName
+				});
 				return Redirect($"/case/{caseUrn}/management");
 			}
 			catch (Exception ex)

@@ -1,8 +1,12 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using AutoFixture;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,11 +24,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 	[Parallelizable(ParallelScope.All)]
 	public class EditPageModelTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_WithNtiId_Calls_API()
 		{
 			// arrange
-			var ntiId = 123L;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
@@ -32,23 +37,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = 1;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = 1;
+			pageModel.NtiId = 123;
 
 			// act
-			await pageModel.OnGetAsync();
+			var pageResult = await pageModel.OnGetAsync();
 
-			// assert
 			mockNtiModelService.Verify(
-					m => m.GetNtiByIdAsync(ntiId),
+					m => m.GetNtiByIdAsync((long)pageModel.NtiId),
 					Times.Once());
+
+			pageResult.Should().BeAssignableTo<PageResult>();
 		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_WithClosedNti_RedirectsToClosedPage()
 		{
 			// arrange
-			var ntiId = 123L;
+			var ntiId = 123;
 			var caseUrn = 1;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
@@ -60,8 +66,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			mockNtiModelService.Setup(s => s.GetNtiByIdAsync(ntiId)).ReturnsAsync(nti);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NtiId = ntiId;
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -83,7 +89,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnPostAsync_WhenMovingToConditions_StoresModelToCache()
 		{
 			// arrange
-			var caseUrn = 111L;
+			var caseUrn = 111;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
@@ -91,17 +97,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
+			pageModel.CaseUrn = caseUrn;
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 			new Dictionary<string, StringValues>
 			{
 					{ "reason", new StringValues("1") },
 					{ "status", new StringValues("1") },
-					{ "dtr-day", new StringValues("2") },
-					{ "dtr-month", new StringValues("9") },
-					{ "dtr-year", new StringValues("2022") }
 			});
+
+			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
+			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			await pageModel.OnPostAsync(pageModel.ActionForAddConditionsButton);
@@ -117,7 +124,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnPostAsync_WhenClickedContinue_ForNewWarningLetter_CreatesModelInDb()
 		{
 			// arrange
-			var caseUrn = 111L;
+			var caseUrn = 111;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
@@ -125,16 +132,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
+			pageModel.CaseUrn = caseUrn;
+
+			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
+			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 			new Dictionary<string, StringValues>
 			{
 					{ "reason", new StringValues("1") },
 					{ "status", new StringValues("1") },
-					{ "dtr-day", new StringValues("2") },
-					{ "dtr-month", new StringValues("9") },
-					{ "dtr-year", new StringValues("2022") }
 			});
 
 			// act
@@ -150,8 +158,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnPostAsync_WhenClickedContinue_ForExistingWarningLetter_UpdatesModelInDb()
 		{
 			// arrange
-			var caseUrn = 111L;
-			var ntiId = 123L;
+			var caseUrn = 111;
+			var ntiId = 123;
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiWLStatusesService = new Mock<INtiStatusesCachedService>();
@@ -161,18 +169,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiWLStatusesService, mockLogger);
 
-			pageModel.RouteData.Values["urn"] = caseUrn;
-			pageModel.RouteData.Values["NtiId"] = ntiId;
+			pageModel.CaseUrn = caseUrn;
+			pageModel.NtiId = ntiId;
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 			new Dictionary<string, StringValues>
 			{
 					{ "reason", new StringValues("1") },
 					{ "status", new StringValues("1") },
-					{ "dtr-day", new StringValues("2") },
-					{ "dtr-month", new StringValues("9") },
-					{ "dtr-year", new StringValues("2022") }
 			});
+
+			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
+			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
+			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			// act
 			await pageModel.OnPostAsync(pageModel.ActionForContinueButton);
