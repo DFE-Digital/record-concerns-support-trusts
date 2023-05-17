@@ -1,21 +1,36 @@
+import { Logger } from "../../common/logger";
+
 class AddToCasePage {
 
     constructor() {
     }
 
-    getAddToCaseBtn() {
+    public getAddToCaseBtn() {
         return cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
     }
 
-    getCaseActionRadio(option: string) {
-        return cy.get('[value="' + option + '"]');
+    public getCaseActionRadio(option: string) {
+        return cy.getByTestId(option);
     }
 
-    addToCase(option: string) {
+    public addToCase(option: string) {
         this.getCaseActionRadio(option).click();
     }
 
-    hasValidationError(value: string) {
+    public hasActions(actions: Array<string>): this
+    {
+        Logger.Log(`Case has available actions ${actions.join(",")}`);
+
+        cy.get('.govuk-radios__label')
+            .should("have.length", actions.length)
+            .each(($elem, index) => {
+                expect($elem.text().trim()).to.equal(actions[index]);
+            });
+
+        return this;
+    }
+
+    public hasValidationError(value: string) {
         cy.getById("errorSummary").should("contain.text", value);
 
         return this;
