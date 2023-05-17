@@ -44,11 +44,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-				
 				var decision = await _decisionService.GetDecision(CaseUrn, DecisionId);
 
 				if (!IsDecisionEditable(decision))

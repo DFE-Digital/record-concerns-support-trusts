@@ -164,19 +164,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 		private static RadioButtonsUiComponent BuildDecisionOutcomeStatusComponent(int? selectedId = null)
 		{
-			var enumValues = new List<DecisionOutcomeStatus>()
-			{
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.Approved,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.ApprovedWithConditions,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.PartiallyApproved,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.Withdrawn,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.Declined
-			};
-
-			var radioItems = enumValues.Select(v =>
-			{
-				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
-			}).ToArray();
+			var radioItems = Enum.GetValues(typeof(DecisionOutcomeStatus))
+				.Cast<DecisionOutcomeStatus>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+				}).ToArray();
 
 			return new(ElementRootId: "decision-outcome-status", Name: nameof(DecisionOutcomeStatus), "What was the decision outcome?")
 			{
@@ -190,22 +183,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 		private static RadioButtonsUiComponent BuildDecisionAuthorizerComponent(int? selectedId = null)
 		{
-			var enumValues = new List<DecisionOutcomeAuthorizer>()
-			{
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.G7,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.G6,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.RegionalDirector,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.DeputyDirector,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.CounterSigningDeputyDirector,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.Director,
-				API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.Minister,
-
-			};
-
-			var radioItems = enumValues.Select(v =>
-			{
-				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
-			}).ToArray();
+			var radioItems = Enum.GetValues(typeof(DecisionOutcomeAuthorizer))
+				.Cast<DecisionOutcomeAuthorizer>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+				}).ToArray();
 
 			return new(ElementRootId: "decision-outcome-authorizer", Name: nameof(DecisionOutcomeAuthorizer), "Who authorised this decision?")
 			{
