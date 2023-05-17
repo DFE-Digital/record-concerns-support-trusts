@@ -95,8 +95,21 @@
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right"></td>
                         </tr>
+                        
+                    @if (!Model.CaseModel.IsConcernsCase())
+                    {
+	                    <tr class="govuk-table__row">
+		                    <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+		                    <td class="govuk-table__cell" data-testid="concern_Field">
 
-                        @if (Model.CaseModel.IsConcernsCase())
+                                    <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/add" aria-label="Add Concern">
+				                    Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
+			                    </a>
+		                    </td>
+		                    <td class="govuk-table__cell govuk-table__header__right"></td>
+	                    </tr>
+                    }
+                    @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
