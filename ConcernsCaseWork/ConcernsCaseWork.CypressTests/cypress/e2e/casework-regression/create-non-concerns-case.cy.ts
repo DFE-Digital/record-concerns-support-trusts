@@ -5,6 +5,11 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import { SelectCaseTypePage } from "cypress/pages/createCase/selectCaseTypePage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
+import CaseManagementPage from "../../pages/caseMangementPage";
+import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
+import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 
 describe("Creating a case", () => {
     let email: string;
@@ -13,6 +18,10 @@ describe("Creating a case", () => {
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
     const createCasePage = new CreateCasePage();
+
+    const editSrmaPage = new EditSrmaPage();
+    const viewSrmaPage = new ViewSrmaPage();
+
     beforeEach(() => {
         cy.login();
         cy.visit(Cypress.env('url') + '/case/create');
@@ -33,7 +42,7 @@ describe("Creating a case", () => {
         Logger.Log("You must select a case error");
         selectCaseTypePage
             .continue()
-            .hasValidationError("Select Case type");
+            .hasValidationError("Select case type");
 
         Logger.Log("Checking accessibility on select case type");
         cy.excuteAccessibilityTests();
@@ -68,6 +77,40 @@ describe("Creating a case", () => {
             .hasCaseHistory(caseHistoryData)
             .hasCaseOwner(name);
 
+        Logger.Log("Verify case actions for non concerns");
+        CaseManagementPage.getAddToCaseBtn().click();
+        
+        AddToCasePage.hasActions([
+            "Decision", 
+            "SRMA (School Resource Management Adviser)", 
+            "TFF (Trust Financial Forecast)"
+        ]);
 
+        Logger.Log("Create an SRMA on non concerns");
+
+        AddToCasePage.addToCase('Srma')
+        AddToCasePage.getAddToCaseBtn().click();
+
+        editSrmaPage
+            .withStatus("TrustConsidering")
+            .withDayTrustContacted("05")
+            .withMonthTrustContacted("06")
+            .withYearTrustContacted("2022")
+            .withNotes("This is my notes")
+            .save();
+
+        actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("Trust considering")
+				row.select();
+			});
+
+        viewSrmaPage
+            .hasStatus("Trust considering")
+            .hasDateTrustContacted("05 June 2022")
+            .hasNotes("This is my notes");
     });
 });

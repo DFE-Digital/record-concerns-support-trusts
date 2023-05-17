@@ -200,8 +200,8 @@ describe("Testing case action NTI", () =>
         Logger.Log("Try to add second nti to case should result in an error");
         addNtiToCase();
 
-        cy.getByTestId("error-text")
-            .should("contain.text", "There is already an open NTI action linked to this case. Please resolve that before opening another one.");
+        AddToCasePage
+            .hasValidationError("There is already an open NTI action linked to this case. Please resolve that before opening another one.");
     });
 
     it("should be able to cancel an NTI", () =>
