@@ -29,9 +29,10 @@ describe("User can add decisions to an existing case", () => {
         AddToCasePage.getAddToCaseBtn().click();
 	});
 
-	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
+	it("Creating, editing, validating then viewing a decision", function () {
 
-		Logger.Log("Checking an invalid date");
+		Logger.Log("Validating Decision");
+
 		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
@@ -41,7 +42,6 @@ describe("User can add decisions to an existing case", () => {
 				DateInvalidError.replace("{0}", "Date ESFA received request")
 			);
 
-		Logger.Log("Checking an incomplete date with notes exceeded");
 		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("12")
@@ -142,7 +142,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
 
-	it("Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
+	it("Closing decision", function () {
 
 		Logger.Log("Adding note on the decision that will be closing ");
 		editDecisionPage
@@ -198,6 +198,8 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
 		viewDecisionPage.closeDecision();
+
+		closeDecisionPage.hasFinaliseSupportingNotes("This is a test");
 
 		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
@@ -258,7 +260,7 @@ describe("User can add decisions to an existing case", () => {
 		cy.excuteAccessibilityTests();
 	});
 
-	it("When Decisions is empty, View Behavior", function () {
+	it("When Decision is empty", function () {
 		Logger.Log("Creating Empty Decision");
 		editDecisionPage.save();
 
@@ -273,6 +275,21 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
+		Logger.Log("Create Decision Outcome with only status");
+		viewDecisionPage
+			.createDecisionOutcome();
+
+		decisionOutcomePage
+			.withDecisionOutcomeStatus("Withdrawn")
+			.saveDecisionOutcome();
+
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
+
 		Logger.Log("Viewing Empty Decision");
 		viewDecisionPage
 			.hasDateOpened(toDisplayDate(now))
@@ -283,96 +300,16 @@ describe("User can add decisions to an existing case", () => {
 			.hasDateESFAReceivedRequest("Empty")
 			.hasTotalAmountRequested("£0.00")
 			.hasTypeOfDecision("Empty")
-			.hasSupportingNotes("Empty");
+			.hasSupportingNotes("Empty")
+			.hasDecisionOutcomeStatus("Withdrawn")
+			.hasBusinessArea("Empty")
+			.hasMadeDate("Empty")
+			.hasEffectiveFromDate("Empty")
+			.hasTotalAmountApproved("£0.00")
+			.hasAuthoriser("Empty");
 	});
 
-	it("Edit a decision outcome ", () => {
-		Logger.Log("Creating Empty Decision");
-		editDecisionPage
-			.save();
-
-		actionSummaryTable
-			.getOpenAction("Decision: No Decision Types")
-			.then(row =>
-			{
-				row.select();
-			});
-
-		viewDecisionPage
-			.createDecisionOutcome();
-
-		Logger.Log("Create Decision Outcome");
-		decisionOutcomePage
-			.withDecisionOutcomeStatus("Withdrawn")
-			.withTotalAmountApproved("1,000")
-			.withDateDecisionMadeDay("3")
-			.withDateDecisionMadeMonth("5")
-			.withDateDecisionMadeYear("2022")
-			.withDecisionTakeEffectDay("6")
-			.withDecisionTakeEffectMonth("8")
-			.withDecisionTakeEffectYear("2022")
-			.withDecisionAuthouriser("DeputyDirector")
-			.withBusinessArea("BusinessPartner")
-			.withBusinessArea("Capital")
-			.withBusinessArea("FinancialProviderMarketOversight")
-			.saveDecisionOutcome();
-
-		actionSummaryTable
-			.getOpenAction("Decision: No Decision Types")
-			.then(row =>
-			{
-				row.select();
-			});
-
-		viewDecisionPage
-			.editDecisionOutcome();
-
-		Logger.Log("Verify Existing Values");
-		decisionOutcomePage
-			.hasDecisionOutcomeStatus("Withdrawn")
-			.hasTotalAmountApproved("1,000")
-			.hasDecisionMadeDay("3")
-			.hasDecisionMadeMonth("5")
-			.hasDecisionMadeYear("2022")
-			.hasDateEffectiveFromDay("6")
-			.hasDateEffectiveFromMonth("8")
-			.hasDateEffectiveFromYear("2022")
-			.hasDecisionAuthouriser("DeputyDirector")
-			.hasBusinessArea("BusinessPartner")
-			.hasBusinessArea("Capital")
-			.hasBusinessArea("FinancialProviderMarketOversight");
-
-		Logger.Log("Checking accessibility on Edit Decision Outcome");
-		cy.excuteAccessibilityTests();
-
-		Logger.Log("Edit Decision Outcome");
-		decisionOutcomePage
-			.withDecisionOutcomeStatus("Approved")
-			.withTotalAmountApproved("1,000,000")
-			.withDateDecisionMadeDay("12")
-			.withDateDecisionMadeMonth("11")
-			.withDateDecisionMadeYear("2023")
-			.withDecisionTakeEffectDay("14")
-			.withDecisionTakeEffectMonth("1")
-			.withDecisionTakeEffectYear("2024")
-			.withDecisionAuthouriser("Minister")
-			.saveDecisionOutcome();
-
-
-		Logger.Log("View Updated Decision Outcome");
-		viewDecisionPage
-			.hasDecisionOutcomeStatus("Approved")
-			.hasTotalAmountApproved("1,000,000")
-			.hasMadeDate("12 November 2023")
-			.hasEffectiveFromDate("14 January 2024")
-			.hasAuthoriser("Minister")
-			.hasBusinessArea("Business Partner")
-			.hasBusinessArea("Capital")
-			.hasBusinessArea("FPMO (Financial Provider Market Oversight)");
-
-	})
-
-	it("Create a decision outcome, checking validation and view it was created correctly", () => {
+	it("Create, edit and view a decision outcome, checking validation", () => {
 		Logger.Log("Creating Empty Decision");
 		editDecisionPage
 			.save();
@@ -404,8 +341,8 @@ describe("User can add decisions to an existing case", () => {
 			.withDecisionTakeEffectMonth("22")
 			.withDecisionTakeEffectYear("2023")
 			.saveDecisionOutcome()
-			.hasValidationError(DateInvalidError.replace("{0}", "Date decision made"))
-			.hasValidationError(DateInvalidError.replace("{0}", "Date decision effective"))
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision was made"))
+			.hasValidationError(DateInvalidError.replace("{0}", "Date decision takes effect"))
 
 		Logger.Log("Checking accessibility on Add Decision Outcome");
 		cy.excuteAccessibilityTests();
@@ -419,8 +356,8 @@ describe("User can add decisions to an existing case", () => {
 			.withDecisionTakeEffectMonth("06")
 			.withDecisionTakeEffectYear("")
 			.saveDecisionOutcome()
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision made"))
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision effective"));
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision was made"))
+			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision takes effect"));
 
 		Logger.Log("Create Decision Outcome");
 		decisionOutcomePage
@@ -448,50 +385,62 @@ describe("User can add decisions to an existing case", () => {
 		Logger.Log("View decision outcome")
 
 		viewDecisionPage
+			.hasDecisionOutcomeStatus("Approved with conditions")
+			.hasTotalAmountApproved("£50,000")
+			.hasMadeDate("24 November 2022")
+			.hasEffectiveFromDate("11 December 2023")
 			.hasBusinessArea("Business Partner")
 			.hasBusinessArea("Capital")
 			.hasBusinessArea("FPMO (Financial Provider Market Oversight)")
-			.hasDecisionOutcomeStatus("Approved with conditions")
-			.hasMadeDate("24 November 2022")
-			.hasEffectiveFromDate("11 December 2023")
-			.hasTotalAmountApproved("£50,000")
 			.hasAuthoriser("Deputy Director")
 			.cannotCreateAnotherDecisionOutcome();
-	});
-
-	it("Create a decision outcome with only status, should set status but all other labels should be empty", () => {
-		Logger.Log("Creating Empty Decision");
-		editDecisionPage
-			.save();
-
-		actionSummaryTable
-			.getOpenAction("Decision: No Decision Types")
-			.then(row =>
-			{
-				row.select();
-			});
-
+		
+		Logger.Log("Edit decision outcome")
 		viewDecisionPage
-			.createDecisionOutcome();
+			.editDecisionOutcome();
 
-		Logger.Log("Create Decision Outcome with only status");
+		Logger.Log("Verify Existing Values");
 		decisionOutcomePage
-			.withDecisionOutcomeStatus("Withdrawn")
+			.hasDecisionOutcomeStatus("ApprovedWithConditions")
+			.hasTotalAmountApproved("50,000")
+			.hasDecisionMadeDay("24")
+			.hasDecisionMadeMonth("11")
+			.hasDecisionMadeYear("2022")
+			.hasDateEffectiveFromDay("11")
+			.hasDateEffectiveFromMonth("12")
+			.hasDateEffectiveFromYear("2023")
+			.hasDecisionAuthouriser("DeputyDirector")
+			.hasBusinessArea("BusinessPartner")
+			.hasBusinessArea("Capital")
+			.hasBusinessArea("FinancialProviderMarketOversight");
+
+		Logger.Log("Checking accessibility on Edit Decision Outcome");
+		cy.excuteAccessibilityTests();
+
+		Logger.Log("Edit Decision Outcome");
+		decisionOutcomePage
+			.withDecisionOutcomeStatus("Approved")
+			.withTotalAmountApproved("1,000,000")
+			.withDateDecisionMadeDay("12")
+			.withDateDecisionMadeMonth("05")
+			.withDateDecisionMadeYear("2023")
+			.withDecisionTakeEffectDay("14")
+			.withDecisionTakeEffectMonth("1")
+			.withDecisionTakeEffectYear("2024")
+			.withDecisionAuthouriser("Minister")
+			.deselectAllBusinessAreas()
+			.withBusinessArea("Funding")
+			.withBusinessArea("RegionsGroup")
 			.saveDecisionOutcome();
 
-		actionSummaryTable
-			.getOpenAction("Decision: No Decision Types")
-			.then(row =>
-			{
-				row.select();
-			});
-
+		Logger.Log("View Updated Decision Outcome");
 		viewDecisionPage
-			.hasBusinessArea("Empty")
-			.hasDecisionOutcomeStatus("Withdrawn")
-			.hasMadeDate("Empty")
-			.hasEffectiveFromDate("Empty")
-			.hasTotalAmountApproved("£0.00")
-			.hasAuthoriser("Empty");
+			.hasDecisionOutcomeStatus("Approved")
+			.hasTotalAmountApproved("1,000,000")
+			.hasMadeDate("12 May 2023")
+			.hasEffectiveFromDate("14 January 2024")
+			.hasAuthoriser("Minister")
+			.hasBusinessArea("Regions Group")
+			.hasBusinessArea("Funding");
 	});
 });
