@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Services.Cases;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -39,6 +41,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
+		private ICaseModelService _caseModelService;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -46,6 +49,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		public TrustAddressModel TrustAddress { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
+		public CaseModel CaseModel { get; private set; }
+
 
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
@@ -54,7 +59,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			IMeansOfReferralModelService meansOfReferralService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient, 
+			ICaseModelService caseModelService)
 		{
 			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -64,6 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_caseModelService = Guard.Against.Null(caseModelService);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -202,7 +209,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private async Task<ActionResult> LoadPage()
 		{
 			var userState = await GetUserState();
-
 			var trustUkPrn = userState.TrustUkPrn;
 		
 			if (string.IsNullOrEmpty(trustUkPrn))
@@ -213,6 +219,11 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
+			var caseUrnValue = RouteData.Values["urn"];
+			long caseUrn=0;
+			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
+				throw new Exception("CaseUrn is null or invalid to parse");
+			CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{
 				EventName = "ADD CONCERN",
