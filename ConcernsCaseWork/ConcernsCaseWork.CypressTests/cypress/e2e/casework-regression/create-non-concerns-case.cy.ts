@@ -42,7 +42,7 @@ describe("Creating a case", () => {
         Logger.Log("You must select a case error");
         selectCaseTypePage
             .continue()
-            .hasValidationError("Select Case type");
+            .hasValidationError("Select case type");
 
         Logger.Log("Checking accessibility on select case type");
         cy.excuteAccessibilityTests();
