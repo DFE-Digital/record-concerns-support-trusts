@@ -268,7 +268,7 @@ export class ViewSrmaPage {
     {
         Logger.Log("Resolving the SRMA");
 
-        cy.getById("complete-decline-srma-button").click();
+        cy.getByTestId("complete-srma-button").click();
 
         return this;
     }
@@ -371,6 +371,6 @@ export class ViewSrmaPage {
     }
 
     private getDecline() {
-        return cy.getById("complete-decline-srma-button");
+        return cy.getByTestId("decline-srma-button");
     }
 }
