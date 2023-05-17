@@ -87,13 +87,6 @@ public class SelectTrustPageModel : AbstractPageModel
 		CreateCaseStep = CreateCaseSteps.SearchForTrust;
 	}
 
-	private async Task RestoreTrustUkprnFromCache()
-	{
-		ModelState.ClearValidationState(nameof(FindTrustModel.SelectedTrustUkprn));
-		FindTrustModel.SelectedTrustUkprn = (await GetUserState()).TrustUkPrn;
-		ModelState.SetModelValue(nameof(FindTrustModel.SelectedTrustUkprn), new ValueProviderResult(FindTrustModel.SelectedTrustUkprn));
-	}
-
 	public async Task<ActionResult> OnPostSelectedTrust()
 	{
 		_logger.LogMethodEntered();
@@ -122,11 +115,10 @@ public class SelectTrustPageModel : AbstractPageModel
 			return HandleExceptionForAjaxCall(ex);
 		}
 
-
 		async Task CacheTrustUkPrn()
 		{
 			var userName = GetUserName();
-			var userState = await _cachedUserService.GetData(userName);
+			var userState = await _cachedUserService.GetData(userName) ??  new UserState(GetUserName());
 			userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 			await _cachedUserService.StoreData(userName, userState);
 		}
@@ -163,8 +155,6 @@ public class SelectTrustPageModel : AbstractPageModel
 	}
 
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
-
-	async Task<UserState> GetUserState() => await _cachedUserService.GetData(GetUserName());
 
 	public enum CaseTypes
 	{
