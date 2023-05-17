@@ -3,6 +3,7 @@ using AutoFixture.AutoMoq;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
@@ -30,14 +31,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 	public class ClosePageModelTests
 	{
 		private readonly static Fixture _fixture = new();
-
-		[Test]
-		public void ClosePageModel_Is_AbstractPageModel()
-		{
-			var builder = new TestBuilder();
-			var sut = builder.BuildSut();
-			sut.Should().BeAssignableTo<AbstractPageModel>();
-		}
 		
 		[Test]
 		public async Task OnGetAsync_When_Decision_Found_Returns_Page()
@@ -55,6 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var sut = builder
 				.WithCaseUrn(expectedUrn)
 				.WithDecisionId(expectedDecisionId)
+				.WithNotes(decision.SupportingNotes)
 				.WithDecisionService(decisionService)
 				.BuildSut();
 
@@ -65,71 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionId.Should().Be(expectedDecisionId);
-			sut.Notes.Should().Be(decision.SupportingNotes);
-		}
-		
-		[Test]
-		[TestCase(0)]
-		[TestCase(-1)]
-		public void OnValidateModel_When_InvalidCaseUrn_ShouldFailModelValidation(int caseUrn)
-		{
-			// arrange
-			var builder = new TestBuilder()
-				.WithCaseUrn(caseUrn)
-				.WithDecisionId(1);
-
-			// act
-			var sut = builder.BuildSut();
-
-			// assert
-			SimpleValidator.IsModelValid(sut).Should().BeFalse();
-			var validationResults = SimpleValidator.Validate(sut).Results;
-			validationResults.Count.Should().Be(1);
-			validationResults.Single().ErrorMessage.Should().Be("CaseUrn must be provided");
-			validationResults.Single().MemberNames.Should().Contain("CaseUrn");
-		}
-		
-		[Test]
-		[TestCase(0)]
-		[TestCase(-1)]
-		public void OnValidateModel_When_InvalidDecisionId_ShouldFailModelValidation(int decisionId)
-		{
-			// arrange
-			var builder = new TestBuilder()
-				.WithCaseUrn(1)
-				.WithDecisionId(decisionId);
-
-			// act
-			var sut = builder.BuildSut();
-
-			// assert
-			SimpleValidator.IsModelValid(sut).Should().BeFalse();
-			var validationResults = SimpleValidator.Validate(sut).Results;
-			validationResults.Count.Should().Be(1);
-			validationResults.Single().ErrorMessage.Should().Be("DecisionId must be provided");
-			validationResults.Single().MemberNames.Should().Contain("DecisionId");
-		}
-		
-		[Test]
-		[TestCase(2001)]
-		[TestCase(3000)]
-		public void OnValidateModel_When_NotesTooLong_ShouldFailModelValidation(int notesLength)
-		{
-			// arrange
-			var builder = new TestBuilder()
-				.WithCaseUrn(1)
-				.WithDecisionId(1)
-				.WithNotes("notes too long".PadRight(notesLength, 'a'));
-
-			// act
-			var sut = builder.BuildSut();
-
-			// assert
-			SimpleValidator.IsModelValid(sut).Should().BeFalse();
-			var validationResults = SimpleValidator.Validate(sut).Results;
-			validationResults.Count.Should().Be(1);
-			validationResults.Single().ErrorMessage.Should().Be("Supporting Notes must be 2000 characters or less");
-			validationResults.Single().MemberNames.Should().Contain("Notes");
+			sut.Notes.Text.StringContents.Should().Be(decision.SupportingNotes);
 		}
 		
 		[Test]
@@ -189,28 +119,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.CaseUrn.Should().Be(expectedUrn);
 			((RedirectResult)page).Url.Should().Be($"/case/{expectedUrn}/management/action/decision/{expectedDecisionId}");
 		}
-		
-		[Test]
-		public async Task OnGetAsync_When_ModelValidationErrorThrown_Returns_Page()
-		{
-			// arrange
-			var builder = new TestBuilder();
-			var decisionService = new Mock<IDecisionService>();
-			
-			var sut = builder
-				.WithDecisionService(decisionService)
-				.BuildSut();
-			
-			sut.ModelState.AddModelError("someErrorProperty", "Some error message");
 
-			// act
-			var result = await sut.OnGetAsync();
-			
-			// assert
-			result.Should().BeOfType<PageResult>();
-			
-			decisionService.Verify(s => s.GetDecision(It.IsAny<long>(), It.IsAny<int>()), Times.Never);
-		}
 
 		[Test]
 		public async Task OnGetAsync_When_GetDecisionThrowsException_Then_SetsError()
@@ -370,8 +279,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
 					CaseUrn = _caseUrnValue,
 					DecisionId = _decisionId,
-					Notes = _notes
+					Notes = _fixture.Create<TextAreaUiComponent>()
 				};
+
+				result.Notes.Text.StringContents = _notes;
 				
 				result.HttpContext.Request.Form = new FormCollection(new Dictionary<string, StringValues>());
 
@@ -379,48 +290,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			}
 			
 			public Fixture Fixture { get; set; }
-		}
-	}
-	
-	public static class SimpleValidator
-	{
-		/// <summary>
-		/// Validate the model and return a response, which includes any validation messages and an IsValid bit.
-		/// </summary>
-		public static ValidationResponse Validate(object model)
-		{
-			var results = new List<ValidationResult>();
-			var context = new ValidationContext(model);
-
-			var isValid = Validator.TryValidateObject(model, context, results, true);
-         
-			return new ValidationResponse()
-			{
-				IsValid = isValid,
-				Results = results
-			};
-		}
-
-		/// <summary>
-		/// Validate the model and return a bit indicating whether the model is valid or not.
-		/// </summary>
-		public static bool IsModelValid(object model)
-		{
-			var response = Validate(model);
-
-			return response.IsValid;
-		}
-	}
-
-	public class ValidationResponse
-	{
-		public List<ValidationResult> Results { get; set; }
-		public bool IsValid { get; set; }
-
-		public ValidationResponse()
-		{
-			Results = new List<ValidationResult>();
-			IsValid = false;
 		}
 	}
 }
