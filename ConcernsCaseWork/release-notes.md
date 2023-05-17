@@ -1,3 +1,12 @@
+## 21.0.0
+
+* Amended Case Create flow to allow for non concerns
+* Added logging of page views to App Insights
+* Improved error messages by adding create context to guide the users across a number of pages
+* Added hyperlinks to error message summaries 
+* Added feature flag for non concerns page
+* Added ability to show SRMA dates within summary table
+---
 ## 20.0.0
 
 * Improved the hint text for reassign case owner to make instructions clearer
