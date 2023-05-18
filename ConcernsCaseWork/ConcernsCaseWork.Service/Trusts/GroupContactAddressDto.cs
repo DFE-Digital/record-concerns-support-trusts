@@ -26,6 +26,6 @@ namespace ConcernsCaseWork.Service.Trusts
 		public GroupContactAddressDto(string street, string locality, string additionalLine, string town, string county, string postcode) => 
 			(Street, Locality, AdditionalLine, Town, County, Postcode) = (street, locality, additionalLine, town, county, postcode);
 		
-		protected GroupContactAddressDto() { }
+		public GroupContactAddressDto() { }
 	}
 }

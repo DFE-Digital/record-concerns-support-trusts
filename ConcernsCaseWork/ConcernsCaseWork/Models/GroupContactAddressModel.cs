@@ -37,7 +37,11 @@ namespace ConcernsCaseWork.Models
 				return sb.ToString();
 			}
 		}
-		
+
+		public GroupContactAddressModel()
+		{ 
+		}
+
 		public GroupContactAddressModel(string street, string locality, string additionalLine, string town, string county, string postcode) => 
 			(Street, Locality, AdditionalLine, Town, County, Postcode) = (street, locality, additionalLine, town, county, postcode);
 	}
