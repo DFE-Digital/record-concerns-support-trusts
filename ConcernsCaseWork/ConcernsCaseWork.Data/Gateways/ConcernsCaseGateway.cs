@@ -14,8 +14,17 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public ConcernsCase SaveConcernsCase(ConcernsCase concernsCase)
         {
-            _concernsDbContext.ConcernsCase.Update(concernsCase);
-            _concernsDbContext.SaveChanges();
+	        try
+	        {
+				_concernsDbContext.ConcernsCase.Update(concernsCase);
+				_concernsDbContext.SaveChanges();
+	        }
+	        catch (Exception e)
+	        {
+		       
+		        throw;
+	        }
+            
 
             return concernsCase;
         }

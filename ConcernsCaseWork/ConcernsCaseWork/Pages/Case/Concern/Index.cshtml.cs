@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					throw new Exception("Missing form values");
 				
 				string typeId;
-				
+				await GetCaseModel();
 				// Form
 				var type = Request.Form["type"].ToString();
 				var subType = Request.Form["sub-type"].ToString();
@@ -161,8 +161,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
-				
+				if (!CaseModel.IsConcernsCase())
+				{
+					return RedirectToPage("/case/concern/add");
+				}
 				return RedirectToPage("add");
+
+				return RedirectToPage();
 			}
 			catch (Exception ex)
 			{
@@ -219,11 +224,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
-			var caseUrnValue = RouteData.Values["urn"];
-			long caseUrn=0;
-			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-			CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+			await GetCaseModel();
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{
 				EventName = "ADD CONCERN",
@@ -233,7 +234,18 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			});
 			return Page();
 		}
-		
+
+		private async Task GetCaseModel()
+		{
+			var caseUrnValue = RouteData.Values["urn"];
+			long caseUrn = 0;
+			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0) ;
+			if (caseUrn > 0)
+			{
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+			}
+		}
+
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData(GetUserName());

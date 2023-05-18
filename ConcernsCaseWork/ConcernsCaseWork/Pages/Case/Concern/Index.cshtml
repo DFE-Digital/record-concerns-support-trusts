@@ -1,4 +1,4 @@
-﻿@page "/case/concern/{urn:long}"
+﻿@page "/case/concern/{urn:long?}"
 @using ConcernsCaseWork.Constants;
 @using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -6,21 +6,32 @@
 @model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
 
 @{
-	if (Model.CaseModel.IsConcernsCase())
+	if (Model?.CaseModel?.Urn>0)
 	{
-		ViewData["Title"] = "New Case Concern";
+		ViewData["Title"] = "Add to Case";
 	}
 	else
 	{
-        ViewData["Title"] = "Add to Case";
+		ViewData["Title"] = "New Case Concern";
+		
 	}
+	
 	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
+	@{
+		if (Model?.CaseModel?.Urn > 0)
+		{
+			<span class="govuk-caption-l">Add to case</span>
+		}
+		else
+		{
+			<span class="govuk-caption-l">Create case</span>
+		}
+	}
 	
-	<span class="govuk-caption-l">Create case</span>
 	<h1 class="govuk-heading-l">Add concern</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
