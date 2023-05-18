@@ -11,10 +11,17 @@ namespace ConcernsCaseWork.Service.Trusts
 	public sealed class TrustService : TramsAbstractService, ITrustService
 	{
 		private readonly ILogger<TrustService> _logger;
+		private readonly IFakeTrustService _fakeTrustService;
 
-		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public TrustService(
+			IHttpClientFactory clientFactory, 
+			ILogger<TrustService> logger, 
+			ICorrelationContext correlationContext, 
+			IClientUserInfoService userInfoService,
+			IFakeTrustService fakeTrustService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
+			_fakeTrustService = fakeTrustService;
 		}
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -44,6 +51,14 @@ namespace ConcernsCaseWork.Service.Trusts
 			try
 			{
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
+
+				var fakeTrust = _fakeTrustService.GetTrustByUkPrn(ukPrn);
+
+				if (fakeTrust != null)
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn Found fake trust, returning {fakeTrust.GiasData.GroupName}");
+					return fakeTrust;
+				}
 
 				// Create a request
 				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
@@ -86,6 +101,14 @@ namespace ConcernsCaseWork.Service.Trusts
 			try
 			{
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
+
+				var fakeTrust = _fakeTrustService.GetTrustsByPagination(trustSearch.GroupName);
+
+				if (fakeTrust?.Trusts.Count > 0)
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination Found fake trust, returning {fakeTrust.Trusts.Count} results");
+					return fakeTrust;
+				}
 
 				// Create a request
 				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
