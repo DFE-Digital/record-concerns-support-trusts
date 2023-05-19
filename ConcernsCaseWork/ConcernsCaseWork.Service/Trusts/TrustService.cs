@@ -104,7 +104,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				var fakeTrust = _fakeTrustService.GetTrustsByPagination(trustSearch.GroupName);
 
-				if (fakeTrust?.Trusts.Count > 0)
+				if (fakeTrust != null)
 				{
 					_logger.LogInformation($"TrustService::GetTrustsByPagination Found fake trust, returning {fakeTrust.Trusts.Count} results");
 					return fakeTrust;
