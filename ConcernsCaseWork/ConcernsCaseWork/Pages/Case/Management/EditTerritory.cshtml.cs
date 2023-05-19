@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -24,13 +27,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public string ReferrerUrl => $"/case/{CaseUrn}/management";
 		
 		[BindProperty(SupportsGet = true, Name="Urn")]
-		[Required(ErrorMessage = "CaseUrn is null or invalid to parse")]
-		public int? CaseUrn { get; set; }
-		
-		[BindProperty(Name="territory")]
-		[Required(ErrorMessage = "An SFSO territory must be selected")]
-		public Territory? Territory { get; set; }
-		
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent Territory { get; set; }
+
 		public EditTerritoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<EditTerritoryPageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -50,14 +51,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 				
 				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
-				Territory = caseModel.Territory;
-				TempData["SelectedTerritory"] = Territory.ToString();
+				LoadPageComponents(caseModel);
+				
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
 			
 			return Page();
@@ -71,24 +71,36 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				if (!ModelState.IsValid)
 				{
+					LoadPageComponents();
 					return Page();	
 				}
 				
 				var userName = GetUserName();
-				await _caseModelService.PatchTerritory((int)CaseUrn, userName, Territory);
+				await _caseModelService.PatchTerritory((int)CaseUrn, userName, (Territory)Territory.SelectedId);
 					
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
 		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
+
+		private void LoadPageComponents(CaseModel model)
+		{
+			LoadPageComponents();
+
+			Territory.SelectedId = model.Territory.HasValue ? (int)model.Territory.Value : null;
+		}
+
+		public void LoadPageComponents()
+		{
+			Territory = CaseComponentBuilder.BuildTerritory(nameof(Territory), Territory?.SelectedId);
+		}
 	}
 }

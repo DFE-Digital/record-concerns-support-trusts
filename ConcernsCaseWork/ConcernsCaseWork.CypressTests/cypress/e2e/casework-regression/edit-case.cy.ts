@@ -133,13 +133,13 @@ describe("Editing a case", () =>
             .editTerritory();
 
         addTerritoryPage
-            .hasTerritory("North_And_Utc__North_East");
+            .hasTerritory("North and UTC - North East");
 
         Logger.Log("Checking accessibility on edit territory");
         cy.excuteAccessibilityTests();
 
         addTerritoryPage
-            .withTerritory("North_And_Utc__North_West")
+            .withTerritory("North and UTC - North West")
             .apply();
 
 

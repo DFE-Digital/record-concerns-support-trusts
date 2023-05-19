@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -32,10 +34,9 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public CreateCaseModel CreateCaseModel { get; private set; }
-		
+
 		[BindProperty]
-		[Required(ErrorMessage = "An SFSO Territory must be selected")]
-		public Territory? Territory { get; set; }
+		public RadioButtonsUiComponent Territory { get; set; }
 
 		public SelectTerritoryPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
@@ -61,8 +62,7 @@ namespace ConcernsCaseWork.Pages.Case
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 				
 				var userState = await GetUserState();
-				userState.CreateCaseModel.Territory = Territory;
+				userState.CreateCaseModel.Territory = (Territory)Territory.SelectedId;
 				await _userStateCache.StoreData(GetUserName(), userState);
 
 				if (userState.CreateCaseModel.CreateRecordsModel.Count == 0)
@@ -91,8 +91,7 @@ namespace ConcernsCaseWork.Pages.Case
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 			
 			return Page();
@@ -100,6 +99,8 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<ActionResult> OnGetCancel()
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
 				UserState userState;
@@ -143,6 +144,9 @@ namespace ConcernsCaseWork.Pages.Case
 				EventPayloadJson = "",
 				EventUserName = userState.UserName
 			});
+
+			Territory = CaseComponentBuilder.BuildTerritory(nameof(Territory), Territory?.SelectedId);
+
 			return Page();
 		}
 		
