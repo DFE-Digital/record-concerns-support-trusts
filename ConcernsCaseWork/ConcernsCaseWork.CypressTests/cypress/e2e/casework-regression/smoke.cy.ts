@@ -38,7 +38,7 @@ import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 
 describe("Testing closing of cases when there are case actions and concerns", () => {
     let caseId: string;
-    let trustName: string;
+    let trustName: string = "Production Smoke Test Trust";
     let now: Date;
 
     const createCasePage = new CreateCasePage();
@@ -85,7 +85,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Create a case");
         createCasePage
             .createCase()
-            .withTrustName("My Test Trust 1")
+            .withTrustName(trustName)
             .selectOption()
             .confirmOption();
 
@@ -99,7 +99,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         Logger.Log("Check Concern details are correctly populated");
         createConcernPage
-            .hasTrustSummaryDetails("My Test Trust 1")
+            .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
             .nextStep();
         
@@ -110,7 +110,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
         addTerritoryPage
-            .hasTrustSummaryDetails("My Test Trust 1")
+            .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
             .hasRiskToTrust("Red Plus")
 
@@ -121,7 +121,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
         addConcernDetailsPage
-            .hasTrustSummaryDetails("My Test Trust 1")
+            .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
             .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
@@ -136,15 +136,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .withCaseHistory("This is the case history")
             .createCase();
 
-        CaseManagementPage.getTrust()
-        .then((trust: string) => {
-            trustName = trust.trim();
-            return CaseManagementPage.getCaseIDText()
-        })
-        .then((id: string) =>
-        {
+        CaseManagementPage.getCaseIDText()
+        .then((id: string) => {
             caseId = id;
-        });
+        })
     });
 
     describe("When we have case actions and concerns that have not been closed", () => {
