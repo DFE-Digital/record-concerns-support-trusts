@@ -95,7 +95,7 @@ describe("Creating a case", () =>
         Logger.Log("Check unpopulated territory throws validation error");
         addTerritoryPage
             .nextStep()
-            .hasValidationError("An SFSO Territory must be selected");
+            .hasValidationError("Select SFSO territory");
 
         Logger.Log("Checking accessibility on territory");
         cy.excuteAccessibilityTests();
@@ -111,7 +111,6 @@ describe("Creating a case", () =>
             .hasConcernType("Financial: Deficit")
             .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
-
 
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
