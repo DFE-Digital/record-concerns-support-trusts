@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using Microsoft.AspNetCore.Authorization;
@@ -21,22 +22,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	{
 		private readonly IDecisionService _decisionService;
 		private readonly ILogger<ClosePageModel> _logger;
-		
-		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
-		
+
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+
 		[BindProperty(SupportsGet = true)]
-		[Required]
-		[Range(1, int.MaxValue, ErrorMessage = "DecisionId must be provided")]
 		public int DecisionId { get; set; }
 
 		[BindProperty(Name="Urn", SupportsGet = true)]
-		[Required]
-		[Range(1, int.MaxValue, ErrorMessage = "CaseUrn must be provided")]
 		public int CaseUrn { get; set; }
-		
-		[BindProperty(Name="SupportingNotes")]
-		[MaxLength(DecisionConstants.MaxSupportingNotesLength, ErrorMessage = "Supporting Notes must be 2000 characters or less")]
-		public string Notes { get; set; }
 
 		public ClosePageModel(IDecisionService decisionService, ILogger<ClosePageModel> logger)
 		{
@@ -50,20 +44,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-				
 				var decision = await _decisionService.GetDecision(CaseUrn, DecisionId);
 
 				if (!IsDecisionEditable(decision))
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
 				}
-				
-				Notes = decision.SupportingNotes;
-				
+
+				LoadPageComponents(decision);
+								
 				return Page();
 			}
 			catch (Exception ex)
@@ -84,18 +73,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				if (!ModelState.IsValid)
 				{
+					LoadPageComponents();
 					return Page();
 				}
 
-				var updateDecisionRequest = new CloseDecisionRequest { SupportingNotes = Notes };
+				var updateDecisionRequest = new CloseDecisionRequest { SupportingNotes = Notes.Text.StringContents };
 
 				await _decisionService.CloseDecision(CaseUrn, DecisionId, updateDecisionRequest);
 
 				return Redirect($"/case/{CaseUrn}/management");
-			}
-			catch (InvalidUserInputException ex)
-			{
-				TempData["Decision.Message"] = new List<string>() { ex.Message };
 			}
 			catch (Exception ex)
 			{
@@ -103,10 +89,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				SetErrorMessage(ErrorOnPostPage);
 			}
+
 			return Page();
 		}
 
-		// TODO: These ought to be part of a general service / model
+		private void LoadPageComponents(GetDecisionResponse model)
+		{
+			LoadPageComponents();
+
+			Notes.Text.StringContents = model.SupportingNotes;
+		}
+
+		private void LoadPageComponents()
+		{
+			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+		}
+
+		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
+		=> new("SupportingNotes", nameof(Notes), "Finalise supporting notes (optional)")
+		{
+			HintText = "Case owners can record any information they want that feels relevant to the action. Include any academy name(s) related to the decision",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = contents,
+				DisplayName = "Supporting notes"
+			}
+		};
+
 		private static bool IsDecisionEditable(GetDecisionResponse decision) => !IsDecisionClosed(decision) && DecisionHasOutcome(decision);
 		private static bool IsDecisionClosed(GetDecisionResponse decision) => decision.ClosedAt.HasValue;
 		private static bool DecisionHasOutcome(GetDecisionResponse decision) => decision.Outcome != null;
