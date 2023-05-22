@@ -223,8 +223,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Try to add second financial plan to case");
         addFinancialPlanToCase();
 
-        cy.getByTestId("error-text")
-            .should("contain.text", "There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
+        AddToCasePage
+            .hasValidationError("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
 
         Logger.Log("Checking accessibility on Creating a duplicate financial plan");
         cy.excuteAccessibilityTests();

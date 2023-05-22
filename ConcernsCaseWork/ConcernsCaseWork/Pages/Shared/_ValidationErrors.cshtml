@@ -33,6 +33,10 @@
                         var component = selectedProperty as BaseUiComponent;
                         containerId = $"container-{component.ElementRootId}";
                     }
+                    else
+                    {
+                        containerId = $"container-{error.Key}";
+                    }
 
                     <li><a tabindex="0" aria-label="Error: @error.Msg" class="govuk govuk-error-message scrollable-error" data-scroll-to="@containerId">@error.Msg</a></li>
 				}
