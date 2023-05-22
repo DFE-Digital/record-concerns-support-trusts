@@ -1,6 +1,7 @@
 using AutoFixture;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
@@ -232,6 +233,9 @@ public class SelectTerritoryPageModelTests
 		
 		var sut = SetupTerritoryModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object,true);
 
+		sut.Territory = _fixture.Create<RadioButtonsUiComponent>();
+		sut.Territory.SelectedId = 1;
+
 		// act
 		var pageResponse = await sut.OnPostAsync();
 
@@ -260,6 +264,9 @@ public class SelectTerritoryPageModelTests
 		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
 
 		var sut = SetupTerritoryModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+
+		sut.Territory = _fixture.Create<RadioButtonsUiComponent>();
+		sut.Territory.SelectedId = 1;
 
 		var pageResponse = await sut.OnPostAsync();
 
