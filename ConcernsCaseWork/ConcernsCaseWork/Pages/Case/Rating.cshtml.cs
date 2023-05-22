@@ -28,10 +28,12 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
+		
 
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
+		public bool IsAddtoCase { get; private set; }
 		
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
@@ -134,7 +136,11 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
 				
