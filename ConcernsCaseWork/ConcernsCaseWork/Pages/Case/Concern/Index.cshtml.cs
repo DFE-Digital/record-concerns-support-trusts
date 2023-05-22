@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				await _cachedService.StoreData(GetUserName(), userState);
 				if (!CaseModel.IsConcernsCase())
 				{
-					return RedirectToPage("/case/concern/add");
+					return RedirectToPage("/case/concern/add",new {urn = CaseModel.Urn});
 				}
 				return RedirectToPage("add");
 
