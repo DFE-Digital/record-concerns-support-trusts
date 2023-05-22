@@ -20,6 +20,11 @@
 			</h2>
 		</legend>
 
+        @if (!string.IsNullOrEmpty(Model.HintFromPartialView))
+        {
+            <partial name="@Model.HintFromPartialView" />
+        }
+
 		<div class="govuk-radios" data-module="govuk-radios">
             <partial name="Components/_ValidationErrorDetail" model="@errors" />
 			@foreach (var radioItem in Model.RadioItems)
@@ -37,9 +42,18 @@
 					       @isChecked />
 
 					<label class="govuk-label govuk-radios__label" for="@radioItem.Id">
-						<span>
-							@radioItem.Label
-						</span>
+                        @if (@radioItem.IsHtmlLabel == true)
+                        {
+                            // Label contains HTML, so we can render it directly
+                            @Html.Raw(@radioItem.Label)
+                        }
+                        else
+                        {
+                            <span>
+							    @radioItem.Label
+						    </span>
+                        }
+
 					</label>
                     @if (!string.IsNullOrEmpty(radioItem.HintText))
                     {

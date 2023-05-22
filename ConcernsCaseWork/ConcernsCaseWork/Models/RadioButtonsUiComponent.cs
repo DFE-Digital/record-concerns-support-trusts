@@ -1,3 +1,4 @@
+using Microsoft.Graph.Models.TermStore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,6 +10,8 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 	public int? SelectedId { get; set; }
 
 	public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
+
+	public string? HintFromPartialView { get; set; }
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	=> Validate(DisplayName ?? validationContext.DisplayName);
