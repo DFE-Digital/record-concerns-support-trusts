@@ -3,12 +3,21 @@ import { Logger } from "../../../common/logger";
 export class CloseDecisionPage
 {
     public withFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
-		Logger.Log(`With Supporting Notes - add notes ${finaliseSupportingNotes}`);
+		Logger.Log(`With Supporting Notes ${finaliseSupportingNotes}`);
 
 		cy.getById("SupportingNotes").clear().type(finaliseSupportingNotes);
 
 		return this;
 	}
+
+	public hasFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
+		Logger.Log(`With Supporting Notes ${finaliseSupportingNotes}`);
+
+		cy.getById("SupportingNotes").should("have.value", finaliseSupportingNotes);
+
+		return this;
+	}
+
 	public closeDecision(): this {
 		Logger.Log("Confirm closing the decision");
 
