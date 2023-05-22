@@ -10,4 +10,10 @@ public record SimpleRadioItem(string Label, int Id)
 	public string? TestId { get; set; }
 
 	public string? HintText { get; set; }
+
+	/// <summary>
+	/// Whether our label is HTML
+	/// E.g. rag ratings is coloured span elements
+	/// </summary>
+	public bool? IsHtmlLabel { get; set; }
 }

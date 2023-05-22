@@ -20,13 +20,13 @@
     }
     else
     {
+        <partial name="_ValidationErrors" />
+
         <!-- Trust details -->
         <dl class="govuk-summary-list">
             <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
             <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
         </dl>
-
-        <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
         <!-- FORM -->
         <form role="form" method="post" id="case-rating-form" novalidate>
@@ -35,9 +35,7 @@
             <div class="govuk-form-group govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
 
-                    <h2 class="govuk-heading-m">What is the risk to the trust?</h2>
-                    <partial name="_RiskToTrustDetails" />
-                    <partial name="_Rating" model="@Model.RatingsModel" />
+                    <partial name="Components/_RadioList" model="Model.RiskToTrust" />
 
                 </fieldset>
             </div>
@@ -52,12 +50,5 @@
             </div>
 
         </form>
-
-        <script type="application/javascript" nonce="@nonce">
-            $(function () {
-                let validator = formValidator($("#case-rating-form")[0]);
-                addRatingValidator(validator);
-            });
-        </script>
     }
 </div>

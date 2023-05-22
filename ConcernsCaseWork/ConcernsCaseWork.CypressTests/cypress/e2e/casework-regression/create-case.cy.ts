@@ -74,13 +74,11 @@ describe("Creating a case", () =>
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addDetailsPage
             .nextStep()
-            .hasValidationError("Select risk rating");
+            .hasValidationError("Select risk to trust rating");
 
         Logger.Log("Checking accessibility on risk to trust");
         cy.excuteAccessibilityTests();
-        
-        cy.waitForJavascript();
-        
+                
         Logger.Log("Populate risk to trust");
         addDetailsPage
             .withRating("Red-Plus")
