@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 				if (rating == null)
 				{
-					throw new InvalidOperationException($"The given ratingUrn '{RiskToTrust.SelectedId.Value}' does not match any known rating in the system");
+					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
 				}
 
 				var ragRatingName = rating.Name;
@@ -155,7 +155,7 @@ namespace ConcernsCaseWork.Pages.Case
 					EventUserName = userState.UserName
 				});
 
-				RiskToTrust = CaseComponentBuilder.BuildRiskToTrustComponent(nameof(RiskToTrust), RatingsModel, RiskToTrust?.SelectedId);
+				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RatingsModel, RiskToTrust?.SelectedId);
 
 				return Page();
 			}
