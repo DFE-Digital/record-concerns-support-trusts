@@ -26,41 +26,6 @@ export default class AddConcernDetailsPage {
         return this;
     }
 
-
-    public hasConcernType(value: string): this
-    {
-        Logger.Log(`Has Concern Type ${value}`);
-
-        cy.getByTestId("concern-type").should(
-			"contain.text",
-			value
-		);
-        return this;
-    }
-
-    public hasRiskToTrust(value: string): this
-    {
-        Logger.Log(`Has Risk to trust ${value}`);
-
-        cy.getByTestId(`risk-to-trust`).should(
-			"contain.text",
-			value
-		);
-        return this;
-    }
-
-    public hasTerritory(value: string): this
-    {
-        Logger.Log(`Has Territory ${value}`);
-
-        cy.getByTestId(`territory`).should(
-			"contain.text",
-			value
-		);
-        return this;
-    }
-
-
     public withIssueExceedingLimit(): this {
         Logger.Log(`With exceeding issue limit`);
 

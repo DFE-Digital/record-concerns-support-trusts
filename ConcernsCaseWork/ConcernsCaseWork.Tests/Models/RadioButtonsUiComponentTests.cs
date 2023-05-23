@@ -87,8 +87,9 @@ namespace ConcernsCaseWork.Tests.Models
 			results.Should().BeEmpty();
 		}
 
-		[Test]
-		public void Validation_SubOptionsExist_NoSubOptionSelected_ReturnsValidationError()
+		[TestCase("", "reason")]
+        [TestCase("reason subtype", "reason subtype")]
+        public void Validation_SubOptionsExist_NoSubOptionSelected_ReturnsValidationError(string subDisplayName, string expectedDisplayName)
 		{
 			// Arrange
 			var component = new RadioButtonsUiComponent("rootId", "name", "heading")
@@ -96,15 +97,16 @@ namespace ConcernsCaseWork.Tests.Models
 				SelectedId = 1,
 				SelectedSubId = null,
 				OptionsWithSubItems = new List<int>() { 1 },
-				DisplayName = "reason"
-			};
+				DisplayName = "reason",
+                SubItemDisplayName = subDisplayName
+            };
 
 			// Act
 			var results = component.Validate(new ValidationContext(component));
 
 			// Assert
 			results.Should().HaveCount(1);
-			results.First().ErrorMessage.Should().Be("Select sub reason");
+			results.First().ErrorMessage.Should().Be($"Select {expectedDisplayName}");
 			results.First().MemberNames.Should().Contain("reason");
 		}
 
