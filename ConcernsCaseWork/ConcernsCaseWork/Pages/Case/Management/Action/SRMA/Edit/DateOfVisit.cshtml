@@ -30,19 +30,19 @@
 					Dates of visit
 				</h1>
 
-				<form role="form" method="post" id="edit-dates-of-visit-form" novalidate>
+                <form role="form" method="post" id="edit-dates-of-visit-form" novalidate>
 
                     <partial name="Components/_DateTime" model="Model.StartDate" />
                     <partial name="Components/_DateTime" model="Model.EndDate" />
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-							Save and return to SRMA
-						</button>
-						<partial name="_Cancel" />
-					</div>
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                            Save and return to SRMA
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
 
-				</form>
+                </form>
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
