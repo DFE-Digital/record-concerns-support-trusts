@@ -161,7 +161,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
-				if (!CaseModel.IsConcernsCase())
+				if (CaseModel!=null && !CaseModel.IsConcernsCase())
 				{
 					return RedirectToPage("/case/concern/add",new {urn = CaseModel.Urn});
 				}
