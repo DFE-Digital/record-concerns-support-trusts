@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Pages.Case
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public bool IsAddtoCase { get; private set; }
 		
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -56,6 +57,11 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
 			
 			// Fetch UI data
+			var caseUrnValue = RouteData.Values["urn"];
+			if (caseUrnValue != null)
+			{
+				IsAddtoCase = true;
+			}
 			await LoadPage();
 		}
 		
@@ -64,7 +70,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::DetailsPageModel::OnPostAsync");
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				var issue = Request.Form["issue"];
 				var currentStatus = Request.Form["current-status"];
 				var nextSteps = Request.Form["next-steps"];

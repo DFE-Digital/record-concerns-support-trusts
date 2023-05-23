@@ -63,7 +63,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::RatingPageModel::OnPostAsync");
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				var ragRating = Request.Form["rating"].ToString();
 				if (string.IsNullOrEmpty(ragRating))
 					throw new Exception("Missing form values");
@@ -98,7 +102,11 @@ namespace ConcernsCaseWork.Pages.Case
 				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				
+				if (IsAddtoCase)
+				{
+					return RedirectToPage("details");
+					
+				}
 				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
