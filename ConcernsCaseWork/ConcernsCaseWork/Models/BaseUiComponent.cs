@@ -2,11 +2,11 @@ namespace ConcernsCaseWork.Models;
 
 public record BaseUiComponent
 {
-	public BaseUiComponent(string ElementRootId, string Name, string Heading)
+	public BaseUiComponent(string elementRootId, string name, string heading)
 	{
-		this.ElementRootId = ElementRootId;
-		this.Name = Name;
-		this.Heading = Heading;
+		ElementRootId = elementRootId;
+		Name = name;
+		Heading = heading;
 	}
 
 	public string Heading { get;set; }

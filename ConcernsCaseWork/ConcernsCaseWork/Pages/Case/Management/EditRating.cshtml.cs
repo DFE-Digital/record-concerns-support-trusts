@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
-			RiskToTrust = CaseComponentBuilder.BuildRiskToTrustComponent(nameof(RiskToTrust), ratingsModel, RiskToTrust?.SelectedId);
+			RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), ratingsModel, RiskToTrust?.SelectedId);
 			RiskToTrust.Heading = "";
 		}
 	}

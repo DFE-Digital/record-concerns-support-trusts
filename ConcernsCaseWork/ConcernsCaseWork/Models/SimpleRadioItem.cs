@@ -1,7 +1,24 @@
+using Microsoft.Data.SqlClient.DataClassification;
+using Microsoft.Graph.Models;
+using System.Collections.Generic;
+
 namespace ConcernsCaseWork.Models;
 
-public record SimpleRadioItem(string Label, int Id)
+public record SimpleRadioItem
 {
+	public SimpleRadioItem(string label, int id)
+	{
+		Label = label;
+		Id = id;
+		SubRadioItems = new List<SubRadioItem>();
+	}
+
+	public List<SubRadioItem> SubRadioItems { get; set; }
+
+	public string Label { get; set; }
+
+	public int? Id { get; set; }
+
 	/// <summary>
 	/// Need an identifier for each radio option
 	/// We can bind to the name, but that changes and it means the tests keep breaking

@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
@@ -6,19 +7,18 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
-using ConcernsCaseWork.Services.MeansOfReferral;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Cases;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,17 +41,23 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private TelemetryClient _telemetryClient;
 		
 		public TypeModel TypeModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 		
 		public TrustAddressModel TrustAddress { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent ConcernType { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent MeansOfReferral { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
 			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
-			IMeansOfReferralModelService meansOfReferralService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
 			TelemetryClient telemetryClient)
@@ -60,7 +66,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_typeModelService =  Guard.Against.Null(typeModelService);
 			_cachedService = Guard.Against.Null(cachedService);
-			_meansOfReferralService = Guard.Against.Null(meansOfReferralService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
@@ -77,8 +82,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
 			return Page();
 		}
@@ -88,27 +92,27 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			try
 			{
 				_logger.LogMethodEntered();
-				
-				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-id"].ToString()))
-					throw new Exception("Missing form values");
-				
-				string typeId;
-				
-				// Form
-				var type = Request.Form["type"].ToString();
-				var subType = Request.Form["sub-type"].ToString();
-				var ragRating = Request.Form["rating"].ToString();
-				
-				// Type
-				(typeId, type, subType) = type.SplitType(subType);
 
-				// Rating
-				var splitRagRating = ragRating.Split(":");
-				var ragRatingId = splitRagRating[0];
-				var ragRatingName = splitRagRating[1];
+				if (!ModelState.IsValid)
+				{
+					await LoadPage();
+					return Page();
+				}
 				
-				var meansOfReferral = Request.Form["means-of-referral-id"].ToString();
-				
+				var ragRatingId = ConcernRiskRating.SelectedId.Value;
+
+				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
+				var rating = await _ratingModelService.GetRatingModelById(ragRatingId);
+
+				if (rating == null)
+				{
+					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
+				}
+
+				var ragRatingName = rating.Name;
+
+				var typeId = (ConcernType)(ConcernType.SelectedSubId.HasValue ? ConcernType.SelectedSubId : ConcernType.SelectedId);
+
 				// Redis state
 				var userState = await GetUserState();
 
@@ -133,14 +137,14 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				var createRecordModel = new CreateRecordModel
 				{
-					TypeId = long.Parse(typeId),
-					Type = type,
-					SubType = subType,
-					RatingId = long.Parse(ragRatingId),
+					TypeId = (long)typeId,
+					Type = typeId.Description(),
+					SubType = null,
+					RatingId = ragRatingId,
 					RatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-					MeansOfReferralId = long.Parse(meansOfReferral)
+					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
@@ -160,19 +164,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
-			}
-			
-			try
-			{
-				return await LoadPage();		
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-					
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 			
 			return Page();
@@ -193,10 +185,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-					
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 
 		private async Task<ActionResult> LoadPage()
@@ -210,9 +202,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateRecordsModel = new List<CreateRecordModel>();
-			RatingsModel = await _ratingModelService.GetRatingsModel();
+			var ratingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
-			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
+
+			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
+
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{
 				EventName = "ADD CONCERN",
@@ -220,6 +216,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				EventPayloadJson = "",
 				EventUserName = userState.UserName
 			});
+
 			return Page();
 		}
 		
