@@ -144,13 +144,14 @@ namespace ConcernsCaseWork.Models
 				SelectedId = selectedId,
 				SelectedSubId = selectedSubId,
 				Required = true,
-				DisplayName = "concern type"
+				DisplayName = "concern type",
+				SubItemDisplayName = "concern subtype"
 			};
 		}
 
 		private static SubRadioItem BuildSubRadioItem(string label, ConcernType concernType)
 		{
-			return new SubRadioItem(label, (int)concernType);
+			return new SubRadioItem(label, (int)concernType) { TestId = concernType.Description() };
 		}
 	}
 }

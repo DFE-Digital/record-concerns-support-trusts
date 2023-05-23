@@ -84,6 +84,7 @@
                                             name="@Model.Name.@nameof(Model.SelectedSubId)" 
                                             value="@subRadioItem.Id" 
                                             type="radio"
+                                            data-testid="@subRadioItem.TestId"
                                             @subItemIsChecked>
 
                                         <label class="govuk-label govuk-radios__label" for="sub-type-@subRadioItem.Label">
@@ -100,6 +101,7 @@
 		</div>
 	</fieldset>
     <input type="hidden" name="@(Model.Name).DisplayName" value="@Model.DisplayName" />
+    <input type="hidden" name="@(Model.Name).SubItemDisplayName" value="@Model.SubItemDisplayName" />
     <input type="hidden" name="@(Model.Name).Required" value="@required" />
     <input type="hidden" name="@(Model.Name).ErrorTextForRequiredField" value="@Model.ErrorTextForRequiredField" />
 </div>

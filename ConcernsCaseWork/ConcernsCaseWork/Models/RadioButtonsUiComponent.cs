@@ -19,6 +19,8 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 
 	public List<int>? OptionsWithSubItems { get; set; }
 
+	public string? SubItemDisplayName { get; set; }
+
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	=> Validate(DisplayName ?? validationContext.DisplayName);
 
@@ -37,7 +39,9 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 
 		if (hasSubItem == true && !SelectedSubId.HasValue)
 		{
-			result.Add(new ValidationResult($"Select sub {displayName}", new[] { displayName }));
+			var subItemErrorName = string.IsNullOrEmpty(SubItemDisplayName) ? displayName : SubItemDisplayName;
+
+			result.Add(new ValidationResult($"Select {subItemErrorName}", new[] { displayName }));
 		}
 
 		return result;

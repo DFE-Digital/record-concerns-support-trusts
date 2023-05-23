@@ -49,8 +49,8 @@ describe("Editing a case", () =>
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
@@ -59,7 +59,7 @@ describe("Editing a case", () =>
 
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Populate territory");
@@ -125,7 +125,7 @@ describe("Editing a case", () =>
         cy.excuteAccessibilityTests();
 
         addDetailsPage
-            .withRating("Amber-Green")
+            .withRiskToTrust("Amber-Green")
             .apply();
 
         Logger.Log("Edit a territory")
