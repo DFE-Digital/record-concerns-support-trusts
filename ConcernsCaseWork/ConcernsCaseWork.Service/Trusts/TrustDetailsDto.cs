@@ -17,6 +17,6 @@ namespace ConcernsCaseWork.Service.Trusts
 		public TrustDetailsDto(GiasDataDto giasData, IfdDataDto ifdData, List<EstablishmentDto> establishments) => 
 			(GiasData, IfdData, Establishments) = (giasData, ifdData, establishments);
 
-		protected TrustDetailsDto() {}
+		public TrustDetailsDto() {}
 	}
 }
