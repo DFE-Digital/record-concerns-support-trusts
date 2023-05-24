@@ -1,12 +1,16 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using Albedo.Refraction;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
+using NUnit.Framework.Internal;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace ConcernsCaseWork.Service.Tests.Trusts
@@ -37,7 +41,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				httpClientFactory.Object,
+				logger.Object,
+				Mock.Of<ICorrelationContext>(),
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
 
 			// act
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), expectedTrusts.Count);
@@ -60,6 +69,38 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		}
 
 		[Test]
+		public async Task WhenGetTrustsByPagination_MatchesFakeTrust_ReturnsFakeTrust()
+		{
+			var trustInfo = new TrustSearchResponseDto()
+			{
+				Trusts = new List<TrustSearchDto>()
+				{
+					new TrustSearchDto()
+					{
+						UkPrn = "123"
+					}
+				}
+			};
+
+			var fakeTrustService = new Mock<IFakeTrustService>();
+			fakeTrustService.Setup(m => m.GetTrustsByPagination(It.IsAny<string>())).Returns(trustInfo);
+
+			var trustService = new TrustService(
+				Mock.Of<IHttpClientFactory>(),
+				Mock.Of<ILogger<TrustService>>(),
+				Mock.Of<ICorrelationContext>(),
+				Mock.Of<IClientUserInfoService>(),
+				fakeTrustService.Object);
+
+			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
+
+			var result = await trustService.GetTrustsByPagination(trustSearchParams, 1);
+
+			result.Trusts.Should().HaveCount(1);
+			result.Trusts.First().UkPrn.Should().Be("123");
+		}
+
+		[Test]
 		public void WhenGetTrustsByPagination_ThrowsException()
 		{
 			// arrange
@@ -79,7 +120,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				httpClientFactory.Object, 
+				logger.Object, 
+				Mock.Of<ICorrelationContext>(), 
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
@@ -95,7 +141,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
-			var trustService = new TrustService(Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<TrustService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				Mock.Of<IHttpClientFactory>(), 
+				Mock.Of<ILogger<TrustService>>(), 
+				Mock.Of<ICorrelationContext>(), 
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
+
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act
@@ -129,7 +181,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				httpClientFactory.Object, 
+				logger.Object, 
+				Mock.Of<ICorrelationContext>(), 
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
@@ -149,6 +206,33 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Street, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Street));
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Town, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Town));
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.AdditionalLine));
+		}
+
+
+		[Test]
+		public async Task WhenGetTrustByUkPrn_MatchesFakeTrust_ReturnsFakeTrust()
+		{
+			var trustInfo = new TrustDetailsDto()
+			{
+				GiasData = new GiasDataDto()
+				{
+					UkPrn = "123",
+				}
+			};
+
+			var fakeTrustService = new Mock<IFakeTrustService>();
+			fakeTrustService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).Returns(trustInfo);
+
+			var trustService = new TrustService(
+				Mock.Of<IHttpClientFactory>(),
+				Mock.Of<ILogger<TrustService>>(),
+				Mock.Of<ICorrelationContext>(),
+				Mock.Of<IClientUserInfoService>(),
+				fakeTrustService.Object);
+
+			var result = await trustService.GetTrustByUkPrn("123");
+
+			result.GiasData.UkPrn.Should().Be("123");
 		}
 
 		[Test]
@@ -171,7 +255,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				httpClientFactory.Object, 
+				logger.Object, 
+				Mock.Of<ICorrelationContext>(), 
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
@@ -199,10 +288,23 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var trustService = new TrustService(
+				httpClientFactory.Object, 
+				logger.Object, 
+				Mock.Of<ICorrelationContext>(), 
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService());
 
 			// act | assert
 			Assert.ThrowsAsync<Exception>(() => trustService.GetTrustByUkPrn("9999999"));
+		}
+
+		private static IFakeTrustService CreateFakeTrustService()
+		{
+			var fakeTrustService = new Mock<IFakeTrustService>();
+			fakeTrustService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).Returns(() => null);
+			fakeTrustService.Setup(m => m.GetTrustsByPagination(It.IsAny<string>())).Returns(() => null);
+			return fakeTrustService.Object;
 		}
 	}
 }

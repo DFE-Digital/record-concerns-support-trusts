@@ -28,6 +28,6 @@ namespace ConcernsCaseWork.Service.Trusts
 			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress) = 
 			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress);
 		
-		protected TrustSearchDto() { }
+		public TrustSearchDto() { }
 	}
 }
