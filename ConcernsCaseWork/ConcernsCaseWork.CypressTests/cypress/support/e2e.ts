@@ -24,6 +24,7 @@ declare global {
             getById(id: string): Chainable<Element>;
             waitForJavascript(): Chainable<Element>;
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;
+            loginWithCredentials(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
             basicCreateCase(): Chainable<number>;
         }
