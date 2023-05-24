@@ -252,7 +252,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				mockLogger.Object, true);
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
-			pageModel.RiskToTrust.SelectedId = 1;
+			pageModel.RiskToTrust.SelectedId = 101;
 
 			// act
 			_ = await pageModel.OnPostAsync();

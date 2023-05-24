@@ -93,19 +93,17 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					return Page();
 				}
 				
-				var ragRatingId = ConcernRiskRating.SelectedId.Value;
+				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
-				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
-				var rating = await _ratingModelService.GetRatingModelById(ragRatingId);
+				if (!Enum.IsDefined(typeof(ConcernRating), ragRatingId))
+					throw new InvalidOperationException($"Unrecognised risk to trust {ragRatingId}");
 
-				if (rating == null)
-				{
-					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
-				}
-
-				var ragRatingName = rating.Name;
+				var ragRatingName = ragRatingId.Description();
 
 				var typeId = (ConcernType)(ConcernType.SelectedSubId.HasValue ? ConcernType.SelectedSubId : ConcernType.SelectedId);
+
+				if (!Enum.IsDefined(typeof(ConcernType), typeId))
+					throw new InvalidOperationException($"Unrecognised concern type {typeId}");
 
 				// Redis state
 				var userState = await GetUserState();
@@ -134,7 +132,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					TypeId = (long)typeId,
 					Type = typeId.Description(),
 					SubType = null,
-					RatingId = ragRatingId,
+					RatingId = (long)ragRatingId,
 					RatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
