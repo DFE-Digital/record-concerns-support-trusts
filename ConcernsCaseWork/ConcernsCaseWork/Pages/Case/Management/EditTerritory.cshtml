@@ -1,12 +1,13 @@
 ﻿@page "/case/{urn:long}/management/edit-territory"
 @using ConcernsCaseWork.API.Contracts.Enums
+@using ConcernsCaseWork.Constants;
 @using ConcernsCaseWork.Extensions
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.Management.EditTerritoryPageModel
 
 @{
 	ViewData["Title"] = "Edit case SFSO territory";
-	ViewData["CancelBackLink"] = Model.ReferrerUrl;
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
 <div class="govuk-width-container">
