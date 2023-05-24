@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
@@ -74,30 +76,25 @@ namespace ConcernsCaseWork.Pages.Case
 					return Page();
 				}
 
-				var ragRatingId = RiskToTrust.SelectedId.Value;
+				var ragRatingId = (ConcernRating)RiskToTrust.SelectedId.Value;
 
-				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
-				var rating = await _ratingModelService.GetRatingModelById(ragRatingId);
+				if (!Enum.IsDefined(typeof(ConcernRating), ragRatingId))
+					throw new InvalidOperationException($"Unrecognised risk to trust {ragRatingId}");
 
-				if (rating == null)
-				{
-					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
-				}
-
-				var ragRatingName = rating.Name;
+				var ragRatingName = ragRatingId.Description();
 
 				// Redis state
 				var userState = await GetUserState();
 
 				// Update cache model
-				userState.CreateCaseModel.RatingId = ragRatingId;
+				userState.CreateCaseModel.RatingId = (long)ragRatingId;
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
-					EventDescription = $"Rating added {rating.Name}",
+					EventDescription = $"Rating added {ragRatingName}",
 					EventPayloadJson = "",
 					EventUserName = userState.UserName
 				});
@@ -111,8 +108,8 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogErrorMsg(ex);
 				SetErrorMessage(ErrorOnPostPage);
 			}
-			
-			return await LoadPage();
+
+			return Page();
 		}
 		
 		public async Task<ActionResult> OnGetCancel()
