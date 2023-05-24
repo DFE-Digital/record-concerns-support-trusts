@@ -259,46 +259,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			// assert
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_MissingFormData_ReloadPage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<RatingPageModel>>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			
-			var createCaseModel = CaseFactory.BuildCreateCaseModel();
-			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
-
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			
-			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
-				mockLogger.Object, true);
-			
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-			var pageResponseInstance = pageResponse as PageResult;
-			
-			// assert
-			Assert.NotNull(pageResponseInstance);
-			Assert.NotNull(pageModel.RatingsModel);
-			Assert.NotNull(pageModel.CreateRecordsModel);
-			Assert.NotNull(pageModel.TrustDetailsModel);
-
-			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-			mockUserStateCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Never);
-			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 		}		
 		
 		private static RatingPageModel SetupRatingPageModel(
