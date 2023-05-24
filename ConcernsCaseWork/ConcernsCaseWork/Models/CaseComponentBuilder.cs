@@ -79,11 +79,11 @@ namespace ConcernsCaseWork.Models
 			var meansOfReferralValues = new[]
 			{
 				new {
-					enumValue = API.Contracts.Concerns.MeansOfReferral.Internal,
+					enumValue = MeansOfReferral.Internal,
 					HintText = "ESFA activity, TFF or other departmental activity"
 				},
 				new {
-					enumValue = API.Contracts.Concerns.MeansOfReferral.External,
+					enumValue = MeansOfReferral.External,
 					HintText = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies"
 				}
 			};
@@ -145,7 +145,8 @@ namespace ConcernsCaseWork.Models
 				SelectedSubId = selectedSubId,
 				Required = true,
 				DisplayName = "concern type",
-				SubItemDisplayName = "concern subtype"
+				SubItemDisplayName = "concern subtype",
+				HintFromPartialView = "_RiskManagementFramework"
 			};
 		}
 

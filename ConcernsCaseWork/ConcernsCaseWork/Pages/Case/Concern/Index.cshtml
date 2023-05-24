@@ -11,9 +11,6 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	
-	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Add concern</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -22,6 +19,9 @@
 	else
 	{
         <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">Create case</span>
+        <h1 class="govuk-heading-l">Add concern</h1>
 
 		<!-- Trust summary and records -->
 		<dl class="govuk-summary-list">
@@ -36,28 +36,8 @@
 			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
 		</dl>
 		
-		<h2 class="govuk-heading-m govuk-!-margin-top-6">Select concern</h2>
-		
 		<!-- FORM -->
 		<form role="form" method="post" id="case-concern-form" novalidate>
-			
-            @*
-			<!--Q Concern type-->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
-
-					<div class="govuk-hint" id="case-issue-hint">
-						Use the
-                        <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
-							Risk Management Framework (opens in new tab)
-						</a> to assess the type of concern
-					</div>
-
-					<partial name="_Concern" model="@Model.TypeModel" />
-
-				</fieldset>
-			</div>
-            *@
 
             <partial name="Components/_RadioList" model="Model.ConcernType" />
 

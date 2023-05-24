@@ -11,9 +11,6 @@
 <div class="govuk-width-container">
     <partial name="_BannerError" />
 
-    <span class="govuk-caption-l">Create case</span>
-    <h1 class="govuk-heading-l">Risk to trust</h1>
-
     @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
     {
         <partial name="_Error" />
@@ -21,6 +18,9 @@
     else
     {
         <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">Create case</span>
+        <h1 class="govuk-heading-l">Risk to trust</h1>
 
         <!-- Trust details -->
         <dl class="govuk-summary-list">
