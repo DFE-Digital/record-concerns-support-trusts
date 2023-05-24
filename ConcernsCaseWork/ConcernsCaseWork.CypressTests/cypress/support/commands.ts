@@ -3,8 +3,8 @@ import "cypress-axe";
 import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
 import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
-//import {AuthenticationComponent} from  "../auth/authenticationComponent";
-import { Logger } from "cypress/common/logger";
+import { Logger } from "../common/logger";
+import { AuthenticationComponent } from "../auth/authenticationComponent";
 
 Cypress.Commands.add("getByTestId", (id) => {
 	cy.get(`[data-testid="${id}"]`);
@@ -36,6 +36,19 @@ Cypress.Commands.add("login", (params) => {
 
 	cy.visit("/");
 });
+
+Cypress.Commands.add("loginWithCredentials", () => {
+	cy.clearCookies();
+	cy.clearLocalStorage();
+
+	// Used for prod as we cannot override login
+	const username = Cypress.env("username");
+	const password = Cypress.env("password");
+	new AuthenticationComponent().login(username, password);
+
+	cy.visit("/");
+});
+
 
 //This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
 Cypress.Commands.add("excuteAccessibilityTests", () => {
