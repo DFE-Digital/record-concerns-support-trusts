@@ -33,15 +33,12 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
-		private readonly ITypeModelService _typeModelService;
 		private readonly IUserStateCachedService _cachedService;
-		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
 		
-		public TypeModel TypeModel { get; private set; }
-		
 		public TrustAddressModel TrustAddress { get; private set; }
+
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 
 		[BindProperty]
@@ -55,7 +52,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
-			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
@@ -63,7 +59,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		{
 			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
-			_typeModelService =  Guard.Against.Null(typeModelService);
 			_cachedService = Guard.Against.Null(cachedService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = Guard.Against.Null(logger);
@@ -202,7 +197,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateRecordsModel = new List<CreateRecordModel>();
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
-			TypeModel = await _typeModelService.GetTypeModel();
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);

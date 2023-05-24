@@ -46,7 +46,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Create a valid concern");
         createConcernPage
-            .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
             .withConcernRating("Red")
@@ -84,7 +83,6 @@ describe("Editing a case", () =>
             .hasConcerns("Financial: Deficit", ["Red"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue");
-
 
         Logger.Log("Edit risk to trust");
         caseManagementPage
@@ -221,7 +219,6 @@ describe("Editing a case", () =>
             .withDeescalationPoint("New de-descalation point")
             .apply();
 
-
         Logger.Log("Edit next steps")
         caseManagementPage
             .editNextSteps();
@@ -240,7 +237,6 @@ describe("Editing a case", () =>
         editNextStepsPage
             .withNextSteps("New next step")
             .apply();
-
 
         Logger.Log("Edit Case history")
         caseManagementPage

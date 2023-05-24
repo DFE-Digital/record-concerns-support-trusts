@@ -327,11 +327,23 @@ describe("Creating a case", () =>
         Logger.Log("Add another concern after case creation");
         caseManagementPage.addAnotherConcern();
 
+        Logger.Log("Attempt to create an invalid concern");
+        createConcernPage
+            .addConcern()
+            .hasValidationError("Select concern type")
+            .hasValidationError("Select concern risk rating")
+            .hasValidationError("Select means of referral");
+
+        Logger.Log("Attempt to create a concern without a concern type");
         createConcernPage
             .withConcernType("Irregularity")
-            .withSubConcernType("Irregularity: Irregularity")
             .withConcernRating("Red-Amber")
             .withMeansOfReferral("External")
+            .addConcern()
+            .hasValidationError("Select concern subtype");     
+
+        createConcernPage
+            .withSubConcernType("Irregularity: Irregularity")
             .addConcern();
 
         caseManagementPage
