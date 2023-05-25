@@ -251,11 +251,12 @@
                     </tbody>
                 </table>
 
-                <h2 class="govuk-heading-m">Case details</h2>
+                @if (Model.CaseModel.IsConcernsCase())
+                {
+                    <h2 class="govuk-heading-m">Case details</h2>
 
-                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion">
-                    @if (Model.CaseModel.IsConcernsCase())
-                    {
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion" data-testid="case-narritive-fields-container">
+
 
                         @* Issue *@
                         <div class="govuk-accordion__section">
@@ -366,27 +367,27 @@
                                 </div>
                             </div>
                         </div>
-                    }
 
-                    @* Case history *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case history</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-case-history-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-history-heading">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case history">Change</a></div>
-                            }
+                        @* Case history *@
+                        <div class="govuk-accordion__section">
+                            <div class="govuk-accordion__section-header">
+                                <h2 class="govuk-accordion__section-heading">
+                                    <span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case history</span>
+                                </h2>
+                            </div>
+                            <div id="accordion-case-history-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-history-heading">
+                                @if (Model.IsEditableCase)
+                                {
+                                    <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case history">Change</a></div>
+                                }
 
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
+                                <div class="govuk-!-width-three-quarters">
+                                    <span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
 
                 <h3 class="govuk-heading-m">Case actions and decisions</h3>
                 @if (Model.IsEditableCase)
