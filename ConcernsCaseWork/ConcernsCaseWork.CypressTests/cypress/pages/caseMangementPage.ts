@@ -31,6 +31,10 @@ class CaseManagementPage {
         return cy.contains("Add concern");
     }
 
+    getAddConcernBtn() {
+    cy.get('[data-testid="Add_Button_Concern"]').click();
+}
+
     getAddToCaseBtn() {
         return cy.get('[role="button"]').contains('Add to case');
     }
