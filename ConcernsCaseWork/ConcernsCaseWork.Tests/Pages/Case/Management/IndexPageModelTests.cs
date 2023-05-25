@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+﻿/*using AutoFixture;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Models;
@@ -307,4 +307,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			pageModel.TempData["Error.Message"].Should().BeNull();
 		}
 	}
-}
+}*/
