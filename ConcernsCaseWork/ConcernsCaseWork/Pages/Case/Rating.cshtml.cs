@@ -104,7 +104,9 @@ namespace ConcernsCaseWork.Pages.Case
 				await _userStateCache.StoreData(GetUserName(), userState);
 				if (IsAddtoCase)
 				{
-					return RedirectToPage("details");
+					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+						caseUrn=0;
+					return RedirectToPage("details",new {urn = caseUrn });
 					
 				}
 				return RedirectToPage("territory");
