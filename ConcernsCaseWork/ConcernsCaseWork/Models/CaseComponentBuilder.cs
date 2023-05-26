@@ -216,7 +216,6 @@ namespace ConcernsCaseWork.Models
 		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
 		=> new("case-history", name, "Case history")
 		{
-			HintText = NarritiveHintText,
 			Text = new ValidateableString()
 			{
 				MaxLength = 4300,

@@ -30,7 +30,7 @@
 
 				<form role="form" asp-page-handler="editNextSteps" method="post" id="next-steps-form" novalidate>
 
-					<partial name="_EditNextSteps" model="@Model.NextSteps"/>
+                    <partial name="Components/_TextArea" model="Model.NextSteps" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
