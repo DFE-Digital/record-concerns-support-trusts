@@ -60,8 +60,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnPostEditCurrentStatus");
-				
+				_logger.LogMethodEntered();
+
+				if (!ModelState.IsValid)
+				{
+					LoadPage();
+					return Page();
+				}
+
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
 				{
