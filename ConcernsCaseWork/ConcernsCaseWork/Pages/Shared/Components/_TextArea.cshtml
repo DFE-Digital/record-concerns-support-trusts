@@ -6,6 +6,7 @@
 @{
     var nonce = Context.GetNonce();
     var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
+    var required = Model.Text.Required == true ? "true" : "false";
 
     var modelPath = $"{Model.Name}.Text.{displayName}";
     ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
@@ -32,6 +33,7 @@
 	</fieldset>
 	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@displayName" />
 	<input type="hidden" name="@(Model.Name).Text.MaxLength" value="@Model.Text.MaxLength" />
+    <input type="hidden" name="@(Model.Name).Text.Required" value="@required" />
 </div>
 
 <script type="application/javascript" nonce="@nonce">

@@ -84,7 +84,7 @@ export default class AddConcernDetailsPage {
     public withIssue(value: string): this {
         Logger.Log(`With issue ${value}`);
 
-        cy.getByTestId(`issue`).clear().type(value);
+        cy.getByTestId(`issue`).clear({force: true}).type(value);
 
         return this;
     }
@@ -92,7 +92,7 @@ export default class AddConcernDetailsPage {
     public withCurrentStatus(value: string): this {
         Logger.Log(`With current status ${value}`);
 
-        cy.getByTestId(`current-status`).clear().type(value);
+        cy.getByTestId(`current-status`).clear({force: true}).type(value);
 
         return this;
     }
@@ -100,7 +100,7 @@ export default class AddConcernDetailsPage {
     public withCaseAim(value: string): this {
         Logger.Log(`With case aim ${value}`);
 
-        cy.getByTestId(`case-aim`).clear().type(value);
+        cy.getByTestId(`case-aim`).clear({force: true}).type(value);
 
         return this;
     }
@@ -108,7 +108,7 @@ export default class AddConcernDetailsPage {
     public withDeEscalationPoint(value: string): this {
         Logger.Log(`With deEscalation point ${value}`);
 
-        cy.getByTestId(`de-escalation-point`).clear().type(value);
+        cy.getByTestId(`de-escalation-point`).clear({force: true}).type(value);
 
         return this;
     }
@@ -116,7 +116,7 @@ export default class AddConcernDetailsPage {
     public withNextSteps(value: string): this {
         Logger.Log(`With next steps ${value}`);
 
-        cy.getByTestId(`next-steps`).clear().type(value);
+        cy.getByTestId(`next-steps`).clear({force: true}).type(value);
 
         return this;
     }
