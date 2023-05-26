@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/management/edit_current_status"
+@using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.EditCurrentStatusPageModel
@@ -6,6 +7,8 @@
 @{
 	ViewData["Title"] = "Edit Current status";
 	var nonce = HttpContext.GetNonce();
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
+
 }
 
 <div class="govuk-width-container">
@@ -14,27 +17,21 @@
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
-			<h1 class="govuk-heading-l">
-				Edit current status
-			</h1>
-            <div class="govuk-hint">
-                This information can be used in Stage 1 and Stage 2 meetings.
-            </div>
-
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
             	<partial name="_Error"/>
             }
 			else
 			{
+                <partial name="_ValidationErrors" />
 
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <h1 class="govuk-heading-l">
+                    Edit current status
+                </h1>
 
 				<form role="form" asp-page-handler="editCurrentStatus" method="post" id="current-status-form" novalidate>
 
-					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
-
-					<partial name="_EditCurrentStatus" model="@Model.CaseModel"/>
+                    <partial name="Components/_TextArea" model="Model.CurrentStatus" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
@@ -48,9 +45,6 @@
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {	
-						let validator = formValidator($("#current-status-form")[0]);
-						addCurrentStatusValidator(validator);
-						
 						autoResizer();
 					});
 				</script>

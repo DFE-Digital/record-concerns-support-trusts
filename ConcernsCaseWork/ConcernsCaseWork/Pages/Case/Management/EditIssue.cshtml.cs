@@ -18,8 +18,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditIssuePageModel> _logger;
 		
-		public CaseModel CaseModel { get; private set; }
-
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int CaseUrn { get; set; }
 

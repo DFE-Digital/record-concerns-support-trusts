@@ -72,7 +72,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(page.Url, Is.EqualTo("/case/1/management"));
 			
 			mockCaseModelService.Verify(c => 
