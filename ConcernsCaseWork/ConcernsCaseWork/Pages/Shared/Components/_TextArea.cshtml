@@ -16,7 +16,10 @@
 }
 <div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
-        <h2 class="govuk-heading-m">@Model.Heading</h2>
+        @if (!string.IsNullOrEmpty(Model.Heading))
+        {
+            <h2 class="govuk-heading-m">@Model.Heading</h2>
+        }
         @if (!string.IsNullOrEmpty(Model.HintText))
         {
             <div class="govuk-hint">@Model.HintText</div>

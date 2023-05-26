@@ -36,7 +36,7 @@ describe("Editing a case", () =>
 		cy.login();
 	});
 
-    it(("Should create a case with only required fields"), () => {
+    it("Should create a case with only required fields", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
@@ -140,22 +140,26 @@ describe("Editing a case", () =>
             .withTerritory("North and UTC - North West")
             .apply();
 
-
         Logger.Log("Edit Issue")
         caseManagementPage
             .showAllConcernDetails()
             .editIssue();
 
         editIssuePage
-            .hasIssue("This is an issue")
+            .hasIssue("This is an issue");
+
+        editIssuePage
+            .clearIssue()
+            .apply()
+            .hasValidationError("Issue is required");
+
+        editIssuePage
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
 
         Logger.Log("Checking accessibility on edit issue");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editIssuePage
             .withIssue("New Issue")
