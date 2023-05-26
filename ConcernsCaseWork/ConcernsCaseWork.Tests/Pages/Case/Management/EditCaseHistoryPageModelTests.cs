@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -50,89 +50,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.Multiple(() =>
 			{
 				Assert.That(page, Is.Not.Null);
-				Assert.That(sut.CaseHistory, Is.EqualTo(caseModel.CaseHistory));
-				Assert.That(sut.ReferrerUrl, Is.EqualTo($"/case/{caseUrn}/management"));
+				Assert.That(sut.CaseHistory.Text.StringContents, Is.EqualTo(caseModel.CaseHistory));
 			});
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(caseUrn), Times.Once);
 
 			mockLogger.VerifyLogInformationWasCalled();
 			mockLogger.VerifyLogErrorWasNotCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var caseUrn = _fixture.Create<long>();
-			var userName = _fixture.Create<string>();
-			var caseModel = CaseFactory.BuildCaseModel();
-
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCaseHistoryPageModel>>();
-			var mockClaimsServicePrincipal = new Mock<IClaimsPrincipalHelper>();
-
-			mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
-
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
-
-			var sut = SetupEditCaseHistoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
-
-			// act
-			var pageResponse = await sut.OnGetAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.Multiple(() =>
-			{
-				Assert.That(page, Is.Not.Null);
-				Assert.That(sut.CaseHistory, Is.Null);
-				Assert.That(sut.TempData, Is.Not.Null);
-				Assert.That(sut.TempData["Error.Message"],
-					Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-			});
-
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-
-			mockLogger.VerifyLogInformationWasCalled();
-			mockLogger.VerifyLogErrorWasCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		public async Task WhenOnPost_MissingCaseUrn_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCaseHistoryPageModel>>();
-			var mockClaimsServicePrincipal = new Mock<IClaimsPrincipalHelper>();
-
-			var sut = SetupEditCaseHistoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
-
-			// act
-			var pageResponse = await sut.OnPost();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.Multiple(() =>
-			{
-				Assert.That(page, Is.Not.Null);
-				Assert.That(sut.CaseHistory, Is.Null);
-				Assert.That(sut.TempData, Is.Not.Null);
-				Assert.That(sut.TempData["Error.Message"],
-					Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-			});
-
-			mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-
-			mockLogger.VerifyLogInformationWasCalled();
-			mockLogger.VerifyLogErrorWasCalled();
 			mockLogger.VerifyNoOtherCalls();
 		}
 
@@ -152,7 +76,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var sut = SetupEditCaseHistoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 			sut.CaseUrn = caseUrn;
-			sut.CaseHistory = caseHistory;
+			sut.CaseHistory = _fixture.Create<TextAreaUiComponent>();
+			sut.CaseHistory.Text.StringContents = caseHistory;
 
 			// act
 			var pageResponse = await sut.OnPost();

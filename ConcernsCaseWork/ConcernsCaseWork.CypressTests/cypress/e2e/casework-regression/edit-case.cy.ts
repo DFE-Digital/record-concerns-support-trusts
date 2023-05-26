@@ -212,8 +212,6 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit de-escalation point");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editDeEscalationPage
             .withDeescalationPoint("New de-descalation point")
             .apply();
@@ -231,8 +229,6 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit next steps");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editNextStepsPage
             .withNextSteps("New next step")
             .apply();
@@ -249,8 +245,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case history");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseHistoryPage
             .withCaseHistory("New case history")

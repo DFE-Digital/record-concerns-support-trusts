@@ -1,12 +1,13 @@
 ﻿@page "/case/{urn:long}/management/casehistory"
+@using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.EditCaseHistoryPageModel
 
 @{
-	ViewData["Title"] = "Edit case history";
-	ViewData["CancelBackLink"] = Model.ReferrerUrl;
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Edit case history";
+    var nonce = HttpContext.GetNonce();
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
 <div class="govuk-width-container">
@@ -15,29 +16,21 @@
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
-			<h1 class="govuk-heading-l">
-				Edit case history
-			</h1>
-
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
             	<partial name="_Error"/>
             }
 			else
 			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-				
+                <partial name="_ValidationErrors" />
+
+                <h1 class="govuk-heading-l">
+                    Edit case history
+                </h1>
+
 				<form role="form" asp-page-handler="CaseHistory" method="post" id="case-history-form" novalidate>
 
-					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="4300">
-						<div class="govuk-form-group">
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-history" name="case-history" data-testid="case-history" rows="3" aria-describedby="case-history">@Model.CaseHistory</textarea>
-						</div>
-
-						<div id="case-history-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 4300 characters
-						</div>
-					</div>
+                    <partial name="Components/_TextArea" model="Model.CaseHistory" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
@@ -51,9 +44,6 @@
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {	
-						let validator = formValidator($("#case-history-form")[0]);
-						addCaseHistoryValidator(validator);
-						
 						autoResizer();
 					});
 				</script>
