@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
-using Ardalis.GuardClauses;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -12,7 +12,6 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph.Models;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -34,7 +33,25 @@ namespace ConcernsCaseWork.Pages.Case
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		
+
+		[BindProperty]
+		public TextAreaUiComponent Issue { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CurrentStatus { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CaseAim { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent DeEscalationPoint { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent NextSteps { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CaseHistory { get; set; }
+
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
@@ -51,44 +68,50 @@ namespace ConcernsCaseWork.Pages.Case
 			
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
-			
-			// Fetch UI data
-			await LoadPage();
+			_logger.LogMethodEntered();
+
+			try
+			{
+				// Fetch UI data
+				await LoadPage();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
+			}
+
+			return Page();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
 			{
-				_logger.LogInformation("Case::DetailsPageModel::OnPostAsync");
-				
-				var issue = Request.Form["issue"];
-				var currentStatus = Request.Form["current-status"];
-				var nextSteps = Request.Form["next-steps"];
-				var caseAim = Request.Form["case-aim"];
-				var deEscalationPoint = Request.Form["de-escalation-point"];
-				var caseHistory = Request.Form["case-history"];
+				_logger.LogMethodEntered();
 
-				if (string.IsNullOrEmpty(issue)) 
-					throw new Exception("Missing form values");
+				if (!ModelState.IsValid)
+				{
+					await LoadPage();
+					return Page();
+				}
 				
 				// Complete create case model
 				var userState = await GetUserState();
 				
 				// get the trust being used for the case
-				var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+				var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
 				
 				var createCaseModel = userState.CreateCaseModel;
-				createCaseModel.Issue = issue;
-				createCaseModel.CurrentStatus = currentStatus;
-				createCaseModel.NextSteps = nextSteps;
-				createCaseModel.CaseAim = caseAim;
-				createCaseModel.DeEscalationPoint = deEscalationPoint;
+				createCaseModel.Issue = Issue.Text.StringContents;
+				createCaseModel.CurrentStatus = CurrentStatus.Text.StringContents;
+				createCaseModel.NextSteps = NextSteps.Text.StringContents;
+				createCaseModel.CaseAim = CaseAim.Text.StringContents;
+				createCaseModel.DeEscalationPoint = DeEscalationPoint.Text.StringContents;
 				createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
-				createCaseModel.CaseHistory = caseHistory;
+				createCaseModel.CaseHistory = CaseHistory.Text.StringContents;
 				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
@@ -102,45 +125,40 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::DetailsPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
-			
-			return await LoadPage();
-		}
-		
-		private async Task<ActionResult> LoadPage()
-		{
-			try
-			{
-				var userState = await GetUserState();
-				var trustUkPrn = userState.TrustUkPrn;
 
-				if (string.IsNullOrEmpty(trustUkPrn))
-					throw new Exception("Cache TrustUkprn is null");
-		
-				CreateCaseModel = userState.CreateCaseModel;
-				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
-				{
-					EventName = "CREATE CASE",
-					EventDescription = "Loading the page",
-					EventPayloadJson = "",
-					EventUserName = userState.UserName
-				});
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::DetailsPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			return Page();
 		}
 		
+		private async Task LoadPage()
+		{
+			var userState = await GetUserState();
+			var trustUkPrn = userState.TrustUkPrn;
+
+			if (string.IsNullOrEmpty(trustUkPrn))
+				throw new Exception("Cache TrustUkprn is null");
+		
+			CreateCaseModel = userState.CreateCaseModel;
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+			{
+				EventName = "CREATE CASE",
+				EventDescription = "Loading the page",
+				EventPayloadJson = "",
+				EventUserName = userState.UserName
+			});
+
+			Issue = CaseComponentBuilder.BuildIssue(nameof(Issue), Issue?.Text.StringContents);
+			CurrentStatus = CaseComponentBuilder.BuildCurrentStatus(nameof(CurrentStatus), CurrentStatus?.Text.StringContents);
+			CaseAim = CaseComponentBuilder.BuildCaseAim(nameof(CaseAim), CaseAim?.Text.StringContents);
+			DeEscalationPoint = CaseComponentBuilder.BuildDeEscalationPoint(nameof(DeEscalationPoint), DeEscalationPoint?.Text.StringContents);
+			NextSteps = CaseComponentBuilder.BuildNextSteps(nameof(NextSteps), NextSteps?.Text.StringContents);
+			CaseHistory = CaseComponentBuilder.BuildCaseHistory(nameof(CaseHistory), CaseHistory?.Text.StringContents);
+		}
+
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _userStateCache.GetData(User.Identity?.Name);
