@@ -1,18 +1,15 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
@@ -20,6 +17,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 	[Parallelizable(ParallelScope.All)]
 	public class EditDeEscalationPointPageModelTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsPage()
 		{
@@ -32,11 +31,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(caseModel);
 
 			var pageModel = SetupEditDeEscalationPointPageModel(mockCaseModelService.Object, mockLogger.Object);
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
 			
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-
 			// act
 			var pageResponse = await pageModel.OnGetAsync();
 
@@ -45,67 +40,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as PageResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.DeEscalationPoint, Is.Not.Null);
 			
 			mockCaseModelService.Verify(c => 
 				c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
-		}
-
-		[Test]
-		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditDeEscalationPointPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
-			
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-			var pageModel = SetupEditDeEscalationPointPageModel(mockCaseModelService.Object, mockLogger.Object);
-			
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-			
-			// act
-			var pageResponse = await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-			
-			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-		}
-
-		[Test]
-		public async Task WhenOnPostEditDeEscalationPoint_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditDeEscalationPointPageModel>>();
-
-			var pageModel = SetupEditDeEscalationPointPageModel(mockCaseModelService.Object, mockLogger.Object);
-			
-			// act
-			var pageResponse = await pageModel.OnPostEditDeEscalationPoint("https://returnto/thispage");
-			
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-
-			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -118,26 +56,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockCaseModelService.Setup(c => c.PatchDeEscalationPoint(It.IsAny<PatchCaseModel>()));
 
 			var pageModel = SetupEditDeEscalationPointPageModel(mockCaseModelService.Object, mockLogger.Object);
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "de-escalation-point", new StringValues("de-escalation-point") }
-				});
+
+			pageModel.CaseUrn = 1;
+
+			pageModel.DeEscalationPoint = _fixture.Create<TextAreaUiComponent>();
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditDeEscalationPoint("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditDeEscalationPoint();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(page.Url, Is.EqualTo("/case/1/management"));
 			
 			mockCaseModelService.Verify(c => 
 				c.PatchDeEscalationPoint(It.IsAny<PatchCaseModel>()), Times.Once);
