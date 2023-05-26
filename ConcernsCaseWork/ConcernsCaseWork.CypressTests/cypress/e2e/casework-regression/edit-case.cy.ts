@@ -178,12 +178,9 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit current status");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editCurrentStatusPage
             .withCurrentStatus("New Status")
             .apply();
-
 
         Logger.Log("Edit Case Aim")
         caseManagementPage
@@ -197,8 +194,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case aim");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseAimPage
             .withCaseAim("New Case aim")
