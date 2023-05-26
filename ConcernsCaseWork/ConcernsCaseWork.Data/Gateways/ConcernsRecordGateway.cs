@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public ConcernsRecord GetConcernsRecordByUrn(int id)
         {
-            return _concernsDbContext.ConcernsRecord
+            return _concernsDbContext.ConcernsRecord.AsNoTracking()
 				.Include(f=> f.ConcernsType)
 				.Include(f => f.ConcernsCase)
 				.Include(f => f.ConcernsRating)
