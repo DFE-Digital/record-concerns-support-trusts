@@ -36,7 +36,7 @@ describe("Editing a case", () =>
 		cy.login();
 	});
 
-    it("Should create a case with only required fields", () => {
+    it("Should be able to edit a case", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
