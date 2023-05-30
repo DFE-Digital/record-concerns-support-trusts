@@ -213,6 +213,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IDecisionService, DecisionService>();
 			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
 			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
+			services.AddScoped<IFakeTrustService, FakeTrustService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -253,9 +254,11 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
 		{
+			var test = configuration.GetSection(TrustSearchOptions.Cache);
 			services.Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache));
 			services.Configure<TrustSearchOptions>(configuration.GetSection(TrustSearchOptions.Cache));
 			services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Site));
+			services.Configure<FakeTrustOptions>(configuration.GetSection("FakeTrusts"));
 		}
 	}
 }
