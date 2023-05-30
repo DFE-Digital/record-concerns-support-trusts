@@ -39,14 +39,15 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 UpdatedAt = recordRequest.UpdatedAt,
                 ReviewAt = recordRequest.ReviewAt,
                 ClosedAt = null,
-                Name = recordRequest.Name,
+				Name = recordRequest.Name,
                 Description = recordRequest.Description,
                 Reason = recordRequest.Reason,
                 ConcernsCase = concernsCase,
                 ConcernsType = concernsType,
                 ConcernsRating = concernsRating,
                 StatusId = recordRequest.StatusId,
-                ConcernsMeansOfReferral = concernsMeansOfReferral
+                ConcernsMeansOfReferral = concernsMeansOfReferral,
+				DeletedAt = null
             };
 
             var result = ConcernsRecordFactory.Create(recordRequest, concernsCase, concernsType, concernsRating, concernsMeansOfReferral);
@@ -56,13 +57,15 @@ namespace ConcernsCaseWork.API.Tests.Factories
         [Fact]
         public void Update_ReturnsConcernsRecord_WhenGivenAnConcernsRecordRequest()
         {
-	        var concernsCase = Builder<ConcernsCase>.CreateNew().Build();
+			BuilderSetup.DisablePropertyNamingFor<ConcernsRecord, DateTime?>(f => f.DeletedAt);
+
+			var concernsCase = Builder<ConcernsCase>.CreateNew().Build();
 	        var concernsType = Builder<ConcernsType>.CreateNew().Build();
 	        var concernsRating = Builder<ConcernsRating>.CreateNew().Build();
 	        var concernsMeansOfReferral = Builder<ConcernsMeansOfReferral>.CreateNew().Build();
-	        var originalConcernsRecord = Builder<ConcernsRecord>.CreateNew().Build();
-            
-	        var recordRequest = new ConcernsRecordRequest
+			var originalConcernsRecord = Builder<ConcernsRecord>.CreateNew().Build();
+
+			var recordRequest = new ConcernsRecordRequest
 	        {
 		        CreatedAt = new DateTime(2021, 05, 14),
 		        UpdatedAt = new DateTime(2021, 05, 14),
