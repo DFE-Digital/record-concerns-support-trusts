@@ -70,6 +70,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUpdateConcernsCase, UpdateConcernsCase>();
 			services.AddScoped<IIndexConcernsTypes, IndexConcernsTypes>();
 			services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
+			services.AddScoped<IDeleteConcernsRecord, DeleteConcernsRecord>();
+			services.AddScoped<IGetConcernsRecord, GetConcernsRecord>();
 
 			services.AddScoped<IIndexConcernsMeansOfReferrals, IndexConcernsMeansOfReferrals>();
 			services.AddScoped<IConcernsMeansOfReferralGateway, ConcernsMeansOfReferralGateway>();
