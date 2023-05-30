@@ -28,13 +28,13 @@ namespace ConcernsCaseWork.API.UseCases
         }
         public ConcernsRecordResponse Execute(ConcernsRecordRequest request)
         {
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn);
-            var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId);
-            var concernsRatings = _concernsRatingGateway.GetRatingById(request.RatingId);
-            var concernsMeansOfReferral = request.MeansOfReferralId != null ? _concernsMeansOfReferralGateway.GetMeansOfReferralById((int)request.MeansOfReferralId) : null;
-            var concernsRecordToCreate = ConcernsRecordFactory.Create(request, concernsCase, concernsType, concernsRatings, concernsMeansOfReferral);
-            var savedConcernsRecord = _concernsRecordGateway.SaveConcernsCase(concernsRecordToCreate);
-            return ConcernsRecordResponseFactory.Create(savedConcernsRecord);
+	        var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn);
+	        var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId);
+	        var concernsRatings = _concernsRatingGateway.GetRatingById(request.RatingId);
+	        var concernsMeansOfReferral = request.MeansOfReferralId != null ? _concernsMeansOfReferralGateway.GetMeansOfReferralById((int)request.MeansOfReferralId) : null;
+	        var concernsRecordToCreate = ConcernsRecordFactory.Create(request, concernsCase, concernsType, concernsRatings, concernsMeansOfReferral);
+	        var savedConcernsRecord = _concernsRecordGateway.SaveConcernsCase(concernsRecordToCreate);
+	        return ConcernsRecordResponseFactory.Create(savedConcernsRecord);
         }
     }
 }
