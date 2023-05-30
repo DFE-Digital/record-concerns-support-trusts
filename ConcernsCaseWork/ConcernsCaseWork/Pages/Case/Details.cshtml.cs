@@ -81,6 +81,7 @@ namespace ConcernsCaseWork.Pages.Case
 					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 						throw new Exception("CaseUrn is null or invalid to parse");
 					await UpdateCase(caseUrn);
+					return RedirectToPage("management/index", new { urn = caseUrn });
 				}
 				else
 				{

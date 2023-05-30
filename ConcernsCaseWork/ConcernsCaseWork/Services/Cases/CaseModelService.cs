@@ -291,7 +291,6 @@ namespace ConcernsCaseWork.Services.Cases
 
 				var newCaseDto = caseDto with { 
 					UpdatedAt = DateTimeOffset.Now,
-					Territory = createCaseModel.Territory,
 					CaseHistory = createCaseModel.CaseHistory,
 					Issue = createCaseModel.Issue,
 					CaseAim = createCaseModel.CaseAim,
@@ -299,11 +298,17 @@ namespace ConcernsCaseWork.Services.Cases
 					CurrentStatus = createCaseModel.CurrentStatus,
 					NextSteps = createCaseModel.NextSteps,
 					RatingId = createCaseModel.RatingId,
-					StatusId = createCaseModel.StatusId,
-					DeEscalationPoint = createCaseModel.DeEscalationPoint
+					DeEscalationPoint = createCaseModel.DeEscalationPoint,
+					
+					
 				};
-					var urn =await _caseService.PatchCaseByUrn(newCaseDto);
-				 return urn.Urn;
+				createCaseModel.StatusId = caseDto.StatusId;
+				var urn =await _caseService.PatchCaseByUrn(newCaseDto);
+				if (createCaseModel.CreateRecordsModel.Any())
+				{
+					 await PostConcerns(createCaseModel, caseUrn);
+				}
+				return urn.Urn;
 			}
 			catch (Exception ex)
 			{
