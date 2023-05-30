@@ -34,5 +34,7 @@ public class ConcernsRecordConfiguration : IEntityTypeConfiguration<ConcernsReco
 			.HasConstraintName("FK__ConcernsRecord_ConcernsMeansOfReferral");
 		
 		builder.HasIndex(x => new {x.CaseId, x.CreatedAt}).IsUnique();
+
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 	}
 }
