@@ -3,15 +3,25 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Options;
 @using NetEscapades.AspNetCore.SecurityHeaders
+@using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Models.FindTrustModel
 
 @inject IOptions<TrustSearchOptions> trustSearchOptions
 
 @{
-	if (String.IsNullOrWhiteSpace(Model.Nonce))
-	{
-		throw new InvalidOperationException("Nonce not provided by parent page");
-	}
+    if (String.IsNullOrWhiteSpace(Model.Nonce))
+    {
+        throw new InvalidOperationException("Nonce not provided by parent page");
+    }
+
+    var test = ViewContext.ModelState;
+
+    var errors = new List<ValidationResult>();
+
+    foreach (var modelStateEntry in ViewData.ModelState)
+    {
+        errors.AddRange(modelStateEntry.Value.Errors.Select(e => new ValidationResult(e.ErrorMessage)));
+    }
 }
 
 <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
@@ -35,7 +45,9 @@
 	</fieldset>
 </div>
 
-<div id="autocomplete-container" class="govuk-!-margin-top-3"></div>
+<partial name="Components/_ValidationErrorDetail" model="@errors" />
+
+<div id="container-SelectedTrustUkprn" class="govuk-!-margin-top-3"></div>
 <div class="ccms-loader govuk-!-display-none"></div>
 <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="trustsearch__listbox" role="listbox">
 	<li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
@@ -52,8 +64,7 @@
             hideLoader();
         })
 
-
-        const autocompleteContainer = document.getElementById("autocomplete-container");
+        const autocompleteContainer = document.getElementById("container-SelectedTrustUkprn");
         const trustSearchDelay = @trustSearchOptions.Value.MilliSecondPauseBeforeSeach;
         let trustSearchResults = undefined;
         let selectedTrustUkprn = undefined;
