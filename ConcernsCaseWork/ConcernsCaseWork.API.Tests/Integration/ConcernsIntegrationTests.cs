@@ -9,6 +9,7 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -695,6 +696,20 @@ public class ConcernsIntegrationTests : IDisposable
 		return concernsCase;
 	}
 
+	[Fact]
+	public async Task DeleteMissingConcernsRecord_Returns_NotFound()
+	{
+		var currentRecordId = 987654321;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Delete,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordId}"),
+		};
+		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+	}
 
 	[Fact]
 	public async Task DeleteConcernsRecord_Returns_NoConcernsRecordForCase()
