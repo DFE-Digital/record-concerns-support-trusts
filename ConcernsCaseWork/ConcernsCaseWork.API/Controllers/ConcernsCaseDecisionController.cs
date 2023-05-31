@@ -173,14 +173,11 @@ namespace ConcernsCaseWork.API.Controllers
 
 				return NotFound();
 			}
-			else
-			{
 
-				await _deleteDecision.Execute(new DeleteDecisionRequest(urn, decisionId), cancellationToken);
-				LogInfo($"Successfully Deleted Concern Decision By Urn {urn}, DecisionId {decisionId}");
+			await _deleteDecision.Execute(new DeleteDecisionRequest(urn, decisionId), cancellationToken);
+			LogInfo($"Successfully Deleted Concern Decision By Urn {urn}, DecisionId {decisionId}");
 
-				return NoContent();
-			}
+			return NoContent();
 		}
 
 
