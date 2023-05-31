@@ -11,6 +11,7 @@ namespace ConcernsCaseWork.Service.Trusts
 	public sealed class TrustService : TramsAbstractService, ITrustService
 	{
 		private readonly ILogger<TrustService> _logger;
+		private readonly string TrustEndpointVersion = "v3";
 
 		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
@@ -46,7 +47,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{TrustEndpointVersion}/trust/{ukPrn}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -88,7 +89,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
+				var endpoint = $"/{TrustEndpointVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
 
 				var response = await GetByPagination<TrustSearchDto>(endpoint);
 
