@@ -1,3 +1,4 @@
+using Azure.Core;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
@@ -15,19 +16,25 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly ILogger<ConcernsRecordController> _logger;
         private readonly ICreateConcernsRecord _createConcernsRecord;
         private readonly IUpdateConcernsRecord _updateConcernsRecord;
+		private readonly IGetConcernsRecord _getConcernsRecord;
+		private readonly IDeleteConcernsRecord _deleteConcernsRecord;
         private readonly IGetConcernsRecordsByCaseUrn _getConcernsRecordsByCaseUrn;
 
         public ConcernsRecordController(
             ILogger<ConcernsRecordController> logger, 
             ICreateConcernsRecord createConcernsRecord,
             IUpdateConcernsRecord updateConcernsRecord,
-            IGetConcernsRecordsByCaseUrn getConcernsRecordsByCaseUrn)
+			IDeleteConcernsRecord deleteConcernsRecord,
+            IGetConcernsRecordsByCaseUrn getConcernsRecordsByCaseUrn,
+			IGetConcernsRecord getConcernsRecord)
         {
             _logger = logger;
             _createConcernsRecord = createConcernsRecord;
             _updateConcernsRecord = updateConcernsRecord;
-            _getConcernsRecordsByCaseUrn = getConcernsRecordsByCaseUrn;
-        }
+			_deleteConcernsRecord = deleteConcernsRecord;
+			_getConcernsRecordsByCaseUrn = getConcernsRecordsByCaseUrn;
+			_getConcernsRecord = getConcernsRecord;
+		}
         
         [HttpPost]
         [MapToApiVersion("2.0")]
@@ -70,5 +77,26 @@ namespace ConcernsCaseWork.API.Controllers
             var response = new ApiResponseV2<ConcernsRecordResponse>(records, pagingResponse);
             return Ok(response);
         }
-    }
+
+
+		[HttpDelete("{id}")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Delete(int id, CancellationToken cancellationToken = default)
+		{
+			_logger.LogInformation($"Attempting to delete Concerns Record {id}");
+
+			var concernsRecord = _getConcernsRecord.Execute(id);
+			if (concernsRecord == null)
+			{
+				_logger.LogInformation($"Deleting Concerns Record failed: No Concerns Record matching Id {id} was found");
+				return NotFound();
+			}
+
+			_deleteConcernsRecord.Execute(id);
+
+			_logger.LogInformation($"Successfully deleted Concerns Record {id}");
+
+			return NoContent();
+		}
+	}
 }
