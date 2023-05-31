@@ -29,9 +29,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 
-		[BindProperty]
-		public TextAreaUiComponent CaseHistory { get; set; }
-
 		public DetailsPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache,
@@ -52,7 +49,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			try
 			{
 				await LoadPageData();
-				LoadComponents();
 
 				return Page();
 			}
@@ -70,14 +66,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			try
 			{
 				_logger.LogMethodEntered();
-
-				if (!ModelState.IsValid)
-				{
-					await LoadPageData();
-					LoadComponents();
-
-					return Page();
-				}
 
 				var createCaseModel = await BuildCreateCaseModel();
 
@@ -107,11 +95,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 		}
 
-		private void LoadComponents()
-		{
-			CaseHistory = BuildCaseHistoryComponent(CaseHistory?.Text.StringContents);
-		}
-
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _userStateCache.GetData(User.Identity?.Name);
@@ -121,31 +104,16 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			return userState;
 		}
 
-		private TextAreaUiComponent BuildCaseHistoryComponent(string contents = "")
-		=> new("case-history", nameof(CaseHistory), "Case history (optional)")
-		{
-			HintText = "You can record any information that gives you additional context to the case",
-			Text = new ValidateableString()
-			{
-				MaxLength = 4300,
-				StringContents = contents,
-				DisplayName = "Case history"
-			}
-		};
-
 		private async Task<CreateCaseModel> BuildCreateCaseModel()
 		{
 			var userState = await GetUserState();
 
 			var result = userState.CreateCaseModel;
 
-			var caseHistory = CaseHistory.Text.StringContents;
-
 			// get the trust being used for the case
 			var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
 
 			result.TrustUkPrn = trust.GiasData.UkPrn;
-			result.CaseHistory = caseHistory;
 			result.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 
 			result.StatusId = (long)CaseStatus.Live;
