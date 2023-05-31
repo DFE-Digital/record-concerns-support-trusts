@@ -21,5 +21,7 @@ public class NTIWarningLetterConditionMappingConfiguration : IEntityTypeConfigur
 			.HasOne(n => n.NTIWarningLetterCondition)
 			.WithMany(n => n.WarningLetterConditionsMapping)
 			.HasForeignKey(n => n.NTIWarningLetterConditionId);
+
+		//builder.HasQueryFilter(t => !t.NTIWarningLetterCondition.IsDeleted);
 	}
 }
