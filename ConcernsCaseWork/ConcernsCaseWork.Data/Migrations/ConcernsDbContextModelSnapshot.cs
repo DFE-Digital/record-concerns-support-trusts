@@ -76,6 +76,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTimeOffset>("ReceivedRequestDate")
                         .HasColumnType("datetimeoffset");
 
@@ -689,6 +692,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")

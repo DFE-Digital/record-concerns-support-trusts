@@ -30,11 +30,22 @@ import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
+import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
+import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
+import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
+import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 
 describe("Testing closing of cases when there are case actions and concerns", () => {
     let caseId: string;
-    let trustName: string;
+    let trustName: string = "Production Smoke Test Trust";
     let now: Date;
+
+    const createCasePage = new CreateCasePage();
+    const createConcernPage = new CreateConcernPage();
+    const addTerritoryPage = new AddTerritoryPage();
+    const addConcernDetailsPage = new AddConcernDetailsPage();
+    const addDetailsPage = new AddDetailsPage();
 
     const editFinancialPlanPage = new EditFinancialPlanPage();
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -68,16 +79,67 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
     beforeEach(() => {
         cy.login();
+        // cy.loginWithCredentials();
         now = new Date();
 
-        cy.basicCreateCase()
-            .then((id: number) => {
-                caseId = id + "";
-                return CaseManagementPage.getTrust()
-            })
-            .then((trust: string) => {
-                trustName = trust.trim();
-            });
+        Logger.Log("Create a case");
+        createCasePage
+            .createCase()
+            .withTrustName(trustName)
+            .selectOption()
+            .confirmOption();
+
+        Logger.Log("Create a valid concern");
+        createConcernPage
+            .withConcernType("Financial")
+            .withSubConcernType("Financial: Deficit")
+            .withRating("Red-Amber")
+            .withMeansOfRefferal("External")
+            .addConcern();
+
+        Logger.Log("Check Concern details are correctly populated");
+        createConcernPage
+            .hasTrustSummaryDetails(trustName)
+            .hasConcernType("Financial: Deficit")
+            .nextStep();
+        
+        Logger.Log("Populate risk to trust");
+        addDetailsPage
+            .withRating("Red-Plus")
+            .nextStep();
+
+        Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
+        addTerritoryPage
+            .hasTrustSummaryDetails(trustName)
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust("Red Plus")
+
+        Logger.Log("Populate territory");
+        addTerritoryPage
+            .withTerritory("North and UTC - North East")
+            .nextStep();
+
+        Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
+        addConcernDetailsPage
+            .hasTrustSummaryDetails(trustName)
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust("Red Plus")
+            .hasTerritory("North and UTC - North East");
+
+        Logger.Log("Add concern details with valid text limit");
+        addConcernDetailsPage
+            .withIssue("This is an issue")
+            .withCurrentStatus("This is the current status")
+            .withCaseAim("This is the case aim")
+            .withDeEscalationPoint("This is the de-escalation point")
+            .withNextSteps("This is the next steps")
+            .withCaseHistory("This is the case history")
+            .createCase();
+
+        CaseManagementPage.getCaseIDText()
+        .then((id: string) => {
+            caseId = id;
+        })
     });
 
     describe("When we have case actions and concerns that have not been closed", () => {
@@ -104,7 +166,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             CaseManagementPage.getBackBtn().click();
 
-
             resolveAllAllowedCaseActions();
 
             closeConcern();
@@ -112,7 +173,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             closeCaseCheckingValidation();
             verifyClosedCaseDetails();
             
-
             Logger.Log("Verifying the closed case action is displayed");
             viewClosedCasePage
                 .hasClosedCaseAction("SRMA")
@@ -451,7 +511,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                     .hasCreatedDate(toDisplayDate(now))
                     .hasClosedDate(toDisplayDate(now))
                     .hasTrust(trustName)
-                    .hasConcern("Governance and compliance: Compliance")
+                    .hasConcern("Financial: Deficit")
 
                 Logger.Log("Checking accessibility on Closed Case Details");
                 cy.excuteAccessibilityTests();
@@ -462,14 +522,14 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         Logger.Log("Validate Closed Case has correct details");
         viewClosedCasePage
-            .hasConcerns("Governance and compliance: Compliance")
-            .hasTerritory("Midlands and West - West Midlands")
-            .hasIssue("test")
-            .hasCurrentStatus("current status")
-            .hasCaseAim("case aim")
-            .hasDeEscalationPoint("de-escalation point")
-            .hasNextSteps("next steps")
-            .hasCaseHistory("case history")
+            .hasConcerns("Financial: Deficit")
+            .hasTerritory("North and UTC - North East")
+            .hasIssue("This is an issue")
+            .hasCurrentStatus("This is the current status")
+            .hasCaseAim("This is the case aim")
+            .hasDeEscalationPoint("This is the de-escalation point")
+            .hasNextSteps("This is the next steps")
+            .hasCaseHistory("This is the case history")
             .hasRationaleForClosure("Closing case");
             
             Logger.Log("Checking accessibility on close case details");

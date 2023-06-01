@@ -1,3 +1,5 @@
+import { Logger } from "../../../common/logger";
+
 export class DecisionOutcomePage {
 	
 	public withDecisionOutcomeStatus(decisionOutcomeID: string): this {
@@ -102,6 +104,13 @@ export class DecisionOutcomePage {
 		return this;
 	}
 
+	public deselectAllBusinessAreas(): this
+	{
+		Logger.Log("Deselecting all business areas");
+		cy.get(".govuk-checkboxes__input").uncheck();
+
+		return this;
+	}
 
 	public saveDecisionOutcome(): this {
 		cy.get('#add-decision-outcome-button').click();
@@ -112,7 +121,7 @@ export class DecisionOutcomePage {
 	public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);
 
-		cy.get("#decision-error-list").should(
+		cy.getById("errorSummary").should(
 			"contain.text",
 			message
 		);
@@ -123,7 +132,7 @@ export class DecisionOutcomePage {
 	public hasDecisionOutcomeStatus(decisionOutcomeID: string): this {
 		cy.task("log", `Has decision outcome status ${decisionOutcomeID}`);
 
-		cy.getByTestId(decisionOutcomeID).should('have.value', decisionOutcomeID);
+		cy.getByTestId(decisionOutcomeID).should('be.checked');
 
 		return this;
 	}
@@ -208,7 +217,7 @@ export class DecisionOutcomePage {
 	public hasDecisionAuthouriser(authoriserID: string): this {
 		cy.task("log", `Has authoriser ${authoriserID}`);
 
-		cy.getByTestId(authoriserID).should('have.value', authoriserID);
+		cy.getByTestId(authoriserID).should('be.checked');
 
 		return this;
 	}

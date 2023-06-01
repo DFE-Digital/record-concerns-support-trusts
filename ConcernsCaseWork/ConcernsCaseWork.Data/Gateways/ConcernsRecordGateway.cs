@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
@@ -28,7 +29,19 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public ConcernsRecord GetConcernsRecordByUrn(int id)
         {
-            return _concernsDbContext.ConcernsRecord.FirstOrDefault(r => r.Id == id);
+            return _concernsDbContext.ConcernsRecord.AsNoTracking()
+				.Include(f=> f.ConcernsType)
+				.Include(f => f.ConcernsCase)
+				.Include(f => f.ConcernsRating)
+				.Include(f => f.ConcernsMeansOfReferral)
+				.SingleOrDefault(r => r.Id == id);
         }
-    }
+
+		public void Delete(int id)
+		{
+			var c = _concernsDbContext.ConcernsRecord.SingleOrDefault(f=> f.Id == id);
+			c.DeletedAt = DateTime.Now;
+			_concernsDbContext.SaveChanges();
+		}
+	}
 }
