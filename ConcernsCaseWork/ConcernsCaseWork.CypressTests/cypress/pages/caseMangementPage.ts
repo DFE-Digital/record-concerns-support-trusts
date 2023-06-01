@@ -7,72 +7,16 @@ class CaseManagementPage {
         return cy.get('h1[class="govuk-heading-l"]');
     }
 
-    getHeadingInnerText() {
-        return cy.get('span.govuk-caption-m');
-    }
-
-    getSubHeadingText() {
-        return cy.get('[class="govuk-caption-m"]');
-    }
-
-    getTrustHeadingText() {
-        return cy.get('h2[class="govuk-heading-m"]');
-    }
-
-    getConcernEditBtn() {
-        return cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]');
-    }
-
-    getConcernTable() {
-        return cy.get('[class^="govuk-table-case-details"]');
-    }
-
-    getConcernTableAddConcernBtn() {
-        return cy.contains("Add concern");
-    }
-
-    getAddConcernBtn() {
-    cy.get('[data-testid="Add_Button_Concern"]').click();
-}
-
     getAddToCaseBtn() {
         return cy.get('[role="button"]').contains('Add to case');
-    }
-
-    getCaseDetailsTab() {
-        return cy.get('[id="tab_case-details"]');
     }
 
     getTrustOverviewTab() {
         return cy.get('[id="tab_trust-overview"]');
     }
 
-    getOpenActionsTable() {
-        return cy.get('[id="open-case-actions"]');
-    }
-
-    getClosedActionsTable() {
-        return cy.get('[id="close-case-actions"]');
-    }
-
     getCloseCaseBtn() {
         return cy.get('#close-case-button');
-    }
-
-    getLiveSRMALink() {
-        return cy.get('a[id="open-case-actions"][href*="/action/srma/"]');
-    }
-
-    getOpenActionLink(action) {
-        return cy.get('[id="open-case-actions"] [href*="/action/' + action + '/"]');
-    }
-
-    getClosedActionLink(action) {
-        return cy.get('[id="closed-case-actions"] [href*="/action/' + action + '/"]');
-    }
-
-    geBackToCaseworkBtn() {
-        return cy.get('[class="buttons-topOfPage"]');
     }
 
     getCaseID() {
@@ -81,46 +25,6 @@ class CaseManagementPage {
 
     getBackBtn() {
         return cy.get('[id="back-link-event"]');
-    }
-
-    //methods
-
-    closeAllOpenConcerns() {
-        const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
-        if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
-
-            this.getConcernEditBtn().its('length').then(($elLen) => {
-
-                while ($elLen > 0) {
-
-                    const $elem = Cypress.$('.govuk-table-case-details__cell_no_border [href*="edit_rating"]');
-                    cy.log("About to close all lopen concerns");
-                    cy.log("$elem.length =" + ($elem).length)
-
-                    if (($elem).length > 0) { //Cypress.$ needed to handle element missing exception
-
-                        this.getConcernEditBtn().its('length').then(($elLen) => {
-                            cy.log("Method $elLen " + $elLen)
-                            while ($elLen > 0) {
-
-                                this.getConcernEditBtn().eq($elLen - 1).click();
-                                cy.get('[href*="closure"]').click();
-                                cy.get('.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)').click();
-                                $elLen = $elLen - 1
-                                cy.log($elLen + " more open concerns")
-                            }
-                        });
-                    } else {
-                        cy.log('All concerns closed')
-                    }
-                }
-            });
-        }
-    }
-
-    checkForOpenActions() {
-        const $elem = Cypress.$('[id="open-case-actions"]');
-        return ($elem.length);
     }
 
     getCaseIDText() {
@@ -476,7 +380,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Adding case action ${action}`);
         this.getAddCaseAction().click();
-        cy.get(`[value=${action}]`).check();
+        cy.getByTestId(action).check();
         cy.getByTestId("add-action-to-case").click();
 
         return this;
@@ -795,7 +699,14 @@ class CaseManagementPage {
 
         return this;
     }
+    
+    public hasNoCaseNarritiveFields(): this
+    {
+        Logger.Log("Has no case narritive fields");
+        cy.getByTestId("case-narritive-fields-container").should("not.exist");
 
+        return this;
+    }
 }
 
 export default new CaseManagementPage();

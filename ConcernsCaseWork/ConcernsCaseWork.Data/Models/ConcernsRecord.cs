@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace ConcernsCaseWork.Data.Models
 {
     public class ConcernsRecord: IAuditable
@@ -20,5 +22,7 @@ namespace ConcernsCaseWork.Data.Models
         public virtual ConcernsRating ConcernsRating { get; set; }
         public virtual ConcernsMeansOfReferral ConcernsMeansOfReferral { get; set; }
         public virtual ConcernsStatus Status { get; set; }
-    }
+
+		public DateTime? DeletedAt { get; set; }
+	}
 }

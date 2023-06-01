@@ -46,6 +46,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 					.Excluding(x => x.Status)
 					.Excluding(x => x.ConcernsCaseId)
 					.Excluding(x => x.Outcome)
+					.Excluding(x => x.DeletedAt)
 				);
 
 			result.Outcome.Status.Should().Be(decision.Outcome.Status);

@@ -43,6 +43,7 @@ describe("Creating a case", () => {
         cy.visit(Cypress.env('url') + '/case/create');
         email = Cypress.env(EnvUsername);
         name = email.split("@")[0];
+        now = new Date();
     });
 
     it.only("Should validate adding a case", () => {
@@ -58,7 +59,7 @@ describe("Creating a case", () => {
         Logger.Log("You must select a case error");
         selectCaseTypePage
             .continue()
-            .hasValidationError("Select Case type");
+            .hasValidationError("Select case type");
 
         Logger.Log("Checking accessibility on select case type");
         cy.excuteAccessibilityTests();
@@ -67,75 +68,135 @@ describe("Creating a case", () => {
         selectCaseTypePage
             .withCaseType("NonConcerns")
             .continue();
+
         Logger.Log("Populate territory");
         addTerritoryPage
             .withTerritory(territory)
             .nextStep();
 
-        Logger.Log("Validate adding concern details errors");
-        addConcernDetailsPage
-            .withCaseHistoryExceedingLimit()
-            .createCase()
-            .hasValidationError("Case history must be 4300 characters or less");
-
         Logger.Log("Checking accessibility on non concerns confirmation page");
         cy.excuteAccessibilityTests();
 
-        Logger.Log("Add concern case details with valid text limit");
+        Logger.Log("Add non concerns case");
         addConcernDetailsPage
-            .withCaseHistory(caseHistoryData)
             .createCase();
 
         Logger.Log("Verify case details");
         caseManagementPage
             .hasTrust(trustName)
             .hasTerritory(territory)
-            .hasCaseHistory(caseHistoryData)
             .hasCaseOwner(name);
+        
+        Logger.Log("Ensure we cannot see the narritive fields");
+        caseManagementPage
+            .hasNoCaseNarritiveFields();
 
-      
-           
+        Logger.Log("Verify case actions for non concerns");
+        CaseManagementPage.getAddToCaseBtn().click();
+        
+        AddToCasePage.hasActions([
+            "Decision", 
+            "SRMA (School Resource Management Adviser)", 
+            "TFF (Trust Financial Forecast)"
+        ]);
 
+        Logger.Log("Create an SRMA on non concerns");
+
+        AddToCasePage.addToCase('Srma')
+        AddToCasePage.getAddToCaseBtn().click();
+
+        editSrmaPage
+            .withStatus("TrustConsidering")
+            .withDayTrustContacted("05")
+            .withMonthTrustContacted("06")
+            .withYearTrustContacted("2022")
+            .withNotes("This is my notes")
+            .save();
+
+        actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("Trust considering")
+				row.select();
+			});
+
+        viewSrmaPage
+            .hasStatus("Trust considering")
+            .hasDateTrustContacted("05 June 2022")
+            .hasNotes("This is my notes");
+        
+        Logger.Log("Closing SRMA");
+        viewSrmaPage
+            .addReason()
+
+        editSrmaPage
+            .withReason("Offer Linked")
+            .save();
+
+        viewSrmaPage
+            .cancel();
+
+        editSrmaPage
+            .confirmCancelled()
+            .save();
+
+        CaseManagementPage.getCaseIDText().then((caseId: string) => {
+            closeCase(caseId);
+            verifyClosedCaseDetails(caseId);
+        });
+
+        Logger.Log("Verifying the closed case actions details are displayed");
+        actionTable
+            .getRowByAction("SRMA")
+            .then((row) => {
+                row
+                    .hasName("SRMA")
+                    .hasStatus("SRMA cancelled")
+                    .hasOpenedDate(toDisplayDate(now))
+                    .hasClosedDate(toDisplayDate(now))
+            });
     });
 
     
-    Logger.Log("Click add concern")
-    caseManagementPage.
-    getAddConcernBtn();
+    // Logger.Log("Click add concern")
+    // caseManagementPage.
+    // getAddConcernBtn();
 
-    Logger.Log("Checking accessibility on adding concern page");
-    cy.excuteAccessibilityTests();
+    // Logger.Log("Checking accessibility on adding concern page");
+    // cy.excuteAccessibilityTests();
 
-    Logger.Log("Create a valid concern");
-    createConcernPage
-        .withConcernType("Financial")
-        .withSubConcernType("Financial: Deficit")
-        .withRating("Red-Amber")
-        .withMeansOfRefferal("External")
-        .addConcern();
+    // Logger.Log("Create a valid concern");
+    // createConcernPage
+    //     .withConcernType("Financial")
+    //     .withSubConcernType("Financial: Deficit")
+    //     .withRating("Red-Amber")
+    //     .withMeansOfRefferal("External")
+    //     .addConcern();
 
-    Logger.Log("Click next to take you to risk page and Select risk");
-    addConcernDetailsPage.nextStep();
-    createConcernPage
+    // Logger.Log("Click next to take you to risk page and Select risk");
+    // addConcernDetailsPage.nextStep();
+    // createConcernPage
 
-    .withRating("Red-Amber");
-    addConcernDetailsPage.nextStep();
-        Logger.Log("Checking accessibility on create case concern page");
-        cy.excuteAccessibilityTests();
+    // .withRating("Red-Amber");
+    // addConcernDetailsPage.nextStep();
+    //     Logger.Log("Checking accessibility on create case concern page");
+    //     cy.excuteAccessibilityTests();
 
-        Logger.Log("Populate territory");
-        addTerritoryPage
-            .withTerritory(territory)
-            .nextStep();
-            Logger.Log("Add concern details with valid text limit");
-            addConcernDetailsPage
-                .withIssue("This is an issue")
-                .withCurrentStatus("This is the current status")
-                .withCaseAim("This is the case aim")
-                .withDeEscalationPoint("This is the de-escalation point")
-                .withNextSteps("This is the next steps")
-                .withCaseHistory("This is the case history")
-                .createCase();
+    //     Logger.Log("Populate territory");
+    //     addTerritoryPage
+    //         .withTerritory(territory)
+    //         .nextStep();
+    //         Logger.Log("Add concern details with valid text limit");
+    //         addConcernDetailsPage
+    //             .withIssue("This is an issue")
+    //             .withCurrentStatus("This is the current status")
+    //             .withCaseAim("This is the case aim")
+    //             .withDeEscalationPoint("This is the de-escalation point")
+    //             .withNextSteps("This is the next steps")
+    //             .withCaseHistory("This is the case history")
+    //             .createCase();
 
 
 
@@ -261,11 +322,11 @@ describe("Creating a case", () => {
                     .select();
             });
 
-        // Logger.Log("Validate Closed Case has correct details");
-        // viewClosedCasePage
-        //     .hasTrust(trustName)
-        //     .hasTerritory(territory)
-        //     .hasCaseOwner(name)
-        //     .hasNoCaseNarritiveFields();
+        Logger.Log("Validate Closed Case has correct details");
+        viewClosedCasePage
+            .hasTrust(trustName)
+            .hasTerritory(territory)
+            .hasCaseOwner(name)
+            .hasNoCaseNarritiveFields();
     }
 });

@@ -7,5 +7,6 @@ namespace ConcernsCaseWork.Data.Gateways
         ConcernsRecord SaveConcernsCase(ConcernsRecord concernsRecord);
         ConcernsRecord Update(ConcernsRecord concernsRecord);
         ConcernsRecord GetConcernsRecordByUrn(int urn);
-    }
+		void Delete(int id);
+	}
 }
