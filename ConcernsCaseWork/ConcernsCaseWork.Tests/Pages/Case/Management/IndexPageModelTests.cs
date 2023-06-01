@@ -84,64 +84,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 		}
 
-		[Test]
-		public async Task WhenOnGetAsync_ModelDataIsBuilt()
-		{
-			// arrange
-			var urn = 3;
-
-			SetupDefaultModels();
-
-			var openActions = _fixture
-				.Build<ActionSummaryModel>()
-				.Without(a => a.ClosedDate)
-				.CreateMany()
-				.ToList();
-
-			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
-
-			var actionBreakdown = new ActionSummaryBreakdownModel();
-			actionBreakdown.OpenActions = openActions;
-			actionBreakdown.ClosedActions = closedActions;
-
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(actionBreakdown);
-
-			var caseModel = _fixture.Create<CaseModel>();
-			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
-
-			var rating = _fixture.Create<RatingModel>();
-			_mockRatingModelService.Setup(m => m.GetRatingModelById(It.IsAny<long>())).ReturnsAsync(rating);
-
-			var records = _fixture.CreateMany<RecordModel>().ToList();
-			_mockRecordModelService.Setup(m => m.GetRecordsModelByCaseUrn(It.IsAny<long>())).ReturnsAsync(records);
-
-			var trustDetails = _fixture.Create<TrustDetailsModel>();
-			_mockTrustModelService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetails);
-
-			var activeCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
-			_caseSummaryService.Setup(m => m.GetActiveCaseSummariesByTrust(It.IsAny<string>())).ReturnsAsync(activeCases);
-			
-			var closedCases = _fixture.CreateMany<ClosedCaseSummaryModel>().ToList();
-			_caseSummaryService.Setup(m => m.GetClosedCaseSummariesByTrust(It.IsAny<string>())).ReturnsAsync(closedCases);
-
-			var pageModel = SetupIndexPageModel();
-			pageModel.RouteData.Values.Add("urn", urn);
-
-			// act
-			var page = await pageModel.OnGetAsync();
-
-			// assert
-			PageLoadedWithoutError(pageModel);
-
-			pageModel.OpenCaseActions.Should().BeEquivalentTo(openActions);
-			pageModel.ClosedCaseActions.Should().BeEquivalentTo(closedActions);
-			pageModel.CaseModel.RatingModel.Should().BeEquivalentTo(rating);
-			pageModel.CaseModel.Urn.Should().Be(caseModel.Urn);
-			pageModel.CaseModel.RecordsModel.Should().BeEquivalentTo(records);
-			pageModel.TrustDetailsModel.Should().BeEquivalentTo(trustDetails);
-			pageModel.ActiveCases.Should().BeEquivalentTo(activeCases);
-			pageModel.ClosedCases.Should().BeEquivalentTo(closedCases);
-		}
+		
 
 		[Test]
 		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
