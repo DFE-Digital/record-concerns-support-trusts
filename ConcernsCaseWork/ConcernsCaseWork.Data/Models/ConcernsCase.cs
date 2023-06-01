@@ -65,7 +65,21 @@ namespace ConcernsCaseWork.Data.Models
 	        currentDecision.Update(updatedDecision, now);
         }
 
-        public void CloseDecision(int decisionId, string notes, DateTimeOffset now)
+		public void DeleteDecision(int decisionId, DateTimeOffset now)
+		{
+			_ = decisionId > 0 ? decisionId : throw new ArgumentOutOfRangeException(nameof(decisionId));
+
+			var currentDecision = Decisions.FirstOrDefault(x => x.DecisionId == decisionId);
+			if (currentDecision == null)
+			{
+				throw new ArgumentOutOfRangeException(nameof(decisionId),
+					$"Decision id {decisionId} not found in this concerns case. Concerns case urn {Urn}");
+			}
+
+			currentDecision.Delete(now.DateTime);
+		}
+
+		public void CloseDecision(int decisionId, string notes, DateTimeOffset now)
         {
 	        _ = decisionId > 0 ? decisionId : throw new ArgumentOutOfRangeException(nameof(decisionId));
 
