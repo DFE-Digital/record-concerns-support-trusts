@@ -1,11 +1,13 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
@@ -43,6 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<IActionsModelService> _actionsModelService = null;
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
 		private Mock<ICasePermissionsService> _casePermissionsService = null;
+		private Mock<IUserStateCachedService> _mockUserStateCacheService = null;
 
 		private readonly static Fixture _fixture = new();
 
@@ -58,7 +61,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			_actionsModelService = new Mock<IActionsModelService>();
 			_caseSummaryService = new Mock<ICaseSummaryService>();
-
+			_mockUserStateCacheService = new Mock<IUserStateCachedService>();
 			_casePermissionsService = new Mock<ICasePermissionsService>();
 			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(new GetCasePermissionsResponse());
 		}
@@ -277,7 +280,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				_mockLogger.Object,
 				_actionsModelService.Object,
 				_caseSummaryService.Object,
-				_casePermissionsService.Object)
+				_casePermissionsService.Object,
+				_mockUserStateCacheService.Object,
+				new ClaimsPrincipalHelper())
 			{
 				PageContext = pageContext,
 				TempData = tempData,
