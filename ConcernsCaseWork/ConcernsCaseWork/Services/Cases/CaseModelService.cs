@@ -299,6 +299,7 @@ namespace ConcernsCaseWork.Services.Cases
 					NextSteps = createCaseModel.NextSteps,
 					RatingId = createCaseModel.RatingId,
 					DeEscalationPoint = createCaseModel.DeEscalationPoint,
+					DirectionOfTravel = createCaseModel.DirectionOfTravel
 					
 					
 				};
