@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -8,7 +9,6 @@ using ConcernsCaseWork.Services.Cases;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -35,6 +35,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			_srmaModelService = srmaModelService;
 			_logger = logger;
+			//Ensure start error comes before end errors
+			ErrorSortOrder = SortOrder.Descending;
 		}
 
 		public async Task<ActionResult> OnGetAsync()

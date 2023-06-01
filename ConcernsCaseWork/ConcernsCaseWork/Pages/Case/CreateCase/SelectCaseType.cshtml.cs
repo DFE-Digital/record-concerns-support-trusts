@@ -120,7 +120,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 			RadioItems = radioItems,
 			SelectedId = selectedId,
 			Required = true,
-			DisplayName = "Case type"
+			DisplayName = "case type"
 		};
 	}
 

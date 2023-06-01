@@ -14,5 +14,6 @@ public class DecisionConfiguration : IEntityTypeConfiguration<Decision>
 		builder.HasMany(x => x.DecisionTypes).WithOne();
 		builder.HasOne(x => x.Outcome);
 		builder.HasIndex(x => new {x.ConcernsCaseId, x.CreatedAt}).IsUnique();
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 	}
 }

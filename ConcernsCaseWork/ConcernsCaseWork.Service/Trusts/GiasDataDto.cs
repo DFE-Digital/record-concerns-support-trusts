@@ -29,6 +29,6 @@ namespace ConcernsCaseWork.Service.Trusts
 		public GiasDataDto(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressDto groupContactAddress, string groupType) => 
 			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress, GroupType) = (ukprn, groupId, groupName, groupTypeCode, companiesHouseNumber, groupContactAddress, groupType);
 		
-		protected GiasDataDto() { }
+		public GiasDataDto() { }
 	}
 }

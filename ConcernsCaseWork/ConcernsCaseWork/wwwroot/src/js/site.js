@@ -22,20 +22,23 @@ function setScrollableErrorElements() {
 
 	elements.each(function(){
 		var id = $(this).data('scroll-to');
+		var element = document.getElementById(id);
+
+		// Skip to the next item as we can't find the id specified
+		if (!element) return true;
 
 		$(this).click(function () {
-			onScrollInvoked(id);
+			onScrollInvoked(element);
 		});
 
 		$(this).keydown(function (event) {
 			if (event.key == "Enter")
-				onScrollInvoked(id);
+				onScrollInvoked(element);
 		});
 	});
 }
 
-function onScrollInvoked(id) {
-	var element = document.getElementById(id);
+function onScrollInvoked(element) {
 	element.scrollIntoView({ behavior: 'smooth' });
 }
 

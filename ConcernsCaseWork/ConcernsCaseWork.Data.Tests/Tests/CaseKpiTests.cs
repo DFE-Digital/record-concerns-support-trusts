@@ -28,34 +28,35 @@ public class CaseKpiTests : DatabaseTestFixture
 
 		var createdAtKpi = results.Single(r => r.DataItemChanged == "CreatedAt");
 		createdAtKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
 		createdAtKpi.NewValue.Should().Be(createdCase.CreatedAt.ToKpiDateFormat());
 
 		var riskToTrustKpi = results.Single(r => r.DataItemChanged == "Risk to Trust");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		riskToTrustKpi.DataItemChanged.Should().Be("Risk to Trust");
 		riskToTrustKpi.Operation.Should().Be("Update");
 		riskToTrustKpi.OldValue.Should().BeEmpty();
 		riskToTrustKpi.NewValue.Should().Be(createdCase.Rating.Name);
 
 		var directionOfTravelKpi = results.Single(r => r.DataItemChanged == "Direction of Travel");
 		directionOfTravelKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		directionOfTravelKpi.DataItemChanged.Should().Be("Direction of Travel");
 		directionOfTravelKpi.Operation.Should().Be("Update");
 		directionOfTravelKpi.OldValue.Should().BeEmpty();
 		directionOfTravelKpi.NewValue.Should().Be(createdCase.DirectionOfTravel);
 		
 		var territoryKpi = results.Single(r => r.DataItemChanged == "Territory");
 		territoryKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		territoryKpi.DataItemChanged.Should().Be("Territory");
 		territoryKpi.Operation.Should().Be("Update");
 		territoryKpi.OldValue.Should().BeEmpty();
 		territoryKpi.NewValue.Should().Be(createdCase.Territory.ToString());
 
+		var caseOwnerKpi = results.Single(r => r.DataItemChanged == "Case Owner");
+		caseOwnerKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
+		caseOwnerKpi.Operation.Should().Be("Update");
+		caseOwnerKpi.OldValue.Should().BeEmpty();
+		caseOwnerKpi.NewValue.Should().Be(createdCase.CreatedBy.ToString());
 
-		results.Count.Should().Be(4);
+		results.Count.Should().Be(5);
 	}
 
 	[Test]
@@ -80,7 +81,6 @@ public class CaseKpiTests : DatabaseTestFixture
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Risk to Trust");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		riskToTrustKpi.DataItemChanged.Should().Be("Risk to Trust");
 		riskToTrustKpi.Operation.Should().Be("Update");
 		riskToTrustKpi.OldValue.Should().Be(originalRating.Name);
 		riskToTrustKpi.NewValue.Should().Be(createdCase.Rating.Name);
@@ -109,7 +109,6 @@ public class CaseKpiTests : DatabaseTestFixture
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Direction of Travel");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		riskToTrustKpi.DataItemChanged.Should().Be("Direction of Travel");
 		riskToTrustKpi.Operation.Should().Be("Update");
 		riskToTrustKpi.OldValue.Should().Be(originalDirectionOfTravel);
 		riskToTrustKpi.NewValue.Should().Be(createdCase.DirectionOfTravel);
@@ -138,10 +137,37 @@ public class CaseKpiTests : DatabaseTestFixture
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Territory");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		riskToTrustKpi.DataItemChanged.Should().Be("Territory");
 		riskToTrustKpi.Operation.Should().Be("Update");
 		riskToTrustKpi.OldValue.Should().Be(originalTerritory.ToString());
 		riskToTrustKpi.NewValue.Should().Be(createdCase.Territory.ToString());
+
+		results.Count.Should().Be(1);
+	}
+
+	[Test]
+	public void UpdateCase_CaseOwner_CreatesKpiEntries()
+	{
+		// arrange
+		var createdCase = _gateway.GenerateTestOpenCase();
+		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
+		var originalCreatedBy = createdCase.CreatedBy;
+
+		using var context = CreateContext();
+		createdCase.UpdatedAt = _randomGenerator.DateTime();
+		createdCase.CreatedBy = _randomGenerator.NextString(3, 10);
+
+		// act
+		context.ConcernsCase.Update(createdCase);
+		context.SaveChanges();
+
+		// assert
+		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
+
+		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Case Owner");
+		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
+		riskToTrustKpi.Operation.Should().Be("Update");
+		riskToTrustKpi.OldValue.Should().Be(originalCreatedBy.ToString());
+		riskToTrustKpi.NewValue.Should().Be(createdCase.CreatedBy.ToString());
 
 		results.Count.Should().Be(1);
 	}
@@ -166,7 +192,6 @@ public class CaseKpiTests : DatabaseTestFixture
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "ClosedAt");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
-		riskToTrustKpi.DataItemChanged.Should().Be("ClosedAt");
 		riskToTrustKpi.Operation.Should().Be("Close");
 		riskToTrustKpi.OldValue.Should().BeEmpty();
 		riskToTrustKpi.NewValue.Should().Be(createdCase.ClosedAt.Value.ToKpiDateFormat());
@@ -176,27 +201,47 @@ public class CaseKpiTests : DatabaseTestFixture
 	
 	private List<CaseKpi> GetKpiResults(int caseId, int previousMaxKpiId)
 	{
-		// Give the trigger a chance to run
-		// Otherwise we could try and get the KPI before the trigger has fired
-		Thread.Sleep(100);
+		// Trigger might not have executed by the time we get the data
+		// Not sure why so lets try a polling approach to wait for the trigger to finish
+		// The docs say triggers always execute during insert, but that isn't the behaviour we see all the time
+		var result = new List<CaseKpi>();
 
+		for (var idx = 0; idx < 10; idx++)
+		{
+			result = QueryKpiResults(caseId, previousMaxKpiId);
+
+			if (result.Count == 0)
+			{
+				Thread.Sleep(100);
+			}
+			else 
+			{
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	private List<CaseKpi> QueryKpiResults(int caseId, int previousMaxKpiId)
+	{
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
-		
+
 		command.CommandText = "SELECT DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [concerns].[kpi-Case] WHERE CaseId = @Id AND Id > @PreviousMaxKpiId";
 		command.Parameters.Add(new SqlParameter("Id", caseId));
 		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
-		
+
 		context.Database.OpenConnection();
 		using var result = command.ExecuteReader();
-		
-		var kpis = new List<CaseKpi>();
+
+		var kpiResults = new List<CaseKpi>();
 		while (result.Read())
 		{
-			kpis.Add(BuildCaseKpi(result));
+			kpiResults.Add(BuildCaseKpi(result));
 		}
 
-		return kpis;
+		return kpiResults;
 	}
 	
 	private int GetMaxKpiIdForCase(int caseId)
