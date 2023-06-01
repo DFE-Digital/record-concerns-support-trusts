@@ -1,68 +1,105 @@
+import { Logger } from "../../../common/logger";
+
 export class EditDecisionPage
 {
     public withCrmEnquiry(crmNumber: string): this {
-		cy.task("log", `With Crm enquiry ${crmNumber}`);
+		Logger.Log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);
 
 		return this;
 	}
 
-	public withRetrospectiveRequest(isRetrospectiveRequest: boolean): this {
-		cy.task("log", `With retrospective request ${isRetrospectiveRequest}`);
+	public hasCrmEnquiry(crmNumber: string): this {
+		Logger.Log(`Has Crm enquiry ${crmNumber}`);
 
-		if (isRetrospectiveRequest) {
-			cy.getById("retrospective-approval").click();
-		} else {
-			cy.getById("retrospective-approval-1").click();
-		}
+		cy.getById("crm-enquiry-number").should("have.value", crmNumber);
 
 		return this;
 	}
 
-	public withSubmissionRequired(isSubmissionRequired: Boolean): this {
-		cy.task("log", `With Submission Required ${isSubmissionRequired}`);
+	public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
+		Logger.Log(`With retrospective request ${isRetrospectiveRequest}`);
 
-		if (isSubmissionRequired) {
-			cy.getById("submission-required").click();
-		} else {
-			cy.getById("submission-required-1").click();
-		}
+		cy.getById(`retrospective-approval-${isRetrospectiveRequest}`).click();
+
+		return this;
+	}
+
+	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
+		Logger.Log(`Has retrospective request ${isRetrospectiveRequest}`);
+
+		cy.getById(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
+
+		return this;
+	}
+
+	public withSubmissionRequired(isSubmissionRequired: string): this {
+		Logger.Log(`With Submission Required ${isSubmissionRequired}`);
+
+		cy.getById(`submission-required-${isSubmissionRequired}`).click();
+
+		return this;
+	}
+
+	public hasSubmissionRequired(isSubmissionRequired: string): this {
+		Logger.Log(`Has Submission Required ${isSubmissionRequired}`);
+
+		cy.getById(`submission-required-${isSubmissionRequired}`).should("be.checked");
 
 		return this;
 	}
 
 	public withSubmissionLink(submissionLink: string): this {
-		cy.task("log", `With Submission link ${submissionLink}`);
+		Logger.Log(`With Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").clear().type(submissionLink);
 
 		return this;
 	}
+
+	public hasSubmissionLink(submissionLink: string): this {
+		Logger.Log(`Has Submission link ${submissionLink}`);
+
+		cy.getById("submission-document-link").should("have.value", submissionLink);
+
+		return this;
+	}
+
 	public withDateESFADay(dateESFADay: string): this {
-		cy.task(
-			"log", `With Date ESFA Day ${dateESFADay}`
-		);
+		Logger.Log(`With Date ESFA Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").clear().type(dateESFADay);
 
 		return this;
 	}
 
+	public hasDateESFADay(dateESFADay: string): this {
+		Logger.Log(`Has Date ESFA Day ${dateESFADay}`);
+
+		cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
+
+		return this;
+	}
+
 	public withDateESFAMonth(dateESFAMonth: string): this {
-		cy.task(
-			"log", `With Date ESFA Month ${dateESFAMonth}`
-		);
+		Logger.Log(`With Date ESFA Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").clear().type(dateESFAMonth);
 
 		return this;
 	}
 
+	public hasDateESFAMonth(dateESFAMonth: string): this {
+		Logger.Log(`Has Date ESFA Month ${dateESFAMonth}`);
+
+		cy.getById("dtr-month-request-received").should("have.value", dateESFAMonth);
+
+		return this;
+	}
+
 	public withDateESFAYear(dateESFAYear: string): this {
-		cy.task(
-			"log", `With Date ESFA Year ${dateESFAYear}`
-		);
+		Logger.Log(`With Date ESFA Year ${dateESFAYear}`);
 
 		const element = cy.getById("dtr-year-request-received");
 		element.clear();
@@ -73,27 +110,59 @@ export class EditDecisionPage
 
 		return this;
 	}
-	public withTypeOfDecisionID(typeOfDecisionID: string): this {
-		cy.task("log", `With type of decision to pick ${typeOfDecisionID}`);
 
-		cy.getById(typeOfDecisionID).click();
+	public hasDateESFAYear(dateESFAYear: string): this {
+		Logger.Log(`Has Date ESFA Year ${dateESFAYear}`);
+
+		cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
+
+		return this;
+	}
+
+	public withTypeOfDecision(typeOfDecision: string): this {
+		Logger.Log(`With type of decision to pick ${typeOfDecision}`);
+
+		cy.getById(typeOfDecision).click();
+
+		return this;
+	}
+
+	public hasTypeOfDecision(typeOfDecision: string): this {
+		Logger.Log(`With type of decision to pick ${typeOfDecision}`);
+
+		cy.getById(typeOfDecision).should("be.checked");
 
 		return this;
 	}
 
 	public withTotalAmountRequested(totalAmountRequested: string): this {
-		cy.task("log", `With total Amount Requested ${totalAmountRequested}`);
+		Logger.Log(`With total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-amount-request").clear().type(totalAmountRequested);
 
 		return this;
 	}
 
+	public hasTotalAmountRequested(totalAmountRequested: string): this {
+		Logger.Log(`Has total Amount Requested ${totalAmountRequested}`);
+
+		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+
+		return this;
+	}
 
 	public withSupportingNotes(supportingNotes: string): this {
-		cy.task("log", `With Supporting Notes ${supportingNotes}`);
+		Logger.Log(`With Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").clear().type(supportingNotes);
+
+		return this;
+	}
+
+	public hasSupportingNotes(supportingNotes: string): this {
+		Logger.Log(`Has Supporting Notes ${supportingNotes}`);
+
+		cy.getById("case-decision-notes").should("have.value", supportingNotes);
 
 		return this;
 	}
@@ -115,7 +184,7 @@ export class EditDecisionPage
 	public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);
 
-		cy.get("#decision-error-list").should(
+		cy.getById("errorSummary").should(
 			"contain.text",
 			message
 		);

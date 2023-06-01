@@ -10,11 +10,11 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class TrustDetailsModel
 	{
-		public GiasDataModel GiasData { get; }
+		public GiasDataModel GiasData { get; set; }
 
-		public IfdDataModel IfdData { get; }
+		public IfdDataModel IfdData { get; set; }
 
-		public List<EstablishmentModel> Establishments { get; }
+		public List<EstablishmentModel> Establishments { get; set; }
 
 		public string TrustNameCounty
 		{
@@ -44,6 +44,11 @@ namespace ConcernsCaseWork.Models
 			{
 				return TotalPupils != 0 && TotalPupilCapacity != 0 ? Math.Round((Math.Round((TotalPupils / TotalPupilCapacity), 2) * 100), 3) : 0;
 			}
+		}
+
+		public TrustDetailsModel()
+		{
+			
 		}
 
 		public TrustDetailsModel(GiasDataModel giasData, IfdDataModel ifdData, List<EstablishmentModel> establishments) =>

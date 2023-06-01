@@ -19,14 +19,17 @@ namespace ConcernsCaseWork.API.Controllers
 	    private readonly IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> _getDecisionsUserCase;
 	    private readonly IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> _updateDecisionUseCase;
 	    private readonly IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> _closeDecisionUseCase;
+		private readonly IUseCaseAsync<DeleteDecisionRequest, DeleteDecisionResponse> _deleteDecision;
 
-	    public ConcernsCaseDecisionController(
+
+		public ConcernsCaseDecisionController(
 		    ILogger<ConcernsCaseDecisionController> logger,
 		    IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse> createDecisionUseCase,
 		    IUseCaseAsync<GetDecisionRequest, GetDecisionResponse> getDecisionUseCase,
 		    IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> getDecisionsUseCase,
 		    IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> updateDecisionUseCase, 
-		    IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase)
+		    IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase,
+			IUseCaseAsync<DeleteDecisionRequest, DeleteDecisionResponse> deleteDecisionUsedCase)
 	    {
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createDecisionUseCase = createDecisionUseCase ?? throw new ArgumentNullException(nameof(createDecisionUseCase));
@@ -34,9 +37,10 @@ namespace ConcernsCaseWork.API.Controllers
 		    _getDecisionsUserCase = getDecisionsUseCase ?? throw new ArgumentNullException(nameof(getDecisionsUseCase));
 		    _updateDecisionUseCase = updateDecisionUseCase ?? throw new ArgumentNullException(nameof(updateDecisionUseCase));
 		    _closeDecisionUseCase = closeDecisionUseCase ?? throw new ArgumentNullException(nameof(closeDecisionUseCase));
-	    }
+			_deleteDecision = deleteDecisionUsedCase ?? throw new ArgumentNullException(nameof(deleteDecisionUsedCase));
+		}
 
-	    [HttpPost]
+		[HttpPost]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionResponse>>> Create(int urn, CreateDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
@@ -151,7 +155,33 @@ namespace ConcernsCaseWork.API.Controllers
 		    return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(results));
 	    }
 
-	    private bool ValidateUrn(int urn, string methodName)
+		[HttpDelete("{decisionId:int}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete(int urn, int decisionId, CancellationToken cancellationToken = default)
+		{
+			LogInfo($"Attempting to delete Concerns Decision by Urn {urn}, DecisionId {decisionId}");
+
+			if (!ValidateUrn(urn, nameof(Delete)) || !ValidateDecisionId(decisionId, nameof(Delete)))
+			{
+				return BadRequest();
+			}
+
+			var decisionResponse = await _getDecisionUserCase.Execute(new GetDecisionRequest(urn, decisionId), cancellationToken);
+			if (decisionResponse == null)
+			{
+				LogInfo($"Deleting Concern Decision failed: No Decision matching Urn {urn}, DecisionId {decisionId} was found");
+
+				return NotFound();
+			}
+
+			await _deleteDecision.Execute(new DeleteDecisionRequest(urn, decisionId), cancellationToken);
+			LogInfo($"Successfully Deleted Concern Decision By Urn {urn}, DecisionId {decisionId}");
+
+			return NoContent();
+		}
+
+
+		private bool ValidateUrn(int urn, string methodName)
 	    {
 		    if (urn <= 0)
 		    {

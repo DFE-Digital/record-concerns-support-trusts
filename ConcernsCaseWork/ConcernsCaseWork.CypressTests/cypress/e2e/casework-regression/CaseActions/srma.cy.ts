@@ -56,12 +56,6 @@ describe("Testing the SRMA case action", () =>
 				row.select();
 			});
 
-        Logger.Log("Should not allow progression without a reason");
-
-        viewSrmaPage
-            .cancel()
-            .hasValidationError("Enter the reason");
-
         Logger.Log("Checking accessibility on View SRMA");
         cy.excuteAccessibilityTests();
 
@@ -240,12 +234,14 @@ describe("Testing the SRMA case action", () =>
 
     it("Should edit an existing configured SRMA", () =>
     {
-        fullConfigureSrma("TrustConsidering");
+        partiallyConfigureSrma("TrustConsidering");
+
+        completeSrmaConfiguration();
 
         viewSrmaPage.addStatus();
         editSrmaPage.hasStatus("TrustConsidering");
         editSrmaPage
-            .withStatus("PreparingForDeployment")
+            .withStatus("Deployed")
             .save();
 
         viewSrmaPage.addDateTrustContacted();
@@ -340,7 +336,7 @@ describe("Testing the SRMA case action", () =>
             .save();
 
         viewSrmaPage
-            .hasStatus("Preparing for deployment")
+            .hasStatus("Deployed")
             .hasDateTrustContacted("11 May 2021")
             .hasReason("Offer linked with grant funding or other offer of support")
             .hasDateAccepted("17 June 2021")
@@ -400,7 +396,18 @@ describe("Testing the SRMA case action", () =>
     {
         it("Should be able to resolve an SRMA", () =>
         {
-            fullConfigureSrma("Deployed");
+            partiallyConfigureSrma("Deployed");
+
+            Logger.Log("Does not allow an SRMA to be resolved without the required fields");
+
+            viewSrmaPage
+                .resolve()
+                .hasValidationError("Add reason for SRMA")
+                .hasValidationError("Enter date trust accepted SRMA")
+                .hasValidationError("Enter dates of visit")
+                .hasValidationError("Enter date report sent to trust");
+
+            completeSrmaConfiguration();
 
             viewSrmaPage.resolve();
 
@@ -453,6 +460,16 @@ describe("Testing the SRMA case action", () =>
         {
             partiallyConfigureSrma("TrustConsidering");
 
+            viewSrmaPage.cancel()
+                .hasValidationError("Add reason for SRMA");
+
+            Logger.Log("Configure reason");
+            viewSrmaPage.addReason();
+    
+            editSrmaPage
+                .withReason("Regions Group Intervention")
+                .save();
+
             viewSrmaPage.cancel();
 
             editSrmaPage.hasNotes("This is my notes");
@@ -495,6 +512,16 @@ describe("Testing the SRMA case action", () =>
 
         it("Should decline an SRMA", () => {
             partiallyConfigureSrma("TrustConsidering");
+
+            viewSrmaPage.decline()
+                .hasValidationError("Add reason for SRMA");
+
+            Logger.Log("Configure reason");
+            viewSrmaPage.addReason();
+    
+            editSrmaPage
+                .withReason("Regions Group Intervention")
+                .save();
 
             viewSrmaPage.decline();
 
@@ -571,19 +598,16 @@ describe("Testing the SRMA case action", () =>
 			{
 				row.select();
 			});
+    }
 
+    function completeSrmaConfiguration()
+    {
         Logger.Log("Configure reason");
         viewSrmaPage.addReason();
 
         editSrmaPage
             .withReason("Regions Group Intervention")
             .save();
-    }
-
-    function fullConfigureSrma(status: string)
-    {
-        Logger.Log("Filling out the SRMA form");
-        partiallyConfigureSrma(status);
 
         Logger.Log("Configure date accepted");
         viewSrmaPage.addDateAccepted();
