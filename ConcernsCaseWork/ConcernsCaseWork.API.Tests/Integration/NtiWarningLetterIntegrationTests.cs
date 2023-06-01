@@ -108,11 +108,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var createCaseResponse = await _client.PostAsync($"v2/concerns-cases", createCaseRequest.ConvertToJson());
 			var response = await createCaseResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-			var x = response.Data.Urn;
+			var CaseUrn = response.Data.Urn;
 			//create the warning letter
-
 			var request = _fixture.Create<CreateNTIWarningLetterRequest>();
-			request.CaseUrn = x;
+			request.CaseUrn = CaseUrn;
 			request.ClosedStatusId = 1;
 			request.StatusId = 1;
 			request.WarningLetterConditionsMapping.Clear();
@@ -126,8 +125,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var createdWarningLetterUri = result.Headers.Location;
 			//check for the warning letter
-			//var getResponse = await _client.GetAsync(createdWarningLetterUri);
-			//getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync(createdWarningLetterUri);
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
 			//delete the warning letter
 			var deleteResponse = await _client.DeleteAsync(createdWarningLetterUri);
