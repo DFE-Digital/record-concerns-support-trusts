@@ -6,6 +6,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -151,6 +152,7 @@ namespace ConcernsCaseWork.Pages.Case
 			//var current = await _caseModelService.GetCaseByUrn(caseUrn);	
 			var createCaseModel = userState.CreateCaseModel;
 			createCaseModel.Issue = issue;
+			createCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
 			createCaseModel.CurrentStatus = currentStatus;
 			createCaseModel.NextSteps = nextSteps;
 			createCaseModel.CaseAim = caseAim;
