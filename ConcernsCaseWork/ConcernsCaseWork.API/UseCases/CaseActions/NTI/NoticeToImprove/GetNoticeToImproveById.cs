@@ -21,7 +21,11 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove
         public async Task<NoticeToImproveResponse> ExecuteAsync(long noticeToImproveId)
         {
             var noticeToImprove = await _gateway.GetNoticeToImproveById(noticeToImproveId);
-            return NoticeToImproveFactory.CreateResponse(noticeToImprove);
+			if (noticeToImprove == null)
+			{
+				return null;
+			}
+			return NoticeToImproveFactory.CreateResponse(noticeToImprove);
         }
     }
 }
