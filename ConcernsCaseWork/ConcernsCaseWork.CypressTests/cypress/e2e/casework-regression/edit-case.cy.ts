@@ -281,7 +281,7 @@ describe("Editing a case", () =>
 
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.getAddToCaseBtn().click();
-        AddToCasePage.hasValidationError("Please select an action to add.");
+        AddToCasePage.hasValidationError("Select an action or decision");
 
         Logger.Log("Checking accessibility on when a not selecting a case action");
         cy.excuteAccessibilityTests();

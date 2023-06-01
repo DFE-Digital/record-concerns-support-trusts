@@ -176,7 +176,6 @@ function createFinancialPlan(caseId, createdBy) {
         createdAt: new Date().toISOString(),
         createdBy: createdBy,
         updatedAt: new Date().toISOString(),
-        closedAt: new Date().toISOString(),
         notes: "This is my notes"
     };
 
@@ -205,8 +204,6 @@ function createNti(caseId, createdBy) {
         "createdBy": createdBy,
         "createdAt": new Date().toISOString(),
         "updatedAt": new Date().toISOString(),
-        "closedAt": new Date().toISOString(),
-        // "closedStatusId": 0,
         "noticeToImproveReasonsMapping": [],
         "noticeToImproveConditionsMapping": []
     };
@@ -238,8 +235,6 @@ function createNtiWarningLetter(caseId, createdBy) {
         "createdBy": createdBy,
         "createdAt": new Date().toISOString(),
         "updatedAt": new Date().toISOString(),
-        "closedAt": new Date().toISOString(),
-        // "closedStatusId": 0
     };
 
     const response = http.post(
@@ -266,8 +261,6 @@ function createNtiUnderConsideration(caseId, createdBy) {
         "createdBy": createdBy,
         "createdAt": new Date().toISOString(),
         "updatedAt": new Date().toISOString(),
-        "closedAt": new Date().toISOString(),
-        // "closedStatusId": 0
     };
 
     const response = http.post(

@@ -320,8 +320,10 @@ public class ConcernsCaseDecisionControllerTests
             internal readonly Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>> GetDecisionsUseCase;
             internal readonly Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>> UpdateDecisionUseCase;
             internal readonly Mock<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>> CloseDecisionUseCase;
+			internal readonly Mock<IUseCaseAsync<DeleteDecisionRequest, DeleteDecisionResponse>> DeleteDecisionUseCase;
 
-            public TestBuilder()
+
+			public TestBuilder()
             {
                 Fixture = new Fixture();
                 Fixture.Customize(new AutoMoqCustomization());
@@ -332,16 +334,19 @@ public class ConcernsCaseDecisionControllerTests
                 GetDecisionsUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>>();
                 UpdateDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>>>();
                 CloseDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>>>();
-            }
+				DeleteDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<DeleteDecisionRequest, DeleteDecisionResponse>>>();
 
-            internal ConcernsCaseDecisionController BuildSut()
+			}
+
+			internal ConcernsCaseDecisionController BuildSut()
             {
                 return new ConcernsCaseDecisionController(MockLogger.Object, 
 	                CreateDecisionUseCase.Object, 
 	                GetDecisionUseCase.Object, 
 	                GetDecisionsUseCase.Object, 
 	                UpdateDecisionUseCase.Object,
-	                CloseDecisionUseCase.Object);
+	                CloseDecisionUseCase.Object,
+					DeleteDecisionUseCase.Object);
             }
 
             public UpdateDecisionRequest CreateValidUpdateDecisionRequest()
