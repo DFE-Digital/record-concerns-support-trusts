@@ -28,10 +28,12 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
+		
 
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
+		public bool IsAddtoCase { get; private set; }
 		
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
@@ -61,7 +63,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::RatingPageModel::OnPostAsync");
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				var ragRating = Request.Form["rating"].ToString();
 				if (string.IsNullOrEmpty(ragRating))
 					throw new Exception("Missing form values");
@@ -96,7 +102,11 @@ namespace ConcernsCaseWork.Pages.Case
 				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				
+				if (IsAddtoCase)
+				{
+					return RedirectToPage("details");
+					
+				}
 				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
@@ -134,7 +144,11 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
 				
