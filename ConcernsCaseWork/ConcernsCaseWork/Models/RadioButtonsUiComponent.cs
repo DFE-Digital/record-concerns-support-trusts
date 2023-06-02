@@ -1,5 +1,8 @@
+using Microsoft.Graph.Models.TermStore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace ConcernsCaseWork.Models;
 
@@ -9,6 +12,14 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 	public int? SelectedId { get; set; }
 
 	public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
+
+	public string? HintFromPartialView { get; set; }
+
+	public int? SelectedSubId { get; set; }
+
+	public List<int>? OptionsWithSubItems { get; set; }
+
+	public string? SubItemDisplayName { get; set; }
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	=> Validate(DisplayName ?? validationContext.DisplayName);
@@ -22,6 +33,15 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 			var requiredErrorText = !string.IsNullOrEmpty(ErrorTextForRequiredField) ? ErrorTextForRequiredField : $"Select {displayName}";
 
 			result.Add(new ValidationResult(requiredErrorText, new[] { displayName }));
+		}
+
+		var hasSubItem = OptionsWithSubItems?.Any(o => o == SelectedId);
+
+		if (hasSubItem == true && !SelectedSubId.HasValue)
+		{
+			var subItemErrorName = string.IsNullOrEmpty(SubItemDisplayName) ? displayName : SubItemDisplayName;
+
+			result.Add(new ValidationResult($"Select {subItemErrorName}", new[] { displayName }));
 		}
 
 		return result;
