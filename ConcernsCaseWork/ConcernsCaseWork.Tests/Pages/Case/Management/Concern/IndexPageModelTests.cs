@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			pageModel.ConcernType.Should().NotBeNull();
 			pageModel.MeansOfReferral.Should().NotBeNull();
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Exactly(2));
 			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);

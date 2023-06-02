@@ -11,6 +11,15 @@ export class ViewClosedCasePage
         return this;
     }
 
+    public hasTrust(value: string): this
+    {
+        Logger.Log(`Has trust ${value}`);
+
+        cy.getByTestId("trust-name").should("contain.text", value);
+
+        return this;
+    }
+
     public hasTerritory(value: string): this
     {
         Logger.Log(`Has territory ${value}`);
@@ -20,11 +29,52 @@ export class ViewClosedCasePage
         return this;
     }
 
+    public hasCaseOwner(value: string): this
+    {
+        Logger.Log(`Has case owner ${value}`);
+
+        cy.getByTestId("case-owner-field").contains(value, { matchCase: false });
+
+        return this;
+    }
+
+    public hasDateCreated(value: string): this
+    {
+        Logger.Log(`Has date created ${value}`);
+
+        cy.getByTestId("date-created-field").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasDateClosed(value: string): this
+    {
+        Logger.Log(`Has date closed ${value}`);
+
+        cy.getByTestId("date-closed-field").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasNoCaseNarritiveFields(): this
+    {
+        Logger.Log("Has no case narritive fields");
+
+        this.getIssue().should("not.exist");
+        this.getCurrentStatus().should("not.exist");
+        this.getCaseAim().should("not.exist");
+        this.getDeEscalationPoint().should("not.exist");
+        this.getNextSteps().should("not.exist");
+        this.getCaseHistory().should("not.exist");
+
+        return this;
+    }
+
     public hasIssue(value: string): this
     {
         Logger.Log(`Has Issue ${value}`);
 
-        cy.getByTestId(`issue_field`).should(`contain.text`, value);
+        this.getIssue().should(`contain.text`, value);
 
         return this;
     }
@@ -33,7 +83,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has currentStatus ${value}`);
 
-        cy.getByTestId(`status_field`).should(`contain.text`, value);
+        this.getCurrentStatus().should(`contain.text`, value);
 
         return this;
     }
@@ -42,7 +92,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has caseAim ${value}`);
 
-        cy.getByTestId(`case_aim_field`).should(`contain.text`, value);
+        this.getCaseAim().should(`contain.text`, value);
 
         return this;
     }
@@ -51,7 +101,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has deEscalationPoint ${value}`);
 
-        cy.getByTestId(`deescalation_point_field`).should(`contain.text`, value);
+        this.getDeEscalationPoint().should(`contain.text`, value);
 
         return this;
     }
@@ -60,7 +110,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has nextSteps ${value}`);
 
-        cy.getByTestId(`next_step_field`).should(`contain.text`, value);
+        this.getNextSteps().should(`contain.text`, value);
 
         return this;
     }
@@ -69,7 +119,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has caseHistory ${value}`);
 
-        cy.getByTestId(`case_history_field`).should(`contain.text`, value);
+        this.getCaseHistory().should(`contain.text`, value);
 
         return this;
     }
@@ -98,4 +148,27 @@ export class ViewClosedCasePage
 
     }
 
+    private getIssue() {
+        return cy.getByTestId(`issue_field`);
+    }
+
+    private getCurrentStatus() {
+        return cy.getByTestId(`status_field`);
+    }
+
+    private getCaseAim() {
+        return cy.getByTestId(`case_aim_field`);
+    }
+
+    private getDeEscalationPoint() {
+        return cy.getByTestId(`deescalation_point_field`);
+    }
+
+    private getNextSteps() {
+        return cy.getByTestId(`next_step_field`);
+    }
+
+    private getCaseHistory() {
+        return cy.getByTestId(`case_history_field`);
+    }
 }

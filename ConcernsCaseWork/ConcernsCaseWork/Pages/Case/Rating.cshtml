@@ -1,4 +1,4 @@
-﻿@page "/case/rating/{handler?}"
+﻿@page "/case/rating/{urn:long?}/{handler?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.RatingPageModel
@@ -19,7 +19,14 @@
     {
         <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">Create case</span>
+        if (Model.IsAddtoCase)
+	    {
+		    <span class="govuk-caption-l">Add to case</span>
+	    }
+	    else
+	    {
+		    <span class="govuk-caption-l">Create case</span>
+	    }
         <h1 class="govuk-heading-l">Risk to trust</h1>
 
         <!-- Trust details -->

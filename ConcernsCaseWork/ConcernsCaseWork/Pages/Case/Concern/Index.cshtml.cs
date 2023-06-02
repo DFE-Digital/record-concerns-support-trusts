@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Services.Cases;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -36,6 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
+		private ICaseModelService _caseModelService;
 		
 		public TrustAddressModel TrustAddress { get; private set; }
 
@@ -50,12 +53,15 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		[BindProperty]
 		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
+		public CaseModel CaseModel { get; private set; }
+
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
 			IRatingModelService ratingModelService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient, 
+			ICaseModelService caseModelService)
 		{
 			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -63,6 +69,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_caseModelService = Guard.Against.Null(caseModelService);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -92,6 +99,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					await LoadPage();
 					return Page();
 				}
+
+				await GetCaseModel();
 				
 				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
@@ -150,8 +159,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
-				
+				if (CaseModel!=null && !CaseModel.IsConcernsCase())
+				{
+					return RedirectToPage("/case/concern/add",new {urn = CaseModel.Urn});
+				}
 				return RedirectToPage("add");
+
+				return RedirectToPage();
 			}
 			catch (Exception ex)
 			{
@@ -186,7 +200,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private async Task<ActionResult> LoadPage()
 		{
 			var userState = await GetUserState();
-
 			var trustUkPrn = userState.TrustUkPrn;
 		
 			if (string.IsNullOrEmpty(trustUkPrn))
@@ -200,6 +213,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
 			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
 
+			await GetCaseModel();
+
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{
 				EventName = "ADD CONCERN",
@@ -210,7 +225,18 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 			return Page();
 		}
-		
+
+		private async Task GetCaseModel()
+		{
+			var caseUrnValue = RouteData.Values["urn"];
+			long caseUrn = 0;
+			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0) ;
+			if (caseUrn > 0)
+			{
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+			}
+		}
+
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData(GetUserName());

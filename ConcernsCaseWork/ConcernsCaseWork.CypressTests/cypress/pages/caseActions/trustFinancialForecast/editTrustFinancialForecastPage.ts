@@ -19,6 +19,17 @@ export class EditTrustFinancialForecastPage
         return this;
     }
 
+    public clearAllDates(): this
+    {
+        cy.getById(`dtr-day-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-month-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-year-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-day-trust-responded-at`).clear();
+        cy.getById(`dtr-month-trust-responded-at`).clear();
+        cy.getById(`dtr-year-trust-responded-at`).clear();
+
+        return this;
+    }
 
     public withDayReviewHappened(value: string): this {
         Logger.Log(`With day review happened ${value}`);
