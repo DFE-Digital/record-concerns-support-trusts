@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Add Case Rating";
+    var heading = Model.CaseUrn.HasValue ? "Add to case" : "Create case";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -19,14 +20,8 @@
     {
         <partial name="_ValidationErrors" />
 
-        if (Model.IsAddtoCase)
-	    {
-		    <span class="govuk-caption-l">Add to case</span>
-	    }
-	    else
-	    {
-		    <span class="govuk-caption-l">Create case</span>
-	    }
+        <span class="govuk-caption-l">@heading</span>
+
         <h1 class="govuk-heading-l">Risk to trust</h1>
 
         <!-- Trust details -->

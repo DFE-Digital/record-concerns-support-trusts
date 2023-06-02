@@ -6,16 +6,12 @@
 @model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
 
 @{
-	if (Model?.CaseModel?.Urn>0)
-	{
-		ViewData["Title"] = "Add to Case";
-	}
-	else
-	{
-		ViewData["Title"] = "New Case Concern";
-		
-	}
-	
+    var caseExists = Model.CaseUrn.HasValue;
+
+    ViewData["Title"] = caseExists ? "Add to Case" : "New Case Concern";
+
+    var heading = caseExists ? "Add to case" : "Create case";
+
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -30,14 +26,7 @@
 	{
         <partial name="_ValidationErrors" />
 
-		if (Model?.CaseModel?.Urn > 0)
-		{
-			<span class="govuk-caption-l">Add to case</span>
-		}
-		else
-		{
-			<span class="govuk-caption-l">Create case</span>
-		}
+        <span class="govuk-caption-l">@heading</span>
 		
         <h1 class="govuk-heading-l">Add concern</h1>
 
