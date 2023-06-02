@@ -6,6 +6,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -280,10 +281,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
+			Mock<ICaseModelService> mockCaseModelService = new Mock<ICaseModelService>();
+
 			return new IndexPageModel(mockTrustModelService, cachedService,
 				mockRatingModelService, claimsPrincipalHelper,
 				mockLogger,
-				MockTelemetry.CreateMockTelemetryClient())
+				MockTelemetry.CreateMockTelemetryClient(),
+				mockCaseModelService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

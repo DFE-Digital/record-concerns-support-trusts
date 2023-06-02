@@ -10,10 +10,9 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Services.MeansOfReferral;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
+		private ICaseModelService _caseModelService;
 		
 		public TrustAddressModel TrustAddress { get; private set; }
 
@@ -50,12 +50,16 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		[BindProperty]
 		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int? CaseUrn { get; set; }
+
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
 			IRatingModelService ratingModelService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient, 
+			ICaseModelService caseModelService)
 		{
 			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -63,6 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_caseModelService = Guard.Against.Null(caseModelService);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -91,6 +96,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				{
 					await LoadPage();
 					return Page();
+				}
+
+				CaseModel caseModel = null;
+
+				if (CaseUrn.HasValue)
+				{
+					caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
 				}
 				
 				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
@@ -150,7 +162,12 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
-				
+
+				if (caseModel != null && !caseModel.IsConcernsCase())
+				{
+					return RedirectToPage("/case/concern/add",new {urn = CaseUrn});
+				}
+
 				return RedirectToPage("add");
 			}
 			catch (Exception ex)
@@ -186,7 +203,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private async Task<ActionResult> LoadPage()
 		{
 			var userState = await GetUserState();
-
 			var trustUkPrn = userState.TrustUkPrn;
 		
 			if (string.IsNullOrEmpty(trustUkPrn))
@@ -210,7 +226,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 			return Page();
 		}
-		
+
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData(GetUserName());

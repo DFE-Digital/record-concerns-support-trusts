@@ -16,8 +16,10 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
+		public DateTime? DeletedAt { get; set; }
 
-        [ForeignKey(nameof(StatusId))]
+
+		[ForeignKey(nameof(StatusId))]
         public virtual NTIWarningLetterStatus Status { get; set; }
 
         [ForeignKey(nameof(ClosedStatusId))]

@@ -1,10 +1,11 @@
-﻿@page "/case/rating/{handler?}"
+﻿@page "/case/rating/{urn:long?}/{handler?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.RatingPageModel
 
 @{
     ViewData["Title"] = "Add Case Rating";
+    var heading = Model.CaseUrn.HasValue ? "Add to case" : "Create case";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -19,7 +20,8 @@
     {
         <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">Create case</span>
+        <span class="govuk-caption-l">@heading</span>
+
         <h1 class="govuk-heading-l">Risk to trust</h1>
 
         <!-- Trust details -->

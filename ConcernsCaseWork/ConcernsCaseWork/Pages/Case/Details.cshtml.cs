@@ -5,6 +5,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -52,6 +53,8 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public TextAreaUiComponent CaseHistory { get; set; }
 
+		public bool IsAddtoCase { get; private set; }
+
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache, 
@@ -74,6 +77,12 @@ namespace ConcernsCaseWork.Pages.Case
 
 			try
 			{
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
+
 				// Fetch UI data
 				await LoadPage();
 			}
@@ -115,13 +124,25 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
 				{
-					EventName = "CREATE CASE",
-					EventDescription = $"Case created {caseUrn}",
-					EventPayloadJson = JsonSerializer.Serialize(createCaseModel),
-					EventUserName = userState.UserName
-				});
-				return RedirectToPage("management/index", new { urn = caseUrn });
+					IsAddtoCase = true;
+				}
+				
+				if (IsAddtoCase)
+				{
+					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+						throw new Exception("CaseUrn is null or invalid to parse");
+					await UpdateCase(caseUrn);
+					return RedirectToPage("management/index", new { urn = caseUrn });
+				}
+				else
+				{
+					var caseUrn =await CreateNewCase();
+					return RedirectToPage("management/index", new { urn = caseUrn });
+				}
 			}
 			catch (Exception ex)
 			{
@@ -166,6 +187,17 @@ namespace ConcernsCaseWork.Pages.Case
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private async Task LogToAppInsights(string eventName, string description, string payload, string userName)
+		{
+			AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+			{
+				EventName = eventName,
+				EventDescription = description,
+				EventPayloadJson = payload,
+				EventUserName = userName
+			});
 		}
 	}
 }
