@@ -4,23 +4,18 @@
 @model ConcernsCaseWork.Pages.Case.DetailsPageModel
 
 @{
-	ViewData["Title"] = "New Case Details";
-	var nonce = HttpContext.GetNonce();
+    var caseExists = Model.CaseUrn.HasValue;
+
+    ViewData["Title"] = caseExists ? "Add Case Details" : "New Case Details";
+    var buttonName = caseExists ? "Add to case" : "Create case";
+    var heading = caseExists ? "Add to case" : "Create case";
+
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	 @{
-    	    if (Model.IsAddtoCase)
-    	    {
-		        <span class="govuk-caption-l">Add to case</span>
-		        ViewData["Title"] = "Add Case Details";
-    	    }
-    	    else
-    	    {
-    		    <span class="govuk-caption-l">Create case</span>
-    	    }
-        }
+    <span class="govuk-caption-l">@heading</span>
 
     <h1 class="govuk-heading-l">Concern details</h1>
 
@@ -63,20 +58,9 @@
                     <partial name="Components/_TextArea" model="Model.CaseHistory" />
 
 					<div class="govuk-button-group">
-					 @{
-                        	    if (Model.IsAddtoCase)
-                        	    {
-		                            <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-			                            Add to case
-		                            </button>
-                        	    }
-                        	    else
-                        	    {
-		                            <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-			                            Create case
-		                            </button>
-                        	    }
-                            }
+                        <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                            @buttonName
+                        </button>
 				
 						<a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
 							Cancel
@@ -93,4 +77,4 @@
 			});
 		</script>
 	}
-</div>
+</div>W

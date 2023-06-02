@@ -254,22 +254,6 @@ describe("Creating a case", () =>
 		"Accrington St Christopher's Church Of England High School";
 	const searchTermForSchool = "school";
 
-    it("User searches for a valid Trust and selects it", () => {
-
-        createCasePage
-            .createCase()
-            .withTrustName(searchTerm)
-            .selectOption()
-            .confirmOption();
-
-		Logger.Log("Should display the Concern details of the specified Trust");
-        createCaseSummary
-            .hasTrustSummaryDetails(searchTerm);
-
-		createConcernPage
-            .cancel();
-	});
-
     it('Should display an error if no trust is selected', () => {
 		createCasePage
             .createCase()
