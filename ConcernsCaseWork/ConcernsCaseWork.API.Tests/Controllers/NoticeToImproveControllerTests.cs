@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
+using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
@@ -25,6 +26,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		private readonly Mock<IUseCase<long, NoticeToImproveResponse>> _mockGetNoticeToImproveByIdUseCase;
 		private readonly Mock<IUseCase<int, List<NoticeToImproveResponse>>> _mockGetNoticeToImproveByCaseUrnUseCase;
 		private readonly Mock<IUseCase<PatchNoticeToImproveRequest, NoticeToImproveResponse>> _mockPatchNoticeToImproveUseCase;
+		private readonly Mock<IUseCase<long, DeleteNoticeToImproveResponse>> _mockDeleteNoticeToImproveByIdUseCase;
+
+
+
 		private readonly Mock<IUseCase<object, List<NoticeToImproveStatus>>> _mockGetAllStatuses;
 		private readonly Mock<IUseCase<object, List<NoticeToImproveReason>>> _mockGetAllReasons;
 		private readonly Mock<IUseCase<object, List<NoticeToImproveCondition>>> _mockGetAllCondition;
@@ -43,9 +48,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			_mockGetAllReasons = new Mock<IUseCase<object, List<NoticeToImproveReason>>>();
 			_mockGetAllCondition = new Mock<IUseCase<object, List<NoticeToImproveCondition>>>();
 			_mockGetAllConditionType = new Mock<IUseCase<object, List<NoticeToImproveConditionType>>>();
+			_mockDeleteNoticeToImproveByIdUseCase = new Mock<IUseCase<long, DeleteNoticeToImproveResponse>>();
 
 			controllerSUT = new NoticeToImproveController(_mockLogger.Object, _mockCreateNoticeToImproveUseCase.Object, _mockGetNoticeToImproveByIdUseCase.Object,
-				_mockGetNoticeToImproveByCaseUrnUseCase.Object, _mockPatchNoticeToImproveUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object,
+				_mockGetNoticeToImproveByCaseUrnUseCase.Object, _mockPatchNoticeToImproveUseCase.Object, _mockDeleteNoticeToImproveByIdUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object,
 				_mockGetAllCondition.Object, _mockGetAllConditionType.Object);
 		}
 
