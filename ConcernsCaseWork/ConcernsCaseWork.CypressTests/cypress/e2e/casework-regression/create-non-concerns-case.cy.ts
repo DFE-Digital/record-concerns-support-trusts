@@ -283,7 +283,7 @@ describe("Creating a case", () => {
         Logger.Log("Closing case");
         CaseManagementPage.getCloseCaseBtn().click();
 
-        CaseManagementPage.withRationaleForClosure("Closing case");
+        CaseManagementPage.withRationaleForClosure("Closing non concerns case");
         CaseManagementPage.getCloseCaseBtn().click();
 
         Logger.Log("Viewing case is closed");
@@ -310,6 +310,7 @@ describe("Creating a case", () => {
             .hasTrust(trustName)
             .hasTerritory(territory)
             .hasCaseOwner(name)
+            .hasRationaleForClosure("Closing non concerns case")
             .hasNoCaseNarritiveFields();
     }
 });

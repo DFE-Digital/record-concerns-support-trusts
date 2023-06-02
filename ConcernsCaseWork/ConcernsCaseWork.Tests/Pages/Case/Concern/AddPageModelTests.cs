@@ -118,8 +118,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 
-			var pageModel = SetupAddPageModel(mockTrustModelService.Object, mockUserStateCachedService.Object,
-				mockLogger.Object, mockCaseModelService.Object,true);
+			var pageModel = SetupAddPageModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object,mockCaseModelService.Object ,true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -178,8 +177,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockUserStateCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 
-			var pageModel = SetupAddPageModel(mockTrustModelService.Object, mockUserStateCachedService.Object, 
-				mockLogger.Object,mockCaseModelService.Object ,true);
+			var pageModel = SetupAddPageModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockCaseModelService.Object,true);
 
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
@@ -194,9 +192,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 		private static AddPageModel SetupAddPageModel(
 			ITrustModelService mockTrustModelService,
 			IUserStateCachedService mockUserStateCachedService,
-			ILogger<AddPageModel> mockLogger, 
-			ICaseModelService mockCaseModelService,
-			bool isAuthenticated = false)
+			ILogger<AddPageModel> mockLogger,ICaseModelService mockCaseModelService,bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
