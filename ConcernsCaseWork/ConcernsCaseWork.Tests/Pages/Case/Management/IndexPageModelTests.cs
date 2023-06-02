@@ -1,8 +1,7 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
@@ -26,7 +25,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
