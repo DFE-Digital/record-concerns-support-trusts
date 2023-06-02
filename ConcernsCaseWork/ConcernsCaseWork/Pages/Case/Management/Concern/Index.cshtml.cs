@@ -36,7 +36,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 		public string PreviousUrl { get; private set; }
-		
+		public CaseModel CaseModel { get; private set; }
+
+
 		public IndexPageModel(ICaseModelService caseModelService,
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService,
@@ -65,6 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 			}
 			catch (Exception ex)
 			{
