@@ -94,5 +94,16 @@ namespace ConcernsCaseWork.Data.Gateways
                 throw;
             }
         }
-    }
+
+		public void Delete(long warningLetterId)
+		{
+			var result = _concernsDbContext.NTIWarningLetters.SingleOrDefault(n => n.Id == warningLetterId);
+			if (result != null)
+			{
+				result.DeletedAt = System.DateTime.Now;
+			}
+
+			_concernsDbContext.SaveChanges();
+		}
+	}
 }
