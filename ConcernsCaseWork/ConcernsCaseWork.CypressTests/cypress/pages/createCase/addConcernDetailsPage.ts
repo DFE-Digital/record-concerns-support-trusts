@@ -128,10 +128,22 @@ export default class AddConcernDetailsPage {
         return this;
     }
 
+    getAddConcernBtn() {
+        cy.get('[data-testid="add-concern-button"]').click();
+    }
+
     public createCase(): this
     {
         Logger.Log("Creating case");
         cy.getByTestId("create-case-button").click();
+
+        return this;
+    }
+
+    public nextStep(): this
+    {
+        Logger.Log("Click next step button");
+        cy.getByTestId("next-step-button").click();
 
         return this;
     }

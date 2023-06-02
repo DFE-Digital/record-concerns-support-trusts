@@ -2,8 +2,10 @@
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace ConcernsCaseWork.API.Controllers
 {
@@ -17,7 +19,8 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IUseCase<long, NTIWarningLetterResponse> _getNtiWarningLetterByIdUseCase;
         private readonly IUseCase<int, List<NTIWarningLetterResponse>> _getNtiWarningLetterByCaseUrnUseCase;
         private readonly IUseCase<PatchNTIWarningLetterRequest, NTIWarningLetterResponse> _patchNTIWarningLetterUseCase;
-        private readonly IUseCase<object, List<NTIWarningLetterStatus>> _getAllStatuses;
+		private readonly IUseCase<long, DeleteNTIWarningLetterResponse> _deleteNTIWarningLetterUseCase;
+		private readonly IUseCase<object, List<NTIWarningLetterStatus>> _getAllStatuses;
         private readonly IUseCase<object, List<NTIWarningLetterReason>> _getAllReasons;
         private readonly IUseCase<object, List<NTIWarningLetterCondition>> _getAllConditions;
         private readonly IUseCase<object, List<NTIWarningLetterConditionType>> _getAllConditionTypes;
@@ -27,7 +30,8 @@ namespace ConcernsCaseWork.API.Controllers
             IUseCase<long, NTIWarningLetterResponse> getNtiWarningLetterByIdUseCase,
             IUseCase<int, List<NTIWarningLetterResponse>> getNtiWarningLetterByCaseUrnUseCase,
             IUseCase<PatchNTIWarningLetterRequest, NTIWarningLetterResponse> patchNTIWarningLetterUseCase,
-            IUseCase<object, List<NTIWarningLetterStatus>> getAllStatuses,
+			IUseCase<long, DeleteNTIWarningLetterResponse> deleteNTIWarningLetterUseCase,
+			IUseCase<object, List<NTIWarningLetterStatus>> getAllStatuses,
             IUseCase<object, List<NTIWarningLetterReason>> getAllReasons,
             IUseCase<object, List<NTIWarningLetterCondition>> getAllConditions,
             IUseCase<object, List<NTIWarningLetterConditionType>> getAllConditionTypes
@@ -37,8 +41,9 @@ namespace ConcernsCaseWork.API.Controllers
             _createNtiWarningLetterUseCase = createNtiWarningLetterUseCase;
             _getNtiWarningLetterByIdUseCase = getNtiWarningLetterByIdUseCase;
             _getNtiWarningLetterByCaseUrnUseCase = getNtiWarningLetterByCaseUrnUseCase;
+			_deleteNTIWarningLetterUseCase = deleteNTIWarningLetterUseCase;
 
-            _getAllStatuses = getAllStatuses;
+			_getAllStatuses = getAllStatuses;
             _getAllReasons = getAllReasons;
             _getAllConditions = getAllConditions;
             _patchNTIWarningLetterUseCase = patchNTIWarningLetterUseCase;
@@ -61,9 +66,12 @@ namespace ConcernsCaseWork.API.Controllers
         public async Task<ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>>> GetNTIWarningLetterById(long warningLetterId, CancellationToken cancellationToken = default)
         {
             var warningLetter = _getNtiWarningLetterByIdUseCase.Execute(warningLetterId);
-            var response = new ApiSingleResponseV2<NTIWarningLetterResponse>(warningLetter);
-
-            return Ok(response);
+			if (warningLetter == null)
+			{
+				return NotFound();
+			}
+			var response = new ApiSingleResponseV2<NTIWarningLetterResponse>(warningLetter);
+			return Ok(response);
         }
 
         [HttpGet]
@@ -86,8 +94,34 @@ namespace ConcernsCaseWork.API.Controllers
 
             return Ok(response);
         }
+		[HttpDelete("{warningLetterId}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete(long warningLetterId, CancellationToken cancellationToken = default)
+		{
+			LogInfo($"Attempting to delete NTI Warning Letter matching Id {warningLetterId}");
 
-        [HttpGet]
+			if (!ValidateWarningLetterId(warningLetterId, nameof(Delete)))
+			{
+				return BadRequest();
+			}
+
+			var warningLetter = _getNtiWarningLetterByIdUseCase.Execute(warningLetterId);
+			if (warningLetter == null)
+			{
+				LogInfo($"Deleting NTI Warning Letter matching failed: No Warning Letter Matching Id {warningLetterId} was found");
+
+				return NotFound();
+			}
+
+			_deleteNTIWarningLetterUseCase.Execute(warningLetterId);
+			LogInfo($"Successfully Deleted NTI Warning Letter matching Id {warningLetterId}");
+
+			return NoContent();
+		}
+
+
+
+		[HttpGet]
         [Route("all-statuses")]
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiSingleResponseV2<List<NTIWarningLetterStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
@@ -130,5 +164,21 @@ namespace ConcernsCaseWork.API.Controllers
 
             return Ok(response);
         }
-    }
+
+		private bool ValidateWarningLetterId(long warningletterId, string methodName)
+		{
+			if (warningletterId <= 0)
+			{
+				LogInfo($"{methodName} found invalid warningletterId value");
+				return false;
+			}
+
+			return true;
+		}
+
+		private void LogInfo(string msg, [CallerMemberName] string caller = "")
+		{
+			_logger.LogInformation($"{caller} {msg}");
+		}
+	}
 }

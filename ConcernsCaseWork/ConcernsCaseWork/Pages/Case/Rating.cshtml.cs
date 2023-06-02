@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
-
+		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -41,6 +41,8 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
 
+		public bool IsAddtoCase { get; private set; }
+		
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			IRatingModelService ratingModelService,
@@ -69,6 +71,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogMethodEntered();
+
+				if (CaseUrn != null)
+				{
+					IsAddtoCase = true;
+				}
 
 				if (!ModelState.IsValid)
 				{
@@ -100,7 +107,13 @@ namespace ConcernsCaseWork.Pages.Case
 				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				
+				if (IsAddtoCase)
+				{
+					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+						caseUrn=0;
+					return RedirectToPage("details",new {urn = caseUrn });
+					
+				}
 				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
@@ -137,7 +150,11 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
 				

@@ -1,11 +1,21 @@
-﻿@page "/case/concern/{handler?}"
+﻿@page "/case/concern/{urn:long?}"
 @using ConcernsCaseWork.Constants;
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
 
 @{
-	ViewData["Title"] = "New Case Concern";
+	if (Model?.CaseModel?.Urn>0)
+	{
+		ViewData["Title"] = "Add to Case";
+	}
+	else
+	{
+		ViewData["Title"] = "New Case Concern";
+		
+	}
+	
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -20,7 +30,15 @@
 	{
         <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">Create case</span>
+		if (Model?.CaseModel?.Urn > 0)
+		{
+			<span class="govuk-caption-l">Add to case</span>
+		}
+		else
+		{
+			<span class="govuk-caption-l">Create case</span>
+		}
+		
         <h1 class="govuk-heading-l">Add concern</h1>
 
 		<!-- Trust summary and records -->
