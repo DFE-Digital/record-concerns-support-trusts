@@ -147,9 +147,6 @@ namespace ConcernsCaseWork.Pages.Case
 			// Complete create case model
 			var userState = await GetUserState();
 				
-			// get the trust being used for the case
-			//var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
-			//var current = await _caseModelService.GetCaseByUrn(caseUrn);	
 			var createCaseModel = userState.CreateCaseModel;
 			createCaseModel.Issue = issue;
 			createCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
