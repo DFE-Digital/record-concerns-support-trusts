@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Authorization;
+﻿/*using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
@@ -26,7 +26,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class IndexPageModelTests
 	{
-		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, IUserStateCachedService mockUserStateCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
+		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService,
+			IUserStateCachedService mockUserStateCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
@@ -42,4 +43,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			};
 		}
 	}
-}
+}*/

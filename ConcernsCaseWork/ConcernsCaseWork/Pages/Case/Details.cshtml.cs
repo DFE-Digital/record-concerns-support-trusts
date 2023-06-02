@@ -1,10 +1,12 @@
 ﻿using Ardalis.GuardClauses;
 using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -75,50 +77,87 @@ namespace ConcernsCaseWork.Pages.Case
 				{
 					IsAddtoCase = true;
 				}
-				var issue = Request.Form["issue"];
-				var currentStatus = Request.Form["current-status"];
-				var nextSteps = Request.Form["next-steps"];
-				var caseAim = Request.Form["case-aim"];
-				var deEscalationPoint = Request.Form["de-escalation-point"];
-				var caseHistory = Request.Form["case-history"];
-
-				if (string.IsNullOrEmpty(issue)) 
-					throw new Exception("Missing form values");
-				
-				// Complete create case model
-				var userState = await GetUserState();
-				
-				// get the trust being used for the case
-				var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
-				
-				var createCaseModel = userState.CreateCaseModel;
-				createCaseModel.Issue = issue;
-				createCaseModel.CurrentStatus = currentStatus;
-				createCaseModel.NextSteps = nextSteps;
-				createCaseModel.CaseAim = caseAim;
-				createCaseModel.DeEscalationPoint = deEscalationPoint;
-				createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
-				createCaseModel.CaseHistory = caseHistory;
-				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
-				var caseUrn = await _caseModelService.PostCase(createCaseModel);
-				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+				if (IsAddtoCase)
 				{
-					EventName = "CREATE CASE",
-					EventDescription = $"Case created {caseUrn}",
-					EventPayloadJson = JsonSerializer.Serialize(createCaseModel),
-					EventUserName = userState.UserName
-				});
-				return RedirectToPage("management/index", new { urn = caseUrn });
+					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+						throw new Exception("CaseUrn is null or invalid to parse");
+					await UpdateCase(caseUrn);
+					return RedirectToPage("management/index", new { urn = caseUrn });
+				}
+				else
+				{
+					var caseUrn =await CreateNewCase();
+					return RedirectToPage("management/index", new { urn = caseUrn });
+				}
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::DetailsPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
 			return await LoadPage();
 		}
+
+		private async Task<long> CreateNewCase()
+		{
+			var issue = Request.Form["issue"];
+			var currentStatus = Request.Form["current-status"];
+			var nextSteps = Request.Form["next-steps"];
+			var caseAim = Request.Form["case-aim"];
+			var deEscalationPoint = Request.Form["de-escalation-point"];
+			var caseHistory = Request.Form["case-history"];
+
+			if (string.IsNullOrEmpty(issue)) 
+				throw new Exception("Missing form values");
+				
+			// Complete create case model
+			var userState = await GetUserState();
+				
+			// get the trust being used for the case
+			var trust = await this._trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+				
+			var createCaseModel = userState.CreateCaseModel;
+			createCaseModel.Issue = issue;
+			createCaseModel.CurrentStatus = currentStatus;
+			createCaseModel.NextSteps = nextSteps;
+			createCaseModel.CaseAim = caseAim;
+			createCaseModel.DeEscalationPoint = deEscalationPoint;
+			createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
+			createCaseModel.CaseHistory = caseHistory;
+			createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
+				
+			var caseUrn = await _caseModelService.PostCase(createCaseModel);
+			await LogToAppInsights("CREATE CASE", $"Case created {caseUrn}",JsonSerializer.Serialize(createCaseModel),userState.UserName);
+			return caseUrn;
+		}
+
+		private async Task UpdateCase(long caseUrn)
+		{
+			var issue = Request.Form["issue"];
+			var currentStatus = Request.Form["current-status"];
+			var nextSteps = Request.Form["next-steps"];
+			var caseAim = Request.Form["case-aim"];
+			var deEscalationPoint = Request.Form["de-escalation-point"];
+			var caseHistory = Request.Form["case-history"];
+
+			if (string.IsNullOrEmpty(issue)) 
+				throw new Exception("Missing form values");
+				
+			// Complete create case model
+			var userState = await GetUserState();
+				
+			var createCaseModel = userState.CreateCaseModel;
+			createCaseModel.Issue = issue;
+			createCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
+			createCaseModel.CurrentStatus = currentStatus;
+			createCaseModel.NextSteps = nextSteps;
+			createCaseModel.CaseAim = caseAim;
+			createCaseModel.DeEscalationPoint = deEscalationPoint;
+			createCaseModel.CaseHistory = caseHistory;
+			caseUrn = await _caseModelService.PatchCase((int)caseUrn,createCaseModel);
+		}
+
 		
 		private async Task<ActionResult> LoadPage()
 		{
@@ -126,20 +165,18 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue != null)
+				{
+					IsAddtoCase = true;
+				}
 				if (string.IsNullOrEmpty(trustUkPrn))
 					throw new Exception("Cache TrustUkprn is null");
 		
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
-				{
-					EventName = "CREATE CASE",
-					EventDescription = "Loading the page",
-					EventPayloadJson = "",
-					EventUserName = userState.UserName
-				});
+				await LogToAppInsights("CREATE CASE","Loading the page","",userState.UserName);
 				return Page();
 			}
 			catch (Exception ex)
@@ -158,6 +195,17 @@ namespace ConcernsCaseWork.Pages.Case
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private async Task LogToAppInsights(string eventName, string description, string payload, string userName)
+		{
+			AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
+			{
+				EventName = eventName,
+				EventDescription = description,
+				EventPayloadJson = payload,
+				EventUserName = userName
+			});
 		}
 	}
 }
