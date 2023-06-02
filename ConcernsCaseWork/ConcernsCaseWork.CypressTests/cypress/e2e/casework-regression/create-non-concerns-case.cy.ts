@@ -186,18 +186,22 @@ describe("Creating a case", () => {
         createConcernPage
             .addConcern()
             .hasValidationError("Select concern type")
-            .hasValidationError("Select risk rating")
+            .hasValidationError("Select concern risk rating")
             .hasValidationError("Select means of referral");
             
-        cy.waitForJavascript();
-
-        Logger.Log("Create a valid concern");
+        Logger.Log("Create an invalid sub concern");
         createConcernPage
             .withConcernType("Financial")
+            .withConcernRating("Red-Amber")
+            .withMeansOfReferral("External")
+            .addConcern()
+            .hasValidationError("Select concern subtype");
+
+        Logger.Log("Create a valid concern")
+        createConcernPage
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
             .addConcern();
+
 
         // Logger.Log("Adding another concern during case creation");
         createConcernPage
@@ -209,13 +213,11 @@ describe("Creating a case", () => {
         //     .addConcern()
             .nextStep();
 
-
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addConcernDetailsPage.nextStep()
-            .hasValidationError("Select risk rating");
+            .hasValidationError("Select risk to trust rating");
 
-        createConcernPage.withRating("Red-Plus");
-        cy.waitForJavascript();
+        createConcernPage.withConcernRating("Red-Plus");
 
         addConcernDetailsPage.nextStep();
         Logger.Log("Checking accessibility on create case concern page");
