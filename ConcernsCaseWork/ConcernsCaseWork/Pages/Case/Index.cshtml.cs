@@ -29,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+		private readonly IUserStateCachedService _cachedService;
 		private TelemetryClient _telemetry;
 		
 		private const int _searchQueryMinLength = 3;
@@ -43,6 +44,7 @@ namespace ConcernsCaseWork.Pages.Case
 			IUserStateCachedService userStateCache,
 			ILogger<IndexPageModel> logger,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
+			IUserStateCachedService cachedService,
 			TelemetryClient telemetryClient)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -51,6 +53,7 @@ namespace ConcernsCaseWork.Pages.Case
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 			FindTrustModel = new();
 			_telemetry = telemetryClient;
+			_cachedService = userStateCache;
 		}
 
 		public async Task<ActionResult> OnPost()
@@ -92,7 +95,7 @@ namespace ConcernsCaseWork.Pages.Case
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
 		}
-
+		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

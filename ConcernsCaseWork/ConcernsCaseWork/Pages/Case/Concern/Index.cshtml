@@ -1,18 +1,37 @@
-﻿@page "/case/concern/{handler?}"
+﻿@page "/case/concern/{urn:long?}"
 @using ConcernsCaseWork.Constants;
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
 
 @{
-	ViewData["Title"] = "New Case Concern";
+	if (Model?.CaseModel?.Urn>0)
+	{
+		ViewData["Title"] = "Add to Case";
+	}
+	else
+	{
+		ViewData["Title"] = "New Case Concern";
+		
+	}
+	
 	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
+	@{
+		if (Model?.CaseModel?.Urn > 0)
+		{
+			<span class="govuk-caption-l">Add to case</span>
+		}
+		else
+		{
+			<span class="govuk-caption-l">Create case</span>
+		}
+	}
 	
-	<span class="govuk-caption-l">Create case</span>
 	<h1 class="govuk-heading-l">Add concern</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -35,7 +54,7 @@
 		</dl>
 		
 		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
+        
 		<h2 class="govuk-heading-m govuk-!-margin-top-6">Select concern</h2>
 		
 		<!-- FORM -->
