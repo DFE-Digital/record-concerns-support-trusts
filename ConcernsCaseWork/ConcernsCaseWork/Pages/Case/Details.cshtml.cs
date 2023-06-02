@@ -105,31 +105,21 @@ namespace ConcernsCaseWork.Pages.Case
 				// Complete create case model
 				var userState = await GetUserState();
 				
-				// get the trust being used for the case
-				var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
-				
 				var createCaseModel = userState.CreateCaseModel;
 				createCaseModel.Issue = Issue.Text.StringContents;
 				createCaseModel.CurrentStatus = CurrentStatus.Text.StringContents;
 				createCaseModel.NextSteps = NextSteps.Text.StringContents;
 				createCaseModel.CaseAim = CaseAim.Text.StringContents;
 				createCaseModel.DeEscalationPoint = DeEscalationPoint.Text.StringContents;
-				createCaseModel.TrustUkPrn = trust.GiasData.UkPrn;
 				createCaseModel.CaseHistory = CaseHistory.Text.StringContents;
-				createCaseModel.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
-				var caseUrn = await _caseModelService.PostCase(createCaseModel);
-				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
 				
 				if (CaseUrn.HasValue)
 				{
-					await UpdateCase(CaseUrn);
-					return RedirectToPage("management/index", new { urn = caseUrn });
+					return await UpdateCase(createCaseModel);
 				}
-				else
-				{
-					var caseUrn = await CreateNewCase();
-					return RedirectToPage("management/index", new { urn = caseUrn });
-				}
+
+				return await CreateNewCase(createCaseModel, userState);
+				
 			}
 			catch (Exception ex)
 			{
@@ -174,6 +164,28 @@ namespace ConcernsCaseWork.Pages.Case
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private async Task<IActionResult> CreateNewCase(CreateCaseModel model, UserState userState)
+		{
+			// get the trust being used for the case
+			var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
+
+			model.TrustUkPrn = trust.GiasData.UkPrn;
+			model.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
+
+			var caseUrn = await _caseModelService.PostCase(model);
+			LogToAppInsights("CREATE CASE", $"Case created {caseUrn}", JsonSerializer.Serialize(model), userState.UserName);
+
+			return RedirectToPage("management/index", new { urn = caseUrn });
+		}
+
+		private async Task<IActionResult> UpdateCase(CreateCaseModel createCaseModel)
+		{
+			createCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
+			await _caseModelService.PatchCase(CaseUrn.Value, createCaseModel);
+
+			return RedirectToPage("management/index", new { urn = CaseUrn });
 		}
 
 		private void LogToAppInsights(string eventName, string description, string payload, string userName)
