@@ -115,12 +115,11 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			long caseUrn = 0;
-			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0) ;
+			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0);
 			if (caseUrn > 0)
 			{
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 			}
 		}
-
 	}
 }

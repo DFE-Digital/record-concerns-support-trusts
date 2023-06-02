@@ -46,11 +46,10 @@ describe("Editing a case", () =>
 
         Logger.Log("Create a valid concern");
         createConcernPage
-            .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
@@ -59,7 +58,7 @@ describe("Editing a case", () =>
 
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Populate territory");
@@ -84,7 +83,6 @@ describe("Editing a case", () =>
             .hasConcerns("Financial: Deficit", ["Red"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue");
-
 
         Logger.Log("Edit risk to trust");
         caseManagementPage
@@ -125,7 +123,7 @@ describe("Editing a case", () =>
         cy.excuteAccessibilityTests();
 
         addDetailsPage
-            .withRating("Amber-Green")
+            .withRiskToTrust("Amber-Green")
             .apply();
 
         Logger.Log("Edit a territory")
@@ -133,13 +131,13 @@ describe("Editing a case", () =>
             .editTerritory();
 
         addTerritoryPage
-            .hasTerritory("North_And_Utc__North_East");
+            .hasTerritory("North and UTC - North East");
 
         Logger.Log("Checking accessibility on edit territory");
         cy.excuteAccessibilityTests();
 
         addTerritoryPage
-            .withTerritory("North_And_Utc__North_West")
+            .withTerritory("North and UTC - North West")
             .apply();
 
 
@@ -221,7 +219,6 @@ describe("Editing a case", () =>
             .withDeescalationPoint("New de-descalation point")
             .apply();
 
-
         Logger.Log("Edit next steps")
         caseManagementPage
             .editNextSteps();
@@ -240,7 +237,6 @@ describe("Editing a case", () =>
         editNextStepsPage
             .withNextSteps("New next step")
             .apply();
-
 
         Logger.Log("Edit Case history")
         caseManagementPage
