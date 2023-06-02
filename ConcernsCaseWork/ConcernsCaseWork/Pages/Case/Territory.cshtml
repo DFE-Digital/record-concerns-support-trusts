@@ -8,7 +8,6 @@
 @{
 	ViewData["Title"] = "New Case Territory";
 	var nonce = HttpContext.GetNonce();
-	var errorClass = "govuk-form-group--error";
 }
 
 <div class="govuk-width-container">
@@ -32,29 +31,8 @@
 		</dl>
 
 		<form role="form" method="post" id="case-territory-form" novalidate>
-			
-			<div class="govuk-form-group @if (Model.ModelState.ContainsKey("Territory")) { @errorClass; }" >
-				<fieldset class="govuk-fieldset">
-					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						Which SFSO territory is managing this case?
-					</legend>
-					@if (!Model.ModelState.IsValid && Model.ModelState.ContainsKey("Territory"))
-            								{
-						<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
-					}
-					<div class="govuk-radios" data-module="govuk-radios" id="Territory">
-						@foreach (Territory territory in Enum.GetValues(typeof(Territory)))
-						{
-							<div class="govuk-radios__item">
-								<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory" data-testid="@territory.Description()">
-								<label class="govuk-label govuk-radios__label" for="territory-@territory">
-									@territory.Description()
-								</label>
-							</div>
-						}
-					</div>
-				</fieldset>
-			</div>
+
+            <partial name="Components/_RadioList" model="Model.Territory" />
 
 			<div class="govuk-button-group">
 				<button data-prevent-double-click="true" data-testid="next-step-button" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">

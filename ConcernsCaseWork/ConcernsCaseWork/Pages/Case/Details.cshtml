@@ -1,4 +1,4 @@
-﻿@page "/case/details"
+﻿@page "/case/details/{urn:long?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.DetailsPageModel
@@ -10,8 +10,18 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	
-	<span class="govuk-caption-l">Create case</span>
+	 @{
+    	    if (Model.IsAddtoCase)
+    	    {
+		        <span class="govuk-caption-l">Add to case</span>
+		        ViewData["Title"] = "Add Case Details";
+    	    }
+    	    else
+    	    {
+    		    <span class="govuk-caption-l">Create case</span>
+    	    }
+        }
+
     <h1 class="govuk-heading-l">Concern details</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -57,11 +67,22 @@
 					
 					<!-- Q Case History -->
                     <partial name="_CaseHistory"/>
-
 					<div class="govuk-button-group">
-                        <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-							Create case
-						</button>
+					 @{
+                        	    if (Model.IsAddtoCase)
+                        	    {
+		                            <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+			                            Add to case
+		                            </button>
+                        	    }
+                        	    else
+                        	    {
+		                            <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+			                            Create case
+		                            </button>
+                        	    }
+                            }
+				
 						<a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
 							Cancel
 						</a>

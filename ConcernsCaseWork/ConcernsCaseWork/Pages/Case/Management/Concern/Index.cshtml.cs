@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
@@ -25,141 +27,113 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly ITrustModelService _trustModelService;
-		private readonly ITypeModelService _typeModelService;
 		private readonly ICaseModelService _caseModelService;
-		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly ILogger<IndexPageModel> _logger;
 		
-		public TypeModel TypeModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
-		public string PreviousUrl { get; private set; }
-		
+
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent ConcernType { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent MeansOfReferral { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
+
+		public CaseModel CaseModel { get; private set; }
+
 		public IndexPageModel(ICaseModelService caseModelService,
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService,
-			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
-			IMeansOfReferralModelService meansOfReferralService,
 			ILogger<IndexPageModel> logger)
 		{
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
-			_meansOfReferralService = meansOfReferralService;
 			_trustModelService = trustModelService;
-			_typeModelService = typeModelService;
 			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::Management::Concern::IndexPageModel::OnGetAsync");
-					
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				_logger.LogMethodEntered();
+
+
+				await LoadPage();
+
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Management::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
-			// Fetch UI data
-			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+
+			return Page();
 		}
 		
-		public async Task<IActionResult> OnPostAsync(string url)
+		public async Task<IActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::Management::Concern::IndexPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				if (!ConcernTypeValidator.IsValid(Request.Form))
-					throw new Exception("Missing form values");
-				
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
-				
-				string typeId;
-				
-				// Form
-				var type = Request.Form["type"].ToString();
-				var subType = Request.Form["sub-type"].ToString();
-				var ragRating = Request.Form["rating"].ToString();
-				
-				// Type
-				(typeId, type, subType) = type.SplitType(subType);
+				if (!ModelState.IsValid)
+				{
+					await LoadPage();
+					return Page();
+				}
 
-				// Rating
-				var splitRagRating = ragRating.Split(":");
-				var ragRatingId = splitRagRating[0];
+				var typeId = (ConcernType)(ConcernType.SelectedSubId.HasValue ? ConcernType.SelectedSubId : ConcernType.SelectedId);
 
-				var meansOfReferral = Request.Form["means-of-referral-id"].ToString();
-				
 				var createRecordModel = new CreateRecordModel
 				{
-					CaseUrn = caseUrn,
-					TypeId = long.Parse(typeId),
-					Type = type,
-					SubType = subType,
-					RatingId = long.Parse(ragRatingId),
-					MeansOfReferralId = long.Parse(meansOfReferral)
+					CaseUrn = CaseUrn,
+					TypeId = (long)typeId,
+					Type = "",
+					SubType = "",
+					RatingId = ConcernRiskRating.SelectedId.Value,
+					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				
 				// Post record
 				await _recordModelService.PostRecordByCaseUrn(createRecordModel);
-				
-				return Redirect(url);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Management::Concern::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 			
-			return await LoadPage(url, caseUrn);
+			return await LoadPage();
 		}
 		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+		private async Task<ActionResult> LoadPage()
 		{
-			try
-			{
-				if (caseUrn == 0) 
-					throw new Exception("Case urn cannot be 0");
+			// Get Case
+			var caseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
 				
-				// Get Case
-				var caseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				
-				PreviousUrl = url;
-				CreateRecordsModel = await _recordModelService.GetCreateRecordsModelByCaseUrn(caseUrn);
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatingsModel();
-				TypeModel = await _typeModelService.GetTypeModel();
-				MeansOfReferralModel = 
-					MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
+			CreateRecordsModel = await _recordModelService.GetCreateRecordsModelByCaseUrn(CaseUrn);
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
+			var ratingsModel = await _ratingModelService.GetRatingsModel();
+
+			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
+
+			CaseModel = caseModel;
+
+			return Page();
 			
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Management::Concern::IndexPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
 		}
 	}
 }

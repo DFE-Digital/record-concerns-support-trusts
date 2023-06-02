@@ -282,6 +282,44 @@ namespace ConcernsCaseWork.Services.Cases
 		}
 		
 		
+		public async Task<long> PatchCase(int caseUrn,CreateCaseModel createCaseModel)
+		{
+			
+			try
+			{
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
+
+				var newCaseDto = caseDto with { 
+					UpdatedAt = DateTimeOffset.Now,
+					CaseHistory = createCaseModel.CaseHistory,
+					Issue = createCaseModel.Issue,
+					CaseAim = createCaseModel.CaseAim,
+					CrmEnquiry = createCaseModel.CrmEnquiry,
+					CurrentStatus = createCaseModel.CurrentStatus,
+					NextSteps = createCaseModel.NextSteps,
+					RatingId = createCaseModel.RatingId,
+					DeEscalationPoint = createCaseModel.DeEscalationPoint,
+					DirectionOfTravel = createCaseModel.DirectionOfTravel
+					
+					
+				};
+				createCaseModel.StatusId = caseDto.StatusId;
+				var urn =await _caseService.PatchCaseByUrn(newCaseDto);
+				if (createCaseModel.CreateRecordsModel.Any())
+				{
+					 await PostConcerns(createCaseModel, caseUrn);
+				}
+				return urn.Urn;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+
+				throw;
+			}
+				
+		}
+		
 		public async Task PatchOwner(int caseUrn, string owner)
 		{
 			try

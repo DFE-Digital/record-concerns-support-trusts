@@ -13,5 +13,7 @@ public class NTIWarningLetterConfiguration : IEntityTypeConfiguration<NTIWarning
 		builder.HasKey(e => e.Id);
 		
 		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
+
 	}
 }

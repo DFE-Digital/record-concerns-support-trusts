@@ -1,19 +1,22 @@
-﻿@page "/case/concern/{handler?}"
+﻿@page "/case/concern/{urn:long?}"
 @using ConcernsCaseWork.Constants;
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
 
 @{
-	ViewData["Title"] = "New Case Concern";
+    var caseExists = Model.CaseUrn.HasValue;
+
+    ViewData["Title"] = caseExists ? "Add to Case" : "New Case Concern";
+
+    var heading = caseExists ? "Add to case" : "Create case";
+
 	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	
-	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Add concern</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -21,6 +24,12 @@
 	}
 	else
 	{
+        <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">@heading</span>
+		
+        <h1 class="govuk-heading-l">Add concern</h1>
+
 		<!-- Trust summary and records -->
 		<dl class="govuk-summary-list">
 			<div class="govuk-summary-list__row">
@@ -34,54 +43,14 @@
 			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
 		</dl>
 		
-		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
-		<h2 class="govuk-heading-m govuk-!-margin-top-6">Select concern</h2>
-		
 		<!-- FORM -->
 		<form role="form" method="post" id="case-concern-form" novalidate>
-			
-			<!--Q Concern type-->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
 
-					<div class="govuk-hint" id="case-issue-hint">
-						Use the
-                        <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
-							Risk Management Framework (opens in new tab)
-						</a> to assess the type of concern
-					</div>
+            <partial name="Components/_RadioList" model="Model.ConcernType" />
 
-					<partial name="_Concern" model="@Model.TypeModel" />
+            <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
 
-				</fieldset>
-			</div>
-
-			<!-- Q Risk rating -->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
-
-					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						Select concern risk rating
-					</legend>
-
-					<partial name="_Rating" model="@Model.RatingsModel" />
-
-				</fieldset>
-			</div>
-			
-			<!-- Q Means of Referral -->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
-
-					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						Means of referral
-					</legend>
-
-					<partial name="_MeansOfReferral" model="@Model.MeansOfReferralModel" />
-
-				</fieldset>
-			</div>
+            <partial name="Components/_RadioList" model="Model.MeansOfReferral" />
 
 			<div class="govuk-button-group">
 				<button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
@@ -96,13 +65,8 @@
 		
 		<script type="application/javascript" nonce="@nonce">
 			$(function () {
-				let validator = formValidator($("#case-concern-form")[0]);
-				addConcernValidator(validator);
-				addRatingValidator(validator);
-				addMeansOfReferralValidator(validator);
-
                 var submitButton = $('#add-concern-button')[0];
-                disableOnSubmitWithJsValidationCheck(validator, submitButton);
+                disableOnSubmit(submitButton);
 			});
 		</script>
 	}
