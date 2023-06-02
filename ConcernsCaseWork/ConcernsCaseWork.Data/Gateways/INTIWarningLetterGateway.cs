@@ -12,5 +12,6 @@ namespace ConcernsCaseWork.Data.Gateways
         Task<List<NTIWarningLetterConditionType>> GetAllConditionTypes();
         Task<ICollection<NTIWarningLetter>> GetNTIWarningLetterByCaseUrn(int caseUrn);
         Task<NTIWarningLetter> PatchNTIWarningLetter(NTIWarningLetter patchNTIWarningLetter);
-    }
+		void Delete(long warningLetterId);
+	}
 }
