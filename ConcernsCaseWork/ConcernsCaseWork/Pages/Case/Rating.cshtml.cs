@@ -39,8 +39,6 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
 
-		public bool IsAddtoCase { get; private set; }
-
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int? CaseUrn { get; set; }
 
@@ -73,11 +71,6 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogMethodEntered();
 
-				if (CaseUrn.HasValue)
-				{
-					IsAddtoCase = true;
-				}
-
 				if (!ModelState.IsValid)
 				{
 					await LoadPage();
@@ -108,11 +101,13 @@ namespace ConcernsCaseWork.Pages.Case
 				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				if (IsAddtoCase)
+
+				if (CaseUrn.HasValue)
 				{
 					return RedirectToPage("details",new {urn = CaseUrn });
 					
 				}
+
 				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
@@ -149,11 +144,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue != null)
-				{
-					IsAddtoCase = true;
-				}
+
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
 				

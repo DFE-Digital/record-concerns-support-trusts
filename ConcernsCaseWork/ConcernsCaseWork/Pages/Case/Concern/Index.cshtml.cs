@@ -10,10 +10,9 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Services.MeansOfReferral;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
-using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Services.Cases;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -53,7 +50,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		[BindProperty]
 		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
-		public CaseModel CaseModel { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int? CaseUrn { get; set; }
 
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
@@ -100,7 +98,12 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					return Page();
 				}
 
-				await GetCaseModel();
+				CaseModel caseModel = null;
+
+				if (CaseUrn.HasValue)
+				{
+					caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
+				}
 				
 				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
@@ -159,13 +162,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(GetUserName(), userState);
-				if (CaseModel!=null && !CaseModel.IsConcernsCase())
-				{
-					return RedirectToPage("/case/concern/add",new {urn = CaseModel.Urn});
-				}
-				return RedirectToPage("add");
 
-				return RedirectToPage();
+				if (caseModel != null && !caseModel.IsConcernsCase())
+				{
+					return RedirectToPage("/case/concern/add",new {urn = CaseUrn});
+				}
+
+				return RedirectToPage("add");
 			}
 			catch (Exception ex)
 			{
@@ -213,8 +216,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
 			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
 
-			await GetCaseModel();
-
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{
 				EventName = "ADD CONCERN",
@@ -224,17 +225,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			});
 
 			return Page();
-		}
-
-		private async Task GetCaseModel()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			long caseUrn = 0;
-			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0) ;
-			if (caseUrn > 0)
-			{
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-			}
 		}
 
 		private async Task<UserState> GetUserState()
