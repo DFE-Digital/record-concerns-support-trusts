@@ -27,12 +27,10 @@ describe("Creating a case", () => {
     const addConcernDetailsPage = new AddConcernDetailsPage();
     const createCasePage = new CreateCasePage();
 
-
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
     const viewClosedCasePage = new ViewClosedCasePage();
     const createConcernPage = new CreateConcernPage();
-
 
     const trustName = "Ashton West End Primary Academy";
     const territory = "North and UTC - North East";
@@ -48,9 +46,6 @@ describe("Creating a case", () => {
     });
 
     it("Should validate adding a case", () => {
-        const trustName = "Ashton West End Primary Academy";
-        const territory = "North and UTC - North East";
-        const caseHistoryData = "This is the case history";
         Logger.Log("Create a case");
         createCasePage
             .withTrustName(trustName)
@@ -194,7 +189,8 @@ describe("Creating a case", () => {
             .hasValidationError("Select risk rating")
             .hasValidationError("Select means of referral");
             
-            cy.waitForJavascript();
+        cy.waitForJavascript();
+
         Logger.Log("Create a valid concern");
         createConcernPage
             .withConcernType("Financial")
@@ -202,6 +198,7 @@ describe("Creating a case", () => {
             .withRating("Red-Amber")
             .withMeansOfRefferal("External")
             .addConcern();
+
         // Logger.Log("Adding another concern during case creation");
         createConcernPage
         //     .addAnotherConcern()
@@ -219,11 +216,11 @@ describe("Creating a case", () => {
 
         createConcernPage.withRating("Red-Plus");
         cy.waitForJavascript();
+
         addConcernDetailsPage.nextStep();
         Logger.Log("Checking accessibility on create case concern page");
         cy.excuteAccessibilityTests();
         
-
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
             .withIssueExceedingLimit()
@@ -253,7 +250,6 @@ describe("Creating a case", () => {
             .withCaseHistory("This is the case history")
             .createCase();
 
-
         Logger.Log("Verify case details");
         caseManagementPage
             .hasTrust("Ashton West End Primary Academy")
@@ -275,8 +271,6 @@ describe("Creating a case", () => {
                         expect(response[0].meansOfReferralId).to.eq(2);
                     });
             });
-
-
     });
 
     function closeCase(caseId: string) {
