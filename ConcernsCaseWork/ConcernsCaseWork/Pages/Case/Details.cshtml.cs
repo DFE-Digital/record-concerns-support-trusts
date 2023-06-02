@@ -53,7 +53,8 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public TextAreaUiComponent CaseHistory { get; set; }
 
-		public bool IsAddtoCase { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int? CaseUrn { get; set; }
 
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -77,12 +78,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 			try
 			{
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue != null)
-				{
-					IsAddtoCase = true;
-				}
-
 				// Fetch UI data
 				await LoadPage();
 			}
@@ -125,22 +120,14 @@ namespace ConcernsCaseWork.Pages.Case
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
 				
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue != null)
+				if (CaseUrn.HasValue)
 				{
-					IsAddtoCase = true;
-				}
-				
-				if (IsAddtoCase)
-				{
-					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-						throw new Exception("CaseUrn is null or invalid to parse");
-					await UpdateCase(caseUrn);
+					await UpdateCase(CaseUrn);
 					return RedirectToPage("management/index", new { urn = caseUrn });
 				}
 				else
 				{
-					var caseUrn =await CreateNewCase();
+					var caseUrn = await CreateNewCase();
 					return RedirectToPage("management/index", new { urn = caseUrn });
 				}
 			}
@@ -189,7 +176,7 @@ namespace ConcernsCaseWork.Pages.Case
 			return userState;
 		}
 
-		private async Task LogToAppInsights(string eventName, string description, string payload, string userName)
+		private void LogToAppInsights(string eventName, string description, string payload, string userName)
 		{
 			AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
 			{
