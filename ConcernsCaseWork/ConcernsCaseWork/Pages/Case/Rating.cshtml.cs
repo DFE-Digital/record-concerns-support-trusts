@@ -17,8 +17,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -42,7 +40,10 @@ namespace ConcernsCaseWork.Pages.Case
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
 
 		public bool IsAddtoCase { get; private set; }
-		
+
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int? CaseUrn { get; set; }
+
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			IRatingModelService ratingModelService,
@@ -72,7 +73,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogMethodEntered();
 
-				if (CaseUrn != null)
+				if (CaseUrn.HasValue)
 				{
 					IsAddtoCase = true;
 				}
@@ -109,9 +110,7 @@ namespace ConcernsCaseWork.Pages.Case
 				await _userStateCache.StoreData(GetUserName(), userState);
 				if (IsAddtoCase)
 				{
-					if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-						caseUrn=0;
-					return RedirectToPage("details",new {urn = caseUrn });
+					return RedirectToPage("details",new {urn = CaseUrn });
 					
 				}
 				return RedirectToPage("territory");
