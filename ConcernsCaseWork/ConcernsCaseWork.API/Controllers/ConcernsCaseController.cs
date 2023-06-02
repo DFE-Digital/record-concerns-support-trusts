@@ -60,9 +60,6 @@ namespace ConcernsCaseWork.API.Controllers
             {
                 var createdConcernsCase = _createConcernsCase.Execute(request);
                 var response = new ApiSingleResponseV2<ConcernsCaseResponse>(createdConcernsCase);
-
-				//return CreatedAtAction(nameof(GetByUrn), new { urn = response.Data.Urn }, response);
-
 				return new ObjectResult(response) {StatusCode = StatusCodes.Status201Created};
             }
             _logger.LogInformation($"Failed to create Concerns Case due to bad request");
