@@ -9,6 +9,7 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -664,6 +665,111 @@ public class ConcernsIntegrationTests : IDisposable
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 		content.Data.Should().BeEquivalentTo(expectedContent);
 	}
+
+
+	public ConcernsCase BuildConcernsCase(Int32 caseRatingID)
+	{
+		ConcernsCase concernsCase = new()
+		{
+			CreatedAt = _randomGenerator.DateTime(),
+			UpdatedAt = _randomGenerator.DateTime(),
+			ReviewAt = _randomGenerator.DateTime(),
+			ClosedAt = _randomGenerator.DateTime(),
+			CreatedBy = _randomGenerator.NextString(3, 10),
+			Description = _randomGenerator.NextString(3, 10),
+			CrmEnquiry = _randomGenerator.NextString(3, 10),
+			TrustUkprn = _randomGenerator.NextString(3, 10),
+			ReasonAtReview = _randomGenerator.NextString(3, 10),
+			DeEscalation = _randomGenerator.DateTime(),
+			Issue = _randomGenerator.NextString(3, 10),
+			CurrentStatus = _randomGenerator.NextString(3, 10),
+			CaseAim = _randomGenerator.NextString(3, 10),
+			DeEscalationPoint = _randomGenerator.NextString(3, 10),
+			NextSteps = _randomGenerator.NextString(3, 10),
+			CaseHistory = _randomGenerator.NextString(3, 10),
+			DirectionOfTravel = _randomGenerator.NextString(3, 10),
+			Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
+			StatusId = 2,
+			RatingId = caseRatingID
+		};
+
+		return concernsCase;
+	}
+
+	[Fact]
+	public async Task DeleteMissingConcernsRecord_Returns_NotFound()
+	{
+		var currentRecordId = 987654321;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Delete,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordId}"),
+		};
+		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+	}
+
+	[Fact]
+	public async Task DeleteConcernsRecord_Returns_NoConcernsRecordForCase()
+	{
+		await using ConcernsDbContext context = _testFixture.GetContext();
+
+		ConcernsRating caseRating = context.ConcernsRatings.First();
+
+		ConcernsCase concernsCase = BuildConcernsCase(caseRating.Id);
+
+		AddConcernsCaseToDatabase(concernsCase);
+
+		ConcernsType linkedType = context.ConcernsTypes.First();
+		ConcernsRating linkedRating = context.ConcernsRatings.First();
+		ConcernsMeansOfReferral meansOfReferral = context.ConcernsMeansOfReferrals.First();
+
+		ConcernsRecordRequest createConcernsRecordContent = Builder<ConcernsRecordRequest>.CreateNew()
+			.With(c => c.CaseUrn = concernsCase.Urn)
+			.With(c => c.TypeId = linkedType.Id)
+			.With(c => c.RatingId = linkedRating.Id)
+			.With(c => c.MeansOfReferralId = meansOfReferral.Id)
+			.Build();
+
+		HttpRequestMessage createConcernsRecordHttpRequest = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-records"),
+			Content = JsonContent.Create(createConcernsRecordContent)
+		};
+
+		HttpResponseMessage createdResponse = await _client.SendAsync(createConcernsRecordHttpRequest);
+		createdResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+
+		ApiSingleResponseV2<ConcernsRecordResponse> createdResult = await createdResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
+		var currentRecordId = createdResult.Data.Id;
+		var urn = concernsCase.Urn;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Delete,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordId}"),
+		};
+		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+	
+		HttpRequestMessage listConcernsforCaseResponse = new()
+		{
+			Method = HttpMethod.Get,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/case/urn/{urn}"),
+		};
+
+		HttpResponseMessage listResponse = await _client.SendAsync(listConcernsforCaseResponse);
+		ApiResponseV2<ConcernsRecordResponse> concernsforCaseList = await listResponse.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsRecordResponse>>();
+
+		listResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+		concernsforCaseList.Data.Count().Should().Be(0);
+	}
+
 
 	[Fact]
 	public async Task GetConcernsRecordsByConcernsCaseUid()
