@@ -1,9 +1,13 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
@@ -37,6 +41,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IActionsModelService _actionsModelService;
 		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
+		private readonly IUserStateCachedService _cachedService;
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -60,19 +66,23 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
 			ICaseSummaryService caseSummaryService,
-			ICasePermissionsService casePermissionsService
+			ICasePermissionsService casePermissionsService,
+			IUserStateCachedService cachedService,
+			IClaimsPrincipalHelper claimsPrincipalHelper
 			)
 		{
-			_trustModelService = trustModelService;
-			_caseModelService = caseModelService;
-			_recordModelService = recordModelService;
-			_ratingModelService = ratingModelService;
-			_statusCachedService = statusCachedService;
-			_ntiStatusesCachedService = ntiUCStatusesCachedService;
-			_logger = logger;
-			_actionsModelService = actionsModelService;
-			_caseSummaryService = caseSummaryService;
-			_casePermissionsService = casePermissionsService;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_recordModelService = Guard.Against.Null(recordModelService);
+			_ratingModelService = Guard.Against.Null(ratingModelService);
+			_statusCachedService = Guard.Against.Null(statusCachedService);
+			_ntiStatusesCachedService = Guard.Against.Null(ntiUCStatusesCachedService);
+			_logger = Guard.Against.Null(logger);
+			_actionsModelService = Guard.Against.Null(actionsModelService);
+			_caseSummaryService = Guard.Against.Null(caseSummaryService);
+			_casePermissionsService = Guard.Against.Null(casePermissionsService);
+			_cachedService = Guard.Against.Null(cachedService);
+			_claimsPrincipalHelper = claimsPrincipalHelper;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -87,7 +97,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-			
+
 				if (await IsCaseClosed())
 				{
 					return Redirect($"/case/{CaseModel.Urn}/closed");
@@ -108,14 +118,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
 				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
-
 				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
-
 				TrustDetailsModel = trustDetailsTask.Result;
 				ActiveCases = activeTrustCasesTask.Result;
 				ClosedCases = closedTrustCasesTask.Result;
-
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
+				await UpdateCacheService(CaseModel);
+				
 			}
 			catch (Exception ex)
 			{
@@ -164,6 +173,21 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return false;
+		}
+
+		
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
+		
+		private async Task UpdateCacheService(CaseModel model)
+		{
+			var userState = await _cachedService.GetData(GetUserName());
+			var trustUkPrn = userState.TrustUkPrn;
+			if (trustUkPrn == null)
+			{
+				userState.TrustUkPrn = model.TrustUkPrn;
+				await _cachedService.StoreData(userState.UserName, userState);
+			}
+			
 		}
 	}
 }

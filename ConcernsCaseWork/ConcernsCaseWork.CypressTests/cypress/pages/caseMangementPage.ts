@@ -101,7 +101,13 @@ class CaseManagementPage {
 
         return this;
     }
+    public addAnotherConcernForNonConcern(): this
+    {
+        Logger.Log("Adding another concern for non concern journey");
+        cy.getByTestId("Add_Button_Concern").click();
 
+        return this;
+    }
     public editRiskToTrust(): this {
         Logger.Log("Editing the risk to trust");
         this.getEditRiskToTrust().click();
