@@ -1,13 +1,13 @@
 ﻿@page "/case/{urn:long}/management/edit-territory"
 @using ConcernsCaseWork.API.Contracts.Enums
+@using ConcernsCaseWork.Constants;
 @using ConcernsCaseWork.Extensions
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.Management.EditTerritoryPageModel
 
 @{
 	ViewData["Title"] = "Edit case SFSO territory";
-	ViewData["CancelBackLink"] = Model.ReferrerUrl;
-	var errorClass = "govuk-form-group--error";
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
 <div class="govuk-width-container">
@@ -26,30 +26,11 @@
             }
 			else
 			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <partial name="_ValidationErrors" />
 				
 				<form role="form" method="post" id="case-territory-form" novalidate>
 
-					<div class="govuk-form-group @if (Model.ModelState.ContainsKey("Territory")) { @errorClass; }" >
-						<fieldset class="govuk-fieldset">
-							@if (!Model.ModelState.IsValid && Model.ModelState.ContainsKey("Territory"))
-							{
-								<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
-							}
-							<div class="govuk-radios" data-module="govuk-radios" id="Territory">
-								@foreach (Territory territory in Enum.GetValues(typeof(Territory)))
-								{
-									var isChecked = Model.Territory == territory ? "checked" : "";
-									<div class="govuk-radios__item">
-										<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory" @isChecked data-testid="@territory">
-										<label class="govuk-label govuk-radios__label" for="territory-@territory">
-											@territory.Description()
-										</label>
-									</div>
-								}
-							</div>
-						</fieldset>
-					</div>
+                    <partial name="Components/_RadioList" model="Model.Territory" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">

@@ -1,6 +1,9 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -28,11 +31,17 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
-
+		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
-		
+
+		[BindProperty]
+		public RadioButtonsUiComponent RiskToTrust { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int? CaseUrn { get; set; }
+
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			IRatingModelService ratingModelService,
@@ -50,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			_logger.LogInformation("Case::RatingPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 				
 			// Fetch UI data
 			await LoadPage();
@@ -60,53 +69,54 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::RatingPageModel::OnPostAsync");
-				
-				var ragRating = Request.Form["rating"].ToString();
-				if (string.IsNullOrEmpty(ragRating))
-					throw new Exception("Missing form values");
-				
-				// Rating
-				var splitRagRating = ragRating.Split(":");
-				var ragRatingId = splitRagRating[0];
-				var ragRatingName = splitRagRating[1];
-				
-				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
-				var rating = await _ratingModelService.GetRatingModelById(long.Parse(ragRatingId));
+				_logger.LogMethodEntered();
 
-				if (rating == null)
+				if (!ModelState.IsValid)
 				{
-					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
+					await LoadPage();
+					return Page();
 				}
+
+				var ragRatingId = (ConcernRating)RiskToTrust.SelectedId.Value;
+
+				if (!Enum.IsDefined(typeof(ConcernRating), ragRatingId))
+					throw new InvalidOperationException($"Unrecognised risk to trust {ragRatingId}");
+
+				var ragRatingName = ragRatingId.Description();
 
 				// Redis state
 				var userState = await GetUserState();
 
 				// Update cache model
-				userState.CreateCaseModel.RatingId = long.Parse(ragRatingId);
+				userState.CreateCaseModel.RatingId = (long)ragRatingId;
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
-					EventDescription = $"Rating added {rating.Name}",
+					EventDescription = $"Rating added {ragRatingName}",
 					EventPayloadJson = "",
 					EventUserName = userState.UserName
 				});
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				
+
+				if (CaseUrn.HasValue)
+				{
+					return RedirectToPage("details",new {urn = CaseUrn });
+					
+				}
+
 				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
-			
-			return await LoadPage();
+
+			return Page();
 		}
 		
 		public async Task<ActionResult> OnGetCancel()
@@ -121,11 +131,11 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::OnGetCancel::Exception - {Message}", ex.Message);
-					
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 		
 		private async Task<ActionResult> LoadPage()
@@ -134,7 +144,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				
+
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
 				
@@ -148,15 +158,18 @@ namespace ConcernsCaseWork.Pages.Case
 					EventPayloadJson = "",
 					EventUserName = userState.UserName
 				});
+
+				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RatingsModel, RiskToTrust?.SelectedId);
+
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 		
 		private async Task<UserState> GetUserState()
