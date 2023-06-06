@@ -17,4 +17,4 @@ services:
       - HTTP_PROXY=${HTTP_PROXY}
       - NO_PROXY=${NO_PROXY}
     volumes:
-      - ./:/reports:rw
+      - ./reports:/reports:rw

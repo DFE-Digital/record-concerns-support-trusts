@@ -1,0 +1,44 @@
+name: Security scanner tests
+
+on:
+  workflow_run:
+    workflows: ["Deploy to environment"]
+    types:
+      - completed
+
+jobs:
+  run-tests-with-zap:
+    name: Run Cypress tests with OWASP ZAP
+    environment: development
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests with scanner
+        env:
+          AUTH_KEY: ${{ secrets.CYPRESS_TEST_SECRET }}
+          API_KEY: ${{ secrets.API_KEY }}
+          HTTP_PROXY: http://zap:8080
+          NO_PROXY: "*.google-analytics.com,*.googletagmanager.com,*.microsoftonline.com,*.gvt1.com"
+          PASSWORD: ${{ secrets.PASSWORD }}
+          URL: ${{ secrets.AZURE_ENDPOINT }}
+          USERNAME: ${{ secrets.USERNAME }}
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+        run: |
+          docker-compose -f CypressTests/docker-compose.yml up --exit-code-from cypress
+
+      - name: Get git sha
+        if: '!cancelled()'
+        run: |
+          CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
+          echo "checked_out_sha=${CHECKED_OUT_SHA}" >> $GITHUB_ENV
+
+      - name: Push report to blob storage
+        if: '!cancelled()'
+        uses: azure/CLI@v1
+        id: azure
+        with:
+          azcliversion: 2.49.0
+          inlineScript: |
+            az storage azcopy blob upload -c ${{ secrets.OWASP_STORAGE_CONTAINER_NAME }} --account-name ${{ secrets.OWASP_STORAGE_ACCOUNT_NAME }} -s "ConcernsCaseWork/ConcernsCaseWork.CypressTests/reports/ZAP-Report.html" -d "ConcernsCaseWork/${{ env.checked_out_sha }}/ZAP-Report.html" --sas-token "${{ secrets.OWASP_BLOB_SAS_TOKEN }}"
