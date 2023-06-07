@@ -56,6 +56,12 @@ To execute the tests in headless mode, use the following command (the output wil
 npm run cy:run
 ```
 
+### Test linting
+
+We have set up [eslint](https://eslint.org) on the Cypress tests to encourage code quality. This can be run by using the script `npm run lint`
+
+Currently, all rules are set to warnings rather than errors. We will be looking to move these to errors long-term.
+
 ### Security testing with ZAP
 
 The Cypress tests can also be run, proxied via [OWASP ZAP](https://zaproxy.org) for passive security scanning of the application.
