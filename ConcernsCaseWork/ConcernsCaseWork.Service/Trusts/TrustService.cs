@@ -1,8 +1,10 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.Configuration;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using System.Web;
 
@@ -11,11 +13,22 @@ namespace ConcernsCaseWork.Service.Trusts
 	public sealed class TrustService : TramsAbstractService, ITrustService
 	{
 		private readonly ILogger<TrustService> _logger;
-		private readonly string TrustEndpointVersion = "v3";
+		private readonly IFakeTrustService _fakeTrustService;
+		IFeatureManager _featureManager;
 
-		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		private const string EndpointV3 = "v3";
+
+		public TrustService(
+			IHttpClientFactory clientFactory, 
+			ILogger<TrustService> logger, 
+			ICorrelationContext correlationContext, 
+			IClientUserInfoService userInfoService,
+			IFakeTrustService fakeTrustService,
+			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
+			_fakeTrustService = fakeTrustService;
+			_featureManager = featureManager;
 		}
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -46,8 +59,19 @@ namespace ConcernsCaseWork.Service.Trusts
 			{
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
 
+				var fakeTrust = _fakeTrustService.GetTrustByUkPrn(ukPrn);
+
+				if (fakeTrust != null)
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn Found fake trust, returning {fakeTrust.GiasData.GroupName}");
+					return fakeTrust;
+				}
+
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.V3TrustSearch);
+				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
+
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{TrustEndpointVersion}/trust/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{endpointVersion}/trust/{ukPrn}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -61,22 +85,33 @@ namespace ConcernsCaseWork.Service.Trusts
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-				// Deserialize content to POCO
-				var apiWrapperTrustDetails = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content);
+				var apiWrapperTrustDetails = ProcessSearchByUkPrnResponse(content, v3Enabled);
 
-				// Unwrap response
-				if (apiWrapperTrustDetails is { Data: { } })
-				{
-					return apiWrapperTrustDetails.Data;
-				}
-
-				throw new Exception("Academies API error unwrap response");
+				return apiWrapperTrustDetails;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
+		}
+
+		private static TrustDetailsDto ProcessSearchByUkPrnResponse(string content, bool v3Enabled)
+		{
+			if (!v3Enabled)
+			{
+				return JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content).Data;
+			}
+
+			var v3Response = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsV3Dto>>(content);
+			var v2Response = new TrustDetailsDto()
+			{
+				IfdData = v3Response.Data.TrustData,
+				Establishments = v3Response.Data.Establishments,
+				GiasData = v3Response.Data.GiasData
+			};
+
+			return v2Response;
 		}
 
 		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -88,8 +123,19 @@ namespace ConcernsCaseWork.Service.Trusts
 			{
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
+				var fakeTrust = _fakeTrustService.GetTrustsByPagination(trustSearch.GroupName);
+
+				if (fakeTrust != null)
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination Found fake trust, returning {fakeTrust.Trusts.Count} results");
+					return fakeTrust;
+				}
+
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.V3TrustSearch);
+				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion; 
+
 				// Create a request
-				var endpoint = $"/{TrustEndpointVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
+				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
 
 				var response = await GetByPagination<TrustSearchDto>(endpoint);
 
