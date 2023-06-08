@@ -242,8 +242,6 @@ describe("Creating a case", () => {
         Logger.Log("Checking accessibility on concerns case confirmation");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         Logger.Log("Add concern details with valid text limit");
         addConcernDetailsPage
             .withIssue("This is an issue")

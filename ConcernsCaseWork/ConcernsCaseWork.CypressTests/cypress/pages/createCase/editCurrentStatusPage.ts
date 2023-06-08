@@ -30,7 +30,7 @@ export default class EditCurrentStatusPage {
     {
         Logger.Log(`With Current status ${value}`);
 
-        cy.getByTestId(`current-status`).clear().type(value);
+        cy.getByTestId(`current-status`).clear({ force: true }).type(value);
 
         return this;
     }

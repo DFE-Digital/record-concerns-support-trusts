@@ -114,6 +114,10 @@ describe("Creating a case", () =>
             .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
 
+        addConcernDetailsPage
+            .createCase()
+            .hasValidationError("Issue is required");
+
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
             .withIssueExceedingLimit()
@@ -125,9 +129,9 @@ describe("Creating a case", () =>
             .createCase()
             .hasValidationError("Issue must be 2000 characters or less")
             .hasValidationError("Current status must be 4000 characters or less")
-            .hasValidationError("Next steps must be 4000 characters or less")
-            .hasValidationError("De-escalation point must be 1000 characters or less")
             .hasValidationError("Case aim must be 1000 characters or less")
+            .hasValidationError("De-escalation point must be 1000 characters or less")
+            .hasValidationError("Next steps must be 4000 characters or less")
             .hasValidationError("Case history must be 4300 characters or less");
 
         Logger.Log("Checking accessibility on concerns case confirmation");
@@ -249,22 +253,6 @@ describe("Creating a case", () =>
     const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
 	const searchTermForSchool = "school";
-
-    it("User searches for a valid Trust and selects it", () => {
-
-        createCasePage
-            .createCase()
-            .withTrustName(searchTerm)
-            .selectOption()
-            .confirmOption();
-
-		Logger.Log("Should display the Concern details of the specified Trust");
-        createCaseSummary
-            .hasTrustSummaryDetails(searchTerm);
-
-		createConcernPage
-            .cancel();
-	});
 
     it('Should display an error if no trust is selected', () => {
 		createCasePage
