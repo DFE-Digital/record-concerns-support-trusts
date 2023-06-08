@@ -15,7 +15,7 @@ public class TestDataFactory
 			UpdatedAt = _randomGenerator.DateTime(),
 			CreatedBy = _randomGenerator.NextString(3, 10),
 			DirectionOfTravel = _randomGenerator.NextString(3, 10),
-			Territory = _randomGenerator.Enumeration<Territory>(),
+			Territory = Territory.National_Operations,
 			StatusId = statusId,
 			RatingId = ratingId
 		};

@@ -14,11 +14,14 @@
 
 <div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
-         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-			<h2 class="govuk-heading-m">
-				@Model.Heading
-			</h2>
-		</legend>
+        @if (!string.IsNullOrEmpty(Model.Heading))
+        {
+             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+			    <h2 class="govuk-heading-m">
+				    @Model.Heading
+			    </h2>
+		    </legend>
+        }
 
         @if (!string.IsNullOrEmpty(Model.HintFromPartialView))
         {
