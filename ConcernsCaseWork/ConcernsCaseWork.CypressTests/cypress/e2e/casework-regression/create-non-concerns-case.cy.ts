@@ -203,14 +203,14 @@ describe("Creating a case", () => {
             .addConcern();
 
 
-        // Logger.Log("Adding another concern during case creation");
+        Logger.Log("Adding another concern during case creation");
         createConcernPage
-        //     .addAnotherConcern()
-        //     .withConcernType("Governance and compliance")
-        //     .withSubConcernType("Governance and compliance: Compliance")
-        //     .withRating("Amber-Green")
-        //     .withMeansOfRefferal("Internal")
-        //     .addConcern()
+             .addAnotherConcern()
+            .withConcernType("Governance and compliance")
+            .withSubConcernType("Governance and compliance: Compliance")
+            .withConcernRating("Amber-Green")
+            .withMeansOfReferral("Internal")
+            .addConcern()
             .nextStep();
 
         Logger.Log("Check unpopulated risk to trust throws validation error");
@@ -256,7 +256,7 @@ describe("Creating a case", () => {
         caseManagementPage
             .hasTrust("Ashton West End Primary Academy")
             .hasRiskToTrust("Red Plus")
-          //  .hasConcerns("Governance and compliance: Compliance", ["Amber", "Green"])
+           .hasConcerns("Governance and compliance: Compliance", ["Amber", "Green"])
             .hasConcerns("Financial: Deficit", ["Red", "Amber"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue")
@@ -270,7 +270,9 @@ describe("Creating a case", () => {
             caseManagementPage.getCaseIDText().then((caseId) => {
                 concernsApi.get(parseInt(caseId))
                     .then(response => {
-                        expect(response[0].meansOfReferralId).to.eq(2);
+                        var ids = response.map(r => r.meansOfReferralId);
+                        expect(ids).to.contain(1);
+                        expect(ids).to.contain(2);
                     });
             });
     });
