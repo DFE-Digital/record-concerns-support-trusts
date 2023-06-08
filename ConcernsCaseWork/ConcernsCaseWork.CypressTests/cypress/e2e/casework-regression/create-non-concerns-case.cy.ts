@@ -242,8 +242,6 @@ describe("Creating a case", () => {
         Logger.Log("Checking accessibility on concerns case confirmation");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         Logger.Log("Add concern details with valid text limit");
         addConcernDetailsPage
             .withIssue("This is an issue")
@@ -272,7 +270,9 @@ describe("Creating a case", () => {
             caseManagementPage.getCaseIDText().then((caseId) => {
                 concernsApi.get(parseInt(caseId))
                     .then(response => {
-                        expect(response[0].meansOfReferralId).to.eq(1);
+                        var ids = response.map(r => r.meansOfReferralId);
+                        expect(ids).to.contain(1);
+                        expect(ids).to.contain(2);
                     });
             });
     });

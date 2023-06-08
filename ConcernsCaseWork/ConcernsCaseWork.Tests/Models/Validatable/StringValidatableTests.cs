@@ -11,9 +11,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable;
 
 [Parallelizable(ParallelScope.All)]
 public class StringValidatableTests
-{
-	private readonly IFixture _fixture = new Fixture();
-	
+{	
 	[Test]
 	public void WhenStringContentsLength_ExceedsMaxLength_Validate_ReturnsValidationResult()
 	{
@@ -53,5 +51,45 @@ public class StringValidatableTests
 		result.Should().HaveCount(0);
 	}
 
+	[TestCase("")]
+	[TestCase(null)]
+	public void WhenRequired_NoValue_ReturnsValidationError(string? value)
+	{
+		// arrange
+		var sut = new ValidateableString()
+		{
+			DisplayName = "Supporting Notes",
+			MaxLength = 100,
+			StringContents = value,
+			Required = true
+		};
+		var context = new ValidationContext(sut);
 
+		// act
+		var result = sut.Validate(context);
+
+		// assert
+		result.Should().HaveCount(1);
+		result.Single().ErrorMessage.Should().Be("Supporting Notes is required");
+	}
+
+	[Test]
+	public void WhenRequired_ValueProvided_ReturnsNoValidationErrors()
+	{
+		// arrange
+		var sut = new ValidateableString()
+		{
+			DisplayName = "Supporting Notes",
+			MaxLength = 100,
+			StringContents = "This is a value",
+			Required = true
+		};
+		var context = new ValidationContext(sut);
+
+		// act
+		var result = sut.Validate(context);
+
+		// assert
+		result.Should().HaveCount(0);
+	}
 }

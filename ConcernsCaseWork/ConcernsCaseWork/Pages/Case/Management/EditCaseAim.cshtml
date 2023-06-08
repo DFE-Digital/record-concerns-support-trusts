@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/management/edit_case_aim"
+@using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.EditCaseAimPageModel
@@ -6,6 +7,7 @@
 @{
 	ViewData["Title"] = "Edit Case aim";
 	var nonce = HttpContext.GetNonce();
+    ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
 <div class="govuk-width-container">
@@ -14,26 +16,21 @@
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
-			<h1 class="govuk-heading-l">
-				Edit case aim
-			</h1>
-            <div class="govuk-hint">
-                This information can be used in Stage 1 and Stage 2 meetings.
-            </div>
-
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
             	<partial name="_Error"/>
             }
 			else
 			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <partial name="_ValidationErrors" />
+
+                <h1 class="govuk-heading-l">
+                    Edit case aim
+                </h1>
 
 				<form role="form" asp-page-handler="editCaseAim" method="post" id="case-aim-form" novalidate>
 
-					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
-
-					<partial name="_EditCaseAim" model="@Model.CaseModel"/>
+                    <partial name="Components/_TextArea" model="Model.CaseAim" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
@@ -44,15 +41,6 @@
 					</div>
 
 				</form>
-
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {	
-						let validator = formValidator($("#case-aim-form")[0]);
-						addCaseAimValidator(validator);
-						
-						autoResizer();
-					});
-				</script>
 			}
 		</div>
 	</div>

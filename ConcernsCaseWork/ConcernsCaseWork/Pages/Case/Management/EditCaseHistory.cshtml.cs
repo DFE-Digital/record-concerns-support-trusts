@@ -1,17 +1,14 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -23,19 +20,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCaseHistoryPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
-		private TelemetryClient _telemetryClient;
-
-		[BindProperty(SupportsGet = true)]
-		public string ReferrerUrl => $"/case/{CaseUrn}/management";
 		
 		[BindProperty(SupportsGet = true, Name="Urn")]
 		[Required(ErrorMessage = "CaseUrn is null or invalid to parse")]
-		public long? CaseUrn { get; set; }
-		
-		[BindProperty(Name="case-history")]
-		[MaxLength(4300, ErrorMessage = "Case history must be 4300 characters or less")]
-		public string CaseHistory { get; set; }
-		
+		public long CaseUrn { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CaseHistory { get; set; }
+
 		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<EditCaseHistoryPageModel> logger)
 		{
@@ -47,28 +39,23 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		public async Task<ActionResult> OnGetAsync()
 		{
-			_logger.LogMethodEntered();
-
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-				
-				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
-				CaseHistory = caseModel.CaseHistory;
+				_logger.LogMethodEntered();
+
+				var model = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				LoadPage(model);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
+
 			return Page();
 		}
-		
+
 		public async Task<ActionResult> OnPost()
 		{
 			_logger.LogMethodEntered();
@@ -77,23 +64,37 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				if (!ModelState.IsValid)
 				{
+					LoadPage();
 					return Page();	
 				}
 				
 				var userName = GetUserName();
-				await _caseModelService.PatchCaseHistory((long)CaseUrn, userName, CaseHistory);
+				await _caseModelService.PatchCaseHistory((long)CaseUrn, userName, CaseHistory.Text.StringContents);
+
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
 		}
-		
+
+		private void LoadPage(CaseModel model)
+		{
+			LoadPage();
+
+			CaseHistory.Text.StringContents = model.CaseHistory;
+		}
+
+		private void LoadPage()
+		{
+			CaseHistory = CaseComponentBuilder.BuildCaseHistory(nameof(CaseHistory), CaseHistory?.Text.StringContents);
+			CaseHistory.Heading = "";
+		}
+
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }
