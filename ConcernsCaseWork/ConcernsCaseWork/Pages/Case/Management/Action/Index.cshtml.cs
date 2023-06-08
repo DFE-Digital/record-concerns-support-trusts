@@ -1,21 +1,25 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.Records;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Cases;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
-using ConcernsCaseWork.Service.TrustFinancialForecast;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -23,7 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly ICaseModelService _caseModelService;
+		private readonly IRecordModelService _recordModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
@@ -32,10 +36,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<IndexPageModel> _logger;
 
-		public CaseModel CaseModel { get; private set; }
-		public List<CaseActionModel> CaseActions { get; private set; }
 
-		public IndexPageModel(ICaseModelService caseModelService,
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public int CaseId { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent CaseActionEnum { get; set; }
+
+		public IndexPageModel(IRecordModelService recordModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
@@ -44,7 +52,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			ITrustFinancialForecastService trustFinancialForecastService,
 			ILogger<IndexPageModel> logger)
 		{
-			_caseModelService = caseModelService;
+			_recordModelService = recordModelService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
@@ -54,73 +62,96 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			try
 			{
-				_logger.LogInformation("Case::Action::IndexPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				// Fetch case urn
-				var caseUrn = GetRouteData();
-
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
 			{
-				_logger.LogInformation("Case::Action::IndexPageModel::OnPostAsync");
+				_logger.LogMethodEntered();
 
-				// Fetch case urn
-				var caseUrn = GetRouteData();
-
-				// Form
-				var action = Request.Form["action"].ToString();
-
-				if (string.IsNullOrEmpty(action))
-					throw new Exception("Missing form values");
-
-				if (!Enum.TryParse(action.ToString(), out CaseActionEnum caseAction))
+				if (!ModelState.IsValid)
 				{
-					throw new Exception($"{action} - is not a recognized case action");
+					await LoadPage();
+
+					return Page();
 				}
 
-				CaseActions = CaseActions ?? new List<CaseActionModel>();
+				var caseAction = (CaseActionEnum)CaseActionEnum.SelectedId;
 
 				var actionStartHelpers = GetStartHelpers();
 
-				var caseActionStarter = actionStartHelpers.SingleOrDefault(s => s.CanHandle(caseAction)) 
+				var caseActionStarter = actionStartHelpers.SingleOrDefault(s => s.CanHandle(caseAction))
 					?? throw new NotImplementedException($"{caseAction} - has not been implemented");
 
-				if (await caseActionStarter.NewCaseActionAllowed(caseUrn))
+				if (await caseActionStarter.NewCaseActionAllowed(CaseId))
 				{
-					return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
+					return RedirectToPage($"{caseAction.ToString().ToLower()}/add", new { urn = CaseId });
 				}
 				else
 				{
-					throw new InvalidOperationException($"Cannot create action of type {caseAction} for case {caseUrn}");
+					throw new InvalidOperationException($"Cannot create action of type {caseAction} for case {CaseId}");
 				}
 			}
 			catch (InvalidOperationException ex)
 			{
-				TempData["CaseAction.Error"] = ex.Message;
+				await LoadPage();
+				ModelState.AddModelError($"{nameof(CaseActionEnum)}.{CaseActionEnum.DisplayName}", ex.Message);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
+		}
+
+		private async Task LoadPage()
+		{
+			var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseId);
+
+			var supportedActions = GetSupportedActions(recordsModel);
+			CaseActionEnum = BuildActionComponent(supportedActions);
+		}
+
+		private List<CaseActionEnum> GetSupportedActions(IList<RecordModel> concerns)
+		{
+			if (concerns.IsNullOrEmpty())
+			{
+				return new List<CaseActionEnum>()
+				{
+					Service.Cases.CaseActionEnum.Decision,
+					Service.Cases.CaseActionEnum.Srma,
+					Service.Cases.CaseActionEnum.TrustFinancialForecast
+				};
+			}
+
+			return new List<CaseActionEnum>()
+			{
+				Service.Cases.CaseActionEnum.Decision,
+				Service.Cases.CaseActionEnum.FinancialPlan,
+				Service.Cases.CaseActionEnum.NtiUnderConsideration,
+				Service.Cases.CaseActionEnum.NtiWarningLetter,
+				Service.Cases.CaseActionEnum.Nti,
+				Service.Cases.CaseActionEnum.Srma,
+				Service.Cases.CaseActionEnum.TrustFinancialForecast
+			};
 		}
 
 		private List<CaseActionCreateHelper> GetStartHelpers()
@@ -135,15 +166,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			};
 		}
 
-		private long GetRouteData()
+		private static RadioButtonsUiComponent BuildActionComponent(List<CaseActionEnum> caseActions)
 		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
+			var radioItems = caseActions.Select(v =>
 			{
-				throw new Exception("Case::Action::IndexPageModel::OnGetAsync::CaseUrn is null or invalid to parse");
-			}
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+			}).ToArray();
 
-			return caseUrn;
+			return new(ElementRootId: "case-action", Name: nameof(CaseActionEnum), "What are you recording?")
+			{
+				RadioItems = radioItems,
+				DisplayName = "an action or decision",
+				Required = true
+			};
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -16,8 +18,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditIssuePageModel> _logger;
 		
-		public CaseModel CaseModel { get; private set; }
-		
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent Issue { get; set; }
+
 		public EditIssuePageModel(ICaseModelService caseModelService, ILogger<EditIssuePageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -25,86 +31,69 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
-		{
-			long caseUrn = 0;
-			
+		{			
 			try
 			{
-				_logger.LogInformation("Case::EditIssuePageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				var model = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				LoadPage(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditIssuePageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+
+			return Page();
 		}
 		
-		public async Task<ActionResult> OnPostEditIssue(string url)
+		public async Task<ActionResult> OnPostEditIssue()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::EditIssuePageModel::OnPostEditIssue");
-				
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				_logger.LogMethodEntered();
 
-				var issue = Request.Form["issue"];
-
-				if (string.IsNullOrEmpty(issue)) 
-					throw new Exception("Missing form values");
+				if (!ModelState.IsValid)
+				{
+					LoadPage();
+					return Page();
+				}
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
 				{
-					Urn = caseUrn,
+					Urn = CaseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					Issue = issue
+					Issue = Issue.Text.StringContents
 				};
 
 				await _caseModelService.PatchIssue(patchCaseModel);
-					
-				return Redirect(url);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditIssuePageModel::OnPostEditIssue::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
-			return await LoadPage(url, caseUrn);
+			return Page();
+		}
+
+		private void LoadPage(CaseModel model)
+		{
+			LoadPage();
+
+			Issue.Text.StringContents = model.Issue;
 		}
 		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+		private void LoadPage()
 		{
-			try
-			{
-				if (caseUrn == 0)
-					throw new Exception("Case urn cannot be 0");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				CaseModel.PreviousUrl = url;
-				
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditIssuePageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			Issue = CaseComponentBuilder.BuildIssue(nameof(Issue), Issue?.Text.StringContents);
+			Issue.Heading = "";
 		}
 	}
 }

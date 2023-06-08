@@ -15,6 +15,7 @@ DeEscalationPoint(1000);
 NextSteps(4000);
 
 setScrollableErrorElements();
+autoResizer();
 
 function setScrollableErrorElements() {
 
@@ -22,20 +23,23 @@ function setScrollableErrorElements() {
 
 	elements.each(function(){
 		var id = $(this).data('scroll-to');
+		var element = document.getElementById(id);
+
+		// Skip to the next item as we can't find the id specified
+		if (!element) return true;
 
 		$(this).click(function () {
-			onScrollInvoked(id);
+			onScrollInvoked(element);
 		});
 
 		$(this).keydown(function (event) {
 			if (event.key == "Enter")
-				onScrollInvoked(id);
+				onScrollInvoked(element);
 		});
 	});
 }
 
-function onScrollInvoked(id) {
-	var element = document.getElementById(id);
+function onScrollInvoked(element) {
 	element.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -245,26 +249,24 @@ window.disableOnSubmitWithJsValidationCheck = function(validator, buttonToDisabl
 	}
 }
 
-
-// Auto resizer textBox
-window.autoResizer = function() {
+function autoResizer() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
-	for(let i = 0; i < multipleFields.length; i++) {
+	for (let i = 0; i < multipleFields.length; i++) {
 		multipleFields[i].addEventListener('input', autoResizeHeight);
-		
+
 		// Force height when textarea contains data
 		$(multipleFields[i]).height(multipleFields[i].scrollHeight);
 	}
-	
+
 	// auto resize multiple textarea
 	function autoResizeHeight() {
-		this.style.height="auto";
-		this.style.height= this.scrollHeight + "px";
+		this.style.height = "auto";
+		this.style.height = this.scrollHeight + "px";
 
 		if ($("#" + this.id + "").val().length > 0) {
-			this.style.borderColor="green";
+			this.style.borderColor = "green";
 		} else {
-			this.style.borderColor="black";
+			this.style.borderColor = "black";
 		}
 	}
 }

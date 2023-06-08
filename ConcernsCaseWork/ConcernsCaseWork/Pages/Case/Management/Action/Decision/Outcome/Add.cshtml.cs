@@ -2,8 +2,11 @@
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
@@ -28,18 +31,30 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		[BindProperty]
 		public EditDecisionOutcomeModel DecisionOutcome { get; set; }
 
+		[BindProperty]
+		public RadioButtonsUiComponent DecisionOutcomeStatus { get; set; }
 
+		[BindProperty]
+		public OptionalDateTimeUiComponent DecisionMadeDate { get; set; }
+
+		[BindProperty]
+		public OptionalDateTimeUiComponent DecisionEffectiveFromDate { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent DecisionOutcomeAuthorizer { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "urn")]
 		public long CaseUrn { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "decisionId")]
 		public long DecisionId { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "outcomeId")]
 		public long? OutcomeId { get; set; }
 
 		public string SaveAndContinueButtonText { get; set; }
 
 		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
-		public List<DecisionOutcomeStatus> DecisionOutcomesCheckBoxes => Enum.GetValues<DecisionOutcomeStatus>().ToList();
-		public List<DecisionOutcomeAuthorizer> AuthoriserCheckBoxes => Enum.GetValues<DecisionOutcomeAuthorizer>().ToList();
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -47,15 +62,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync(long urn, long decisionId, long? outcomeId = null)
+		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetupPage(urn, decisionId, outcomeId);
+				DecisionOutcome = await CreateDecisionOutcomeModel();
 
-				DecisionOutcome = await CreateDecisionOutcomeModel(urn, decisionId);
+				LoadPageComponents(DecisionOutcome);
 
 				return Page();
 			}
@@ -69,37 +84,37 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync(long urn, long decisionId, long? outcomeId = null)
+		public async Task<IActionResult> OnPostAsync()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetupPage(urn, decisionId, outcomeId);
-
 				if (!ModelState.IsValid)
 				{
-					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+					LoadPageComponents();
 					return Page();
 				}
+
+				DecisionOutcome.Status = (DecisionOutcomeStatus)DecisionOutcomeStatus.SelectedId;
+				DecisionOutcome.DecisionMadeDate = DecisionMadeDate.Date;
+				DecisionOutcome.DecisionEffectiveFromDate = DecisionEffectiveFromDate.Date;
+				DecisionOutcome.Authorizer = DecisionOutcomeAuthorizer.SelectedId.HasValue
+					? (DecisionOutcomeAuthorizer)DecisionOutcomeAuthorizer.SelectedId : null;
 
 				if (OutcomeId.HasValue)
 				{
 					var updateDecisionOutcomeRequest = DecisionMapping.ToUpdateDecisionOutcome(DecisionOutcome);
-					await _decisionService.PutDecisionOutcome(urn, decisionId, updateDecisionOutcomeRequest);
+					await _decisionService.PutDecisionOutcome(CaseUrn, DecisionId, updateDecisionOutcomeRequest);
 
 					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
 				}
 
 				var request = DecisionMapping.ToCreateDecisionOutcomeRequest(DecisionOutcome);
 
-				await _decisionService.PostDecisionOutcome(urn, decisionId, request);
+				await _decisionService.PostDecisionOutcome(CaseUrn, DecisionId, request);
 
 				return Redirect($"/case/{CaseUrn}/management");
-			}
-			catch (InvalidUserInputException ex)
-			{
-				TempData["Decision.Message"] = new List<string>() { ex.Message };
 			}
 			catch (Exception ex)
 			{
@@ -107,27 +122,98 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 				SetErrorMessage(ErrorOnPostPage);
 			}
+
 			return Page();
 		}
 
-		private void SetupPage(long urn, long decisionId, long? outcomeId)
+		private void LoadPageComponents(EditDecisionOutcomeModel model)
 		{
-			ViewData[ViewDataConstants.Title] = outcomeId.HasValue ? "Edit outcome" : "Add outcome";
-			SaveAndContinueButtonText = outcomeId.HasValue ? "Save and return to decision" : "Save and return to case overview";
+			LoadPageComponents();
 
-			CaseUrn = (CaseUrn)urn;
-			DecisionId = decisionId;
-			OutcomeId = outcomeId;
+			if (model == null) return;
+
+			DecisionOutcomeStatus.SelectedId = (int)model.Status;
+			DecisionMadeDate.Date = model.DecisionMadeDate;
+			DecisionEffectiveFromDate.Date = model.DecisionEffectiveFromDate;
+			DecisionOutcomeAuthorizer.SelectedId = model.Authorizer.HasValue ? (int)model.Authorizer : null;
 		}
 
-		private async Task<EditDecisionOutcomeModel> CreateDecisionOutcomeModel(long urn, long decisionId)
+		private void LoadPageComponents()
 		{
-			var result = new EditDecisionOutcomeModel();
+			SetupPage();
 
-			var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
-			result = DecisionMapping.ToEditDecisionOutcomeModel(apiDecision);
+			DecisionOutcomeStatus = BuildDecisionOutcomeStatusComponent(DecisionOutcomeStatus?.SelectedId);
+			DecisionMadeDate = BuildDecisionMadeDateComponent(DecisionMadeDate?.Date);
+			DecisionEffectiveFromDate = BuildDecisionEffectiveFromDateComponent(DecisionEffectiveFromDate?.Date);
+			DecisionOutcomeAuthorizer = BuildDecisionAuthorizerComponent(DecisionOutcomeAuthorizer?.SelectedId);
+		}
+
+		private void SetupPage()
+		{
+			ViewData[ViewDataConstants.Title] = OutcomeId.HasValue ? "Edit outcome" : "Add outcome";
+			SaveAndContinueButtonText = OutcomeId.HasValue ? "Save and return to decision" : "Save and return to case overview";
+		}
+
+		private async Task<EditDecisionOutcomeModel> CreateDecisionOutcomeModel()
+		{
+			var apiDecision = await _decisionService.GetDecision(CaseUrn, (int)DecisionId);
+			var result = DecisionMapping.ToEditDecisionOutcomeModel(apiDecision);
 
 			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildDecisionOutcomeStatusComponent(int? selectedId = null)
+		{
+			var radioItems = Enum.GetValues(typeof(DecisionOutcomeStatus))
+				.Cast<DecisionOutcomeStatus>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+				}).ToArray();
+
+			return new(ElementRootId: "decision-outcome-status", Name: nameof(DecisionOutcomeStatus), "What was the decision outcome?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "decision outcome",
+				ErrorTextForRequiredField = "Select a decision outcome"
+			};
+		}
+
+		private static RadioButtonsUiComponent BuildDecisionAuthorizerComponent(int? selectedId = null)
+		{
+			var radioItems = Enum.GetValues(typeof(DecisionOutcomeAuthorizer))
+				.Cast<DecisionOutcomeAuthorizer>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+				}).ToArray();
+
+			return new(ElementRootId: "decision-outcome-authorizer", Name: nameof(DecisionOutcomeAuthorizer), "Who authorised this decision?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "decision outcome authorizer"
+			};
+		}
+
+		private static OptionalDateTimeUiComponent BuildDecisionMadeDateComponent(OptionalDateModel? date = null)
+		{
+			return new OptionalDateTimeUiComponent("decision-made", nameof(DecisionMadeDate), "When was the decision made?")
+			{
+				Date = date,
+				DisplayName = "Date decision was made"
+			};
+		}
+
+		private static OptionalDateTimeUiComponent BuildDecisionEffectiveFromDateComponent(OptionalDateModel? date = null)
+		{
+			return new OptionalDateTimeUiComponent("take-effect", nameof(DecisionEffectiveFromDate), "When did or does the decision take effect?")
+			{
+				Date = date,
+				DisplayName = "Date decision takes effect"
+			};
 		}
 	}
 }

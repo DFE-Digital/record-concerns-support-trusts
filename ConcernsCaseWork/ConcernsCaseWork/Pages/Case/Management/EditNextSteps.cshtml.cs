@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -16,7 +17,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditNextStepsPageModel> _logger;
 
-		public CaseModel CaseModel { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent NextSteps { get; set; }
 
 		public EditNextStepsPageModel(ICaseModelService caseModelService, ILogger<EditNextStepsPageModel> logger)
 		{
@@ -26,82 +31,68 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public async Task<ActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-
 			try
 			{
-				_logger.LogInformation("Case::EditNextStepsPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				var model = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				LoadPage(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditNextStepsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+			return Page();
 		}
 
-		public async Task<ActionResult> OnPostEditNextSteps(string url)
+		public async Task<ActionResult> OnPostEditNextSteps()
 		{
-			long caseUrn = 0;
-
 			try
 			{
-				_logger.LogInformation("Case::EditNextStepsPageModel::OnPostEditCaseAim");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
-
-				var nextSteps = Request.Form["next-steps"];
+				if (!ModelState.IsValid)
+				{
+					LoadPage();
+					return Page();
+				}
 
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
 				{
-					Urn = caseUrn,
+					Urn = CaseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					NextSteps = nextSteps
+					NextSteps = NextSteps.Text.StringContents
 				};
 
 				await _caseModelService.PatchNextSteps(patchCaseModel);
 
-				return Redirect(url);
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditNextStepsPageModel::OnPostEditNextSteps::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
-			return await LoadPage(url, caseUrn);
+			return Page();
 		}
 
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+		private void LoadPage(CaseModel model)
 		{
-			try
-			{
-				if (caseUrn == 0)
-					throw new Exception("Case urn cannot be 0");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				CaseModel.PreviousUrl = url;
+			LoadPage();
 
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditNextStepsPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			NextSteps.Text.StringContents = model.NextSteps;
+		}
+
+		private void LoadPage()
+		{
+			NextSteps = CaseComponentBuilder.BuildNextSteps(nameof(NextSteps), NextSteps?.Text.StringContents);
+			NextSteps.Heading = "";
 		}
 	}
 }

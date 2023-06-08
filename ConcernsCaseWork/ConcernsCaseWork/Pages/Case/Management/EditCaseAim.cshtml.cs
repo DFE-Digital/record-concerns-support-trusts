@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -22,107 +23,91 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCaseAimPageModel> _logger;
 		private TelemetryClient _telemetryClient;
-		
-		
-		
-		public CaseModel CaseModel { get; private set; }
-		
+
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CaseAim { get; set; }
+
 		public EditCaseAimPageModel(ICaseModelService caseModelService, ILogger<EditCaseAimPageModel> logger,
 			TelemetryClient telemetryClient)
 		{
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
-			
-
 		}
 		
 		public async Task<ActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::EditCaseAimPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				var model = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				LoadPage(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCaseAimPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+
+			return Page();
 		}
-		
-		public async Task<ActionResult> OnPostEditCaseAim(string url)
+
+		public async Task<ActionResult> OnPostEditCaseAim()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::EditCaseAimPageModel::OnPostEditCaseAim");
-				
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				if (!ModelState.IsValid)
+				{
+					LoadPage();
+					return Page();
+				}
 
-				var caseAim = Request.Form["case-aim"];
+				_logger.LogMethodEntered();
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
 				{
-					Urn = caseUrn,
+					Urn = CaseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					CaseAim = caseAim
+					CaseAim = CaseAim.Text.StringContents
 				};
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "EDIT case aim",
-					EventDescription = $"Case aim has been changed {caseUrn}",
+					EventDescription = $"Case aim has been changed {CaseUrn}",
 					EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
 					EventUserName = User.Identity.Name
 				});
 				await _caseModelService.PatchCaseAim(patchCaseModel);
-					
-				return Redirect(url);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCaseAimPageModel::OnPostEditCaseAim::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
-			return await LoadPage(url, caseUrn);
+			return Page();
 		}
-		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+
+		private void LoadPage(CaseModel model)
 		{
-			try
-			{
-				if (caseUrn == 0)
-					throw new Exception("Case urn cannot be 0");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				CaseModel.PreviousUrl = url;
-				
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditCaseAimPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			LoadPage();
+
+			CaseAim.Text.StringContents = model.CaseAim;
 		}
-		
-		
+
+		private void LoadPage()
+		{
+			CaseAim = CaseComponentBuilder.BuildCaseAim(nameof(CaseAim), CaseAim?.Text.StringContents);
+			CaseAim.Heading = "";
+		}
 	}
 }

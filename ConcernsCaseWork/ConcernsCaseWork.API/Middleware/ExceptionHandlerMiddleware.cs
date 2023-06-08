@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.ResponseModels;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -15,23 +16,17 @@ public class ExceptionHandlerMiddleware
 
 	public async Task InvokeAsync(HttpContext httpContext, ILogger<ExceptionHandlerMiddleware> logger)
 	{
+		var originalBodyStream = httpContext.Response.Body;
+		using var memoryStream = new MemoryStream();
+
 		try
 		{
-			bool captureBadRequestsWithBodyAsWarnings = (logger.IsEnabled(LogLevel.Warning) && IsApiRequest(httpContext.Request.Path));
-			if (captureBadRequestsWithBodyAsWarnings)
-			{
-				httpContext.Request.EnableBuffering();
-			}
+			httpContext.Request.EnableBuffering();
+			httpContext.Response.Body = memoryStream;
 
 			await _next(httpContext);
 
-			// if non-success and warnings are enabled, log it.
-
-			if (captureBadRequestsWithBodyAsWarnings && httpContext.Response.StatusCode >= (int)HttpStatusCode.BadRequest)
-			{
-				var bodyString = await GetRawBodyAsync(httpContext.Request);
-				logger.LogWarning($"Returning bad request for path:{httpContext.Request.Path}. Request body:{bodyString}");
-			}
+			await LogValidationFailed(httpContext, logger);
 		}
 		catch (Exception ex)
 		{
@@ -48,17 +43,34 @@ public class ExceptionHandlerMiddleware
 
 			await HandleHttpException(parameters);
 		}
+		finally
+		{
+			// Reset the response stream so it can be used to send the response back to the requester
+			memoryStream.Position = 0;
+			await memoryStream.CopyToAsync(originalBodyStream);
+
+			httpContext.Response.Body = originalBodyStream;
+		}
+	}
+
+	private async Task LogValidationFailed(HttpContext httpContext, ILogger<ExceptionHandlerMiddleware> logger)
+	{
+		bool logRequestResponse = (logger.IsEnabled(LogLevel.Warning) && IsApiRequest(httpContext.Request.Path));
+
+		// if non-success and warnings are enabled, log it.
+		if (logRequestResponse && httpContext.Response.StatusCode >= (int)HttpStatusCode.BadRequest)
+		{
+			var requestBody = await GetRequestBody(httpContext.Request);
+			logger.LogWarning($"Validation failed for path:{httpContext.Request.Path}. Request body:{requestBody}");
+
+			var responseBody = await GetResponseBody(httpContext.Response.Body);
+			logger.LogWarning($"Validation failed for path:{httpContext.Request.Path}. Response body: {responseBody}");
+		}
 	}
 
 	private bool IsApiRequest(string path) => path.StartsWith("/v2/");
 
-	private async Task<string> BodyToString(Stream requestBody)
-	{
-		var sr = new StreamReader(requestBody);
-		return await sr.ReadToEndAsync();
-	}
-
-	public async Task<string> GetRawBodyAsync(HttpRequest request, Encoding encoding = null)
+	private async Task<string> GetRequestBody(HttpRequest request)
 	{
 		if (!request.Body.CanSeek)
 		{
@@ -70,13 +82,22 @@ public class ExceptionHandlerMiddleware
 
 		request.Body.Position = 0;
 
-		var reader = new StreamReader(request.Body, encoding ?? Encoding.UTF8);
+		var reader = new StreamReader(request.Body, Encoding.UTF8);
 
 		var body = await reader.ReadToEndAsync().ConfigureAwait(false);
 
 		request.Body.Position = 0;
 
 		return body;
+	}
+
+	private async Task<string> GetResponseBody(Stream stream)
+	{
+		stream.Position = 0;
+		var reader = new StreamReader(stream);
+		var result = await reader.ReadToEndAsync();
+
+		return result;
 	}
 
 	private async Task HandleHttpException(HttpExceptionParams parameters)

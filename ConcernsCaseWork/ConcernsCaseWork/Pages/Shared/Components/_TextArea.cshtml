@@ -6,6 +6,7 @@
 @{
     var nonce = Context.GetNonce();
     var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
+    var required = Model.Text.Required == true ? "true" : "false";
 
     var modelPath = $"{Model.Name}.Text.{displayName}";
     ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
@@ -15,7 +16,10 @@
 }
 <div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
-        <h2 class="govuk-heading-m">@Model.Heading</h2>
+        @if (!string.IsNullOrEmpty(Model.Heading))
+        {
+            <h2 class="govuk-heading-m">@Model.Heading</h2>
+        }
         @if (!string.IsNullOrEmpty(Model.HintText))
         {
             <div class="govuk-hint">@Model.HintText</div>
@@ -32,10 +36,5 @@
 	</fieldset>
 	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@displayName" />
 	<input type="hidden" name="@(Model.Name).Text.MaxLength" value="@Model.Text.MaxLength" />
+    <input type="hidden" name="@(Model.Name).Text.Required" value="@required" />
 </div>
-
-<script type="application/javascript" nonce="@nonce">
-	$(function () {
-        autoResizer();
-	});
-</script>

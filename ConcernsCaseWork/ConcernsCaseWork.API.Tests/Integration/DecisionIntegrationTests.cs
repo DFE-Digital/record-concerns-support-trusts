@@ -2,12 +2,17 @@
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -89,6 +94,47 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(outcomeRequest.BusinessAreasConsulted);
 		}
+
+		[Fact]
+		public async Task When_Delete_HasNoResource_Returns_404()
+		{
+			var concernsCaseId = 987654321;
+			var decisionId = 123456789;
+
+			HttpResponseMessage deleteResponse = await _client.DeleteAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}");
+			deleteResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+
+		[Fact]
+		public async Task When_Delete_HasResource_Returns_204()
+		{
+			//BuilderSetup.DisablePropertyNamingFor<ConcernsRecord, DateTime?>(f => f.DeletedAt);
+			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
+			decisionRequest.TotalAmountRequested = 100;
+
+			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
+
+			var concernsCase = await CreateConcernsCase();
+			var concernsCaseId = concernsCase.Id;
+
+			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
+
+			_ = await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+
+			HttpResponseMessage deleteResponse = await _client.DeleteAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
+
+			deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+			var getResponseNotFound = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
+			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+		}
+
 
 		private void AssertDecision(GetDecisionResponse actual, CreateDecisionRequest expected)
 		{

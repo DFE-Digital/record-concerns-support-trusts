@@ -70,6 +70,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUpdateConcernsCase, UpdateConcernsCase>();
 			services.AddScoped<IIndexConcernsTypes, IndexConcernsTypes>();
 			services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
+			services.AddScoped<IDeleteConcernsRecord, DeleteConcernsRecord>();
+			services.AddScoped<IGetConcernsRecord, GetConcernsRecord>();
 
 			services.AddScoped<IIndexConcernsMeansOfReferrals, IndexConcernsMeansOfReferrals>();
 			services.AddScoped<IConcernsMeansOfReferralGateway, ConcernsMeansOfReferralGateway>();
@@ -115,7 +117,9 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest details), UpdateDecisionResponse>, UpdateDecision>();
 			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
 			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
-			
+			services.AddScoped<IUseCaseAsync<DeleteDecisionRequest, DeleteDecisionResponse>, DeleteDecision>();
+
+
 			services.AddScoped<IUseCaseAsync<CreateTrustFinancialForecastRequest, int>, CreateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>, UpdateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>, GetTrustFinancialForecastById>();

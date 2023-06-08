@@ -2,6 +2,7 @@ using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -51,7 +52,7 @@ public class EditTerritoryPageModelTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(page, Is.Not.Null);
-			Assert.That(sut.Territory, Is.EqualTo(caseModel.Territory));
+			Assert.That((Territory)sut.Territory.SelectedId, Is.EqualTo(caseModel.Territory));
 			Assert.That(sut.ReferrerUrl, Is.EqualTo($"/case/{caseUrn}/management"));
 		});
 
@@ -64,83 +65,7 @@ public class EditTerritoryPageModelTests
 	}
 
 	[Test]
-	public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnsPage()
-	{
-		// arrange
-		var caseUrn = _fixture.Create<int>();
-		var userName = _fixture.Create<string>();
-		var caseModel = CaseFactory.BuildCaseModel();
-
-		var mockCaseModelService = new Mock<ICaseModelService>();
-		var mockLogger = new Mock<ILogger<EditTerritoryPageModel>>();
-		var mockClaimsServicePrincipal = new Mock<IClaimsPrincipalHelper>();
-
-		mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
-
-		mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
-
-		var sut = SetupEditTerritoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
-
-		// act
-		var pageResponse = await sut.OnGetAsync();
-
-		// assert
-		Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		var page = pageResponse as PageResult;
-
-		Assert.Multiple(() =>
-		{
-			Assert.That(page, Is.Not.Null);
-			Assert.That(sut.Territory, Is.Null);
-			Assert.That(sut.TempData, Is.Not.Null);
-			Assert.That(sut.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-		});
-
-		mockCaseModelService.Verify(c =>
-			c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-
-		mockLogger.VerifyLogInformationWasCalled();
-		mockLogger.VerifyLogErrorWasCalled();
-		mockLogger.VerifyNoOtherCalls();
-	}
-
-	[Test]
-	public async Task WhenOnPost_MissingCaseUrn_ThrowsException_ReturnsPage()
-	{
-		// arrange
-		var mockCaseModelService = new Mock<ICaseModelService>();
-		var mockLogger = new Mock<ILogger<EditTerritoryPageModel>>();
-		var mockClaimsServicePrincipal = new Mock<IClaimsPrincipalHelper>();
-
-		var sut = SetupEditTerritoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
-
-		// act
-		var pageResponse = await sut.OnPost();
-
-		// assert
-		Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		var page = pageResponse as PageResult;
-
-		Assert.Multiple(() =>
-		{
-			Assert.That(page, Is.Not.Null);
-			Assert.That(sut.Territory, Is.Null);
-			Assert.That(sut.TempData, Is.Not.Null);
-			Assert.That(sut.TempData["Error.Message"],
-				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-		});
-
-		mockCaseModelService.Verify(c =>
-			c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-
-		mockLogger.VerifyLogInformationWasCalled();
-		mockLogger.VerifyLogErrorWasCalled();
-		mockLogger.VerifyNoOtherCalls();
-	}
-
-	[Test]
-	public async Task WhenOnPost_WithValidData_ReturnsToPreviousUrl()
+	public async Task WhenOnPost_WithValidData_ReturnsPage()
 	{
 		// arrange
 		var caseUrn = _fixture.Create<int>();
@@ -155,7 +80,8 @@ public class EditTerritoryPageModelTests
 
 		var sut = SetupEditTerritoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 		sut.CaseUrn = caseUrn;
-		sut.Territory = caseTerritory;
+		sut.Territory = _fixture.Create<RadioButtonsUiComponent>();
+		sut.Territory.SelectedId = (int)caseTerritory;
 
 		// act
 		var pageResponse = await sut.OnPost();
