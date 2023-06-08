@@ -28,5 +28,6 @@ namespace ConcernsCaseWork.Data.Models
 
         public virtual ICollection<NoticeToImproveReasonMapping> NoticeToImproveReasonsMapping { get; set; }
         public virtual ICollection<NoticeToImproveConditionMapping> NoticeToImproveConditionsMapping { get; set; }
-    }
+		public DateTime? DeletedAt { get; set; }
+	}
 }

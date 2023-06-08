@@ -32,9 +32,6 @@
                 <!-- FORM -->
                 <form role="form" method="post" id="case-details-form" novalidate>
 
-                    <!-- Q Case History -->
-                    <partial name="Components/_TextArea" model="Model.CaseHistory" />
-
                     <div class="govuk-button-group">
                         <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
                             Create case
@@ -51,8 +48,6 @@
             $(function () {
                 var submitButton = $('#create-case-button')[0];
                 disableOnSubmit(submitButton);
-
-                autoResizer();
             });
         </script>
     }

@@ -3,9 +3,9 @@ using AutoFixture.AutoMoq;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -17,11 +17,11 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Graph.Models;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
@@ -32,23 +32,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		private readonly static Fixture _fixture = new();
 
 		[Test]
-		public void AddPageModel_Is_AbstractPageModel()
-		{
-			var builder = new TestBuilder();
-			var sut = builder.BuildSut();
-			Assert.NotNull(sut as AbstractPageModel);
-		}
-
-		[Test]
 		public async Task OnGetAsync_When_NewDecisionOutcome_Returns_Page()
 		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 7;
+			const int expectedUrn = 2;
+			const int expectedDecisionId = 7;
 			var builder = new TestBuilder();
 			var sut = builder
+				.WithCaseUrn(expectedUrn)
+				.WithDecisionId(expectedDecisionId)
 				.BuildSut();
 
-			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
+			await sut.OnGetAsync();
 
 			sut.ViewData[ViewDataConstants.Title].Should().Be("Add outcome");
 
@@ -56,18 +50,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionId.Should().Be(expectedDecisionId);
-			sut.DecisionOutcomesCheckBoxes.Should().NotBeEmpty();
 			sut.BusinessAreaCheckBoxes.Should().NotBeEmpty();
-			sut.AuthoriserCheckBoxes.Should().NotBeEmpty();
 			sut.SaveAndContinueButtonText.Should().Be("Save and return to case overview");
 		}
 
 		[Test]
 		public async Task OnGetAsync_When_ExistingDecision_Returns_Page()
 		{
-			const long expectedCaseUrn = 1;
+			const int expectedCaseUrn = 1;
 			const int expectedDecisionId = 2;
-			const long expectedOutcomeId = 3;
+			const int expectedOutcomeId = 3;
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
 
@@ -81,10 +73,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			var builder = new TestBuilder();
 			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
 				.WithDecisionService(decisionService)
 				.BuildSut();
 
-			await sut.OnGetAsync(expectedCaseUrn, expectedDecisionId, expectedOutcomeId);
+			await sut.OnGetAsync();
 
 			sut.ViewData[ViewDataConstants.Title].Should().Be("Edit outcome");
 
@@ -113,10 +108,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			var builder = new TestBuilder();
 			var sut = builder
+				.WithCaseUrn(1)
+				.WithDecisionId(2)
+				.WithOutcomeId(3)
 				.WithDecisionService(decisionService)
 				.BuildSut();
 
-			await sut.OnGetAsync(1, 2, 3);
+			await sut.OnGetAsync();
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().Be(ErrorConstants.ErrorOnGetPage);
 		}
@@ -124,28 +122,31 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		[Test]
 		public async Task OnPostAsync_When_NewDecisionOutcome_Returns_PageRedirectToCase()
 		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 3;
+			const int expectedUrn = 2;
+			const int expectedDecisionId = 3;
 			var builder = new TestBuilder();
 			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
+				.WithCaseUrn(expectedUrn)
+				.WithDecisionId(expectedDecisionId)
 				.BuildSut();
 
-			sut.DecisionOutcome.DecisionMadeDate = new OptionalDateModel()
+			sut.DecisionMadeDate = _fixture.Create<OptionalDateTimeUiComponent>();
+			sut.DecisionMadeDate.Date = new OptionalDateModel()
 			{
 				Day = "22",
 				Month = "05",
 				Year = "2022"
 			};
 
-			sut.DecisionOutcome.DecisionEffectiveFromDate = new OptionalDateModel()
+			sut.DecisionEffectiveFromDate = _fixture.Create<OptionalDateTimeUiComponent>();
+			sut.DecisionEffectiveFromDate.Date = new OptionalDateModel()
 			{
 				Day = "04",
 				Month = "11",
 				Year = "2022"
 			};
 
-			var page = await sut.OnPostAsync(expectedUrn, expectedDecisionId) as RedirectResult;
+			var page = await sut.OnPostAsync() as RedirectResult;
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionId.Should().Be(expectedDecisionId);
@@ -158,33 +159,38 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		[Test]
 		public async Task OnPostAsync_When_ExistingDecisionOutcome_Returns_PageRedirectToDecision()
 		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 3;
-			const long expectedOutcomeId = 4;
+			const int expectedUrn = 2;
+			const int expectedDecisionId = 3;
+			const int expectedOutcomeId = 4;
 			var builder = new TestBuilder();
+
 			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
+				.WithCaseUrn(expectedUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
 				.BuildSut();
 
 			sut.DecisionOutcome.BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> {
 				DecisionOutcomeBusinessArea.Funding
 			};
 
-			sut.DecisionOutcome.DecisionMadeDate = new OptionalDateModel()
+			sut.DecisionMadeDate = _fixture.Create<OptionalDateTimeUiComponent>();
+			sut.DecisionMadeDate.Date = new OptionalDateModel()
 			{
 				Day = "23",
 				Month = "11",
 				Year = "2022"
 			};
 
-			sut.DecisionOutcome.DecisionEffectiveFromDate = new OptionalDateModel()
+			sut.DecisionEffectiveFromDate = _fixture.Create<OptionalDateTimeUiComponent>();
+			sut.DecisionEffectiveFromDate.Date = new OptionalDateModel()
 			{
 				Day = "24",
 				Month = "11",
 				Year = "2022"
 			};
 
-			var page = await sut.OnPostAsync(expectedUrn, expectedDecisionId, expectedOutcomeId) as RedirectResult;
+			var page = await sut.OnPostAsync() as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/3");
 			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(DecisionOutcomeBusinessArea.Funding);
@@ -192,55 +198,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().NotBeNull();
 		}
 
-		[Test]
-		public async Task OnPostAsync_When_Validation_Failures_Concatenates_Error_Messages()
-		{
-			long expectedUrn = 233433;
-			long expectedDecision = 434;
-			const string expectedMessage1 = "Select a decision outcome";
-			const string expectedMessage2 = "Please enter a complete date DD MM YYYY";
-
-			var builder = new TestBuilder();
-
-			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
-				.BuildSut();
-
-			sut.ModelState.AddModelError("Error1", expectedMessage1);
-			sut.ModelState.AddModelError("Error2", expectedMessage2);
-
-			await sut.OnPostAsync(expectedUrn, expectedDecision);
-
-			var decisionsValidationErrors = sut.TempData["Decision.Message"] as IEnumerable<string>;
-
-			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage1));
-			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage2));
-			sut.BusinessAreaCheckBoxes.Should().NotBeEmpty();
-			sut.ViewData[ViewDataConstants.Title].Should().Be("Add outcome");
-		}
-
-		[Test]
-		[TestCase(0)]
-		[TestCase(-1)]
-		public async Task OnPostAsync_When_InvalidCaseUrnRouteValue_Then_Throws_Exception(long caseUrn)
-		{
-			var decisionId = 123;
-			var builder = new TestBuilder()
-				.WithCaseUrnRouteValue(caseUrn);
-
-			var sut = builder.BuildSut();
-
-			await sut.OnPostAsync(caseUrn, decisionId);
-
-			Assert.AreEqual(AddPageModel.ErrorOnPostPage, sut.TempData["Error.Message"]);
-		}
-
 		private class TestBuilder
 		{
 			private Mock<IDecisionService> _mockDecisionService;
 			private readonly Mock<ILogger<AddPageModel>> _mockLogger;
 			private readonly bool _isAuthenticated;
-			private object _caseUrnValue;
+			private int _caseUrnValue;
+			private int _decisionId;
+			private int? _outcomeId;
 
 			public TestBuilder()
 			{
@@ -253,13 +218,26 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 				_mockLogger = Fixture.Freeze<Mock<ILogger<AddPageModel>>>();
 			}
 
-			public TestBuilder WithCaseUrnRouteValue(object urnValue)
+			public TestBuilder WithCaseUrn(int urnValue)
 			{
 				_caseUrnValue = urnValue;
 
 				return this;
 			}
 
+			public TestBuilder WithDecisionId(int decisionId)
+			{
+				_decisionId = decisionId;
+
+				return this;
+			}
+
+			public TestBuilder WithOutcomeId(int outcomeId)
+			{
+				_outcomeId = outcomeId;
+
+				return this;
+			}
 
 			public TestBuilder WithDecisionService(Mock<IDecisionService> decisionService)
 			{
@@ -278,10 +256,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					DecisionOutcome = new EditDecisionOutcomeModel()
+					DecisionOutcome = new EditDecisionOutcomeModel(),
+					DecisionOutcomeStatus = _fixture.Create<RadioButtonsUiComponent>(),
+					DecisionOutcomeAuthorizer = _fixture.Create<RadioButtonsUiComponent>()
 				};
 
-				var routeData = result.RouteData.Values;
+				result.CaseUrn = _caseUrnValue;
+				result.DecisionId = _decisionId;
+
+				if (_outcomeId.HasValue)
+				{
+					result.OutcomeId = _outcomeId.Value;
+				}
+
 				result.HttpContext.Request.Form = new FormCollection(new Dictionary<string, StringValues>());
 
 				return result;

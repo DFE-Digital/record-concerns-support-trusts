@@ -7,6 +7,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import concernsApi from "cypress/api/concernsApi";
 import caseApi from "cypress/api/caseApi";
+import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 
 describe("Creating a case", () =>
 {
@@ -34,68 +35,68 @@ describe("Creating a case", () =>
         createCasePage
             .confirmOption();
 
+        createCaseSummary
+            .hasTrustSummaryDetails("Ashton West End Primary Academy");
+
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
-            .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .addConcern()
             .hasValidationError("Select concern type")
-            .hasValidationError("Select risk rating")
+            .hasValidationError("Select concern risk rating")
             .hasValidationError("Select means of referral");
 
         Logger.Log("Checking accessibility on concern");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         Logger.Log("Attempt to create a concern without a concern type");
         createConcernPage
             .withConcernType("Financial")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red-Amber")
+            .withMeansOfReferral("External")
             .addConcern()
-            .hasValidationError("Select concern sub type");
-
-        cy.waitForJavascript();
+            .hasValidationError("Select concern subtype");
 
         Logger.Log("Create a valid concern");
         createConcernPage
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red-Amber")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
-        createConcernPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
+            .hasConcernRiskRating("Red Amber");
+
+        createConcernPage
             .nextStep();
 
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addDetailsPage
             .nextStep()
-            .hasValidationError("Select risk rating");
+            .hasValidationError("Select risk to trust rating");
 
         Logger.Log("Checking accessibility on risk to trust");
         cy.excuteAccessibilityTests();
-        
-        cy.waitForJavascript();
-        
+                
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
-        addTerritoryPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust("Red Plus")
+            .hasConcernRiskRating("Red Amber")
+            .hasRiskToTrust("Red Plus");
 
         Logger.Log("Check unpopulated territory throws validation error");
         addTerritoryPage
             .nextStep()
-            .hasValidationError("An SFSO Territory must be selected");
+            .hasValidationError("Select SFSO territory");
 
         Logger.Log("Checking accessibility on territory");
         cy.excuteAccessibilityTests();
@@ -106,12 +107,16 @@ describe("Creating a case", () =>
             .nextStep();
 
         Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
-        addConcernDetailsPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
+            .hasConcernRiskRating("Red Amber")
             .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
 
+        addConcernDetailsPage
+            .createCase()
+            .hasValidationError("Issue is required");
 
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
@@ -124,9 +129,9 @@ describe("Creating a case", () =>
             .createCase()
             .hasValidationError("Issue must be 2000 characters or less")
             .hasValidationError("Current status must be 4000 characters or less")
-            .hasValidationError("Next steps must be 4000 characters or less")
-            .hasValidationError("De-escalation point must be 1000 characters or less")
             .hasValidationError("Case aim must be 1000 characters or less")
+            .hasValidationError("De-escalation point must be 1000 characters or less")
+            .hasValidationError("Next steps must be 4000 characters or less")
             .hasValidationError("Case history must be 4300 characters or less");
 
         Logger.Log("Checking accessibility on concerns case confirmation");
@@ -141,7 +146,6 @@ describe("Creating a case", () =>
             .withNextSteps("This is the next steps")
             .withCaseHistory("This is the case history")
             .createCase();
-
 
         Logger.Log("Verify case details");
         caseManagementPage
@@ -175,7 +179,7 @@ describe("Creating a case", () =>
         });
     });
 
-    it(("Should create a case with only required fields"), () => {
+    it("Should create a case with only required fields", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
@@ -183,31 +187,36 @@ describe("Creating a case", () =>
             .selectOption()
             .confirmOption();
 
+        createCaseSummary
+            .hasTrustSummaryDetails("Ashton West End Primary Academy");
+
         Logger.Log("Create a valid concern");
         createConcernPage
-            .hasTrustSummaryDetails("Ashton West End Primary Academy")
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
+            .withConcernType("Force majeure")
+            .withConcernRating("Amber-Green")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
-        createConcernPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
-            .hasConcernType("Financial: Deficit")
+            .hasConcernRiskRating("Amber Green")
+            .hasConcernType("Force majeure");
+
+        createConcernPage
             .nextStep();
 
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red")
             .nextStep();
 
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
-        addTerritoryPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
-            .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust("Red Plus")
+            .hasConcernType("Force majeure")
+            .hasConcernRiskRating("Amber Green")
+            .hasRiskToTrust("Red")
 
         Logger.Log("Populate territory");
         addTerritoryPage
@@ -215,10 +224,11 @@ describe("Creating a case", () =>
             .nextStep();
 
         Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
-        addConcernDetailsPage
+        createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
-            .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust("Red Plus")
+            .hasConcernType("Force majeure")
+            .hasConcernRiskRating("Amber Green")
+            .hasRiskToTrust("Red")
             .hasTerritory("North and UTC - North East");
 
         Logger.Log("Add concern details with valid text limit");
@@ -229,8 +239,8 @@ describe("Creating a case", () =>
         Logger.Log("Verify case details");
         caseManagementPage
             .hasTrust("Ashton West End Primary Academy")
-            .hasRiskToTrust("Red Plus")
-            .hasConcerns("Financial: Deficit", ["Red", "Amber"])
+            .hasRiskToTrust("Red")
+            .hasConcerns("Force majeure", ["Amber", "Green"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue")
             .hasEmptyCurrentStatus()
@@ -243,20 +253,6 @@ describe("Creating a case", () =>
     const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
 	const searchTermForSchool = "school";
-
-    it("User searches for a valid Trust and selects it", () => {
-
-        createCasePage
-            .createCase()
-            .withTrustName(searchTerm)
-            .selectOption()
-            .confirmOption();
-
-		Logger.Log("Should display the Concern details of the specified Trust");
-		createConcernPage
-            .hasTrustSummaryDetails(searchTerm)
-            .cancel();
-	});
 
     it('Should display an error if no trust is selected', () => {
 		createCasePage
@@ -287,8 +283,8 @@ describe("Creating a case", () =>
         createConcernPage
             .withConcernType("Irregularity")
             .withSubConcernType("Irregularity: Suspected fraud")
-            .withRating("Red-Plus")
-            .withMeansOfRefferal("Internal")
+            .withConcernRating("Red-Plus")
+            .withMeansOfReferral("Internal")
             .addConcern();
 
         Logger.Log("Adding another concern during case creation");
@@ -296,14 +292,14 @@ describe("Creating a case", () =>
             .addAnotherConcern()
             .withConcernType("Governance and compliance")
             .withSubConcernType("Governance and compliance: Compliance")
-            .withRating("Amber-Green")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Amber-Green")
+            .withMeansOfReferral("External")
             .addConcern()
             .nextStep();
 
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Populate territory");
@@ -319,11 +315,23 @@ describe("Creating a case", () =>
         Logger.Log("Add another concern after case creation");
         caseManagementPage.addAnotherConcern();
 
+        Logger.Log("Attempt to create an invalid concern");
+        createConcernPage
+            .addConcern()
+            .hasValidationError("Select concern type")
+            .hasValidationError("Select concern risk rating")
+            .hasValidationError("Select means of referral");
+
+        Logger.Log("Attempt to create a concern without a concern type");
         createConcernPage
             .withConcernType("Irregularity")
+            .withConcernRating("Red-Amber")
+            .withMeansOfReferral("External")
+            .addConcern()
+            .hasValidationError("Select concern subtype");     
+
+        createConcernPage
             .withSubConcernType("Irregularity: Irregularity")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
             .addConcern();
 
         caseManagementPage

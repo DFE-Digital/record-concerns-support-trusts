@@ -3,8 +3,6 @@ import { Logger } from "../../common/logger";
 
 export default class CreateConcernPage {
 
-   
-
     public withConcernType(value: string): this
     {
         Logger.Log(`With concernType ${value}`);
@@ -24,44 +22,21 @@ export default class CreateConcernPage {
         return this;
     }
 
-    public withRating(value: string): this
+    public withConcernRating(value: string): this
     {
-        Logger.Log(`With Rating ${value}`);
+        Logger.Log(`With concern Rating ${value}`);
 
         cy.getByTestId(value).click();
 
         return this;
     }
 
-    public withMeansOfRefferal(value: string): this
+    public withMeansOfReferral(value: string): this
     {
-        Logger.Log(`With Means of refferal ${value}`);
+        Logger.Log(`With Means of referral ${value}`);
 
         cy.getByTestId(value).click();
 
-        return this;
-    }
-
-    public hasTrustSummaryDetails(value: string): this
-    {
-        Logger.Log(`Has Trust summary details ${value}`);
-
-        cy.getByTestId("trust-summary").should(
-			"contain.text",
-			value
-		);
-        return this;
-    }
-
-
-    public hasConcernType(value: string): this
-    {
-        Logger.Log(`Has Concern Type ${value}`);
-
-        cy.getByTestId("concern-type").should(
-			"contain.text",
-			value
-		);
         return this;
     }
 

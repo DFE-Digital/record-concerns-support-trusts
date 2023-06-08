@@ -11,17 +11,17 @@ namespace ConcernsCaseWork.Models
 	{
 		private readonly string _isNullOrEmpty = "-".PadRight(2);
 
-		public string UkPrn { get; }
+		public string UkPrn { get; set; }
 
-		public string Urn { get; }
+		public string Urn { get; set; }
 
-		public string GroupName { get; }
+		public string GroupName { get; set; }
 
-		public string CompaniesHouseNumber { get; }
+		public string CompaniesHouseNumber { get; set; }
 
-		public string TrustType { get; }
+		public string TrustType { get; set; }
 
-		public GroupContactAddressModel GroupContactAddress { get; }
+		public GroupContactAddressModel GroupContactAddress { get; set; }
 
 		public string DisplayName
 		{
@@ -38,6 +38,10 @@ namespace ConcernsCaseWork.Models
 
 				return sb.ToString();
 			}
+		}
+
+		public TrustSearchModel()
+		{
 		}
 
 		public TrustSearchModel(string ukprn, string urn, string groupName,

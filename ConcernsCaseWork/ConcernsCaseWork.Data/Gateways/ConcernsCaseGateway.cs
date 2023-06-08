@@ -14,10 +14,9 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public ConcernsCase SaveConcernsCase(ConcernsCase concernsCase)
         {
-            _concernsDbContext.ConcernsCase.Update(concernsCase);
-            _concernsDbContext.SaveChanges();
-
-            return concernsCase;
+				 _concernsDbContext.ConcernsCase.Update(concernsCase);
+				_concernsDbContext.SaveChanges();
+				return concernsCase;
         }
 
         public IList<ConcernsCase> GetConcernsCaseByTrustUkprn(string trustUkPrn, int page, int count)

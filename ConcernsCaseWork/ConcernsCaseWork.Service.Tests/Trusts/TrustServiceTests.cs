@@ -1,13 +1,17 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using Albedo.Refraction;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Moq;
 using Moq.Protected;
+using NUnit.Framework.Internal;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 
 namespace ConcernsCaseWork.Service.Tests.Trusts
@@ -230,6 +234,33 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.AdditionalLine));
 		}
 
+
+		[Test]
+		public async Task WhenGetTrustByUkPrn_MatchesFakeTrust_ReturnsFakeTrust()
+		{
+			var trustInfo = new TrustDetailsDto()
+			{
+				GiasData = new GiasDataDto()
+				{
+					UkPrn = "123",
+				}
+			};
+
+			var fakeTrustService = new Mock<IFakeTrustService>();
+			fakeTrustService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).Returns(trustInfo);
+
+			var trustService = new TrustService(
+				Mock.Of<IHttpClientFactory>(),
+				Mock.Of<ILogger<TrustService>>(),
+				Mock.Of<ICorrelationContext>(),
+				Mock.Of<IClientUserInfoService>(),
+				fakeTrustService.Object);
+
+			var result = await trustService.GetTrustByUkPrn("123");
+
+			result.GiasData.UkPrn.Should().Be("123");
+		}
+
 		[Test]
 		public async Task WhenGetTrustByUkPrn_V3SearchEnabled_ReturnsTrust()
 		{
@@ -385,6 +416,14 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			yield return new TestCaseData("https://localhost/v2/trust/999999", CreateFeatureManagerV2());
 			yield return new TestCaseData("https://localhost/v3/trust/999999", CreateFeatureManagerV3());
+		}
+
+		private static IFakeTrustService CreateFakeTrustService()
+		{
+			var fakeTrustService = new Mock<IFakeTrustService>();
+			fakeTrustService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).Returns(() => null);
+			fakeTrustService.Setup(m => m.GetTrustsByPagination(It.IsAny<string>())).Returns(() => null);
+			return fakeTrustService.Object;
 		}
 	}
 }

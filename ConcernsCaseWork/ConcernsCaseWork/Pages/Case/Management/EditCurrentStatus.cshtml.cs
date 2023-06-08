@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -21,8 +23,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ILogger<EditCurrentStatusPageModel> _logger;
 		private TelemetryClient _telemetryClient;
 		
-		public CaseModel CaseModel { get; private set; }
-		
+		[BindProperty(SupportsGet = true, Name = "Urn")]
+		public int CaseUrn { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent CurrentStatus { get; set; }
+
 		public EditCurrentStatusPageModel(ICaseModelService caseModelService, ILogger<EditCurrentStatusPageModel> logger,
 			TelemetryClient telemetryClient)
 		{
@@ -33,88 +39,74 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		public async Task<ActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				var model = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				LoadPage(model);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCurrentStatusPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+
+			return Page();
 		}
 		
-		public async Task<ActionResult> OnPostEditCurrentStatus(string url)
+		public async Task<ActionResult> OnPostEditCurrentStatus()
 		{
-			long caseUrn = 0;
-			
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnPostEditCurrentStatus");
-				
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
+				_logger.LogMethodEntered();
 
-				var currentStatus = Request.Form["current-status"];
-				
+				if (!ModelState.IsValid)
+				{
+					LoadPage();
+					return Page();
+				}
+
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
 				{
-					Urn = caseUrn,
+					Urn = CaseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					CurrentStatus = currentStatus
+					CurrentStatus = CurrentStatus.Text.StringContents
 				};
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
-					EventName = "EDIT case aim",
-					EventDescription = $"Case aim has been changed {caseUrn}",
+					EventName = "EDIT current status",
+					EventDescription = $"Current status has been changed {CaseUrn}",
 					EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
 					EventUserName = User.Identity.Name
 				});
 				await _caseModelService.PatchCurrentStatus(patchCaseModel);
-					
-				return Redirect(url);
+
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCurrentStatusPageModel::OnPostEditCurrentStatus::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
-			return await LoadPage(url, caseUrn);
+			return Page();
 		}
-		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+
+		private void LoadPage(CaseModel model)
 		{
-			try
-			{
-				if (caseUrn == 0)
-					throw new Exception("Case urn cannot be 0");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				CaseModel.PreviousUrl = url;
-				
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditCurrentStatusPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			LoadPage();
+
+			CurrentStatus.Text.StringContents = model.CurrentStatus;
+		}
+
+		private void LoadPage()
+		{
+			CurrentStatus = CaseComponentBuilder.BuildCurrentStatus(nameof(CurrentStatus), CurrentStatus?.Text.StringContents);
+			CurrentStatus.Heading = "";
 		}
 	}
 }
