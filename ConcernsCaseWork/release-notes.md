@@ -3,7 +3,9 @@
 * Added ability to Create a Concerns case from a Proactive Engagement Case (Non Concerns case)
 * Added soft delete functionality to Concerns, Decision, Notice to Improve and Notice to Improve Warning Letter
 * Provactive Engagement Case layout changes
-* Error message improvements for Trust Financial Forecast and Decisions
+* Error message improvements for Trust Financial Forecast, Decisions & SRMA error messages
+* New KPI to track when case owner is changed
+* Added Fake Trust to enable Production smoke testing
 
 ## 21.0.0
 
