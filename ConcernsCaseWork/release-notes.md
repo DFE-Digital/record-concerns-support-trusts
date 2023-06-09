@@ -1,3 +1,10 @@
+## 22.0.0
+
+* Added ability to Create a Concerns case from a Proactive Engagement Case (Non Concerns case)
+* Added soft delete functionality to Concerns, Decision, Notice to Improve and Notice to Improve Warning Letter
+* Provactive Engagement Case layout changes
+* Error message improvements for Trust Financial Forecast and Decisions
+
 ## 21.0.0
 
 * Amended Case Create flow to allow for non concerns
