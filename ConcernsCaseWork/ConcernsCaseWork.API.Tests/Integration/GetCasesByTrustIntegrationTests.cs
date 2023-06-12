@@ -1,7 +1,10 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
+using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -26,6 +29,65 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			_client = apiTestFixture.Client;
 			_fixture = new();
 			_testFixture = apiTestFixture;
+		}
+
+		[Fact]
+
+		public async Task When_HasActiveCasesWithCaseActions_Returns_CorrectInformation_200()
+		{
+			var ukPrn = CreateUkPrn();
+			List<ConcernsCase> cases = new List<ConcernsCase>();
+
+			var expectedCase = CreateConcernsCase(ukPrn);
+
+			cases.Add(expectedCase);
+
+			await SaveCases(cases);
+			await CreateOpenCaseActions(expectedCase.Id);
+			await CreateClosedCaseActions(expectedCase.Id);
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
+
+			var actualCase = result.First();
+			actualCase.CaseUrn.Should().Be(expectedCase.Id);
+			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
+			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
+			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
+			actualCase.StatusName.Should().Be("Live");
+			actualCase.Rating.Id.Should().Be(1);
+			actualCase.Rating.Name.Should().Be("Red-Plus");
+
+			actualCase.Decisions.Should().HaveCount(1);
+			var decision = actualCase.Decisions.First();
+			decision.Name.Should().Be("Decision: No Decision Types");
+
+			actualCase.NoticesToImprove.Should().HaveCount(1);
+			var nti = actualCase.NoticesToImprove.First();
+			nti.Name.Should().Be("Action: Notice To Improve");
+
+			actualCase.NtisUnderConsideration.Should().HaveCount(1);
+			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
+			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
+
+			actualCase.NtiWarningLetters.Should().HaveCount(1);
+			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
+			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
+
+			actualCase.FinancialPlanCases.Should().HaveCount(1);
+			var financialPlan = actualCase.FinancialPlanCases.First();
+			financialPlan.Name.Should().Be("Action: Financial plan");
+
+			actualCase.SrmaCases.Should().HaveCount(1);
+			var srma = actualCase.SrmaCases.First();
+			srma.Name.Should().Be("Action: School Resource Management Adviser");
+
+			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
+			var tff = actualCase.TrustFinancialForecasts.First();
+			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
 		}
 
 		[Fact]
@@ -140,6 +202,64 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
+
+		[Fact]
+		public async Task When_HasClosedCasesWithCaseActions_Returns_CorrectInformation_200()
+		{
+			var ukPrn = CreateUkPrn();
+			List<ConcernsCase> cases = new List<ConcernsCase>();
+
+			var expectedCase = CloseCase(CreateConcernsCase(ukPrn));
+
+			cases.Add(expectedCase);
+
+			await SaveCases(cases);
+			await CreateOpenCaseActions(expectedCase.Id);
+			await CreateClosedCaseActions(expectedCase.Id);
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
+
+			var actualCase = result.First();
+			actualCase.CaseUrn.Should().Be(expectedCase.Id);
+			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
+			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
+			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
+			actualCase.StatusName.Should().Be("Close");
+			actualCase.Rating.Id.Should().Be(1);
+			actualCase.Rating.Name.Should().Be("Red-Plus");
+
+			actualCase.Decisions.Should().HaveCount(1);
+			var decision = actualCase.Decisions.First();
+			decision.Name.Should().Be("Decision: No Decision Types");
+
+			actualCase.NoticesToImprove.Should().HaveCount(1);
+			var nti = actualCase.NoticesToImprove.First();
+			nti.Name.Should().Be("Action: Notice To Improve");
+
+			actualCase.NtisUnderConsideration.Should().HaveCount(1);
+			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
+			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
+
+			actualCase.NtiWarningLetters.Should().HaveCount(1);
+			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
+			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
+
+			actualCase.FinancialPlanCases.Should().HaveCount(1);
+			var financialPlan = actualCase.FinancialPlanCases.First();
+			financialPlan.Name.Should().Be("Action: Financial plan");
+
+			actualCase.SrmaCases.Should().HaveCount(1);
+			var srma = actualCase.SrmaCases.First();
+			srma.Name.Should().Be("Action: School Resource Management Adviser");
+
+			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
+			var tff = actualCase.TrustFinancialForecasts.First();
+			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
 		}
 
 		[Fact]
@@ -265,6 +385,15 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return _fixture.Create<string>().Substring(0, 7);
 		}
 
+		public Decision CreateDecision()
+		{
+			var result = new Decision()
+			{
+			};
+
+			return result;
+		}
+
 		private ConcernsCase CreateNonConcernsCase(string ukPrn)
 		{
 			var result = new ConcernsCase()
@@ -273,8 +402,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 1,
 				TrustUkprn = ukPrn,
 				ConcernsRecords = new List<ConcernsRecord>(),
-				CreatedAt = _fixture.Create<DateTime>()
-			};
+				CreatedAt = _fixture.Create<DateTime>(),
+				CreatedBy = _fixture.Create<string>()
+		};
 
 			return result;
 		} 
@@ -301,6 +431,56 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			concernsCase.StatusId = 3;
 
 			return concernsCase;
+		}
+
+		private async Task CreateOpenCaseActions(int caseId)
+		{
+			using var context = _testFixture.GetContext();
+
+			context.Decisions.Add(DatabaseModelBuilder.BuildDecision(caseId));
+			context.NoticesToImprove.Add(DatabaseModelBuilder.BuildNoticeToImprove(caseId));
+			context.NTIUnderConsiderations.Add(DatabaseModelBuilder.BuildNTIUnderConsideration(caseId));
+			context.NTIWarningLetters.Add(DatabaseModelBuilder.BuildNTIWarningLetter(caseId));
+			context.SRMACases.Add(DatabaseModelBuilder.BuildSrma(caseId));
+			context.TrustFinancialForecasts.Add(DatabaseModelBuilder.BuildTrustFinancialForecast(caseId));
+			context.FinancialPlanCases.Add(DatabaseModelBuilder.BuildFinancialPlan(caseId));
+
+			await context.SaveChangesAsync();
+		}
+
+		private async Task CreateClosedCaseActions(int caseId)
+		{
+			using var context = _testFixture.GetContext();
+
+			var decision = DatabaseModelBuilder.BuildDecision(caseId);
+			decision.ClosedAt = _fixture.Create<DateTime>();
+			context.Decisions.Add(decision);
+
+			var noticeToImprove = DatabaseModelBuilder.BuildNoticeToImprove(caseId);
+			noticeToImprove.ClosedAt = _fixture.Create<DateTime>();
+			context.NoticesToImprove.Add(noticeToImprove);
+
+			var ntiUnderConsideration = DatabaseModelBuilder.BuildNTIUnderConsideration(caseId);
+			ntiUnderConsideration.ClosedAt = _fixture.Create<DateTime>();
+			context.NTIUnderConsiderations.Add(ntiUnderConsideration);
+
+			var ntiWarningLetter = DatabaseModelBuilder.BuildNTIWarningLetter(caseId);
+			ntiWarningLetter.ClosedAt = _fixture.Create<DateTime>();
+			context.NTIWarningLetters.Add(ntiWarningLetter);
+
+			var srma = DatabaseModelBuilder.BuildSrma(caseId);
+			srma.ClosedAt = _fixture.Create<DateTime>();
+			context.SRMACases.Add(srma);
+
+			var tff = DatabaseModelBuilder.BuildTrustFinancialForecast(caseId);
+			tff.ClosedAt = _fixture.Create<DateTime>();
+			context.TrustFinancialForecasts.Add(tff);
+
+			var financialPlan = DatabaseModelBuilder.BuildFinancialPlan(caseId);
+			financialPlan.ClosedAt = _fixture.Create<DateTime>();
+			context.FinancialPlanCases.Add(financialPlan);
+
+			await context.SaveChangesAsync();
 		}
 
 		private async Task<List<ConcernsCase>> BulkCreateActiveCases(string ukPrn)
