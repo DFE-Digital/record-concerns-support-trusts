@@ -1,11 +1,13 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Extensions;
 using FluentAssertions;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +42,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var expectedCase = CreateConcernsCase(ukPrn);
 
+			var closedConcern = DatabaseModelBuilder.BuildConcernsRecord();
+			closedConcern.TypeId = (int)ConcernType.Irregularity;
+			closedConcern.StatusId = (int)CaseStatus.Close;
+			expectedCase.ConcernsRecords.Add(closedConcern);
+
 			cases.Add(expectedCase);
 
 			await SaveCases(cases);
@@ -57,37 +64,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
-			actualCase.StatusName.Should().Be("Live");
-			actualCase.Rating.Id.Should().Be(1);
-			actualCase.Rating.Name.Should().Be("Red-Plus");
+			actualCase.StatusName.Should().Be(CaseStatus.Live.ToString());
 
-			actualCase.Decisions.Should().HaveCount(1);
-			var decision = actualCase.Decisions.First();
-			decision.Name.Should().Be("Decision: No Decision Types");
+			actualCase.ActiveConcerns.Should().HaveCount(1);
+			var concern = actualCase.ActiveConcerns.First();
+			concern.Name.Should().Be(ConcernType.FinancialDeficit.Description());
+			concern.Rating.Id.Should().Be((int)ConcernRating.AmberGreen);
+			concern.Rating.Name.Should().Be(ConcernRating.AmberGreen.Description());
 
-			actualCase.NoticesToImprove.Should().HaveCount(1);
-			var nti = actualCase.NoticesToImprove.First();
-			nti.Name.Should().Be("Action: Notice To Improve");
+			actualCase.Rating.Id.Should().Be((int)ConcernRating.RedPlus);
+			actualCase.Rating.Name.Should().Be(ConcernRating.RedPlus.Description());
 
-			actualCase.NtisUnderConsideration.Should().HaveCount(1);
-			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
-			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
-
-			actualCase.NtiWarningLetters.Should().HaveCount(1);
-			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
-			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
-
-			actualCase.FinancialPlanCases.Should().HaveCount(1);
-			var financialPlan = actualCase.FinancialPlanCases.First();
-			financialPlan.Name.Should().Be("Action: Financial plan");
-
-			actualCase.SrmaCases.Should().HaveCount(1);
-			var srma = actualCase.SrmaCases.First();
-			srma.Name.Should().Be("Action: School Resource Management Adviser");
-
-			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
-			var tff = actualCase.TrustFinancialForecasts.First();
-			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
+			AssertCaseActions(actualCase);
 		}
 
 		[Fact]
@@ -123,7 +111,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Should().HaveCount(10);
 
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 		}
 
 		[Fact]
@@ -154,7 +142,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
@@ -176,7 +164,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -198,7 +186,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -215,13 +203,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			cases.Add(expectedCase);
 
 			await SaveCases(cases);
-			await CreateOpenCaseActions(expectedCase.Id);
 			await CreateClosedCaseActions(expectedCase.Id);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data.ToList();
 
 			var actualCase = result.First();
@@ -229,37 +216,15 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
-			actualCase.StatusName.Should().Be("Close");
-			actualCase.Rating.Id.Should().Be(1);
-			actualCase.Rating.Name.Should().Be("Red-Plus");
+			actualCase.StatusName.Should().Be(CaseStatus.Close.ToString());
 
-			actualCase.Decisions.Should().HaveCount(1);
-			var decision = actualCase.Decisions.First();
-			decision.Name.Should().Be("Decision: No Decision Types");
+			actualCase.ClosedConcerns.Should().HaveCount(1);
+			var concern = actualCase.ClosedConcerns.First();
+			concern.Name.Should().Be(ConcernType.FinancialDeficit.Description());
+			concern.Rating.Id.Should().Be((int)ConcernRating.AmberGreen);
+			concern.Rating.Name.Should().Be(ConcernRating.AmberGreen.Description());
 
-			actualCase.NoticesToImprove.Should().HaveCount(1);
-			var nti = actualCase.NoticesToImprove.First();
-			nti.Name.Should().Be("Action: Notice To Improve");
-
-			actualCase.NtisUnderConsideration.Should().HaveCount(1);
-			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
-			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
-
-			actualCase.NtiWarningLetters.Should().HaveCount(1);
-			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
-			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
-
-			actualCase.FinancialPlanCases.Should().HaveCount(1);
-			var financialPlan = actualCase.FinancialPlanCases.First();
-			financialPlan.Name.Should().Be("Action: Financial plan");
-
-			actualCase.SrmaCases.Should().HaveCount(1);
-			var srma = actualCase.SrmaCases.First();
-			srma.Name.Should().Be("Action: School Resource Management Adviser");
-
-			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
-			var tff = actualCase.TrustFinancialForecasts.First();
-			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
+			AssertCaseActions(actualCase);
 		}
 
 		[Fact]
@@ -292,14 +257,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data.ToList();
 
 			wrapper.Paging.Should().BeNull();
 
 			result.Should().HaveCount(10);
 
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 		}
 
 		[Fact]
@@ -314,11 +279,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=1&count=2");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
@@ -336,11 +301,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=3&count=2");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -358,11 +323,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=5&count=2");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result, expectedCases);
+			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -374,7 +339,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/NoExist/closed");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
 			var result = wrapper.Data;
 
 			result.Should().HaveCount(0);
@@ -385,21 +350,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return _fixture.Create<string>().Substring(0, 7);
 		}
 
-		public Decision CreateDecision()
-		{
-			var result = new Decision()
-			{
-			};
-
-			return result;
-		}
-
 		private ConcernsCase CreateNonConcernsCase(string ukPrn)
 		{
 			var result = new ConcernsCase()
 			{
-				RatingId = 1,
-				StatusId = 1,
+				RatingId = (int)ConcernRating.RedPlus,
+				StatusId = (int)CaseStatus.Live,
 				TrustUkprn = ukPrn,
 				ConcernsRecords = new List<ConcernsRecord>(),
 				CreatedAt = _fixture.Create<DateTime>(),
@@ -415,12 +371,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var concern = new ConcernsRecord()
 			{
-				RatingId = 1,
-				StatusId = 1,
-				TypeId = 3
+				RatingId = (int)ConcernRating.AmberGreen,
+				StatusId = (int)CaseStatus.Live,
+				TypeId = (int)ConcernType.FinancialDeficit
 			};
 
-			result.ConcernsRecords.Add(concern);
+			result.ConcernsRecords.Add(DatabaseModelBuilder.BuildConcernsRecord());
 
 			return result;
 		}
@@ -428,7 +384,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		private ConcernsCase CloseCase(ConcernsCase concernsCase)
 		{
 			concernsCase.ClosedAt = _fixture.Create<DateTime>();
-			concernsCase.StatusId = 3;
+			concernsCase.StatusId = (int)CaseStatus.Close;
+			concernsCase.ConcernsRecords.ForEach(r => r.StatusId = (int)CaseStatus.Close);
 
 			return concernsCase;
 		}
@@ -525,7 +482,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return cases;
 		}
 
-		private void AssertCaseList(List<ActiveCaseSummaryResponse> actualCases, List<ConcernsCase> expectedCases)
+		private void AssertCaseList(List<CaseSummaryResponse> actualCases, List<ConcernsCase> expectedCases)
 		{
 			for (var idx = 0; idx < expectedCases.Count; idx++)
 			{
@@ -535,6 +492,37 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 				actualCase.CaseUrn.Should().Be(expectedCase.Id);
 			}
+		}
+
+		private static void AssertCaseActions(CaseSummaryResponse actualCase)
+		{
+			actualCase.Decisions.Should().HaveCount(1);
+			var decision = actualCase.Decisions.First();
+			decision.Name.Should().Be("Decision: No Decision Types");
+
+			actualCase.NoticesToImprove.Should().HaveCount(1);
+			var nti = actualCase.NoticesToImprove.First();
+			nti.Name.Should().Be("Action: Notice To Improve");
+
+			actualCase.NtisUnderConsideration.Should().HaveCount(1);
+			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
+			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
+
+			actualCase.NtiWarningLetters.Should().HaveCount(1);
+			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
+			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
+
+			actualCase.FinancialPlanCases.Should().HaveCount(1);
+			var financialPlan = actualCase.FinancialPlanCases.First();
+			financialPlan.Name.Should().Be("Action: Financial plan");
+
+			actualCase.SrmaCases.Should().HaveCount(1);
+			var srma = actualCase.SrmaCases.First();
+			srma.Name.Should().Be("Action: School Resource Management Adviser");
+
+			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
+			var tff = actualCase.TrustFinancialForecasts.First();
+			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
 		}
 	}
 }
