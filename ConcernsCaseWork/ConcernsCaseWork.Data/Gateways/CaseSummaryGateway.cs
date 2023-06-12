@@ -170,13 +170,24 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		return await query.ToListAsync();
 	}
 
-	public async Task<IList<ClosedCaseSummaryVm>> GetClosedCaseSummariesByTrust(string trustUkPrn)
+	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
 	{
-		var query = _concernsDbContext.ConcernsCase
+		var queryBuilder = _concernsDbContext.ConcernsCase
 			.Include(cases => cases.Rating)
 			.Include(cases => cases.Status)
 			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
-			.Where(cases => cases.TrustUkprn == trustUkPrn && cases.Status.Name == "Close")
+			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Close")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Skip((parameters.Page.Value - 1) * parameters.Count.Value).Take(parameters.Count.Value);
+		}
+
+		var cases = await queryBuilder
 			.Select(cases => new ClosedCaseSummaryVm
 			{
 				CaseUrn = cases.Urn,
@@ -217,9 +228,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 					.ToArray()
 			})
 			.AsSplitQuery()
-			.OrderByDescending(c => c.CreatedAt);
+			.ToListAsync();
 
-		return await query.ToListAsync();
+		return (cases, recordCount);
 	}
 
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
