@@ -7,23 +7,19 @@
 	ViewData["Title"] = "Trust Overview";
 	var nonce = HttpContext.GetNonce();
 }
-
-@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.TrustDetailsModel is null)
-{
-	<div class="govuk-width-container">
-		<partial name="_BannerError"/>
-		<div class="moj-banner__message">
-			<p class="govuk-body">@TempData["Error.Message"]</p>
-		</div>
-	</div>
-    <script type="application/javascript" nonce="@nonce">
-        $(function () {
-            showGlobalError();
-		});
-    </script>
+<style>
+.toggle-content {
+	height: 0;
+	overflow: hidden;
+	transition: height 350ms ease-in-out;
 }
-else
-{
+
+.toggle-content.is-visible {
+	height: auto;
+}
+
+</style>
+
 	<div class="govuk-width-container">
 		<div class="govuk-button-group">
 			<a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
@@ -40,22 +36,72 @@ else
 		<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
 		<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
 
-		<table class="govuk-table  govuk-!-margin-top-9">
-			<caption class="govuk-table__caption govuk-table__caption--m">
-				<div class="govuk-button-group flexalign__right">
-					<a asp-page="../case/concern/index" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-						Create case
-					</a>
-				</div>
-				Active cases
-			</caption>
-			<partial name="_TrustActiveCases" model="@Model.ActiveCases"/>
-		</table>
-        <table class="govuk-table  govuk-!-margin-top-9">
-            <caption class="govuk-table__caption govuk-table__caption--m">
-                Closed cases
-            </caption>
-			<partial name="_TrustClosedCases" model="@Model.ClosedCases"/>
-		</table>
+		<nav class="moj-sub-navigation" aria-label="Sub navigation">
+        
+          <ul class="moj-sub-navigation__list">
+            <li class="moj-sub-navigation__item">
+	            <a id="hide-show-active" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" href="#active-cases"><span aria-hidden="false"></span>Active Cases</a>
+            </li>
+        
+            <li class="moj-sub-navigation__item">
+              <a id="hide-show-closed" class="moj-sub-navigation__link" href="#closed-cases" aria-expanded="false"><span aria-hidden="true"></span>Closed Cases</a>
+            </li>
+        
+          
+          </ul>
+        
+        </nav>
+		
+		<div id ="active-cases">
+			<table class="govuk-table   govuk-!-margin-top-9" data-module="moj-sortable-table">
+            			<caption class="govuk-table__caption govuk-table__caption--m">
+            				<div class="govuk-button-group flexalign__right">
+            					<a asp-page="../case/concern/index" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+            						Create case
+            					</a>
+            				</div>
+            				Active cases
+            			</caption>
+            			<partial name="_TrustActiveCases" model="@Model.ActiveCases"/>
+            		</table>
+		</div>
+		<div id="closed-cases" hidden >
+			<table class="govuk-table  govuk-!-margin-top-9" data-module="moj-sortable-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m">
+                        Closed cases
+                    </caption>
+            		<partial name="_TrustClosedCases" model="@Model.ClosedCases"/>
+            </table>
+		</div>
+		
+		
+		
 	</div>
-}
+
+
+<script type="application/javascript" nonce="@nonce">
+document.getElementById("hide-show-closed").addEventListener("click", function(){
+	console.log("show closed")
+	if (document.getElementById("closed-cases").hasAttribute("hidden")) {
+		console.log("show hidden");
+		document.getElementById("closed-cases").removeAttribute("hidden");
+		document.getElementById("active-cases").hidden = true;
+		document.getElementById("hide-show-closed").setAttribute("aria-expanded","true");
+		document.getElementById("hide-show-closed").setAttribute("aria-current","page");
+		document.getElementById("hide-show-active").removeAttribute("aria-current");
+	} 
+});
+
+document.getElementById("hide-show-active").addEventListener("click", function(){
+	console.log("show active")
+	if (document.getElementById("active-cases").hasAttribute("hidden")) {
+		console.log("show active");
+		document.getElementById("active-cases").removeAttribute("hidden");
+		document.getElementById("closed-cases").hidden = true;
+		document.getElementById("hide-show-active").setAttribute("aria-expanded","true");
+		document.getElementById("hide-show-active").setAttribute("aria-current","page");
+		document.getElementById("hide-show-closed").removeAttribute("aria-current");
+	} 
+});	
+
+</script>
