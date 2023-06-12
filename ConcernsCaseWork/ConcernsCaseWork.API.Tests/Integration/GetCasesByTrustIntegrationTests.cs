@@ -98,167 +98,167 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			wrapper.Paging.HasPrevious.Should().BeFalse();
 		}
 
-		//[Fact]
-		//public async Task When_HasActiveCases_PaginationNextAndPrevious_Returns_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
+		[Fact]
+		public async Task When_HasActiveCases_PaginationNextAndPrevious_Returns_200()
+		{
+			var ukPrn = CreateUkPrn();
 
-		//	var cases = await BulkCreateActiveCases(ukPrn);
+			var cases = await BulkCreateActiveCases(ukPrn);
 
-		//	var expectedCases = cases.Skip(4).Take(2).ToList();
+			var expectedCases = cases.Skip(4).Take(2).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active?page=3&count=2");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active?page=3&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	result.Should().HaveCount(2);
-		//	AssertCaseList(result, expectedCases);
-		//	wrapper.Paging.RecordCount.Should().Be(10);
-		//	wrapper.Paging.HasNext.Should().BeTrue();
-		//	wrapper.Paging.HasPrevious.Should().BeTrue();
-		//}
+			result.Should().HaveCount(2);
+			AssertCaseList(result, expectedCases);
+			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.HasNext.Should().BeTrue();
+			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
 
-		//[Fact]
-		//public async Task When_HasActiveCases_PaginationPreviousOnly_Returns_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
+		[Fact]
+		public async Task When_HasActiveCases_PaginationPreviousOnly_Returns_200()
+		{
+			var ukPrn = CreateUkPrn();
 
-		//	var cases = await BulkCreateActiveCases(ukPrn);
+			var cases = await BulkCreateActiveCases(ukPrn);
 
-		//	var expectedCases = cases.Skip(8).Take(2).ToList();
+			var expectedCases = cases.Skip(8).Take(2).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active?page=5&count=2");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active?page=5&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	result.Should().HaveCount(2);
-		//	AssertCaseList(result, expectedCases);
-		//	wrapper.Paging.RecordCount.Should().Be(10);
-		//	wrapper.Paging.HasNext.Should().BeFalse();
-		//	wrapper.Paging.HasPrevious.Should().BeTrue();
-		//}
+			result.Should().HaveCount(2);
+			AssertCaseList(result, expectedCases);
+			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.HasNext.Should().BeFalse();
+			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
 
-		//[Fact]
-		//public async Task When_HasClosedCases_Returns_AllCases_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
-		//	var differentUkPrn = CreateUkPrn();
-		//	List<ConcernsCase> cases = new List<ConcernsCase>();
-		//	List<ConcernsCase> casesDifferentUkPrn = new List<ConcernsCase>();
-		//	List<ConcernsCase> openCases = new List<ConcernsCase>();
+		[Fact]
+		public async Task When_HasClosedCases_Returns_AllCases_200()
+		{
+			var ukPrn = CreateUkPrn();
+			var differentUkPrn = CreateUkPrn();
+			List<ConcernsCase> cases = new List<ConcernsCase>();
+			List<ConcernsCase> casesDifferentUkPrn = new List<ConcernsCase>();
+			List<ConcernsCase> openCases = new List<ConcernsCase>();
 
-		//	for (var idx = 0; idx < 5; idx++)
-		//	{
-		//		var nonConcernsCase = CreateNonConcernsCase(ukPrn);
-		//		var concernsCase = CreateConcernsCase(ukPrn);
-		//		var nonTrustCase = CreateNonConcernsCase(differentUkPrn);
+			for (var idx = 0; idx < 5; idx++)
+			{
+				var nonConcernsCase = CreateNonConcernsCase(ukPrn);
+				var concernsCase = CreateConcernsCase(ukPrn);
+				var nonTrustCase = CreateNonConcernsCase(differentUkPrn);
 
-		//		cases.Add(CloseCase(nonConcernsCase));
-		//		cases.Add(CloseCase(concernsCase));
-		//		casesDifferentUkPrn.Add(CloseCase(nonTrustCase));
-		//		openCases.Add(CreateNonConcernsCase(ukPrn));
-		//	}
+				cases.Add(CloseCase(nonConcernsCase));
+				cases.Add(CloseCase(concernsCase));
+				casesDifferentUkPrn.Add(CloseCase(nonTrustCase));
+				openCases.Add(CreateNonConcernsCase(ukPrn));
+			}
 
-		//	await SaveCases(cases);
-		//	await SaveCases(casesDifferentUkPrn);
-		//	await SaveCases(openCases);
+			await SaveCases(cases);
+			await SaveCases(casesDifferentUkPrn);
+			await SaveCases(openCases);
 
-		//	var expectedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
+			var expectedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	wrapper.Paging.Should().BeNull();
+			wrapper.Paging.Should().BeNull();
 
-		//	result.Should().HaveCount(10);
+			result.Should().HaveCount(10);
 
-		//	AssertCaseList(result, expectedCases);
-		//}
+			AssertCaseList(result, expectedCases);
+		}
 
-		//[Fact]
-		//public async Task When_HasClosedCases_PaginationOnlyNext_Returns_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
+		[Fact]
+		public async Task When_HasClosedCases_PaginationOnlyNext_Returns_200()
+		{
+			var ukPrn = CreateUkPrn();
 
-		//	var cases = await BulkCreateClosedCases(ukPrn);
+			var cases = await BulkCreateClosedCases(ukPrn);
 
-		//	var expectedCases = cases.Take(2).ToList();
+			var expectedCases = cases.Take(2).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=1&count=2");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=1&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	result.Should().HaveCount(2);
-		//	AssertCaseList(result, expectedCases);
-		//	wrapper.Paging.RecordCount.Should().Be(10);
-		//	wrapper.Paging.HasNext.Should().BeTrue();
-		//	wrapper.Paging.HasPrevious.Should().BeFalse();
-		//}
+			result.Should().HaveCount(2);
+			AssertCaseList(result, expectedCases);
+			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.HasNext.Should().BeTrue();
+			wrapper.Paging.HasPrevious.Should().BeFalse();
+		}
 
-		//[Fact]
-		//public async Task When_HasClosedCases_PaginationNextAndPrevious_Returns_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
+		[Fact]
+		public async Task When_HasClosedCases_PaginationNextAndPrevious_Returns_200()
+		{
+			var ukPrn = CreateUkPrn();
 
-		//	var cases = await BulkCreateClosedCases(ukPrn);
+			var cases = await BulkCreateClosedCases(ukPrn);
 
-		//	var expectedCases = cases.Skip(4).Take(2).ToList();
+			var expectedCases = cases.Skip(4).Take(2).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=3&count=2");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=3&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	result.Should().HaveCount(2);
-		//	AssertCaseList(result, expectedCases);
-		//	wrapper.Paging.RecordCount.Should().Be(10);
-		//	wrapper.Paging.HasNext.Should().BeTrue();
-		//	wrapper.Paging.HasPrevious.Should().BeTrue();
-		//}
+			result.Should().HaveCount(2);
+			AssertCaseList(result, expectedCases);
+			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.HasNext.Should().BeTrue();
+			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
 
-		//[Fact]
-		//public async Task When_HasClosedCases_PaginationPreviousOnly_Returns_200()
-		//{
-		//	var ukPrn = CreateUkPrn();
+		[Fact]
+		public async Task When_HasClosedCases_PaginationPreviousOnly_Returns_200()
+		{
+			var ukPrn = CreateUkPrn();
 
-		//	var cases = await BulkCreateClosedCases(ukPrn);
+			var cases = await BulkCreateClosedCases(ukPrn);
 
-		//	var expectedCases = cases.Skip(8).Take(2).ToList();
+			var expectedCases = cases.Skip(8).Take(2).ToList();
 
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=5&count=2");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed?page=5&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data.ToList();
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
 
-		//	result.Should().HaveCount(2);
-		//	AssertCaseList(result, expectedCases);
-		//	wrapper.Paging.RecordCount.Should().Be(10);
-		//	wrapper.Paging.HasNext.Should().BeFalse();
-		//	wrapper.Paging.HasPrevious.Should().BeTrue();
-		//}
+			result.Should().HaveCount(2);
+			AssertCaseList(result, expectedCases);
+			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.HasNext.Should().BeFalse();
+			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
 
-		//[Fact]
-		//public async Task When_HasNoClosedCases_Returns_Empty_200()
-		//{
-		//	var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/NoExist/closed");
-		//	getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+		[Fact]
+		public async Task When_HasNoClosedCases_Returns_Empty_200()
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/NoExist/closed");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-		//	var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-		//	var result = wrapper.Data;
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
+			var result = wrapper.Data;
 
-		//	result.Should().HaveCount(0);
-		//}
+			result.Should().HaveCount(0);
+		}
 
 		private string CreateUkPrn()
 		{
