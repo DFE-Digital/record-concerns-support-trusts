@@ -1,4 +1,6 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using System;
@@ -46,6 +48,17 @@ namespace ConcernsCaseWork.API.Tests.Helpers
 		public static TrustFinancialForecast BuildTrustFinancialForecast(int caseId)
 		{
 			return new TrustFinancialForecast() { CaseUrn = caseId, CreatedAt = _fixture.Create<DateTime>(), UpdatedAt = _fixture.Create<DateTime>() };
+		}
+
+		public static ConcernsRecord BuildConcernsRecord()
+		{
+			return new ConcernsRecord()
+			{
+				RatingId = (int)ConcernRating.AmberGreen,
+				StatusId = (int)CaseStatus.Live,
+				TypeId = (int)ConcernType.FinancialDeficit,
+				CreatedAt = _fixture.Create<DateTime>()
+			};
 		}
 	}
 }
