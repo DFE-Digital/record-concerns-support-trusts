@@ -61,7 +61,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
             {
                 Page = page,
                 RecordCount = recordCount,
-                NextPageUrl = expectedNextPageUrl
+                NextPageUrl = expectedNextPageUrl,
+				HasNext = true,
+				HasPrevious = false
             };
 
             var mockHttpRequest = new Mock<HttpRequest>();
@@ -94,8 +96,10 @@ namespace ConcernsCaseWork.API.Tests.Factories
             {
                 Page = page,
                 RecordCount = recordCount,
-                NextPageUrl = expectedNextPageUrl
-            };
+                NextPageUrl = expectedNextPageUrl,
+				HasNext = true,
+				HasPrevious = false
+			};
 
             var mockHttpRequest = new Mock<HttpRequest>();
             mockHttpRequest.SetupGet(r => r.Scheme).Returns("https");
