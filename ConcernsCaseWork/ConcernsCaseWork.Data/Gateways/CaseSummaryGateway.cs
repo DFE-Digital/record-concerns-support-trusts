@@ -1,4 +1,5 @@
 using Azure;
+using ConcernsCaseWork.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways;
@@ -184,7 +185,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
-			queryBuilder = queryBuilder.Skip((parameters.Page.Value - 1) * parameters.Count.Value).Take(parameters.Count.Value);
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
 		var cases = await queryBuilder
@@ -247,7 +248,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
-			queryBuilder = queryBuilder.Skip((parameters.Page.Value - 1) * parameters.Count.Value).Take(parameters.Count.Value);
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
 		var cases = await queryBuilder
