@@ -4,8 +4,6 @@ using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
-using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
@@ -74,7 +72,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_NotCreatedResourceRequest_Returns_NotFound()
 		{
-			var warningLetterID = 1;
+			var warningLetterID = 10000000;
 
 			var result = await _client.DeleteAsync($"/v2/case-actions/nti-warning-letter/{warningLetterID}");
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
