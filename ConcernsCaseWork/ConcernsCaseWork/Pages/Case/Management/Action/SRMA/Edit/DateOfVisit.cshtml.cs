@@ -35,8 +35,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			_srmaModelService = srmaModelService;
 			_logger = logger;
-			//Ensure start error comes before end errors
-			ErrorSortOrder = SortOrder.Descending;
 		}
 
 		public async Task<ActionResult> OnGetAsync()
@@ -132,7 +130,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			return new OptionalDateTimeUiComponent("start", nameof(StartDate), "Start date")
 			{
 				Date = date,
-				DisplayName = "Start date"
+				DisplayName = "Start date",
+				SortOrder = 1
 			};
 		}
 
@@ -141,7 +140,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			return new OptionalDateTimeUiComponent("end", nameof(EndDate), "End date")
 			{
 				Date = date,
-				DisplayName = "End date"
+				DisplayName = "End date",
+				SortOrder = 2
 			};
 		}
 	}
