@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public DateTime? DateStarted { get; set; }
 		public int? ClosedStatusId { get; set; }
 		public NtiStatusModel ClosedStatus { get; set; }
-		public string SumissionDecisionId { get; set; }
+		public string SubmissionDecisionId { get; set; }
 		public DateTime? DateNTILifted { get; set; }
 		public DateTime? DateNTIClosed { get; set; }
 	}
