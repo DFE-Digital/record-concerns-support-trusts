@@ -115,8 +115,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				CaseModel.RecordsModel = recordsModel;
 
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
-				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
+				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn,0,999);
+				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn,0,999);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
 				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
 				TrustDetailsModel = trustDetailsTask.Result;

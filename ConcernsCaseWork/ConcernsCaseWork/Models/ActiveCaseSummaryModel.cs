@@ -18,6 +18,14 @@ public record ActiveCaseSummaryModel : CaseSummaryModel
 	public string[] ActiveActionsAndDecisions { get; set; }
 	public IEnumerable<string> ActiveConcerns { get; set; }
 	public RatingModel Rating { get; set; }
+	
+	public int Page { get; set; }
+	public int RecordCount { get; set; }
+	public string NextPageUrl { get; set; }
+	public bool HasNext { get; set; }
+	public bool HasPrevious { get; set; }
+	
+	
 }
 
 public record ClosedCaseSummaryModel : CaseSummaryModel
@@ -25,4 +33,9 @@ public record ClosedCaseSummaryModel : CaseSummaryModel
 	public string ClosedAt { get; set; }
 	public string[] ClosedActionsAndDecisions { get; set; }
 	public IEnumerable<string> ClosedConcerns { get; set; }
+	public int Page { get; set; }
+	public int RecordCount { get; set; }
+	public string NextPageUrl { get; set; }
+	public bool HasNext { get; set; }
+	public bool HasPrevious { get; set; }
 }

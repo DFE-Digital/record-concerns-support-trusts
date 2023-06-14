@@ -24,6 +24,8 @@ namespace ConcernsCaseWork.Pages.Trust
 		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		
+		
+		
 		public OverviewPageModel(ITrustModelService trustModelService,
 			ICaseSummaryService caseSummaryService,
 			ITypeModelService typeModelService,
@@ -47,8 +49,8 @@ namespace ConcernsCaseWork.Pages.Trust
 				}
 
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkprnValue);
-				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue);
-				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue);
+				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue,1,5);
+				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue,1,5);
 			}
 			catch (Exception ex)
 			{
