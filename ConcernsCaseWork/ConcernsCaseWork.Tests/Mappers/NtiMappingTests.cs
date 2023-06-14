@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
 			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
 			Assert.That(serviceModel.Status, Is.Not.Null);
-			Assert.That(serviceModel.SumissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
+			Assert.That(serviceModel.SubmissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
 			Assert.That(serviceModel.DateNTILifted, Is.EqualTo(testData.DateNTILifted));
 			Assert.That(serviceModel.DateNTIClosed, Is.EqualTo(testData.DateNTIClosed));
 
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Status = new NtiStatusModel { Id = testData.Status.Key, Name = testData.Status.Value },
 				DateStarted = testData.DateStarted,
 				UpdatedAt = testData.UpdatedAt,
-				SumissionDecisionId = testData.SumissionDecisionId,
+				SubmissionDecisionId = testData.SumissionDecisionId,
 				DateNTIClosed = testData.DateNTIClosed,
 				DateNTILifted = testData.DateNTILifted
 			};
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.ReasonsMapping.First(), Is.EqualTo(testData.Reasons.First().Key));
 			Assert.That(dbModel.DateStarted, Is.EqualTo(testData.DateStarted));
 			Assert.That(dbModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt));
-			Assert.That(serviceModel.SumissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
+			Assert.That(serviceModel.SubmissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
 			Assert.That(serviceModel.DateNTILifted, Is.EqualTo(testData.DateNTILifted));
 			Assert.That(serviceModel.DateNTIClosed, Is.EqualTo(testData.DateNTIClosed));
 		}
