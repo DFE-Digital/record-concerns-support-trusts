@@ -28,6 +28,26 @@ namespace ConcernsCaseWork.API.Tests.Factories
             
             result.Should().BeEquivalentTo(expectedPagingResponse);
         }
+
+		[Theory]
+		[InlineData(1, 50, false, false)]
+		[InlineData(1, 10, true, false)]
+		[InlineData(3, 10, true, true)]
+		[InlineData(5, 10, false, true)]
+		public void CreatePagingResponse_WithNextAndPrevious_Should_ReturnCorrectResult(int page, int count, bool hasNext, bool hasPrevious)
+		{
+			var recordCount = 50;
+
+			var mockHttpRequest = new Mock<HttpRequest>();
+			mockHttpRequest.SetupGet(r => r.Scheme).Returns("https");
+			mockHttpRequest.SetupGet(r => r.Path).Returns("/controller-name/");
+			mockHttpRequest.SetupGet(r => r.Query).Returns(() => new QueryCollection());
+
+			var result = PagingResponseFactory.Create(page, count, recordCount, mockHttpRequest.Object);
+
+			result.HasNext.Should().Be(hasNext);
+			result.HasPrevious.Should().Be(hasPrevious);
+		}
         
         [Fact]
         public void CreatingPagingResponse_WithRecordGreaterThanViewedRecords_Should_ReturnPagingResponseWithNextPageUrlPointingToNextPage()
@@ -41,7 +61,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
             {
                 Page = page,
                 RecordCount = recordCount,
-                NextPageUrl = expectedNextPageUrl
+                NextPageUrl = expectedNextPageUrl,
+				HasNext = true,
+				HasPrevious = false
             };
 
             var mockHttpRequest = new Mock<HttpRequest>();
@@ -74,8 +96,10 @@ namespace ConcernsCaseWork.API.Tests.Factories
             {
                 Page = page,
                 RecordCount = recordCount,
-                NextPageUrl = expectedNextPageUrl
-            };
+                NextPageUrl = expectedNextPageUrl,
+				HasNext = true,
+				HasPrevious = false
+			};
 
             var mockHttpRequest = new Mock<HttpRequest>();
             mockHttpRequest.SetupGet(r => r.Scheme).Returns("https");
