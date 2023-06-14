@@ -26,7 +26,12 @@ describe("Creating a case", () =>
         createCasePage
             .createCase()
             .withTrustName("Ashton West End Primary Academy")
-            .selectOption()
+            .selectOption();
+
+        Logger.Log("Checking accessibility on finding a trust");
+        cy.excuteAccessibilityTests();
+
+        createCasePage
             .confirmOption();
 
         Logger.Log("Attempt to create an invalid concern");
@@ -36,6 +41,9 @@ describe("Creating a case", () =>
             .hasValidationError("Select concern type")
             .hasValidationError("Select risk rating")
             .hasValidationError("Select means of referral");
+
+        Logger.Log("Checking accessibility on concern");
+        cy.excuteAccessibilityTests();
 
         cy.waitForJavascript();
 
@@ -67,6 +75,9 @@ describe("Creating a case", () =>
         addDetailsPage
             .nextStep()
             .hasValidationError("Select risk rating");
+
+        Logger.Log("Checking accessibility on risk to trust");
+        cy.excuteAccessibilityTests();
         
         cy.waitForJavascript();
         
@@ -85,6 +96,9 @@ describe("Creating a case", () =>
         addTerritoryPage
             .nextStep()
             .hasValidationError("An SFSO Territory must be selected");
+
+        Logger.Log("Checking accessibility on territory");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Populate territory");
         addTerritoryPage
@@ -115,6 +129,9 @@ describe("Creating a case", () =>
             .hasValidationError("Case aim must be 1000 characters or less")
             .hasValidationError("Case history must be 4300 characters or less");
 
+        Logger.Log("Checking accessibility on concerns case confirmation");
+        cy.excuteAccessibilityTests();
+
         Logger.Log("Add concern details with valid text limit");
         addConcernDetailsPage
             .withIssue("This is an issue")
@@ -138,6 +155,9 @@ describe("Creating a case", () =>
             .hasDeEscalationPoint("This is the de-escalation point")
             .hasNextSteps("This is the next steps")
             .hasCaseHistory("This is the case history");
+
+        Logger.Log("Checking accessibility on case management");
+        cy.excuteAccessibilityTests();
 
         Logger.Log("Verify the means of referral is set");
         caseManagementPage.getCaseIDText().then((caseId) => {

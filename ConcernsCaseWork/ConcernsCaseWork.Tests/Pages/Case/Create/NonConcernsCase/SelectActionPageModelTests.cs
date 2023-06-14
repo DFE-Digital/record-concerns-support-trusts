@@ -8,6 +8,7 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using ConcernsCaseWork.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -33,7 +34,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<IUserStateCachedService>(),
 					Mock.Of<ILogger<SelectActionPageModel>>(),
 					null,
-					Mock.Of<ICreateCaseService>()));
+					Mock.Of<ICreateCaseService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
 
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
 		}
@@ -46,7 +48,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<IUserStateCachedService>(),
 					null,
 					Mock.Of<IClaimsPrincipalHelper>(),
-					Mock.Of<ICreateCaseService>()));
+					Mock.Of<ICreateCaseService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
 
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
 		}
@@ -59,7 +62,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					null,
 					Mock.Of<ILogger<SelectActionPageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
-					Mock.Of<ICreateCaseService>()));
+					Mock.Of<ICreateCaseService>(),
+					MockTelemetry.CreateMockTelemetryClient()));
 
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'cachedService')"));
 		}
@@ -72,7 +76,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<IUserStateCachedService>(),
 					Mock.Of<ILogger<SelectActionPageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
-					null));
+					null,
+					MockTelemetry.CreateMockTelemetryClient()));
 
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'createCaseService')"));
 		}
@@ -222,7 +227,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			return new SelectActionPageModel(mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipleService.Object, mockCreateCaseService.Object)
+			return new SelectActionPageModel(mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipleService.Object, 
+				mockCreateCaseService.Object,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,
 				TempData = tempData,

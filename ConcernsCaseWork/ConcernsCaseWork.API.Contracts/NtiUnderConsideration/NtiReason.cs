@@ -21,4 +21,6 @@ namespace ConcernsCaseWork.API.Contracts.NtiUnderConsideration
 		[Description("Safeguarding")]
 		Safeguarding = 8
 	}
+
+	
 }

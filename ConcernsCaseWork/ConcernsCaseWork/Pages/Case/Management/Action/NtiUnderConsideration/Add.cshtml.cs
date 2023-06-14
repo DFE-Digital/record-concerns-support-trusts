@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -25,9 +27,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 
 		public const int NotesMaxLength = 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider;
+		public List<RadioItem> NTIReasonsToConsider;
 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "Urn")] 
+		public long CaseUrn { get;  set; }
+		private int _max;
+		
+		[BindProperty]
+		public TextAreaUiComponent Notes { get; set; }
+
 
 		public AddPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -35,22 +43,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			_ntiModelService = ntiModelService;
 			_logger = logger;
+			_max = NtiConstants.MaxNotesLength;
 		}
 
 		public IActionResult OnGet()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::AddPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				NTIReasonsToConsider = GetReasons();
-				ExtractCaseUrnFromRoute();
+				LoadPageComponents();
+				NTIReasonsToConsider = GetReasons().ToList();
+				if (CaseUrn == 0)
+				{
+					throw(new InvalidOperationException("Invalid CaseUrn "));
+				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGet::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
@@ -60,38 +72,32 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				ExtractCaseUrnFromRoute();
-
+				if (!ModelState.IsValid)
+				{
+					ResetOnValidationError();
+					var data = PopulateNtiFromRequest();
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					NTIReasonsToConsider = GetReasons().ToList();
+					foreach (var check in NTIReasonsToConsider)
+					{
+						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						{
+							check.IsChecked = true;
+						}
+					}
+					return Page();
+				}
 				var newNti = PopulateNtiFromRequest();
-
 				await _ntiModelService.CreateNti(newNti);
-
 				return Redirect($"/case/{CaseUrn}/management");
-			}
-			catch (InvalidUserInputException ex)
-			{
-				TempData["NTI-UC.Message"] = ex.Message;
-				return RedirectToPage();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
-		}
-
-		private void ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				CaseUrn = caseUrn;
-			}
-			else
-			{
-				throw new Exception("CaseUrn not found in the route");
-			}
 		}
 
 		private IEnumerable<RadioItem> GetReasons()
@@ -108,25 +114,35 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
-
 			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new InvalidUserInputException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-				else
-				{
-					nti.Notes = notes;
-				}
-			}
-
+			nti.Notes = Notes.Text.StringContents;
 			return nti;
 		}
+		
+		private void LoadPageComponents()
+		{
+			Notes = BuildNotesComponent();
+		}
+		
+		private TextAreaUiComponent BuildNotesComponent(string contents = "")
+			=> new("nti-notes", nameof(Notes), "Notes (optional)")
+			{
+				HintText = "Case owners can record any information they want that feels relevant to the action",
+				Text = new ValidateableString()
+				{
+					MaxLength = _max,
+					StringContents = contents,
+					DisplayName = "Notes"
+				}
+			};
+		
+		private void ResetOnValidationError()
+		{
+			
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
+
+		
 	}
 }
