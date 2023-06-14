@@ -1,3 +1,4 @@
+CREATE VIEW [concerns].[vw_GetCasesJointRisk] AS
 SELECT
 	cc.Id AS CaseId,
 	cc.CreatedAt AS CaseCreated,
