@@ -461,11 +461,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
 
-
             Logger.Log("Validating that a rationale for closure must be entered");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasValidationError("You have not recorded rationale for closure");
-            cy.waitForJavascript();
+            CaseManagementPage.hasValidationError("Rationale for closure is required");
 
             Logger.Log("Checking accessibility on Close case");
             cy.excuteAccessibilityTests();
@@ -473,10 +471,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Validating rationale for closure is 200 characters");
             CaseManagementPage.withRationaleForClosureExceedingLimit();
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasValidationError("Your rationale for closure contains too many characters");
+            CaseManagementPage.hasValidationError("Rationale for closure must be 200 characters or less");
 
             CaseManagementPage.withRationaleForClosure("Closing case");
-            cy.waitForJavascript();
             CaseManagementPage.getCloseCaseBtn().click();
 
             Logger.Log("Viewing case is closed");

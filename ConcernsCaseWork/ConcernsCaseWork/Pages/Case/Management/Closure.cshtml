@@ -39,25 +39,14 @@
 			}
 			else
 			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <partial name="_ValidationErrors" />
 
-				<h1 class="govuk-heading-l"> Close case @Model.CaseModel.Urn </h1>
+				<h1 class="govuk-heading-l"> Close case @Model.CaseId</h1>
 				<h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
 				<form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 
-					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
-
-						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="case-outcomes">
-								Rationale for closure
-							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
-						</div>
-						<div id="case-outcomes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 200 characters
-						</div>
-					</div>
+                    <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
 					
 					<!--Close case-->
 					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" id="close-case-button" data-module="govuk-button">
@@ -65,24 +54,6 @@
 					</button>
 
 				</form>
-
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#close-case-form")[0]);
-						validator.addValidator('case-outcomes', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'You have not recorded rationale for closure'
-						},
-						{
-							method: function(field) {
-								return field.value.trim().length <= 200;
-							},
-							message: 'Your rationale for closure contains too many characters'
-						}]);
-					});
-				</script>
 			}
 		</div>
 	</div>

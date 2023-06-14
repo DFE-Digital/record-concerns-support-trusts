@@ -1,34 +1,35 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Cases;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Status;
-using System;
-using ConcernsCaseWork.Services.Trusts;
-using System.Threading.Tasks;
-using ConcernsCaseWork.Services.Records;
-using System.Linq;
-using System.Collections.Generic;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
+using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.Records;
+using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -51,8 +52,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ILogger<ClosurePageModel> _logger;
 		private TelemetryClient _telemetryClient;
 		private readonly IUserStateCachedService _userStateCache;
-	
-		public CaseModel CaseModel { get; private set; }
+
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public int CaseId { get; set; }
+
+		[BindProperty]
+		public TextAreaUiComponent RationaleForClosure { get; set; }
+
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
@@ -94,16 +100,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			try
 			{
-				_logger.LogInformation("Case::ClosurePageModel::OnGetAsync");
-				
-				// Fetch case urn
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("CaseUrn is null or invalid to parse");
-				}
+				_logger.LogMethodEntered();
 
-				var validationMessages = await ValidateCloseConcern(caseUrn);
+				var validationMessages = await ValidateCloseConcern(CaseId);
 
 				if (validationMessages.Count > 0)
 				{
@@ -111,9 +110,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					return;
 				}
 
-				// Fetch UI data
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
@@ -127,38 +124,36 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			try
 			{
-				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
-				var userState = await GetUserState();
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+				_logger.LogMethodEntered();
+
+				if (!ModelState.IsValid)
 				{
-					throw new Exception("CaseUrn is null or invalid to parse");
+					await LoadPage();
+					return Page();
 				}
 
-				if (!(await IsCaseAlreadyClosed(caseUrn)))
-				{
-					var caseOutcomes = Request.Form["case-outcomes"];
-					if (string.IsNullOrEmpty(caseOutcomes))
-					{
-						throw new Exception("Missing form values");
-					}
+				var userState = await GetUserState();
 
+				if (!(await IsCaseAlreadyClosed(CaseId)))
+				{
 					var patchCaseModel = new PatchCaseModel
 					{
 						// Update patch case model
-						Urn = caseUrn,
+						Urn = CaseId,
 						ClosedAt = DateTimeOffset.Now,
 						UpdatedAt = DateTimeOffset.Now,
 						StatusName = StatusEnum.Close.ToString(),
-						ReasonAtReview = caseOutcomes
+						ReasonAtReview = RationaleForClosure.Text.StringContents
 					};
+
 					AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 					{
 						EventName = "CASE CLOSED",
-						EventDescription = $"Case has been closed {caseUrn}",
+						EventDescription = $"Case has been closed {CaseId}",
 						EventPayloadJson = JsonSerializer.Serialize(patchCaseModel),
 						EventUserName = userState.UserName
 					});
+
 					await _caseModelService.PatchClosure(patchCaseModel);
 				}
 					
@@ -166,9 +161,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::ClosurePageModel::OnPostCloseCase::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Redirect("closure");
@@ -222,6 +216,27 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return errorMessages;
 		}
+
+		private async Task LoadPage()
+		{
+			// Fetch UI data
+			var caseModel = await _caseModelService.GetCaseByUrn(CaseId);
+
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
+			RationaleForClosure = BuildRationaleForClosureComponent(RationaleForClosure?.Text.StringContents);
+		}
+
+		private TextAreaUiComponent BuildRationaleForClosureComponent(string contents = "")
+		=> new("case-outcomes", nameof(RationaleForClosure), "Rationale for closure")
+		{
+			Text = new ValidateableString()
+			{
+				MaxLength = 200,
+				StringContents = contents,
+				DisplayName = "Rationale for closure",
+				Required = true
+			}
+		};
 
 		private async Task<List<DecisionSummaryModel>> GetDecisions(long caseUrn)
 		{
