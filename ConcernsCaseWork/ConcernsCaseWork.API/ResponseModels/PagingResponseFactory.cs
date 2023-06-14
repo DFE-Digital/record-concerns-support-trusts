@@ -6,13 +6,17 @@ namespace ConcernsCaseWork.API.ResponseModels
 	{
 		public static PagingResponse Create(int page, int count, int recordCount, HttpRequest request)
 		{
+			var totalItemsSeen = page * count;
+
 			var pagingResponse = new PagingResponse
 			{
 				RecordCount = recordCount,
-				Page = page
+				Page = page,
+				HasNext = totalItemsSeen < recordCount,
+				HasPrevious = (totalItemsSeen - count) > 0
 			};
 
-			if ((count * page) >= recordCount) return pagingResponse;
+			if (totalItemsSeen >= recordCount) return pagingResponse;
 
 			var queryAttributes = request.Query
 				.Where(q => q.Key != nameof(page) && q.Key != nameof(count))
