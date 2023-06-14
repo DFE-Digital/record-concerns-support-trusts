@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 {
     public class Decision: IAuditable
     {
-        private Decision()
+        public Decision()
         {
             DecisionTypes = new List<DecisionType>();
         }
