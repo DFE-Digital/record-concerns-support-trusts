@@ -67,6 +67,33 @@ export class ViewNoticeToImprovePage {
         return this;
     }
 
+    public hasDateCancelled(value: string): this
+    {
+        Logger.Log(`Has date NTI cancelled ${value}`);
+
+        cy.getByTestId("date-nti-cancelled").should("contains.text", value);
+
+        return this;
+    }
+
+    public hasDateLifted(value: string): this
+    {
+        Logger.Log(`Has date NTI lifted ${value}`);
+
+        cy.getByTestId("date-nti-lifted").should("contains.text", value);
+
+        return this;
+    }
+
+    public hasSubmissionDecisionId(value: string): this
+    {
+        Logger.Log(`Has submission decision ID ${value}`);
+
+        cy.getByTestId("submission-decision-id").should("contains.text", value);
+
+        return this;
+    }
+
     public edit(): this
     {
         Logger.Log("Editing Notice To Improve");
