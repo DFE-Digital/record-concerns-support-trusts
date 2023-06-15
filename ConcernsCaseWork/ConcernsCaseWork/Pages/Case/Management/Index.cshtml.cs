@@ -127,7 +127,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 					errors.ForEach(error =>
 					{
-						ModelState.AddModelError("CloseCaseValidationError", error);
+						var key = error.Type == CloseCaseError.Concern ? "Concerns" : "CaseActions";
+
+						ModelState.AddModelError(key, error.Error);
 					});
 
 					return Page();
