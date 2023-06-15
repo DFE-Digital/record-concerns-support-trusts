@@ -15,6 +15,7 @@ using ConcernsCaseWork.Services.Records;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -62,9 +63,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var result = await validator.Validate(1);
 
-			result.Should().HaveCount(2);
-			result.Should().Contain("Resolve Concerns");
-			result.Should().Contain("Case Action Error");
+			var expected = new List<CloseCaseErrorModel>()
+			{
+				new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve Concerns" },
+				new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Case Action Error" },
+
+			};
+
+			result.Should().BeEquivalentTo(expected);
 		}
 
 		private ICloseCaseValidatorService CreateService(

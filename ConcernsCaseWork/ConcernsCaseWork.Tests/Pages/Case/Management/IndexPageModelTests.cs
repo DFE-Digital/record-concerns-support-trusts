@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.Models;
@@ -85,7 +86,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(new GetCasePermissionsResponse());
 
 			_mockCloseCaseValidationService = new Mock<ICloseCaseValidatorService>();
-			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<string>());
+			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<CloseCaseErrorModel>());
 		}
 
 		[Test]
@@ -191,7 +192,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		[Test]
 		public async Task Post_WhenCaseHasOpenConcernsAndActions_Returns_ValidationsErrors()
 		{
-			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<string>() { "Resolve concerns" });
+			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(
+				new List<CloseCaseErrorModel>() 
+				{ 
+					new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve concerns" },
+					new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Resolve SRMA" }
+				});
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(CaseFactory.BuildCaseModel("Tester", 1));
@@ -201,13 +207,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			await pageModel.OnPostAsync();
 
-			var errors = pageModel.ModelState.GetValidationMessages();
+			var errors = pageModel.ModelState.GetValidationMessages().ToList();
 
-			errors.Should().HaveCount(1);
+			errors.Should().HaveCount(2);
 
-			var error = errors.First();
-			error.Key.Should().Be("CloseCaseValidationError");
-			error.Value.Should().Be("Resolve concerns");
+			var concernError = errors[0];
+			concernError.Key.Should().Be("Concerns");
+			concernError.Value.Should().Be("Resolve concerns");
+
+			var actionError = errors[1];
+			concernError.Key.Should().Be("CaseActions");
+			concernError.Value.Should().Be("Resolve SRMA");
 		}
 
 		private IndexPageModel SetupIndexPageModel(

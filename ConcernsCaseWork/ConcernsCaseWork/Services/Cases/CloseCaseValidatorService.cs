@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Service.Decision;
@@ -51,16 +52,16 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseActionValidator = caseActionValidator;
 		}
 
-		public async Task<List<string>> Validate(long caseUrn)
+		public async Task<List<CloseCaseErrorModel>> Validate(long caseUrn)
 		{
-			var result = new List<string>();
+			var result = new List<CloseCaseErrorModel>();
 			List<CaseActionModel> caseActionModels = new List<CaseActionModel>();
 
 			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusId == (int)CaseStatus.Live);
 
 			if (numberOfOpenConcerns > 0)
-				result.Add("Resolve Concerns");
+				result.Add(new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve Concerns" });
 
 			var srmaModelsTask = _srmaModelService.GetSRMAsForCase(caseUrn);
 			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn);
@@ -79,7 +80,10 @@ namespace ConcernsCaseWork.Services.Cases
 			caseActionModels.AddRange((await trustFinancialForecastTask).Select(x => x.ToTrustFinancialForecastSummaryModel()));
 
 			var caseActionErrorMessages = _caseActionValidator.Validate(caseActionModels);
-			result.AddRange(caseActionErrorMessages);
+
+			var caseActionErrors = caseActionErrorMessages.Select(error => new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = error });
+
+			result.AddRange(caseActionErrors);
 
 			return result;
 		}
@@ -96,6 +100,6 @@ namespace ConcernsCaseWork.Services.Cases
 
 	public interface ICloseCaseValidatorService
 	{
-		public Task<List<string>> Validate(long caseUrn);
+		public Task<List<CloseCaseErrorModel>> Validate(long caseUrn);
 	}
 }
