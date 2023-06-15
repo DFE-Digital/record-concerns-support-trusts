@@ -37,8 +37,7 @@ namespace ConcernsCaseWork.Services.Cases
 			INtiModelService ntiModelService,
 			IDecisionService decisionService,
 			ITrustFinancialForecastService trustFinancialForecastService,
-			ICaseActionValidator caseActionValidator
-			)
+			ICaseActionValidator caseActionValidator)
 		{
 			_recordModelService = recordModelService;
 			_srmaModelService = srmaModelService;
