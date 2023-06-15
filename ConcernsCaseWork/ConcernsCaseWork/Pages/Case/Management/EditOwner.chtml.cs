@@ -36,7 +36,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_teamsService = teamsService;
 			_logger = logger;
 		}
-
 		public async Task<ActionResult> OnGet()
 		{
 			_logger.LogMethodEntered();
@@ -56,8 +55,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return Page();
 		}
-
-		//public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked,int valueInList)
 		public async Task<ActionResult> OnPost(string selectedOwner, string currentOwner,int valueInList)
 
 		{
