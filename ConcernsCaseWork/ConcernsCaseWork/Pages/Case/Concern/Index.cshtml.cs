@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -45,10 +46,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		public RadioButtonsUiComponent ConcernType { get; set; }
 
 		[BindProperty]
-		public RadioButtonsUiComponent MeansOfReferral { get; set; }
+		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
 		[BindProperty]
-		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
+		public RadioButtonsUiComponent MeansOfReferral { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int? CaseUrn { get; set; }
@@ -212,9 +213,14 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			CreateRecordsModel = new List<CreateRecordModel>();
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
-			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
 			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
+			ConcernType.SortOrder = 1;
+
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernRiskRating.SortOrder = 2;
+
+			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
+			MeansOfReferral.SortOrder = 3;
 
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 			{

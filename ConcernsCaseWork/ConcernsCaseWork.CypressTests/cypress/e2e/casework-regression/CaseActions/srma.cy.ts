@@ -6,6 +6,7 @@ import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import validationComponent from "cypress/pages/validationComponent";
 
 describe("Testing the SRMA case action", () =>
 {
@@ -104,18 +105,24 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
             .withStartDayOfVisit("22")
             .withEndDayOfVisit("11")
-            .save()
-            .hasValidationError(DateIncompleteError.replace("{0}", "Start date"))
-            .hasValidationError(DateIncompleteError.replace("{0}", "End date"));
+            .save();
+
+        validationComponent.hasValidationErrorsInOrder([
+            DateIncompleteError.replace("{0}", "Start date"),
+            DateIncompleteError.replace("{0}", "End date")
+        ]);
 
         editSrmaPage
             .withStartMonthOfVisit("22")
             .withStartYearOfVisit("2022")
             .withEndMonthOfVisit("33")
             .withEndYearOfVisit("2021")
-            .save()
-            .hasValidationError(DateInvalidError.replace("{0}", "Start date"))
-            .hasValidationError(DateInvalidError.replace("{0}", "End date"));
+            .save();
+
+        validationComponent.hasValidationErrorsInOrder([
+            DateInvalidError.replace("{0}", "Start date"),
+            DateInvalidError.replace("{0}", "End date")
+        ]);
 
         Logger.Log("Checking accessibility on Add Dates of visit");
         cy.excuteAccessibilityTests();
@@ -126,9 +133,12 @@ describe("Testing the SRMA case action", () =>
             .withEndDayOfVisit("15")
             .withEndMonthOfVisit("01")
             .withEndYearOfVisit("2021")
-            .save()
-            .hasValidationError("Start date must be the same as or come before the end date")
-            .hasValidationError("End date must be the same as or come after the start date");
+            .save();
+
+        validationComponent.hasValidationErrorsInOrder([
+            "Start date must be the same as or come before the end date",
+            "End date must be the same as or come after the start date"
+        ]);
 
         editSrmaPage
             .withEndDayOfVisit("15")
@@ -402,10 +412,14 @@ describe("Testing the SRMA case action", () =>
 
             viewSrmaPage
                 .resolve()
-                .hasValidationError("Add reason for SRMA")
-                .hasValidationError("Enter date trust accepted SRMA")
-                .hasValidationError("Enter dates of visit")
-                .hasValidationError("Enter date report sent to trust");
+            
+            validationComponent.hasValidationErrorsInOrder([
+                    "Add reason for SRMA",
+                    "Enter date trust accepted SRMA",
+                    "Enter dates of visit",
+                    "Enter date report sent to trust"
+                ]
+            );
 
             completeSrmaConfiguration();
 
@@ -415,9 +429,12 @@ describe("Testing the SRMA case action", () =>
 
             editSrmaPage
                 .withNotesExceedingLimit()
-                .save()
-                .hasValidationError("Confirm SRMA action is complete")
-                .hasValidationError(NotesError);
+                .save();
+
+            validationComponent.hasValidationErrorsInOrder([
+                "Confirm SRMA action is complete",
+                NotesError
+            ]);
 
             Logger.Log("Checking accessibility on Resolve SRMA");
             cy.excuteAccessibilityTests();
