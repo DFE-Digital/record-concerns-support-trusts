@@ -36,7 +36,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_teamsService = teamsService;
 			_logger = logger;
 		}
-
 		public async Task<ActionResult> OnGet()
 		{
 			_logger.LogMethodEntered();
@@ -56,36 +55,26 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return Page();
 		}
+		public async Task<ActionResult> OnPost(string selectedOwner, string currentOwner,int valueInList)
 
-		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked,int valueInList)
 		{
 			_logger.LogMethodEntered();
-			var isValid = true;
 			if (selectedOwner == currentOwner)
 			{
 				return Redirect($"/case/{Urn}/management");
 			}
-			if (valuePicked)
+
+			if (valueInList != -1)
 			{
-				if (string.IsNullOrEmpty(selectedOwner))
+				if (!String.IsNullOrEmpty(selectedOwner) && !String.IsNullOrWhiteSpace(selectedOwner))
 				{
-					isValid = false;
+					return await UpdateCaseOwner(selectedOwner);
 				}
-
-				if (string.IsNullOrWhiteSpace(selectedOwner))
-				{
-					isValid = false;
-				}
-
-				if (valueInList == -1)
-				{
-					isValid = false;
-				}
-				if (isValid)
-                {
-                	return await UpdateCaseOwner(selectedOwner);
-                }
 			}
+
+
+
+
 			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
 			CurrentCaseOwner = caseModel.CreatedBy;
 			CaseNumber = caseModel.Urn.ToString();
