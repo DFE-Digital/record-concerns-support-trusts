@@ -1,3 +1,4 @@
+@using ConcernsCaseWork.Extensions;
 @using ConcernsCaseWork.Models;
 @using Microsoft.AspNetCore.Mvc.ModelBinding;
 @using ConcernsCaseWork.Enums;
@@ -6,10 +7,8 @@
 
 @if (!Model.ModelState.IsValid)
 {
-	var errors = Model.ModelState
-			.Where(s => s.Value?.ValidationState == ModelValidationState.Invalid)
-			.Select(e => new { e.Key, Msg = string.Join("<br />", e.Value.Errors.Select(errs => errs?.ErrorMessage)) });
-			
+    var errors = Model.ModelState.GetValidationMessages();
+
 	if (Model.ErrorSortOrder.HasValue)
 	{
 		errors = Model.ErrorSortOrder.Value.Equals(SortOrder.Ascending) ? errors .OrderBy(e => e.Key) : errors .OrderByDescending(e => e.Key);
@@ -38,7 +37,7 @@
                         containerId = $"container-{error.Key}";
                     }
 
-                    <li><a tabindex="0" aria-label="Error: @error.Msg" class="govuk govuk-error-message scrollable-error" data-scroll-to="@containerId">@error.Msg</a></li>
+                    <li><a tabindex="0" aria-label="Error: @error.Value" class="govuk govuk-error-message scrollable-error" data-scroll-to="@containerId">@error.Value</a></li>
 				}
 			</ul>
 		</div>
