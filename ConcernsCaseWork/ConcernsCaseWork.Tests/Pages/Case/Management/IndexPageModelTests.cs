@@ -216,8 +216,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			concernError.Value.Should().Be("Resolve concerns");
 
 			var actionError = errors[1];
-			concernError.Key.Should().Be("CaseActions");
-			concernError.Value.Should().Be("Resolve SRMA");
+			actionError.Key.Should().Be("CaseActions");
+			actionError.Value.Should().Be("Resolve SRMA");
 		}
 
 		private IndexPageModel SetupIndexPageModel(
