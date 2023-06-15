@@ -1,10 +1,10 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
@@ -19,7 +19,6 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,13 +35,16 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly IActionsModelService _actionsModelService;
 		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+		private readonly ICloseCaseValidatorService _closeCaseValidatorService;
+
+		[BindProperty(Name = "Urn", SupportsGet = true)]
+		public long CaseUrn { get; set; }
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -50,9 +52,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsEditableCase { get; private set; }
-		
+
 		[TempData]
-		public bool CaseOwnerChanged { get; set; } 
+		public bool CaseOwnerChanged { get; set; }
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
@@ -61,21 +63,20 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
-			IStatusCachedService statusCachedService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
 			ICaseSummaryService caseSummaryService,
 			ICasePermissionsService casePermissionsService,
 			IUserStateCachedService cachedService,
-			IClaimsPrincipalHelper claimsPrincipalHelper
+			IClaimsPrincipalHelper claimsPrincipalHelper,
+			ICloseCaseValidatorService closeCaseValidatorService
 			)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_recordModelService = Guard.Against.Null(recordModelService);
 			_ratingModelService = Guard.Against.Null(ratingModelService);
-			_statusCachedService = Guard.Against.Null(statusCachedService);
 			_ntiStatusesCachedService = Guard.Against.Null(ntiUCStatusesCachedService);
 			_logger = Guard.Against.Null(logger);
 			_actionsModelService = Guard.Against.Null(actionsModelService);
@@ -83,57 +84,89 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_casePermissionsService = Guard.Against.Null(casePermissionsService);
 			_cachedService = Guard.Against.Null(cachedService);
 			_claimsPrincipalHelper = claimsPrincipalHelper;
+			_closeCaseValidatorService = closeCaseValidatorService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
 			try
 			{
-				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-					throw new Exception("CaseUrn is null or invalid to parse");
-				
 				// Get Case
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
 
-				if (await IsCaseClosed())
+				if (CaseModel.IsClosed())
 				{
 					return Redirect($"/case/{CaseModel.Urn}/closed");
 				}
 
-				// Check if case is editable
-				IsEditableCase = await IsCaseEditable(caseUrn);
-
-				// Map Case Rating
-				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
-				// Get Case concerns
-				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
-
-				// Map Case concerns
-				CaseModel.RecordsModel = recordsModel;
-
-				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
-				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
-				var caseActionsTask = PopulateCaseActions(caseUrn);
-				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
-				TrustDetailsModel = trustDetailsTask.Result;
-				ActiveCases = activeTrustCasesTask.Result;
-				ClosedCases = closedTrustCasesTask.Result;
-				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
-				await UpdateCacheService(CaseModel);
-				
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::ManagementPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 
 			return Page();
+		}
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			_logger.LogMethodEntered();
+
+			try
+			{
+				var errors = await _closeCaseValidatorService.Validate(CaseUrn);
+
+				if (errors.Count > 0)
+				{
+					CaseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
+					await LoadPage();
+
+					errors.ForEach(error =>
+					{
+						ModelState.AddModelError("CloseCaseValidationError", error);
+					});
+
+					return Page();
+				}
+
+				return Redirect($"/case/{CaseUrn}/management/closure");
+			}
+			catch(Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
+			}
+
+			return Page();
+		}
+
+		private async Task LoadPage()
+		{
+			// Check if case is editable
+			IsEditableCase = await IsCaseEditable(CaseUrn);
+
+			// Map Case Rating
+			CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
+			// Get Case concerns
+			var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseUrn);
+
+			// Map Case concerns
+			CaseModel.RecordsModel = recordsModel;
+
+			var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
+			var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
+			var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
+			var caseActionsTask = PopulateCaseActions(CaseUrn);
+			Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
+			TrustDetailsModel = trustDetailsTask.Result;
+			ActiveCases = activeTrustCasesTask.Result;
+			ClosedCases = closedTrustCasesTask.Result;
+			NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
+			await UpdateCacheService(CaseModel);
 		}
 
 		private async Task PopulateCaseActions(long caseUrn)
@@ -150,24 +183,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return permissionsResponse.HasEditPermissions();
 		}
 
-		private async Task<bool> IsCaseClosed()
-		{
-			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
-
-			if (CaseModel.StatusId.CompareTo(closedStatus.Id) == 0)
-			{
-				return true;
-			}
-
-			return false;
-		}
-
 		private async Task<bool> IsCaseEditable(long caseId)
 		{
-			var isCaseClosed = await IsCaseClosed();
 			var userHasEditCasePrivileges = await UserHasEditCasePrivileges(caseId);
 
-			if (!isCaseClosed && userHasEditCasePrivileges)
+			if (!CaseModel.IsClosed() && userHasEditCasePrivileges)
 			{
 				return true;
 			}
@@ -175,7 +195,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return false;
 		}
 
-		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 		
 		private async Task UpdateCacheService(CaseModel model)

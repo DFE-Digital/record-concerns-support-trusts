@@ -21,15 +21,21 @@
     }
     else
     {
+        <partial name="_ValidationErrors" />
+
         <div class="buttons-topOfPage">
             <div class="govuk-width-container">
                 <back-link url="/" label="Back to casework"></back-link>
             </div>
             @if (Model.IsEditableCase)
             {
-                <a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
-                    Close case
-                </a>
+                <form method="post">
+
+                    <button role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
+                        Close case
+                    </button>
+
+                </form>
             }
         </div>
         @if (@Model.CaseOwnerChanged)
@@ -95,21 +101,21 @@
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right"></td>
                         </tr>
-                        
-                    @if (!Model.CaseModel.IsConcernsCase())
-                    {
-	                    <tr class="govuk-table__row">
-		                    <th scope="row" class="govuk-table-case-details__header">Concerns</th>
-		                    <td class="govuk-table__cell" data-testid="concern_Field">
+
+                        @if (!Model.CaseModel.IsConcernsCase())
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+                                <td class="govuk-table__cell" data-testid="concern_Field">
 
                                     <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
-				                    Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
-			                    </a>
-		                    </td>
-		                    <td class="govuk-table__cell govuk-table__header__right"></td>
-	                    </tr>
-                    }
-                    @if (Model.CaseModel.IsConcernsCase())
+                                        Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
+                                    </a>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__header__right"></td>
+                            </tr>
+                        }
+                        @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>

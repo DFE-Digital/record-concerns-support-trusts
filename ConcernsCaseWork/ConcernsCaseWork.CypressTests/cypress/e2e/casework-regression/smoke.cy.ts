@@ -170,8 +170,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Checking accessibility on case management error page");
             cy.excuteAccessibilityTests();
 
-            CaseManagementPage.getBackBtn().click();
-
             resolveAllAllowedCaseActions();
 
             closeConcern();
@@ -249,7 +247,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Validating an error is displayed for NTI warning letter when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
             CaseManagementPage.hasClosedCaseValidationError("Resolve NTI Warning Letter");
-            CaseManagementPage.getBackBtn().click();
 
             Logger.Log("Completing NTI Warning Letter");
             actionSummaryTable
@@ -289,7 +286,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Validating an error is displayed for Notice To Improve when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
             CaseManagementPage.hasClosedCaseValidationError("Resolve Notice To Improve");
-            CaseManagementPage.getBackBtn().click();
 
             Logger.Log("Completing Notice To Improve");
             actionSummaryTable
