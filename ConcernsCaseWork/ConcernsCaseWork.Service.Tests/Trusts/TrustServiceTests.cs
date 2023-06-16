@@ -1,16 +1,15 @@
-﻿using Albedo.Refraction;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework.Internal;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
 
 namespace ConcernsCaseWork.Service.Tests.Trusts
@@ -18,23 +17,31 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 	[Parallelizable(ParallelScope.All)]
 	public class TrustServiceTests
 	{
-		[Test]
-		public async Task WhenGetTrustsByPagination_ReturnsTrusts()
+		[TestCaseSource(nameof(TrustSearchTestCases))]
+		public async Task WhenGetTrustsByPagination_ReturnsTrusts(string expectedUrl, IFeatureManager featureManager)
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
 			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, new ApiListWrapper<TrustSearchDto>.Pagination(1, expectedTrusts.Count, string.Empty));
 			var tramsApiEndpoint = "https://localhost";
+			HttpRequestMessage sentRequest = null;
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
 				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-				.ReturnsAsync(new HttpResponseMessage
+				.ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
 				{
-					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
-				});
+					sentRequest = request;
+
+					var response = new HttpResponseMessage
+					{
+						StatusCode = HttpStatusCode.OK,
+						Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
+					};
+
+					return response;
+				} );
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
@@ -46,7 +53,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				logger.Object,
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
+				CreateFakeTrustService(),
+				featureManager);
 
 			// act
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), expectedTrusts.Count);
@@ -55,6 +63,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
 			Assert.That(apiWrapperTrusts.Trusts, Is.Not.Null);
 			Assert.That(apiWrapperTrusts.Trusts.Count, Is.EqualTo(expectedTrusts.Count));
+
+			sentRequest.RequestUri.AbsoluteUri.Should().Contain(expectedUrl);
 
 			foreach (var trust in apiWrapperTrusts.Trusts)
 			{
@@ -90,7 +100,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
-				fakeTrustService.Object);
+				fakeTrustService.Object,
+				CreateFeatureManagerV2());
 
 			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
 
@@ -125,7 +136,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
+				CreateFakeTrustService(),
+				CreateFeatureManagerV2());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
@@ -146,7 +158,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ILogger<TrustService>>(), 
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
+				CreateFakeTrustService(),
+				CreateFeatureManagerV2());
 
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
@@ -165,15 +178,23 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
 			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(expectedTrust);
 			var tramsApiEndpoint = "https://localhost";
+			HttpRequestMessage sentRequest = null;
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
 				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-				.ReturnsAsync(new HttpResponseMessage
+				.ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
 				{
-					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
+					sentRequest = request;
+
+					var response = new HttpResponseMessage
+					{
+						StatusCode = HttpStatusCode.OK,
+						Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
+					};
+
+					return response;
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -186,10 +207,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
+				CreateFakeTrustService(),
+				CreateFeatureManagerV2());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
+
+			sentRequest.RequestUri.AbsoluteUri.Should().Contain("https://localhost/v2/trust/999999");
 
 			// assert
 			Assert.That(trustDetailDto, Is.Not.Null);
@@ -228,11 +252,72 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
-				fakeTrustService.Object);
+				fakeTrustService.Object,
+				CreateFeatureManagerV2());
 
 			var result = await trustService.GetTrustByUkPrn("123");
 
 			result.GiasData.UkPrn.Should().Be("123");
+		}
+
+		[Test]
+		public async Task WhenGetTrustByUkPrn_V3SearchEnabled_ReturnsTrust()
+		{
+			// arrange
+			var trustDetails = TrustFactory.BuildTrustDetailsDto();
+			var expectedTrust = new TrustDetailsV3Dto()
+			{
+				Establishments = trustDetails.Establishments,
+				GiasData = trustDetails.GiasData,
+				TrustData = trustDetails.IfdData
+			};
+
+			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsV3Dto>(expectedTrust);
+			var tramsApiEndpoint = "https://localhost";
+			HttpRequestMessage sentRequest = null;
+
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
+				{
+					sentRequest = request;
+
+					var response = new HttpResponseMessage
+					{
+						StatusCode = HttpStatusCode.OK,
+						Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
+					};
+
+					return response;
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+			var logger = new Mock<ILogger<TrustService>>();
+			var trustService = new TrustService(
+				httpClientFactory.Object,
+				logger.Object,
+				Mock.Of<ICorrelationContext>(),
+				Mock.Of<IClientUserInfoService>(),
+				CreateFakeTrustService(),
+				CreateFeatureManagerV3());
+
+			// act
+			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
+
+			sentRequest.RequestUri.AbsoluteUri.Should().Contain("https://localhost/v3/trust/999999");
+
+			// assert
+			Assert.That(trustDetailDto, Is.Not.Null);
+			Assert.That(trustDetailDto.GiasData, Is.Not.Null);
+
+			trustDetailDto.GiasData.Should().BeEquivalentTo(expectedTrust.GiasData);
+			trustDetailDto.Establishments.Should().BeEquivalentTo(expectedTrust.Establishments);
+			trustDetailDto.IfdData.Should().BeEquivalentTo(expectedTrust.TrustData);
 		}
 
 		[Test]
@@ -260,43 +345,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
+				CreateFakeTrustService(),
+				CreateFeatureManagerV2());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
-		}
-
-		[Test]
-		public void WhenGetTrustByUkPrn_ApiWrapperResponseData_IsNull_ThrowsException()
-		{
-			// arrange
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(null, null);
-			var tramsApiEndpoint = "https://localhost";
-
-			var httpClientFactory = new Mock<IHttpClientFactory>();
-			var mockMessageHandler = new Mock<HttpMessageHandler>();
-			mockMessageHandler.Protected()
-				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-				.ReturnsAsync(new HttpResponseMessage
-				{
-					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
-				});
-
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
-			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-
-			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(
-				httpClientFactory.Object, 
-				logger.Object, 
-				Mock.Of<ICorrelationContext>(), 
-				Mock.Of<IClientUserInfoService>(),
-				CreateFakeTrustService());
-
-			// act | assert
-			Assert.ThrowsAsync<Exception>(() => trustService.GetTrustByUkPrn("9999999"));
 		}
 
 		private static IFakeTrustService CreateFakeTrustService()
@@ -305,6 +358,36 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			fakeTrustService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).Returns(() => null);
 			fakeTrustService.Setup(m => m.GetTrustsByPagination(It.IsAny<string>())).Returns(() => null);
 			return fakeTrustService.Object;
+		}
+
+		private static IFeatureManager CreateFeatureManagerV2()
+		{
+			var result = new Mock<IFeatureManager>();
+
+			result.Setup(m => m.IsEnabledAsync(It.IsAny<string>())).ReturnsAsync(false);
+
+			return result.Object;
+		}
+
+		private static IFeatureManager CreateFeatureManagerV3()
+		{
+			var result = new Mock<IFeatureManager>();
+
+			result.Setup(m => m.IsEnabledAsync(It.IsAny<string>())).ReturnsAsync(true);
+
+			return result.Object;
+		}
+
+		private static IEnumerable<TestCaseData> TrustSearchTestCases()
+		{
+			yield return new TestCaseData("https://localhost/v2/trusts", CreateFeatureManagerV2());
+			yield return new TestCaseData("https://localhost/v3/trusts", CreateFeatureManagerV3());
+		}
+
+		private static IEnumerable<TestCaseData> SearchByUkPrnTestCases()
+		{
+			yield return new TestCaseData("https://localhost/v2/trust/999999", CreateFeatureManagerV2());
+			yield return new TestCaseData("https://localhost/v3/trust/999999", CreateFeatureManagerV3());
 		}
 	}
 }
