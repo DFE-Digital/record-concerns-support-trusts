@@ -9,6 +9,7 @@ import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import validationComponent from "cypress/pages/validationComponent";
 
 describe("User can add decisions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -326,14 +327,8 @@ describe("User can add decisions to an existing case", () => {
 			.hasNoDecisionOutcome()
 			.createDecisionOutcome();
 
-		Logger.Log("Checking when no status is selected");
+		Logger.Log("Checking validation ");
 		decisionOutcomePage
-			.saveDecisionOutcome()
-			.hasValidationError("Select a decision outcome");
-
-		Logger.Log("Checking an invalid date");
-		decisionOutcomePage
-			.withDecisionOutcomeStatus("Withdrawn")
 			.withDateDecisionMadeDay("24")
 			.withDateDecisionMadeMonth("13")
 			.withDateDecisionMadeYear("2022")
@@ -341,14 +336,18 @@ describe("User can add decisions to an existing case", () => {
 			.withDecisionTakeEffectMonth("22")
 			.withDecisionTakeEffectYear("2023")
 			.saveDecisionOutcome()
-			.hasValidationError(DateInvalidError.replace("{0}", "Date decision was made"))
-			.hasValidationError(DateInvalidError.replace("{0}", "Date decision takes effect"))
+
+		validationComponent.hasValidationErrorsInOrder([
+			"Select a decision outcome",
+			DateInvalidError.replace("{0}", "Date decision was made"),
+			DateInvalidError.replace("{0}", "Date decision takes effect")
+		]);
 
 		Logger.Log("Checking accessibility on Add Decision Outcome");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Checking an incomplete dates");
 		decisionOutcomePage
+			.withDecisionOutcomeStatus("Withdrawn")
 			.withDateDecisionMadeDay("24")
 			.withDateDecisionMadeMonth("12")
 			.withDateDecisionMadeYear("")
@@ -356,8 +355,11 @@ describe("User can add decisions to an existing case", () => {
 			.withDecisionTakeEffectMonth("06")
 			.withDecisionTakeEffectYear("")
 			.saveDecisionOutcome()
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision was made"))
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date decision takes effect"));
+
+		validationComponent.hasValidationErrorsInOrder([
+			DateIncompleteError.replace("{0}", "Date decision was made"),
+			DateIncompleteError.replace("{0}", "Date decision takes effect")
+		]);
 
 		Logger.Log("Create Decision Outcome");
 		decisionOutcomePage

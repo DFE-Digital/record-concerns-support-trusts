@@ -8,6 +8,7 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import concernsApi from "cypress/api/concernsApi";
 import caseApi from "cypress/api/caseApi";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
+import validationComponent from "cypress/pages/validationComponent";
 
 describe("Creating a case", () =>
 {
@@ -41,9 +42,12 @@ describe("Creating a case", () =>
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
             .addConcern()
-            .hasValidationError("Select concern type")
-            .hasValidationError("Select concern risk rating")
-            .hasValidationError("Select means of referral");
+
+        validationComponent
+            .hasValidationErrorsInOrder([
+                "Select concern type",
+                "Select concern risk rating",
+                "Select means of referral"]);
 
         Logger.Log("Checking accessibility on concern");
         cy.excuteAccessibilityTests();
@@ -126,13 +130,16 @@ describe("Creating a case", () =>
             .withDeEscalationPointExceedingLimit()
             .withNextStepsExceedingLimit()
             .withCaseHistoryExceedingLimit()
-            .createCase()
-            .hasValidationError("Issue must be 2000 characters or less")
-            .hasValidationError("Current status must be 4000 characters or less")
-            .hasValidationError("Case aim must be 1000 characters or less")
-            .hasValidationError("De-escalation point must be 1000 characters or less")
-            .hasValidationError("Next steps must be 4000 characters or less")
-            .hasValidationError("Case history must be 4300 characters or less");
+            .createCase();
+
+        validationComponent.hasValidationErrorsInOrder([
+            "Issue must be 2000 characters or less",
+            "Current status must be 4000 characters or less",
+            "Case aim must be 1000 characters or less",
+            "De-escalation point must be 1000 characters or less",
+            "Next steps must be 4000 characters or less",
+            "Case history must be 4300 characters or less"
+        ]);
 
         Logger.Log("Checking accessibility on concerns case confirmation");
         cy.excuteAccessibilityTests();
