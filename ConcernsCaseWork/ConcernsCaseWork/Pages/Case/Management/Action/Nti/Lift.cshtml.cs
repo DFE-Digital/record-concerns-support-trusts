@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 
 				ntiModel.Notes = Notes.Text.StringContents;
-				ntiModel.SumissionDecisionId = DecisionID.Text.StringContents;
+				ntiModel.SubmissionDecisionId = DecisionID.Text.StringContents;
 				ntiModel.DateNTILifted = !DateNTILifted.Date?.IsEmpty() ?? false ? DateNTILifted.Date?.ToDateTime() : null;
 				ntiModel.ClosedStatusId = (int)NTIStatus.Lifted;
 				ntiModel.ClosedAt = DateTime.Now;

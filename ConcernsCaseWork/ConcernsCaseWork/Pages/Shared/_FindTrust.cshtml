@@ -1,4 +1,4 @@
-﻿@using ConcernsCaseWork.Service.Configuration;
+﻿@using ConcernsCaseWork.API.Contracts.Configuration;
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Options;
@@ -136,6 +136,7 @@
             name: "trustSearch",
             source: searchForTrusts,
             confirmOnBlur: false,
+            autoselect: true,
             minLength: @trustSearchOptions.Value.MinCharsRequiredToSeach,
             showNoOptonsFound: true,
             onConfirm: (selected) => {

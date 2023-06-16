@@ -1,15 +1,26 @@
-﻿@page "/case/concern/add/{handler?}"
+﻿@page "/case/concern/add/{urn:long?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.Concern.AddPageModel
 
 @{
 	ViewData["Title"] = "Add Case Concern";
+	
+	
 }
 
 <div class="govuk-width-container">
 <partial name="_BannerError"/>
-	
-<span class="govuk-caption-l">Create case</span>
+	@{
+    		if (Model?.CaseModel?.Urn > 0)
+    		{
+    			<span class="govuk-caption-l">Add to case</span>
+    		}
+    		else
+    		{
+    			<span class="govuk-caption-l">Create case</span>
+    		}
+    	}
+
 <h1 class="govuk-heading-l">Concerns </h1>
 
 @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -21,10 +32,10 @@ else
 	<!-- Trust summary and records -->
 	<dl class="govuk-summary-list">
 		<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
-        <div id="concerns-summary-list" class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Concerns</dt>
-            <dd class="govuk-summary-list__value">
-                <div class="govuk-grid-row">
+		<div id="concerns-summary-list" class="govuk-summary-list__row">
+			<dt class="govuk-summary-list__key">Concerns</dt>
+			<dd class="govuk-summary-list__value">
+				<div class="govuk-grid-row">
 
                     @foreach (var concern in Model.CreateRecordsModel)
                     {
@@ -32,7 +43,7 @@ else
                             <span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds" data-testid="concern-type">
                                 @concern.TypeDisplay
                             </span>
-                            <div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
+                                <div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third" data-testid="concern-risk-rating">
                                 @for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
                                 {
                                     <span class="govuk-tag ragtag @concern.RagRatingCss.ElementAt(index)">
@@ -42,24 +53,52 @@ else
                             </div>
                         </div>
                     }
-                    <span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
-                        <a data-prevent-double-click="true" asp-page="index" class="govuk-link" data-module="govuk-button" role="button" data-testid="add-concern-button">
-                            Add concern
-                        </a>
-                    </span>
+                    @if (Model?.CaseModel?.Urn > 0)
+                    {
+	                    <span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
+		                    <a data-prevent-double-click="true" asp-page="index" class="govuk-link" asp-route-urn="@Model.CaseModel.Urn" data-module="govuk-button" role="button" data-testid="add-concern-button">
+			                    Add concern
+		                    </a>
+	                    </span>
+                    }
+                    else
+                    {
+	                    <span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
+		                    <a data-prevent-double-click="true" asp-page="index" class="govuk-link" data-module="govuk-button" role="button" data-testid="add-concern-button">
+			                    Add concern
+		                    </a>
+	                    </span>
+                    }
                 </div>
             </dd>
         </div>
 	</dl>
-
 	<div class="govuk-button-group">
-		<a data-prevent-double-click="true" asp-page="../rating" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="next-step-button">
+	@if (Model?.CaseModel?.Urn > 0)
+	{
+	<a data-prevent-double-click="true" asp-page="../rating/"  asp-route-urn="@Model.CaseModel.Urn" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="next-step-button">
 			Next step
 		</a>
 		
-		<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-link" data-module="govuk-button" role="button">
+	}
+	else
+	{
+		
+		<a data-prevent-double-click="true" asp-page="../rating/" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="next-step-button">
+			Next step
+		</a>
+			
+	}
+
+	<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-link" data-module="govuk-button" role="button">
 			Cancel
 		</a>
 	</div>
 }
+
+
+
+
+
+
 </div>

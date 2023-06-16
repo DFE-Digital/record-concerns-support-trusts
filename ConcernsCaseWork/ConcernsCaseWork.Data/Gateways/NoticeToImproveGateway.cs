@@ -94,5 +94,16 @@ namespace ConcernsCaseWork.Data.Gateways
                 throw;
             }
         }
-    }
+
+		public void Delete(long noticeToImproveId)
+		{
+			var result = _concernsDbContext.NoticesToImprove.SingleOrDefault(n => n.Id == noticeToImproveId);
+			if (result != null)
+			{
+				result.DeletedAt = System.DateTime.Now;
+			}
+
+			_concernsDbContext.SaveChanges();
+		}
+	}
 }

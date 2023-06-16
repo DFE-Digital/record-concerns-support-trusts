@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 {
     public class Decision: IAuditable
     {
-        private Decision()
+        public Decision()
         {
             DecisionTypes = new List<DecisionType>();
         }
@@ -116,7 +116,9 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 
 		public DecisionOutcome? Outcome { get; set; }
 
-        public string GetTitle()
+		public DateTime? DeletedAt { get; set; }
+
+		public string GetTitle()
         {
             switch (DecisionTypes?.Count ?? 0)
             {
@@ -167,5 +169,10 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 	        SupportingNotes = notes;
 	        UpdatedAt = updatedAt;
         }
+
+		public void Delete(DateTime now)
+		{
+			this.DeletedAt = now;
+		}
     }
 }

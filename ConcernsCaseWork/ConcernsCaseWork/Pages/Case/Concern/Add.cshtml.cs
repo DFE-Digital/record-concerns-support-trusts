@@ -4,6 +4,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
@@ -23,19 +24,24 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
 		private TelemetryClient _telemetryClient;
+		private ICaseModelService _caseModelService;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public CaseModel CaseModel { get; private set; }
 		
 		public AddPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			ILogger<AddPageModel> logger,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient,
+			ICaseModelService caseModelService
+			)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
 			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_caseModelService = Guard.Against.Null(caseModelService);
 		}
 		
 		public async Task OnGetAsync()
@@ -77,6 +83,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				await GetCaseModel();
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
@@ -102,6 +109,17 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+		
+		private async Task GetCaseModel()
+		{
+			var caseUrnValue = RouteData.Values["urn"];
+			long caseUrn = 0;
+			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0);
+			if (caseUrn > 0)
+			{
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+			}
 		}
 	}
 }

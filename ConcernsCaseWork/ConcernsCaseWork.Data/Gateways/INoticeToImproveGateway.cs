@@ -12,5 +12,6 @@ namespace ConcernsCaseWork.Data.Gateways
         Task<List<NoticeToImproveConditionType>> GetAllConditionTypes();
         Task<List<NoticeToImproveCondition>> GetAllConditions();        
         Task<NoticeToImprove> PatchNoticeToImprove(NoticeToImprove patchNoticeToImprove);
-    }
+		void Delete(long warningLetterId);
+	}
 }

@@ -6,8 +6,8 @@ import CaseManagementPage from "../../../pages/caseMangementPage";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { DateInvalidError } from "cypress/constants/validationErrorConstants";
-
+import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import validationComponent from "cypress/pages/validationComponent";
 
 describe("User can add trust financial forecast to an existing case", () => {
 
@@ -24,24 +24,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
     it("Creation of a TFF", function () {
-		
 		Logger.Log("Create a TFF with invalid values - Shows validation errors");
-		editTFFPage
-			.withForecastingTool("Current year - Spring")
-			.withDayReviewHappened("90")
-			.withMonthReviewHappened("60")
-			.withYearReviewHappened("2023")
-			.withDayTrustResponded("270")
-			.withMonthTrustResponded("30")
-			.withYearTrustResponded("2024")
-			.withNotesExceedingLimit()
-			.save()
-			.hasValidationError("Supporting notes must be 2000 characters or less")
-			.hasValidationError(DateInvalidError.replace("{0}", "When did the trust respond?"))
-			.hasValidationError(DateInvalidError.replace("{0}", "When did SFSO initial review happen?"));
-
-		Logger.Log("Checking accessibility on Add TFF");
-		cy.excuteAccessibilityTests();
+		validateAddEdit();
 
 		Logger.Log("Create a TFF will all values");
 		editTFFPage
@@ -155,8 +139,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.hasSRMAOffered("Yes")
 			.hasNotes("Supporting notes");
 
-		Logger.Log("Checking accessibility on Edit TFF");
-		cy.excuteAccessibilityTests();	
+		editTFFPage.clearAllDates();
+		validateAddEdit();
 
 		Logger.Log("Edit a TFF will all values");
 		editTFFPage
@@ -270,4 +254,35 @@ describe("User can add trust financial forecast to an existing case", () => {
        	AddToCasePage.addToCase('TrustFinancialForecast')
     	AddToCasePage.getAddToCaseBtn().click();
     }
+
+	function validateAddEdit()
+	{
+		editTFFPage
+			.withDayReviewHappened("90")
+			.withDayTrustResponded("270")
+			.save()
+
+		// Ensure errors appear in field order
+		validationComponent.hasValidationErrorsInOrder([
+			DateIncompleteError.replace("{0}", "Date SFSO initial review happened"),
+			DateIncompleteError.replace("{0}", "Date trust responded")
+		]);
+
+		editTFFPage
+			.withMonthReviewHappened("60")
+			.withYearReviewHappened("2023")
+			.withMonthTrustResponded("30")
+			.withYearTrustResponded("2024")
+			.withNotesExceedingLimit()
+			.save()
+
+		validationComponent.hasValidationErrorsInOrder([
+			DateInvalidError.replace("{0}", "Date SFSO initial review happened"),
+			DateInvalidError.replace("{0}", "Date trust responded"),
+			NotesError
+		]);
+
+		Logger.Log("Checking accessibility on Add/Edit TFF");
+		cy.excuteAccessibilityTests();
+	}
 });
