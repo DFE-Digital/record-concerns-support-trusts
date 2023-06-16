@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.Service.Base;
+﻿using ConcernsCaseWork.API.Contracts.Configuration;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Configuration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
