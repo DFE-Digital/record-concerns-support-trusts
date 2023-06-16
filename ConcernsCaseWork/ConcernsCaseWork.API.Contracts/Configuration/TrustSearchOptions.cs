@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Service.Configuration
+﻿namespace ConcernsCaseWork.API.Contracts.Configuration
 {
 	public class TrustSearchOptions
 	{
