@@ -14,8 +14,6 @@
         throw new InvalidOperationException("Nonce not provided by parent page");
     }
 
-    var test = ViewContext.ModelState;
-
     var errors = new List<ValidationResult>();
 
     foreach (var modelStateEntry in ViewData.ModelState)

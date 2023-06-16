@@ -22,8 +22,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty(SupportsGet = true)] public int Urn { get; init; }
 
 		public string CurrentCaseOwner { get; set; }
+
 		public string CaseNumber { get; set; }
-		public bool ShowValidationMessage { get; set; }
+
 		[TempData]
 		public bool CaseOwnerChanged { get; set; }
 
@@ -55,32 +56,27 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return Page();
 		}
-		public async Task<ActionResult> OnPost(string selectedOwner, string currentOwner,int valueInList)
-
+		public async Task<ActionResult> OnPost(string selectedOwner, string currentOwner, int valueInList)
 		{
 			_logger.LogMethodEntered();
+
+			if (valueInList == -1 || string.IsNullOrWhiteSpace(selectedOwner))
+			{
+				var caseModel = await _caseModelService.GetCaseByUrn(Urn);
+				CurrentCaseOwner = caseModel.CreatedBy;
+				CaseNumber = caseModel.Urn.ToString();
+
+				ModelState.AddModelError("SelectedCaseOwner", "A case owner must be selected");
+
+				return Page();
+			}
+
 			if (selectedOwner == currentOwner)
 			{
 				return Redirect($"/case/{Urn}/management");
 			}
 
-			if (valueInList != -1)
-			{
-				if (!String.IsNullOrEmpty(selectedOwner) && !String.IsNullOrWhiteSpace(selectedOwner))
-				{
-					return await UpdateCaseOwner(selectedOwner);
-				}
-			}
-
-
-
-
-			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
-			CurrentCaseOwner = caseModel.CreatedBy;
-			CaseNumber = caseModel.Urn.ToString();
-			ShowValidationMessage = true;
-			return Page();
-			
+			return await UpdateCaseOwner(selectedOwner);
 		}
 
 		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
