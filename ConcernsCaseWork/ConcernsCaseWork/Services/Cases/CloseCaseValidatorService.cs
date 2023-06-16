@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.Services.Cases
 			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusId == (int)CaseStatus.Live);
 
 			if (numberOfOpenConcerns > 0)
-				result.Add(new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve Concerns" });
+				result.Add(new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Close concerns" });
 
 			var srmaModelsTask = _srmaModelService.GetSRMAsForCase(caseUrn);
 			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn);

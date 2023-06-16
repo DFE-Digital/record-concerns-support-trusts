@@ -160,12 +160,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             CaseManagementPage.getCloseCaseBtn().click();
 
             CaseManagementPage
-                .hasClosedCaseValidationError("Resolve Financial Plan")
-                .hasClosedCaseValidationError("Resolve SRMA")
-                .hasClosedCaseValidationError("Resolve NTI Under Consideration")
-                .hasClosedCaseValidationError("Resolve Decision")
-                .hasClosedCaseValidationError("Resolve Concerns")
-                .hasClosedCaseValidationError("Resolve Trust Financial Forecast");
+                .hasClosedCaseValidationError("Close financial plan")
+                .hasClosedCaseValidationError("Close SRMA action")
+                .hasClosedCaseValidationError("Close NTI: Under consideration")
+                .hasClosedCaseValidationError("Close decisions")
+                .hasClosedCaseValidationError("Close concerns")
+                .hasClosedCaseValidationError("Close trust financial forecast");
 
             Logger.Log("Checking accessibility on case management error page");
             cy.excuteAccessibilityTests();
@@ -246,7 +246,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Validating an error is displayed for NTI warning letter when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasClosedCaseValidationError("Resolve NTI Warning Letter");
+            CaseManagementPage.hasClosedCaseValidationError("Close NTI: Warning letter");
 
             Logger.Log("Completing NTI Warning Letter");
             actionSummaryTable
@@ -285,7 +285,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Validating an error is displayed for Notice To Improve when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasClosedCaseValidationError("Resolve Notice To Improve");
+            CaseManagementPage.hasClosedCaseValidationError("Cancel, lift or close NTI: Notice to improve");
 
             Logger.Log("Completing Notice To Improve");
             actionSummaryTable

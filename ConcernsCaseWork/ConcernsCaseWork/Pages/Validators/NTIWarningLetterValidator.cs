@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Validators
 		{
 			var ntiWarningLetters = caseActions.Where(ca => ca is NtiWarningLetterModel).ToList();
 
-			var errorMessage = ntiWarningLetters.Any(f => !f.ClosedAt.HasValue) ? "Resolve NTI Warning Letter" : string.Empty;
+			var errorMessage = ntiWarningLetters.Any(f => !f.ClosedAt.HasValue) ? "Close NTI: Warning letter" : string.Empty;
 
 			return errorMessage;
 		}
