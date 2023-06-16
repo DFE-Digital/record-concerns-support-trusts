@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
+using ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
@@ -25,7 +26,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         private readonly Mock<IUseCase<long, NTIWarningLetterResponse>> _mockGetNtiWarningLetterByIdUseCase;
         private readonly Mock<IUseCase<int, List<NTIWarningLetterResponse>>> _mockGetNtiWarningLetterByCaseUrnUseCase;
         private readonly Mock<IUseCase<PatchNTIWarningLetterRequest, NTIWarningLetterResponse>> _mockPatchNTIWarningLetterUseCase;
-        private readonly Mock<IUseCase<object, List<NTIWarningLetterStatus>>> _mockGetAllStatuses;
+		private readonly Mock<IUseCase<long, DeleteNTIWarningLetterResponse>> _mockDeleteNTIWarningLetterUseCase;
+
+		private readonly Mock<IUseCase<object, List<NTIWarningLetterStatus>>> _mockGetAllStatuses;
         private readonly Mock<IUseCase<object, List<NTIWarningLetterReason>>> _mockGetAllReasons;
         private readonly Mock<IUseCase<object, List<NTIWarningLetterCondition>>> _mockGetAllCondition;
         private readonly Mock<IUseCase<object, List<NTIWarningLetterConditionType>>> _mockGetAllConditionType;
@@ -43,9 +46,11 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             _mockGetAllReasons = new Mock<IUseCase<object, List<NTIWarningLetterReason>>>();
             _mockGetAllCondition = new Mock<IUseCase<object, List<NTIWarningLetterCondition>>>();
             _mockGetAllConditionType = new Mock<IUseCase<object, List<NTIWarningLetterConditionType>>>();
+			_mockDeleteNTIWarningLetterUseCase = new Mock<IUseCase<long, DeleteNTIWarningLetterResponse>>();
 
-            controllerSUT = new NTIWarningLetterController(_mockLogger.Object, _mockCreateNtiWarningLetterUseCase.Object, _mockGetNtiWarningLetterByIdUseCase.Object,
-                _mockGetNtiWarningLetterByCaseUrnUseCase.Object, _mockPatchNTIWarningLetterUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object, _mockGetAllCondition.Object, _mockGetAllConditionType.Object);
+			controllerSUT = new NTIWarningLetterController(_mockLogger.Object, _mockCreateNtiWarningLetterUseCase.Object, _mockGetNtiWarningLetterByIdUseCase.Object,
+                _mockGetNtiWarningLetterByCaseUrnUseCase.Object, _mockPatchNTIWarningLetterUseCase.Object, _mockDeleteNTIWarningLetterUseCase.Object,
+				_mockGetAllStatuses.Object, _mockGetAllReasons.Object, _mockGetAllCondition.Object, _mockGetAllConditionType.Object);
         }
 
         [Fact]

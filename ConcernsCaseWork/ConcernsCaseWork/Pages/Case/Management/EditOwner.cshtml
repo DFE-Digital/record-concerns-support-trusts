@@ -38,7 +38,6 @@
 
         <input type="hidden" id="selected-owner" name="selectedOwner" required />
         <input type="hidden" id="current-owner" name ="currentOwner" value="@Model.CurrentCaseOwner" />
-	    <input type="hidden" id="owner-selected" name ="valuePicked" value="false" />
 	     <input type="hidden" id="in-list" name ="valueInList" value="-1" />
 	    
         <!--Button group-->
@@ -67,29 +66,47 @@
                 defaultValue:currentCaseOwner,
                 source: result,
                 confirmOnBlur: false,
+                autoselect: true,
                 showNoOptonsFound: true,
                 onConfirm: (selected) => {
 					document.getElementById('selected-owner').value = selected;
-					document.getElementById('owner-selected').value = true;
+                    if(selected)
+                    {
+                        document.getElementById('in-list').value = 1
+                    }
+                    else
+                    {
+                        document.getElementById('in-list').value = -1
+                    }
 					results = result;
-					
                 }
             });
+
+            var indexInList = jQuery.inArray(currentCaseOwner, result);
+            document.getElementById('in-list').value = indexInList;
+            if(indexInList == -1)
+            {
+                 document.getElementById('selected-owner').value = ""
+            }
         });
-		
-		 $( "body" ).on('change','#case-owner-input',function() {
-           	document.getElementById('selected-owner').value =  document.getElementById("case-owner-input").value;
-		   	document.getElementById('owner-selected').value = true;
-			document.getElementById('in-list').value = jQuery.inArray(document.getElementById('selected-owner').value, results);
-         });
-    });
-	
-	function updateOwner(selected)
-	{
-		
-		 document.getElementById('value-picked').value = true;
-		 return selected;
-                         
-	}
-		
+
+        $("body").on('change','#case-owner-input',function(evt) {
+
+            var inputText = evt.target.value.trim();
+            if(inputText.length==0)
+            {
+                document.getElementById('selected-owner').value = ""
+                document.getElementById('in-list').value = -1
+            }
+            else
+            {
+                var indexInList = jQuery.inArray(inputText, results);
+                if(indexInList == -1)
+                {
+                    document.getElementById('selected-owner').value = ""
+                }
+                document.getElementById('in-list').value = indexInList
+            }
+        });
+    });	
 </script>

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Authorization;
+﻿using AutoFixture;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
@@ -7,16 +8,13 @@ using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Tests.Helpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -26,6 +24,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class RatingPageModelTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_Return_Page()
 		{
@@ -68,16 +68,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsPageModel);
 			Assert.IsAssignableFrom<List<RatingModel>>(ratingsPageModel);
 			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("RatingPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
@@ -117,16 +107,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.IsNull(pageModel.RatingsModel);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
 			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("RatingPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
@@ -156,16 +136,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.IsNull(pageModel.TrustDetailsModel);
 			Assert.IsNull(pageModel.CreateRecordsModel);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
-			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("RatingPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 			
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -244,14 +214,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				mockUserStateCachedService.Object, 
 				mockRatingModelService.Object,
 				mockLogger.Object, true);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "rating", new StringValues("123:red") }
-				});
 
-			mockRatingModelService.Setup(x => x.GetRatingModelById(123)).ReturnsAsync(new RatingModel() { Id = 123 });
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 1;
+
+			mockRatingModelService.Setup(x => x.GetRatingModelById(1)).ReturnsAsync(new RatingModel() { Id = 1 });
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -283,114 +250,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				mockUserStateCachedService.Object, 
 				mockRatingModelService.Object,
 				mockLogger.Object, true);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "rating", new StringValues("123:red") }
-				});
-			
+
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 101;
+
 			// act
 			_ = await pageModel.OnPostAsync();
 			
 			// assert
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
-
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("The given ratingUrn '123' does not match any known rating in the system")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_MissingFormData_ReloadPage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<RatingPageModel>>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			
-			var createCaseModel = CaseFactory.BuildCreateCaseModel();
-			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
-
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			
-			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
-				mockLogger.Object, true);
-			
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-			var pageResponseInstance = pageResponse as PageResult;
-			
-			// assert
-			Assert.NotNull(pageResponseInstance);
-			Assert.NotNull(pageModel.RatingsModel);
-			Assert.NotNull(pageModel.CreateRecordsModel);
-			Assert.NotNull(pageModel.TrustDetailsModel);
-
-			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-			mockUserStateCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Never);
-			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 		}		
-		
-		[Test]
-		public async Task WhenOnPostAsync_IncorrectFormData_ReloadPage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<RatingPageModel>>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			
-			var createCaseModel = CaseFactory.BuildCreateCaseModel();
-			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
-
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			
-			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
-				mockLogger.Object, true);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "rating", new StringValues("") }
-				});
-			
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-			var pageResponseInstance = pageResponse as PageResult;
-			
-			// assert
-			Assert.NotNull(pageResponseInstance);
-			Assert.NotNull(pageModel.RatingsModel);
-			Assert.NotNull(pageModel.CreateRecordsModel);
-			Assert.NotNull(pageModel.TrustDetailsModel);
-
-			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-			mockUserStateCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Never);
-			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
-		}
 		
 		private static RatingPageModel SetupRatingPageModel(
 			ITrustModelService mockTrustModelService, 

@@ -68,25 +68,30 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		};
 		
 	private static TextAreaUiComponent BuildNotesComponent(string contents = "")
-		=> new("notes", nameof(Notes), "Supporting notes")
+		=> new("notes", nameof(Notes), "Notes")
 		{
+			SortOrder = 3,
 			Text = new ValidateableString()
 			{
 				MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
 				StringContents = contents,
-				DisplayName = "Supporting notes"
+				DisplayName = "Notes"
 			}
 		};
 		
 	private static OptionalDateTimeUiComponent BuildTrustRespondedAtComponent([CanBeNull] OptionalDateModel selectedDate = default)
 		=> new ("trust-responded-at", nameof(TrustRespondedAt), "When did the trust respond?")
 		{
-			Date = selectedDate
+			Date = selectedDate,
+			DisplayName = "Date trust responded",
+			SortOrder = 2
 		};
 		
 	private static OptionalDateTimeUiComponent BuildSFSOInitialReviewHappenedAtComponent([CanBeNull] OptionalDateModel selectedDate = default)
 		=> new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did SFSO initial review happen?")
 		{
-			Date = selectedDate
+			Date = selectedDate,
+			DisplayName = "Date SFSO initial review happened",
+			SortOrder = 1
 		};
 }

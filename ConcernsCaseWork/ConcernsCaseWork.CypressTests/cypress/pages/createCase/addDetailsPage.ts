@@ -14,9 +14,9 @@ export default class AddDetailsPage {
     }
 
 
-    public withRating(value: string): this
+    public withRiskToTrust(value: string): this
     {
-        Logger.Log(`With Rating ${value}`);
+        Logger.Log(`With risk to trust ${value}`);
 
         cy.getByTestId(value).click();
 

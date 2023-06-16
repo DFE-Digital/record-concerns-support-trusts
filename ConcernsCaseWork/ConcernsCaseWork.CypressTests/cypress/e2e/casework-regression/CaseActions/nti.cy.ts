@@ -232,6 +232,33 @@ describe("Testing case action NTI", () =>
             .cancel();
 
         assertClosedNti("Cancelled");
+
+        viewNtiPage
+            .hasDateCancelled(toDisplayDate(now));
+    });
+
+    it("Should cancel an nti with empty fields", () =>
+    {
+        Logger.Log("Saving an empty form");
+        editNtiPage.save();
+
+        Logger.Log("Validate the NTI on the view page");
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
+
+        viewNtiPage.cancel();
+
+        cancelNtiPage
+            .cancel();
+
+        assertEmptyClosedNti("Cancelled");
+
+        viewNtiPage
+            .hasDateCancelled(toDisplayDate(now));
     });
 
     it("Should be able to lift an NTI", () =>
@@ -277,6 +304,35 @@ describe("Testing case action NTI", () =>
             .lift();
 
         assertClosedNti("Lifted");
+
+        viewNtiPage
+            .hasDateLifted("12 July 2005")
+            .hasSubmissionDecisionId("123456");
+    });
+
+    it("Should lift an nti with empty fields", () =>
+    {
+        Logger.Log("Saving an empty form");
+        editNtiPage.save();
+
+        Logger.Log("Validate the NTI on the view page");
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
+
+        viewNtiPage.lift();
+
+        liftNtiPage
+            .lift();
+
+        assertEmptyClosedNti("Lifted");
+
+        viewNtiPage
+            .hasDateLifted("Empty")
+            .hasSubmissionDecisionId("Empty");
     });
 
     it("Should be able to close an NTI", () =>
@@ -320,6 +376,30 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasDateClosed("15 December 2020");
+    });
+
+    it("Should close an nti with empty fields", () =>
+    {
+        Logger.Log("Saving an empty form");
+        editNtiPage.save();
+
+        Logger.Log("Validate the NTI on the view page");
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
+
+        viewNtiPage.close();
+
+        closeNtiPage
+            .close();
+
+        assertEmptyClosedNti("Closed");
+
+        viewNtiPage
+            .hasDateClosed("Empty");
     });
 
     function addNtiToCase()
@@ -402,5 +482,29 @@ describe("Testing case action NTI", () =>
 
             Logger.Log("Checking accessibility on View Closed NTI");
             cy.excuteAccessibilityTests();
+    }
+
+    function assertEmptyClosedNti(expectedStatus: string)
+    {
+        Logger.Log("Viewing the closed empty NTI");
+		actionSummaryTable
+			.getClosedAction("NTI")
+			.then(row =>
+			{
+				row.hasName("NTI")
+				row.hasStatus(expectedStatus)
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
+
+        viewNtiPage
+            .hasDateOpened(toDisplayDate(now))
+            .hasDateCompleted(toDisplayDate(now))
+            .hasDateIssued("Empty")
+            .hasReasonIssued("Empty")
+            .hasStatus(expectedStatus)
+            .hasConditions("Empty")
+            .hasNotes("Empty");
     }
 });

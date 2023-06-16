@@ -35,6 +35,7 @@ import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
 import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
+import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 
 describe("Testing closing of cases when there are case actions and concerns", () => {
     let caseId: string;
@@ -93,26 +94,30 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         createConcernPage
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red-Amber")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
-        createConcernPage
+        createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
+            .hasConcernRiskRating("Red Amber");
+
+        createConcernPage
             .nextStep();
         
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
-        addTerritoryPage
+        createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust("Red Plus")
+            .hasConcernRiskRating("Red Amber")
+            .hasRiskToTrust("Red Plus");
 
         Logger.Log("Populate territory");
         addTerritoryPage
@@ -120,9 +125,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .nextStep();
 
         Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
-        addConcernDetailsPage
+        createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasConcernType("Financial: Deficit")
+            .hasConcernRiskRating("Red Amber")
             .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
 

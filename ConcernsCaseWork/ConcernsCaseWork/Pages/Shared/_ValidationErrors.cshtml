@@ -9,38 +9,40 @@
 	var errors = Model.ModelState
 			.Where(s => s.Value?.ValidationState == ModelValidationState.Invalid)
 			.Select(e => new { e.Key, Msg = string.Join("<br />", e.Value.Errors.Select(errs => errs?.ErrorMessage)) });
-			
-	if (Model.ErrorSortOrder.HasValue)
-	{
-		errors = Model.ErrorSortOrder.Value.Equals(SortOrder.Ascending) ? errors .OrderBy(e => e.Key) : errors .OrderByDescending(e => e.Key);
-	}
+
+    var formattedErrors = errors.Select((error, index) =>
+    {
+        var propertyName = error.Key.Split(".").First();
+
+        object selectedProperty = Model.GetType().GetProperty(propertyName)?.GetValue(Model);
+
+        var containerId = "";
+        var sortOrder = index;
+
+        if (selectedProperty is BaseUiComponent)
+        {
+            var component = selectedProperty as BaseUiComponent;
+            containerId = $"container-{component.ElementRootId}";
+            sortOrder = component.SortOrder.HasValue ? component.SortOrder.Value : sortOrder;
+        }
+        else
+        {
+            containerId = $"container-{error.Key}";
+        }
+
+        return new { ContainerId = containerId, SortOrder = sortOrder, ErrorMessage = error.Msg };
+    }).OrderBy(error => error.SortOrder);
 
 
 	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
 		<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
 		<div class="govuk-error-summary__body">
 			<ul class="govuk-list govuk-error-summary__list">
-				@foreach (var error in errors)
-				{
-                    var propertyName = error.Key.Split(".").First();
-
-                    object selectedProperty = Model.GetType().GetProperty(propertyName)?.GetValue(Model);
-
-                    var containerId = "";
-
-                    if (selectedProperty is BaseUiComponent)
-                    {
-                        var component = selectedProperty as BaseUiComponent;
-                        containerId = $"container-{component.ElementRootId}";
-                    }
-                    else
-                    {
-                        containerId = $"container-{error.Key}";
-                    }
-
-                    <li><a tabindex="0" aria-label="Error: @error.Msg" class="govuk govuk-error-message scrollable-error" data-scroll-to="@containerId">@error.Msg</a></li>
-				}
-			</ul>
+                @foreach (var error in formattedErrors)
+                {
+                    <li><a tabindex="0" aria-label="Error: @error.ErrorMessage" class="govuk govuk-error-message scrollable-error" data-scroll-to="@error.ContainerId">@error.ErrorMessage</a></li>
+                }
+            </ul>
 		</div>
 	</div>
 }

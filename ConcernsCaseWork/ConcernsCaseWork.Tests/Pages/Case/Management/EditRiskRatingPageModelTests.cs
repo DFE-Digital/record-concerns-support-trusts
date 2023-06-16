@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
@@ -22,6 +23,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 	[Parallelizable(ParallelScope.All)]
 	public class EditRiskRatingPageModelTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGet_ReturnsPage()
 		{
@@ -37,10 +40,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(caseModel);
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockLogger.Object);
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1); 
+
+			pageModel.CaseUrn = 1;
 			
 			// act
 			var pageResponse = await pageModel.OnGet();
@@ -50,119 +51,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as PageResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			
-			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
-		public async Task WhenOnGet_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
-
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-
-			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockLogger.Object);
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-
-			// act
-			var pageResponse = await pageModel.OnGet();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-			
-			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-		}
-
-		[Test]
-		public async Task WhenOnPostEditRiskRating_MissingRouteData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
-
-			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockLogger.Object);
-			
-			// act
-			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
-			
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
-		}
-
-		[Test]
-		public async Task WhenOnPostEditRiskRating_RouteData_MissingRequestForm_ReloadPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
-
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
-				.ReturnsAsync(ratingsModel);
-			
-			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockLogger.Object);
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "rating", new StringValues("") }
-				});
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("recordId", 1);
-			
-			// act
-			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Not.Null);
-			Assert.That(pageModel.RatingsModel, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
-			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Once);
-		}
-
-		[Test]
-		public async Task WhenOnPostEditRiskRating_RouteData_RequestForm_ReturnsToPreviousUrl()
+		public async Task WhenOnPostEditRiskRating_RouteData_RequestForm_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -173,27 +65,21 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockCaseModelService.Setup(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()));
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockLogger.Object);
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "rating", new StringValues("123:ragRating") }
-				});
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("recordId", 1);
+
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 1;
+
+			pageModel.CaseUrn = 1;
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRiskRating();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
 			var page = pageResponse as RedirectResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
-			Assert.IsNull(pageModel.RatingsModel);
-			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(page.Url, Is.EqualTo("/case/1/management"));
 		}
 
 		private static EditRatingPageModel SetupEditRiskRatingPageModel(

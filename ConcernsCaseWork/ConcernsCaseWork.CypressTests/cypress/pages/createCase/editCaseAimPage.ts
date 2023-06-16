@@ -30,7 +30,7 @@ export default class EditCaseAimPage {
     {
         Logger.Log(`With Case aim ${value}`);
 
-        cy.getByTestId(`case-aim`).clear().type(value);
+        cy.getByTestId(`case-aim`).clear({ force: true }).type(value);
 
         return this;
     }

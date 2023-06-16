@@ -36,7 +36,7 @@ describe("Editing a case", () =>
 		cy.login();
 	});
 
-    it(("Should create a case with only required fields"), () => {
+    it("Should be able to edit a case", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
@@ -46,11 +46,10 @@ describe("Editing a case", () =>
 
         Logger.Log("Create a valid concern");
         createConcernPage
-            .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .withConcernType("Financial")
             .withSubConcernType("Financial: Deficit")
-            .withRating("Red")
-            .withMeansOfRefferal("External")
+            .withConcernRating("Red")
+            .withMeansOfReferral("External")
             .addConcern();
 
         Logger.Log("Check Concern details are correctly populated");
@@ -59,7 +58,7 @@ describe("Editing a case", () =>
 
         Logger.Log("Populate risk to trust");
         addDetailsPage
-            .withRating("Red-Plus")
+            .withRiskToTrust("Red-Plus")
             .nextStep();
 
         Logger.Log("Populate territory");
@@ -84,7 +83,6 @@ describe("Editing a case", () =>
             .hasConcerns("Financial: Deficit", ["Red"])
             .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue");
-
 
         Logger.Log("Edit risk to trust");
         caseManagementPage
@@ -125,7 +123,7 @@ describe("Editing a case", () =>
         cy.excuteAccessibilityTests();
 
         addDetailsPage
-            .withRating("Amber-Green")
+            .withRiskToTrust("Amber-Green")
             .apply();
 
         Logger.Log("Edit a territory")
@@ -133,15 +131,14 @@ describe("Editing a case", () =>
             .editTerritory();
 
         addTerritoryPage
-            .hasTerritory("North_And_Utc__North_East");
+            .hasTerritory("North and UTC - North East");
 
         Logger.Log("Checking accessibility on edit territory");
         cy.excuteAccessibilityTests();
 
         addTerritoryPage
-            .withTerritory("North_And_Utc__North_West")
+            .withTerritory("North and UTC - North West")
             .apply();
-
 
         Logger.Log("Edit Issue")
         caseManagementPage
@@ -149,15 +146,20 @@ describe("Editing a case", () =>
             .editIssue();
 
         editIssuePage
-            .hasIssue("This is an issue")
+            .hasIssue("This is an issue");
+
+        editIssuePage
+            .clearIssue()
+            .apply()
+            .hasValidationError("Issue is required");
+
+        editIssuePage
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
 
         Logger.Log("Checking accessibility on edit issue");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editIssuePage
             .withIssue("New Issue")
@@ -176,12 +178,9 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit current status");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editCurrentStatusPage
             .withCurrentStatus("New Status")
             .apply();
-
 
         Logger.Log("Edit Case Aim")
         caseManagementPage
@@ -195,8 +194,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case aim");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseAimPage
             .withCaseAim("New Case aim")
@@ -215,12 +212,9 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit de-escalation point");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editDeEscalationPage
             .withDeescalationPoint("New de-descalation point")
             .apply();
-
 
         Logger.Log("Edit next steps")
         caseManagementPage
@@ -235,12 +229,9 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit next steps");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editNextStepsPage
             .withNextSteps("New next step")
             .apply();
-
 
         Logger.Log("Edit Case history")
         caseManagementPage
@@ -254,8 +245,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case history");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseHistoryPage
             .withCaseHistory("New case history")
