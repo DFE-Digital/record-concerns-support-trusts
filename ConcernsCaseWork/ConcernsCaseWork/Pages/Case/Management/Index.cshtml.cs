@@ -43,6 +43,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ICloseCaseValidatorService _closeCaseValidatorService;
 
+		public readonly string ConcernsErrorKey = "Concerns";
+		public readonly string CaseActionsErrorKey = "CaseActions";
+
 		[BindProperty(Name = "Urn", SupportsGet = true)]
 		public long CaseUrn { get; set; }
 
@@ -127,7 +130,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 					errors.ForEach(error =>
 					{
-						var key = error.Type == CloseCaseError.Concern ? "Concerns" : "CaseActions";
+						var key = error.Type == CloseCaseError.Concern ? ConcernsErrorKey : CaseActionsErrorKey;
 
 						ModelState.AddModelError(key, error.Error);
 					});
