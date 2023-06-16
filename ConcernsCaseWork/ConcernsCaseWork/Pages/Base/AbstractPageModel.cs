@@ -14,7 +14,6 @@ namespace ConcernsCaseWork.Pages.Base
 	{
 		public const string ErrorOnGetPage = ErrorConstants.ErrorOnGetPage;
 		public const string ErrorOnPostPage = ErrorConstants.ErrorOnPostPage;
-		public SortOrder? ErrorSortOrder { get; set; }
 		
 		// Configured in startup
 		public static IPageHistoryStorageHandler PageHistoryStorageHandler { get; set; }
