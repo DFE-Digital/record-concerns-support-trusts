@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Configuration;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Service.Trusts
 					return fakeTrust;
 				}
 
-				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.V3TrustSearch);
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
 				// Create a request
@@ -131,7 +131,7 @@ namespace ConcernsCaseWork.Service.Trusts
 					return fakeTrust;
 				}
 
-				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.V3TrustSearch);
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion; 
 
 				// Create a request
