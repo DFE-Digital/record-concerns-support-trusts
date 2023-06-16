@@ -7,6 +7,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import validationComponent from "cypress/pages/validationComponent";
 
 describe("User can add trust financial forecast to an existing case", () => {
 
@@ -260,8 +261,12 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withDayReviewHappened("90")
 			.withDayTrustResponded("270")
 			.save()
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date trust responded"))
-			.hasValidationError(DateIncompleteError.replace("{0}", "Date SFSO initial review happened"));
+
+		// Ensure errors appear in field order
+		validationComponent.hasValidationErrorsInOrder([
+			DateIncompleteError.replace("{0}", "Date SFSO initial review happened"),
+			DateIncompleteError.replace("{0}", "Date trust responded")
+		]);
 
 		editTFFPage
 			.withMonthReviewHappened("60")
@@ -270,9 +275,12 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withYearTrustResponded("2024")
 			.withNotesExceedingLimit()
 			.save()
-			.hasValidationError(NotesError)
-			.hasValidationError(DateInvalidError.replace("{0}", "Date trust responded"))
-			.hasValidationError(DateInvalidError.replace("{0}", "Date SFSO initial review happened"));
+
+		validationComponent.hasValidationErrorsInOrder([
+			DateInvalidError.replace("{0}", "Date SFSO initial review happened"),
+			DateInvalidError.replace("{0}", "Date trust responded"),
+			NotesError
+		]);
 
 		Logger.Log("Checking accessibility on Add/Edit TFF");
 		cy.excuteAccessibilityTests();
