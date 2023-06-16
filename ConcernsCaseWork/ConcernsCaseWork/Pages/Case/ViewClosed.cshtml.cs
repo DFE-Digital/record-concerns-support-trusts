@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Configuration;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
