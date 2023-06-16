@@ -7,7 +7,7 @@
 
 @if (!Model.ModelState.IsValid)
 {
-	var errors = var errors = Model.ModelState.GetValidationMessages();
+	var errors = Model.ModelState.GetValidationMessages();
 
     var formattedErrors = errors.Select((error, index) =>
     {
@@ -15,7 +15,7 @@
 
         object selectedProperty = Model.GetType().GetProperty(propertyName)?.GetValue(Model);
 
-        var containerId = "";
+        var containerId = $"container-{error.Key}";
         var sortOrder = index;
 
         if (selectedProperty is BaseUiComponent)
@@ -24,12 +24,8 @@
             containerId = $"container-{component.ElementRootId}";
             sortOrder = component.SortOrder.HasValue ? component.SortOrder.Value : sortOrder;
         }
-        else
-        {
-            containerId = $"container-{error.Key}";
-        }
 
-        return new { ContainerId = containerId, SortOrder = sortOrder, ErrorMessage = error.Msg };
+        return new { ContainerId = containerId, SortOrder = sortOrder, ErrorMessage = error.Value };
     }).OrderBy(error => error.SortOrder);
 
 
