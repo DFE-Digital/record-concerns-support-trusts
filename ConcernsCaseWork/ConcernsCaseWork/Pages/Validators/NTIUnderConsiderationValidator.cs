@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Validators
 		{
 			var ntiUC = caseActions.Where(ca => ca is NtiUnderConsiderationModel).ToList();
 
-			var errorMessage = ntiUC.Any(f => !f.ClosedAt.HasValue) ? "Resolve NTI Under Consideration" : string.Empty;
+			var errorMessage = ntiUC.Any(f => !f.ClosedAt.HasValue) ? "Close NTI: Under consideration" : string.Empty;
 
 			return errorMessage;
 		}

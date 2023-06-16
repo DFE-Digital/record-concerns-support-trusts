@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var expected = new List<CloseCaseErrorModel>()
 			{
-				new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve Concerns" },
+				new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Close concerns" },
 				new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Case Action Error" },
 
 			};
