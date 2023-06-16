@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
@@ -6,17 +7,12 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -25,7 +21,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-[FeatureGate(FeatureFlags.Constants.IsNonConcernsPageEnabled)]
+[FeatureGate(FeatureFlags.IsNonConcernsPageEnabled)]
 public class SelectTrustPageModel : AbstractPageModel
 {
 	private readonly ITrustModelService _trustModelService;
