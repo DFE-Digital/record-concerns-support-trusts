@@ -43,10 +43,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				var caseModel = await _caseModelService.GetCaseByUrn(Urn);
-
-				CurrentCaseOwner = caseModel.CreatedBy;
-				CaseNumber = caseModel.Urn.ToString();
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
@@ -62,9 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			if (valueInList == -1 || string.IsNullOrWhiteSpace(selectedOwner))
 			{
-				var caseModel = await _caseModelService.GetCaseByUrn(Urn);
-				CurrentCaseOwner = caseModel.CreatedBy;
-				CaseNumber = caseModel.Urn.ToString();
+				await LoadPage();
 
 				ModelState.AddModelError("SelectedCaseOwner", "A case owner must be selected");
 
@@ -77,21 +72,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return await UpdateCaseOwner(selectedOwner);
-		}
-
-		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
-		{
-			try
-			{
-				await _caseModelService.PatchOwner(Urn, selectedOwner);
-				CaseOwnerChanged = true;
-				return  Redirect($"/case/{Urn}/management"); 
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-			}
-			return Redirect($"/case/{Urn}/management");
 		}
 
 		public async Task<ActionResult> OnGetTeamList()
@@ -109,6 +89,27 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				_logger.LogErrorMsg(ex);
 				return new JsonResult(new string[] { });
 			}
+		}
+
+		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
+		{
+			try
+			{
+				await _caseModelService.PatchOwner(Urn, selectedOwner);
+				CaseOwnerChanged = true;
+				return  Redirect($"/case/{Urn}/management"); 
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+			}
+			return Redirect($"/case/{Urn}/management");
+		}
+
+		private async Task LoadPage()
+		{
+			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
+			CurrentCaseOwner = caseModel.CreatedBy;
 		}
 	}
 }
