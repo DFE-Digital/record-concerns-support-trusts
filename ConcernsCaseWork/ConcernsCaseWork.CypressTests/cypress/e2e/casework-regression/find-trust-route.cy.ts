@@ -14,7 +14,7 @@ describe("User interactions via Find Trust route", () => {
 	
 		Logger.Log("It should display an error when the user does not enter a trust");
 		cy.get("#search").type(searchTerm.substring(0, 1) + "{enter}");
-		cy.getById("errorSummary").should("contain.text", "Select a trust");
+		cy.getById("errorSummary").should("contain.text", "A trust must be selected");
 	
 		Logger.Log("Getting too many search results should result in a warning");
 		const warningMessage = "There are a large number of search results. Try a more specific search term.";
