@@ -1,3 +1,12 @@
+-- =============================================
+-- Author: Mike Stock
+-- Create date: 19-03-23
+-- Description: 
+-- Query for getting case information for the joint risk tool
+-- This query will be deployed manually and will not be part of entity framework migrations
+-- Entity Framework migration only really handles communication between the app and the database
+-- This is a separate query that is used by a different team
+-- =============================================
 CREATE VIEW [concerns].[vw_GetCasesJointRisk] AS
 SELECT
 	cc.Id AS CaseId,
