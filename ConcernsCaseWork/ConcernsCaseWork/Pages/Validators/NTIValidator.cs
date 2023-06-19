@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Validators
 		{
 			var ntiModel = caseActions.Where(ca => ca is NtiModel).ToList();
 
-			var errorMessage = ntiModel.Any(f => !f.ClosedAt.HasValue) ? "Resolve Notice To Improve" : string.Empty;
+			var errorMessage = ntiModel.Any(f => !f.ClosedAt.HasValue) ? "Cancel, lift or close NTI: Notice to improve" : string.Empty;
 
 			return errorMessage;
 		}
