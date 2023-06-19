@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Configuration
+﻿namespace ConcernsCaseWork.API.Contracts.Configuration
 {
 	public class SiteOptions
 	{

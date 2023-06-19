@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Validators
 		{
 			var srma = caseActions.Where(ca => ca is SRMAModel).ToList();
 
-			var errorMessage = srma.Any(f => !f.ClosedAt.HasValue) ? "Resolve SRMA" : string.Empty;
+			var errorMessage = srma.Any(f => !f.ClosedAt.HasValue) ? "Close SRMA action" : string.Empty;
 
 			return errorMessage;
 		}
