@@ -60,5 +60,10 @@ namespace ConcernsCaseWork.API.Tests.Helpers
 				CreatedAt = _fixture.Create<DateTime>()
 			};
 		}
+
+		public static string CreateUkPrn()
+		{
+			return _fixture.Create<string>().Substring(0, 7);
+		}
 	}
 }
