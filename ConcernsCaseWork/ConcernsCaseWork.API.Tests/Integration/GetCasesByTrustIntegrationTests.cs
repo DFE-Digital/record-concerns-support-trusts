@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		public async Task When_HasActiveCasesWithCaseActions_Returns_CorrectInformation_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			var expectedCase = CreateConcernsCase(ukPrn);
@@ -81,8 +81,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasActiveCases_Returns_AllCases_200()
 		{
-			var ukPrn = CreateUkPrn();
-			var differentUkPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
+			var differentUkPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 			List<ConcernsCase> casesDifferentUkPrn = new List<ConcernsCase>();
 			List<ConcernsCase> closedCases = new List<ConcernsCase>();
@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasActiveCases_PaginationOnlyNext_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateActiveCases(ukPrn);
 
@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasActiveCases_PaginationNextAndPrevious_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateActiveCases(ukPrn);
 
@@ -173,7 +173,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasActiveCases_PaginationPreviousOnly_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateActiveCases(ukPrn);
 
@@ -195,7 +195,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasClosedCasesWithCaseActions_Returns_CorrectInformation_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			var expectedCase = CloseCase(CreateConcernsCase(ukPrn));
@@ -230,8 +230,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasClosedCases_Returns_AllCases_200()
 		{
-			var ukPrn = CreateUkPrn();
-			var differentUkPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
+			var differentUkPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 			List<ConcernsCase> casesDifferentUkPrn = new List<ConcernsCase>();
 			List<ConcernsCase> openCases = new List<ConcernsCase>();
@@ -270,7 +270,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasClosedCases_PaginationOnlyNext_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateClosedCases(ukPrn);
 
@@ -292,7 +292,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasClosedCases_PaginationNextAndPrevious_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateClosedCases(ukPrn);
 
@@ -314,7 +314,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_HasClosedCases_PaginationPreviousOnly_Returns_200()
 		{
-			var ukPrn = CreateUkPrn();
+			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 
 			var cases = await BulkCreateClosedCases(ukPrn);
 
@@ -345,11 +345,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Should().HaveCount(0);
 		}
 
-		private string CreateUkPrn()
-		{
-			return _fixture.Create<string>().Substring(0, 7);
-		}
-
 		private ConcernsCase CreateNonConcernsCase(string ukPrn)
 		{
 			var result = new ConcernsCase()
@@ -360,7 +355,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				ConcernsRecords = new List<ConcernsRecord>(),
 				CreatedAt = _fixture.Create<DateTime>(),
 				CreatedBy = _fixture.Create<string>()
-		};
+			};
 
 			return result;
 		} 
@@ -368,13 +363,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		private ConcernsCase CreateConcernsCase(string ukPrn)
 		{
 			var result = CreateNonConcernsCase(ukPrn);
-
-			var concern = new ConcernsRecord()
-			{
-				RatingId = (int)ConcernRating.AmberGreen,
-				StatusId = (int)CaseStatus.Live,
-				TypeId = (int)ConcernType.FinancialDeficit
-			};
 
 			result.ConcernsRecords.Add(DatabaseModelBuilder.BuildConcernsRecord());
 
