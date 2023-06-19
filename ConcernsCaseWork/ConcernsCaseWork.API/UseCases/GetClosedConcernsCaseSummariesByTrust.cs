@@ -13,9 +13,10 @@ public class GetClosedConcernsCaseSummariesByTrust : IGetClosedConcernsCaseSumma
 		_gateway = gateway;
 	}
 	
-	public async Task<IList<ClosedCaseSummaryResponse>> Execute(string trustUkPrn)
+	public async Task<(IList<ClosedCaseSummaryResponse>, int)> Execute(GetCaseSummariesByTrustParameters parameters)
 	{
-		var caseSummaries = await _gateway.GetClosedCaseSummariesByTrust(trustUkPrn);
-		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
+		(IList<ClosedCaseSummaryVm> caseSummaries, int recordCount) = await _gateway.GetClosedCaseSummariesByTrust(parameters);
+
+		return (caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList(), recordCount);
 	}
 }

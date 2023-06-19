@@ -13,10 +13,10 @@ public class GetActiveConcernsCaseSummariesByTrust : IGetActiveConcernsCaseSumma
 		_gateway = gateway;
 	}
 	
-	public async Task<IList<ActiveCaseSummaryResponse>> Execute(string trustUkPrn)
+	public async Task<(IList<ActiveCaseSummaryResponse>, int)> Execute(GetCaseSummariesByTrustParameters parameters)
 	{
-		var caseSummaries = await _gateway.GetActiveCaseSummariesByTrust(trustUkPrn);
+		(IList<ActiveCaseSummaryVm> caseSummaries, int recordCount) = await _gateway.GetActiveCaseSummariesByTrust(parameters);
 		
-		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
+		return (caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList(), recordCount);
 	}
 }

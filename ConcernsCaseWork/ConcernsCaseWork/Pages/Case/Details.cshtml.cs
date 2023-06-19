@@ -150,11 +150,22 @@ namespace ConcernsCaseWork.Pages.Case
 			});
 
 			Issue = CaseComponentBuilder.BuildIssue(nameof(Issue), Issue?.Text.StringContents);
+			Issue.SortOrder = 1;
+
 			CurrentStatus = CaseComponentBuilder.BuildCurrentStatus(nameof(CurrentStatus), CurrentStatus?.Text.StringContents);
+			CurrentStatus.SortOrder = 2;
+
 			CaseAim = CaseComponentBuilder.BuildCaseAim(nameof(CaseAim), CaseAim?.Text.StringContents);
+			CaseAim.SortOrder = 3;
+
 			DeEscalationPoint = CaseComponentBuilder.BuildDeEscalationPoint(nameof(DeEscalationPoint), DeEscalationPoint?.Text.StringContents);
+			DeEscalationPoint.SortOrder = 4;
+
 			NextSteps = CaseComponentBuilder.BuildNextSteps(nameof(NextSteps), NextSteps?.Text.StringContents);
+			NextSteps.SortOrder = 5;
+
 			CaseHistory = CaseComponentBuilder.BuildCaseHistory(nameof(CaseHistory), CaseHistory?.Text.StringContents);
+			CaseHistory.SortOrder = 6;
 		}
 
 		private async Task<UserState> GetUserState()

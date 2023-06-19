@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			string validationError = srmaValidator.Validate(srmaModels);
 
 			// assert
-			Assert.That(validationError, Is.EqualTo("Resolve SRMA"));
+			Assert.That(validationError, Is.EqualTo("Close SRMA action"));
 		}
 
 		[Test]
@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			string validationError = financialPlanValidator.Validate(financialPlanModels);
 
 			// assert
-			Assert.That(validationError, Is.EqualTo("Resolve Financial Plan"));
+			Assert.That(validationError, Is.EqualTo("Close financial plan"));
 		}
 
 		[Test]
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			string validationError = ntiUCValidator.Validate(ntiUCModels);
 
 			// assert
-			Assert.That(validationError, Is.EqualTo("Resolve NTI Under Consideration"));
+			Assert.That(validationError, Is.EqualTo("Close NTI: Under consideration"));
 		}
 
 		[Test]
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			string validationError = ntiWLValidator.Validate(ntiWLModels);
 
 			// assert
-			Assert.That(validationError, Is.EqualTo("Resolve NTI Warning Letter"));
+			Assert.That(validationError, Is.EqualTo("Close NTI: Warning letter"));
 		}
 
 		[Test]
@@ -142,7 +142,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			string validationError = ntiValidator.Validate(ntiModels);
 
 			// assert
-			Assert.That(validationError, Is.EqualTo("Resolve Notice To Improve"));
+			Assert.That(validationError, Is.EqualTo("Cancel, lift or close NTI: Notice to improve"));
 		}
 
 		[Test]
@@ -189,7 +189,32 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 
 			var result = validator.Validate(input);
 
-			result.Should().Be("Resolve Decision(s)");
+			result.Should().Be("Close decisions");
+		}
+
+		[Test]
+		public void When_NoOpenTrustFinancialForecast_Returns_EmptyString()
+		{
+			var input = _fixture.CreateMany<TrustFinancialForecastSummaryModel>().ToList();
+
+			var validator = new TrustFinancialForecastValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().BeEmpty();
+		}
+
+		[Test]
+		public void When_OpenTrustFinancialForecast_Returns_ValidationError()
+		{
+			var input = _fixture.CreateMany<TrustFinancialForecastSummaryModel>().ToList();
+			input.ForEach(c => c.ClosedAt = null);
+
+			var validator = new TrustFinancialForecastValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().Be("Close trust financial forecast");
 		}
 	}
 }

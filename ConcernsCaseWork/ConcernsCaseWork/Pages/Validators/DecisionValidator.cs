@@ -12,20 +12,7 @@ namespace ConcernsCaseWork.Pages.Validators
 				.Where(c => c is DecisionSummaryModel)
 				.Any(c => !c.ClosedAt.HasValue);
 
-			var result = hasOpenActions ? "Resolve Decision(s)" : string.Empty;
-
-			return result;
-		}
-	}
-	public class TrustFinancialForecastValidator : ICaseActionValidationStrategy
-	{
-		public string Validate(IEnumerable<CaseActionModel> caseActions)
-		{
-			var hasOpenActions = caseActions
-				.Where(c => c is TrustFinancialForecastSummaryModel)
-				.Any(c => !c.ClosedAt.HasValue);
-
-			var result = hasOpenActions ? "Resolve Trust Financial Forecast (TFF)" : string.Empty;
+			var result = hasOpenActions ? "Close decisions" : string.Empty;
 
 			return result;
 		}

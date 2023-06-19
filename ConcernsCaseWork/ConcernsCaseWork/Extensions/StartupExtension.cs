@@ -1,6 +1,6 @@
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
@@ -17,12 +17,9 @@ using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Service.AzureAd;
-using ConcernsCaseWork.Service.AzureAd.Client;
 using ConcernsCaseWork.Service.AzureAd.IoC;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Configuration;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Service.MeansOfReferral;
@@ -57,11 +54,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using StackExchange.Redis;
 using System;
-using System.Configuration;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -184,6 +179,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 			services.AddScoped<IApiCaseSummaryService, ApiCaseSummaryService>();
+			services.AddScoped<ICloseCaseValidatorService, CloseCaseValidatorService>();
 
 			// api services
 			services.AddScoped<ICaseService, CaseService>();

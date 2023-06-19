@@ -3,6 +3,8 @@ using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.Validators;
+using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -190,29 +192,67 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/bytrust/{trustukprn}/active")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(string trustukprn, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(
+			string trustukprn,
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
         {
-	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn}");
-	        var caseSummaries = await _getActiveConcernsCaseSummariesByTrust.Execute(trustukprn);
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn} page {page} count {count}");
 
-	        _logger.LogInformation($"Returning Concerns active cases with Trust {trustukprn}");
-	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
-            
-	        return Ok(response);
+			var parameters = new GetCaseSummariesByTrustParameters()
+			{
+				TrustUkPrn = trustukprn,
+				Page = page,
+				Count = count
+			};
+
+			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getActiveConcernsCaseSummariesByTrust.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation($"Returning Concerns active cases with Trust {trustukprn} page {page} count {count}");
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
+
+			return Ok(response);
         }
         
         [HttpGet]
         [Route("summary/bytrust/{trustukprn}/closed")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(string trustukprn, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(
+			string trustukprn,
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
         {
-	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn}");
-	        var caseSummaries = await _getClosedConcernsCaseSummariesByTrust.Execute(trustukprn);
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn} page {page} count {count}");
 
-	        _logger.LogInformation($"Returning closed Concerns cases with Trust {trustukprn}");
-	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
+			var parameters = new GetCaseSummariesByTrustParameters()
+			{
+				TrustUkPrn = trustukprn,
+				Page = page,
+				Count = count
+			};
+
+			(IList<ClosedCaseSummaryResponse> caseSummaries, int recordCount) = await _getClosedConcernsCaseSummariesByTrust.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation($"Returning closed Concerns cases with Trust {trustukprn} page {page} count {count}");
+	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
             
 	        return Ok(response);
         }
+
+		private PagingResponse BuildPaginationResponse(int recordCount, int? page = null, int? count = null)
+		{
+			PagingResponse result = null;
+
+			if (page.HasValue && count.HasValue)
+				result = PagingResponseFactory.Create(page.Value, count.Value, recordCount, Request);
+
+			return result;
+		}
     }
 }
