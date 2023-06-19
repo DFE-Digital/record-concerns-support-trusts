@@ -1,15 +1,16 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -25,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
@@ -37,13 +39,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<ITrustModelService> _mockTrustModelService = null;
 		private Mock<IRecordModelService> _mockRecordModelService = null;
 		private Mock<IRatingModelService> _mockRatingModelService = null;
-		private Mock<IStatusCachedService> _mockStatusCachedService = null;
 		private Mock<ILogger<IndexPageModel>> _mockLogger = null;
 		private Mock<INtiUnderConsiderationStatusesCachedService> _mockNtiStatusesCachedService = null;
 		private Mock<IActionsModelService> _actionsModelService = null;
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
 		private Mock<ICasePermissionsService> _casePermissionsService = null;
 		private Mock<IUserStateCachedService> _mockUserStateCacheService = null;
+		private Mock<ICloseCaseValidatorService> _mockCloseCaseValidationService = null;
 
 		private readonly static Fixture _fixture = new();
 
@@ -51,52 +53,51 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public void SetUp()
 		{
 			_mockCaseModelService = new Mock<ICaseModelService>();
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
+				.ReturnsAsync(CaseFactory.BuildCaseModel("Tester", (int)CaseStatus.Live));
+
 			_mockTrustModelService = new Mock<ITrustModelService>();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+
 			_mockRecordModelService = new Mock<IRecordModelService>();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+
 			_mockRatingModelService = new Mock<IRatingModelService>();
-			_mockStatusCachedService = new Mock<IStatusCachedService>();
 			_mockLogger = new Mock<ILogger<IndexPageModel>>();
+
 			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
+				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
+
 			_actionsModelService = new Mock<IActionsModelService>();
+			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
+				.ReturnsAsync(new ActionSummaryBreakdownModel());
+
 			_caseSummaryService = new Mock<ICaseSummaryService>();
+			
 			_mockUserStateCacheService = new Mock<IUserStateCachedService>();
+			_mockUserStateCacheService.Setup(m => m.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("Tester"));
+
 			_casePermissionsService = new Mock<ICasePermissionsService>();
 			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(new GetCasePermissionsResponse());
+
+			_mockCloseCaseValidationService = new Mock<ICloseCaseValidatorService>();
+			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<CloseCaseErrorModel>());
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		public async Task Get_When_CaseIsClosed_RedirectsToClosedCasePage()
 		{
-			// arrange
-			var pageModel = SetupIndexPageModel();
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-
-			_mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
-			_mockTrustModelService.Verify(c =>
-				c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-		}
-
-		
-
-		[Test]
-		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
-		{
-			var closedStatusId = 3;
-			SetupDefaultModels();
+			var closedStatusId = (int)CaseStatus.Close;
 
 			var caseModel = CaseFactory.BuildCaseModel(statusId: closedStatusId);
-			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusId);
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			_mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Close.ToString()))
-				.ReturnsAsync(closedStatusModel);
 
 			var pageModel = SetupIndexPageModel();
 
@@ -112,21 +113,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		[Test]
-		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_False()
+		public async Task Get_WhenUserHasEditCasePrivileges_ShowEditActions_Return_False()
 		{
 			// arrange
-			var caseModel = CaseFactory.BuildCaseModel();
-			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var recordsModel = RecordFactory.BuildListRecordModel();
-
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
-				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
-				.ReturnsAsync(recordsModel);
-
 			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
@@ -141,24 +130,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		[Test]
-		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_True()
+		public async Task Get_WhenUserHasEditCasePrivileges_ShowEditActions_Return_True()
 		{
 			// arrange
-			var caseModel = CaseFactory.BuildCaseModel("Tester");
-			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
-
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
-				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
-				.ReturnsAsync(recordsModel);
-			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(closeStatusModel);
-
 			var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
 			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(permissionsResponse);
 
@@ -176,23 +150,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		[Test]
-		public async Task WhenCaseIsClosed_ShowEditActions_Return_False()
+		public async Task Get_WhenCaseIsClosed_ShowEditActions_Return_False()
 		{
 			// arrange
 			var caseModel = CaseFactory.BuildCaseModel("Tester", 3);
-			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
-			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
-
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
-				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
-				.ReturnsAsync(recordsModel);
-			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(closeStatusModel);
 
 			var pageModel = SetupIndexPageModel(isAuthenticated: true);
 
@@ -207,6 +170,56 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.False(showEditActions);
 		}
 
+		[Test]
+		public async Task Post_WhenCaseHasNoOpenConcernsAndActions_Returns_NoValidationsErrors()
+		{
+			var pageModel = SetupIndexPageModel(isAuthenticated: true);
+			pageModel.CaseUrn = 1;
+
+			var result = await pageModel.OnPostAsync();
+
+			var errors = pageModel.ModelState.GetValidationMessages();
+
+			errors.Should().HaveCount(0);
+
+			result.Should().BeAssignableTo<RedirectResult>();
+
+			var redirect = result as RedirectResult;
+
+			redirect.Url.Should().Be("/case/1/management/closure");
+		}
+
+		[Test]
+		public async Task Post_WhenCaseHasOpenConcernsAndActions_Returns_ValidationsErrors()
+		{
+			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(
+				new List<CloseCaseErrorModel>() 
+				{ 
+					new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve concerns" },
+					new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Resolve SRMA" }
+				});
+
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
+				.ReturnsAsync(CaseFactory.BuildCaseModel("Tester", 1));
+
+			var pageModel = SetupIndexPageModel(isAuthenticated: true);
+			pageModel.CaseUrn = 1;
+
+			await pageModel.OnPostAsync();
+
+			var errors = pageModel.ModelState.GetValidationMessages().ToList();
+
+			errors.Should().HaveCount(2);
+
+			var concernError = errors[0];
+			concernError.Key.Should().Be("Concerns");
+			concernError.Value.Should().Be("Resolve concerns");
+
+			var actionError = errors[1];
+			actionError.Key.Should().Be("CaseActions");
+			actionError.Value.Should().Be("Resolve SRMA");
+		}
+
 		private IndexPageModel SetupIndexPageModel(
 			bool isAuthenticated = false)
 		{
@@ -216,41 +229,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				_mockTrustModelService.Object,
 				_mockRecordModelService.Object,
 				_mockRatingModelService.Object,
-				_mockStatusCachedService.Object,
 				_mockNtiStatusesCachedService.Object,
 				_mockLogger.Object,
 				_actionsModelService.Object,
 				_caseSummaryService.Object,
 				_casePermissionsService.Object,
 				_mockUserStateCacheService.Object,
-				new ClaimsPrincipalHelper())
+				new ClaimsPrincipalHelper(),
+				_mockCloseCaseValidationService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-		}
-
-		private void SetupDefaultModels()
-		{
-			var urn = 3;
-			var caseModel = CaseFactory.BuildCaseModel("Tester", urn);
-			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 1);
-
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(closedStatusModel);
-			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
-				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
-				.ReturnsAsync(new ActionSummaryBreakdownModel());
-		}
-
-		private void PageLoadedWithoutError(IndexPageModel pageModel)
-		{
-			pageModel.TempData["Error.Message"].Should().BeNull();
 		}
 	}
 }
