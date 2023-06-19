@@ -266,7 +266,7 @@ describe("Creating a case", () =>
             .createCase()
             .withTrustName("A")
             .confirmOption()
-            .hasValidationError("Select a trust");
+            .hasValidationError("A trust must be selected");
     });
 
 	it('Should display a warning if too many results', () => {
