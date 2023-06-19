@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
@@ -128,7 +128,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
@@ -154,7 +154,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();

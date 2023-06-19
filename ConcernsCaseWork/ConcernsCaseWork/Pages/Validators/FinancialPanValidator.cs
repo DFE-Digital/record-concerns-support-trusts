@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Validators
 		{
 			var financialPlans = caseActions.Where(ca => ca is FinancialPlanModel).ToList();
 
-			var errorMessage = financialPlans.Any(f => !f.ClosedAt.HasValue) ? "Resolve Financial Plan" : string.Empty;
+			var errorMessage = financialPlans.Any(f => !f.ClosedAt.HasValue) ? "Close financial plan" : string.Empty;
 
 			return errorMessage;
 		}

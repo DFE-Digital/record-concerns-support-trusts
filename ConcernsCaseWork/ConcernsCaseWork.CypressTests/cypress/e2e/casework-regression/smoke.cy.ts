@@ -160,17 +160,15 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             CaseManagementPage.getCloseCaseBtn().click();
 
             CaseManagementPage
-                .hasClosedCaseValidationError("Resolve Financial Plan")
-                .hasClosedCaseValidationError("Resolve SRMA")
-                .hasClosedCaseValidationError("Resolve NTI Under Consideration")
-                .hasClosedCaseValidationError("Resolve Decision")
-                .hasClosedCaseValidationError("Resolve Concerns")
-                .hasClosedCaseValidationError("Resolve Trust Financial Forecast");
+                .hasClosedCaseValidationError("Close financial plan")
+                .hasClosedCaseValidationError("Close SRMA action")
+                .hasClosedCaseValidationError("Close NTI: Under consideration")
+                .hasClosedCaseValidationError("Close decisions")
+                .hasClosedCaseValidationError("Close concerns")
+                .hasClosedCaseValidationError("Close trust financial forecast");
 
             Logger.Log("Checking accessibility on case management error page");
             cy.excuteAccessibilityTests();
-
-            CaseManagementPage.getBackBtn().click();
 
             resolveAllAllowedCaseActions();
 
@@ -248,8 +246,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Validating an error is displayed for NTI warning letter when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasClosedCaseValidationError("Resolve NTI Warning Letter");
-            CaseManagementPage.getBackBtn().click();
+            CaseManagementPage.hasClosedCaseValidationError("Close NTI: Warning letter");
 
             Logger.Log("Completing NTI Warning Letter");
             actionSummaryTable
@@ -288,8 +285,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             Logger.Log("Validating an error is displayed for Notice To Improve when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasClosedCaseValidationError("Resolve Notice To Improve");
-            CaseManagementPage.getBackBtn().click();
+            CaseManagementPage.hasClosedCaseValidationError("Cancel, lift or close NTI: Notice to improve");
 
             Logger.Log("Completing Notice To Improve");
             actionSummaryTable
@@ -461,11 +457,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
 
-
             Logger.Log("Validating that a rationale for closure must be entered");
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasValidationError("You have not recorded rationale for closure");
-            cy.waitForJavascript();
+            CaseManagementPage.hasValidationError("Rationale for closure is required");
 
             Logger.Log("Checking accessibility on Close case");
             cy.excuteAccessibilityTests();
@@ -473,10 +467,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             Logger.Log("Validating rationale for closure is 200 characters");
             CaseManagementPage.withRationaleForClosureExceedingLimit();
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasValidationError("Your rationale for closure contains too many characters");
+            CaseManagementPage.hasValidationError("Rationale for closure must be 200 characters or less");
 
             CaseManagementPage.withRationaleForClosure("Closing case");
-            cy.waitForJavascript();
             CaseManagementPage.getCloseCaseBtn().click();
 
             Logger.Log("Viewing case is closed");

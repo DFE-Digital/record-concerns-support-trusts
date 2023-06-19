@@ -19,8 +19,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<EditNotesPageModel> _logger;
 
-		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
-		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
+		public int CaseId { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "srmaId")] 
+		public int SrmaId { get; set; }
 
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
