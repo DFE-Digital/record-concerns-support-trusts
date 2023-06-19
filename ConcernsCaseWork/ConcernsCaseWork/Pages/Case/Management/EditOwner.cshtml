@@ -1,16 +1,12 @@
 ﻿@page "/case/{urn:long}/management/edit-case-owner"
+@using ConcernsCaseWork.Extensions;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Pages.Case.Management.EditOwnerPageModel
 @{
     var nonce = HttpContext.GetNonce();
 
-    var errors = new List<ValidationResult>();
-
-    foreach (var modelStateEntry in ViewData.ModelState)
-    {
-        errors.AddRange(modelStateEntry.Value.Errors.Select(e => new ValidationResult(e.ErrorMessage)));
-    }
+    var errors = ViewData.ModelState.ToValidationResult();
 
     var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
 }
@@ -30,7 +26,7 @@
 
                     <h1 class="govuk-heading-l" name="caseID">
                         <span class="govuk-caption-m">Case ID</span>
-                        @Model.CaseNumber
+                        @Model.Urn
                     </h1>
 
                     <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
