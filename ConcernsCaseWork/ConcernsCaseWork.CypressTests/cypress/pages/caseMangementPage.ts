@@ -53,7 +53,7 @@ class CaseManagementPage {
     }
 
     public hasClosedCaseValidationError(value: string): this {
-        cy.getByTestId("case-closure-validation-errors").should("contain.text", value);
+        cy.getById("errorSummary").should("contain.text", value);
 
         return this;
     }
