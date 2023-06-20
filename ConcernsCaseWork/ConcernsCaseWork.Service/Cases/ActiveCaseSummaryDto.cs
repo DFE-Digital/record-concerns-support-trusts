@@ -2,7 +2,7 @@ using ConcernsCaseWork.Service.Ratings;
 
 namespace ConcernsCaseWork.Service.Cases;
 
-public abstract record CaseSummaryDto
+public record CaseSummaryDto
 {
 	public long CaseUrn { get; set; }
 	public string CreatedBy { get; set; }

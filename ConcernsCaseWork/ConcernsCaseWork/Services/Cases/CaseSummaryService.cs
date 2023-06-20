@@ -4,6 +4,7 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
@@ -63,6 +64,17 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 	{
 		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
+	}
+
+	private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(ApiListWrapper<ActiveCaseSummaryDto> caseSummaries)
+	{
+		var result = new CaseSummaryGroupModel<ActiveCaseSummaryModel>();
+
+		var cases = await BuildActiveCaseSummaryModel(caseSummaries.Data);
+
+		result.Cases = cases;
+
+		return result;
 	}
 
 	private async Task<List<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(IEnumerable<ActiveCaseSummaryDto> caseSummaries)

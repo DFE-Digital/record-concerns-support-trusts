@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Services.Cases;
 
 public interface ICaseSummaryService
 {
-	Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker);
+	Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker);
 	Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForUsersTeam(string caseworker);
 	Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker);
 	Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn);

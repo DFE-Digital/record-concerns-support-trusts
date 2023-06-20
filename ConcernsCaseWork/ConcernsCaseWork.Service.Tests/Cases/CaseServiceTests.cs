@@ -211,7 +211,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(
 				expectedCases,
-				new ApiListWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+				new Pagination(1, 1, string.Empty));
 			var concernsApiEndpoint = "https://localhost";
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
