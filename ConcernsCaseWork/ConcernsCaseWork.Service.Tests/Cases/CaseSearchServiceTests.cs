@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
-			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, new ApiListWrapper<CaseDto>.Pagination(1, 200, string.Empty));
+			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, new Pagination(1, 200, string.Empty));
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(c => c.GetCases(It.IsAny<PageSearch>()))
