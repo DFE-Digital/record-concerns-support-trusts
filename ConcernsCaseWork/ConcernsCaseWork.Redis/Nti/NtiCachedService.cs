@@ -175,5 +175,34 @@ namespace ConcernsCaseWork.Redis.Nti
 
 			return await GetData<NtiDto>(continuationId);
 		}
+
+		public async Task DeleteNtiAsunc(long ntiId)
+		{
+			var nti = await _ntiService.GetNtiAsync(ntiId);
+			if (nti != null)
+			{
+				await ClearCacheNtiAsync(nti);
+				await ClearNtisForCaseFromCacheAsync(nti.CaseUrn);
+				await _ntiService.DeleteNtiAsync(ntiId);
+			}
+		}
+
+		private async Task ClearCacheNtiAsync(NtiDto nti)
+		{
+			try
+			{
+				if (nti.Id == default(long))
+				{
+					throw new InvalidOperationException("Nti Id is invalid");
+				}
+
+				await ClearData(CreateCacheKeyForNti(nti.Id));
+			}
+			catch (Exception x)
+			{
+				_logger.LogError(x, "Error occured while trying to add new Nti to cache");
+				throw;
+			}
+		}
 	}
 }

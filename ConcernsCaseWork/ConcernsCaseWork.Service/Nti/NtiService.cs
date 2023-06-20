@@ -114,5 +114,23 @@ namespace ConcernsCaseWork.Service.Nti
 				throw;
 			}
 		}
+
+
+		public async Task DeleteNtiAsync(long ntiId)
+		{
+			try
+			{
+				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+
+				var client = CreateHttpClient();
+				var response = await client.DeleteAsync($"{Url}/{ntiId}");
+				response.EnsureSuccessStatusCode();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				throw;
+			}
+		}
 	}
 }
