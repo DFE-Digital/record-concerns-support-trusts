@@ -13,10 +13,10 @@ public class GetActiveConcernsCaseSummariesByOwner : IGetActiveConcernsCaseSumma
 		_gateway = gateway;
 	}
 	
-	public async Task<IList<ActiveCaseSummaryResponse>> Execute(string userName)
+	public async Task<(IList<ActiveCaseSummaryResponse>, int)> Execute(GetCaseSummariesByOwnerParameters parameters)
 	{
-		var caseSummaries = await _gateway.GetActiveCaseSummariesByOwner(userName);
-		
-		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
+		(IList<ActiveCaseSummaryVm> caseSummaries, int recordCount) = await _gateway.GetActiveCaseSummariesByOwner(parameters);
+
+		return (caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList(), recordCount);
 	}
 }

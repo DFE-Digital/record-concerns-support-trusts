@@ -81,8 +81,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_ValidResourceRequest_Returns_NoContent()
 		{
-			var warningLetterID = 1;
-
 			//Create the case
 			ConcernCaseRequest createCaseRequest = Builder<ConcernCaseRequest>.CreateNew()
 				.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
