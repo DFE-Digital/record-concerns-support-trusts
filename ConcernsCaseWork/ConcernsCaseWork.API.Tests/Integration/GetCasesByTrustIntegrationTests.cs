@@ -49,9 +49,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			cases.Add(expectedCase);
 
-			await SaveCases(cases);
-			await CreateOpenCaseActions(expectedCase.Id);
-			await CreateClosedCaseActions(expectedCase.Id);
+			using var context = _testFixture.GetContext();
+
+			await context.SaveCases(cases);
+			await context.CreateOpenCaseActions(expectedCase.Id);
+			await context.CreateClosedCaseActions(expectedCase.Id);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/active");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -75,7 +77,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.Rating.Id.Should().Be((int)ConcernRating.RedPlus);
 			actualCase.Rating.Name.Should().Be(ConcernRating.RedPlus.Description());
 
-			AssertCaseActions(actualCase);
+			CaseSummaryAssert.AssertCaseActions(actualCase);
 		}
 
 		[Fact]
@@ -92,12 +94,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				cases.Add(CreateNonConcernsCase(ukPrn));
 				cases.Add(CreateConcernsCase(ukPrn));
 				casesDifferentUkPrn.Add(CreateNonConcernsCase(differentUkPrn));
-				closedCases.Add(CloseCase(CreateNonConcernsCase(ukPrn)));
+				closedCases.Add(DatabaseModelBuilder.CloseCase(CreateNonConcernsCase(ukPrn)));
 			}
 
-			await SaveCases(cases);
-			await SaveCases(casesDifferentUkPrn);
-			await SaveCases(closedCases);
+			using var context = _testFixture.GetContext();
+
+			await context.SaveCases(cases);
+			await context.SaveCases(casesDifferentUkPrn);
+			await context.SaveCases(closedCases);
 
 			var expectedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
@@ -111,7 +115,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Should().HaveCount(10);
 
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 		}
 
 		[Fact]
@@ -142,7 +146,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
@@ -164,7 +168,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -186,7 +190,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -198,12 +202,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
-			var expectedCase = CloseCase(CreateConcernsCase(ukPrn));
+			var expectedCase = DatabaseModelBuilder.CloseCase(CreateConcernsCase(ukPrn));
 
 			cases.Add(expectedCase);
 
-			await SaveCases(cases);
-			await CreateClosedCaseActions(expectedCase.Id);
+			using var context = _testFixture.GetContext();
+
+			await context.SaveCases(cases);
+			await context.CreateClosedCaseActions(expectedCase.Id);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/bytrust/{ukPrn}/closed");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -224,7 +230,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			concern.Rating.Id.Should().Be((int)ConcernRating.AmberGreen);
 			concern.Rating.Name.Should().Be(ConcernRating.AmberGreen.Description());
 
-			AssertCaseActions(actualCase);
+			CaseSummaryAssert.AssertCaseActions(actualCase);
 		}
 
 		[Fact]
@@ -242,15 +248,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				var concernsCase = CreateConcernsCase(ukPrn);
 				var nonTrustCase = CreateNonConcernsCase(differentUkPrn);
 
-				cases.Add(CloseCase(nonConcernsCase));
-				cases.Add(CloseCase(concernsCase));
-				casesDifferentUkPrn.Add(CloseCase(nonTrustCase));
+				cases.Add(DatabaseModelBuilder.CloseCase(nonConcernsCase));
+				cases.Add(DatabaseModelBuilder.CloseCase(concernsCase));
+				casesDifferentUkPrn.Add(DatabaseModelBuilder.CloseCase(nonTrustCase));
 				openCases.Add(CreateNonConcernsCase(ukPrn));
 			}
 
-			await SaveCases(cases);
-			await SaveCases(casesDifferentUkPrn);
-			await SaveCases(openCases);
+			using var context = _testFixture.GetContext();
+
+			await context.SaveCases(cases);
+			await context.SaveCases(casesDifferentUkPrn);
+			await context.SaveCases(openCases);
 
 			var expectedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
@@ -264,7 +272,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Should().HaveCount(10);
 
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 		}
 
 		[Fact]
@@ -283,7 +291,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
@@ -305,7 +313,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -327,7 +335,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = wrapper.Data.ToList();
 
 			result.Should().HaveCount(2);
-			AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
+			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
@@ -347,15 +355,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		private ConcernsCase CreateNonConcernsCase(string ukPrn)
 		{
-			var result = new ConcernsCase()
-			{
-				RatingId = (int)ConcernRating.RedPlus,
-				StatusId = (int)CaseStatus.Live,
-				TrustUkprn = ukPrn,
-				ConcernsRecords = new List<ConcernsRecord>(),
-				CreatedAt = _fixture.Create<DateTime>(),
-				CreatedBy = _fixture.Create<string>()
-			};
+			var result = DatabaseModelBuilder.BuildCase();
+			result.TrustUkprn = ukPrn;
 
 			return result;
 		} 
@@ -369,67 +370,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return result;
 		}
 
-		private ConcernsCase CloseCase(ConcernsCase concernsCase)
-		{
-			concernsCase.ClosedAt = _fixture.Create<DateTime>();
-			concernsCase.StatusId = (int)CaseStatus.Close;
-			concernsCase.ConcernsRecords.ForEach(r => r.StatusId = (int)CaseStatus.Close);
-
-			return concernsCase;
-		}
-
-		private async Task CreateOpenCaseActions(int caseId)
-		{
-			using var context = _testFixture.GetContext();
-
-			context.Decisions.Add(DatabaseModelBuilder.BuildDecision(caseId));
-			context.NoticesToImprove.Add(DatabaseModelBuilder.BuildNoticeToImprove(caseId));
-			context.NTIUnderConsiderations.Add(DatabaseModelBuilder.BuildNTIUnderConsideration(caseId));
-			context.NTIWarningLetters.Add(DatabaseModelBuilder.BuildNTIWarningLetter(caseId));
-			context.SRMACases.Add(DatabaseModelBuilder.BuildSrma(caseId));
-			context.TrustFinancialForecasts.Add(DatabaseModelBuilder.BuildTrustFinancialForecast(caseId));
-			context.FinancialPlanCases.Add(DatabaseModelBuilder.BuildFinancialPlan(caseId));
-
-			await context.SaveChangesAsync();
-		}
-
-		private async Task CreateClosedCaseActions(int caseId)
-		{
-			using var context = _testFixture.GetContext();
-
-			var decision = DatabaseModelBuilder.BuildDecision(caseId);
-			decision.ClosedAt = _fixture.Create<DateTime>();
-			context.Decisions.Add(decision);
-
-			var noticeToImprove = DatabaseModelBuilder.BuildNoticeToImprove(caseId);
-			noticeToImprove.ClosedAt = _fixture.Create<DateTime>();
-			context.NoticesToImprove.Add(noticeToImprove);
-
-			var ntiUnderConsideration = DatabaseModelBuilder.BuildNTIUnderConsideration(caseId);
-			ntiUnderConsideration.ClosedAt = _fixture.Create<DateTime>();
-			context.NTIUnderConsiderations.Add(ntiUnderConsideration);
-
-			var ntiWarningLetter = DatabaseModelBuilder.BuildNTIWarningLetter(caseId);
-			ntiWarningLetter.ClosedAt = _fixture.Create<DateTime>();
-			context.NTIWarningLetters.Add(ntiWarningLetter);
-
-			var srma = DatabaseModelBuilder.BuildSrma(caseId);
-			srma.ClosedAt = _fixture.Create<DateTime>();
-			context.SRMACases.Add(srma);
-
-			var tff = DatabaseModelBuilder.BuildTrustFinancialForecast(caseId);
-			tff.ClosedAt = _fixture.Create<DateTime>();
-			context.TrustFinancialForecasts.Add(tff);
-
-			var financialPlan = DatabaseModelBuilder.BuildFinancialPlan(caseId);
-			financialPlan.ClosedAt = _fixture.Create<DateTime>();
-			context.FinancialPlanCases.Add(financialPlan);
-
-			await context.SaveChangesAsync();
-		}
-
 		private async Task<List<ConcernsCase>> BulkCreateActiveCases(string ukPrn)
 		{
+			using var context = _testFixture.GetContext();
+
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			for (var idx = 0; idx < 10; idx++)
@@ -437,7 +381,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				cases.Add(CreateConcernsCase(ukPrn));
 			}
 
-			await SaveCases(cases);
+			await context.SaveCases(cases);
 
 			var orderedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
@@ -446,71 +390,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		private async Task<List<ConcernsCase>> BulkCreateClosedCases(string ukPrn)
 		{
+			using var context = _testFixture.GetContext();
+
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			for (var idx = 0; idx < 10; idx++)
 			{
-				cases.Add(CloseCase(CreateConcernsCase(ukPrn)));
+				cases.Add(DatabaseModelBuilder.CloseCase(CreateConcernsCase(ukPrn)));
 			}
 
-			await SaveCases(cases);
+			await context.SaveCases(cases);
 
 			var orderedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
 			return orderedCases;
-		}
-
-		private async Task<List<ConcernsCase>> SaveCases(List<ConcernsCase> cases)
-		{
-			await using var context = _testFixture.GetContext();
-
-			context.ConcernsCase.AddRange(cases);
-			await context.SaveChangesAsync();
-
-			return cases;
-		}
-
-		private void AssertCaseList(List<CaseSummaryResponse> actualCases, List<ConcernsCase> expectedCases)
-		{
-			for (var idx = 0; idx < expectedCases.Count; idx++)
-			{
-				var expectedCase = expectedCases[idx];
-				var actualCase = actualCases[idx];
-
-				actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
-				actualCase.CaseUrn.Should().Be(expectedCase.Id);
-			}
-		}
-
-		private static void AssertCaseActions(CaseSummaryResponse actualCase)
-		{
-			actualCase.Decisions.Should().HaveCount(1);
-			var decision = actualCase.Decisions.First();
-			decision.Name.Should().Be("Decision: No Decision Types");
-
-			actualCase.NoticesToImprove.Should().HaveCount(1);
-			var nti = actualCase.NoticesToImprove.First();
-			nti.Name.Should().Be("Action: Notice To Improve");
-
-			actualCase.NtisUnderConsideration.Should().HaveCount(1);
-			var ntiUnderConsideration = actualCase.NtisUnderConsideration.First();
-			ntiUnderConsideration.Name.Should().Be("Action: NTI under consideration");
-
-			actualCase.NtiWarningLetters.Should().HaveCount(1);
-			var ntiWarningLetter = actualCase.NtiWarningLetters.First();
-			ntiWarningLetter.Name.Should().Be("Action: NTI warning letter");
-
-			actualCase.FinancialPlanCases.Should().HaveCount(1);
-			var financialPlan = actualCase.FinancialPlanCases.First();
-			financialPlan.Name.Should().Be("Action: Financial plan");
-
-			actualCase.SrmaCases.Should().HaveCount(1);
-			var srma = actualCase.SrmaCases.First();
-			srma.Name.Should().Be("Action: School Resource Management Adviser");
-
-			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
-			var tff = actualCase.TrustFinancialForecasts.First();
-			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
 		}
 	}
 }
