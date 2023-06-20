@@ -191,19 +191,16 @@ variable "cdn_frontdoor_rate_limiting_threshold" {
   type        = number
 }
 
-variable "monitor_enable_slack_webhook" {
-  description = "Enable slack webhooks to send monitoring notifications to a channel"
-  type        = bool
-}
-
-variable "monitor_slack_webhook_receiver" {
-  description = "A Slack App webhook URL"
-  type        = string
-}
-
-variable "monitor_slack_channel" {
-  description = "Slack channel name/id to send messages to"
-  type        = string
+variable "existing_logic_app_workflow" {
+  description = "Name, and Resource Group of an existing Logic App Workflow. Leave empty to create a new Resource"
+  type = object({
+    name : string
+    resource_group_name : string
+  })
+  default = {
+    name                = ""
+    resource_group_name = ""
+  }
 }
 
 variable "existing_network_watcher_name" {
