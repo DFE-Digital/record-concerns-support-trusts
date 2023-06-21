@@ -24,9 +24,18 @@ namespace ConcernsCaseWork.Service.Base
 			[JsonProperty("nextPageUrl")]
 			public string NextPageUrl { get; }
 			
+			
+			[JsonProperty("hasNext")]
+			public bool HasNext { get; }
+			
+			
+			[JsonProperty("hasPrevious")]
+			public bool HasPrevious { get; }
+			
+			
 			[JsonConstructor]
-			public Pagination(int page, int recordCount, string nextPageUrl) => 
-				(Page, RecordCount, NextPageUrl) = (page, recordCount, nextPageUrl);
+			public Pagination(int page, int recordCount, string nextPageUrl, bool hasNext, bool hasPrevious) => 
+				(Page, RecordCount, NextPageUrl, HasNext, HasPrevious) = (page, recordCount, nextPageUrl, hasNext, hasPrevious);
 		}
 	}
 }

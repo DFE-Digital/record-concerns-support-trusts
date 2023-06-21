@@ -47,7 +47,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int count)
+	public async Task<PagedCaseSummaryModel> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int count)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page, count);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
@@ -59,7 +59,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildClosedCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count)
+	public async Task<PagedCaseSummaryModel> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count)
 	{
 		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, page, count);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
@@ -72,16 +72,43 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		var getTrustNameTasks = activeCaseSummaryDtos.DistinctBy(x => x.TrustUkPrn).Select(x => GetTrust(x.TrustUkPrn));
 		var trusts = await Task.WhenAll(getTrustNameTasks);
 
+		List<ActiveCaseSummaryModel> sortedCaseSummaries = BuildActiveCaseSummaryModels(activeCaseSummaryDtos, trusts);
+		return sortedCaseSummaries.ToList();
+	}
+	
+	private async Task<PagedActiveCases> BuildActiveCaseSummaryModel(ActivePagedCasesDto caseSummaries)
+	{
+		IEnumerable<ActiveCaseSummaryDto> activeCaseSummaryDtos = caseSummaries.Cases as ActiveCaseSummaryDto[] ?? caseSummaries.Cases.ToArray();
+		var getTrustNameTasks = activeCaseSummaryDtos.DistinctBy(x => x.TrustUkPrn).Select(x => GetTrust(x.TrustUkPrn));
+		var trusts = await Task.WhenAll(getTrustNameTasks);
+		List<ActiveCaseSummaryModel> sortedCaseSummaries = BuildActiveCaseSummaryModels(activeCaseSummaryDtos, trusts);
+		var model = new PagedActiveCases()
+		{
+			ActiveCases = sortedCaseSummaries,
+			Page = caseSummaries.Page,
+			RecordCount = caseSummaries.RecordCount,
+			HasNext = caseSummaries.HasNext,
+			HasPrevious = caseSummaries.HasPrevious,
+			NextPageUrl = caseSummaries.NextPageUrl
+
+		};
+		return model;
+	}
+	
+
+	private static List<ActiveCaseSummaryModel> BuildActiveCaseSummaryModels(IEnumerable<ActiveCaseSummaryDto> activeCaseSummaryDtos, KeyValuePair<string, string>[] trusts)
+	{
 		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
 		foreach (var caseSummary in activeCaseSummaryDtos.OrderByDescending(cs => cs.CreatedAt))
 		{
 			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
-			
-			var summary = 
+
+			var summary =
 				new ActiveCaseSummaryModel
 				{
 					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
-					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
+					ActiveActionsAndDecisions =
+						sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
@@ -91,11 +118,11 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
 					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
 				};
-			
+
 			sortedCaseSummaries.Add(summary);
 		}
-		
-		return sortedCaseSummaries.ToList();
+
+		return sortedCaseSummaries;
 	}
 
 	private async Task<List<ClosedCaseSummaryModel>> BuildClosedCaseSummaryModel(IEnumerable<ClosedCaseSummaryDto> caseSummaries)
