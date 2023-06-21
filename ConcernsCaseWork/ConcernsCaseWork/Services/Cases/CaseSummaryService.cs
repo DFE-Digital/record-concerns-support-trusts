@@ -1,3 +1,4 @@
+using Azure.Core;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
@@ -36,9 +37,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int page, int count)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker, page, count);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
@@ -73,6 +74,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		var cases = await BuildActiveCaseSummaryModel(caseSummaries.Data);
 
 		result.Cases = cases;
+		result.Pagination = caseSummaries.Paging;
 
 		return result;
 	}

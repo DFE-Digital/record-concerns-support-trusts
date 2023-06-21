@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Service.Base
 		public bool HasNext { get; }
 
 		[JsonConstructor]
-		public Pagination(int page, int recordCount, string nextPageUrl) =>
-			(Page, RecordCount, NextPageUrl) = (page, recordCount, nextPageUrl);
+		public Pagination(int page, int recordCount, int totalPageCount, string nextPageUrl, bool hasPrevious, bool hasNext) =>
+			(Page, RecordCount, TotalPageCount, NextPageUrl, HasPrevious, HasNext) = (page, recordCount, totalPageCount, nextPageUrl, hasPrevious, hasNext);
 	}
 }

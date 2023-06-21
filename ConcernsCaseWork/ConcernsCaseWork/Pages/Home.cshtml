@@ -77,7 +77,7 @@
                                     var pageNumber = pageIdx + 1;
 
                                     <li class="govuk-pagination__item">
-                                        <a class="govuk-link govuk-pagination__link" href="#" aria-label="Page @pageNumber">
+                                        <a class="govuk-link govuk-pagination__link" asp-page="Home" asp-route-pageNumber="@pageNumber" aria-label="Page @pageNumber">
                                             @pageNumber
                                         </a>
                                     </li>
