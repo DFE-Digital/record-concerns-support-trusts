@@ -148,7 +148,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			{
 				Page = 1,
 				RecordCount = 1,
-				NextPageUrl = null
+				NextPageUrl = null,
+				TotalPages = 1
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(new List<ConcernsCaseResponse> { concernsCaseResponse }, expectedPagingResponse);
 
@@ -253,7 +254,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			{
 				Page = 1,
 				RecordCount = 4,
-				NextPageUrl = null
+				NextPageUrl = null,
+				TotalPages = 1
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
 			result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));

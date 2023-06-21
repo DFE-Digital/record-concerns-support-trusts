@@ -136,6 +136,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Should().HaveCount(2);
 			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.TotalPages.Should().Be(5);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
 		}
@@ -292,6 +293,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Should().HaveCount(2);
 			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
 			wrapper.Paging.RecordCount.Should().Be(10);
+			wrapper.Paging.TotalPages.Should().Be(5);
 			wrapper.Paging.HasNext.Should().BeTrue();
 			wrapper.Paging.HasPrevious.Should().BeFalse();
 		}
