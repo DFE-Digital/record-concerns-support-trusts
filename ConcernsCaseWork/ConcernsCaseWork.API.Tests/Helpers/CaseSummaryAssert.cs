@@ -48,6 +48,7 @@ namespace ConcernsCaseWork.API.Tests.Helpers
 
 				actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 				actualCase.CaseUrn.Should().Be(expectedCase.Id);
+				actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
 			}
 		}
 	}
