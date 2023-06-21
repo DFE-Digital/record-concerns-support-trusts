@@ -6,6 +6,14 @@
 
 @{
     ViewData["Title"] = "Home";
+
+    var selectedPage = 1;
+
+    if (Request.Query.ContainsKey("pageNumber"))
+    {
+        var queryValue = Request.Query["pageNumber"][0];
+        selectedPage = int.Parse(queryValue);
+    }
 }
 
 <div class="govuk-extra-width-container">
@@ -75,8 +83,9 @@
                                 @for (var pageIdx = 0; pageIdx < Model.Pagination.TotalPageCount; pageIdx++)
                                 {
                                     var pageNumber = pageIdx + 1;
+                                    var markAsSelected = (selectedPage == pageNumber) ? "govuk-pagination__item--current" : "";
 
-                                    <li class="govuk-pagination__item">
+                                    <li class="govuk-pagination__item  @markAsSelected">
                                         <a class="govuk-link govuk-pagination__link" asp-page="Home" asp-route-pageNumber="@pageNumber" aria-label="Page @pageNumber">
                                             @pageNumber
                                         </a>
