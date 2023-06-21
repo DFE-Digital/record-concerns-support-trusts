@@ -48,25 +48,17 @@ namespace ConcernsCaseWork.Pages
 			_telemetry = Guard.Against.Null(telemetryClient);
 		}
 
-		public async Task<ActionResult> OnGetAsync()
+		public async Task<ActionResult> OnGetAsync(int pageNumber = 1)
 		{
 			_logger.LogInformation("HomePageModel::OnGetAsync executed");
 
 			try
 			{
-				// Display all live cases for the current user.
-				// And in addition display live cases belonging to other users that the current user has expressed an interest in seeing.
-
-				// Check if logged user as role leader
-				// And get all live cases for each caseworker
-
-				// cases belonging to this user
-				// get any team members defined
 				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
 				await RecordUserSignIn(team);
 
-				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
+				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), pageNumber, 5);
 				ActiveCases = activeCaseGroup.Cases;
 				Pagination = activeCaseGroup.Pagination;
 			}
