@@ -8,7 +8,7 @@
 
 @section BeforeMain {
 	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+		<back-link url="/case/create"></back-link>
 	</div>
 }
 
@@ -28,7 +28,7 @@
 			<dl class="govuk-summary-list">
 				<div class="govuk-summary-list__row">
 					<dt class="govuk-summary-list__key">Trust</dt>
-					<dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-testid="trust-summary">
 						@Model.TrustAddress.TrustName @Model.TrustAddress.County
 						<br/>
 						@Model.TrustAddress.DisplayAddress
