@@ -14,12 +14,12 @@ namespace ConcernsCaseWork.Data.Migrations
                 name: "Notes",
                 schema: "concerns",
                 table: "SRMACase",
-                type: "nvarchar(max)",
+                type: "VARCHAR(5000)",
                 maxLength: 5000,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(2000)",
-                oldMaxLength: 2000,
+                oldType: "nvarchar(max)",
+                oldMaxLength: 5000,
                 oldNullable: true);
         }
 
@@ -30,11 +30,11 @@ namespace ConcernsCaseWork.Data.Migrations
                 name: "Notes",
                 schema: "concerns",
                 table: "SRMACase",
-                type: "nvarchar(2000)",
-                maxLength: 2000,
+                type: "nvarchar(max)",
+                maxLength: 5000,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "VARCHAR(5000)",
                 oldMaxLength: 5000,
                 oldNullable: true);
         }
