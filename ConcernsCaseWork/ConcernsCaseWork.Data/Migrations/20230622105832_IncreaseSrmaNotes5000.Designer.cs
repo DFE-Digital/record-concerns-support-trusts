@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    [Migration("20230622093920_IncreaseSrmaNotes5000")]
+    [Migration("20230622105832_IncreaseSrmaNotes5000")]
     partial class IncreaseSrmaNotes5000
     {
         /// <inheritdoc />
@@ -2465,7 +2465,7 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<string>("Notes")
                         .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(5000)");
 
                     b.Property<int?>("ReasonId")
                         .HasColumnType("int");

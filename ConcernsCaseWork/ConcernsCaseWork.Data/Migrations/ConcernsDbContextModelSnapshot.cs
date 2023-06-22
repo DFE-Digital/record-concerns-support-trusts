@@ -2462,7 +2462,7 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<string>("Notes")
                         .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(5000)");
 
                     b.Property<int?>("ReasonId")
                         .HasColumnType("int");

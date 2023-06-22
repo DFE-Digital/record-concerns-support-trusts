@@ -21,7 +21,9 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
 
-        [StringLength(SrmaConstants.NotesLength)]
+		// Entity framework will make this VARCHAR(MAX) over 4000, without specifying
+		[Column(TypeName = "VARCHAR(5000)")]
+		[StringLength(SrmaConstants.NotesLength)]
         public string Notes { get; set; }
 
         [ForeignKey(nameof(ReasonId))]
