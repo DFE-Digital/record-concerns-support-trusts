@@ -36,6 +36,7 @@ import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Testing closing of cases when there are case actions and concerns", () => {
     let caseId: string;
@@ -89,6 +90,11 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .withTrustName(trustName)
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
         Logger.Log("Create a valid concern");
         createConcernPage
