@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, new ApiListWrapper<TrustSearchDto>.Pagination(1, expectedTrusts.Count, string.Empty));
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, new ApiListWrapper<TrustSearchDto>.Pagination(1, expectedTrusts.Count, string.Empty, false,false));
 			var tramsApiEndpoint = "https://localhost";
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();

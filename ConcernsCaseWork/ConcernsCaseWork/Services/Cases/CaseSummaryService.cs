@@ -46,13 +46,25 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
+	
 
 	public async Task<PagedActiveCases> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int count)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page, count);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
+	
+	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn)
+	{
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, 1, 999);
+		return BuildActiveCaseSummaryModel(caseSummaries).Result.ActiveCases.ToList();
+	}
 
+	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn)
+	{
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, 1, 999);
+		return BuildClosedCaseSummaryModel(caseSummaries).Result.ClosedCases.ToList();
+	}
 	public async Task<PagedClosedCases> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count)
 	{
 		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, page, count);

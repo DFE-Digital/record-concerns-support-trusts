@@ -120,8 +120,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var caseActionsTask = PopulateCaseActions(caseUrn);
 				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
 				TrustDetailsModel = trustDetailsTask.Result;
-				ActiveCases = activeTrustCasesTask.Result;
-				ClosedCases = closedTrustCasesTask.Result;
+				ActiveCases = activeTrustCasesTask.Result.ActiveCases.ToList();
+				ClosedCases = closedTrustCasesTask.Result.ClosedCases.ToList();
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 				await UpdateCacheService(CaseModel);
 				
