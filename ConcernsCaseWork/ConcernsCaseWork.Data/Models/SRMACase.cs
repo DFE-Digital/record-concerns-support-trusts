@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
@@ -20,7 +21,7 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
 
-        [StringLength(2000)]
+        [StringLength(SrmaConstants.NotesLength)]
         public string Notes { get; set; }
 
         [ForeignKey(nameof(ReasonId))]
