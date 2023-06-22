@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    [Migration("20230622105832_IncreaseSrmaNotes5000")]
+    [Migration("20230622123817_IncreaseSrmaNotes5000")]
     partial class IncreaseSrmaNotes5000
     {
         /// <inheritdoc />
