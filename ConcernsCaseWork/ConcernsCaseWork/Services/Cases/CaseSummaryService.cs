@@ -47,24 +47,27 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<PagedCaseSummaryModel> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int count)
+	public async Task<PagedActiveCases> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int count)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page, count);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
+	public async Task<PagedClosedCases> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count)
+	{
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, page, count);
+		return await BuildClosedCaseSummaryModel(caseSummaries);
+	}
+
+	
 	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker)
 	{
 		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<PagedCaseSummaryModel> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count)
-	{
-		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, page, count);
-		return await BuildClosedCaseSummaryModel(caseSummaries);
-	}
-
+	
+	
 	private async Task<List<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(IEnumerable<ActiveCaseSummaryDto> caseSummaries)
 	{
 		IEnumerable<ActiveCaseSummaryDto> activeCaseSummaryDtos = caseSummaries as ActiveCaseSummaryDto[] ?? caseSummaries.ToArray();
@@ -123,6 +126,45 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		}
 
 		return sortedCaseSummaries;
+	}
+	
+	private async Task<PagedClosedCases> BuildClosedCaseSummaryModel(ClosedPagedCasesDto caseSummaries)
+	{
+		var sortedCaseSummaries = new List<ClosedCaseSummaryModel>();
+		var model = new PagedClosedCases()
+		{
+			NextPageUrl = caseSummaries.NextPageUrl,
+			Page = caseSummaries.Page,
+			RecordCount = caseSummaries.RecordCount,
+			HasNext = caseSummaries.HasNext,
+			HasPrevious = caseSummaries.HasPrevious
+		};
+			
+		foreach (var caseSummary in caseSummaries.Cases.OrderByDescending(cs => cs.CreatedAt))
+		{
+			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
+			
+			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
+			
+			var summary = 
+				new ClosedCaseSummaryModel
+				{
+					ClosedConcerns = GetSortedClosedConcerns(caseSummary.ClosedConcerns),
+					ClosedActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
+					ClosedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.ClosedAt),
+					CaseUrn = caseSummary.CaseUrn,
+					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
+					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
+					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
+					StatusName = caseSummary.StatusName,
+					TrustName = trustName,
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
+				};
+			
+			sortedCaseSummaries.Add(summary);
+		}
+		model.ClosedCases = sortedCaseSummaries.ToList();
+		return model;
 	}
 
 	private async Task<List<ClosedCaseSummaryModel>> BuildClosedCaseSummaryModel(IEnumerable<ClosedCaseSummaryDto> caseSummaries)
