@@ -1,3 +1,15 @@
+## 23.0.0
+
+* Ability to change case owner using keyboard only input
+* Ability to select Trust in Trust Search using keyboard only input
+* Fix typo on Error Message Page
+* Ensure consistent use of term Case Owner
+* Show Error Summary and Error message next to each answer for Reassign Case Owner, Close Case and Find a Trust Error Pages
+* Ensure Error Message order is consistent with field on case creation page
+* Fix issue with Decision ID not being visible in Closed Notice to Improve Information
+* Ability to return paged results to Get Case By Trust Endpoint
+* Add Feature toggle to switch to Updated Trust Search Endpoint
+
 ## 22.0.0
 
 * Added ability to Create a Concerns case from a Proactive Engagement Case (Non Concerns case)
