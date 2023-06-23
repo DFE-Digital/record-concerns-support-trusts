@@ -186,6 +186,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_HasActiveCases_RequestPageGreaterThanAvailable_Returns_Empty_200()
+		{
+			var owner = _fixture.Create<string>();
+
+			await BulkCreateActiveCases(owner);
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/active?page=6&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
+
+			result.Should().HaveCount(0);
+		}
+
+		[Fact]
 		public async Task When_HasClosedCasesWithCaseActions_Returns_CorrectInformation_200()
 		{
 			var owner = _fixture.Create<string>();
@@ -340,6 +356,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			wrapper.Paging.RecordCount.Should().Be(10);
 			wrapper.Paging.HasNext.Should().BeFalse();
 			wrapper.Paging.HasPrevious.Should().BeTrue();
+		}
+
+		[Fact]
+		public async Task When_HasClosedCases_RequestPageGreaterThanAvailable_Returns_Empty_200()
+		{
+			var owner = _fixture.Create<string>();
+
+			await BulkCreateClosedCases(owner);
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/closed?page=6&count=2");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ClosedCaseSummaryResponse>>();
+			var result = wrapper.Data.ToList();
+
+			result.Should().HaveCount(0);
 		}
 
 		private ConcernsCase CreateCase(string owner)
