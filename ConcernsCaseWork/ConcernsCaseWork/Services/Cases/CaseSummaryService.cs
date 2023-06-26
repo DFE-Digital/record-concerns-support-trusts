@@ -93,21 +93,25 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 	
 	private async Task<PagedActiveCases> BuildActiveCaseSummaryModel(ActivePagedCasesDto caseSummaries)
 	{
-		IEnumerable<ActiveCaseSummaryDto> activeCaseSummaryDtos = caseSummaries.Cases as ActiveCaseSummaryDto[] ?? caseSummaries.Cases.ToArray();
-		var getTrustNameTasks = activeCaseSummaryDtos.DistinctBy(x => x.TrustUkPrn).Select(x => GetTrust(x.TrustUkPrn));
-		var trusts = await Task.WhenAll(getTrustNameTasks);
-		List<ActiveCaseSummaryModel> sortedCaseSummaries = BuildActiveCaseSummaryModels(activeCaseSummaryDtos, trusts);
-		var model = new PagedActiveCases()
+		var activeCaseSummaryDtos = caseSummaries.Cases;
+		if (activeCaseSummaryDtos != null)
 		{
-			ActiveCases = sortedCaseSummaries,
-			Page = caseSummaries.Page,
-			RecordCount = caseSummaries.RecordCount,
-			HasNext = caseSummaries.HasNext,
-			HasPrevious = caseSummaries.HasPrevious,
-			NextPageUrl = caseSummaries.NextPageUrl
+			var getTrustNameTasks = activeCaseSummaryDtos.DistinctBy(x => x.TrustUkPrn).Select(x => GetTrust(x.TrustUkPrn));
+			var trusts = await Task.WhenAll(getTrustNameTasks);
+			List<ActiveCaseSummaryModel> sortedCaseSummaries = BuildActiveCaseSummaryModels(activeCaseSummaryDtos, trusts);
+			var model = new PagedActiveCases()
+			{
+				ActiveCases = sortedCaseSummaries,
+				Page = caseSummaries.Page,
+				RecordCount = caseSummaries.RecordCount,
+				HasNext = caseSummaries.HasNext,
+				HasPrevious = caseSummaries.HasPrevious,
+				NextPageUrl = caseSummaries.NextPageUrl
+			};
+			return model;
+		}
 
-		};
-		return model;
+		return new PagedActiveCases();
 	}
 	
 

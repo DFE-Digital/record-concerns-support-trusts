@@ -51,7 +51,7 @@
 					</div>
 					Active cases
 				</caption>
-				<partial name="_TrustActiveCases" model="@Model.ActiveCases"/>
+				<partial name="_TrustActiveCases" model="@Model.ActiveCases.ActiveCases"/>
 			</table>
 			<form action="/form-handler" method="post" novalidate="">
                   
@@ -90,7 +90,7 @@
 				<caption class="govuk-table__caption govuk-table__caption--m">
 					Closed cases
 				</caption>
-				<partial name="_TrustClosedCases" model="@Model.ClosedCases"/>
+				<partial name="_TrustClosedCases" model="@Model.ClosedCases.ClosedCases"/>
 			</table>
 			<form action="/form-handler" method="post" novalidate="">
                   

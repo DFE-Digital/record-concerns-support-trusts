@@ -27,7 +27,22 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 	{
 		var response =await GetByPagination<ActivePagedCasesDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/active?page={page}&count={recordCount}");
 		ActivePagedCasesDto result = new ActivePagedCasesDto();
-		result.Cases = response.Data.GetEnumerator().Current.Cases;
+		result.Cases = new List<ActiveCaseSummaryDto>();
+		foreach (var active in response.Data.ToList())
+		{
+			var c = new ActiveCaseSummaryDto();
+			/*{
+				ActiveConcerns = active., 
+				CaseUrn = active.CaseUrn,
+				UpdatedAt = active.UpdatedAt,
+				Rating = active.Rating,
+				CreatedAt = active.CreatedAt,
+				CreatedBy = active.CreatedBy,
+				StatusName = active.StatusName,
+				TrustUkPrn = active.TrustUkPrn
+			};*/
+			result.Cases.Add(c);
+		}
 		result.Page = response.Paging.Page;
 		result.RecordCount = response.Paging.RecordCount;
 		result.HasNext = response.Paging.HasNext;
@@ -42,7 +57,7 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 	{
 		var response =await GetByPagination<ClosedPagedCasesDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/closed?page={page}&count={recordCount}");
 		var result = new ClosedPagedCasesDto();
-		result.Cases = response.Data.GetEnumerator().Current.Cases;
+		result.Cases = response.Data.GetEnumerator().Current?.Cases;
 		result.Page = response.Paging.Page;
 		result.RecordCount = response.Paging.RecordCount;
 		result.HasNext = response.Paging.HasNext;
