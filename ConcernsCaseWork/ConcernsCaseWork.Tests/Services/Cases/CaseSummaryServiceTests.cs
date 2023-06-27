@@ -30,10 +30,11 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1)).ReturnsAsync(
 			new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto>()
+				Data = new List<ActiveCaseSummaryDto>(),
+				Paging = new Pagination()
 			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -55,10 +56,15 @@ public class CaseSummaryServiceTests
 		var userName = _fixture.Create<string>();
 
 		var data = BuildListActiveCaseSummaryDtos(userName);
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = data
+				Data = data,
+				Paging = new Pagination()
+				{
+					Page = 1,
+					TotalPages = 10
+				}
 			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -68,6 +74,9 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Cases.Should().HaveCount(data.Count);
+
+		result.Pagination.PageNumber.Should().Be(1);
+		result.Pagination.TotalPages.Should().Be(10);
 	}
 	
 	[Test]
@@ -83,8 +92,8 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var data = BuildListActiveCaseSummaryDtos(userName);
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>() { Data = data });
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>() { Data = data, Paging = new Pagination() });
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -114,10 +123,11 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto> { data }
+				Data = new List<ActiveCaseSummaryDto> { data },
+				Paging = new Pagination()
 			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -153,10 +163,11 @@ public class CaseSummaryServiceTests
 		data.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto> { data }
+				Data = new List<ActiveCaseSummaryDto> { data },
+				Paging = new Pagination()
 			});
 
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -186,10 +197,11 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto> { data }
+				Data = new List<ActiveCaseSummaryDto> { data },
+				Paging = new Pagination()
 			});
 
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -215,10 +227,11 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = data
+				Data = data,
+				Paging = new Pagination()
 			});
 
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -251,10 +264,11 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto> { data }
+				Data = new List<ActiveCaseSummaryDto> { data },
+				Paging = new Pagination()
 			});
 
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
@@ -294,10 +308,11 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName, 1))
 			.ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 			{
-				Data = new List<ActiveCaseSummaryDto> { data }
+				Data = new List<ActiveCaseSummaryDto> { data },
+				Paging = new Pagination()
 			});
 
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);

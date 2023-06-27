@@ -36,5 +36,5 @@ public record CaseSummaryGroupModel<T> where T : CaseSummaryModel
 
 	public List<T> Cases { get; set; }
 
-	public Pagination? Pagination { get; set; }
+	public PaginationModel Pagination { get; set; }
 }
