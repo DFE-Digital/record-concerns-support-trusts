@@ -297,7 +297,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 		}
 
 		[Test]
-		[TestCase(CaseType.Concerns, "/case/concern/index")]
+		[TestCase(CaseType.Concerns, "/case/concern")]
 		[TestCase(CaseType.NonConcerns, "/case/territory")]
 		public async Task WhenOnPost_WithConcernsType_RedirectsToConcernsCreatePage(CaseType selectedCaseType, string expectedUrl)
 		{
