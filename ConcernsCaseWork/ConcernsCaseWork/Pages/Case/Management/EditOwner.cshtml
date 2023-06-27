@@ -9,6 +9,7 @@
     var errors = ViewData.ModelState.ToValidationResult();
 
     var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
+    var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
 }
 
 <div class="govuk-width-container">
@@ -37,7 +38,7 @@
 
                         <partial name="Components/_ValidationErrorDetail" model="@errors" />
 
-                        <div id="autocomplete-container"></div>
+                        <div id="autocomplete-container" class="@inputErrorClass"></div>
 
                         <div class="ccms-loader govuk-!-display-none"></div>
 
