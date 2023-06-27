@@ -14,8 +14,8 @@ public interface ICaseSummaryService
 	
 	Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn);
 	
-	Task<PagedActiveCases> GetActiveCaseSummariesByTrust(string trustUkPrn,int page, int count);
-	Task<PagedClosedCases> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count);
+	Task<PagedCaseSummaryModel> GetActiveCaseSummariesByTrust(string trustUkPrn,int page, int count);
+	Task<PagedCaseSummaryModel> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int count);
 	
 	
 }

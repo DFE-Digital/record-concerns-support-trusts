@@ -2,6 +2,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.Cases;
 
@@ -23,45 +24,43 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		=> await Get<IEnumerable<ActiveCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/active");
 
 
-	public async Task<ActivePagedCasesDto> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int recordCount)
+	public async Task<PagedCasesDto> GetActiveCaseSummariesByTrust(string trustUkPrn, int page, int recordCount)
 	{
-		var response =await GetByPagination<ActivePagedCasesDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/active?page={page}&count={recordCount}");
-		ActivePagedCasesDto result = new ActivePagedCasesDto();
-		result.Cases = new List<ActiveCaseSummaryDto>();
-		foreach (var active in response.Data.ToList())
+		var  response=await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/active?page={page}&count={recordCount}");
+		PagedCasesDto result = new PagedCasesDto();
+		result.ActiveCases = response.Data.ToList();
+		result.PageData = new Paging()
 		{
-			var c = new ActiveCaseSummaryDto();
-			/*{
-				ActiveConcerns = active., 
-				CaseUrn = active.CaseUrn,
-				UpdatedAt = active.UpdatedAt,
-				Rating = active.Rating,
-				CreatedAt = active.CreatedAt,
-				CreatedBy = active.CreatedBy,
-				StatusName = active.StatusName,
-				TrustUkPrn = active.TrustUkPrn
-			};*/
-			result.Cases.Add(c);
-		}
-		result.Page = response.Paging.Page;
-		result.RecordCount = response.Paging.RecordCount;
-		result.HasNext = response.Paging.HasNext;
-		result.HasPrevious = response.Paging.HasPrevious;
+			Page = response.Paging.Page,
+			HasPrevious = response.Paging.HasPrevious,
+			RecordCount = response.Paging.RecordCount,
+			NextPageUrl = response.Paging.NextPageUrl,
+			HasNext = response.Paging.HasNext,
+			Sort = "",
+			SearchPhrase = ""
+		};
+		
 		return result;
 	}
 
 	public async Task<IEnumerable<ClosedCaseSummaryDto>> GetClosedCaseSummariesByTrust(string trustUkPrn)
 		=> await Get<IEnumerable<ClosedCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/closed");
 
-	public async Task<ClosedPagedCasesDto> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int recordCount)
+	public async Task<PagedCasesDto> GetClosedCaseSummariesByTrust(string trustUkPrn, int page, int recordCount)
 	{
-		var response =await GetByPagination<ClosedPagedCasesDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/closed?page={page}&count={recordCount}");
-		var result = new ClosedPagedCasesDto();
-		result.Cases = response.Data.GetEnumerator().Current?.Cases;
-		result.Page = response.Paging.Page;
-		result.RecordCount = response.Paging.RecordCount;
-		result.HasNext = response.Paging.HasNext;
-		result.HasPrevious = response.Paging.HasPrevious;
+		var response =await GetByPagination<ClosedCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/bytrust/{trustUkPrn}/closed?page={page}&count={recordCount}");
+		var result = new PagedCasesDto();
+		result.ClosedCases = response.Data.ToList();
+		result.PageData = new Paging()
+		{
+			Page = response.Paging.Page,
+			HasPrevious = response.Paging.HasPrevious,
+			RecordCount = response.Paging.RecordCount,
+			NextPageUrl = response.Paging.NextPageUrl,
+			HasNext = response.Paging.HasNext,
+			Sort = "",
+			SearchPhrase = ""
+		};
 		return result;
 	}
 		

@@ -21,8 +21,8 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ILogger<OverviewPageModel> _logger;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public PagedActiveCases ActiveCases { get; private set; }
-		public PagedClosedCases ClosedCases { get; private set; }
+		public PagedCaseSummaryModel ActiveCases { get; private set; }
+		public PagedCaseSummaryModel ClosedCases { get; private set; }
 		
 		
 		

@@ -43,31 +43,53 @@ public record ClosedCaseSummaryDto : CaseSummaryDto
 }
 
 
-public  abstract record PagedCasesDto
+public record PagedCasesDto
 {
-	[JsonProperty("page")]
+	
+	public  Paging PageData { get; set; }
+
+	public List<ClosedCaseSummaryDto> ClosedCases { get; set; }
+	public List<ActiveCaseSummaryDto> ActiveCases { get; set; }
+
+}
+public record Paging
+{
 	public int Page { get; set; }
-	[JsonProperty("recordCount")]
 	public int RecordCount { get; set; }
-	[JsonProperty("nextPageUrl")]
 	public string NextPageUrl { get; set; }
-	[JsonProperty("hasNext")]
 	public bool HasNext { get; set; }
-	[JsonProperty("hasPrevious")]
 	public bool HasPrevious { get; set; }
 	public string Sort { get; set; }
 	public string SearchPhrase { get; set; }
-		
 }
-
-public record ActivePagedCasesDto : PagedCasesDto
+public record ActivePagedCasesDto 
 
 {
-	[JsonProperty("activeConcerns")]
-	public List<ActiveCaseSummaryDto> Cases{get; set; }
+	public long CaseUrn { get; set; }
+	public string CreatedBy { get; set; }
+	public DateTime CreatedAt { get; set; }
+	public DateTime UpdatedAt { get; set; }
+	public string StatusName { get; set; }
+	public RatingDto Rating { get; set; }
+	public string TrustUkPrn { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> Decisions { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> FinancialPlanCases { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NoticesToImprove { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NtiWarningLetters { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NtisUnderConsideration { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> SrmaCases { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> TrustFinancialForecasts { get; set; }
+	public IEnumerable<ConcernSummaryDto> ActiveCases { get; set; }
+	public record ActionDecisionSummaryDto(DateTime CreatedAt, DateTime? ClosedAt, string Name);
+
+	//[JsonProperty("activeConcerns")]
+	public record ConcernSummaryDto(string Name, RatingDto Rating, DateTime CreatedAt);
+	
+	
 }
 
-public record ClosedPagedCasesDto : PagedCasesDto
-	{	
-	public List<ClosedCaseSummaryDto> Cases { get; set; }
-	}
+// public record ClosedPagedCasesDto : PagedCasesDto
+// 	{	
+// 		[JsonProperty("closedConcerns")]
+// 	public List<ClosedCaseSummaryDto> Cases { get; set; }
+// 	}
