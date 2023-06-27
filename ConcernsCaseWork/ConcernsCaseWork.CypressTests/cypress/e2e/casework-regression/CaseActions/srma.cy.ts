@@ -5,7 +5,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, SrmaNotesError } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
 
 describe("Testing the SRMA case action", () =>
@@ -32,7 +32,7 @@ describe("Testing the SRMA case action", () =>
             .save()
             .hasValidationError("Select SRMA status")
             .hasValidationError("Enter date trust was contacted")
-            .hasValidationError(NotesError);
+            .hasValidationError(SrmaNotesError);
 
         Logger.Log("Checking accessibility on Add SRMA");
         cy.excuteAccessibilityTests();
@@ -337,7 +337,7 @@ describe("Testing the SRMA case action", () =>
         editSrmaPage
         .withNotesExceedingLimit()
         .save()
-        .hasValidationError(NotesError);
+        .hasValidationError(SrmaNotesError);
 
         Logger.Log("Checking accessibility on Add SRMA Notes");
         cy.excuteAccessibilityTests();
@@ -433,7 +433,7 @@ describe("Testing the SRMA case action", () =>
 
             validationComponent.hasValidationErrorsInOrder([
                 "Confirm SRMA action is complete",
-                NotesError
+                SrmaNotesError
             ]);
 
             Logger.Log("Checking accessibility on Resolve SRMA");
