@@ -6,18 +6,6 @@
 
 @{
     ViewData["Title"] = "Home";
-
-    var selectedPage = 1;
-    int nextPage = 1;
-    int previousPage = 1;
-
-    if (Request.Query.ContainsKey("pageNumber"))
-    {
-        var queryValue = Request.Query["pageNumber"][0];
-        selectedPage = int.Parse(queryValue);
-        nextPage = selectedPage + 1;
-        previousPage = selectedPage - 1;
-    }
 }
 
 <div class="govuk-extra-width-container">

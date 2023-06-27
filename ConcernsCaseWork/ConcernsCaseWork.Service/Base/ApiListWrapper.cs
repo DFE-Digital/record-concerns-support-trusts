@@ -18,22 +18,26 @@ namespace ConcernsCaseWork.Service.Base
 	public class Pagination
 	{
 		[JsonProperty("page")]
-		public int Page { get; }
+		public int Page { get; set; }
 
 		[JsonProperty("recordCount")]
-		public int RecordCount { get; }
+		public int RecordCount { get; set; }
 
 		[JsonProperty("totalPages")]
-		public int TotalPages { get; }
+		public int TotalPages { get; set; }
 
 		[JsonProperty("nextPageUrl")]
-		public string NextPageUrl { get; }
+		public string NextPageUrl { get; set; }
 
 		[JsonProperty("hasPrevious")]
-		public bool HasPrevious { get; }
+		public bool HasPrevious { get; set; }
 
 		[JsonProperty("hasNext")]
-		public bool HasNext { get; }
+		public bool HasNext { get; set; }
+
+		public Pagination()
+		{
+		}
 
 		[JsonConstructor]
 		public Pagination(int page, int recordCount, int totalPages, string nextPageUrl, bool hasPrevious, bool hasNext) =>

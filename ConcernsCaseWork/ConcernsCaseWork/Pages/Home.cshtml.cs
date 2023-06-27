@@ -61,17 +61,10 @@ namespace ConcernsCaseWork.Pages
 
 				await RecordUserSignIn(team);
 
-				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), PageNumber, 5);
+				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), PageNumber);
 				ActiveCases = activeCaseGroup.Cases;
 
-				Pagination = new PaginationModel()
-				{
-					HasNext = activeCaseGroup.Pagination.HasNext,
-					HasPrevious = activeCaseGroup.Pagination.HasPrevious,
-					TotalPages = activeCaseGroup.Pagination.TotalPages,
-					Url = "",
-					PageNumber = PageNumber
-				};
+				Pagination = activeCaseGroup.Pagination;
 			}
 			catch (Exception ex)
 			{

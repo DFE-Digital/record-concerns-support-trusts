@@ -1,14 +1,12 @@
 ﻿@using ConcernsCaseWork.Models;
 @model PaginationModel
 @{
-    int nextPage = Model.PageNumber + 1;
-    int previousPage = Model.PageNumber - 1;
-    var nextPageLink = $"{Model.Url}/?pageNumber={nextPage}";
-    var previousPageLink = $"{Model.Url}/?pageNumber={previousPage}";
+    var nextPageLink = $"{Model.Url}/?pageNumber={Model.Next}";
+    var previousPageLink = $"{Model.Url}/?pageNumber={Model.Previous}";
 }
 
 <nav class="govuk-pagination" role="navigation" aria-label="results">
-    @if (Model.HasPrevious)
+    @if (Model.Previous.HasValue)
     {
         <div class="govuk-pagination__prev">
             <a class="govuk-link govuk-pagination__link" href="@previousPageLink" rel="prev">
@@ -36,7 +34,7 @@
 
     </ul>
 
-    @if (Model.HasNext)
+    @if (Model.Next.HasValue)
     {
         <div class="govuk-pagination__next">
             <a class="govuk-link govuk-pagination__link" href="@nextPageLink" rel="next">

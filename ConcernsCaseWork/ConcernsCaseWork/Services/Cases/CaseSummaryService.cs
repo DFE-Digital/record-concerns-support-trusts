@@ -37,9 +37,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int page, int count)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker, page, count);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
@@ -74,7 +74,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		var cases = await BuildActiveCaseSummaryModel(caseSummaries.Data);
 
 		result.Cases = cases;
-		result.Pagination = caseSummaries.Paging;
+		result.Pagination = PaginationMapping.ToModel(caseSummaries.Paging);
 
 		return result;
 	}
