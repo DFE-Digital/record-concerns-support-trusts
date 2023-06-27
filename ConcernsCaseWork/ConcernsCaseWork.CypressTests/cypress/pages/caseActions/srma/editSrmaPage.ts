@@ -58,7 +58,7 @@ export class EditSrmaPage {
     public withNotes(notes: string) {
         Logger.Log(`With notes ${notes}`);
 
-        cy.getById("srma-notes").clear().type(notes);
+        cy.getById("srma-notes").clear({ force: true }).type(notes);
 
         return this;
     }
@@ -66,7 +66,7 @@ export class EditSrmaPage {
     public withNotesExceedingLimit(): this {
         Logger.Log(`With notes exceeding limit`);
 
-        cy.getById('srma-notes').clear().invoke("val", "x 1".repeat(666) + "\n".repeat(3));
+        cy.getById('srma-notes').clear().invoke("val", "x 1 D".repeat(1001));
 
         return this;
     }
