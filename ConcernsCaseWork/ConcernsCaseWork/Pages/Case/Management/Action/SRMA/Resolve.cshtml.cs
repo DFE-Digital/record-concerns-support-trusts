@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.CoreTypes;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
@@ -143,7 +142,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			HintText = "Case owners can record any information they want that feels relevant to the action",
 			Text = new ValidateableString()
 			{
-				MaxLength = 2000,
+				MaxLength = SrmaConstants.NotesLength,
 				StringContents = contents,
 				DisplayName = "Notes"
 			}

@@ -18,6 +18,8 @@
     var errors = ViewData.ModelState.ToValidationResult();
 
     var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
+
+    var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
 }
 
 <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
@@ -42,7 +44,7 @@
 
     <partial name="Components/_ValidationErrorDetail" model="@errors" />
 
-    <div id="container-SelectedTrustUkprn" class="govuk-!-margin-top-3"></div>
+    <div id="container-SelectedTrustUkprn" class="govuk-!-margin-top-3 @inputErrorClass"></div>
     <div class="ccms-loader govuk-!-display-none"></div>
     <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="trustsearch__listbox" role="listbox">
         <li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
