@@ -171,14 +171,25 @@ namespace ConcernsCaseWork.API.Controllers
 
 			_logger.LogInformation($"Returning active Concerns cases for User Id {ownerId} page {page} count {count}", ownerId);
 			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
-
-	        _logger.LogInformation("Returning active Concerns cases for User Id {UserId}", userId);
-	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
             
 	        return Ok(response);
         }
-        
-        [HttpGet]
+
+		[HttpGet]
+		[Route("summary/{userId}/active/team")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId, CancellationToken cancellationToken = default)
+		{
+			_logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
+			var caseSummaries = await _getActiveConcernsCaseSummariesForUsersTeam.Execute(userId, cancellationToken);
+
+			_logger.LogInformation("Returning active Concerns cases for User Id {UserId}", userId);
+			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
         [Route("summary/{ownerId}/closed")]
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(

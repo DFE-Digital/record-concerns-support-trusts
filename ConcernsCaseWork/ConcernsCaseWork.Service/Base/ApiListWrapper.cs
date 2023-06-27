@@ -23,8 +23,8 @@ namespace ConcernsCaseWork.Service.Base
 		[JsonProperty("recordCount")]
 		public int RecordCount { get; }
 
-		[JsonProperty("totalPageCount")]
-		public int TotalPageCount { get; }
+		[JsonProperty("totalPages")]
+		public int TotalPages { get; }
 
 		[JsonProperty("nextPageUrl")]
 		public string NextPageUrl { get; }
@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Service.Base
 		public bool HasNext { get; }
 
 		[JsonConstructor]
-		public Pagination(int page, int recordCount, int totalPageCount, string nextPageUrl, bool hasPrevious, bool hasNext) =>
-			(Page, RecordCount, TotalPageCount, NextPageUrl, HasPrevious, HasNext) = (page, recordCount, totalPageCount, nextPageUrl, hasPrevious, hasNext);
+		public Pagination(int page, int recordCount, int totalPages, string nextPageUrl, bool hasPrevious, bool hasNext) =>
+			(Page, RecordCount, TotalPages, NextPageUrl, HasPrevious, HasNext) = (page, recordCount, totalPages, nextPageUrl, hasPrevious, hasNext);
 	}
 }
