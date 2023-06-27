@@ -34,8 +34,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	[BindProperty]
 	public RadioButtonsUiComponent CaseType { get; set; }
 
-	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
-
 	public SelectCaseTypePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectCaseTypePageModel> logger,
@@ -86,7 +84,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 			switch (selectedCaseType)
 			{
 				case API.Contracts.Case.CaseType.Concerns:
-					return Redirect("/case/concern/index");
+					return Redirect("/case/concern");
 				case API.Contracts.Case.CaseType.NonConcerns:
 					return Redirect("/case/territory");
 				default:

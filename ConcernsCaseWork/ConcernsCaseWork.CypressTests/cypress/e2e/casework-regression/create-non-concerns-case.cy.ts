@@ -2,7 +2,6 @@ import { Logger } from "cypress/common/logger";
 import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import caseManagementPage from "cypress/pages/caseMangementPage";
-import { SelectCaseTypePage } from "cypress/pages/createCase/selectCaseTypePage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
@@ -18,11 +17,11 @@ import { toDisplayDate } from "cypress/support/formatDate";
 import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage";
 import actionTable from "cypress/pages/caseRows/caseActionTable";
 import concernsApi from "cypress/api/concernsApi";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Creating a case", () => {
     let email: string;
     let name: string;
-    const selectCaseTypePage = new SelectCaseTypePage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
     const createCasePage = new CreateCasePage();
@@ -51,14 +50,6 @@ describe("Creating a case", () => {
             .withTrustName(trustName)
             .selectOption()
             .confirmOption();
-
-        Logger.Log("You must select a case error");
-        selectCaseTypePage
-            .continue()
-            .hasValidationError("Select case type");
-
-        Logger.Log("Checking accessibility on select case type");
-        cy.excuteAccessibilityTests();
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage

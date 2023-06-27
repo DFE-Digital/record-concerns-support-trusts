@@ -1,6 +1,6 @@
 import { Logger } from "../../common/logger";
 
-export class SelectCaseTypePage {
+class SelectCaseTypePage {
 
     public withCaseType(value: string): this {
         Logger.Log(`With NonConcernType ${value}`);
@@ -27,8 +27,9 @@ export class SelectCaseTypePage {
 
         return this;
     }
-
-
-
 }
+
+var selectCaseTypePage = new SelectCaseTypePage();
+
+export default selectCaseTypePage;
 
