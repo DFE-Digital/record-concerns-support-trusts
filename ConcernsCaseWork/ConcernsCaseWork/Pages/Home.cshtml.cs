@@ -5,7 +5,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.ApplicationInsights;
@@ -14,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
@@ -30,8 +30,11 @@ namespace ConcernsCaseWork.Pages
 		private TelemetryClient _telemetry;
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
-		public Pagination Pagination { get; set; }
+		public PaginationModel Pagination { get; set; }
 
+		[BindProperty(SupportsGet = true)]
+		public int PageNumber { get; set; } = 1;
+			
 		public HomePageModel(
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
@@ -48,7 +51,7 @@ namespace ConcernsCaseWork.Pages
 			_telemetry = Guard.Against.Null(telemetryClient);
 		}
 
-		public async Task<ActionResult> OnGetAsync(int pageNumber = 1)
+		public async Task<ActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("HomePageModel::OnGetAsync executed");
 
@@ -58,9 +61,17 @@ namespace ConcernsCaseWork.Pages
 
 				await RecordUserSignIn(team);
 
-				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), pageNumber, 5);
+				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), PageNumber, 5);
 				ActiveCases = activeCaseGroup.Cases;
-				Pagination = activeCaseGroup.Pagination;
+
+				Pagination = new PaginationModel()
+				{
+					HasNext = activeCaseGroup.Pagination.HasNext,
+					HasPrevious = activeCaseGroup.Pagination.HasPrevious,
+					TotalPages = activeCaseGroup.Pagination.TotalPages,
+					Url = "",
+					PageNumber = PageNumber
+				};
 			}
 			catch (Exception ex)
 			{
