@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			var request = _fixture.Create<CreateSRMARequest>();
 			request.CreatedBy = new string('a', 301);
-			request.Notes = new string('a', 2001);
+			request.Notes = new string('a', 5001);
 
 			var result = await _client.PostAsync($"/v2/case-actions/srma", request.ConvertToJson());
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -35,19 +35,19 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var error = await result.Content.ReadAsStringAsync();
 			error.Should().Contain("The field CreatedBy must be a string with a maximum length of 300.");
-			error.Should().Contain("The field Notes must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field Notes must be a string with a maximum length of 5000.");
 		}
 
 		[Fact]
 		public async Task When_Patch_InvalidNotes_Returns_ValidationErrors()
 		{
-			var notes = new string('a', 2001);
+			var notes = new string('a', 5001);
 
 			var result = await _client.PatchAsync($"/v2/case-actions/srma/1/update-notes?notes={notes}", null);
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
 			var error = await result.Content.ReadAsStringAsync();
-			error.Should().Contain("The field notes must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field notes must be a string with a maximum length of 5000.");
 
 		}
 	}

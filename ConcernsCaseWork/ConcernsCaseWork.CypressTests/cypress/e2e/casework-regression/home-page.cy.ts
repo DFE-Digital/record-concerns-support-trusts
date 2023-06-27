@@ -10,15 +10,15 @@ describe("Home page tests", () => {
 		Logger.Log("Create, Find and Closed Case buttons should be displayed");
 		cy.get('.govuk-button[href="/case/closed"]').should("be.visible");
 		cy.get('.govuk-button[href="/trust"]').should("be.visible");
-		cy.get('.govuk-button[href="/case"]').should("be.visible");
+		cy.get('.govuk-button[href="/case/create"]').should("be.visible");
 
 		Logger.Log("User clicks on Create Case and should see Search Trusts");
-		cy.get('[href="/case"]').click();
+		cy.get('[href="/case/create"]').click();
 		cy.get('#search').should('be.visible');
 
 		Logger.Log("User clicks Back and should be taken back to the Active Casework screen");
 		cy.getByTestId("cancel-trust-search").click();
-		cy.get('[href="/case"').should('be.visible');
+		cy.get('[href="/case/create"').should('be.visible');
 		cy.get('[href="/trust"').should('be.visible');
 		cy.get('[href="/case/closed"').should('be.visible');
 
@@ -28,7 +28,7 @@ describe("Home page tests", () => {
 
 		Logger.Log("User clicks Back and should be taken back to the Active Casework screen");
 		cy.getByTestId("cancel-trust-search").click();
-		cy.get('[href="/case"').should('be.visible');
+		cy.get('[href="/case/create"').should('be.visible');
 		cy.get('[href="/trust"').should('be.visible');
 		cy.get('[href="/case/closed"').should('be.visible');
 

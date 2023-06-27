@@ -15,6 +15,7 @@ import EditNextStepsPage from "cypress/pages/createCase/editNextStepsPage";
 import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Editing a case", () =>
 {
@@ -43,6 +44,11 @@ describe("Editing a case", () =>
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
         Logger.Log("Create a valid concern");
         createConcernPage

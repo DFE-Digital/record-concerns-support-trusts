@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
 				.With(c => c.Description = "")
 				.With(c => c.CrmEnquiry = "")
-				.With(c => c.TrustUkprn = "100223")
+				.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
 				.With(c => c.ReasonAtReview = "")
 				.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
 				.With(c => c.Issue = "Here is the issue")
@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				.With(c => c.DirectionOfTravel = "Up")
 				.With(c => c.StatusId = 1)
 				.With(c => c.RatingId = 2)
-				.With(c => c.TrustCompaniesHouseNumber = "12345678")
+				.With(c => c.TrustCompaniesHouseNumber = DatabaseModelBuilder.CreateUkPrn())
 				.Build();
 
 			var createCaseResponse = await _client.PostAsync($"v2/concerns-cases", createCaseRequest.ConvertToJson());
