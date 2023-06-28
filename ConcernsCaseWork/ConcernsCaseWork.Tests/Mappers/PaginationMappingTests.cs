@@ -15,6 +15,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			paginationResponse.HasPrevious = true;
 			paginationResponse.HasNext = true;
 			paginationResponse.TotalPages = 5;
+			paginationResponse.RecordCount = 50;
 
 			var result = PaginationMapping.ToModel(paginationResponse);
 
@@ -23,6 +24,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			result.TotalPages.Should().Be(5);
 			result.Next.Should().Be(3);
 			result.Previous.Should().Be(1);
+			result.RecordCount.Should().Be(50);
 		}
 
 		[Test]

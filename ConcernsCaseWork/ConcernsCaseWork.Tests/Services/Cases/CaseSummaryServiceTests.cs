@@ -570,7 +570,11 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 
-		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName)).ReturnsAsync(new List<ClosedCaseSummaryDto>());
+		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1)).ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+		{
+			Data = new List<ClosedCaseSummaryDto>(),
+			Paging = new Pagination()
+		});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -578,7 +582,7 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Should().BeEmpty();
+		result.Cases.Should().BeEmpty();
 	}
 	
 	
@@ -592,7 +596,15 @@ public class CaseSummaryServiceTests
 		var userName = _fixture.Create<string>();
 
 		var data = BuildListClosedCaseSummaryDtos();
-		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
+		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1)).ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+		{
+			Data = data,
+			Paging = new Pagination()
+			{
+				Page = 1,
+				TotalPages = 10
+			}
+		});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -600,7 +612,9 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Should().HaveCount(data.Count);
+		result.Cases.Should().HaveCount(data.Count);
+		result.Pagination.PageNumber.Should().Be(1);
+		result.Pagination.TotalPages.Should().Be(10);
 	}
 		
 	[Test]
@@ -621,8 +635,12 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
+			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+			{
+				Data = new List<ClosedCaseSummaryDto>() { data },
+				Paging = new Pagination()
+			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -630,7 +648,7 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Single().IsMoreActionsAndDecisions.Should().BeTrue();
+		result.Cases.Single().IsMoreActionsAndDecisions.Should().BeTrue();
 	}
 	
 	[Test]
@@ -657,8 +675,12 @@ public class CaseSummaryServiceTests
 		data.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
+			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+			{
+				Data = new List<ClosedCaseSummaryDto>() { data },
+				Paging = new Pagination()
+			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -666,7 +688,7 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Single().IsMoreActionsAndDecisions.Should().BeFalse();
+		result.Cases.Single().IsMoreActionsAndDecisions.Should().BeFalse();
 	}
 
 	[Test]
@@ -687,8 +709,12 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
+			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+			{
+				Data = new List<ClosedCaseSummaryDto>() { data },
+				Paging = new Pagination()
+			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -696,10 +722,10 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Single().ClosedActionsAndDecisions.Length.Should().Be(3);
-		result.Single().ClosedActionsAndDecisions[0].Should().Be("1");
-		result.Single().ClosedActionsAndDecisions[1].Should().Be("2");
-		result.Single().ClosedActionsAndDecisions[2].Should().Be("3");
+		result.Cases.Single().ClosedActionsAndDecisions.Length.Should().Be(3);
+		result.Cases.Single().ClosedActionsAndDecisions[0].Should().Be("1");
+		result.Cases.Single().ClosedActionsAndDecisions[1].Should().Be("2");
+		result.Cases.Single().ClosedActionsAndDecisions[2].Should().Be("3");
 	}
 	
 	[Test]
@@ -713,8 +739,12 @@ public class CaseSummaryServiceTests
 		var data = BuildListClosedCaseSummaryDtos();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(data);
+			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+			{
+				Data = data,
+				Paging = new Pagination()
+			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -722,9 +752,9 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Count.Should().Be(data.Count);
+		result.Cases.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Cases.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 
 	[Test]
@@ -747,8 +777,12 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
-			.ReturnsAsync(new List<ClosedCaseSummaryDto>{ data });
+			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName, 1))
+			.ReturnsAsync(new ApiListWrapper<ClosedCaseSummaryDto>()
+			{
+				Data = new List<ClosedCaseSummaryDto>() { data },
+				Paging = new Pagination()
+			});
 		
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -756,8 +790,8 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
 
 		// assert
-		result.Count.Should().Be(1);
-		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Cases.Count.Should().Be(1);
+		result.Cases.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	[Test]

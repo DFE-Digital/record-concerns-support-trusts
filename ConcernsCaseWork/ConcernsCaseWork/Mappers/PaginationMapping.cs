@@ -14,6 +14,7 @@ namespace ConcernsCaseWork.Mappers
 				TotalPages = paginationResponse.TotalPages,
 				Next = paginationResponse.HasNext ? paginationResponse.Page + 1 : null,
 				Previous = paginationResponse.HasPrevious ? paginationResponse.Page - 1 : null,
+				RecordCount = paginationResponse.RecordCount
 			};
 
 			return result;
