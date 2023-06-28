@@ -14,9 +14,11 @@ class CaseworkTable {
 
     public getCaseIds(): Cypress.Chainable<Array<string>>
     {
+        Logger.Log("Getting all displayed case ids");
+
         const result: Array<string> = [];
 
-        return cy.containsTestId("case-id-row")
+        return cy.containsByTestId("case-id-row")
         .each($el =>
         {
             result.push($el.text());
