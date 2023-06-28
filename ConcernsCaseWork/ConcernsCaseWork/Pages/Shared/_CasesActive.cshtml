@@ -36,7 +36,7 @@
 	{
 		foreach (var activeCase in Model)
 		{
-			<tr class="govuk-table__row tr__large" data-testid="case-id-row-@activeCase.CaseUrn">
+			<tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
 				<td class="govuk-table__cell" data-testid="case-id">
 					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
 				</td>

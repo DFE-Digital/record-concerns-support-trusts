@@ -62,8 +62,6 @@ describe("Your casework tests", () =>
                 const currentCases = response.paging.recordCount;
                 const casesToCreate = 15 - currentCases;
 
-                const cases = new Array<CreateCaseRequest>();
-
                 if (casesToCreate > 0)
                 {
                     const interator = Array.from({ length: casesToCreate });
@@ -74,7 +72,7 @@ describe("Your casework tests", () =>
                         const request = CaseBuilder.buildOpenCase();
 
                         caseApi.post(request)
-                            .then(() => {})
+                            .then(() => {});
                     });
 
                     cy.reload();

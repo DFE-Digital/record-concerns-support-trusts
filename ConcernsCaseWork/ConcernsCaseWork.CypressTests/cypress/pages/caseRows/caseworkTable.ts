@@ -5,7 +5,7 @@ class CaseworkTable {
     public getRowByCaseId(caseId: string): Cypress.Chainable<CaseRow> {
         Logger.Log(`Getting the case row for ${caseId}`);
 
-        return cy.getByTestId(`case-id-row-${caseId}`)
+        return cy.getByTestId(`row-${caseId}`)
         .then((el) =>
         {
             return new CaseRow(el);
@@ -18,7 +18,7 @@ class CaseworkTable {
 
         const result: Array<string> = [];
 
-        return cy.containsByTestId("case-id-row")
+        return cy.containsByTestId("case-id")
         .each($el =>
         {
             result.push($el.text());
