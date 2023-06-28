@@ -148,15 +148,29 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpGet]
-        [Route("summary/{userId}/active")]
+        [Route("summary/{ownerId}/active")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUser(string userId, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUser(
+			string ownerId,
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
         {
-	        _logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
-	        var caseSummaries = await _getActiveConcernsCaseSummariesByOwner.Execute(userId);
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries for User Id {ownerId} page {page} count {count}");
 
-	        _logger.LogInformation("Returning active Concerns cases for User Id {UserId}", userId);
-	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+			var parameters = new GetCaseSummariesByOwnerParameters()
+			{
+				Owner = ownerId,
+				Page = page,
+				Count = count
+			};
+
+			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getActiveConcernsCaseSummariesByOwner.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation($"Returning active Concerns cases for User Id {ownerId} page {page} count {count}", ownerId);
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
             
 	        return Ok(response);
         }
@@ -178,13 +192,27 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/{ownerId}/closed")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(string ownerId, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(
+			string ownerId,
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
         {
-	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId}");
-	        var caseSummaries = await _getClosedConcernsCaseSummariesByOwner.Execute(ownerId);
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
 
-	        _logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId}");
-	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
+			var parameters = new GetCaseSummariesByOwnerParameters()
+			{
+				Owner = ownerId,
+				Page = page,
+				Count = count
+			};
+
+			(IList<ClosedCaseSummaryResponse> caseSummaries, int recordCount) = await _getClosedConcernsCaseSummariesByOwner.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId} page {page} count {count}");
+	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
             
 	        return Ok(response);
         }
