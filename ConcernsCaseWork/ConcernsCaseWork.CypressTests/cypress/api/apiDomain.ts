@@ -1,7 +1,13 @@
 export type ResponseWrapper<T> =
 {
     data: T;
+    paging: PagingResponse
 }
+
+export type PagingResponse =
+{
+    recordCount: number
+};
 
 export type CreateCaseRequest =
 {
@@ -32,14 +38,19 @@ export type PatchCaseRequest =
 {
     urn: number;
     createdBy: string;
-}
+};
 
 export type PatchCaseResponse =
 {
 
-}
+};
 
 export type GetConcernResponse =
 {
     meansOfReferralId: number;
-}
+};
+
+export type GetOpenCasesByOwnerResponse =
+{
+
+};
