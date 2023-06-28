@@ -15,5 +15,7 @@
 		public int? Next { get; set; }
 
 		public int? Previous { get; set; }
+
+		public int RecordCount { get; set; }
 	}
 }

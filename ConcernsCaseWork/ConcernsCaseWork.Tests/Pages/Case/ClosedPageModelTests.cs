@@ -41,8 +41,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var caseSummaryModels = CaseSummaryModelFactory.BuildClosedCaseSummaryModels();
 
-			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>()))
-				.ReturnsAsync(caseSummaryModels);
+			var caseGroup = new CaseSummaryGroupModel<ClosedCaseSummaryModel>()
+			{
+				Cases = caseSummaryModels,
+			};
+
+			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>(), 1))
+				.ReturnsAsync(caseGroup);
 
 			var sut = SetupClosedPageModel(mockCaseSummaryService.Object, mockLogger.Object, true);
 
@@ -82,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
 			var telemetryClient = MockTelemetry.CreateMockTelemetryClient();
-			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>()))
+			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>(), 1))
 				.Throws<Exception>();
 
 			var pageModel = SetupClosedPageModel(mockCaseSummaryService.Object, mockLogger.Object ,true);

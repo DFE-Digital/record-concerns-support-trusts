@@ -55,9 +55,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker)
+	public async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker);
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker, page);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
 	}
 
@@ -72,6 +72,18 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		var result = new CaseSummaryGroupModel<ActiveCaseSummaryModel>();
 
 		var cases = await BuildActiveCaseSummaryModel(caseSummaries.Data);
+
+		result.Cases = cases;
+		result.Pagination = PaginationMapping.ToModel(caseSummaries.Paging);
+
+		return result;
+	}
+
+	private async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> BuildClosedCaseSummaryModel(ApiListWrapper<ClosedCaseSummaryDto> caseSummaries)
+	{
+		var result = new CaseSummaryGroupModel<ClosedCaseSummaryModel>();
+
+		var cases = await BuildClosedCaseSummaryModel(caseSummaries.Data);
 
 		result.Cases = cases;
 		result.Pagination = PaginationMapping.ToModel(caseSummaries.Paging);

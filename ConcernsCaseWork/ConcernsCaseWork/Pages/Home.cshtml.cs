@@ -31,9 +31,6 @@ namespace ConcernsCaseWork.Pages
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
 		public PaginationModel Pagination { get; set; }
-
-		[BindProperty(SupportsGet = true)]
-		public int PageNumber { get; set; } = 1;
 			
 		public HomePageModel(
 			ILogger<HomePageModel> logger,
