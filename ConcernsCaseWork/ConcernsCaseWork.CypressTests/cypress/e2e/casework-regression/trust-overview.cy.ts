@@ -2,6 +2,7 @@ import { toDisplayDate } from "../../support/formatDate";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import { Logger } from "cypress/common/logger";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
+import trustOverviewPage from "cypress/pages/trustOverviewPage";
 
 describe("Trust overview ", () =>
 {
@@ -15,18 +16,19 @@ describe("Trust overview ", () =>
         cy.basicCreateCase()
         .then((id: number) => {
             caseId = id + "";
-            return CaseManagementPage.getTrust()
-        })
+        });
 	});
 
     describe("When we create a case", () =>
     {
-        it("Should display trust details", () =>
+        it("Should display trust details on case management", () =>
         {
             //Only checking for the presence of the data, not the actual data becuase trust data may be sensitive/dynamic
             Logger.Log("Checking trust details are present");
             CaseManagementPage
-                .viewTrustOverview()
+                .viewTrustOverview();
+
+            trustOverviewPage
                 .trustTypeIsNotEmpty()
                 .trustAddressIsNotEmpty()
                 .trustAcademiesIsNotEmpty()
@@ -34,7 +36,7 @@ describe("Trust overview ", () =>
                 .trustPupilNumbersIsNotEmpty()
                 .trustGroupIdIsNotEmpty()
                 .trustUKPRNIsNotEmpty()
-                .trustCompanyHouseNumberIsNotEmpty()
+                .trustCompanyHouseNumberIsNotEmpty();
 
             Logger.Log("Checking accessibility on Trust Overview");
             cy.excuteAccessibilityTests();	
@@ -50,7 +52,7 @@ describe("Trust overview ", () =>
                         .hasConcern("Governance and compliance: Compliance")
                         .hasRiskToTrust("Amber")
                         .hasRiskToTrust("Green")
-                })
+                });
         });
     });
 })
