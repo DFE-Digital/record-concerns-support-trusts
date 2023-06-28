@@ -21,7 +21,7 @@ declare global {
     namespace Cypress {
         interface Chainable {
             getByTestId(id: string): Chainable<Element>;
-            containsTestId(id: string): Chainable<Element>;
+            containsByTestId(id: string): Chainable<Element>;
             getById(id: string): Chainable<Element>;
             waitForJavascript(): Chainable<Element>;
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;

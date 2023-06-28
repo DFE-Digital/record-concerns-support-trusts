@@ -66,15 +66,18 @@ describe("Your casework tests", () =>
 
                 if (casesToCreate > 0)
                 {
-                    for (let caseIdx = 0; caseIdx < casesToCreate; caseIdx++)
-                    {
-                        cases.push(CaseBuilder.buildOpenCase());
-                    }
+                    const interator = Array.from({ length: casesToCreate });
 
-                    cy.wrap(cases).each(() => {
-                        caseApi.getOpenCasesByOwner(Cypress.env(EnvUsername))
+                    cy.wrap(interator).each(($el, index, $list) => {
+                        cy.wait(10);
+
+                        const request = CaseBuilder.buildOpenCase();
+
+                        caseApi.post(request)
                             .then(() => {})
                     });
+
+                    cy.reload();
                 }
             });
         });
@@ -83,14 +86,12 @@ describe("Your casework tests", () =>
         {
             let pageOneCases: Array<string> = [];
             let pageTwoCases: Array<string> = [];
-            let allCases: Array<string> = [];
 
             caseworkTable
                 .getCaseIds()
                 .then((caseIds: Array<string>) =>
                 {
                     pageOneCases = caseIds;
-                    allCases = allCases.concat(pageOneCases);
 
                     Logger.Log("Ensure we have 5 cases on page one")
                     expect(pageOneCases.length).to.eq(5);
@@ -102,7 +103,6 @@ describe("Your casework tests", () =>
                 .then((caseIds: Array<string>) =>
                 {
                     pageTwoCases = caseIds;
-                    allCases = allCases.concat(pageTwoCases);
 
                     Logger.Log("Ensure we have 5 cases on page 2");
                     expect(pageTwoCases.length).to.equal(5);
