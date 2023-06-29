@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<OverviewPageModel> _logger;
+		private const int _pageCount = 5;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public PagedCaseSummaryModel ActiveCases { get; private set; }
@@ -47,10 +48,51 @@ namespace ConcernsCaseWork.Pages.Trust
 				{
 					throw new Exception("OverviewPageModel::TrustUkrn is null or invalid to parse");
 				}
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkprnValue);
+				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue,1,_pageCount);
+				ActiveCases.PageCount = (int)Math.Ceiling((double)ActiveCases.RecordCount / _pageCount);
+				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue,1,_pageCount);
+				ClosedCases.PageCount = (int)Math.Ceiling((double)ClosedCases.RecordCount / _pageCount);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Trust::OverviewPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+		}
+		
+		public async Task OnPostAsync(int page, string caseType)
+		{
+			try
+			{
+				_logger.LogInformation("Trust::OverviewPageModel::OnPostAsync");
+
+				var trustUkprnValue = RouteData.Values["id"].ToString();
+				if (string.IsNullOrEmpty(trustUkprnValue))
+				{
+					throw new Exception("OverviewPageModel::TrustUkrn is null or invalid to parse");
+				}
 
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkprnValue);
-				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue,1,5);
-				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue,1,5);
+				if (caseType == "active")
+				{
+					ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue, page, _pageCount);
+				}
+				else
+				{
+					ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue, 1, _pageCount);
+				}
+				ActiveCases.PageCount = ActiveCases.RecordCount / _pageCount;
+				if (caseType == "closed")
+				{
+					ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue, page, _pageCount);
+				}
+				else
+				{
+					ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue, 1, _pageCount);
+				}
+				ClosedCases.PageCount = ActiveCases.RecordCount / _pageCount;
 			}
 			catch (Exception ex)
 			{

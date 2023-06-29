@@ -10,6 +10,12 @@ public record PagedCaseSummaryModel
 	public string NextPageUrl { get; set; }
 	public bool HasNext { get; set; }
 	public bool HasPrevious { get; set; }
+	public string PreviousPageUrl { get; set; }
+	public string Sort { get; set; }
+	public string SearchPhrase { get; set; }
+	public int PageCount { get; set; }
+	
+	public int PageSize { get; set; }
 	
 	public IEnumerable<ActiveCaseSummaryModel> ActiveCases { get; set; }
 	public IEnumerable<ClosedCaseSummaryModel> ClosedCases { get; set; }

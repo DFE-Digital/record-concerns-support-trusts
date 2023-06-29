@@ -1744,3 +1744,9 @@ label.govuk-label .govuk-tag {
 	display: block;
 	text-transform: unset;
 }
+
+.disabled-link {
+  pointer-events: none; !important;
+  cursor: default; !important;
+  color: gray; !important;
+}
