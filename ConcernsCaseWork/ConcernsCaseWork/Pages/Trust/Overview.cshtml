@@ -56,13 +56,14 @@
 			@{
 				if (@Model.ActiveCases.ActiveCases.Any() && @Model.ActiveCases.PageCount>1)
 				{
-					<form method="post" action="overview" id="activePagination">
-						 <input type="hidden" name="currentPage" id="currentPageInput" value="@Model.ActiveCases.Page" />
+					<form method="post" action="" id="activePagination">
+						<input type="hidden" name="pageNo" id="activePage" value="@Model.ActiveCases.Page" />
+						 <input type="hidden" name="caseType" id="caseType" value="@Model.ActiveCases.Page" />
 						<nav class="govuk-pagination" role="navigation" aria-label="results">
 							@if (@Model.ActiveCases.Page > 1)
 							{
 								<div class="govuk-pagination__prev">
-									<a class="govuk-link govuk-pagination__link " href="#" onclick="changePage(event, @Model.ActiveCases.Page - 1)" rel="prev">
+									<a class="govuk-link govuk-pagination__link active " href="#" data-pageval="@Model.ActiveCases.Page - 1"  rel="prev">
 										<svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
 											<path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
 										</svg>
@@ -72,7 +73,7 @@
 							else
 							{
 								<div class="govuk-pagination__prev">
-									<a class="govuk-link govuk-pagination__link disabled-link" href="#" rel="prev">
+									<a class="govuk-link govuk-pagination__link disabled-link active" href="#"  rel="prev">
 										<svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
 											<path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
 										</svg>
@@ -85,7 +86,7 @@
 									if (i == @Model.ActiveCases.Page)
 									{
 										<li class="govuk-pagination__item">
-											<a class="govuk-link govuk-pagination__link  govuk-pagination__item--current" onclick="changePage(event, @i)" href="#" aria-label="@i">
+											<a class="govuk-link govuk-pagination__link  govuk-pagination__item--current active"  data-pageval="@i" href="#" aria-label="@i">
 												@i
 											</a>
 										</li>
@@ -93,7 +94,7 @@
 									else
 									{
 										<li class="govuk-pagination__item">
-											<a class="govuk-link govuk-pagination__link" href="#" onclick="changePage(event, @i)" aria-label="@i">
+											<a class="govuk-link govuk-pagination__link active" href="#" data-pageval="@i" aria-label="@i">
 												@i
 											</a>
 										</li>
@@ -104,7 +105,7 @@
 							@if (@Model.ActiveCases.HasNext)
 							{
 								<div class="govuk-pagination__next">
-									<a class="govuk-link govuk-pagination__link" href="#" rel="next">  <span class="govuk-pagination__link-title" onclick="changePage(event, @Model.ActiveCases.Page + 1)">Next</span>
+									<a class="govuk-link govuk-pagination__link active" href="#" data-pageval="@Model.ActiveCases.Page + 1" rel="next">  <span class="govuk-pagination__link-title" data-page="@Model.ActiveCases.Page + 1">Next</span>
 										<svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
 											<path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
 										</svg></a>
@@ -174,6 +175,7 @@
 
 
 <script type="application/javascript" nonce="@nonce">
+
 document.getElementById("hide-show-closed").addEventListener("click", function(){
 	console.log("show closed")
 	if (document.getElementById("closed-cases").hasAttribute("hidden")) {
@@ -198,14 +200,29 @@ document.getElementById("hide-show-active").addEventListener("click", function()
 	} 
 });	
 
-    function changePage(event, page) {
-        event.preventDefault(); // Prevent the default link behavior
 
-        // Update the value of the hidden input field with the new page number
-        document.getElementById("currentPageInput").value = page;
-
-        // Submit the form
-        document.getElementById("paginationForm").submit();
-    }
-
+	document.addEventListener("DOMContentLoaded", function(event) {
+            // Custom actions to perform on page load
+            console.log("Page loaded!");
+           
+            var parent = document.getElementById("activePagination");
+             // Add an event listener to catch the click event
+			parent.addEventListener("click", function(event) {
+				if (event.target.classList.contains("active")) {
+					var sourceElement = event.target;
+					console.log("Clicked on:", sourceElement.textContent);
+                    event.preventDefault();
+					var clicked = event.target;
+                    var data = clicked.dataset.pageval;
+					console.log(data); 
+					var pageNo = document.getElementById("activePage");
+					var  caseType= document.getElementById("caseType");
+					pageNo.value = data;
+					caseType.value = "active";
+					document.getElementById("activePagination").submit();
+					
+                }
+							
+			});
+        });
 </script>

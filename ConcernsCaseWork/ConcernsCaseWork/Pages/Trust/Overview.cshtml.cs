@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages.Trust
 			}
 		}
 		
-		public async Task OnPostAsync(int page, string caseType)
+		public async Task OnPostAsync(int pageNo, string caseType)
 		{
 			try
 			{
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkprnValue);
 				if (caseType == "active")
 				{
-					ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue, page, _pageCount);
+					ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue, pageNo, _pageCount);
 				}
 				else
 				{
@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				ActiveCases.PageCount = ActiveCases.RecordCount / _pageCount;
 				if (caseType == "closed")
 				{
-					ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue, page, _pageCount);
+					ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue, pageNo, _pageCount);
 				}
 				else
 				{
