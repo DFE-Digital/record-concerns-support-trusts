@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Trust
 			try
 			{
 				_logger.LogInformation("Trust::OverviewPageModel::OnPostAsync");
-
+				if (pageNo <= 0) { pageNo = 1;}
 				var trustUkprnValue = RouteData.Values["id"].ToString();
 				if (string.IsNullOrEmpty(trustUkprnValue))
 				{
