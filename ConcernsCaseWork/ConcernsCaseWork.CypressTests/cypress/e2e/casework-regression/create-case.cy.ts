@@ -9,6 +9,7 @@ import concernsApi from "cypress/api/concernsApi";
 import caseApi from "cypress/api/caseApi";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import validationComponent from "cypress/pages/validationComponent";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Creating a case", () =>
 {
@@ -17,7 +18,7 @@ describe("Creating a case", () =>
     const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-    
+
 	beforeEach(() => {
 		cy.login();
 	});
@@ -39,9 +40,25 @@ describe("Creating a case", () =>
         createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy");
 
+        Logger.Log("You must select a case error");
+        selectCaseTypePage
+            .continue()
+            .hasValidationError("Select case type");
+
+        Logger.Log("Checking accessibility on select case type");
+        cy.excuteAccessibilityTests();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
+
+        createCaseSummary
+            .hasTrustSummaryDetails("Ashton West End Primary Academy");
+
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
-            .addConcern()
+            .addConcern();
 
         validationComponent
             .hasValidationErrorsInOrder([
@@ -197,6 +214,14 @@ describe("Creating a case", () =>
         createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy");
 
+        Logger.Log("Create a valid concerns case type");
+            selectCaseTypePage
+                .withCaseType("Concerns")
+                .continue();
+
+        createCaseSummary
+            .hasTrustSummaryDetails("Ashton West End Primary Academy");
+
         Logger.Log("Create a valid concern");
         createConcernPage
             .withConcernType("Force majeure")
@@ -257,10 +282,6 @@ describe("Creating a case", () =>
             .hasEmptyCaseHistory();
     });
 
-    const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
-	const searchTermForSchool = "school";
-
     it('Should display an error if no trust is selected', () => {
 		createCasePage
             .createCase()
@@ -272,7 +293,7 @@ describe("Creating a case", () =>
 	it('Should display a warning if too many results', () => {
 		createCasePage
             .createCase()
-            .withTrustName(searchTermForSchool)
+            .withTrustName("school")
             .shouldNotHaveVisibleLoader()
             .hasTooManyResultsWarning("There are a large number of search results. Try a more specific search term.");
     });
@@ -285,6 +306,11 @@ describe("Creating a case", () =>
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
         Logger.Log("Create a valid concern");
         createConcernPage

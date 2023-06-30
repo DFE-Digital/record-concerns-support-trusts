@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
@@ -23,8 +24,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 	{
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly ISRMAService _srmaModelService;
-
-		public int NotesMaxLength => 2000;
 
 		[BindProperty]
 		public RadioButtonsUiComponent SRMAStatus { get; set; }
@@ -142,7 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				HintText = "Case owners can record any information they want that feels relevant to the action",
 				Text = new ValidateableString()
 				{
-					MaxLength = 2000,
+					MaxLength = SrmaConstants.NotesLength,
 					StringContents = contents,
 					DisplayName = "Notes"
 				}
