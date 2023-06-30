@@ -1,17 +1,20 @@
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCaseRequest } from "./apiDomain";
+import { getUkLocalDate } from "cypress/support/formatDate";
 
 export class CaseBuilder
 {
     public static buildOpenCase(): CreateCaseRequest
     {
+        const currentDate = getUkLocalDate();
+
         const result: CreateCaseRequest =
         {
-            createdAt: new Date().toISOString(),
-            reviewAt: new Date().toISOString(),
+            createdAt: currentDate,
+            reviewAt: currentDate,
             createdBy: Cypress.env(EnvUsername),
             trustUkprn: this.chooseRandomTrust(),
-            deEscalation: new Date().toISOString(),
+            deEscalation: currentDate,
             issue: "test",
             currentStatus: "current status",
             caseAim: "case aim",
