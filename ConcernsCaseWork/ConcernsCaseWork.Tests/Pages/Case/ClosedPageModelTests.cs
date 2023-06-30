@@ -44,6 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var caseGroup = new CaseSummaryGroupModel<ClosedCaseSummaryModel>()
 			{
 				Cases = caseSummaryModels,
+				Pagination = new PaginationModel()
 			};
 
 			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByCaseworker(It.IsAny<string>(), 1))
