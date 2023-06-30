@@ -35,18 +35,19 @@
                 var isChecked = Model.SelectedId == radioItem.Id ? "checked" : "";
                 var testId = !string.IsNullOrEmpty(radioItem.TestId) ? radioItem.TestId : radioItem.Label;
                 var radioItemSubContainerId = $"sub-item-container-{radioItem.Id}";
+                var radioItemElementId = $"{Model.ElementRootId}-{radioItem.Id}";
 				
 				<div class="govuk-radios__item">
-					<input class="govuk-radios__input" 
-					       id="@radioItem.Id" 
-					       name="@Model.Name.@nameof(Model.SelectedId)" 
-					       type="radio" 
+					<input class="govuk-radios__input"
+                           id="@radioItemElementId"
+                           name="@Model.Name.@nameof(Model.SelectedId)"
+					       type="radio"
 					       data-testid="@testId" 
 					       value="@radioItem.Id"
                            data-aria-controls="@radioItemSubContainerId"
 					       @isChecked />
 
-					<label class="govuk-label govuk-radios__label" for="@radioItem.Id">
+                    <label class="govuk-label govuk-radios__label" for="@radioItemElementId">
                         @if (@radioItem.IsHtmlLabel == true)
                         {
                             // Label contains HTML, so we can render it directly
