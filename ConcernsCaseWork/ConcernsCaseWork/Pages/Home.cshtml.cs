@@ -8,13 +8,12 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
@@ -31,6 +30,8 @@ namespace ConcernsCaseWork.Pages
 		private TelemetryClient _telemetry;
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
+		public PaginationModel Pagination { get; set; }
+			
 		public HomePageModel(
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
@@ -53,19 +54,14 @@ namespace ConcernsCaseWork.Pages
 
 			try
 			{
-				// Display all live cases for the current user.
-				// And in addition display live cases belonging to other users that the current user has expressed an interest in seeing.
-
-				// Check if logged user as role leader
-				// And get all live cases for each caseworker
-
-				// cases belonging to this user
-				// get any team members defined
 				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
 				await RecordUserSignIn(team);
 
-				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
+				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), PageNumber);
+				ActiveCases = activeCaseGroup.Cases;
+
+				Pagination = activeCaseGroup.Pagination;
 			}
 			catch (Exception ex)
 			{

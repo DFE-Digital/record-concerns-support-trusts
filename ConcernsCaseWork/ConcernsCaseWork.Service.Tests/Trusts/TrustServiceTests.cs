@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using AutoFixture;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -17,12 +18,18 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 	[Parallelizable(ParallelScope.All)]
 	public class TrustServiceTests
 	{
+		private static readonly Fixture _fixture = new();
+
 		[TestCaseSource(nameof(TrustSearchTestCases))]
 		public async Task WhenGetTrustsByPagination_ReturnsTrusts(string expectedUrl, IFeatureManager featureManager)
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, new ApiListWrapper<TrustSearchDto>.Pagination(1, expectedTrusts.Count, string.Empty));
+			var pagination = _fixture.Create<Pagination>();
+			pagination.Page = 1;
+			pagination.RecordCount = expectedTrusts.Count;
+
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, pagination);
 			var tramsApiEndpoint = "https://localhost";
 			HttpRequestMessage sentRequest = null;
 
