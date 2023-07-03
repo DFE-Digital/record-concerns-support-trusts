@@ -71,23 +71,30 @@
 <script type="application/javascript" nonce="@nonce">
 
     $(function () {
-        document.getElementById("closed-cases-tab").addEventListener("click", function(){
-            if (document.getElementById("closed-cases").hasAttribute("hidden")) {
-                document.getElementById("closed-cases").removeAttribute("hidden");
-                document.getElementById("active-cases").hidden = true;
-                document.getElementById("closed-cases-tab").setAttribute("aria-expanded","true");
-                document.getElementById("closed-cases-tab").setAttribute("aria-current","page");
-                document.getElementById("active-cases-tab").removeAttribute("aria-current");
+
+        const closedCasesTab = document.getElementById("closed-cases-tab");
+        const closedCasesTable = document.getElementById("closed-cases");
+
+        const activeCasesTab = document.getElementById("active-cases-tab");
+        const activeCasesTable = document.getElementById("active-cases");
+
+        closedCasesTab.addEventListener("click", function(){
+            if (closedCasesTable.hasAttribute("hidden")) {
+                closedCasesTable.removeAttribute("hidden");
+                closedCasesTab.setAttribute("aria-expanded","true");
+                closedCasesTab.setAttribute("aria-current","page");
+                activeCasesTable.hidden = true;
+                activeCasesTab.removeAttribute("aria-current");
             }
         });
 
-        document.getElementById("active-cases-tab").addEventListener("click", function(){
-            if (document.getElementById("active-cases").hasAttribute("hidden")) {
-                document.getElementById("active-cases").removeAttribute("hidden");
-                document.getElementById("closed-cases").hidden = true;
-                document.getElementById("active-cases-tab").setAttribute("aria-expanded","true");
-                document.getElementById("active-cases-tab").setAttribute("aria-current","page");
-                document.getElementById("closed-cases-tab").removeAttribute("aria-current");
+        activeCasesTab.addEventListener("click", function(){
+            if (activeCasesTable.hasAttribute("hidden")) {
+                activeCasesTable.removeAttribute("hidden");
+                activeCasesTab.setAttribute("aria-expanded","true");
+                activeCasesTab.setAttribute("aria-current","page");
+                closedCasesTable.hidden = true;
+                closedCasesTab.removeAttribute("aria-current");
             }
         });
     });
