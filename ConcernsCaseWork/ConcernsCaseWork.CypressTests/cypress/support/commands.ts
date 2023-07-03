@@ -5,9 +5,14 @@ import concernsApi from "../api/concernsApi";
 import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 import { Logger } from "../common/logger";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
+import { CaseBuilder } from "cypress/api/caseBuilder";
 
 Cypress.Commands.add("getByTestId", (id) => {
 	cy.get(`[data-testid="${id}"]`);
+});
+
+Cypress.Commands.add("containsByTestId", (id) => {
+	cy.get(`[data-testid*="${id}"]`);
 });
 
 Cypress.Commands.add("getById", (id) => {
@@ -77,7 +82,7 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 });
 
 Cypress.Commands.add("basicCreateCase", () => {
-    caseApi.post()
+    caseApi.post(CaseBuilder.buildOpenCase())
     .then((caseResponse) => {
         const caseId = caseResponse.urn;
         concernsApi.post(caseId);
