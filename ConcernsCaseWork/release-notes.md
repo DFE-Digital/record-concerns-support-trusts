@@ -1,3 +1,9 @@
+## 24.0.0
+* Increase SRMA notes field limit
+* Iterate hint text on Create Case page based on user feedback
+* Amend Create case button to adopt combined Concerns and Non Concerns Journey
+* Fixed radio button selection changing values in another radio group
+
 ## 23.0.0
 
 * Ability to change case owner using keyboard only input

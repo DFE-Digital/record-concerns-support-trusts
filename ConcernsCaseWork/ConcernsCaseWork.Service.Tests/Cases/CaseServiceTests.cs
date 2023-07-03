@@ -1,3 +1,4 @@
+using AutoFixture;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
@@ -14,6 +15,8 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 	[Parallelizable(ParallelScope.All)]
 	public class CaseServiceTests
 	{
+		private static readonly Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
@@ -209,9 +212,15 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
+			var pagination = _fixture.Create<Pagination>();
+			pagination.Page = 1;
+			pagination.RecordCount = 1;
+			pagination.NextPageUrl = string.Empty;
+
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(
 				expectedCases,
-				new ApiListWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+				pagination);
+
 			var concernsApiEndpoint = "https://localhost";
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
