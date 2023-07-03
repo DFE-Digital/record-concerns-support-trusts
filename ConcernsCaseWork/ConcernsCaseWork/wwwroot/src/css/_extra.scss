@@ -1744,3 +1744,8 @@ label.govuk-label .govuk-tag {
 	display: block;
 	text-transform: unset;
 }
+
+.govuk-pagination__link-disabled {
+	pointer-events: none;
+	opacity: 0.5
+}
