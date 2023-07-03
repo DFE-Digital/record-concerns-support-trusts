@@ -5,95 +5,91 @@
 @model ConcernsCaseWork.Pages.Trust.OverviewPageModel
 @addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
-
 @{
-	ViewData["Title"] = "Trust Overview";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Trust Overview";
+    var nonce = HttpContext.GetNonce();
 }
 
+<div class="govuk-width-container">
+    <div class="govuk-button-group">
+        <a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
+            Your casework
+        </a>
+        <a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
+            Find trust
+        </a>
+    </div>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-m">Trust Overview</span>
+        @Model.TrustDetailsModel.GiasData.GroupNameTitle
+    </h1>
+    <partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
+    <partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
 
-	<div class="govuk-width-container">
-		<div class="govuk-button-group">
-			<a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
-				Your casework
-			</a>
-			<a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
-				Find trust
-			</a>
-		</div>
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">Trust Overview</span>
-			@Model.TrustDetailsModel.GiasData.GroupNameTitle
-		</h1>
-		<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
-		<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
+    <h2 class="govuk-heading-m">
+        Active and closed cases
+    </h2>
+    <div class="govuk-button-group flexalign__right">
+        <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
+            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                Create case
+            </a>
+        </feature>
+        <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
+            <a class="govuk-button" asp-page="/case/concern/index" role="button" data-testid="create-case-button">
+                Create case
+            </a>
+        </feature>
+    </div>
 
-		<nav class="moj-sub-navigation" aria-label="Sub navigation">
-        
-          <ul class="moj-sub-navigation__list">
+    <nav class="moj-sub-navigation" aria-label="Sub navigation">
+
+        <ul class="moj-sub-navigation__list">
             <li class="moj-sub-navigation__item">
-	            <a id="hide-show-active" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" href="#active-cases"><span aria-hidden="false"></span>Active Cases</a>
+                <a id="active-cases-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Active Cases</a>
             </li>
-        
+
             <li class="moj-sub-navigation__item">
-              <a id="hide-show-closed" class="moj-sub-navigation__link" href="#closed-cases" aria-expanded="false"><span aria-hidden="true"></span>Closed Cases</a>
+                <a id="closed-cases-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Closed Cases</a>
             </li>
-        
-          
-          </ul>
-        
-        </nav>
-		
-		<div id ="active-cases">
-			<table class="govuk-table   govuk-!-margin-top-9" data-module="moj-sortable-table">
-            			<caption class="govuk-table__caption govuk-table__caption--m">
-            				<div class="govuk-button-group flexalign__right">
-            					<a asp-page="../case/concern/index" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-            						Create case
-            					</a>
-            				</div>
-            				Active cases
-            			</caption>
-            			<partial name="_TrustActiveCases" model="@Model.ActiveCases"/>
-            		</table>
-		</div>
-		<div id="closed-cases" hidden >
-			<table class="govuk-table  govuk-!-margin-top-9" data-module="moj-sortable-table">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
-                        Closed cases
-                    </caption>
-            		<partial name="_TrustClosedCases" model="@Model.ClosedCases"/>
-            </table>
-		</div>
-		
-		
-		
-	</div>
+        </ul>
+    </nav>
+
+    <div id="active-cases">
+        <table class="govuk-table   govuk-!-margin-top-9">
+            <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
+        </table>
+    </div>
+    <div id="closed-cases" hidden>
+        <table class="govuk-table  govuk-!-margin-top-9">
+            <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
+        </table>
+    </div>
+</div>
 
 
 <script type="application/javascript" nonce="@nonce">
-document.getElementById("hide-show-closed").addEventListener("click", function(){
-	console.log("show closed")
-	if (document.getElementById("closed-cases").hasAttribute("hidden")) {
-		console.log("show hidden");
-		document.getElementById("closed-cases").removeAttribute("hidden");
-		document.getElementById("active-cases").hidden = true;
-		document.getElementById("hide-show-closed").setAttribute("aria-expanded","true");
-		document.getElementById("hide-show-closed").setAttribute("aria-current","page");
-		document.getElementById("hide-show-active").removeAttribute("aria-current");
-	} 
-});
 
-document.getElementById("hide-show-active").addEventListener("click", function(){
-	console.log("show active")
-	if (document.getElementById("active-cases").hasAttribute("hidden")) {
-		console.log("show active");
-		document.getElementById("active-cases").removeAttribute("hidden");
-		document.getElementById("closed-cases").hidden = true;
-		document.getElementById("hide-show-active").setAttribute("aria-expanded","true");
-		document.getElementById("hide-show-active").setAttribute("aria-current","page");
-		document.getElementById("hide-show-closed").removeAttribute("aria-current");
-	} 
-});	
+    $(function () {
+        document.getElementById("closed-cases-tab").addEventListener("click", function(){
+            if (document.getElementById("closed-cases").hasAttribute("hidden")) {
+                document.getElementById("closed-cases").removeAttribute("hidden");
+                document.getElementById("active-cases").hidden = true;
+                document.getElementById("closed-cases-tab").setAttribute("aria-expanded","true");
+                document.getElementById("closed-cases-tab").setAttribute("aria-current","page");
+                document.getElementById("active-cases-tab").removeAttribute("aria-current");
+            }
+        });
+
+        document.getElementById("active-cases-tab").addEventListener("click", function(){
+            if (document.getElementById("active-cases").hasAttribute("hidden")) {
+                document.getElementById("active-cases").removeAttribute("hidden");
+                document.getElementById("closed-cases").hidden = true;
+                document.getElementById("active-cases-tab").setAttribute("aria-expanded","true");
+                document.getElementById("active-cases-tab").setAttribute("aria-current","page");
+                document.getElementById("closed-cases-tab").removeAttribute("aria-current");
+            }
+        });
+    });
 
 </script>
