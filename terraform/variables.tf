@@ -141,6 +141,16 @@ variable "enable_event_hub" {
   type        = bool
 }
 
+variable "enable_logstash_consumer" {
+  description = "Create an Event Hub consumer group for Logstash"
+  type        = bool
+}
+
+variable "eventhub_export_log_analytics_table_names" {
+  description = "List of Log Analytics table names that you want to export to Event Hub. See https://learn.microsoft.com/en-gb/azure/azure-monitor/logs/logs-data-export?tabs=portal#supported-tables for a list of supported tables"
+  type        = list(string)
+}
+
 variable "monitor_endpoint_healthcheck" {
   description = "Specify a route that should be monitored for a 200 OK status"
   type        = string
