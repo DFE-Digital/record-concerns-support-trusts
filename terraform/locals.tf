@@ -40,6 +40,8 @@ locals {
   key_vault_access_ipv4                         = var.key_vault_access_ipv4
   tfvars_filename                               = var.tfvars_filename
   enable_event_hub                              = var.enable_event_hub
+  enable_logstash_consumer                      = var.enable_logstash_consumer
+  eventhub_export_log_analytics_table_names     = var.eventhub_export_log_analytics_table_names
   enable_monitoring                             = var.enable_monitoring
   monitor_email_receivers                       = var.monitor_email_receivers
   monitor_endpoint_healthcheck                  = var.monitor_endpoint_healthcheck
