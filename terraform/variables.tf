@@ -239,6 +239,12 @@ variable "mssql_database_name" {
   type        = string
 }
 
+variable "mssql_server_public_access_enabled" {
+  description = "Enable public internet access to your MSSQL instance. Be sure to specify 'mssql_firewall_ipv4_allow_list' to restrict inbound connections"
+  type        = bool
+  default     = false
+}
+
 variable "mssql_firewall_ipv4_allow_list" {
   description = "A list of IPv4 Addresses that require remote access to the MSSQL Server"
   type        = list(string)
