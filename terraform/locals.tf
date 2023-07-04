@@ -21,6 +21,7 @@ locals {
   mssql_firewall_ipv4_allow_list                = var.mssql_firewall_ipv4_allow_list
   mssql_azuread_admin_username                  = var.mssql_azuread_admin_username
   mssql_azuread_admin_object_id                 = var.mssql_azuread_admin_object_id
+  mssql_server_public_access_enabled            = var.mssql_server_public_access_enabled
   redis_cache_sku                               = var.redis_cache_sku
   redis_cache_capacity                          = var.redis_cache_capacity
   enable_cdn_frontdoor                          = var.enable_cdn_frontdoor
