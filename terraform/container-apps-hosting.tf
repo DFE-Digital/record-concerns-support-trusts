@@ -10,12 +10,13 @@ module "azure_container_apps_hosting" {
 
   enable_container_registry = local.enable_container_registry
 
-  enable_mssql_database          = local.enable_mssql_database
-  mssql_server_admin_password    = local.mssql_server_admin_password
-  mssql_database_name            = local.mssql_database_name
-  mssql_firewall_ipv4_allow_list = local.mssql_firewall_ipv4_allow_list
-  mssql_azuread_admin_username   = local.mssql_azuread_admin_username
-  mssql_azuread_admin_object_id  = local.mssql_azuread_admin_object_id
+  enable_mssql_database              = local.enable_mssql_database
+  mssql_server_admin_password        = local.mssql_server_admin_password
+  mssql_database_name                = local.mssql_database_name
+  mssql_firewall_ipv4_allow_list     = local.mssql_firewall_ipv4_allow_list
+  mssql_azuread_admin_username       = local.mssql_azuread_admin_username
+  mssql_azuread_admin_object_id      = local.mssql_azuread_admin_object_id
+  mssql_server_public_access_enabled = local.mssql_server_public_access_enabled
 
   image_name = local.image_name
 
