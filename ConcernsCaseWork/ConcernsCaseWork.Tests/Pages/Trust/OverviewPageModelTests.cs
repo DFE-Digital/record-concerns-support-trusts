@@ -4,7 +4,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -26,10 +25,9 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			// arrange
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<OverviewPageModel>>();
 
-			var pageModel = SetupOverviewPageModel(mockTrustModelService.Object, mockCaseSummaryService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupOverviewPageModel(mockTrustModelService.Object, mockCaseSummaryService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", "");
@@ -47,7 +45,6 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			// arrange
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<OverviewPageModel>>();
 			var activeCaseSummaryModels = CaseSummaryModelFactory.BuildActiveCaseSummaryModels();
 			var closedCaseSummaryModels = CaseSummaryModelFactory.BuildClosedCaseSummaryModels();
@@ -57,13 +54,18 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 				Cases = activeCaseSummaryModels,
 			};
 
+			var closedCaseSummaryGroupModel = new CaseSummaryGroupModel<ClosedCaseSummaryModel>()
+			{
+				Cases = closedCaseSummaryModels
+			};
+
 			mockCaseSummaryService.Setup(c => c.GetActiveCaseSummariesByTrust(It.IsAny<string>(), 1))
 				.ReturnsAsync(activeCaseSummaryGroupModel);
-			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByTrust(It.IsAny<string>()))
-				.ReturnsAsync(closedCaseSummaryModels);
+			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByTrust(It.IsAny<string>(), 1))
+				.ReturnsAsync(closedCaseSummaryGroupModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
 
-			var pageModel = SetupOverviewPageModel(mockTrustModelService.Object, mockCaseSummaryService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupOverviewPageModel(mockTrustModelService.Object, mockCaseSummaryService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -83,16 +85,16 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 				Assert.That(pageModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite, Does.Contain("http"));
 
 				Assert.That(pageModel.ActiveCaseSummaryGroupModel.Cases, Is.EquivalentTo(activeCaseSummaryModels));
-				Assert.That(pageModel.ClosedCases, Is.EquivalentTo(closedCaseSummaryModels));
+				Assert.That(pageModel.ClosedCaseSummaryGroupModel.Cases, Is.EquivalentTo(closedCaseSummaryModels));
 			});
 	}
 
 		private static OverviewPageModel SetupOverviewPageModel(
-			 ITrustModelService mockTrustModelService, ICaseSummaryService mockCaseSummaryService, ITypeModelService mockTypeModelService, ILogger<OverviewPageModel> mockLogger, bool isAuthenticated = false)
+			 ITrustModelService mockTrustModelService, ICaseSummaryService mockCaseSummaryService, ILogger<OverviewPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new OverviewPageModel(mockTrustModelService, mockCaseSummaryService, mockTypeModelService, mockLogger)
+			return new OverviewPageModel(mockTrustModelService, mockCaseSummaryService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

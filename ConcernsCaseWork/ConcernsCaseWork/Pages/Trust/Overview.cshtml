@@ -31,16 +31,9 @@
             Active and closed cases
         </h2>
         <div class="govuk-button-group flexalign__right">
-            <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
-                <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-                    Create case
-                </a>
-            </feature>
-            <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
-                <a class="govuk-button" asp-page="/case/concern/index" role="button" data-testid="create-case-button">
-                    Create case
-                </a>
-            </feature>
+            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                Create case
+            </a>
         </div>
 
         <nav class="moj-sub-navigation" aria-label="Sub navigation">
@@ -60,9 +53,7 @@
             <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
         </div>
         <div id="closed-cases" hidden>
-            <table class="govuk-table  govuk-!-margin-top-9">
-                <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
-            </table>
+            <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
         </div>
     </feature>
     <feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
@@ -78,18 +69,8 @@
                 </a>
             </feature>
         </div>
-        <table class="govuk-table  govuk-!-margin-top-9">
-            <caption class="govuk-table__caption govuk-table__caption--m">
-                Active cases
-            </caption>
-            <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
-        </table>
-        <table class="govuk-table  govuk-!-margin-top-9">
-            <caption class="govuk-table__caption govuk-table__caption--m">
-                Closed cases
-            </caption>
-            <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
-        </table>
+        <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+        <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
     </feature>
 </div>
 

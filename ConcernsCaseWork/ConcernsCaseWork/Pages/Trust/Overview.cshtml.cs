@@ -21,16 +21,16 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ILogger<OverviewPageModel> _logger;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 
 		public CaseSummaryGroupModel<ActiveCaseSummaryModel> ActiveCaseSummaryGroupModel { get; set; }
+
+		public CaseSummaryGroupModel<ClosedCaseSummaryModel> ClosedCaseSummaryGroupModel { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "id")]
 		public string TrustUkPrn { get; set; }
 
 		public OverviewPageModel(ITrustModelService trustModelService,
 			ICaseSummaryService caseSummaryService,
-			ITypeModelService typeModelService,
 			ILogger<OverviewPageModel> logger)
 		{
 			_trustModelService = trustModelService;
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Pages.Trust
 
 				ActiveCaseSummaryGroupModel = await GetActiveCases(1);
 
-				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(TrustUkPrn);
+				ClosedCaseSummaryGroupModel = await GetClosedCases(1);
 			}
 			catch (Exception ex)
 			{
@@ -65,12 +65,29 @@ namespace ConcernsCaseWork.Pages.Trust
 			return Partial("_TrustActiveCases", activeCaseSummaryGroup);
 		}
 
+		public async Task<IActionResult> OnGetPaginatedClosedCases(int pageNumber)
+		{
+			var closedCaseSummaryGroup = await GetClosedCases(pageNumber);
+
+			return Partial("_TrustActiveCases", closedCaseSummaryGroup);
+		}
+
 		private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCases(int pageNumber)
 		{
 			var result = await _caseSummaryService.GetActiveCaseSummariesByTrust(TrustUkPrn, pageNumber);
 			result.Pagination.Url = $"/trust/{TrustUkPrn}/overview?handler=PaginatedActiveCases";
 			result.Pagination.ContentContainerId = "active-cases";
 			result.Pagination.ElementIdPrefix = "active-cases";
+
+			return result;
+		}
+
+		private async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> GetClosedCases(int pageNumber)
+		{
+			var result = await _caseSummaryService.GetClosedCaseSummariesByTrust(TrustUkPrn, pageNumber);
+			result.Pagination.Url = $"/trust/{TrustUkPrn}/overview?handler=PaginatedClosedCases";
+			result.Pagination.ContentContainerId = "closed-cases";
+			result.Pagination.ElementIdPrefix = "closed-cases";
 
 			return result;
 		}
