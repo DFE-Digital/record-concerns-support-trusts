@@ -64,48 +64,47 @@
     {
         <script type="application/javascript" nonce="@nonce">
 
-            function onPageMoved()
-            {
-                $("#@nextButtonId").on("click", function(e) {
-                    e.preventDefault();
+            $(function () {
+                onPageMoved();
 
-                    const pageNumber = $('#@nextPageValueId').val();
-
-                    refreshContent(pageNumber);
-                });
-
-                $("#@previousButtonId").on("click", function(e) {
-                    e.preventDefault();
-
-                    const pageNumber = $('#@previousPageValueId').val();
-
-                    refreshContent(pageNumber);
-                });
-
-                var numberedPageLinks = $('#@paginationContainerId').find('[data-page-number-link]');
-
-                numberedPageLinks.each(function() {
-                    const pageNumber = $(this).data('page-number-link');
-
-                    $(this).click(function(e) {
-
+                function onPageMoved() {
+                    $("#@nextButtonId").on("click", function(e) {
                         e.preventDefault();
+
+                        const pageNumber = $('#@nextPageValueId').val();
 
                         refreshContent(pageNumber);
                     });
-                });
-            }
 
-            function refreshContent(pageNumber) {
-                $.get(`@Model.Url&pageNumber=${pageNumber}`)
-                    .done(function (response) {
-                        $("#@Model.ContentContainerId").html(response);
-                        onPageMoved();
+                    $("#@previousButtonId").on("click", function(e) {
+                        e.preventDefault();
+
+                        const pageNumber = $('#@previousPageValueId').val();
+
+                        refreshContent(pageNumber);
                     });
-            }
 
-            $(function () {
-                onPageMoved();
+                    var numberedPageLinks = $('#@paginationContainerId').find('[data-page-number-link]');
+
+                    numberedPageLinks.each(function() {
+                        const pageNumber = $(this).data('page-number-link');
+
+                        $(this).click(function(e) {
+
+                            e.preventDefault();
+
+                            refreshContent(pageNumber);
+                        });
+                    });
+                }
+
+                function refreshContent(pageNumber) {
+                    $.get(`@Model.Url&pageNumber=${pageNumber}`)
+                        .done(function (response) {
+                            $("#@Model.ContentContainerId").html(response);
+                            onPageMoved();
+                        });
+                }
             });
         </script>
     }

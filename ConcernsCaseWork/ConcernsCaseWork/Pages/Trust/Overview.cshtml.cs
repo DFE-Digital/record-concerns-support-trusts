@@ -2,12 +2,10 @@
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Trust
@@ -69,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Trust
 		{
 			var closedCaseSummaryGroup = await GetClosedCases(pageNumber);
 
-			return Partial("_TrustActiveCases", closedCaseSummaryGroup);
+			return Partial("_TrustClosedCases", closedCaseSummaryGroup);
 		}
 
 		private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCases(int pageNumber)
@@ -77,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Trust
 			var result = await _caseSummaryService.GetActiveCaseSummariesByTrust(TrustUkPrn, pageNumber);
 			result.Pagination.Url = $"/trust/{TrustUkPrn}/overview?handler=PaginatedActiveCases";
 			result.Pagination.ContentContainerId = "active-cases";
-			result.Pagination.ElementIdPrefix = "active-cases";
+			result.Pagination.ElementIdPrefix = "active-cases-";
 
 			return result;
 		}
@@ -87,7 +85,7 @@ namespace ConcernsCaseWork.Pages.Trust
 			var result = await _caseSummaryService.GetClosedCaseSummariesByTrust(TrustUkPrn, pageNumber);
 			result.Pagination.Url = $"/trust/{TrustUkPrn}/overview?handler=PaginatedClosedCases";
 			result.Pagination.ContentContainerId = "closed-cases";
-			result.Pagination.ElementIdPrefix = "closed-cases";
+			result.Pagination.ElementIdPrefix = "closed-cases-";
 
 			return result;
 		}
