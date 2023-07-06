@@ -62,7 +62,15 @@
                 Create case
             </a>
         </div>
+
+        <h2 class="govuk-heading-m">
+            Active cases
+        </h2>
         <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+
+        <h2 class="govuk-heading-m">
+            Closed cases
+        </h2>
         <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
     </feature>
 </div>
