@@ -49,9 +49,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 

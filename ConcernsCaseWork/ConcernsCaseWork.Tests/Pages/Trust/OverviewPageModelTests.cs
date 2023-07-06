@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -51,9 +52,13 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var activeCaseSummaryModels = CaseSummaryModelFactory.BuildActiveCaseSummaryModels();
 			var closedCaseSummaryModels = CaseSummaryModelFactory.BuildClosedCaseSummaryModels();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var activeCaseSummaryGroupModel = new CaseSummaryGroupModel<ActiveCaseSummaryModel>()
+			{
+				Cases = activeCaseSummaryModels,
+			};
 
-			mockCaseSummaryService.Setup(c => c.GetActiveCaseSummariesByTrust(It.IsAny<string>()))
-				.ReturnsAsync(activeCaseSummaryModels);
+			mockCaseSummaryService.Setup(c => c.GetActiveCaseSummariesByTrust(It.IsAny<string>(), 1))
+				.ReturnsAsync(activeCaseSummaryGroupModel);
 			mockCaseSummaryService.Setup(c => c.GetClosedCaseSummariesByTrust(It.IsAny<string>()))
 				.ReturnsAsync(closedCaseSummaryModels);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
@@ -77,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 	
 				Assert.That(pageModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite, Does.Contain("http"));
 
-				Assert.That(pageModel.ActiveCases, Is.EquivalentTo(activeCaseSummaryModels));
+				Assert.That(pageModel.ActiveCaseSummaryGroupModel.Cases, Is.EquivalentTo(activeCaseSummaryModels));
 				Assert.That(pageModel.ClosedCases, Is.EquivalentTo(closedCaseSummaryModels));
 			});
 	}
