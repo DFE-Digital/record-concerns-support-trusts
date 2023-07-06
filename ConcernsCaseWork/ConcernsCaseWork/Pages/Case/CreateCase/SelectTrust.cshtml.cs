@@ -21,7 +21,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-[FeatureGate(FeatureFlags.IsNonConcernsPageEnabled)]
 public class SelectTrustPageModel : AbstractPageModel
 {
 	private readonly ITrustModelService _trustModelService;

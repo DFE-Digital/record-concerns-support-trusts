@@ -33,17 +33,9 @@
 
                 <div class="govuk-tabs__panel" id="your-casework">
                     <div class="govuk-button-group concerns-align-buttons-right-in-govuk-button-group">
-                        <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
-                            <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
-                                Create case
-                            </a>
-                        </feature>
-                        <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
-                            <a class="govuk-button" asp-page="/case/index" role="button" data-testid="create-case-button">
-                                Create case
-                            </a>
-                        </feature>
-
+                        <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
+                            Create case
+                        </a>
                         <a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
                             Find trust
                         </a>
