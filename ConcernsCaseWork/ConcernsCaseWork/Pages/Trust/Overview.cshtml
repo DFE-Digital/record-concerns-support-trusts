@@ -58,16 +58,9 @@
     </feature>
     <feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
         <div class="govuk-button-group flexalign__right">
-            <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
-                <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-                    Create case
-                </a>
-            </feature>
-            <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
-                <a class="govuk-button" asp-page="/case/concern/index" role="button" data-testid="create-case-button">
-                    Create case
-                </a>
-            </feature>
+            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                Create case
+            </a>
         </div>
         <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
         <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
