@@ -8,5 +8,5 @@ public interface IApiCaseSummaryService
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page);
 	Task<ApiListWrapper<ClosedCaseSummaryDto>> GetClosedCaseSummariesByCaseworker(string caseworker, int? page);
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesByTrust(string trustUkPrn, int? page);
-	Task<IEnumerable<ClosedCaseSummaryDto>> GetClosedCaseSummariesByTrust(string trustUkPrn);
+	Task<ApiListWrapper<ClosedCaseSummaryDto>> GetClosedCaseSummariesByTrust(string trustUkPrn, int? page);
 }
