@@ -76,16 +76,16 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+				Assert.That(pageModel.TrustOverviewModel.TrustDetailsModel, Is.Not.Null);
 
-				Assert.That(pageModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsModel.GiasData.GroupName));
-				Assert.That(pageModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(trustDetailsModel.GiasData.GroupName.ToTitle()));
-				Assert.That(pageModel.TrustDetailsModel, Is.EqualTo(trustDetailsModel));
+				Assert.That(pageModel.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsModel.GiasData.GroupName));
+				Assert.That(pageModel.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(trustDetailsModel.GiasData.GroupName.ToTitle()));
+				Assert.That(pageModel.TrustOverviewModel.TrustDetailsModel, Is.EqualTo(trustDetailsModel));
 	
-				Assert.That(pageModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite, Does.Contain("http"));
+				Assert.That(pageModel.TrustOverviewModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite, Does.Contain("http"));
 
-				Assert.That(pageModel.ActiveCaseSummaryGroupModel.Cases, Is.EquivalentTo(activeCaseSummaryModels));
-				Assert.That(pageModel.ClosedCaseSummaryGroupModel.Cases, Is.EquivalentTo(closedCaseSummaryModels));
+				Assert.That(pageModel.TrustOverviewModel.ActiveCaseSummaryGroupModel.Cases, Is.EquivalentTo(activeCaseSummaryModels));
+				Assert.That(pageModel.TrustOverviewModel.ClosedCaseSummaryGroupModel.Cases, Is.EquivalentTo(closedCaseSummaryModels));
 			});
 	}
 

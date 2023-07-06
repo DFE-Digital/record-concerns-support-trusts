@@ -1,65 +1,95 @@
-﻿@model ConcernsCaseWork.Models.TrustDetailsModel
-
-@{ 
-//var trustContactNumber = !string.IsNullOrEmpty(Model.IfdData.TrustContactPhoneNumber) ? Model.IfdData.TrustContactPhoneNumber : "Visit trust website";//var trustContactNumber = !string.IsNullOrEmpty(Model.IfdData.TrustContactPhoneNumber) ? Model.IfdData.TrustContactPhoneNumber : "Visit trust website";
+﻿@using ConcernsCaseWork.API.Contracts.Configuration;
+@using ConcernsCaseWork.Models;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
+@model TrustOverviewModel
+@{
+    var nonce = Context.GetNonce();
 }
 
-<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-3">
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Type</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-type">
-			@Model.GiasData.GroupType
-		</dd>
-	</div>
+<partial name="_TrustDetails" model="@Model.TrustDetailsModel" />
+<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
 
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Address</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-address">
-			@Model.GiasData.GroupContactAddress.DisplayAddress
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Number of academies</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-academies">
-			@Model.Establishments.Count
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Total pupil capacity</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-pupil-capacity">
-			@Model.TotalPupilCapacity
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Number of pupils</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-number-of-pupils">
-			@Model.TotalPupils (@Model.PupilCapacityPercentage%)
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Group Id</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-group-id">
-			@Model.GiasData.GroupId
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">UKPRN (UK provider reference number) </dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-UKPRN">
-			@Model.GiasData.UkPrn
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Trust phone number</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-phone-number">
-			@*@trustContactNumber*@
-		</dd>
-	</div>
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Companies House</dt>
-		<dd class="govuk-summary-list__value" data-testid="trust-company-house-number">
-			<a href="@Model.GiasData.CompaniesHouseWebsite" target="_blank">
-				@Model.GiasData.CompaniesHouseNumber (opens in new tab)
-			</a>
-		</dd>
-	</div>
-</dl>
+<feature name="@FeatureFlags.IsTrustCasesTabsEnabled">
+    <h2 class="govuk-heading-m">
+        Active and closed cases
+    </h2>
+    <div class="govuk-button-group flexalign__right">
+        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+            Create case
+        </a>
+    </div>
+
+    <nav class="moj-sub-navigation" aria-label="Sub navigation">
+
+        <ul class="moj-sub-navigation__list">
+            <li class="moj-sub-navigation__item">
+                <a id="active-cases-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Active Cases</a>
+            </li>
+
+            <li class="moj-sub-navigation__item">
+                <a id="closed-cases-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Closed Cases</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="active-cases">
+        <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+    </div>
+    <div id="closed-cases" hidden>
+        <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
+    </div>
+</feature>
+<feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
+    <div class="govuk-button-group flexalign__right">
+        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+            Create case
+        </a>
+    </div>
+
+    <h2 class="govuk-heading-m">
+        Active cases
+    </h2>
+    <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+
+    <h2 class="govuk-heading-m">
+        Closed cases
+    </h2>
+    <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
+</feature>
+
+<script type="application/javascript" nonce="@nonce">
+
+    $(function () {
+        const closedCasesTab = document.getElementById("closed-cases-tab");
+        const closedCasesTableContainer = document.getElementById("closed-cases");
+
+        const activeCasesTab = document.getElementById("active-cases-tab");
+        const activeCasesTableContainer = document.getElementById("active-cases");
+
+        if (closedCasesTab) {
+            closedCasesTab.addEventListener("click", function() {
+                if (closedCasesTableContainer.hasAttribute("hidden")) {
+                    closedCasesTableContainer.removeAttribute("hidden");
+                    closedCasesTab.setAttribute("aria-expanded","true");
+                    closedCasesTab.setAttribute("aria-current","page");
+                    activeCasesTableContainer.hidden = true;
+                    activeCasesTab.removeAttribute("aria-current");
+                }
+            });
+        }
+
+        if (activeCasesTab) {
+            activeCasesTab.addEventListener("click", function() {
+                if (activeCasesTableContainer.hasAttribute("hidden")) {
+                    activeCasesTableContainer.removeAttribute("hidden");
+                    activeCasesTab.setAttribute("aria-expanded","true");
+                    activeCasesTab.setAttribute("aria-current","page");
+                    closedCasesTableContainer.hidden = true;
+                    closedCasesTab.removeAttribute("aria-current");
+                }
+            });
+        }
+    });
+
+</script>
