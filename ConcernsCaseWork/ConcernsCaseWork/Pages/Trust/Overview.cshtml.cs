@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -18,11 +19,7 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<OverviewPageModel> _logger;
 		
-		public TrustDetailsModel TrustDetailsModel { get; private set; }
-
-		public CaseSummaryGroupModel<ActiveCaseSummaryModel> ActiveCaseSummaryGroupModel { get; set; }
-
-		public CaseSummaryGroupModel<ClosedCaseSummaryModel> ClosedCaseSummaryGroupModel { get; set; }
+		public TrustOverviewModel TrustOverviewModel { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "id")]
 		public string TrustUkPrn { get; set; }
@@ -40,13 +37,19 @@ namespace ConcernsCaseWork.Pages.Trust
 		{
 			try
 			{
-				_logger.LogInformation("Trust::OverviewPageModel::OnGetAsync");
+				_logger.LogMethodEntered();
 
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(TrustUkPrn);
+				var trustDetailsModel = await _trustModelService.GetTrustByUkPrn(TrustUkPrn);
+				var activeCaseSummaryGroupModel = await GetActiveCases(1);
+				var closedCaseSummaryGroupModel = await GetClosedCases(1);
 
-				ActiveCaseSummaryGroupModel = await GetActiveCases(1);
+				TrustOverviewModel = new TrustOverviewModel()
+				{
+					TrustDetailsModel = trustDetailsModel,
+					ActiveCaseSummaryGroupModel = activeCaseSummaryGroupModel,
+					ClosedCaseSummaryGroupModel = closedCaseSummaryGroupModel
+				};
 
-				ClosedCaseSummaryGroupModel = await GetClosedCases(1);
 			}
 			catch (Exception ex)
 			{
