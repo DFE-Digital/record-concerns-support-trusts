@@ -21,9 +21,13 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ILogger<OverviewPageModel> _logger;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
-		
+
+		public CaseSummaryGroupModel<ActiveCaseSummaryModel> ActiveCaseSummaryGroupModel { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "id")]
+		public string TrustUkPrn { get; set; }
+
 		public OverviewPageModel(ITrustModelService trustModelService,
 			ICaseSummaryService caseSummaryService,
 			ITypeModelService typeModelService,
@@ -40,15 +44,11 @@ namespace ConcernsCaseWork.Pages.Trust
 			{
 				_logger.LogInformation("Trust::OverviewPageModel::OnGetAsync");
 
-				var trustUkprnValue = RouteData.Values["id"].ToString();
-				if (string.IsNullOrEmpty(trustUkprnValue))
-				{
-					throw new Exception("OverviewPageModel::TrustUkrn is null or invalid to parse");
-				}
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(TrustUkPrn);
 
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkprnValue);
-				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkprnValue);
-				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkprnValue);
+				ActiveCaseSummaryGroupModel = await GetActiveCases(1);
+
+				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByTrust(TrustUkPrn);
 			}
 			catch (Exception ex)
 			{
@@ -56,6 +56,23 @@ namespace ConcernsCaseWork.Pages.Trust
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+		}
+
+		public async Task<IActionResult> OnGetPaginatedActiveCases(int pageNumber)
+		{
+			var activeCaseSummaryGroup = await GetActiveCases(pageNumber);
+
+			return Partial("_TrustActiveCases", activeCaseSummaryGroup);
+		}
+
+		private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCases(int pageNumber)
+		{
+			var result = await _caseSummaryService.GetActiveCaseSummariesByTrust(TrustUkPrn, pageNumber);
+			result.Pagination.Url = $"/trust/{TrustUkPrn}/overview?handler=PaginatedActiveCases";
+			result.Pagination.ContentContainerId = "active-cases";
+			result.Pagination.ElementIdPrefix = "active-cases";
+
+			return result;
 		}
 	}
 }

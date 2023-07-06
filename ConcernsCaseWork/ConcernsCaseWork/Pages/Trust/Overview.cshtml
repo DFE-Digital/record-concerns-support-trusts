@@ -57,9 +57,7 @@
         </nav>
 
         <div id="active-cases">
-            <table class="govuk-table   govuk-!-margin-top-9">
-                <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
-            </table>
+            <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
         </div>
         <div id="closed-cases" hidden>
             <table class="govuk-table  govuk-!-margin-top-9">
@@ -68,23 +66,23 @@
         </div>
     </feature>
     <feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
+        <div class="govuk-button-group flexalign__right">
+            <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
+                <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                    Create case
+                </a>
+            </feature>
+            <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
+                <a class="govuk-button" asp-page="/case/concern/index" role="button" data-testid="create-case-button">
+                    Create case
+                </a>
+            </feature>
+        </div>
         <table class="govuk-table  govuk-!-margin-top-9">
             <caption class="govuk-table__caption govuk-table__caption--m">
-                <div class="govuk-button-group flexalign__right">
-                    <feature name="@FeatureFlags.IsNonConcernsPageEnabled">
-                        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-                            Create case
-                        </a>
-                    </feature>
-                    <feature name="@FeatureFlags.IsNonConcernsPageEnabled" negate="true">
-                        <a class="govuk-button" asp-page="/case/concern/index" role="button" data-testid="create-case-button">
-                            Create case
-                        </a>
-                    </feature>
-                </div>
                 Active cases
             </caption>
-            <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
+            <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
         </table>
         <table class="govuk-table  govuk-!-margin-top-9">
             <caption class="govuk-table__caption govuk-table__caption--m">
@@ -99,20 +97,19 @@
 <script type="application/javascript" nonce="@nonce">
 
     $(function () {
-
         const closedCasesTab = document.getElementById("closed-cases-tab");
-        const closedCasesTable = document.getElementById("closed-cases");
+        const closedCasesTableContainer = document.getElementById("closed-cases");
 
         const activeCasesTab = document.getElementById("active-cases-tab");
-        const activeCasesTable = document.getElementById("active-cases");
+        const activeCasesTableContainer = document.getElementById("active-cases");
 
         if (closedCasesTab) {
             closedCasesTab.addEventListener("click", function() {
-                if (closedCasesTable.hasAttribute("hidden")) {
-                    closedCasesTable.removeAttribute("hidden");
+                if (closedCasesTableContainer.hasAttribute("hidden")) {
+                    closedCasesTableContainer.removeAttribute("hidden");
                     closedCasesTab.setAttribute("aria-expanded","true");
                     closedCasesTab.setAttribute("aria-current","page");
-                    activeCasesTable.hidden = true;
+                    activeCasesTableContainer.hidden = true;
                     activeCasesTab.removeAttribute("aria-current");
                 }
             });
@@ -120,11 +117,11 @@
 
         if (activeCasesTab) {
             activeCasesTab.addEventListener("click", function() {
-                if (activeCasesTable.hasAttribute("hidden")) {
-                    activeCasesTable.removeAttribute("hidden");
+                if (activeCasesTableContainer.hasAttribute("hidden")) {
+                    activeCasesTableContainer.removeAttribute("hidden");
                     activeCasesTab.setAttribute("aria-expanded","true");
                     activeCasesTab.setAttribute("aria-current","page");
-                    closedCasesTable.hidden = true;
+                    closedCasesTableContainer.hidden = true;
                     closedCasesTab.removeAttribute("aria-current");
                 }
             });

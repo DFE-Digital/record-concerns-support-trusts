@@ -163,12 +163,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseModel.RecordsModel = recordsModel;
 
 			var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-			var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
+			var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn, 1);
 			var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
 			var caseActionsTask = PopulateCaseActions(CaseUrn);
 			Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
 			TrustDetailsModel = trustDetailsTask.Result;
-			ActiveCases = activeTrustCasesTask.Result;
+
+			var activeCaseGroup = activeTrustCasesTask.Result;
+
+			ActiveCases = activeCaseGroup.Cases;
 			ClosedCases = closedTrustCasesTask.Result;
 			NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			await UpdateCacheService(CaseModel);
