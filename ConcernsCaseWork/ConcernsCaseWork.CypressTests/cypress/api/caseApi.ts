@@ -1,6 +1,6 @@
 import { EnvApi, EnvUsername } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
-import { CreateCaseRequest, CreateCaseResponse, GetOpenCasesByOwnerResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper } from "./apiDomain";
+import { CreateCaseRequest, CreateCaseResponse, GetClosedCasesByOwnerResponse, GetOpenCasesByOwnerResponse, GetOpenCasesByTrustResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper } from "./apiDomain";
 import { CaseBuilder } from "./caseBuilder";
 
 class CaseApi extends ApiBase {
@@ -43,6 +43,17 @@ class CaseApi extends ApiBase {
         return cy.request<ResponseWrapper<GetOpenCasesByOwnerResponse>>({
             method: 'GET',
             url: Cypress.env(EnvApi) + `/v2/concerns-cases/summary/${ownerId}/active?page=1&count=5`,
+            headers: this.getHeaders(),
+        })
+        .then((response => {
+            return response.body;
+        }));
+    }
+
+    public getOpenCasesByTrust(trustUkPrn: string): Cypress.Chainable<ResponseWrapper<GetOpenCasesByTrustResponse>> {
+        return cy.request<ResponseWrapper<GetOpenCasesByTrustResponse>>({
+            method: 'GET',
+            url: Cypress.env(EnvApi) + `/v2/concerns-cases/summary/bytrust/${trustUkPrn}/active?page=1&count=5`,
             headers: this.getHeaders(),
         })
         .then((response => {
