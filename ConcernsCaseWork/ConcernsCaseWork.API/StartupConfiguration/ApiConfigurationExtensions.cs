@@ -19,7 +19,14 @@ public static class ApiConfigurationExtensions
 			config.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 		});
 
-		services.AddControllers();
+		services.AddControllers()
+			.ConfigureApiBehaviorOptions(options =>
+			{
+				//default behaviour for binding complex types is to assume they come from request body
+				//Enabling this setting allows mapping of MediatR request objections in the controller action
+				options.SuppressInferBindingSourcesForParameters = true;
+			});
+
 		services.AddApiVersioning(config =>
 		{
 			config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
