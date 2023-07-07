@@ -141,6 +141,16 @@ variable "enable_event_hub" {
   type        = bool
 }
 
+variable "enable_logstash_consumer" {
+  description = "Create an Event Hub consumer group for Logstash"
+  type        = bool
+}
+
+variable "eventhub_export_log_analytics_table_names" {
+  description = "List of Log Analytics table names that you want to export to Event Hub. See https://learn.microsoft.com/en-gb/azure/azure-monitor/logs/logs-data-export?tabs=portal#supported-tables for a list of supported tables"
+  type        = list(string)
+}
+
 variable "monitor_endpoint_healthcheck" {
   description = "Specify a route that should be monitored for a 200 OK status"
   type        = string
@@ -227,6 +237,12 @@ variable "mssql_server_admin_password" {
 variable "mssql_database_name" {
   description = "The name of the MSSQL database to create. Must be set if `enable_mssql_database` is true"
   type        = string
+}
+
+variable "mssql_server_public_access_enabled" {
+  description = "Enable public internet access to your MSSQL instance. Be sure to specify 'mssql_firewall_ipv4_allow_list' to restrict inbound connections"
+  type        = bool
+  default     = false
 }
 
 variable "mssql_firewall_ipv4_allow_list" {
