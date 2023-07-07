@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		[HttpGet(Name = nameof(List))]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.OK)]
-		public async Task<IActionResult> List(List.Query query)
+		public async Task<IActionResult> List([FromQuery]List.Query query)
 		{
 			var model = await _mediator.Send(query);
 			return Ok(model.Items);
@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		[HttpGet("ukprn/{ukprn}", Name = nameof(GetByUKPRN))]
 		[ProducesResponseType((int)HttpStatusCode.OK)]
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
-		public async Task<IActionResult> GetByUKPRN(GetByUKPRN.Query query)
+		public async Task<IActionResult> GetByUKPRN([FromRoute]GetByUKPRN.Query query)
 		{
 			var model = await _mediator.Send(query);
 			if (model == null)
