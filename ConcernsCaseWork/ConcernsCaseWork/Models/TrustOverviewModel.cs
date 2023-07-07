@@ -7,5 +7,7 @@
 		public CaseSummaryGroupModel<ActiveCaseSummaryModel> ActiveCaseSummaryGroupModel { get; set; }
 
 		public CaseSummaryGroupModel<ClosedCaseSummaryModel> ClosedCaseSummaryGroupModel { get; set; }
+
+		public bool CanCreateCase { get; set; }
 	}
 }

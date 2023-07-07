@@ -47,15 +47,15 @@ namespace ConcernsCaseWork.Pages.Trust
 				{
 					TrustDetailsModel = trustDetailsModel,
 					ActiveCaseSummaryGroupModel = activeCaseSummaryGroupModel,
-					ClosedCaseSummaryGroupModel = closedCaseSummaryGroupModel
+					ClosedCaseSummaryGroupModel = closedCaseSummaryGroupModel,
+					CanCreateCase = true
 				};
 
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Trust::OverviewPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
 		}
 

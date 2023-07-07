@@ -14,11 +14,15 @@
     <h2 class="govuk-heading-m">
         Active and closed cases
     </h2>
-    <div class="govuk-button-group flexalign__right">
-        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-            Create case
-        </a>
-    </div>
+
+    @if (Model.CanCreateCase)
+    {
+        <div class="govuk-button-group flexalign__right">
+            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                Create case
+            </a>
+        </div>
+    }
 
     <nav class="moj-sub-navigation" aria-label="Sub navigation">
 
@@ -41,11 +45,14 @@
     </div>
 </feature>
 <feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
-    <div class="govuk-button-group flexalign__right">
-        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-            Create case
-        </a>
-    </div>
+    @if (Model.CanCreateCase)
+    {
+        <div class="govuk-button-group flexalign__right">
+            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+                Create case
+            </a>
+        </div>
+    }
 
     <h2 class="govuk-heading-m">
         Active cases
