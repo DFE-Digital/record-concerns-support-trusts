@@ -76,6 +76,30 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await context.SaveChangesAsync();
 		}
 
+		[Fact]
+		public async Task When_GetList_Return_OK_And_Created_ItemsWithQueryStrings()
+		{
+			//Arrange
+			await using ConcernsDbContext context = _testFixture.GetContext();
+
+			CityTechnologyCollege ctc = BuildRecord();
+			context.CityTechnologyColleges.Add(ctc);
+			await context.SaveChangesAsync();
+
+
+			//Act
+			var response = await _client.GetAsync($"/v2/citytechnologycolleges/?NameUKPRNCHNumber=test");
+			var wrapper = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollege>>();
+
+			//Assert
+			response.StatusCode.Should().Be(HttpStatusCode.OK);
+			wrapper.Count.Should().Be(0);
+
+			//Tidy
+			context.CityTechnologyColleges.Remove(ctc);
+			await context.SaveChangesAsync();
+		}
+
 
 		[Fact]
 		public async Task When_Get_IndividualItem_Return_OK()
@@ -106,8 +130,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Get_IndividualItem_WhenNoneExist_Return_OK()
 		{
-			CityTechnologyCollege ctcA = _autoFixture.Create<CityTechnologyCollege>();
-			var result = await _client.GetAsync($"/v2/citytechnologycolleges/ukprn/{ctcA.UKPRN}");
+			string urkprn = "123465789";
+			var result = await _client.GetAsync($"/v2/citytechnologycolleges/ukprn/{urkprn}");
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
