@@ -61,33 +61,22 @@
 <script type="application/javascript" nonce="@nonce">
 
     $(function () {
-        const closedCasesTab = document.getElementById("closed-cases-tab");
-        const closedCasesTableContainer = document.getElementById("closed-cases");
+        onTabMove({ from: "closed", to: "active" });
 
-        const activeCasesTab = document.getElementById("active-cases-tab");
-        const activeCasesTableContainer = document.getElementById("active-cases");
+        onTabMove({ from: "active", to: "closed" });
 
-        if (closedCasesTab) {
-            closedCasesTab.addEventListener("click", function() {
-                if (closedCasesTableContainer.hasAttribute("hidden")) {
-                    closedCasesTableContainer.removeAttribute("hidden");
-                    closedCasesTab.setAttribute("aria-expanded","true");
-                    closedCasesTab.setAttribute("aria-current","page");
-                    activeCasesTableContainer.hidden = true;
-                    activeCasesTab.removeAttribute("aria-current");
-                }
-            });
-        }
+        function onTabMove(parameters) {
+            const tabToHide = document.getElementById(`${parameters.from}-cases-tab`);
+            const tableToHide = document.getElementById(`${parameters.from}-cases`);
+            const tabToShow = document.getElementById(`${parameters.to}-cases-tab`);
+            const tableToShow = document.getElementById(`${parameters.to}-cases`);
 
-        if (activeCasesTab) {
-            activeCasesTab.addEventListener("click", function() {
-                if (activeCasesTableContainer.hasAttribute("hidden")) {
-                    activeCasesTableContainer.removeAttribute("hidden");
-                    activeCasesTab.setAttribute("aria-expanded","true");
-                    activeCasesTab.setAttribute("aria-current","page");
-                    closedCasesTableContainer.hidden = true;
-                    closedCasesTab.removeAttribute("aria-current");
-                }
+            tabToShow.addEventListener("click", function() {
+                tableToShow.removeAttribute("hidden");
+                tabToShow.setAttribute("aria-expanded","true");
+                tabToShow.setAttribute("aria-current","page");
+                tableToHide.hidden = true;
+                tabToHide.removeAttribute("aria-current");
             });
         }
     });
