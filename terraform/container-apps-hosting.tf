@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v0.18.1"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v0.18.2"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -10,12 +10,13 @@ module "azure_container_apps_hosting" {
 
   enable_container_registry = local.enable_container_registry
 
-  enable_mssql_database          = local.enable_mssql_database
-  mssql_server_admin_password    = local.mssql_server_admin_password
-  mssql_database_name            = local.mssql_database_name
-  mssql_firewall_ipv4_allow_list = local.mssql_firewall_ipv4_allow_list
-  mssql_azuread_admin_username   = local.mssql_azuread_admin_username
-  mssql_azuread_admin_object_id  = local.mssql_azuread_admin_object_id
+  enable_mssql_database              = local.enable_mssql_database
+  mssql_server_admin_password        = local.mssql_server_admin_password
+  mssql_database_name                = local.mssql_database_name
+  mssql_firewall_ipv4_allow_list     = local.mssql_firewall_ipv4_allow_list
+  mssql_azuread_admin_username       = local.mssql_azuread_admin_username
+  mssql_azuread_admin_object_id      = local.mssql_azuread_admin_object_id
+  mssql_server_public_access_enabled = local.mssql_server_public_access_enabled
 
   image_name = local.image_name
 
@@ -47,7 +48,9 @@ module "azure_container_apps_hosting" {
   dns_ns_records       = local.dns_ns_records
   dns_txt_records      = local.dns_txt_records
 
-  enable_event_hub = local.enable_event_hub
+  enable_event_hub                          = local.enable_event_hub
+  enable_logstash_consumer                  = local.enable_logstash_consumer
+  eventhub_export_log_analytics_table_names = local.eventhub_export_log_analytics_table_names
 
   enable_monitoring            = local.enable_monitoring
   monitor_email_receivers      = local.monitor_email_receivers
