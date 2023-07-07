@@ -71,13 +71,16 @@
             const tabToShow = document.getElementById(`${parameters.to}-cases-tab`);
             const tableToShow = document.getElementById(`${parameters.to}-cases`);
 
-            tabToShow.addEventListener("click", function() {
-                tableToShow.removeAttribute("hidden");
-                tabToShow.setAttribute("aria-expanded","true");
-                tabToShow.setAttribute("aria-current","page");
-                tableToHide.hidden = true;
-                tabToHide.removeAttribute("aria-current");
-            });
+            // This guard is only needed while the feature flag IsTrustCasesTabsEnabled exists
+            if (tabToShow) {
+                tabToShow.addEventListener("click", function() {
+                    tableToShow.removeAttribute("hidden");
+                    tabToShow.setAttribute("aria-expanded","true");
+                    tabToShow.setAttribute("aria-current","page");
+                    tableToHide.hidden = true;
+                    tabToHide.removeAttribute("aria-current");
+                });
+            }
         }
     });
 

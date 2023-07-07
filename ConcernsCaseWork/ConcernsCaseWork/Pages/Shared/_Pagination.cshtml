@@ -47,9 +47,9 @@
                 var pageNumber = pageIdx + 1;
                 var isCurrentPage = Model.PageNumber == pageNumber;
                 var markAsSelected = isCurrentPage ? "govuk-pagination__item--current" : "";
-                var pageNumberLinkId = $"{prefix}page-@pageNumber";
+                var pageNumberLinkId = $"{prefix}page-{pageNumber}";
                 var ariaCurrentPage = isCurrentPage ? "aria-current=true" : "";
-                var ariaLabel = isCurrentPage ? $"Current page, page {@pageNumber}" : $"go to page {@pageNumber}";
+                var ariaLabel = isCurrentPage ? $"Current page, page {pageNumber}" : $"go to page {pageNumber}";
 
                 <li class="govuk-pagination__item @markAsSelected">
                     <a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@pageNumber" @ariaCurrentPage aria-label="@ariaLabel" id="@pageNumberLinkId" data-testid="@pageNumberLinkId" data-page-number-link="@pageNumber">
