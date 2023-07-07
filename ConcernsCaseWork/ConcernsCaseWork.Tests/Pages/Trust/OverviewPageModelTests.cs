@@ -52,11 +52,13 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var activeCaseSummaryGroupModel = new CaseSummaryGroupModel<ActiveCaseSummaryModel>()
 			{
 				Cases = activeCaseSummaryModels,
+				Pagination = new PaginationModel()
 			};
 
 			var closedCaseSummaryGroupModel = new CaseSummaryGroupModel<ClosedCaseSummaryModel>()
 			{
-				Cases = closedCaseSummaryModels
+				Cases = closedCaseSummaryModels,
+				Pagination = new PaginationModel()
 			};
 
 			mockCaseSummaryService.Setup(c => c.GetActiveCaseSummariesByTrust(It.IsAny<string>(), 1))
