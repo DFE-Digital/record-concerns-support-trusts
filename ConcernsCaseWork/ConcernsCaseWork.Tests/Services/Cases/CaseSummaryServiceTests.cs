@@ -1072,7 +1072,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos();
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByTrust(userName, 1)).ReturnsAsync(new ApiListWrapper<ActiveCaseSummaryDto>()
 		{
-			Data = new List<ActiveCaseSummaryDto>(),
+			Data = data,
 			Paging = new Pagination()
 			{
 				Page = 1,
