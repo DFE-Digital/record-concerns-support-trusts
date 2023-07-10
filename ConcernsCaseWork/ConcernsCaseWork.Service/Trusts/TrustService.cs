@@ -14,7 +14,8 @@ namespace ConcernsCaseWork.Service.Trusts
 	{
 		private readonly ILogger<TrustService> _logger;
 		private readonly IFakeTrustService _fakeTrustService;
-		IFeatureManager _featureManager;
+		private readonly IFeatureManager _featureManager;
+		private readonly ICityTechnologyCollegeService _cityTechnologyCollegeService;
 
 		private const string EndpointV3 = "v3";
 
@@ -24,11 +25,13 @@ namespace ConcernsCaseWork.Service.Trusts
 			ICorrelationContext correlationContext, 
 			IClientUserInfoService userInfoService,
 			IFakeTrustService fakeTrustService,
+			ICityTechnologyCollegeService cityTechnologyCollegeService,
 			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 			_fakeTrustService = fakeTrustService;
 			_featureManager = featureManager;
+			_cityTechnologyCollegeService = cityTechnologyCollegeService;
 		}
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -69,6 +72,34 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
+
+				bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.ShouldCTCBeIncludedInTrustSearch); ;
+				if (ShouldCTCBeIncludedInTrustSearch)
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
+
+					TrustDetailsDto cityTechnologyCollege = null;
+
+					try
+					{
+						cityTechnologyCollege = await _cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
+						if (cityTechnologyCollege != null)
+						{
+							_logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
+
+							return cityTechnologyCollege;
+						}
+					}
+					catch (Exception ex)
+					{
+						_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
+						_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+					}
+				}
+				else
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+				}
 
 				// Create a request
 				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{endpointVersion}/trust/{ukPrn}");
@@ -132,14 +163,55 @@ namespace ConcernsCaseWork.Service.Trusts
 				}
 
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
-				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion; 
+				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
+
+
+				bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.ShouldCTCBeIncludedInTrustSearch);
+
+				Int32 maxResultsFromApi = maxRecordsPerPage;
+				TrustSearchResponseDto ctcList = null;
+
+				if (ShouldCTCBeIncludedInTrustSearch)
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
+
+					try
+					{
+						ctcList = await _cityTechnologyCollegeService.GetCollegeByPagination(trustSearch.GroupName);
+						if (ctcList !=null)
+						{
+							_logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
+							maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
+						}
+
+					}
+					catch (Exception ex)
+					{
+						_logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
+						_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+					}
+				}
+				else
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+				}
 
 				// Create a request
-				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
-
+				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxResultsFromApi)}";
 				var response = await GetByPagination<TrustSearchDto>(endpoint);
 
-				return new TrustSearchResponseDto { NumberOfMatches = response.Paging.RecordCount, Trusts = response.Data };
+				//Combine the results of Trusts and CTC Searches
+				List<TrustSearchDto> combinedMatches = new List<TrustSearchDto>();
+				if (ctcList !=null && ctcList.Trusts.Count() >0)
+				{
+					combinedMatches.AddRange(ctcList.Trusts);
+				}
+				if (response.Data !=null)
+				{
+					combinedMatches.AddRange(response.Data);
+				}
+
+				return new TrustSearchResponseDto { NumberOfMatches = combinedMatches.Count(), Trusts = combinedMatches };
 			}
 			catch (Exception ex)
 			{

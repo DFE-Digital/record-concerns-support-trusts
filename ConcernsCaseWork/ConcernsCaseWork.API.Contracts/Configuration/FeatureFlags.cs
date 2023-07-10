@@ -4,5 +4,6 @@
 	{
 		public const string IsV3TrustSearchEnabled = "IsV3TrustSearchEnabled";
 		public const string IsTrustCasesTabsEnabled = "IsTrustCasesTabsEnabled";
+		public const string ShouldCTCBeIncludedInTrustSearch = "ShouldCTCBeIncludedInTrustSearch";
 	}
 }
