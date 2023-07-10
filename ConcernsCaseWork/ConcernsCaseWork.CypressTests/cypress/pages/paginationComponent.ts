@@ -2,11 +2,16 @@ import { Logger } from "cypress/common/logger";
 
 export class PaginationComponent
 {
+    constructor(private prefix: string = "")
+    {
+
+    }
+
     public next(): this
     {
         Logger.Log("Nagivating to the next page");
 
-        cy.getByTestId("next-page").click();
+        cy.getByTestId(`${this.prefix}next-page`).click();
 
         return this;
     }
@@ -15,7 +20,7 @@ export class PaginationComponent
     {
         Logger.Log("Navigating to the previous page");
 
-        cy.getByTestId("previous-page").click();
+        cy.getByTestId(`${this.prefix}previous-page`).click();
 
         return this;
     }
@@ -24,7 +29,16 @@ export class PaginationComponent
     {
         Logger.Log(`Moving to page ${pageNumber}`);
 
-        cy.getByTestId(`page-${pageNumber}`).click();
+        cy.getByTestId(`${this.prefix}page-${pageNumber}`).click();
+
+        return this;
+    }
+
+    public isCurrentPage(pageNumber: string): this {
+        Logger.Log(`Currently selected page is page ${pageNumber}`);
+
+        // Used to check that we have navigated to the next page with ajax
+        cy.getByTestId(`${this.prefix}page-${pageNumber}`).parent().should("have.class", "govuk-pagination__item--current");
 
         return this;
     }

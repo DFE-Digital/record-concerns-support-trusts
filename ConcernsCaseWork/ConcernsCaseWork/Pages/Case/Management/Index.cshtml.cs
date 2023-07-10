@@ -6,11 +6,9 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -50,9 +48,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public long CaseUrn { get; set; }
 
 		public CaseModel CaseModel { get; private set; }
-		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
-		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
+
+		public TrustOverviewModel TrustOverviewModel { get; set; }
+
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsEditableCase { get; private set; }
 
@@ -163,13 +161,18 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseModel.RecordsModel = recordsModel;
 
 			var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-			var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
-			var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
+			var activeTrustCasesTask = GetActiveCases(CaseModel.TrustUkPrn, 1);
+			var closedTrustCasesTask = GetClosedCases(CaseModel.TrustUkPrn, 1);
 			var caseActionsTask = PopulateCaseActions(CaseUrn);
 			Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
-			TrustDetailsModel = trustDetailsTask.Result;
-			ActiveCases = activeTrustCasesTask.Result;
-			ClosedCases = closedTrustCasesTask.Result;
+
+			TrustOverviewModel = new TrustOverviewModel()
+			{
+				ActiveCaseSummaryGroupModel = activeTrustCasesTask.Result,
+				ClosedCaseSummaryGroupModel = closedTrustCasesTask.Result,
+				TrustDetailsModel = trustDetailsTask.Result
+			};
+			
 			NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			await UpdateCacheService(CaseModel);
 		}
@@ -212,6 +215,40 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				await _cachedService.StoreData(userState.UserName, userState);
 			}
 			
+		}
+
+		public async Task<IActionResult> OnGetPaginatedActiveCases(string trustUkPrn, int pageNumber)
+		{
+			var activeCaseSummaryGroup = await GetActiveCases(trustUkPrn, pageNumber);
+
+			return Partial("_TrustActiveCases", activeCaseSummaryGroup);
+		}
+
+		public async Task<IActionResult> OnGetPaginatedClosedCases(string trustUkPrn, int pageNumber)
+		{
+			var closedCaseSummaryGroup = await GetClosedCases(trustUkPrn, pageNumber);
+
+			return Partial("_TrustClosedCases", closedCaseSummaryGroup);
+		}
+
+		private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCases(string trustUkPrn, int pageNumber)
+		{
+			var result = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, pageNumber);
+			result.Pagination.Url = $"/case/{CaseUrn}/management?handler=PaginatedActiveCases&trustUkPrn={trustUkPrn}";
+			result.Pagination.ContentContainerId = "active-cases";
+			result.Pagination.ElementIdPrefix = "active-cases-";
+
+			return result;
+		}
+
+		private async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> GetClosedCases(string trustUkPrn, int pageNumber)
+		{
+			var result = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, pageNumber);
+			result.Pagination.Url = $"/case/{CaseUrn}/management?handler=PaginatedClosedCases&trustUkPrn={trustUkPrn}";
+			result.Pagination.ContentContainerId = "closed-cases";
+			result.Pagination.ElementIdPrefix = "closed-cases-";
+
+			return result;
 		}
 	}
 }
