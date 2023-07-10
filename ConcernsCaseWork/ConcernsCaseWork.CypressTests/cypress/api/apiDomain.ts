@@ -54,3 +54,8 @@ export type GetOpenCasesByOwnerResponse =
 {
 
 };
+
+export type GetOpenCasesByTrustResponse =
+{
+
+};

@@ -64,16 +64,17 @@ describe("Your casework tests", () =>
 
                 if (casesToCreate > 0)
                 {
-                    const interator = Array.from({ length: casesToCreate });
+                    const cases = CaseBuilder.bulkCreateOpenCases(casesToCreate);
 
-                    cy.wrap(interator).each(($el, index, $list) => {
-                        cy.wait(10);
-
-                        const request = CaseBuilder.buildOpenCase();
-
+                    cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
                         caseApi.post(request)
                             .then(() => {});
                     });
+
+                    // Wait 1ms per case created
+					// Each case is created one 1ms apart so that we don't break the table constraint
+					// Max will be 15ms
+					cy.wait(casesToCreate);
 
                     cy.reload();
                 }

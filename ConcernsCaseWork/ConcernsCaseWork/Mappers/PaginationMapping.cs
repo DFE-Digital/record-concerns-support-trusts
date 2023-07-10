@@ -7,6 +7,11 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public static PaginationModel ToModel(Pagination paginationResponse)
 		{
+			if (paginationResponse == null)
+			{
+				return new PaginationModel();
+			}
+
 			var result = new PaginationModel()
 			{
 				Url = string.Empty,
