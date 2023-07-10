@@ -171,9 +171,7 @@ describe("User interactions via Find Trust route", () => {
                     cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
 
                         request.trustUkprn = trustUkPrn;
-
-						console.log(request);
-
+						
                         caseApi.post(request)
                             .then(() => { });
                     });

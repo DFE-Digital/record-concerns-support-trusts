@@ -10,6 +10,7 @@ describe("User interactions via Create Case route", () => {
 
 	beforeEach(() => {
 
+		// Ensure that the automation user has been registered in the system
 		cy.login();
 
 		cy.login({
