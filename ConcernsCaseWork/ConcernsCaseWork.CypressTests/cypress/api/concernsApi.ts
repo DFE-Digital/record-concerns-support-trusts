@@ -1,4 +1,4 @@
-import { getUkLocalDate } from "cypress/support/formatDate";
+import { getUkLocalDateFormatted } from "cypress/support/formatDate";
 import { EnvApi } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
 import { GetConcernResponse, ResponseWrapper } from "./apiDomain";
@@ -20,7 +20,7 @@ class ConcernsApi extends ApiBase
 
     public post(caseId: number): Cypress.Chainable
     {
-        const currentDate = getUkLocalDate();
+        const currentDate = getUkLocalDateFormatted();
 
         return cy.request({
             method: 'POST',

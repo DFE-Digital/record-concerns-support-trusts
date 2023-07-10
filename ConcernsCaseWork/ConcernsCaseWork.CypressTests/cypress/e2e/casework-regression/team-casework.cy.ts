@@ -10,6 +10,8 @@ describe("User interactions via Create Case route", () => {
 
 	beforeEach(() => {
 
+		cy.login();
+
 		cy.login({
 			username: "Reassign.Test@education.gov.uk"
 		});
