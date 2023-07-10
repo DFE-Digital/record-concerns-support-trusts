@@ -1,12 +1,12 @@
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCaseRequest } from "./apiDomain";
-import { getUkLocalDate } from "cypress/support/formatDate";
+import { getUkLocalDate, getUkLocalDateFormatted } from "cypress/support/formatDate";
 
 export class CaseBuilder
 {
     public static buildOpenCase(): CreateCaseRequest
     {
-        const currentDate = getUkLocalDate();
+        const currentDate = getUkLocalDateFormatted();
 
         const result: CreateCaseRequest =
         {
@@ -28,6 +28,23 @@ export class CaseBuilder
 
         return result;
     }
+
+    public static bulkCreateOpenCases(numberToCreate): Array<CreateCaseRequest>
+    {
+        const result: Array<CreateCaseRequest> = [];
+
+        const now  = getUkLocalDate();
+
+        for (let idx = 1; idx <= numberToCreate; idx++)
+        {
+            const request = this.buildOpenCase();
+            request.createdAt = <string>now.plus(idx).toISO();
+
+            result.push(request);
+        }
+
+        return result;
+    } 
 
     private static chooseRandomTrust()
     {

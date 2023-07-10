@@ -11,6 +11,7 @@ import caseApi from "cypress/api/caseApi";
 import { CaseBuilder } from "cypress/api/caseBuilder";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import { PaginationComponent } from "cypress/pages/paginationComponent";
+import { CreateCaseRequest } from "cypress/api/apiDomain";
 
 describe("User interactions via Find Trust route", () => {
 
@@ -165,17 +166,22 @@ describe("User interactions via Find Trust route", () => {
 
                 if (casesToCreate > 0)
                 {
-                    const interator = Array.from({ length: casesToCreate });
+					const cases = CaseBuilder.bulkCreateOpenCases(casesToCreate);
 
-                    cy.wrap(interator).each(($el, index, $list) => {
-                        cy.wait(10);
+                    cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
 
-                        const request = CaseBuilder.buildOpenCase();
                         request.trustUkprn = trustUkPrn;
 
+						console.log(request);
+
                         caseApi.post(request)
-                            .then(() => {});
+                            .then(() => { });
                     });
+
+					// Wait 1ms per case created
+					// Each case is created one 1ms apart so that we don't break the table constraint
+					// Max will be 15ms
+					cy.wait(casesToCreate);
 
                     cy.reload();
                 }
