@@ -1,94 +1,101 @@
-﻿@model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
+﻿@using ConcernsCaseWork.Models;
+@model CaseSummaryGroupModel<ActiveCaseSummaryModel>
 
-<thead class="govuk-table__head">
-    <tr class="govuk-table__row tr__large">
-        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_4" scope="col" >
-            Case ID
-        </th>
-        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col" >
-            Date created
-        </th>
-        <th class="govuk-table__header govuk-table__cell__cases" scope="col" >
-            Contents
-        </th>
-        <th class="govuk-table__header govuk-table__cell__cases" scope="col" >
-            Assigned to
-        </th>
-    </tr>
-</thead>
-
-<tbody class="govuk-table__body">
-    @if (!Model.Any())
-    {
+<table class="govuk-table govuk-!-margin-top-9">
+    <caption class="govuk-table__caption govuk-table__caption--m">
+        Active cases
+    </caption>
+    <thead class="govuk-table__head">
         <tr class="govuk-table__row tr__large">
-            <td class="govuk-table__cell__cases govuk-oneline-row">
-                <span>There are no active cases available.</span>
-            </td>
+            <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_4" scope="col">
+                Case ID
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
+                Date created
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                Contents
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                Assigned to
+            </th>
         </tr>
-    }
-	else
-	{
-		foreach (var activeCase in Model)
-		{
-			<tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
-				<td class="govuk-table__cell" data-testid="case-id">
-					<a class="govuk-link" href="/case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
-				</td>
-				<td class="govuk-table__cell" data-testid="created-at">
-					@activeCase.CreatedAt
-				</td>
+    </thead>
 
-			@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
-			{
-				<td class="govuk-table__cell">
-					<span>There are no active concerns, actions or decisions.</span>
-				</td>
-			}
+    <tbody class="govuk-table__body">
+        @if (!Model.Cases.Any())
+        {
+            <tr class="govuk-table__row tr__large">
+                <td class="govuk-table__cell__cases govuk-oneline-row">
+                    <span>There are no active cases available.</span>
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var activeCase in Model.Cases)
+            {
+                <tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
+                    <td class="govuk-table__cell" data-testid="case-id">
+                        <a class="govuk-link" href="/case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
+                    </td>
+                    <td class="govuk-table__cell" data-testid="created-at">
+                        @activeCase.CreatedAt
+                    </td>
 
-			@if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
-			{
-				<td class="govuk-table__cell">
-					<div class="concerns-secondary-text-colour">Actions and decisions</div>
-					<ul class="govuk-list govuk-list--bullet">
-						@foreach (var action in activeCase.ActiveActionsAndDecisions)
-						{
-							<li>
-								@action
-							</li>
-						}
-					</ul>
-					@if (activeCase.IsMoreActionsAndDecisions)
-					{
-						<span>and more</span>
-					}
-				</td>
-			}
-								
-			@if (activeCase.ActiveConcerns.Any())
-			{
-				<td class="govuk-table__cell">
-					<div class="concerns-secondary-text-colour">Concerns</div>
-					<ul class="govuk-list govuk-list--bullet" data-testid="concern">
-						@foreach (var concern in activeCase.ActiveConcerns)
-						{
-							<li>@concern</li>
-						}
-					</ul>
-					<div class="concerns-secondary-text-colour">Risk to trust</div>
-					<div class="govuk-label-wrapper" data-testid="risk-to-trust-list">
-						@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
-								@activeCase.Rating.RagRating.Item2.ElementAt(index)
-							</span>
-						}
-					</div>
-				</td>
-			}
-				<td class="govuk-table__cell">
-            		@activeCase.CreatedBy
-            	</td>
-			</tr>
-		}
-	}
-</tbody>
+                    @if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
+                    {
+                        <td class="govuk-table__cell">
+                            <span>There are no active concerns, actions or decisions.</span>
+                        </td>
+                    }
+
+                    @if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
+                    {
+                        <td class="govuk-table__cell">
+                            <div class="concerns-secondary-text-colour">Actions and decisions</div>
+                            <ul class="govuk-list govuk-list--bullet">
+                                @foreach (var action in activeCase.ActiveActionsAndDecisions)
+                                {
+                                    <li>
+                                        @action
+                                    </li>
+                                }
+                            </ul>
+                            @if (activeCase.IsMoreActionsAndDecisions)
+                            {
+                                <span>and more</span>
+                            }
+                        </td>
+                    }
+
+                    @if (activeCase.ActiveConcerns.Any())
+                    {
+                        <td class="govuk-table__cell">
+                            <div class="concerns-secondary-text-colour">Concerns</div>
+                            <ul class="govuk-list govuk-list--bullet" data-testid="concern">
+                                @foreach (var concern in activeCase.ActiveConcerns)
+                                {
+                                    <li>@concern</li>
+                                }
+                            </ul>
+                            <div class="concerns-secondary-text-colour">Risk to trust</div>
+                            <div class="govuk-label-wrapper" data-testid="risk-to-trust-list">
+                                @for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
+                                {
+                                    <span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
+                                        @activeCase.Rating.RagRating.Item2.ElementAt(index)
+                                    </span>
+                                }
+                            </div>
+                        </td>
+                    }
+                    <td class="govuk-table__cell">
+                        @activeCase.CreatedBy
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<partial name="_Pagination" model="@Model.Pagination" />

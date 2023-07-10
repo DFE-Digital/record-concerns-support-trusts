@@ -69,7 +69,7 @@
             @Model.CaseModel.Urn
         </h1>
 
-        <h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+        <h2 class="govuk-heading-m">@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
         <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
@@ -101,7 +101,7 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Trust</th>
                             <td class="govuk-table__cell" data-testid="trust_Field">
-                                @Model.TrustDetailsModel.GiasData.GroupName
+                                @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right"></td>
                         </tr>
@@ -470,21 +470,7 @@
 
             </div>
             <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-                <partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
-                <partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
-
-                <table class="govuk-table  govuk-!-margin-top-9">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
-                        Active cases
-                    </caption>
-                    <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
-                </table>
-                <table class="govuk-table  govuk-!-margin-top-9">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
-                        Closed cases
-                    </caption>
-                    <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
-                </table>
+                <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
             </div>
         </div>
 
