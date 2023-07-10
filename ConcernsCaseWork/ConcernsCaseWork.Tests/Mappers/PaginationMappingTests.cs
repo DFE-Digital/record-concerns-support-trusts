@@ -43,5 +43,13 @@ namespace ConcernsCaseWork.Tests.Mappers
 			result.Next.Should().BeNull();
 			result.Previous.Should().BeNull();
 		}
+
+		[Test]
+		public void ToModel_When_ResponseIsNull_Returns_EmptyModel()
+		{
+			var result = PaginationMapping.ToModel(null);
+
+			result.TotalPages.Should().Be(0);
+		}
 	}
 }

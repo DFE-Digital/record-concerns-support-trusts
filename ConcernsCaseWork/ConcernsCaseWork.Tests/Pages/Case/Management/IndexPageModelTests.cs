@@ -78,7 +78,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(new ActionSummaryBreakdownModel());
 
 			_caseSummaryService = new Mock<ICaseSummaryService>();
-			
+			_caseSummaryService.Setup(m => m.GetActiveCaseSummariesByTrust(It.IsAny<string>(), 1))
+					.ReturnsAsync(new CaseSummaryGroupModel<ActiveCaseSummaryModel>() { Pagination = new PaginationModel() });
+			_caseSummaryService.Setup(m => m.GetClosedCaseSummariesByTrust(It.IsAny<string>(), 1))
+					.ReturnsAsync(new CaseSummaryGroupModel<ClosedCaseSummaryModel>() { Pagination = new PaginationModel() });
+
 			_mockUserStateCacheService = new Mock<IUserStateCachedService>();
 			_mockUserStateCacheService.Setup(m => m.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("Tester"));
 
