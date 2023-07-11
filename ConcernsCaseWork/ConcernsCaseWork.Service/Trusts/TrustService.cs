@@ -73,32 +73,11 @@ namespace ConcernsCaseWork.Service.Trusts
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
-				bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.ShouldCTCBeIncludedInTrustSearch); ;
-				if (ShouldCTCBeIncludedInTrustSearch)
+
+				TrustDetailsDto cityTechnologyCollege = await CheckForCTCByUKPRN(ukPrn);
+				if (cityTechnologyCollege != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
-
-					TrustDetailsDto cityTechnologyCollege = null;
-
-					try
-					{
-						cityTechnologyCollege = await _cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
-						if (cityTechnologyCollege != null)
-						{
-							_logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
-
-							return cityTechnologyCollege;
-						}
-					}
-					catch (Exception ex)
-					{
-						_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
-						_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
-					}
-				}
-				else
-				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+					return cityTechnologyCollege;
 				}
 
 				// Create a request
@@ -125,6 +104,37 @@ namespace ConcernsCaseWork.Service.Trusts
 				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
+		}
+		
+		private async Task<TrustDetailsDto> CheckForCTCByUKPRN(string ukPrn)
+		{
+			TrustDetailsDto cityTechnologyCollege = null;
+
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled); ;
+			if (ShouldCTCBeIncludedInTrustSearch)
+			{
+				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
+
+
+				try
+				{
+					cityTechnologyCollege = await _cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
+					if (cityTechnologyCollege != null)
+					{
+						_logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
+					_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+				}
+			}
+			else
+			{
+				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+			}
+			return cityTechnologyCollege;
 		}
 
 		private static TrustDetailsDto ProcessSearchByUkPrnResponse(string content, bool v3Enabled)
@@ -165,35 +175,11 @@ namespace ConcernsCaseWork.Service.Trusts
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
-
-				bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.ShouldCTCBeIncludedInTrustSearch);
-
 				Int32 maxResultsFromApi = maxRecordsPerPage;
-				TrustSearchResponseDto ctcList = null;
-
-				if (ShouldCTCBeIncludedInTrustSearch)
+				TrustSearchResponseDto ctcList = await Test(trustSearch.GroupName);
+				if (ctcList != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
-
-					try
-					{
-						ctcList = await _cityTechnologyCollegeService.GetCollegeByPagination(trustSearch.GroupName);
-						if (ctcList !=null)
-						{
-							_logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
-							maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
-						}
-
-					}
-					catch (Exception ex)
-					{
-						_logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
-						_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
-					}
-				}
-				else
-				{
-					_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+					maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
 				}
 
 				// Create a request
@@ -219,6 +205,36 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				throw;
 			}
+		}
+
+		private async Task<TrustSearchResponseDto> Test(string GroupName)
+		{
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled);
+
+			TrustSearchResponseDto ctcList = null;
+
+			if (ShouldCTCBeIncludedInTrustSearch)
+			{
+				_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
+				try
+				{
+					ctcList = await _cityTechnologyCollegeService.GetCollegeByPagination(GroupName);
+					if (ctcList != null)
+					{
+						_logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
+					_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+				}
+			}
+			else
+			{
+				_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+			}
+			return ctcList;
 		}
 
 		private bool IsNumeric(string input)

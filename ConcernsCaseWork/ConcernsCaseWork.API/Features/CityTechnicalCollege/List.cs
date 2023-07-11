@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 
 			public class CityTechnologyCollege
 			{
-
+				public int Id { get; set; }	
 				public string Name { get; set; }
 				public string UKPRN { get; set; }
 				public string CompaniesHouseNumber { get; set; }

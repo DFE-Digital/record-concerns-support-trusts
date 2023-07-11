@@ -555,12 +555,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 
 		private static IFeatureManager CreateFeatureManagerCTCEnabled()
 		{
-			return CreateFeatureManager(FeatureFlags.ShouldCTCBeIncludedInTrustSearch, true);
+			return CreateFeatureManager(FeatureFlags.IsCTCInTrustSearchEnabled, true);
 		}
 
 		private static IFeatureManager CreateFeatureManagerCTCDisabled()
 		{
-			return CreateFeatureManager(FeatureFlags.ShouldCTCBeIncludedInTrustSearch, false);
+			return CreateFeatureManager(FeatureFlags.IsCTCInTrustSearchEnabled, false);
 		}
 
 		private static IFeatureManager CreateFeatureManagerV3()

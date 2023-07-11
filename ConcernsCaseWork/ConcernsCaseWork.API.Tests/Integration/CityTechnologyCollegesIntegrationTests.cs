@@ -69,11 +69,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Assert
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
-			wrapper.Count.Should().Be(1);
-
-			//Tidy
-			context.CityTechnologyColleges.Remove(ctc);
-			await context.SaveChangesAsync();
+			wrapper.Count.Should().BeGreaterThan(0);
+			var actual = wrapper.SingleOrDefault(f => f.Id == ctc.Id);
+			actual.Should().BeEquivalentTo(ctc);
 		}
 
 		[Fact]
@@ -94,10 +92,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			//Assert
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
 			wrapper.Count.Should().Be(0);
-
-			//Tidy
-			context.CityTechnologyColleges.Remove(ctc);
-			await context.SaveChangesAsync();
 		}
 
 
@@ -118,12 +112,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Asset
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
-
-
-			context.CityTechnologyColleges.Remove(ctcA);
-			context.CityTechnologyColleges.Remove(ctcB);
-
-			await context.SaveChangesAsync();
 		}
 
 
