@@ -1,3 +1,9 @@
+## 25.0.0
+* Add pagination to get active cases by owner and get closed cases by owner APIs
+* Your active casework redesign - Add pagination
+* Trust Overview Redesign - Add Open/Closed sub-navs
+* Trust Overview Design - Add pagination to sub-navs
+
 ## 24.0.0
 * Increase SRMA notes field limit
 * Iterate hint text on Create Case page based on user feedback
