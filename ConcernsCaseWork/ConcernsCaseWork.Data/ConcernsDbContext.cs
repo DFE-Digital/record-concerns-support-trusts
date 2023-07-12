@@ -65,6 +65,8 @@ namespace ConcernsCaseWork.Data
 		public virtual DbSet<SRMAStatus> SRMAStatuses { get; set; }
 		public virtual DbSet<TrustFinancialForecast> TrustFinancialForecasts { get; set; }
 
+		public virtual DbSet<CityTechnologyCollege> CityTechnologyColleges { get; set; }
+
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
 			var userName = GetCurrentUsername();
