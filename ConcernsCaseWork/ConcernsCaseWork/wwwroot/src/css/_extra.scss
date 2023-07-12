@@ -1745,7 +1745,25 @@ label.govuk-label .govuk-tag {
 	text-transform: unset;
 }
 
+/* ==========================================================================
+   # Pagination
+   ========================================================================== */
 .govuk-pagination__link-disabled {
 	pointer-events: none;
-	opacity: 0.5
+	opacity: 0.5;
+
+	a {
+		color: #b1b4b6 !important;
+	}
+
+	svg {
+		color: #b1b4b6;
+	}
+}
+
+/* ==========================================================================
+   # Sub Navs
+   ========================================================================== */
+.moj-sub-navigation__link {
+	cursor: pointer;
 }
