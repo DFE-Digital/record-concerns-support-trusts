@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var expectedDecision = new CreateDecisionRequest()
 			{
-				DecisionTypes = new DecisionType[] { }
+				DecisionTypeQuestions = new DecisionTypeQuestion[] { }
 			};
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
@@ -66,9 +67,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			const int expectedDecisionId = 1;
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
-			getDecisionResponse.DecisionTypes = new DecisionType[] {
-				DecisionType.NoticeToImprove,
-				DecisionType.OtherFinancialSupport
+			getDecisionResponse.DecisionTypeQuestions = new DecisionTypeQuestion[] {
+
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.NoticeToImprove
+				},
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.OtherFinancialSupport
+				}
 			};
 			getDecisionResponse.ReceivedRequestDate = new DateTimeOffset(new DateTime(2022, 5, 2));
 
@@ -90,7 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.Decision.ConcernsCaseUrn.Should().Be(getDecisionResponse.ConcernsCaseUrn);
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
-			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
+			sut.Decision.DecisionTypeQuestions.Should().BeEquivalentTo(getDecisionResponse.DecisionTypeQuestions);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
 			sut.ReceivedRequestDate.Date.Day.Should().Be("02");
 			sut.ReceivedRequestDate.Date.Month.Should().Be("05");
@@ -139,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			page.Url.Should().Be("/case/2/management");
-			sut.Decision.DecisionTypes.Should().BeEmpty();
+			sut.Decision.DecisionTypeQuestions.Should().BeEmpty();
 			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 
@@ -153,8 +161,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithDecisionId(1)
 				.BuildSut();
 
-			sut.Decision.DecisionTypes = new DecisionType[] {
-				DecisionType.NonRepayableFinancialSupport
+			sut.Decision.DecisionTypeQuestions = new DecisionTypeQuestion[] {
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.NonRepayableFinancialSupport
+				}
 			};
 
 			sut.ReceivedRequestDate = _fixture.Create<OptionalDateTimeUiComponent>();
@@ -170,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var page = await sut.OnPostAsync() as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
-			sut.Decision.DecisionTypes.Should().Contain(DecisionType.NonRepayableFinancialSupport);
+			sut.Decision.DecisionTypeQuestions.Should().Contain(x => x.Id == DecisionType.NonRepayableFinancialSupport);
 			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 

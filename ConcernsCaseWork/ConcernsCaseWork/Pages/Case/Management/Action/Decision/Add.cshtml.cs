@@ -1,5 +1,7 @@
 ﻿
 using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
@@ -13,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 #nullable disable
 
@@ -33,6 +36,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
+
+		[BindProperty]
+		public DecisionType[] DecisionTypes { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseUrn { get; set; }
@@ -84,8 +90,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
+
 				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
+				Decision.DecisionTypeQuestions = DecisionTypes.Select(d =>
+				{
+					return new DecisionTypeQuestion()
+					{
+						Id = d
+					};
+				}).ToArray();
 
 				if (DecisionId.HasValue)
 				{
@@ -161,57 +175,96 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.NoticeToImprove,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.NoticeToImprove
+					},
 					Hint = "An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.Section128,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.Section128
+					},
 					Hint = "A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools)."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.QualifiedFloatingCharge,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.QualifiedFloatingCharge
+					},
 					Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.NonRepayableFinancialSupport,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.NonRepayableFinancialSupport
+					},
 					Hint = "Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.RepayableFinancialSupport,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.RepayableFinancialSupport
+					},
 					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.ShortTermCashAdvance,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.ShortTermCashAdvance
+					},
 					Hint = "A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.WriteOffRecoverableFunding,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.WriteOffRecoverableFunding
+					},
 					Hint = "A write-off can be considered if a trust cannot repay financial support previously received from us."
+
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.OtherFinancialSupport,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.OtherFinancialSupport
+					},
 					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), general annual grant (GAG) protection, popular growth funding, restructuring support and start-up support."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.EstimatesFundingOrPupilNumberAdjustment,
+					DecisionTypeQuestion = new DecisionTypeQuestion()
+					{
+						Id = DecisionType.EstimatesFundingOrPupilNumberAdjustment
+					},
 					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment or change in funding methodology."
+
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.EsfaApproval,
+					DecisionTypeQuestion = new API.Contracts.Decisions.DecisionTypeQuestion()
+					{
+						Id = API.Contracts.Enums.DecisionType.EsfaApproval
+					},
+
+					//DecisionType = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions,
 					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds (also called transactions approval). Examples include as severance pay, compromise agreements or ex gratia payments; agreeing off-payroll arrangements for staff; entering into a finance lease or operating lease; or carrying forward large reserves. Trusts going ahead with these decisions or transactions without ESFA approval could be in breach of their funding agreement. This typically affects trusts under an NTI (Notice to Improve), where ESFA approval can be a condition of the NTI."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionType = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions,
+					DecisionTypeQuestion = new API.Contracts.Decisions.DecisionTypeQuestion()
+					{
+						Id = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions
+					},
+
+					//DecisionType = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions,
 					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
 				}
 			};
@@ -243,7 +296,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 	public class DecisionTypeCheckBox
 	{
-		public API.Contracts.Enums.DecisionType DecisionType { get; set; }
+		public API.Contracts.Decisions.DecisionTypeQuestion DecisionTypeQuestion { get; set; }
 		public string Hint { get; set; }
 	}
 

@@ -1,4 +1,5 @@
 using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.Permissions;
@@ -73,10 +74,16 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			apiDecision.SubmissionRequired = booleanFlag;
 			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.TotalAmountRequested = 150000;
-			apiDecision.DecisionTypes = new DecisionType[]
+			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[]
 			{
-				DecisionType.NoticeToImprove,
-				DecisionType.RepayableFinancialSupport
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.NoticeToImprove
+				},
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.RepayableFinancialSupport
+				}
 			};
 			apiDecision.CreatedAt = new DateTimeOffset(2022, 12, 24, 0, 0, 0, new TimeSpan());
 			apiDecision.ClosedAt = new DateTimeOffset(2022, 12, 25, 0, 0, 0, new TimeSpan());
@@ -130,7 +137,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void ToDecisionModel_WhenNoPropertiesFilled_AndNoOutcome_ReturnsCorrectModel()
 		{
 			var apiDecision = new GetDecisionResponse();
-			apiDecision.DecisionTypes = new DecisionType[] { };
+			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[] { };
 
 			var result = DecisionMapping.ToViewDecisionModel(apiDecision, new GetCasePermissionsResponse());
 
@@ -160,7 +167,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			result.CrmCaseNumber.Should().Be(apiDecision.CrmCaseNumber);
-			result.DecisionTypes.Should().BeEquivalentTo(apiDecision.DecisionTypes);
+			result.DecisionTypeQuestions.Should().BeEquivalentTo(apiDecision.DecisionTypeQuestions);
 			result.ReceivedRequestDate.Should().Be(apiDecision.ReceivedRequestDate);
 			result.RetrospectiveApproval.Should().Be(apiDecision.RetrospectiveApproval);
 			result.SubmissionDocumentLink.Should().Be(apiDecision.SubmissionDocumentLink);
@@ -173,7 +180,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void ToEditDecision_When_NoPropertiesFilled_Returns_CorrectModel()
 		{
 			var apiDecision = new GetDecisionResponse();
-			apiDecision.DecisionTypes = new DecisionType[] { };
+			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[] { };
 
 			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
 
