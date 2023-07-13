@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			{
 				ConcernsCaseUrn = concernsCaseUrn,
 				DecisionId = decision.DecisionId,
-				DecisionTypeQuestions = decision.DecisionTypes.Select(x => {
+				DecisionTypes = decision.DecisionTypes.Select(x => {
 					return new DecisionTypeQuestion()
 					{
 						Id = (Contracts.Enums.DecisionType)x.DecisionTypeId

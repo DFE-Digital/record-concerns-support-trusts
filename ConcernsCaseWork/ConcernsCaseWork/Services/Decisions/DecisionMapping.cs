@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
 				EsfaReceivedRequestDate = DateTimeHelper.ParseToDisplayDate(receivedRequestDate),
 				TotalAmountRequested = ToCurrencyField(decisionResponse.TotalAmountRequested),
-				DecisionTypes = decisionResponse.DecisionTypeQuestions.Select(d => EnumHelper.GetEnumDescription(d.Id)).ToList(),
+				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d.Id)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Services.Decisions
 			{
 				ConcernsCaseUrn = getDecisionResponse.ConcernsCaseUrn,
 				CrmCaseNumber = getDecisionResponse.CrmCaseNumber,
-				DecisionTypeQuestions = getDecisionResponse.DecisionTypeQuestions,
+				DecisionTypes = getDecisionResponse.DecisionTypes,
 				ReceivedRequestDate = GetEsfaReceivedRequestDate(getDecisionResponse),
 				RetrospectiveApproval = getDecisionResponse.RetrospectiveApproval,
 				SubmissionDocumentLink = getDecisionResponse.SubmissionDocumentLink,
@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Services.Decisions
 			var updateDecisionRequest = new UpdateDecisionRequest()
 			{
 				CrmCaseNumber = createDecisionRequest.CrmCaseNumber,
-				DecisionTypeQuestions = createDecisionRequest.DecisionTypeQuestions,
+				DecisionTypes = createDecisionRequest.DecisionTypes,
 				TotalAmountRequested = createDecisionRequest.TotalAmountRequested,
 				SupportingNotes = createDecisionRequest.SupportingNotes,
 				ReceivedRequestDate = createDecisionRequest.ReceivedRequestDate,

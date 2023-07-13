@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 	{
 		public CreateDecisionRequest()
 		{
-			DecisionTypeQuestions = new DecisionTypeQuestion[] { };
+			DecisionTypes = new DecisionTypeQuestion[] { };
 		}
 
 		private const int _maxUrlLength = 2048;
@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		[Range(1, int.MaxValue, ErrorMessage = "The ConcernsCaseUrn must be greater than zero")]
 		public int ConcernsCaseUrn { get; set; } // TODO: Remove this and pass urn separately to the decision request.
 
-		public DecisionTypeQuestion[] DecisionTypeQuestions { get; set; }
+		public DecisionTypeQuestion[] DecisionTypes { get; set; }
 
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
 		public decimal TotalAmountRequested { get; set; }
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 
 		public bool IsValid()
 		{
-			return DecisionTypeQuestions.All(x => Enum.IsDefined(typeof(DecisionType), x.Id));
+			return DecisionTypes.All(x => Enum.IsDefined(typeof(DecisionType), x.Id));
 		}
 	}
 }

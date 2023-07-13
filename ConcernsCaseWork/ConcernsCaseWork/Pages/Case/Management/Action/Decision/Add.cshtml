@@ -157,7 +157,7 @@
 
                             @foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
                             {
-                                var isChecked = Model.Decision.DecisionTypeQuestions.Any(q => q.Id == decisionTypeCheckbox.DecisionTypeQuestion.Id);
+                                var isChecked = Model.Decision.DecisionTypes.Any(q => q.Id == decisionTypeCheckbox.DecisionTypeQuestion.Id);
 
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionTypeQuestion" name="DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionTypeQuestion.Id" checked="@isChecked">

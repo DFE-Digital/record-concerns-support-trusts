@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 		public int ConcernsCaseUrn { get; set; }
 
 		public int DecisionId { get; set; }
-		public DecisionTypeQuestion[] DecisionTypeQuestions { get; set; }
+		public DecisionTypeQuestion[] DecisionTypes{ get; set; }
 		public decimal TotalAmountRequested { get; set; }
 		public string SupportingNotes { get; set; }
 		public DateTimeOffset ReceivedRequestDate { get; set; }
