@@ -20,11 +20,11 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 			var decision = sut.CreateDecision(input);
 
 			decision.Should().BeEquivalentTo(input,
-				cfg => cfg.Excluding(x => x.DecisionTypes)
+				cfg => cfg.Excluding(x => x.DecisionTypeQuestions)
 					.Excluding(x => x.ConcernsCaseUrn));
 
 			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
+				.Should().Contain(input.DecisionTypeQuestions.Select(i => (int)i.Id)); 
 		}
 
 		[Fact]
@@ -38,10 +38,10 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 			var decision = sut.CreateDecision(input);
 
 			decision.Should().BeEquivalentTo(input,
-				cfg => cfg.Excluding(x => x.DecisionTypes));
+				cfg => cfg.Excluding(x => x.DecisionTypeQuestions));
 
 			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
+				.Should().Contain(input.DecisionTypeQuestions.Select(i => (int)i.Id));
 		}
 	}
 }
