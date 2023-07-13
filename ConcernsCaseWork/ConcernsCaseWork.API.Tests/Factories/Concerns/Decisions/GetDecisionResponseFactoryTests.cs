@@ -59,11 +59,6 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(expectedBusinessAreas);
 
-
-            var x = result.DecisionTypes;
-            var y = decision.DecisionTypes.Select(x => x.DecisionTypeId);
-
-
             result.DecisionTypes.Select(t => t.Id).Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
                 opt => opt.WithStrictOrdering());
             result.DecisionStatus.Should().HaveSameValueAs(decision.Status);
