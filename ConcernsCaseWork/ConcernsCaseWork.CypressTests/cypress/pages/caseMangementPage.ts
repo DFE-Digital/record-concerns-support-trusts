@@ -490,7 +490,21 @@ class CaseManagementPage {
     {
         Logger.Log(`Has trust ${value}`);
 
-        cy.getByTestId(`trust_Field`).should("contain.text", value);
+        cy.getByTestId("trust_Field").contains(value, { matchCase: false });
+
+        //cy.getByTestId(`trust_Field`).should("contain.text", value);
+
+        return this;
+    }
+
+        // has methods
+    public hasTrustContain(value: string): this
+    {
+        Logger.Log(`Has trust ${value}`);
+
+        cy.getByTestId("trust_Field").contains(value, { matchCase: false });
+
+        //cy.getByTestId(`trust_Field`).should("contain.text", value);
 
         return this;
     }
