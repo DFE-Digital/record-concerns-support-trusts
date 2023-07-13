@@ -140,6 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Month = "05",
 				Year = "2022"
 			};
+			sut.DecisionTypes = Array.Empty<DecisionType>();
 
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
@@ -161,12 +162,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithDecisionId(1)
 				.BuildSut();
 
-			sut.Decision.DecisionTypes = new DecisionTypeQuestion[] {
-				new DecisionTypeQuestion()
-				{
-					Id = DecisionType.NonRepayableFinancialSupport
-				}
-			};
+		
 
 			sut.ReceivedRequestDate = _fixture.Create<OptionalDateTimeUiComponent>();
 			sut.ReceivedRequestDate.Date = new OptionalDateModel()
@@ -175,8 +171,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Month = "05",
 				Year = "2022"
 			};
+			sut.DecisionTypes = new DecisionType[] { DecisionType.NonRepayableFinancialSupport };
 
-			sut.Notes = _fixture.Create<TextAreaUiComponent>();
+            sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			var page = await sut.OnPostAsync() as RedirectResult;
 
@@ -197,6 +194,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.ReceivedRequestDate = _fixture.Create <OptionalDateTimeUiComponent>();
 			sut.ReceivedRequestDate.Date = new OptionalDateModel();
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
+			sut.DecisionTypes = Array.Empty<DecisionType>();
 
 			var page = await sut.OnPostAsync();
 
