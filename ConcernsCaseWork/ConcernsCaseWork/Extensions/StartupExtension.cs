@@ -210,6 +210,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
 			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 			services.AddScoped<IFakeTrustService, FakeTrustService>();
+			services.AddScoped<ICityTechnologyCollegeService, CityTechnologyCollegeService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
