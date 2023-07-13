@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
-				Decision.DecisionTypeQuestions = DecisionTypes.Select(d =>
+				Decision.DecisionTypes = DecisionTypes.Select(d =>
 				{
 					return new DecisionTypeQuestion()
 					{

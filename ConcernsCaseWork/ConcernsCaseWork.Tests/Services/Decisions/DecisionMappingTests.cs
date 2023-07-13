@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			apiDecision.SubmissionRequired = booleanFlag;
 			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.TotalAmountRequested = 150000;
-			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[]
+			apiDecision.DecisionTypes = new DecisionTypeQuestion[]
 			{
 				new DecisionTypeQuestion()
 				{
@@ -137,7 +137,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void ToDecisionModel_WhenNoPropertiesFilled_AndNoOutcome_ReturnsCorrectModel()
 		{
 			var apiDecision = new GetDecisionResponse();
-			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[] { };
+			apiDecision.DecisionTypes = new DecisionTypeQuestion[] { };
 
 			var result = DecisionMapping.ToViewDecisionModel(apiDecision, new GetCasePermissionsResponse());
 
@@ -167,7 +167,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			result.CrmCaseNumber.Should().Be(apiDecision.CrmCaseNumber);
-			result.DecisionTypeQuestions.Should().BeEquivalentTo(apiDecision.DecisionTypeQuestions);
+			result.DecisionTypes.Should().BeEquivalentTo(apiDecision.DecisionTypes);
 			result.ReceivedRequestDate.Should().Be(apiDecision.ReceivedRequestDate);
 			result.RetrospectiveApproval.Should().Be(apiDecision.RetrospectiveApproval);
 			result.SubmissionDocumentLink.Should().Be(apiDecision.SubmissionDocumentLink);
@@ -180,7 +180,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void ToEditDecision_When_NoPropertiesFilled_Returns_CorrectModel()
 		{
 			var apiDecision = new GetDecisionResponse();
-			apiDecision.DecisionTypeQuestions = new DecisionTypeQuestion[] { };
+			apiDecision.DecisionTypes = new DecisionTypeQuestion[] { };
 
 			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
 

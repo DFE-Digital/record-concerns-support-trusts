@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.API.Tests.RequestModels.Concerns.Decisions
 		{
 			var fixture = new Fixture();
 			var sut = fixture.Build<CreateDecisionRequest>()
-				.With(x => x.DecisionTypeQuestions, new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
+				.With(x => x.DecisionTypes, new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
 				.Create();
 
 			sut.IsValid().Should().BeFalse();

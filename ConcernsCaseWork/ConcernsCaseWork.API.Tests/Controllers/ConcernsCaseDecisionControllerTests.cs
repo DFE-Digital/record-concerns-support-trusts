@@ -60,7 +60,7 @@ public class ConcernsCaseDecisionControllerTests
             var testBuilder = new TestBuilder();
 
             var createDecisionRequest = testBuilder.Fixture.Build<CreateDecisionRequest>()
-				.With(x => x.DecisionTypeQuestions, () => new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
+				.With(x => x.DecisionTypes, () => new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
 				.Create();
 
             var createDecisionResponse = testBuilder.Fixture.Create<CreateDecisionResponse>();
@@ -92,7 +92,7 @@ public class ConcernsCaseDecisionControllerTests
             var testBuilder = new TestBuilder();
 
             var createDecisionRequest = testBuilder.Fixture.Build<CreateDecisionRequest>()
-                .With(x => x.DecisionTypeQuestions, () => new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = Contracts.Enums.DecisionType.EsfaApproval } })
+                .With(x => x.DecisionTypes, () => new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = Contracts.Enums.DecisionType.EsfaApproval } })
                 .Create();
 
             var createDecisionResponse = testBuilder.Fixture.Create<CreateDecisionResponse>();
@@ -356,7 +356,7 @@ public class ConcernsCaseDecisionControllerTests
             public UpdateDecisionRequest CreateInvalidUpdateDecisionRequest()
             {
                 return Fixture.Build<UpdateDecisionRequest>()
-                        .With(x => x.DecisionTypeQuestions, new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
+                        .With(x => x.DecisionTypes, new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
 						.Create();
             }
             

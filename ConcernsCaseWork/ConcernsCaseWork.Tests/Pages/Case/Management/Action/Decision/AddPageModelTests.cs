@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var expectedDecision = new CreateDecisionRequest()
 			{
-				DecisionTypeQuestions = new DecisionTypeQuestion[] { }
+				DecisionTypes = new DecisionTypeQuestion[] { }
 			};
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			const int expectedDecisionId = 1;
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
-			getDecisionResponse.DecisionTypeQuestions = new DecisionTypeQuestion[] {
+			getDecisionResponse.DecisionTypes = new DecisionTypeQuestion[] {
 
 				new DecisionTypeQuestion()
 				{
@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.Decision.ConcernsCaseUrn.Should().Be(getDecisionResponse.ConcernsCaseUrn);
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
-			sut.Decision.DecisionTypeQuestions.Should().BeEquivalentTo(getDecisionResponse.DecisionTypeQuestions);
+			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
 			sut.ReceivedRequestDate.Date.Day.Should().Be("02");
 			sut.ReceivedRequestDate.Date.Month.Should().Be("05");
@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			page.Url.Should().Be("/case/2/management");
-			sut.Decision.DecisionTypeQuestions.Should().BeEmpty();
+			sut.Decision.DecisionTypes.Should().BeEmpty();
 			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 
@@ -161,7 +161,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithDecisionId(1)
 				.BuildSut();
 
-			sut.Decision.DecisionTypeQuestions = new DecisionTypeQuestion[] {
+			sut.Decision.DecisionTypes = new DecisionTypeQuestion[] {
 				new DecisionTypeQuestion()
 				{
 					Id = DecisionType.NonRepayableFinancialSupport
@@ -181,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var page = await sut.OnPostAsync() as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
-			sut.Decision.DecisionTypeQuestions.Should().Contain(x => x.Id == DecisionType.NonRepayableFinancialSupport);
+			sut.Decision.DecisionTypes.Should().Contain(x => x.Id == DecisionType.NonRepayableFinancialSupport);
 			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 
