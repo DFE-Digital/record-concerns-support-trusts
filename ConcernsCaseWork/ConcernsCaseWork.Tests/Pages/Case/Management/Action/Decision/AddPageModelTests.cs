@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
 
 			sut.CaseUrn.Should().Be(expectedUrn);
-			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+			sut.DecisionTypeQuestions.Should().NotBeEmpty();
 			sut.SaveAndContinueButtonText.Should().Be("Save and return to case overview");
 		}
 
@@ -140,7 +140,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Month = "05",
 				Year = "2022"
 			};
-			sut.DecisionTypes = Array.Empty<DecisionType>();
+
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel>();
 
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
@@ -171,7 +172,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Month = "05",
 				Year = "2022"
 			};
-			sut.DecisionTypes = new DecisionType[] { DecisionType.NonRepayableFinancialSupport };
+
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel> { new DecisionTypeQuestionModel() { Id = DecisionType.NonRepayableFinancialSupport } };
 
             sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
@@ -194,7 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.ReceivedRequestDate = _fixture.Create <OptionalDateTimeUiComponent>();
 			sut.ReceivedRequestDate.Date = new OptionalDateModel();
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
-			sut.DecisionTypes = Array.Empty<DecisionType>();
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel>();
 
 			var page = await sut.OnPostAsync();
 
