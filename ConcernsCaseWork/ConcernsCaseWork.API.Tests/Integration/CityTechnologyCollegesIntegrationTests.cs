@@ -1,9 +1,11 @@
 ﻿using AutoFixture;
+using Azure;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
+using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
@@ -16,6 +18,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Tavis.UriTemplates;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
@@ -32,24 +35,47 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			_client = apiTestFixture.Client;
 			_autoFixture = new Fixture();
 			_testFixture = apiTestFixture;
-			_autoFixture.Customize<CityTechnologyCollege>(c => c.Without(w => w.Id));
+		}
 
+		public class CityTechnologyCollegeResponse
+		{
+			public int Id { get; set; }
+			public string Name { get; set; }
+			public string UKPRN { get; set; }
+			public string CompaniesHouseNumber { get; set; }
+
+			public string AddressLine1 { get; set; }
+			public string AddressLine2 { get; set; }
+			public string AddressLine3 { get; set; }
+			public string Town { get; set; }
+			public string County { get; set; }
+			public string Postcode { get; set; }
 		}
 
 		protected CityTechnologyCollege BuildRecord()
 		{
-			return new CityTechnologyCollege()
-			{
-				Name = _autoFixture.Create<string>(),
-				UKPRN = _autoFixture.Create<string>().Substring(0, 12),
-				CompaniesHouseNumber = _autoFixture.Create<string>().Substring(0, 8),
-				AddressLine1 = _autoFixture.Create<string>(),
-				AddressLine2 = _autoFixture.Create<string>(),
-				AddressLine3 = _autoFixture.Create<string>(),
-				Town = _autoFixture.Create<string>(),
-				County = _autoFixture.Create<string>(),
-				Postcode = _autoFixture.Create<string>().Substring(0, 9),
-			};
+			var result = CityTechnologyCollege.Create(_autoFixture.Create<string>(), _autoFixture.Create<string>().Substring(0, 12), _autoFixture.Create<string>().Substring(0, 8));
+			result.ChangeAddress(_autoFixture.Create<string>(), _autoFixture.Create<string>(), _autoFixture.Create<string>(), _autoFixture.Create<string>(), _autoFixture.Create<string>(), _autoFixture.Create<string>().Substring(0, 9));
+			return result;
+		}
+
+		[Fact]
+		public async Task When_CreateNewCTC_Return_OK_And_ResourceUrl()
+		{
+			//Arrange
+			CityTechnologyCollege ctc = BuildRecord();
+			
+			//Act
+			HttpResponseMessage postResponse = await _client.PostAsync("/v2/citytechnologycolleges", ctc.ConvertToJson());
+			var createdUrl = postResponse.Headers.Location;
+			var getResponse = await _client.GetAsync(createdUrl);
+			var actual = await getResponse.Content.ReadFromJsonAsync<CityTechnologyCollegeResponse>();
+
+
+			//Assert
+			postResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			actual.Should().BeEquivalentTo(ctc);
 		}
 
 		[Fact]
@@ -65,7 +91,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Act
 			var response = await _client.GetAsync($"/v2/citytechnologycolleges");
-			var wrapper = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollege>>();
+			var wrapper = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollegeResponse>>();
 
 			//Assert
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -87,7 +113,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Act
 			var response = await _client.GetAsync($"/v2/citytechnologycolleges/?NameUKPRNCHNumber=test");
-			var wrapper = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollege>>();
+			var wrapper = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollegeResponse>>();
 
 			//Assert
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
