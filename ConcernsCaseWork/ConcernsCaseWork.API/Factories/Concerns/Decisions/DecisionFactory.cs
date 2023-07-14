@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			_ = request ?? throw new ArgumentNullException(nameof(request));
 
 			var decisionTypes = request.DecisionTypes.Select(x =>
-				new DecisionTypeModel.DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x))
+				new DecisionTypeModel.DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id))
 				.ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 		{
 			_ = request ?? throw new ArgumentNullException(nameof(request));
 
-			var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x)).Distinct().ToArray();
+			var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id)).Distinct().ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
 				request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
