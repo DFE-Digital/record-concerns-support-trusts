@@ -155,20 +155,27 @@
                             </div>
                             <br>
 
-                            @foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
+                            @foreach (var decisionTypeQuestion in Model.DecisionTypeQuestions)
                             {
-                                var isChecked = Model.Decision.DecisionTypes.Any(q => q.Id == decisionTypeCheckbox.DecisionTypeQuestion.Id);
-
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionTypeQuestion.Id" name="DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionTypeQuestion.Id" checked="@isChecked">
-                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionTypeQuestion.Id">
-                                        @EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionTypeQuestion.Id)
-
-
-                                        <div id="@decisionTypeCheckbox.DecisionTypeQuestion.Id-hint" class="govuk-hint">
-                                            @decisionTypeCheckbox.Hint
+                                    <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
+                                        @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
+                                        <div id="@decisionTypeQuestion.Id-hint" class="govuk-hint">
+                                            @decisionTypeQuestion.Hint
                                         </div>
                                     </label>
+
+                                    @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
+                                    {
+                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
+                                    }
+
+                                    @if (decisionTypeQuestion.FrameworkCategory != null)
+                                    {
+                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                    }
+
                                 </div>
                             }
                         </fieldset>
