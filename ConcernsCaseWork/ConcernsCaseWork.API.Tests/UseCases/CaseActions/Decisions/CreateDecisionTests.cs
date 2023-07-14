@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         {
             var badRequestObject = new CreateDecisionRequest
             {
-                DecisionTypes = new Contracts.Enums.DecisionType[] { 0 }
+				DecisionTypes = new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } }
             };
 
             var sut = new CreateDecision(Mock.Of<IConcernsCaseGateway>(), Mock.Of<IDecisionFactory>(), Mock.Of<ICreateDecisionResponseFactory>());
@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
                 receivedRequestDate: (DateTimeOffset)request.ReceivedRequestDate,
-                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x)).ToArray(),
+                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
                 fixture.Create<DateTimeOffset>());
