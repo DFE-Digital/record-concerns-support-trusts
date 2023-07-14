@@ -157,15 +157,15 @@
 
                             @foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
                             {
-                                var isChecked = Model.Decision.DecisionTypes.Contains(decisionTypeCheckbox.DecisionType);
+                                var isChecked = Model.Decision.DecisionTypes.Any(q => q.Id == decisionTypeCheckbox.DecisionTypeQuestion.Id);
 
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionType" name="Decision.DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionType" checked="@isChecked">
-                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionType">
-                                        @EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionType)
+                                    <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionTypeQuestion.Id" name="DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionTypeQuestion.Id" checked="@isChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionTypeQuestion.Id">
+                                        @EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionTypeQuestion.Id)
 
 
-                                        <div id="@decisionTypeCheckbox.DecisionType-hint" class="govuk-hint">
+                                        <div id="@decisionTypeCheckbox.DecisionTypeQuestion.Id-hint" class="govuk-hint">
                                             @decisionTypeCheckbox.Hint
                                         </div>
                                     </label>

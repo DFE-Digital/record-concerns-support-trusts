@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		private const int _maxSupportingNotesLength = 2000;
 		private const int _maxCaseNumberLength = 20;
 
-		public DecisionType[] DecisionTypes { get; set; }
+		public DecisionTypeQuestion[] DecisionTypes { get; set; }
 
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
 		public decimal TotalAmountRequested { get; set; }
@@ -32,7 +33,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 
 		public bool IsValid()
 		{
-			return DecisionTypes.All(x => Enum.IsDefined(typeof(DecisionType), x));
+			return DecisionTypes.All(x => Enum.IsDefined(typeof(DecisionType), x.Id));
 		}
 	}
 }
