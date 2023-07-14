@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 					.Excluding(x => x.ConcernsCaseUrn));
 
 			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
+				.Should().Contain(input.DecisionTypes.Select(i => (int)i.Id)); 
 		}
 
 		[Fact]
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 				cfg => cfg.Excluding(x => x.DecisionTypes));
 
 			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
+				.Should().Contain(input.DecisionTypes.Select(i => (int)i.Id));
 		}
 	}
 }
