@@ -48,5 +48,14 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 
 			return Ok(model);
 		}
+
+		[HttpPost(Name = nameof(Create))]
+		[ProducesResponseType((int)HttpStatusCode.Created)]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Create([FromBody] Create.Command command)
+		{
+			var response = await _mediator.Send(command);
+			return CreatedAtAction(nameof(GetByUKPRN), new { UKPRN = command.UKPRN }, null);
+		}
 	}
 }
