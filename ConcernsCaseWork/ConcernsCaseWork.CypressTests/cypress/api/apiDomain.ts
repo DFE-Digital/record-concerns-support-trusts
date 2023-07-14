@@ -78,3 +78,16 @@ export type CreateCityTechnologyCollegeResponse =
 {
 
 };
+
+export type GetCityTechnologyCollegeResponse =
+{
+    name: string
+    ukprn: string,
+    companiesHouseNumber: string,
+    addressline1: string,
+    addressline2: string,
+    addressline3: string,
+    town: string,
+    county: string,
+    postcode: string,
+};

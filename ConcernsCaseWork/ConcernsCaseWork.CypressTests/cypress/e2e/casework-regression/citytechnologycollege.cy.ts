@@ -37,10 +37,11 @@ describe("Creating a case for a city technology college", () =>
         } else {
             name = x;
         }
+
         ctcRequest = {
-            name: "Automation CTC " + now.toISOString(),
-            ukprn: "CTC"+ randomIntFromInterval(0,999999999),
-            companiesHouseNumber: "CTC"+ randomIntFromInterval(0,99999),
+            name: "Automation CTC",
+            ukprn: "CTC987654321",
+            companiesHouseNumber: "CTC12345",
             addressline1: "1 New Road",
             addressline2: "Old Street",
             addressline3: "Somewhere",
@@ -50,12 +51,15 @@ describe("Creating a case for a city technology college", () =>
         };
 
         Logger.Log("Creating CTC via Api");
-        ctcApi.post(ctcRequest);
-	});
+        ctcApi.get(ctcRequest.ukprn)
+            .then(response => {
 
-    function randomIntFromInterval(min, max) { // min and max included 
-        return Math.floor(Math.random() * (max - min + 1) + min)
-    }
+                if(response.ukprn == null)
+                {
+                    ctcApi.post(ctcRequest);
+                }
+            });
+	});
 
     it("Should create a case with only required fields", () => {
         Logger.Log("Create a case");

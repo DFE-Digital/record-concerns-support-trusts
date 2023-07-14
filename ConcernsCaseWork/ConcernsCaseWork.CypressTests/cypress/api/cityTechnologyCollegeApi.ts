@@ -1,6 +1,6 @@
 import { EnvApi, EnvUsername } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
-import { ResponseWrapper, CreateCityTechnologyCollegeRequest, CreateCityTechnologyCollegeResponse } from "./apiDomain";
+import { ResponseWrapper, CreateCityTechnologyCollegeRequest, CreateCityTechnologyCollegeResponse, GetCityTechnologyCollegeResponse } from "./apiDomain";
 import { CaseBuilder } from "./caseBuilder";
 
 class CityTechnologyCollegeApi extends ApiBase {
@@ -13,6 +13,20 @@ class CityTechnologyCollegeApi extends ApiBase {
             body: request
         })
         .then(response => {
+            return response.body;
+        });
+    }
+
+    public get(ukprn: string): Cypress.Chainable<GetCityTechnologyCollegeResponse>
+    {
+        return cy.request<GetCityTechnologyCollegeResponse>({
+            method: 'GET',
+            url: Cypress.env(EnvApi) + `/v2/citytechnologycolleges/ukprn/${ukprn}`,
+            failOnStatusCode: false,
+            headers: this.getHeaders(),
+        })
+        .then(response =>
+        {
             return response.body;
         });
     }
