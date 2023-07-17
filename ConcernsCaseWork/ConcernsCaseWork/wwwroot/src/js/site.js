@@ -99,6 +99,20 @@ window.disableOnSubmitWithJsValidationCheck = function(validator, buttonToDisabl
 	}
 }
 
+window.formatCurrency = function (element) {
+	let currencyFormatter = new Intl.NumberFormat("en-GB", {
+		style: "currency",
+		currency: "GBP"
+	});
+
+	const onlyNumbersRegex = /[^\d\.]/g;
+
+	const amount = element.val().replace(onlyNumbersRegex, "");
+
+	const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
+	element.val(formattedCurrency);
+}
+
 function autoResizer() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
 	for (let i = 0; i < multipleFields.length; i++) {

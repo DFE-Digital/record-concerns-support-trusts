@@ -168,12 +168,14 @@
 
                                     @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
                                     {
-                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
-                                    }
+                                        <div class="govuk-radios__conditional--hidden" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
 
-                                    @if (decisionTypeQuestion.FrameworkCategory != null)
-                                    {
-                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                            @if (decisionTypeQuestion.FrameworkCategory != null)
+                                            {
+                                                <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                            }
+                                        </div>
                                     }
 
                                 </div>
@@ -214,25 +216,33 @@
                 </form>
 
                 <script type="application/javascript" nonce="@nonce">
-
-                    function formatCurrency(element) {
-
-                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
-                            style: "currency",
-                            currency: "GBP"
-                        });
-
-                        const onlyNumbersRegex = /[^\d\.]/g;
-
-                        const amount = element.val().replace(onlyNumbersRegex, "");
-
-                        const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
-                        element.val(formattedCurrency);
-                    }
-
                     $(function () {
 
+                        function onSubQuestionSelected(type) {
+
+                            $(`#${type}`).on('click', function () {
+                                hideIfNotSelected(type);
+                            });
+
+                            hideIfNotSelected(type);
+                        }
+
+                        function hideIfNotSelected(type) {
+                            let isChecked = $(`#${type}`).is(":checked");
+                            let inputElement = $(`#${type}-subquestion-container :input`);
+                            inputElement.prop('checked', false);
+                            let subQuestionContainer = $(`#${type}-subquestion-container`);
+                            subQuestionContainer.removeClass(["govuk-radios__conditional", "govuk-radios__conditional--hidden"]);
+
+                            let classToAdd = isChecked ? "govuk-radios__conditional" : "govuk-radios__conditional--hidden";
+                            subQuestionContainer.addClass(classToAdd);
+                        }
+
                         $totalAmountRequestedObj = $('#total-amount-request');
+
+                        onSubQuestionSelected("NonRepayableFinancialSupport");
+                        onSubQuestionSelected("RepayableFinancialSupport");
+                        onSubQuestionSelected("ShortTermCashAdvance");
 
                         $(document).ready(function() {
                             formatCurrency($totalAmountRequestedObj);
