@@ -321,7 +321,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				return new SimpleRadioItem(value.Description(), (int)value)
 				{
-					TestId = value.ToString()
+					TestId = $"{model.Id}-{value}"
 				};
 			});
 
@@ -346,7 +346,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				return new SimpleRadioItem(value.Description(), (int)value)
 				{
-					TestId = value.ToString()
+					TestId = $"{model.Id}-{value}"
 				};
 			});
 
