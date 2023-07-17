@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
 				EsfaReceivedRequestDate = DateTimeHelper.ParseToDisplayDate(receivedRequestDate),
 				TotalAmountRequested = ToCurrencyField(decisionResponse.TotalAmountRequested),
-				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
+				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d.Id)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",

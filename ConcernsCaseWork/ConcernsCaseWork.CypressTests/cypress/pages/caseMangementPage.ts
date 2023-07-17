@@ -495,6 +495,16 @@ class CaseManagementPage {
         return this;
     }
 
+        // has methods
+    public hasTrustContain(value: string): this
+    {
+        Logger.Log(`Has trust ${value}`);
+
+        cy.getByTestId("trust_Field").contains(value, { matchCase: false });
+
+        return this;
+    }
+
     public hasRiskToTrust(value: string): this
     {
         Logger.Log(`Has risk to trust ${value}`);
