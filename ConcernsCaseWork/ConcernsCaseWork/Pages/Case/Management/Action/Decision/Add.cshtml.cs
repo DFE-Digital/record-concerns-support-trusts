@@ -175,7 +175,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		private DecisionTypeQuestion[] ModelToDecisionTypeQuestion(List<DecisionTypeQuestionModel> model)
 		{
-			var result = model.Where(q => q.Id != null).Select(q => new DecisionTypeQuestion()
+			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
 			{
 				Id = (DecisionType)q.Id,
 			}).ToArray();
@@ -246,12 +246,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				}
 			};
 
-			for (var idx = 0; idx < result.Count; idx++)
+			result.ForEach(question =>
 			{
-				var question = result[idx];
-
-				question.Index = idx;
-				question.Name = $"{nameof(DecisionTypeQuestions)}[{idx}].Id";
+				question.Name = $"{nameof(DecisionTypeQuestions)}[{question.Id}].Id";
 
 				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
 				{
@@ -263,7 +260,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
 				}
-			}
+			});
 
 			return result;
 		}
@@ -308,7 +305,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var id = $"draw-down-facility-agreed-{model.Id}";
 
-			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Index}].DrawdownFacilityAgreed", "Has drawdown facility been agreed?");
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].DrawdownFacilityAgreed", "Has drawdown facility been agreed?");
 
 			var values = new List<DrawdownFacilityAgreed>() 
 			{ 
@@ -332,7 +329,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var id = $"framwork-category-{model.Id}";
 
-			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Index}].FrameworkCategory", "What is the framework category?");
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "What is the framework category?");
 
 			var values = new List<FrameworkCategory>()
 			{
@@ -362,10 +359,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public RadioButtonsUiComponent? FrameworkCategory { get; set; }
 		public string Hint { get; set; }
 		public bool IsChecked { get; set; }
-		/// <summary>
-		/// In order to post a list of complex objects you need to track an index
-		/// </summary>
-		public int Index { get; set; }
 	}
 
 }
