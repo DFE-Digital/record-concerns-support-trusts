@@ -109,7 +109,8 @@ window.formatCurrency = function (element) {
 
 	const amount = element.val().replace(onlyNumbersRegex, "");
 
-	const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
+	// Replace the pound sign, it needs to be encoded for webpack to understand it
+	const formattedCurrency = currencyFormatter.format(amount).replace(/\u00A3/g, "");
 	element.val(formattedCurrency);
 }
 

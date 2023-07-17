@@ -158,6 +158,7 @@
                             @foreach (var decisionTypeQuestion in Model.DecisionTypeQuestions)
                             {
                                 <div class="govuk-checkboxes__item">
+
                                     <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
                                     <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
                                         @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
@@ -238,18 +239,18 @@
                             subQuestionContainer.addClass(classToAdd);
                         }
 
-                        $totalAmountRequestedObj = $('#total-amount-request');
+                        let totalAmountRequestedElement = $('#total-amount-request');
 
                         onSubQuestionSelected("NonRepayableFinancialSupport");
                         onSubQuestionSelected("RepayableFinancialSupport");
                         onSubQuestionSelected("ShortTermCashAdvance");
 
                         $(document).ready(function() {
-                            formatCurrency($totalAmountRequestedObj);
+                            formatCurrency(totalAmountRequestedElement);
                         });
 
-                        $totalAmountRequestedObj.focusout(function () {
-                            formatCurrency($totalAmountRequestedObj);
+                        totalAmountRequestedElement.focusout(function () {
+                            formatCurrency(totalAmountRequestedElement);
                         });
 
                         var submitButton = $('#add-decision-button')[0];
