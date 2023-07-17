@@ -366,6 +366,7 @@ public class TrustFinancialForecastControllerTests
 		internal readonly Mock<IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>> _getTrustFinancialForecastsUseCase;
 		internal readonly Mock<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>> _updateTrustFinancialForecastUseCase;
 		internal readonly Mock<IUseCaseAsync<CloseTrustFinancialForecastRequest, int>> _closeTrustFinancialForecastUseCase;
+		internal readonly Mock<IUseCaseAsync<DeleteTrustFinancialForecastRequest, int>> _deleteTrustFinancialForecastUseCase;
 
 		public TestBuilder()
 		{
@@ -378,6 +379,7 @@ public class TrustFinancialForecastControllerTests
 			_getTrustFinancialForecastsUseCase = _fixture.Freeze<Mock<IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>>>();
 			_updateTrustFinancialForecastUseCase = _fixture.Freeze<Mock<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>>>();
 			_closeTrustFinancialForecastUseCase = _fixture.Freeze<Mock<IUseCaseAsync<CloseTrustFinancialForecastRequest, int>>>();
+			_deleteTrustFinancialForecastUseCase = _fixture.Freeze<Mock<IUseCaseAsync<DeleteTrustFinancialForecastRequest, int>>>();
 		}
 
 		internal TrustFinancialForecastController BuildSut()
@@ -387,7 +389,8 @@ public class TrustFinancialForecastControllerTests
 				_getTrustFinancialForecastUseCase.Object, 
 				_updateTrustFinancialForecastUseCase.Object,
 				_closeTrustFinancialForecastUseCase.Object,
-				_getTrustFinancialForecastsUseCase.Object );
+				_getTrustFinancialForecastsUseCase.Object,
+				_deleteTrustFinancialForecastUseCase.Object);
 		}
 
 		public UpdateTrustFinancialForecastRequest CreateValidUpdateTrustFinancialForecastRequest()
