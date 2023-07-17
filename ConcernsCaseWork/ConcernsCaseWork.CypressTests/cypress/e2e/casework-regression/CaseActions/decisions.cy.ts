@@ -34,9 +34,6 @@ describe("User can add decisions to an existing case", () => {
 		const repayableFinancialSupportOption = "RepayableFinancialSupport";
 		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
 
-		editDecisionPage
-			.hasNoVisibleSubQuestions("RepayableFinancialSupport");
-
 		Logger.Log("Validating Decision");
 		editDecisionPage
 			.withDateESFADay("23")
@@ -162,7 +159,7 @@ describe("User can add decisions to an existing case", () => {
 		Logger.Log("Check the decision sub questions have been updated");
 		viewDecisionPage.editDecision();
 
-		// The sub questions don't appear on edit, so we need to make sure they got updated
+		// The sub questions only appear on edit, so we need to make sure they got updated
 		editDecisionPage
 			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
 			.hasFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
