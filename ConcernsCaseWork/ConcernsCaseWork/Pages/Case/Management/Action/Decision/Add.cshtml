@@ -159,6 +159,7 @@
                             {
                                 <div class="govuk-checkboxes__item">
 
+                                    <input type="hidden" name="DecisionTypeQuestions.Index" value="@decisionTypeQuestion.Id">
                                     <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
                                     <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
                                         @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
