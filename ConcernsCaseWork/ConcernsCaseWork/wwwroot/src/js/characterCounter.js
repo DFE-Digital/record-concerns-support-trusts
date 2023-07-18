@@ -7,10 +7,10 @@ C# treats a new line has two characters \r\n
 Since we use two different languages, we need to make sure they are counting correctly
 In the future it would be useful to be able to inject this behaviour into the existing version
 Change Log:
-1. In the count function, we count the number of new lines and take that away from the length of the text
-   -  C# treats new lines as 2 characters instead of 1
+1. In the count function, we count the number of new lines and add that to the length of the text
+   -  C# treats new lines as 2 characters instead of 1, so we need an extra character for each new line in our count
 2. Updated the selector in the CharacterCount constructor to govuk-js-concerns-character-count so it does not clash with the original
-3. Updated the selector in the calling code to data-module="govuk-concerns-character-count so that it does not clash with the original
+3. Updated the selector in the calling code to data-module="govuk-concerns-character-count" so that it does not clash with the original
 4. There may be code that can be removed, however to make it as simple as possible to update in the future, kept the changes to a minimum
 */
 (function (global, factory) {
