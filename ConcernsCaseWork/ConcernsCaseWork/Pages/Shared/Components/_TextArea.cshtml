@@ -24,10 +24,10 @@
         {
             <div class="govuk-hint">@Model.HintText</div>
         }
-		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
+		<div class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="@Model.Text.MaxLength">
 			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
                 <partial name="Components/_ValidationErrorDetail" model="@errors" />
-				<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-label="@displayName">@Model.Text.StringContents</textarea>
+				<textarea class="govuk-textarea govuk-js-concerns-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-label="@displayName">@Model.Text.StringContents</textarea>
 			</div>
 			<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 				You can enter up to @Model.Text.MaxLength characters
