@@ -8,11 +8,10 @@
     var nonce = HttpContext.GetNonce();
     var backLink = $"/case/{Model.CaseId}/management";
 }
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="@backLink"></back-link>
-    </div>
-}
+
+<div class="govuk-width-container">
+    <back-link url="@backLink"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -31,7 +30,7 @@
                 <h1 class="govuk-heading-l"> Close case @Model.CaseId</h1>
                 <h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
-                <form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
+                <form asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 
                     <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
 

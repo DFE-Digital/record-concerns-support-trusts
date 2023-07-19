@@ -23,7 +23,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 		addTFFToCase();
 	});
 
-    it("Creation of a TFF", function () {
+    it.only("Creation of a TFF", function () {
 		Logger.Log("Create a TFF with invalid values - Shows validation errors");
 		validateAddEdit();
 

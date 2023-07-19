@@ -58,7 +58,7 @@ Cypress.Commands.add("loginWithCredentials", () => {
 //This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
 Cypress.Commands.add("excuteAccessibilityTests", () => {
 	Logger.Log("Executing the command");
-	const wcagStandards = ["wcag22aa"];
+	const wcagStandards = ["wcag2a"];
 	const impactLevel = ["critical", "minor", "moderate", "serious"];
 	const continueOnFail = false;
 	Logger.Log("Inject Axe");
@@ -68,10 +68,6 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 	cy.checkA11y(
 		undefined,
 		{
-			runOnly: {
-				type: "tag",
-				values: wcagStandards,
-			},
 			includedImpacts: impactLevel,
 		},
 		undefined,

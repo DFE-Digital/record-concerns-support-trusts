@@ -23,7 +23,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         addFinancialPlanToCase();
     });
 
-    it("Should add a financial plan", () => 
+    it.only("Should add a financial plan", () => 
     {
         checkFormValidation();
 

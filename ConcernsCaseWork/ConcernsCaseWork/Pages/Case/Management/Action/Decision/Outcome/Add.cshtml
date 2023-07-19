@@ -8,13 +8,12 @@
     var nonce = HttpContext.GetNonce();
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-            Back to case
-        </a>
-    </div>
-}
+
+<div class="govuk-width-container">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -42,7 +41,7 @@
                     </strong>
                 </div>
 
-                <form role="form" method="post" id="add-decision-outcome-form" novalidate>
+                <form method="post" id="add-decision-outcome-form" novalidate>
 
                     <input type="hidden" name="DecisionOutcome.DecisionId" value="@RouteData.Values["decisionId"]" />
 
@@ -89,8 +88,8 @@
                             </legend>
 
                             @foreach (var businessAreaCheckbox in Model.BusinessAreaCheckBoxes)
-							{
-								var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
+                            {
+                                var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
 
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input"
@@ -125,37 +124,37 @@
 
                 <script type="application/javascript" nonce="@nonce">
 
-					function formatCurrency(element) {
+                    function formatCurrency(element) {
 
-						let currencyFormatter = new Intl.NumberFormat("en-GB", {
-							style: "currency",
-							currency: "GBP"
-						});
+                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
+                            style: "currency",
+                            currency: "GBP"
+                        });
 
-						const onlyNumbersRegex = /[^\d\.]/g;
+                        const onlyNumbersRegex = /[^\d\.]/g;
 
-						const amount = element.val().replace(onlyNumbersRegex, "");
+                        const amount = element.val().replace(onlyNumbersRegex, "");
 
-						const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
-						element.val(formattedCurrency);
-					}
+                        const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
+                        element.val(formattedCurrency);
+                    }
 
-					$(function () {
-						let validator = formValidator($("#add-decision-outcome-form")[0]);
+                    $(function () {
+                        let validator = formValidator($("#add-decision-outcome-form")[0]);
 
-						$totalAmountRequestedObj = $('#total-amount-approved');
+                        $totalAmountRequestedObj = $('#total-amount-approved');
 
-						$(document).ready(function() {
-							formatCurrency($totalAmountRequestedObj);
-						});
+                        $(document).ready(function() {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
 
-						$totalAmountRequestedObj.focusout(function () {
-							formatCurrency($totalAmountRequestedObj);
-						});
+                        $totalAmountRequestedObj.focusout(function () {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
 
                         var submitButton = $('#add-decision-outcome-button')[0];
                         disableOnSubmit(submitButton);
-					});
+                    });
                 </script>
             }
 

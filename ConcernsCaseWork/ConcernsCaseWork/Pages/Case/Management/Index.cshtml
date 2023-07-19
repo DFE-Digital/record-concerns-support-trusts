@@ -89,17 +89,9 @@
 
                 <!-- Case Details -->
                 <table class="govuk-table">
-                    <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-                    <thead>
-                        <tr>
-                            <th scope="col" class="govuk-!-width-one-quarter"></th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Trust</th>
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15">Trust</th>
                             <td class="govuk-table__cell" data-testid="trust_Field">
                                 @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName
                             </td>
@@ -109,7 +101,7 @@
                         @if (!Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Concerns</th>
                                 <td class="govuk-table__cell" data-testid="concern_Field">
 
                                     <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
@@ -122,7 +114,7 @@
                         @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Risk to trust</th>
                                 <td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
                                     @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
                                     {
@@ -141,7 +133,7 @@
                                 </td>
                             </tr>
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Direction of travel</th>
                                 <td class="govuk-table__cell" data-testid="direction-of-travel">
                                     @Model.CaseModel.DirectionOfTravel
                                 </td>
@@ -158,7 +150,7 @@
                         @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row" id="container-Concerns">
-                                <th scope="row" class="govuk-table-case-details__header">
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">
                                     <span class="@concernsErrorClass">Concerns</span>
                                  </th>
                                 <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
@@ -227,7 +219,7 @@
                         }
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15">SFSO territory</th>
                             <td class="govuk-table__cell" data-testid="territory_Field">
                                 @if (Model.CaseModel.Territory == null)
                                 {
@@ -250,7 +242,7 @@
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Case owner</th>
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15">Case owner</th>
                             <td class="govuk-table__cell" data-testid="case owner_field">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
@@ -266,7 +258,7 @@
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Date created</th>
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date created</th>
                             <td class="govuk-table__cell">
                                 @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.CreatedAt)
                             </td>

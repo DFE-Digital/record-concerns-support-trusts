@@ -8,11 +8,9 @@
     var nonce = HttpContext.GetNonce();
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case overview"></back-link>
-    </div>
-}
+<div class="govuk-width-container">
+    <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case overview"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -27,7 +25,7 @@
             else
             {
                 <partial name="_ValidationErrors" />
-                <form role="form" method="post" id="add-decision-form" novalidate>
+                <form method="post" id="add-decision-form" novalidate>
 
                     <h1 class="govuk-heading-l">
                         <span class="govuk-caption-m">Decision ID @Model.DecisionId</span>

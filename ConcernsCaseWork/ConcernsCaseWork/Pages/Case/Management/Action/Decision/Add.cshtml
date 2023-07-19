@@ -10,11 +10,9 @@
     var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
-    </div>
-}
+<div class="govuk-width-container">
+    <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -35,7 +33,7 @@
                     Decision
                 </h1>
 
-                <form role="form" method="post" id="add-decision-form" novalidate>
+                <form method="post" id="add-decision-form" novalidate>
 
                     <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
 

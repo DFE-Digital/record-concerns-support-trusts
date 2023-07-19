@@ -17,11 +17,10 @@
     var dateReportSentError = ModelState.ContainsKey(Model.DateReportSentToTrustErrorKey);
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="/case/@Model.CaseUrn/management" label="Back to case"></back-link>
-    </div>
-}
+
+<div class="govuk-width-container">
+    <back-link url="/case/@Model.CaseUrn/management" label="Back to case"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -40,19 +39,11 @@
         </h1>
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date SRMA open</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date SRMA open</th>
                     <td class="govuk-table__cell" data-testid="date-opened-text">
                         @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.CreatedAt)
                     </td>
@@ -62,7 +53,7 @@
 
                 @* Status *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Status</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Status</th>
                     <td class="govuk-table__cell" data-testid="status">
                         @{
                             var statusStr = Model.SRMAModel.Status == Enums.SRMAStatus.Unknown ? string.Empty
@@ -79,7 +70,7 @@
 
                 @* Date offered *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date trust was contacted</th>
                     <td class="govuk-table__cell" data-testid="date-trust-contacted">
                         @{
                             RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered));
@@ -94,7 +85,7 @@
 
                 @* Reason *@
                 <tr class="govuk-table__row" id="container-@Model.ReasonErrorKey">
-                    <th scope="row" class="govuk-table-case-details__header">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">
                         <span class="@(reasonError ? errorClass : "")">Reason</span>
                     </th>
                     <td class="govuk-table__cell" data-testid="reason">
@@ -114,7 +105,7 @@
 
                 @* Date accepted *@
                 <tr class="govuk-table__row" id="container-@Model.DateAcceptedErrorKey">
-                    <th scope="row" class="govuk-table-case-details__header">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">
                         <span class="@(dateAcceptedError ? errorClass : "")">Date accepted</span>
                     </th>
                     <td class="govuk-table__cell" data-testid="date-accepted">
@@ -138,7 +129,7 @@
 
                 @* Dates of visit *@
                 <tr class="govuk-table__row" id="container-@Model.DatesOfVisitErrorKey">
-                    <th scope="row" class="govuk-table-case-details__header">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">
                         <span class="@(dateVisitError ? errorClass : "")">Dates of visit</span>
                     </th>
                     <td class="govuk-table__cell" data-testid="date-of-visit">
@@ -185,7 +176,7 @@
 
                 @* Date report sent *@
                 <tr class="govuk-table__row" id="container-@Model.DateReportSentToTrustErrorKey">
-                    <th scope="row" class="govuk-table-case-details__header">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">
                         <span class="@(dateReportSentError ? errorClass : "")">Date report sent to trust</span>
                     </th>
                     <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
@@ -209,7 +200,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes">
                         @{
                             RenderTextAreaValue(Model.SRMAModel.Notes);

@@ -7,11 +7,9 @@
 	ViewData[ViewDataConstants.Title] = "Edit Trust Financial Forecast (TFF)";
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
-	</div>
-}
+<div class="govuk-width-container">
+    <back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
+</div>
 
 <div class="govuk-width-container">
 	<partial name="_BannerError" />
@@ -38,7 +36,7 @@
 				</a>
 			</div>
 
-			<form role="form" method="post" id="edit-trust-financial-forecast-form" novalidate>
+			<form method="post" id="edit-trust-financial-forecast-form" novalidate>
 
 				<partial name="Components/_RadioList" model="Model.ForecastingToolRanAt"/>
 

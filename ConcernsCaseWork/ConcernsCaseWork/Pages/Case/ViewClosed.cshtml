@@ -11,11 +11,9 @@
     var caseArchiveLink = "https://educationgovuk.sharepoint.com/:x:/r/sites/efaak/_layouts/15/Doc.aspx?sourcedoc=%7BDDBFCD6E-2A56-4575-85C1-2A5B716B9C3E%7D&file=SFSO%20Case%20Archive.xlsx";
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-    </div>
-}
+<div class="govuk-width-container">
+    <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />

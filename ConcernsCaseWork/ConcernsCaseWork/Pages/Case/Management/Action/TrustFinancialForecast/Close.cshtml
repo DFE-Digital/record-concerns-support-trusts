@@ -6,11 +6,9 @@
 	ViewData["Title"] = "Close trust Financial forecast";
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
-	</div>
-}
+<div class="govuk-width-container">
+	<back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
+</div>
 
 <div class="govuk-width-container">
 	<partial name="_BannerError" />
@@ -25,7 +23,7 @@
 			else
 			{
 				<partial name="_ValidationErrors"/>
-				<form role="form" method="post" id="close-trust-financial-forecast-form" novalidate>
+				<form method="post" id="close-trust-financial-forecast-form" novalidate>
 					
 					<h1 class="govuk-heading-l">
 						<span class="govuk-caption-m">Case ID @Model.CaseUrn</span>

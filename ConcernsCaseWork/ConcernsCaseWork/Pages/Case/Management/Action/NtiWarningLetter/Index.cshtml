@@ -10,11 +10,11 @@
     var isClosed = Model.NtiWarningLetterModel.ClosedAt.HasValue;
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
-}
+
+<div class="govuk-width-container">
+	<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+</div>
+
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -44,19 +44,12 @@
 
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
                 @{
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter opened</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Warning letter opened</th>
                         <td class="govuk-table__cell" data-testid="date-opened-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.CreatedAt)</span>
@@ -68,7 +61,7 @@
                 @if (isClosed)
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter completed</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Warning letter completed</th>
                         <td class="govuk-table__cell" data-testid="date-closed-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.ClosedAt.Value)</span>
@@ -81,7 +74,7 @@
                 <tr class="govuk-table__row">
                     @if (Model.NtiWarningLetterModel.ClosedAt == null)
                     {
-                        <th scope="row" class="govuk-table-case-details__header">Current status</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Current status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
                                 RenderValue(Model.NtiWarningLetterModel.Status?.Name);
@@ -90,7 +83,7 @@
                     }
                     else
                     {
-                        <th scope="row" class="govuk-table-case-details__header">Status</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
                                 RenderValue(Model.NtiWarningLetterModel.ClosedStatus?.Name);
@@ -102,7 +95,7 @@
 
                 @* Date sent *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date sent</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date sent</th>
                     <td class="govuk-table__cell" data-testid="nti-date-sent">
                         @if (@Model.NtiWarningLetterModel.SentDate.HasValue)
                         {
@@ -117,7 +110,7 @@
 
                 @* Reasons *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Reasons</th>
                     <td class="govuk-table__cell" data-testid="nti-reasons">
                         @{
                             if (Model.NtiWarningLetterModel.Reasons.Any())
@@ -139,7 +132,7 @@
 
                 @* Conditions *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Conditions</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Conditions</th>
                     <td class="govuk-table__cell" data-testid="nti-conditions">
                         @{
                             if (Model.NtiWarningLetterModel.Conditions.Any())
@@ -161,7 +154,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="nti-notes">
                         @{
 

@@ -8,11 +8,9 @@
     var isClosed = Model.NTIUnderConsiderationModel.ClosedAt.HasValue;
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
-}
+<div class="govuk-width-container">
+	<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+</div>
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -41,19 +39,12 @@
         </div>
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
                 @{
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration opened</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Under consideration opened</th>
                         <td class="govuk-table__cell" data-testid="date-opened-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.CreatedAt)</span>
@@ -65,7 +56,7 @@
                 @if (isClosed)
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration completed</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Under consideration completed</th>
                         <td class="govuk-table__cell" data-testid="date-closed-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.ClosedAt.Value)</span>
@@ -79,7 +70,7 @@
                     if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName))
                     {
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Status</th>
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15">Status</th>
                             <td class="govuk-table__cell" data-testid="nti-status">
                                 <div class="govuk-!-padding-bottom-2">
                                     <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
@@ -91,7 +82,7 @@
 
                 @* Reasons *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Reasons</th>
                     <td class="govuk-table__cell" data-testid="nti-reasons">
                         @{
                             if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
@@ -112,11 +103,9 @@
                     </td>
                 </tr>
 
-
-
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="nti-notes">
                         @{
 

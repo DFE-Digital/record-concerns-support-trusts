@@ -11,11 +11,11 @@
     var isClosed = Model.NtiModel.ClosedAt.HasValue;
 }
 
-@section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-    </div>
-}
+
+<div class="govuk-width-container">
+    <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+</div>
+
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -45,19 +45,12 @@
 
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
                 @{
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Notice to improve opened</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Notice to improve opened</th>
                         <td class="govuk-table__cell" data-testid="date-opened-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiModel.CreatedAt)</span>
@@ -69,7 +62,7 @@
                 @if (isClosed)
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Notice to improve completed</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI: Notice to improve completed</th>
                         <td class="govuk-table__cell" data-testid="date-completed-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiModel.ClosedAt.Value)</span>
@@ -83,7 +76,7 @@
                 <tr class="govuk-table__row">
                     @if (Model.NtiModel.ClosedAt == null)
                     {
-                        <th scope="row" class="govuk-table-case-details__header">Current status</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Current status</th>
                         <td class="govuk-table__cell" data-testid="status-text">
                             @{
                                 RenderValue(Model.NtiModel.Status?.Name);
@@ -92,7 +85,7 @@
                     }
                     else
                     {
-                        <th scope="row" class="govuk-table-case-details__header">Status</th>
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Status</th>
                         <td class="govuk-table__cell" data-testid="status-text">
                             @{
                                 RenderValue(Model.NtiModel.ClosedStatus?.Name);
@@ -104,7 +97,7 @@
 
                 @* Date NTI Issued *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date NTI Issued</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI Issued</th>
                     <td class="govuk-table__cell" data-testid="date-issued-text">
                         @{
                             RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateStarted));
@@ -119,7 +112,7 @@
                     {
                         case (int)NTIStatus.Cancelled:
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Date NTI cancelled</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI cancelled</th>
                                 <td class="govuk-table__cell" data-testid="date-nti-cancelled">
                                     @{
                                         RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.ClosedAt));
@@ -131,7 +124,7 @@
                         case (int)NTIStatus.Lifted:
                             <tr class="govuk-table__row">
 
-                                <th scope="row" class="govuk-table-case-details__header">Date NTI Lifted</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI Lifted</th>
                                 <td class="govuk-table__cell" data-testid="date-nti-lifted">
                                     @{
 
@@ -140,7 +133,7 @@
                                 </td>
                             </tr>
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Submission Decision ID</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Submission Decision ID</th>
                                 <td class="govuk-table__cell" data-testid="submission-decision-id">
                                     @{
                                         RenderValue(Model.NtiModel.SubmissionDecisionId);
@@ -151,7 +144,7 @@
                         case (int)NTIStatus.Closed:
                             <tr class="govuk-table__row">
 
-                                <th scope="row" class="govuk-table-case-details__header">Date NTI Closed</th>
+                                <th scope="row" class="govuk-table__header govuk-table__header__width_15">Date NTI Closed</th>
                                 <td class="govuk-table__cell" data-testid="date-nti-closed">
                                     @{
                                         RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateNTIClosed));
@@ -166,7 +159,7 @@
 
                 @* Reasons *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Reasons</th>
                     <td class="govuk-table__cell" data-testid="reason-text">
                         @{
                             if (Model.NtiModel.Reasons.Any())
@@ -188,7 +181,7 @@
 
                 @* Conditions *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Conditions</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Conditions</th>
                     <td class="govuk-table__cell" data-testid="condition-text">
                         @{
                             if (Model.NtiModel.Conditions.Any())
@@ -210,7 +203,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes-text">
                         @{
 
