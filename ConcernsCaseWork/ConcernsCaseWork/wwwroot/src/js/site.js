@@ -6,6 +6,17 @@ GOVUKFrontend.initAll();
 import MOJFrontend from "@ministryofjustice/frontend/moj/all";
 MOJFrontend.initAll();
 
+// We have our own version of the character counter copied from govuk-frontend
+// The original cannot count characters for c# due to issues with new lines
+// See the js file for more information
+import CharacterCount from "./characterCounter";
+
+let characterCounts = document.querySelectorAll('[data-module="govuk-concerns-character-count"]');
+
+characterCounts.forEach((characterCount) => {
+	new CharacterCount(characterCount, {}).init();
+});
+
 setScrollableErrorElements();
 autoResizer();
 
