@@ -10,53 +10,38 @@
 <partial name="_TrustDetails" model="@Model.TrustDetailsModel" />
 <partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
 
-<feature name="@FeatureFlags.IsTrustCasesTabsEnabled">
-    <h2 class="govuk-heading-m">
-        Active and closed cases
-    </h2>
+<h2 class="govuk-heading-m">
+    Active and closed cases
+</h2>
 
-    @if (Model.CanCreateCase)
-    {
-        <div class="govuk-button-group flexalign__right">
-            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-                Create case
-            </a>
-        </div>
-    }
-
-    <nav class="moj-sub-navigation" aria-label="Sub navigation">
-
-        <ul class="moj-sub-navigation__list">
-            <li class="moj-sub-navigation__item">
-                <a id="active-cases-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Active Cases</a>
-            </li>
-
-            <li class="moj-sub-navigation__item">
-                <a id="closed-cases-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Closed Cases</a>
-            </li>
-        </ul>
-    </nav>
-
-    <div id="active-cases">
-        <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+@if (Model.CanCreateCase)
+{
+    <div class="govuk-button-group flexalign__right">
+        <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
+            Create case
+        </a>
     </div>
-    <div id="closed-cases" hidden>
-        <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
-    </div>
-</feature>
-<feature name="@FeatureFlags.IsTrustCasesTabsEnabled" negate="true">
-    @if (Model.CanCreateCase)
-    {
-        <div class="govuk-button-group flexalign__right">
-            <a class="govuk-button" asp-page="/case/createCase/selectCaseType" role="button" data-testid="create-case-button">
-                Create case
-            </a>
-        </div>
-    }
+}
 
+<nav class="moj-sub-navigation" aria-label="Sub navigation">
+
+    <ul class="moj-sub-navigation__list">
+        <li class="moj-sub-navigation__item">
+            <a id="active-cases-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Active Cases</a>
+        </li>
+
+        <li class="moj-sub-navigation__item">
+            <a id="closed-cases-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Closed Cases</a>
+        </li>
+    </ul>
+</nav>
+
+<div id="active-cases">
     <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+</div>
+<div id="closed-cases" hidden>
     <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
-</feature>
+</div>
 
 <script type="application/javascript" nonce="@nonce">
 
@@ -71,7 +56,6 @@
             const tabToShow = document.getElementById(`${parameters.to}-cases-tab`);
             const tableToShow = document.getElementById(`${parameters.to}-cases`);
 
-            // This guard is only needed while the feature flag IsTrustCasesTabsEnabled exists
             if (tabToShow) {
                 tabToShow.addEventListener("click", function() {
                     tableToShow.removeAttribute("hidden");
