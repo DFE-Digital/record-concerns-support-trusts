@@ -177,7 +177,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
 			{
-				Id = (DecisionType)q.Id,
+				Id = (DecisionType)q.Id
 			}).ToArray();
 
 			return result;
