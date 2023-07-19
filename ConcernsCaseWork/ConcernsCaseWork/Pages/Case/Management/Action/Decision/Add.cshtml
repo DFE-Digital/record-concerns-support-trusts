@@ -170,7 +170,7 @@
 
                                     @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
                                     {
-                                        <div class="govuk-radios__conditional--hidden" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                        <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
                                             <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
 
                                             @if (decisionTypeQuestion.FrameworkCategory != null)
@@ -231,20 +231,25 @@
 
                         function hideIfNotSelected(type) {
                             let isChecked = $(`#${type}`).is(":checked");
+
                             let inputElement = $(`#${type}-subquestion-container :input`);
                             inputElement.prop('checked', false);
-                            let subQuestionContainer = $(`#${type}-subquestion-container`);
-                            subQuestionContainer.removeClass(["govuk-radios__conditional", "govuk-radios__conditional--hidden"]);
+                            inputElement.prop('disabled', !isChecked);
+                            inputElement.prop('aria-disabled', !isChecked);
 
-                            let classToAdd = isChecked ? "govuk-radios__conditional" : "govuk-radios__conditional--hidden";
-                            subQuestionContainer.addClass(classToAdd);
+                            let subContainer = $(`#${type}-subquestion-container`);
+                            subContainer.removeClass(['govuk-radios__conditional--disabled']);
+                            
+                            if (!isChecked) {
+                                subContainer.addClass('govuk-radios__conditional--disabled');
+                            }
                         }
-
-                        let totalAmountRequestedElement = $('#total-amount-request');
 
                         onSubQuestionSelected("NonRepayableFinancialSupport");
                         onSubQuestionSelected("RepayableFinancialSupport");
                         onSubQuestionSelected("ShortTermCashAdvance");
+
+                        let totalAmountRequestedElement = $('#total-amount-request');
 
                         $(document).ready(function() {
                             formatCurrency(totalAmountRequestedElement);
