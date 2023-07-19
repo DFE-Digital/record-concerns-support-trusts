@@ -57,9 +57,18 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.Log("Ensure the decision type sub questions do not display if not selected");
 		editDecisionPage
-			.hasNoVisibleSubQuestions("RepayableFinancialSupport")
-			.hasNoVisibleSubQuestions("NonRepayableFinancialSupport")
-			.hasNoVisibleSubQuestions("ShortTermCashAdvance");
+			.hasNoEnabledOrSelectedSubQuestions("RepayableFinancialSupport")
+			.hasNoEnabledOrSelectedSubQuestions("NonRepayableFinancialSupport")
+			.hasNoEnabledOrSelectedSubQuestions("ShortTermCashAdvance");
+
+		Logger.Log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
+		editDecisionPage
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
+		
 
 		Logger.Log("Checking accessibility on Create Decision");
 		cy.excuteAccessibilityTests();
