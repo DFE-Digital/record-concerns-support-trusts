@@ -145,7 +145,7 @@ export class EditDecisionPage
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
 		Logger.Log(`Has ${type} drawdown facility agreed ${value}`);
-
+		
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
 		return this;
@@ -167,11 +167,14 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasNoVisibleSubQuestions(type: string): this {
-		Logger.Log(`${type} sub questions are not visible`);
+	public hasNoEnabledOrSelectedSubQuestions(type: string): this {
+		Logger.Log(`${type} sub questions are not enabled`);
 
-		cy.getByTestId(`${type}-subquestion-container`).should("not.be.visible");
-
+		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
+		
+		elements.should("not.be.enabled");
+		elements.should("not.be.checked");
+		
 		return this;
 	}
 
