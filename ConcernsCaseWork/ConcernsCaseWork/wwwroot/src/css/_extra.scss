@@ -1767,3 +1767,7 @@ label.govuk-label .govuk-tag {
 .moj-sub-navigation__link {
 	cursor: pointer;
 }
+
+.moj-sub-navigation__link[aria-current=page] {
+	font-weight: 600;
+}
