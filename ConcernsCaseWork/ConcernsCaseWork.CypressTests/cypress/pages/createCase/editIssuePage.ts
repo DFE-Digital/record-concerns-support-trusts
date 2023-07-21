@@ -49,6 +49,13 @@ export default class EditIssuePage {
         return this;
     }
 
+    public hasCharacterCountMessage(value: string): this {
+        Logger.Log(`Has character count message ${value}`);
+        cy.contains(value);
+
+        return this;
+    }
+
     public apply(): this
     {
         Logger.Log("Apply Issue");

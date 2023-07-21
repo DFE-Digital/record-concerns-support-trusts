@@ -164,6 +164,11 @@ describe("Editing a case", () =>
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
 
+        // Ensure the correct character count when new lines are used
+        editIssuePage
+            .withIssue("Testing \n the character count \n with \n\n\n new lines")
+            .hasCharacterCountMessage("You have 1,945 characters remaining");
+
         Logger.Log("Checking accessibility on edit issue");
         cy.excuteAccessibilityTests();
 
