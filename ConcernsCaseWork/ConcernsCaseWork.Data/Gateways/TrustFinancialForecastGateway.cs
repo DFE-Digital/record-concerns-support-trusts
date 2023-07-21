@@ -15,7 +15,7 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 	public async Task<TrustFinancialForecast> GetById(int trustFinancialForecastId, CancellationToken cancellationToken = default)
 		=> await _concernsDbContext
 			.TrustFinancialForecasts
-			.SingleAsync(f => f.Id == trustFinancialForecastId, cancellationToken);
+			.SingleOrDefaultAsync(f => f.Id == trustFinancialForecastId, cancellationToken);
 
 
 	public async Task<ICollection<TrustFinancialForecast>> GetAllForCase(int caseUrn, CancellationToken cancellationToken = default)
@@ -34,5 +34,14 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 		await _concernsDbContext.SaveChangesAsync(cancellationToken);
 		
 		return trustFinancialForecast.Id;
+	}
+
+	public void Delete(int trustFinancialForecastId)
+	{
+		var result = this._concernsDbContext.TrustFinancialForecasts.SingleOrDefault(f => f.Id == trustFinancialForecastId);
+		result.DeletedAt = System.DateTime.Now;
+
+		_concernsDbContext.SaveChanges();
+
 	}
 }
