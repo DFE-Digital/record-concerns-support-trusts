@@ -39,10 +39,7 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 	public void Delete(int trustFinancialForecastId)
 	{
 		var result = this._concernsDbContext.TrustFinancialForecasts.SingleOrDefault(f => f.Id == trustFinancialForecastId);
-		if (result != null)
-		{
-			result.DeletedAt = System.DateTime.Now;
-		}
+		result.DeletedAt = System.DateTime.Now;
 
 		_concernsDbContext.SaveChanges();
 
