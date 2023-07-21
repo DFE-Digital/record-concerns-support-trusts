@@ -23,5 +23,6 @@ public class TrustFinancialForecastConfiguration : IEntityTypeConfiguration<Trus
 			.HasConversion<string>();
 
 		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 	}
 }
