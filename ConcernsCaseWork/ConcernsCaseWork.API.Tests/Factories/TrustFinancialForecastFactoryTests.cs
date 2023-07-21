@@ -20,7 +20,7 @@ public class TrustFinancialForecastFactoryTests
 		var result = trustFinancialForecast.ToResponseModel();
 
 		// assert
-		result.Should().BeEquivalentTo(trustFinancialForecast, options => options.Excluding(x => x.Id));
+		result.Should().BeEquivalentTo(trustFinancialForecast, options => options.Excluding(x => x.Id).Excluding(f=> f.DeletedAt));
 		result.TrustFinancialForecastId.Should().Be(trustFinancialForecast.Id);
 	}
 }
