@@ -9,6 +9,19 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
+  appsettings:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check appsettings validity
+        run: |
+          DIRECTORY=./ConcernsCaseWork/ConcernsCaseWork
+          for i in "$DIRECTORY"/appsettings*.json; do
+            echo "$i" && jq . "$i"
+          done
+
   build-test:
     runs-on: ubuntu-latest
     environment: dev
