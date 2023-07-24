@@ -130,7 +130,8 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
                 receivedRequestDate: (DateTimeOffset)request.ReceivedRequestDate,
-                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id)).ToArray(),
+                //TODO EA
+                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id, null, null)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
                 fixture.Create<DateTimeOffset>());

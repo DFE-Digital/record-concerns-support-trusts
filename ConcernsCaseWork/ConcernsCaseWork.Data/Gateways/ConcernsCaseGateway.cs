@@ -40,6 +40,7 @@ namespace ConcernsCaseWork.Data.Gateways
 				.ThenInclude(x => x.Outcome)
 				.ThenInclude(x => x.BusinessAreasConsulted);
 
+
 			if (!withChangeTracking)
 	        {
 		        exp.AsNoTracking();
@@ -88,7 +89,15 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public async Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase)
         {
-	        await _concernsDbContext.SaveChangesAsync();
+            try
+            {
+				await _concernsDbContext.SaveChangesAsync();
+			}
+			catch (Exception e)
+            {
+                throw new Exception(e.InnerException.Message);
+            }
+
 	        return concernsCase;
         }
 

@@ -71,8 +71,8 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
             var decisionTypes = new[]
             {
-                new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) { DecisionId = decisionId },
-                new DecisionType(Data.Enums.Concerns.DecisionType.OtherFinancialSupport){ DecisionId = decisionId }
+                new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferEducationallyTriggered) { DecisionId = decisionId },
+                new DecisionType(Data.Enums.Concerns.DecisionType.OtherFinancialSupport, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity){ DecisionId = decisionId }
             };
 
             var expectation = new
@@ -157,7 +157,8 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             var decisionTypes = new[]
             {
-                new DecisionType(decisionType) { DecisionId = (int)decisionType },
+                //TODO EA comeback and complete
+                new DecisionType(decisionType, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity) { DecisionId = (int)decisionType },
             };
 
             var sut = Decision.CreateNew(

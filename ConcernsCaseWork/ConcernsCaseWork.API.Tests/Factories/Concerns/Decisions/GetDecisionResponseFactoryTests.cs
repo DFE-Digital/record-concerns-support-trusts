@@ -146,7 +146,8 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
                     submissionRequired: fixture.Create<bool>(),
                     submissionDocumentLink: new string(fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
                     receivedRequestDate: DateTimeOffset.Now,
-                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
+                    // TODO EA this as well
+                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, null, null) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
                     DateTimeOffset.Now

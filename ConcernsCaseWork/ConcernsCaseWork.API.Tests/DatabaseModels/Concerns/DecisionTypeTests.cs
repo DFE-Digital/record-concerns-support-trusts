@@ -19,21 +19,27 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
 		[Theory]
 		[MemberData(nameof(DecisionTypeTests.EnumValues))]
-		public void DecisionType_Properties_SetByConstructor(Data.Enums.Concerns.DecisionType enumValue)
+		public void DecisionType_Properties_SetByConstructor(Data.Enums.Concerns.DecisionType decisionTypeEnum)
 		{
 			var fixture = new Fixture();
-			var expectedId = enumValue;
+			var expectedTypeId = decisionTypeEnum;
+			//TODO EA. comeback and make these random like the types
+			var expectedFacilityAgreedId = Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No;
+			var expectedCategoryId = Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity;
 			var expectedDecisionId = fixture.Create<int>();
-			var sut = new DecisionType(expectedId) { DecisionId = expectedDecisionId };
 
-			sut.DecisionTypeId.Should().Be(expectedId);
+			var sut = new DecisionType(expectedTypeId, expectedFacilityAgreedId, expectedCategoryId) { DecisionId = expectedDecisionId };
+
+			sut.DecisionTypeId.Should().Be(expectedTypeId);
+			sut.DecisionDrawdownFacilityAgreedId.Should().Be(expectedFacilityAgreedId);
+			sut.DecisionFrameworkCategoryId.Should().Be(expectedCategoryId);
 			sut.DecisionId.Should().Be(expectedDecisionId);
 		}
 
 		[Fact]
 		public void Given_Invalid_DecisionTypes_Constructor_Throws_Exception()
 		{
-			Action action = () => new DecisionType(0) { DecisionId = 1 };
+			Action action = () => new DecisionType(0, 0, 0) { DecisionId = 1 };
 
 			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionType");
 		}
