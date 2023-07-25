@@ -132,27 +132,25 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Put_Returns_200Response()
 		{
-			
+			// arrange
+			var request = _autoFixture.Create<UpdateDecisionRequest>();
+			request.TotalAmountRequested = 100;
 
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
 
-			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity) };
-
-
+			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferFinanciallyTriggered) };
 			var decisionId = await CreateDecision(concernsCaseId, originalDecisionTypes);
 
-			var request = _autoFixture.Create<UpdateDecisionRequest>();
-
-			/*
-			var expectedFacilityAgreed = Contracts.Enums.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement;
-			var expectedCategory = Contracts.Enums.DecisionFrameworkCategory.BuildingFinancialCapacity;
-
-			request.DecisionTypes.First().DecisionDrawdownFacilityAgreedId = expectedFacilityAgreed;
-			request.DecisionTypes.First().DecisionFrameworkCategoryId = expectedCategory;
-			*/
-
-
+			request.DecisionTypes = null;
+			request.DecisionTypes = new List<Contracts.Decisions.DecisionTypeQuestion>() { new Contracts.Decisions.DecisionTypeQuestion()
+				{
+					Id = Contracts.Enums.DecisionType.EsfaApproval,
+					DecisionDrawdownFacilityAgreedId = Contracts.Enums.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement,
+					DecisionFrameworkCategoryId = Contracts.Enums.DecisionFrameworkCategory.BuildingFinancialCapacity
+				}
+			}.ToArray();
+			
 			// act
 			var result = await _client
 				.PutAsync($"/v2/concerns-cases/{concernsCase.Urn}/decisions/{decisionId}", 
@@ -164,21 +162,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			response.Data.DecisionId.Should().Be(decisionId);
 			response.Data.ConcernsCaseUrn.Should().Be(concernsCase.Urn);
 
-			var dbDecision = _testFixture.GetContext().Decisions.Single(d => d.DecisionId == decisionId);
+			var dbDecision = _testFixture.GetContext().Decisions.Include(d => d.DecisionTypes).Single(d => d.DecisionId == decisionId);
 
-
-			/*
-			var decisionTypesList = request.DecisionTypes;
-
-			var dbDecisionTypesList = dbDecision.DecisionTypes;
-			
 			dbDecision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
 			{
 				options.Excluding(r => r.Id);
 
 				return options;
 			});
-			*/
 		}
 		
 		[Fact]

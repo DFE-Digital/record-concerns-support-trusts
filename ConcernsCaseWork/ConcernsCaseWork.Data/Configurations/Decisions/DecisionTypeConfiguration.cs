@@ -9,6 +9,6 @@ public class DecisionTypeConfiguration : IEntityTypeConfiguration<DecisionType>
 	public void Configure(EntityTypeBuilder<DecisionType> builder)
 	{
 		builder.ToTable("ConcernsDecisionType", "concerns");
-		builder.HasKey(x => new { x.DecisionId, x.DecisionTypeId, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId });
+		builder.HasKey(x => new { x.DecisionId, x.DecisionTypeId });
 	}
 }

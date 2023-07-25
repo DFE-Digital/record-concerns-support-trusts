@@ -157,7 +157,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             var decisionTypes = new[]
             {
-                //TODO EA comeback and complete
                 new DecisionType(decisionType, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity) { DecisionId = (int)decisionType },
             };
 

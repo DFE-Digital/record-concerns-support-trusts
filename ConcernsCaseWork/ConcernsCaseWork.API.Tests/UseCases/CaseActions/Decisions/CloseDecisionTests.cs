@@ -255,8 +255,7 @@ public class CloseDecisionTests
 			submissionRequired: _fixture.Create<bool>(),
 			submissionDocumentLink: new string(_fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
 			receivedRequestDate: DateTimeOffset.Now,
-			//TODO EA, also look at this 
-			decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, null, null) },
+			decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferFinanciallyTriggered) },
 			totalAmountRequested: _fixture.Create<decimal>(),
 			supportingNotes: new string(_fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
 			DateTimeOffset.Now

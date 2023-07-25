@@ -23,7 +23,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 		{
 			var fixture = new Fixture();
 			var expectedTypeId = decisionTypeEnum;
-			//TODO EA. comeback and make these random like the types
 			var expectedFacilityAgreedId = Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No;
 			var expectedCategoryId = Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity;
 			var expectedDecisionId = fixture.Create<int>();

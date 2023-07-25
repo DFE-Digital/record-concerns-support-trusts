@@ -15,8 +15,22 @@
 			if (!Enum.IsDefined(typeof(Enums.Concerns.DecisionType), decisionType))
 			{
 				throw new ArgumentOutOfRangeException(nameof(decisionType),
-					"The given value is not one of the supported decision types");
+					$"{decisionType} value is not one of the supported decision types");
 			}
+
+			if (decisionDrawdownFacilityAgreed.HasValue && !Enum.IsDefined(typeof(Enums.Concerns.DecisionDrawdownFacilityAgreed), decisionDrawdownFacilityAgreed))
+			{
+				throw new ArgumentOutOfRangeException(nameof(decisionDrawdownFacilityAgreed),
+					$"{decisionDrawdownFacilityAgreed} value is not one of the supported decision drawdown facility agreed");
+			}
+
+
+			if (decisionFrameworkCategory.HasValue && !Enum.IsDefined(typeof(Enums.Concerns.DecisionFrameworkCategory), decisionFrameworkCategory))
+			{
+				throw new ArgumentOutOfRangeException(nameof(decisionFrameworkCategory),
+					$"{decisionFrameworkCategory} value is not one of the supported decision category");
+			}
+
 			DecisionTypeId = decisionType;
 			DecisionDrawdownFacilityAgreedId = decisionDrawdownFacilityAgreed;
 			DecisionFrameworkCategoryId = decisionFrameworkCategory;
