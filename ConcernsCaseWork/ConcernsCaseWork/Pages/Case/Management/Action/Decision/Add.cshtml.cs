@@ -249,22 +249,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionTypeQuestion = new API.Contracts.Decisions.DecisionTypeQuestion()
+					DecisionTypeQuestion = new DecisionTypeQuestion()
 					{
-						Id = API.Contracts.Enums.DecisionType.EsfaApproval
+						Id = DecisionType.EsfaApproval
 					},
-
-					//DecisionType = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions,
 					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds (also called transactions approval). Examples include as severance pay, compromise agreements or ex gratia payments; agreeing off-payroll arrangements for staff; entering into a finance lease or operating lease; or carrying forward large reserves. Trusts going ahead with these decisions or transactions without ESFA approval could be in breach of their funding agreement. This typically affects trusts under an NTI (Notice to Improve), where ESFA approval can be a condition of the NTI."
 				},
 				new DecisionTypeCheckBox()
 				{
-					DecisionTypeQuestion = new API.Contracts.Decisions.DecisionTypeQuestion()
+					DecisionTypeQuestion = new DecisionTypeQuestion()
 					{
-						Id = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions
+						Id = DecisionType.FreedomOfInformationExemptions
 					},
-
-					//DecisionType = API.Contracts.Enums.DecisionType.FreedomOfInformationExemptions,
 					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
 				}
 			};
@@ -296,7 +292,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 	public class DecisionTypeCheckBox
 	{
-		public API.Contracts.Decisions.DecisionTypeQuestion DecisionTypeQuestion { get; set; }
+		public DecisionTypeQuestion DecisionTypeQuestion { get; set; }
 		public string Hint { get; set; }
 	}
 
