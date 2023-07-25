@@ -130,8 +130,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
                 receivedRequestDate: (DateTimeOffset)request.ReceivedRequestDate,
-                //TODO EA
-                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id, null, null)).ToArray(),
+                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferFinanciallyTriggered)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
                 fixture.Create<DateTimeOffset>());
