@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			_ = request ?? throw new ArgumentNullException(nameof(request));
 
 			var decisionTypes = request.DecisionTypes.Select(x =>
-				new DecisionTypeModel.DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (ConcernsCaseWork.Data.Enums.Concerns.DecisionDrawdownFacilityAgreed)x.DecisionDrawdownFacilityAgreedId, (ConcernsCaseWork.Data.Enums.Concerns.DecisionFrameworkCategory)x.DecisionFrameworkCategoryId))
+				new DecisionTypeModel.DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (ConcernsCaseWork.Data.Enums.Concerns.DecisionDrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (ConcernsCaseWork.Data.Enums.Concerns.DecisionFrameworkCategory?)x.DecisionFrameworkCategoryId))
 				.ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 		{
 			_ = request ?? throw new ArgumentNullException(nameof(request));
 
-			var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (ConcernsCaseWork.Data.Enums.Concerns.DecisionDrawdownFacilityAgreed)x.DecisionDrawdownFacilityAgreedId, (ConcernsCaseWork.Data.Enums.Concerns.DecisionFrameworkCategory)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+			var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (ConcernsCaseWork.Data.Enums.Concerns.DecisionDrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (ConcernsCaseWork.Data.Enums.Concerns.DecisionFrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
 				request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
