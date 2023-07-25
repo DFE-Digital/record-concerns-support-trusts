@@ -31,9 +31,10 @@ describe("User can add decisions to an existing case", () => {
 	});
 
 	it("Creating, editing, validating then viewing a decision", function () {
+		const repayableFinancialSupportOption = "RepayableFinancialSupport";
+		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
 
 		Logger.Log("Validating Decision");
-
 		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
@@ -54,6 +55,21 @@ describe("User can add decisions to an existing case", () => {
 			)
 			.hasValidationError(NotesError);
 
+		Logger.Log("Ensure the decision type sub questions do not display if not selected");
+		editDecisionPage
+			.hasNoEnabledOrSelectedSubQuestions("RepayableFinancialSupport")
+			.hasNoEnabledOrSelectedSubQuestions("NonRepayableFinancialSupport")
+			.hasNoEnabledOrSelectedSubQuestions("ShortTermCashAdvance");
+
+		Logger.Log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
+		editDecisionPage
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
+		
+
 		Logger.Log("Checking accessibility on Create Decision");
 		cy.excuteAccessibilityTests();
 
@@ -68,6 +84,11 @@ describe("User can add decisions to an existing case", () => {
 			.withDateESFAYear("2022")
 			.withTypeOfDecision("NoticeToImprove")
 			.withTypeOfDecision("Section128")
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.withTypeOfDecision(shortTermCashAdvanceOption)
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
@@ -94,12 +115,16 @@ describe("User can add decisions to an existing case", () => {
 			.hasTotalAmountRequested("£140,000")
 			.hasTypeOfDecision("Notice to Improve (NTI)")
 			.hasTypeOfDecision("Section 128 (S128)")
+			.hasTypeOfDecision("Repayable financial support")
+			.hasTypeOfDecision("Short-term cash advance")
 			.hasSupportingNotes("These are some supporting notes!")
 			.hasActionEdit()
 			.cannotCloseDecision()
 			.editDecision();
 
 		Logger.Log("Editing Decision");
+
+		Logger.Log("Check existing values are set");
 		editDecisionPage
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("no")
@@ -111,8 +136,14 @@ describe("User can add decisions to an existing case", () => {
 			.hasTotalAmountRequested("140,000.00")
 			.hasTypeOfDecision("NoticeToImprove")
 			.hasTypeOfDecision("Section128")
+			.hasTypeOfDecision(repayableFinancialSupportOption)
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.hasFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.hasTypeOfDecision(shortTermCashAdvanceOption)
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
 			.hasSupportingNotes("These are some supporting notes!")
 
+		Logger.Log("Set new values");
 		editDecisionPage
 			.withCrmEnquiry("777")
 			.withRetrospectiveRequest("no")
@@ -122,14 +153,28 @@ describe("User can add decisions to an existing case", () => {
 			.withDateESFAMonth("03")
 			.withDateESFAYear("2022")
 			.withTypeOfDecision("QualifiedFloatingCharge")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.withFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes")
 			.withTotalAmountRequested("£130,000")
-			.withSupportingNotes("Testing Supporting Notes")
+			.withSupportingNotes("Testing Supporting Notes");
 
 		Logger.Log("Checking accessibility on Edit Decision");
 		cy.excuteAccessibilityTests();
 
 		editDecisionPage
 			.save();
+
+		Logger.Log("Check the decision sub questions have been updated");
+		viewDecisionPage.editDecision();
+
+		// The sub questions only appear on edit, so we need to make sure they got updated
+		editDecisionPage
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.hasFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes");
+
+		editDecisionPage.cancel();
 
 		Logger.Log("Viewing Edited Decision");
 		viewDecisionPage
@@ -139,7 +184,11 @@ describe("User can add decisions to an existing case", () => {
 			.hasSubmissionLink("www.google.uk")
 			.hasDateESFAReceivedRequest("22 March 2022")
 			.hasTotalAmountRequested("£130,000")
+			.hasTypeOfDecision("NoticeToImprove")
+			.hasTypeOfDecision("Section128")
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
+			.hasTypeOfDecision("Repayable financial support")
+			.hasTypeOfDecision("Short-term cash advance")
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
 
