@@ -53,8 +53,34 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 							
 				await _context.SaveChangesAsync();
 
+				var ConcernCreatedNotification = new ConcernCreatedNotification() { Id = cr.Id, CaseId = cr.CaseId, };
+				await _mediator.Publish(ConcernCreatedNotification);
 
 				return cr.Id;
+			}
+		}
+
+		//ToDo: BB 25/07/2023 Once we have more events decide on specific folder structure to organise events and handles
+		public class ConcernCreatedNotification : INotification
+		{
+			public int Id { get; set; }
+			public int CaseId { get; set; }
+		}
+
+		public class ConcernCreatedCaseUpdatedHandler : INotificationHandler<ConcernCreatedNotification>
+		{
+			private readonly ConcernsDbContext _context;
+			public ConcernCreatedCaseUpdatedHandler(ConcernsDbContext context)
+			{
+				_context = context;
+			}
+
+			public async Task Handle(ConcernCreatedNotification notification, CancellationToken cancellationToken)
+			{
+				ConcernsCase cc = await _context.ConcernsCase.SingleOrDefaultAsync(f => f.Id == notification.CaseId, cancellationToken: cancellationToken);
+				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(f => f.Id == notification.Id, cancellationToken: cancellationToken);
+				cc.CaseLastUpdatedAt = cr.CreatedAt;
+				await _context.SaveChangesAsync();
 			}
 		}
 

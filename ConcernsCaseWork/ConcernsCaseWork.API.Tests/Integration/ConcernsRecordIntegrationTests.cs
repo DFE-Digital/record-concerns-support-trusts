@@ -104,6 +104,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			expected.Data.Id = createdRecord!.Id;
 
 			result.Should().BeEquivalentTo(expected);
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == linkedCase.Id);
+			concernsCase.CaseLastUpdatedAt.Should().Be(createdRecord.CreatedAt);
 		}
 
 		[Fact]
@@ -310,9 +314,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		public ConcernsCase BuildConcernsCase(Int32 caseRatingID)
 		{
+			var createdAt = _randomGenerator.DateTime();
+
 			ConcernsCase concernsCase = new()
 			{
-				CreatedAt = _randomGenerator.DateTime(),
+				CreatedAt = createdAt,
+				CaseLastUpdatedAt = createdAt,
 				UpdatedAt = _randomGenerator.DateTime(),
 				ReviewAt = _randomGenerator.DateTime(),
 				ClosedAt = _randomGenerator.DateTime(),
@@ -333,7 +340,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 2,
 				RatingId = caseRatingID
 			};
-
 			return concernsCase;
 		}
 

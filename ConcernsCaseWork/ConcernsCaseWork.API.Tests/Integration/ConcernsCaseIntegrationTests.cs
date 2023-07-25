@@ -101,6 +101,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
+		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
 	[Fact]
@@ -150,6 +151,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
+		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
 	[Fact]
