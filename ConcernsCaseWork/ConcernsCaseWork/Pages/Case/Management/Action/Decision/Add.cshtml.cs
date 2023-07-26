@@ -177,7 +177,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
 			{
-				Id = (DecisionType)q.Id
+				Id = (DecisionType)q.Id,
+				DecisionDrawdownFacilityAgreedId = (DecisionDrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
+				DecisionFrameworkCategoryId = (DecisionFrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
 			}).ToArray();
 
 			return result;
@@ -275,8 +277,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					return;
 				}
-
+		
 				question.IsChecked = true;
+
+				//TODO EA, This has been hard coded for now to help debug
+				question.DrawdownFacilityAgreed.SelectedId = 2;
 			});
 		}
 
@@ -321,6 +326,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					TestId = $"{model.Id}-{value}"
 				};
 			});
+
+			result.SelectedId = 1;
 
 			return result;
 		}
