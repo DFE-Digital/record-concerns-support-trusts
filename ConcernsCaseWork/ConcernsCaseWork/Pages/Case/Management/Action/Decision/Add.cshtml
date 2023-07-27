@@ -231,16 +231,14 @@
 
                         function hideIfNotSelected(type) {
                             let isChecked = $(`#${type}`).is(":checked");
-
                             let inputElement = $(`#${type}-subquestion-container :input`);
-                            inputElement.prop('checked', false);
                             inputElement.prop('disabled', !isChecked);
                             inputElement.prop('aria-disabled', !isChecked);
-
                             let subContainer = $(`#${type}-subquestion-container`);
                             subContainer.removeClass(['govuk-radios__conditional--disabled']);
-                            
+
                             if (!isChecked) {
+                                inputElement.prop('checked', false);
                                 subContainer.addClass('govuk-radios__conditional--disabled');
                             }
                         }
