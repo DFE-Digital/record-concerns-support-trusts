@@ -89,16 +89,9 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public async Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase)
         {
-            try
-            {
-				await _concernsDbContext.SaveChangesAsync();
-			}
-			catch (Exception e)
-            {
-                throw new Exception(e.InnerException.Message);
-            }
+			await _concernsDbContext.SaveChangesAsync();
 
-	        return concernsCase;
+			return concernsCase;
         }
 
         public ConcernsCase Update(ConcernsCase concernsCase)
