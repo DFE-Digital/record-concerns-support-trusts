@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
             var request = Builder<ConcernCaseRequest>.CreateNew()
                 .With(c => c.CreatedAt = new DateTime(2022,10,13))
                 .With(c => c.UpdatedAt = new DateTime(2022,06,07))
-                .With(c => c.ReviewAt = new DateTime(2022,07,10))
+				.With(c => c.ReviewAt = new DateTime(2022,07,10))
                 .With(c => c.CreatedBy = "7654")
                 .With(c => c.Description = " Test Description for case")
                 .With(c => c.CrmEnquiry = "3456")
@@ -58,7 +58,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Territory = request.Territory,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId,
-                TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber
+                TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
+				CaseLastUpdatedAt = request.CreatedAt
             };
 
             var result = ConcernsCaseFactory.Create(request);
