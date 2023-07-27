@@ -21,7 +21,7 @@ using Xunit;
 namespace ConcernsCaseWork.API.Tests.Integration
 {
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
-	public class ConcernsRecordIntegrationTests: IDisposable
+	public class ConcernsRecordIntegrationTests : IDisposable
 	{
 
 		private readonly Fixture _autoFixture;
@@ -203,6 +203,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
 			content.Data.Should().BeEquivalentTo(expectedContent);
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			currentConcernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == content.Data.CaseUrn);
+			currentConcernsCase.CaseLastUpdatedAt.Should().Be(content.Data.UpdatedAt);
 		}
 
 		[Fact]
@@ -309,6 +313,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			response.StatusCode.Should().Be(HttpStatusCode.OK);
 			content.Data.Should().BeEquivalentTo(expectedContent);
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == content.Data.CaseUrn);
+			concernsCase.CaseLastUpdatedAt.Should().Be(content.Data.UpdatedAt);
 		}
 
 
@@ -529,6 +537,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			ApiResponseV2<ConcernsRecordResponse> content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsRecordResponse>>();
 			content.Data.Count().Should().Be(2);
 			content.Data.Should().BeEquivalentTo(expected);
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCase.Id);
+			concernsCase.CaseLastUpdatedAt.Should().Be(createdRecord2.CreatedAt);
 		}
 
 
