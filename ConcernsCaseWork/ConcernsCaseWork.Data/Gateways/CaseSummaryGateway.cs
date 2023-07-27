@@ -30,7 +30,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				StatusName = cases.Status.Name,
 				TrustUkPrn = cases.TrustUkprn,
 				UpdatedAt = cases.UpdatedAt,
-
+				CaseLastUpdatedAt = cases.CaseLastUpdatedAt,
 				ActiveConcerns = from concerns
 					in cases.ConcernsRecords
 								 where concerns.StatusId == 1
@@ -167,7 +167,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			StatusName = cases.Status.Name,
 			TrustUkPrn = cases.TrustUkprn,
 			UpdatedAt = cases.UpdatedAt,
-
+			CaseLastUpdatedAt = cases.CaseLastUpdatedAt,
 			ActiveConcerns = from concerns
 				in cases.ConcernsRecords
 							 where concerns.StatusId == 1

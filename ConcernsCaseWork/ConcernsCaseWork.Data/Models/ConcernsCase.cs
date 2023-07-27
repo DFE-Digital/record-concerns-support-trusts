@@ -1,3 +1,5 @@
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
@@ -9,7 +11,10 @@ namespace ConcernsCaseWork.Data.Models
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+		/// <summary>
+		/// Stores datetime when the case object was last updated
+		/// </summary>
+		public DateTime UpdatedAt { get; set; }
         public DateTime ReviewAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
@@ -32,8 +37,14 @@ namespace ConcernsCaseWork.Data.Models
         public Territory? Territory { get; set; }
 
         public string? TrustCompaniesHouseNumber { get; set; }
-        
-        public virtual ConcernsStatus Status { get; set; }
+
+		/// <summary>
+		/// Stores date when the entire case was last updated e.g. Changes such as adding concern or case action.
+		/// </summary>
+		public DateTime? CaseLastUpdatedAt { get; set; }
+
+
+		public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
         public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
 
@@ -101,5 +112,41 @@ namespace ConcernsCaseWork.Data.Models
 
 	        currentDecision.Close(notes, now);
         }
-    }
+
+		//public void SetCreatedDate(DateTime createdAt)
+		//{
+		//	this.CreatedAt = createdAt;
+		//	SetCaseUpdatedDate(createdAt);
+		//}
+
+		//public void SetCaseUpdatedDate(DateTime caseUpdatedAt)
+		//{
+		//	this.CaseLastUpdatedAt = caseUpdatedAt;
+		//}
+
+		//public ConcernsCase()
+		//{
+
+		//}
+
+		//private ConcernsCase(int statusID, int ratingID, string trustUKPRN, string createdBy, DateTime createdAt)
+		//{
+		//	this.ConcernsRecords = new List<ConcernsRecord>();
+		//	this.StatusId = statusID;
+		//	this.RatingId = ratingID;
+		//	this.TrustUkprn = trustUKPRN;
+		//	this.CreatedBy = createdBy;
+		//	this.CreatedAt = CreatedAt;
+		//}
+
+		//public static ConcernsCase Create(CaseStatus status, ConcernRating rating, string trustUKPRN, string createdBy, DateTime createdAt)
+		//{
+		//	return new ConcernsCase((int)status, (int)rating, trustUKPRN, createdBy, createdAt);
+		//}
+
+		//public void SetAuditInformation(DateTime caseUpdatedAt)
+		//{
+		//	this.CaseLastUpdatedAt = caseUpdatedAt;
+		//}
+	}
 }

@@ -8,6 +8,7 @@ public record CaseSummaryDto
 	public string CreatedBy { get; set; }
 	public DateTime CreatedAt { get; set; }
 	public DateTime UpdatedAt { get; set; }
+	public DateTime? CaseLastUpdatedAt { get; set; }
 	public string StatusName { get; set; }
 	public RatingDto Rating { get; set; }
 	public string TrustUkPrn { get; set; }

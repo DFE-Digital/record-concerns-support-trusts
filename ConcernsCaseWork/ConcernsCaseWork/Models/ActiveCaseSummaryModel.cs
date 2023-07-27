@@ -18,6 +18,7 @@ public record ActiveCaseSummaryModel : CaseSummaryModel
 	public string[] ActiveActionsAndDecisions { get; set; }
 	public IEnumerable<string> ActiveConcerns { get; set; }
 	public RatingModel Rating { get; set; }
+	public string CaseLastUpdatedAt { get; internal set; }
 }
 
 public record ClosedCaseSummaryModel : CaseSummaryModel

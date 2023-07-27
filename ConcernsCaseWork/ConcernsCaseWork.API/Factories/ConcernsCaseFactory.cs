@@ -8,9 +8,10 @@ namespace ConcernsCaseWork.API.Factories
     {
         public static ConcernsCase Create(ConcernCaseRequest request)
         {
-            return new ConcernsCase
+            var cc =  new ConcernsCase
             {
                 CreatedAt = request.CreatedAt,
+				CaseLastUpdatedAt = request.CreatedAt,
                 UpdatedAt = request.UpdatedAt,
                 ReviewAt = request.ReviewAt,
                 ClosedAt = request.ClosedAt,
@@ -32,6 +33,8 @@ namespace ConcernsCaseWork.API.Factories
                 Territory = request.Territory,
                 TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber
             };
+
+			return cc;
         }
         
         public static ConcernsCase Update(ConcernsCase original, ConcernCaseRequest updateRequest)
