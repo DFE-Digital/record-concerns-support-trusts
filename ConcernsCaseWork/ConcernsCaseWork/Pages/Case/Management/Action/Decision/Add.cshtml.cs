@@ -280,8 +280,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		
 				question.IsChecked = true;
 
-				//TODO EA, This has been hard coded for now to help debug
-				question.DrawdownFacilityAgreed.SelectedId = 2;
+				if (question.DrawdownFacilityAgreed != null)
+				{
+					question.DrawdownFacilityAgreed.SelectedId = (int?)answer.DecisionDrawdownFacilityAgreedId ?? 0;
+				}
+
+				if (question.FrameworkCategory != null)
+				{
+					question.FrameworkCategory.SelectedId = (int?)answer.DecisionFrameworkCategoryId ?? 0;
+				}
 			});
 		}
 
