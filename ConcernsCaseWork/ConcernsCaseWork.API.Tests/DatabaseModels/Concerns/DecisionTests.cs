@@ -71,8 +71,8 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
             var decisionTypes = new[]
             {
-                new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferEducationallyTriggered) { DecisionId = decisionId },
-                new DecisionType(Data.Enums.Concerns.DecisionType.OtherFinancialSupport, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity){ DecisionId = decisionId }
+                new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferEducationallyTriggered) { DecisionId = decisionId },
+                new DecisionType(Data.Enums.Concerns.DecisionType.OtherFinancialSupport, API.Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, API.Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability){ DecisionId = decisionId }
             };
 
             var expectation = new
@@ -157,7 +157,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             var decisionTypes = new[]
             {
-                new DecisionType(decisionType, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity) { DecisionId = (int)decisionType },
+                new DecisionType(decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, API.Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability) { DecisionId = (int)decisionType },
             };
 
             var sut = Decision.CreateNew(

@@ -6,6 +6,7 @@ using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
@@ -113,12 +114,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var decisionToAdd = await CreateDecision(concernsCase.Id, request);
 
 			var result = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions", request.ConvertToJson());
-
 			await using var context = _testFixture.GetContext();
 
-			var decision = context.Decisions
-				.Include(d => d.DecisionTypes)
-				.First(d => d.DecisionId == decisionToAdd.DecisionId);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionToAdd.DecisionId}");
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
+			var decision = wrapper.Data;
 
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
 			decision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
@@ -139,7 +140,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
 
-			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.FacilitatingTransferFinanciallyTriggered) };
+			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
 			var decisionId = await CreateDecision(concernsCaseId, originalDecisionTypes);
 
 			request.DecisionTypes = null;
@@ -162,9 +163,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			response.Data.DecisionId.Should().Be(decisionId);
 			response.Data.ConcernsCaseUrn.Should().Be(concernsCase.Urn);
 
-			var dbDecision = _testFixture.GetContext().Decisions.Include(d => d.DecisionTypes).Single(d => d.DecisionId == decisionId);
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}");
 
-			dbDecision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
+			var decision = wrapper.Data;
+
+			decision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
 			{
 				options.Excluding(r => r.Id);
 

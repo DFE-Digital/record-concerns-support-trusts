@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                     submissionRequired: fixture.Create<bool>(),
                     submissionDocumentLink: new string(fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
                     receivedRequestDate: DateTimeOffset.Now,
-                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, Data.Enums.Concerns.DecisionDrawdownFacilityAgreed.No, Data.Enums.Concerns.DecisionFrameworkCategory.BuildingFinancialCapacity) },
+                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
                     DateTimeOffset.Now
