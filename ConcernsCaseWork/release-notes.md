@@ -1,3 +1,17 @@
+## 26.0.0
+* Ability to add Cases to CTCs
+* Remove redundant code replace by components
+* Enabling work on Api for adding Sub questions to Decision work
+* Fix incorrect character count display in UI
+* Ability to Soft Delete TFF for a Case via Api
+* Amend subnav on trust page to better reflect the design
+
+## 25.0.0
+* Add pagination to get active cases by owner and get closed cases by owner APIs
+* Your active casework redesign - Add pagination
+* Trust Overview Redesign - Add Open/Closed sub-navs
+* Trust Overview Design - Add pagination to sub-navs
+
 ## 24.0.0
 * Increase SRMA notes field limit
 * Iterate hint text on Create Case page based on user feedback

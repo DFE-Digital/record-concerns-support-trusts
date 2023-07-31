@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.Data.Models
 {
     public class ConcernsRecord: IAuditable
     {
-        public int Id { get; set; }
+		public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime ReviewAt { get; set; }
@@ -24,5 +24,39 @@ namespace ConcernsCaseWork.Data.Models
         public virtual ConcernsStatus Status { get; set; }
 
 		public DateTime? DeletedAt { get; set; }
+
+		//Todo: BB 25/07/2023 Make constructor private once concernsrecord refactor is complete
+		public ConcernsRecord()
+		{
+			
+		}
+
+		protected ConcernsRecord(int caseUrn, int typeId, int ratingId, int meansOfReferralId, int statusId)
+		{
+			this.CaseId = caseUrn;
+			this.TypeId = typeId;
+			this.RatingId = ratingId;
+			this.MeansOfReferralId = meansOfReferralId; 
+			this.StatusId = statusId;
+		}
+
+		public static ConcernsRecord Create(int caseUrn, int typeId, int ratingId, int meansOfReferralId, int statusId)
+		{
+			return new ConcernsRecord(caseUrn,typeId, ratingId, meansOfReferralId, statusId);
+		}
+
+		public void ChangeNameDescriptionAndReason(string name, string description, string reason)
+		{
+			this.Name = name;
+			this.Description = description;
+			this.Reason = reason;
+		}
+
+		public void SetAuditInformation(DateTime createdAt, DateTime updatedAt, DateTime reviewAt)
+		{
+			this.CreatedAt = createdAt;
+			this.UpdatedAt = updatedAt;
+			this.ReviewAt = reviewAt;
+		}
 	}
 }

@@ -57,6 +57,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CaseUrn.Should().Be(expectedCase.Id);
 			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
+			actualCase.CaseLastUpdatedAt.Should().Be(expectedCase.CaseLastUpdatedAt);
+
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 			actualCase.StatusName.Should().Be(CaseStatus.Live.ToString());
 
@@ -226,6 +228,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CaseUrn.Should().Be(expectedCase.Id);
 			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
+			actualCase.CaseLastUpdatedAt.Should().Be(expectedCase.CaseLastUpdatedAt);
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 			actualCase.StatusName.Should().Be(CaseStatus.Close.ToString());
 

@@ -115,7 +115,8 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
-					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),
+					CaseLastUpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CaseLastUpdatedAt),
 				};
 			
 			sortedCaseSummaries.Add(summary);
