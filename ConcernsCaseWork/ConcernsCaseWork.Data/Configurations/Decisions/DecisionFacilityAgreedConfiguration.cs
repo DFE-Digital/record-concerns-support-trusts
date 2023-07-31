@@ -11,7 +11,7 @@ public class DecisionFrameworkCategoryConfiguration : IEntityTypeConfiguration<D
 		builder.ToTable("ConcernsDecisionFrameworkCategory", "concerns");
 		builder.HasKey(x => x.Id);
 		builder.HasData(
-			Enum.GetValues(typeof(Enums.Concerns.DecisionFrameworkCategory)).Cast<Enums.Concerns.DecisionFrameworkCategory>()
+			Enum.GetValues(typeof(API.Contracts.Decisions.FrameworkCategory)).Cast<API.Contracts.Decisions.FrameworkCategory>()
 				.Select(enm => new DecisionFrameworkCategory(enm) { Name = enm.ToString() }));
 	}
 }

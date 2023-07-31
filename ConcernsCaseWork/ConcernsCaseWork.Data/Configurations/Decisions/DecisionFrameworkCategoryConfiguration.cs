@@ -11,7 +11,7 @@ public class DecisionFacilityAgreedConfiguration : IEntityTypeConfiguration<Deci
 		builder.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns");
 		builder.HasKey(x => x.Id);
 		builder.HasData(
-			Enum.GetValues(typeof(Enums.Concerns.DecisionDrawdownFacilityAgreed)).Cast<Enums.Concerns.DecisionDrawdownFacilityAgreed>()
+			Enum.GetValues(typeof(API.Contracts.Decisions.DrawdownFacilityAgreed)).Cast<API.Contracts.Decisions.DrawdownFacilityAgreed>()
 				.Select(enm => new DecisionDrawdownFacilityAgreed(enm) { Name = enm.ToString() }));
 	}
 }

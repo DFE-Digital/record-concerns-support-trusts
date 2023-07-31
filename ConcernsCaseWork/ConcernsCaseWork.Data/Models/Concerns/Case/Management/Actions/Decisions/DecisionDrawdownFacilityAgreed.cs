@@ -1,22 +1,22 @@
 ﻿namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
 {
-	public class DecisionFrameworkCategory
+	public class DecisionDrawdownFacilityAgreed
 	{
-		public Enums.Concerns.DecisionFrameworkCategory Id { get; set; }
+		public API.Contracts.Decisions.DrawdownFacilityAgreed Id { get; set; }
 		public string Name { get; set; }
 
-		private DecisionFrameworkCategory()
+		private DecisionDrawdownFacilityAgreed()
 		{
 		}
 
-		public DecisionFrameworkCategory(Enums.Concerns.DecisionFrameworkCategory frameworkCategory) : this()
+		public DecisionDrawdownFacilityAgreed(API.Contracts.Decisions.DrawdownFacilityAgreed facilityAgreed) : this()
 		{
-			if (!Enum.IsDefined(typeof(Enums.Concerns.DecisionFrameworkCategory), frameworkCategory))
+			if (!Enum.IsDefined(typeof(API.Contracts.Decisions.DrawdownFacilityAgreed), facilityAgreed))
 			{
-				throw new ArgumentOutOfRangeException(nameof(frameworkCategory),
-					"The given value is not a supported decision framework category");
+				throw new ArgumentOutOfRangeException(nameof(facilityAgreed),
+					"The given value is not one a supported decision drawdown facility");
 			}
-			Id = frameworkCategory;
+			Id = facilityAgreed;
 		}
 	}
 }
