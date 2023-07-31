@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725115835_AddCaseLastUpdatedDate")]
+    partial class AddCaseLastUpdatedDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,77 +172,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionDrawdownFacilityAgreed", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Yes"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "No"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "PaymentUnderExistingArrangement"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionFrameworkCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionFrameworkCategory", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "EnablingFinancialRecovery"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "BuildingFinancialCapacity"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "FacilitatingTransferFinanciallyTriggered"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FacilitatingTransferEducationallyTriggered"
-                        });
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -274,12 +206,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("DecisionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DecisionDrawdownFacilityAgreedId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DecisionFrameworkCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("DecisionId", "DecisionTypeId");
