@@ -24,6 +24,11 @@
     var nextPageValueId = $"{prefix}next-page-value";
     var previousButtonId = $"{prefix}previous-page";
     var previousPageValueId = $"{prefix}previous-page-value";
+	var pagesToDisplay = new List<int>() { 1, Model.PageNumber, Model.TotalPages };
+			if (Model.Previous.HasValue)
+				pagesToDisplay.Add((int)Model.Previous);
+			if (Model.Next.HasValue)
+				pagesToDisplay.Add((int)Model.Next);
 }
 
 @if (Model.TotalPages > 1)
@@ -40,26 +45,9 @@
             </a>
         </div>
 
-		<ul class="govuk-pagination__list">
-			@if (Model.PageNumber > 1)
-			{
-				<li class="govuk-pagination__item">
-					<a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=1" aria-label="Go to page 1" id="page-first" data-testid="page-first" data-page-number-link="1">
-						1
-					</a>
-				</li>
-
-				@if (Model.PageNumber > 3)
-				{
-					<li class="govuk-pagination__item">
-						<span class="govuk-pagination__ellipsis">...</span>
-					</li>
-				}
-			}
-
-			@for (var pageIdx = Model.PageNumber - 1; pageIdx <= Model.PageNumber + 1; pageIdx++)
-			{
-				if (pageIdx >= 0 && pageIdx < Model.TotalPages)
+		<nav class="govuk-pagination" role="navigation" aria-label="Pagination">
+			<ol class="govuk-pagination__list" role="navigation" aria-label="Page navigation">
+				@for (var pageIdx = 0; pageIdx < Model.TotalPages; pageIdx++)
 				{
 					var pageNumber = pageIdx + 1;
 					var isCurrentPage = Model.PageNumber == pageNumber;
@@ -68,33 +56,29 @@
 					var ariaCurrentPage = isCurrentPage ? "aria-current=true" : "";
 					var ariaLabel = isCurrentPage ? $"Current page, page {pageNumber}" : $"Go to page {pageNumber}";
 
-					<li class="govuk-pagination__item @markAsSelected">
-						<a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@pageNumber" @ariaCurrentPage aria-label="@ariaLabel" id="@pageNumberLinkId" data-testid="@pageNumberLinkId" data-page-number-link="@pageNumber">
-							@pageNumber
-						</a>
-					</li>
+					if (pagesToDisplay.Contains(pageNumber))
+					{
+						if (Model.Previous.HasValue && Model.Previous == pageNumber && ((Model.Previous - 1) > 1))
+						{
+							<li class="govuk-pagination__item">
+								<span class="govuk-pagination__item govuk-pagination__item--ellipses" aria-hidden="true">&ctdot;</span>
+							</li>
+						}
+						<li class="govuk-pagination__item @markAsSelected">
+							<a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@pageNumber" @ariaCurrentPage aria-label="@ariaLabel" id="@pageNumberLinkId" data-testid="@pageNumberLinkId" data-page-number-link="@pageNumber">
+								@pageNumber
+							</a>
+						</li>
+						if (Model.Next.HasValue && Model.Next == pageNumber && ((Model.Next + 1) < Model.TotalPages))
+						{
+							<li class="govuk-pagination__item">
+								<span class="govuk-pagination__item govuk-pagination__item--ellipses" aria-hidden="true">&ctdot;</span>
+							</li>
+						}
+					}
 				}
-			}
-
-			@if (Model.PageNumber < Model.TotalPages)
-			{
-				@if (Model.TotalPages - Model.PageNumber > 2)
-				{
-					<li class="govuk-pagination__item">
-						<span class="govuk-pagination__ellipsis">...</span>
-					</li>
-				}
-
-				@if (Model.PageNumber < Model.TotalPages - 2)
-				{
-					<li class="govuk-pagination__item">
-						<a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@Model.TotalPages" aria-label="Go to last page, page @Model.TotalPages" id="page-last" data-testid="page-last" data-page-number-link="@Model.TotalPages">
-							@Model.TotalPages
-						</a>
-					</li>
-				}
-			}
-		</ul>
+			</ol>
+		</nav>
 
 
         <div class="govuk-pagination__next @nextDisabledStyle">
