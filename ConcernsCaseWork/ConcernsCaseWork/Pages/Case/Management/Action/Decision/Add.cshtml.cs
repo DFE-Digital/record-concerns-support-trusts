@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
@@ -13,6 +14,7 @@ using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,16 +39,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
 
-		[BindProperty]
-		public DecisionType[] DecisionTypes { get; set; }
-
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseUrn { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "decisionId")]
 		public long? DecisionId { get; set; }
 
-		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
+		[BindProperty]
+		public List<DecisionTypeQuestionModel> DecisionTypeQuestions { get; set; }
 
 		public string SaveAndContinueButtonText { get; set; }
 
@@ -93,13 +93,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
-				Decision.DecisionTypes = DecisionTypes.Select(d =>
-				{
-					return new DecisionTypeQuestion()
-					{
-						Id = d
-					};
-				}).ToArray();
+				Decision.DecisionTypes = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
 
 				if (DecisionId.HasValue)
 				{
@@ -135,6 +129,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			};
 
 			Notes.Text.StringContents = model.SupportingNotes;
+
+			SetDecisionTypeAnswers(DecisionTypeQuestions, model.DecisionTypes);
 		}
 
 		private void LoadPageComponents()
@@ -143,14 +139,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			ReceivedRequestDate = BuildReceivedRequestDateComponent(ReceivedRequestDate?.Date);
 			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+
+			var answers = new DecisionTypeQuestion[] { };
+
+			if (DecisionTypeQuestions != null)
+			{
+				answers = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
+			}
+
+			DecisionTypeQuestions = BuildDecisionTypeQuestionsComponent();
+			SetDecisionTypeAnswers(DecisionTypeQuestions, answers);
 		}
 
 		private void SetupPage()
 		{
 			ViewData[ViewDataConstants.Title] = DecisionId.HasValue ? "Edit decision" : "Add decision";
 			SaveAndContinueButtonText = DecisionId.HasValue ? "Save and return to decision" : "Save and return to case overview";
-
-			DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
 		}
 
 		private async Task<CreateDecisionRequest> CreateDecisionModel()
@@ -169,103 +173,123 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private List<DecisionTypeCheckBox> BuildDecisionTypeCheckBoxes()
+		private DecisionTypeQuestion[] ModelToDecisionTypeQuestion(List<DecisionTypeQuestionModel> model)
 		{
-			var result = new List<DecisionTypeCheckBox>()
+			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
 			{
-				new DecisionTypeCheckBox()
+				Id = (DecisionType)q.Id,
+				DecisionDrawdownFacilityAgreedId = (DecisionDrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
+				DecisionFrameworkCategoryId = (DecisionFrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+			}).ToArray();
+
+			return result;
+		}
+
+		private static List<DecisionTypeQuestionModel> BuildDecisionTypeQuestionsComponent()
+		{
+			var result = new List<DecisionTypeQuestionModel>()
+			{
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.NoticeToImprove
-					},
+					Id = DecisionType.NoticeToImprove,
 					Hint = "An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.Section128
-					},
+					Id = DecisionType.Section128,
 					Hint = "A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools)."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.QualifiedFloatingCharge
-					},
+					Id = DecisionType.QualifiedFloatingCharge,
 					Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.NonRepayableFinancialSupport
-					},
+					Id = DecisionType.NonRepayableFinancialSupport,
 					Hint = "Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.RepayableFinancialSupport
-					},
+					Id = DecisionType.RepayableFinancialSupport,
 					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.ShortTermCashAdvance
-					},
+					Id = DecisionType.ShortTermCashAdvance,
 					Hint = "A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.WriteOffRecoverableFunding
-					},
+					Id = DecisionType.WriteOffRecoverableFunding,
 					Hint = "A write-off can be considered if a trust cannot repay financial support previously received from us."
 
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.OtherFinancialSupport
-					},
+					Id = DecisionType.OtherFinancialSupport,
 					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), general annual grant (GAG) protection, popular growth funding, restructuring support and start-up support."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.EstimatesFundingOrPupilNumberAdjustment
-					},
+					Id = DecisionType.EstimatesFundingOrPupilNumberAdjustment,
 					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment or change in funding methodology."
 
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.EsfaApproval
-					},
+					Id = DecisionType.EsfaApproval,
 					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds (also called transactions approval). Examples include as severance pay, compromise agreements or ex gratia payments; agreeing off-payroll arrangements for staff; entering into a finance lease or operating lease; or carrying forward large reserves. Trusts going ahead with these decisions or transactions without ESFA approval could be in breach of their funding agreement. This typically affects trusts under an NTI (Notice to Improve), where ESFA approval can be a condition of the NTI."
 				},
-				new DecisionTypeCheckBox()
+				new DecisionTypeQuestionModel()
 				{
-					DecisionTypeQuestion = new DecisionTypeQuestion()
-					{
-						Id = DecisionType.FreedomOfInformationExemptions
-					},
+					Id = DecisionType.FreedomOfInformationExemptions,
 					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
 				}
 			};
 
+			result.ForEach(question =>
+			{
+				question.Name = $"{nameof(DecisionTypeQuestions)}[{question.Id}].Id";
+
+				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
+				{
+					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
+					question.FrameworkCategory = BuildFrameworkCategoryComponent(question);
+				}
+
+				if (question.Id == DecisionType.ShortTermCashAdvance)
+				{
+					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
+				}
+			});
+
 			return result;
+		}
+
+		private void SetDecisionTypeAnswers(List<DecisionTypeQuestionModel> model, DecisionTypeQuestion[] answers)
+		{
+			answers.ForEach(answer =>
+			{
+				var question = model.SingleOrDefault(m => m.Id == answer.Id);
+
+				if (question == null)
+				{
+					return;
+				}
+		
+				question.IsChecked = true;
+
+				if (question.DrawdownFacilityAgreed != null)
+				{
+					question.DrawdownFacilityAgreed.SelectedId = (int?)answer.DecisionDrawdownFacilityAgreedId ?? 0;
+				}
+
+				if (question.FrameworkCategory != null)
+				{
+					question.FrameworkCategory.SelectedId = (int?)answer.DecisionFrameworkCategoryId ?? 0;
+				}
+			});
 		}
 
 		private static OptionalDateTimeUiComponent BuildReceivedRequestDateComponent(OptionalDateModel? date = null)
@@ -288,12 +312,67 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				DisplayName = "Notes"
 			}
 		};
+
+		private static RadioButtonsUiComponent BuildDrawdownFacilityAgreedComponent(DecisionTypeQuestionModel model)
+		{
+			var id = $"draw-down-facility-agreed-{model.Id}";
+
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].DrawdownFacilityAgreed", "Has drawdown facility been agreed?");
+
+			var values = new List<DrawdownFacilityAgreed>() 
+			{ 
+				DrawdownFacilityAgreed.Yes, 
+				DrawdownFacilityAgreed.No, 
+				DrawdownFacilityAgreed.PaymentUnderExistingArrangement 
+			};
+
+			result.RadioItems = values.Select(value =>
+			{
+				return new SimpleRadioItem(value.Description(), (int)value)
+				{
+					TestId = $"{model.Id}-{value}"
+				};
+			});
+
+			result.SelectedId = 1;
+
+			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildFrameworkCategoryComponent(DecisionTypeQuestionModel model)
+		{
+			var id = $"framwork-category-{model.Id}";
+
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "What is the framework category?");
+
+			var values = new List<FrameworkCategory>()
+			{
+				FrameworkCategory.EnablingFinancialRecovery,
+				FrameworkCategory.BuildingFinancialCapability,
+				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
+				FrameworkCategory.FacilitatingTransferEducationallyTriggered
+			};
+
+			result.RadioItems = values.Select(value =>
+			{
+				return new SimpleRadioItem(value.Description(), (int)value)
+				{
+					TestId = $"{model.Id}-{value}"
+				};
+			});
+
+			return result;
+		}
 	}
 
-	public class DecisionTypeCheckBox
+	public class DecisionTypeQuestionModel
 	{
-		public DecisionTypeQuestion DecisionTypeQuestion { get; set; }
+		public string Name { get; set; }
+		public DecisionType? Id { get; set; }
+		public RadioButtonsUiComponent? DrawdownFacilityAgreed { get; set; }
+		public RadioButtonsUiComponent? FrameworkCategory { get; set; }
 		public string Hint { get; set; }
+		public bool IsChecked { get; set; }
 	}
 
 }

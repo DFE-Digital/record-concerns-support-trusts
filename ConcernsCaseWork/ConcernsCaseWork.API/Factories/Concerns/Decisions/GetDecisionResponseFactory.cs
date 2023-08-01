@@ -19,7 +19,9 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 				DecisionTypes = decision.DecisionTypes.Select(x => {
 					return new DecisionTypeQuestion()
 					{
-						Id = (Contracts.Enums.DecisionType)x.DecisionTypeId
+						Id = (Contracts.Enums.DecisionType)x.DecisionTypeId,
+						DecisionDrawdownFacilityAgreedId = (Contracts.Enums.DecisionDrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId,
+						DecisionFrameworkCategoryId = (Contracts.Enums.DecisionFrameworkCategory?)x.DecisionFrameworkCategoryId
 					};
 				}).ToArray(),
 				TotalAmountRequested = decision.TotalAmountRequested,
