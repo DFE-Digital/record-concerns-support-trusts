@@ -110,6 +110,21 @@ window.disableOnSubmitWithJsValidationCheck = function(validator, buttonToDisabl
 	}
 }
 
+window.formatCurrency = function (element) {
+	let currencyFormatter = new Intl.NumberFormat("en-GB", {
+		style: "currency",
+		currency: "GBP"
+	});
+
+	const onlyNumbersRegex = /[^\d\.]/g;
+
+	const amount = element.val().replace(onlyNumbersRegex, "");
+
+	// Replace the pound sign, it needs to be encoded for webpack to understand it
+	const formattedCurrency = currencyFormatter.format(amount).replace(/\u00A3/g, "");
+	element.val(formattedCurrency);
+}
+
 function autoResizer() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
 	for (let i = 0; i < multipleFields.length; i++) {

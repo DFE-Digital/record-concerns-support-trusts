@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
                 receivedRequestDate: (DateTimeOffset)request.ReceivedRequestDate,
-                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id)).ToArray(),
+                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id, API.Contracts.Decisions.DrawdownFacilityAgreed.No, Contracts.Decisions.FrameworkCategory.FacilitatingTransferEducationallyTriggered)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
                 fixture.Create<DateTimeOffset>());
