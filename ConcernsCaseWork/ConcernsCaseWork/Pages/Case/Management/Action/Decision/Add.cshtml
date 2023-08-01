@@ -155,20 +155,31 @@
                             </div>
                             <br>
 
-                            @foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
+                            @foreach (var decisionTypeQuestion in Model.DecisionTypeQuestions)
                             {
-                                var isChecked = Model.Decision.DecisionTypes.Any(q => q.Id == decisionTypeCheckbox.DecisionTypeQuestion.Id);
-
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionTypeQuestion.Id" name="DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionTypeQuestion.Id" checked="@isChecked">
-                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionTypeQuestion.Id">
-                                        @EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionTypeQuestion.Id)
 
-
-                                        <div id="@decisionTypeCheckbox.DecisionTypeQuestion.Id-hint" class="govuk-hint">
-                                            @decisionTypeCheckbox.Hint
+                                    <input type="hidden" name="DecisionTypeQuestions.Index" value="@decisionTypeQuestion.Id">
+                                    <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
+                                        @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
+                                        <div id="@decisionTypeQuestion.Id-hint" class="govuk-hint">
+                                            @decisionTypeQuestion.Hint
                                         </div>
                                     </label>
+
+                                    @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
+                                    {
+                                        <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
+
+                                            @if (decisionTypeQuestion.FrameworkCategory != null)
+                                            {
+                                                <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                            }
+                                        </div>
+                                    }
+
                                 </div>
                             }
                         </fieldset>
@@ -207,32 +218,43 @@
                 </form>
 
                 <script type="application/javascript" nonce="@nonce">
-
-                    function formatCurrency(element) {
-
-                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
-                            style: "currency",
-                            currency: "GBP"
-                        });
-
-                        const onlyNumbersRegex = /[^\d\.]/g;
-
-                        const amount = element.val().replace(onlyNumbersRegex, "");
-
-                        const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
-                        element.val(formattedCurrency);
-                    }
-
                     $(function () {
 
-                        $totalAmountRequestedObj = $('#total-amount-request');
+                        function onSubQuestionSelected(type) {
+
+                            $(`#${type}`).on('click', function () {
+                                hideIfNotSelected(type);
+                            });
+
+                            hideIfNotSelected(type);
+                        }
+
+                        function hideIfNotSelected(type) {
+                            let isChecked = $(`#${type}`).is(":checked");
+                            let inputElement = $(`#${type}-subquestion-container :input`);
+                            inputElement.prop('disabled', !isChecked);
+                            inputElement.prop('aria-disabled', !isChecked);
+                            let subContainer = $(`#${type}-subquestion-container`);
+                            subContainer.removeClass(['govuk-radios__conditional--disabled']);
+
+                            if (!isChecked) {
+                                inputElement.prop('checked', false);
+                                subContainer.addClass('govuk-radios__conditional--disabled');
+                            }
+                        }
+
+                        onSubQuestionSelected("NonRepayableFinancialSupport");
+                        onSubQuestionSelected("RepayableFinancialSupport");
+                        onSubQuestionSelected("ShortTermCashAdvance");
+
+                        let totalAmountRequestedElement = $('#total-amount-request');
 
                         $(document).ready(function() {
-                            formatCurrency($totalAmountRequestedObj);
+                            formatCurrency(totalAmountRequestedElement);
                         });
 
-                        $totalAmountRequestedObj.focusout(function () {
-                            formatCurrency($totalAmountRequestedObj);
+                        totalAmountRequestedElement.focusout(function () {
+                            formatCurrency(totalAmountRequestedElement);
                         });
 
                         var submitButton = $('#add-decision-button')[0];

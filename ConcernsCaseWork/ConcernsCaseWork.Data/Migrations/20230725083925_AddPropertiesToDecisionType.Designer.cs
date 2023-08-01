@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230725083925_AddPropertiesToDecisionType")]
+    partial class AddPropertiesToDecisionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -614,9 +617,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<string>("CaseHistory")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CaseLastUpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ClosedAt")
                         .HasColumnType("datetime2");
