@@ -36,15 +36,15 @@ namespace ConcernsCaseWork.API.Controllers
 			_getConcernsRecord = getConcernsRecord;
 		}
         
-        [HttpPost]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Create(ConcernsRecordRequest request, CancellationToken cancellationToken = default)
-        {
-            var createdConcernsRecord = _createConcernsRecord.Execute(request);
-            var response = new ApiSingleResponseV2<ConcernsRecordResponse>(createdConcernsRecord);
+        //[HttpPost]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Create(ConcernsRecordRequest request, CancellationToken cancellationToken = default)
+        //{
+        //    var createdConcernsRecord = _createConcernsRecord.Execute(request);
+        //    var response = new ApiSingleResponseV2<ConcernsRecordResponse>(createdConcernsRecord);
             
-            return new ObjectResult(response) {StatusCode = StatusCodes.Status201Created};
-        }
+        //    return new ObjectResult(response) {StatusCode = StatusCodes.Status201Created};
+        //}
         
         [HttpPatch("{id}")]
         [MapToApiVersion("2.0")]
