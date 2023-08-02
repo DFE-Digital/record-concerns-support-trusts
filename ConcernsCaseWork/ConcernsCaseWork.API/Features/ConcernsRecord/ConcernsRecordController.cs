@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
@@ -42,6 +43,18 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 			}
 
 			return Ok(model);
+		}
+
+		[HttpPatch("{Id}", Name = nameof(Update))]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.Created)]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Update(int Id, [FromBody] Update.ConcernModel patchModel, CancellationToken cancellationToken = default)
+		{
+			var command = new Update.Command(Id, patchModel);
+			var commandResult = await _mediator.Send(command);
+			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
 		}
 	}
 }
