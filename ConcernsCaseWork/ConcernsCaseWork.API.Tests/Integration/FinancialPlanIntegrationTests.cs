@@ -83,8 +83,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			//Assert
 			createdFinancialPlan.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
 			createdFinancialPlan.Status.Id.Should().Be(request.StatusId.Value);
-			updatedCase.CaseLastUpdatedAt = createdFinancialPlan.CreatedAt;
-
+			updatedCase.CaseLastUpdatedAt.Should().Be(createdFinancialPlan.CreatedAt);
 		}
 
 		[Fact]
@@ -94,7 +93,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var createdConcern = await CreateCase();
 			var createdFinancialPlan = await CreateFinancialPlan(createdConcern.Urn);
 
-			var request = _fixture.Build<PatchFinancialPlanModel>()
+			var request = _fixture.Build<PatchFinancialPlanRequest>()
 							.With(x => x.Id, createdFinancialPlan.Id)
 							.With(x => x.CaseUrn, createdConcern.Urn)
 							.With(x => x.StatusId, 2)
@@ -102,13 +101,15 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Act
 			var result = await _client.PatchAsync($"/v2/case-actions/financial-plan", request.ConvertToJson());
-			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			var updatedCase = await GetCase(request.CaseUrn);
 
 			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+
 			var updatedFinancialPlan = await GetFinancialPlanByID(request.Id);
 			updatedFinancialPlan.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+			updatedCase.CaseLastUpdatedAt.Should().Be(updatedFinancialPlan.UpdatedAt);
 		}
-
 
 		private async Task<ConcernsCaseResponse> CreateCase()
 		{

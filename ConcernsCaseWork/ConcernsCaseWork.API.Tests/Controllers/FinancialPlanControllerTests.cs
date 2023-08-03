@@ -119,40 +119,40 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		//	actualResult?.Data.Id.Should().Be(fpId);
 		//}
 
-		[Fact]
-		public async Task PatchFinancialPlan_ReturnsUpdatedFinancialPlan()
-		{
-			var fpId = 444;
-			var newNotes = "new notes xyz";
-			var newStatusId = 3;
+		//[Fact]
+		//public async Task PatchFinancialPlan_ReturnsUpdatedFinancialPlan()
+		//{
+		//	var fpId = 444;
+		//	var newNotes = "new notes xyz";
+		//	var newStatusId = 3;
 
-			var fp = new FinancialPlanCase { Id = fpId, Notes = "Original notes", StatusId = 1 };
+		//	var fp = new FinancialPlanCase { Id = fpId, Notes = "Original notes", StatusId = 1 };
 
-			var request = Builder<PatchFinancialPlanRequest>
-				.CreateNew()
-				.With(r => r.Id = fp.Id)
-				.With(r => r.StatusId = newStatusId)
-				.With(r => r.Notes = newNotes)
-				.Build();
+		//	var request = Builder<PatchFinancialPlanRequest>
+		//		.CreateNew()
+		//		.With(r => r.Id = fp.Id)
+		//		.With(r => r.StatusId = newStatusId)
+		//		.With(r => r.Notes = newNotes)
+		//		.Build();
 
-			var fpResponse = Builder<FinancialPlanResponse>
-				.CreateNew()
-				.With(r => r.Id = request.Id)
-				.With(r => r.Notes = request.Notes)
-				.With(r => r.StatusId = request.StatusId)
-				.Build();
+		//	var fpResponse = Builder<FinancialPlanResponse>
+		//		.CreateNew()
+		//		.With(r => r.Id = request.Id)
+		//		.With(r => r.Notes = request.Notes)
+		//		.With(r => r.StatusId = request.StatusId)
+		//		.Build();
 
-			_mockPatchFinancialPlanUseCase
-				.Setup(x => x.Execute(request))
-				.Returns(fpResponse);
+		//	_mockPatchFinancialPlanUseCase
+		//		.Setup(x => x.Execute(request))
+		//		.Returns(fpResponse);
 
-			var controllerResponse = await _controllerSut.Patch(request); //.Result as OkObjectResult;
+		//	var controllerResponse = await _controllerSut.Patch(request); //.Result as OkObjectResult;
 
-			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
+		//	var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
 
-			actualResult?.Data.Should().NotBeNull();
-			actualResult?.Data.Id.Should().Be(fpId);
-		}
+		//	actualResult?.Data.Should().NotBeNull();
+		//	actualResult?.Data.Id.Should().Be(fpId);
+		//}
 
 		[Fact]
 		public async Task GetAllStatuses_ReturnsAllStatuses()

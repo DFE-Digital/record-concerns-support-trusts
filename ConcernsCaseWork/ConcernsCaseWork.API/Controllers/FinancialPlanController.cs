@@ -99,14 +99,14 @@ namespace ConcernsCaseWork.API.Controllers
             return Ok(response);
         }
 
-        [HttpPatch]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Patch(PatchFinancialPlanRequest request, CancellationToken cancellationToken = default)
-        {
-            var createdFP = _patchFinancialPlanUseCase.Execute(request);
-            var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);
+        //[HttpPatch]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Patch(PatchFinancialPlanRequest request, CancellationToken cancellationToken = default)
+        //{
+        //    var createdFP = _patchFinancialPlanUseCase.Execute(request);
+        //    var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
     }
 }

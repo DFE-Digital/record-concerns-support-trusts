@@ -41,5 +41,17 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
 			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<GetByID.Result>(model));
 		}
+
+
+		[HttpPatch]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.Created)]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Update([FromBody] Update.Command command, CancellationToken cancellationToken = default)
+		{
+			var commandResult = await _mediator.Send(command);
+			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+		}
 	}
 }
