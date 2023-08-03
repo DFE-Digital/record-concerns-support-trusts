@@ -42,29 +42,29 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				_mockGetFinancialPlansByCaseUseCase.Object, _mockPatchFinancialPlanUseCase.Object, _mockGetAllStatuses.Object);
 		}
 
-		[Fact]
-		public async Task Create_ReturnsApiSingleResponseWithNewFinancialPlan()
-		{
-			var status = 2;
-			var createdAt = DateTime.Now.AddDays(-5);
-			var caseUrn = 223;
+		//[Fact]
+		//public async Task Create_ReturnsApiSingleResponseWithNewFinancialPlan()
+		//{
+		//	var status = 2;
+		//	var createdAt = DateTime.Now.AddDays(-5);
+		//	var caseUrn = 223;
 
-			var response = Builder<FinancialPlanResponse>
-				.CreateNew()
-				.With(r => r.StatusId = status)
-				.With(r => r.CreatedAt = createdAt)
-				.Build();
+		//	var response = Builder<FinancialPlanResponse>
+		//		.CreateNew()
+		//		.With(r => r.StatusId = status)
+		//		.With(r => r.CreatedAt = createdAt)
+		//		.Build();
 
-			var expectedResponse = new ApiSingleResponseV2<FinancialPlanResponse>(response);
+		//	var expectedResponse = new ApiSingleResponseV2<FinancialPlanResponse>(response);
 
-			_mockCreateFinancialPlanUseCase
-				.Setup(x => x.Execute(It.IsAny<CreateFinancialPlanRequest>()))
-				.Returns(response);
+		//	_mockCreateFinancialPlanUseCase
+		//		.Setup(x => x.Execute(It.IsAny<CreateFinancialPlanRequest>()))
+		//		.Returns(response);
 
-			var result = await _controllerSut.Create(new CreateFinancialPlanRequest { StatusId = status, CaseUrn = caseUrn, CreatedAt = createdAt, });
+		//	var result = await _controllerSut.Create(new CreateFinancialPlanRequest { StatusId = status, CaseUrn = caseUrn, CreatedAt = createdAt, });
 
-			result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
-		}
+		//	result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
+		//}
 
 		[Fact]
 		public async Task GetFinancialPlansByCaseId_ReturnsMatchingFinancialPlan_WhenGivenCaseId()
@@ -94,30 +94,30 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			actualResult?.Data.First().CaseUrn.Should().Be(caseUrn);
 		}
 
-		[Fact]
-		public async Task GetFinancialPlansById_ReturnsMatchingFinancialPlan_WhenGivenId()
-		{
-			var fpId = 444;
+		//[Fact]
+		//public async Task GetFinancialPlansById_ReturnsMatchingFinancialPlan_WhenGivenId()
+		//{
+		//	var fpId = 444;
 
-			var matchingFinancialPlan = new FinancialPlanCase { Id = fpId, Notes = "match" };
+		//	var matchingFinancialPlan = new FinancialPlanCase { Id = fpId, Notes = "match" };
 
-			var fpResponse = Builder<FinancialPlanResponse>
-				.CreateNew()
-				.With(r => r.Id = matchingFinancialPlan.Id)
-				.With(r => r.Notes = matchingFinancialPlan.Notes)
-				.Build();
+		//	var fpResponse = Builder<FinancialPlanResponse>
+		//		.CreateNew()
+		//		.With(r => r.Id = matchingFinancialPlan.Id)
+		//		.With(r => r.Notes = matchingFinancialPlan.Notes)
+		//		.Build();
 
-			_mockGetFinancialPlanByIdUseCase
-				.Setup(x => x.Execute(fpId))
-				.Returns(fpResponse);
+		//	_mockGetFinancialPlanByIdUseCase
+		//		.Setup(x => x.Execute(fpId))
+		//		.Returns(fpResponse);
 
-			var controllerResponse = await _controllerSut.GetFinancialPlanById(fpId); //.Result as OkObjectResult;
+		//	var controllerResponse = await _controllerSut.GetFinancialPlanById(fpId); //.Result as OkObjectResult;
 
-			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
+		//	var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
 
-			actualResult?.Data.Should().NotBeNull();
-			actualResult?.Data.Id.Should().Be(fpId);
-		}
+		//	actualResult?.Data.Should().NotBeNull();
+		//	actualResult?.Data.Id.Should().Be(fpId);
+		//}
 
 		[Fact]
 		public async Task PatchFinancialPlan_ReturnsUpdatedFinancialPlan()

@@ -71,16 +71,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_Post_Returns_201Response()
 		{
 			//Arrange
-			var createdConcern = await CreateCase();
+			var createdCase = await CreateCase();
 			var request = _fixture.Create<CreateFinancialPlanRequest>();
+			request.CaseUrn = createdCase.Urn;
 			request.StatusId = 1;
 
 			//Act
 			var createdFinancialPlan = await CreateFinancialPlan(request);
+			var updatedCase = await GetCase(request.CaseUrn);
 
 			//Assert
 			createdFinancialPlan.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
 			createdFinancialPlan.Status.Id.Should().Be(request.StatusId.Value);
+			updatedCase.CaseLastUpdatedAt = createdFinancialPlan.CreatedAt;
+
 		}
 
 		[Fact]
@@ -88,7 +92,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			//Arrange
 			var createdConcern = await CreateCase();
-			var createdFinancialPlan = await CreateFinancialPlan();
+			var createdFinancialPlan = await CreateFinancialPlan(createdConcern.Urn);
 
 			var request = _fixture.Build<PatchFinancialPlanModel>()
 							.With(x => x.Id, createdFinancialPlan.Id)
@@ -98,6 +102,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Act
 			var result = await _client.PatchAsync($"/v2/case-actions/financial-plan", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
 
 			//Assert
 			var updatedFinancialPlan = await GetFinancialPlanByID(request.Id);
@@ -143,16 +148,19 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		private async Task<ConcernsCaseResponse> GetCase(Int32 urn)
 		{
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{urn}");
-			var x = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+			
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseCase.Data.Should().NotBeNull();
 
-
-			return x.Data;
+			return getResponseCase.Data;
 		}
 
-		private async Task<FinancialPlanResponse> CreateFinancialPlan()
+		private async Task<FinancialPlanResponse> CreateFinancialPlan(Int32 caseUrn)
 		{
 			var request = _fixture.Create<CreateFinancialPlanRequest>();
+			request.CaseUrn = caseUrn;
 			request.StatusId = 1;
 			return await CreateFinancialPlan(request);
 		}
@@ -167,10 +175,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponseFinancialPlan = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<FinancialPlanResponse>>();
 
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
-			createdFinancialPlan.Should().NotBeNull();
+			createdFinancialPlan.Data.Should().NotBeNull();
 
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-			getResponseFinancialPlan.Should().NotBeNull();
+			getResponseFinancialPlan.Data.Should().NotBeNull();
 
 			return getResponseFinancialPlan.Data;
 		}

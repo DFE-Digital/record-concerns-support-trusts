@@ -34,26 +34,26 @@ namespace ConcernsCaseWork.API.Controllers
             _getAllStatuses = getAllStatuses;
         }
 
-        [HttpPost]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Create(CreateFinancialPlanRequest request, CancellationToken cancellationToken = default)
-        {
-            var createdFP = _createFinancialPlanUseCase.Execute(request);
-            var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);
+        //[HttpPost]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> Create(CreateFinancialPlanRequest request, CancellationToken cancellationToken = default)
+        //{
+        //    var createdFP = _createFinancialPlanUseCase.Execute(request);
+        //    var response = new ApiSingleResponseV2<FinancialPlanResponse>(createdFP);
 
-            return CreatedAtAction(nameof(GetFinancialPlanById), new { financialPlanId = createdFP.Id}, response);
-        }
+        //    return CreatedAtAction(nameof(GetFinancialPlanById), new { financialPlanId = createdFP.Id}, response);
+        //}
 
-        [HttpGet]
-        [Route("{financialPlanId}")]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> GetFinancialPlanById(long financialPlanId, CancellationToken cancellationToken = default)
-        {
-            var fp = _getFinancialPlanByIdUseCase.Execute(financialPlanId);
-            var response = new ApiSingleResponseV2<FinancialPlanResponse>(fp);
+        //[HttpGet]
+        //[Route("{financialPlanId}")]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<ApiSingleResponseV2<FinancialPlanResponse>>> GetFinancialPlanById(long financialPlanId, CancellationToken cancellationToken = default)
+        //{
+        //    var fp = _getFinancialPlanByIdUseCase.Execute(financialPlanId);
+        //    var response = new ApiSingleResponseV2<FinancialPlanResponse>(fp);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         [HttpGet]
         [Route("case/{caseUrn}")]
