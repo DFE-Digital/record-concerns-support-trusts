@@ -40,6 +40,8 @@ namespace ConcernsCaseWork.API.Controllers
 			_deleteDecision = deleteDecisionUsedCase ?? throw new ArgumentNullException(nameof(deleteDecisionUsedCase));
 		}
 
+		/*
+
 		[HttpPost]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionResponse>>> Create(int urn, CreateDecisionRequest request, CancellationToken cancellationToken = default)
@@ -68,6 +70,10 @@ namespace ConcernsCaseWork.API.Controllers
 		    LogInfo($"Returning created response. Concerns Case Urn {response.Data.ConcernsCaseUrn}, DecisionId {response.Data.DecisionId}");
 		    return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 	    }
+
+		*/
+
+
 
 	    [HttpGet("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
