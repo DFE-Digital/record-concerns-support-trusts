@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.API.Features.ConcernsRecord;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
@@ -41,8 +42,7 @@ namespace ConcernsCaseWork.API.Controllers
         {
             var createdSRMA = _createSRMAUseCase.Execute(request);
             var response = new ApiSingleResponseV2<SRMAResponse>(createdSRMA);
-
-            return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+			return CreatedAtAction(nameof(GetSRMAById), new { srmaId = createdSRMA.Id }, response);
         }
 
         [HttpGet]
