@@ -26,4 +26,11 @@ public record BaseUiComponent
 	public string ErrorTextForRequiredField { get; set; }
 
 	public string? HintText { get; set; }
+
+	/// <summary>
+	/// For some reason the order of errors is not always the order the properties are added
+	/// Could not find any explanation for why this happens and have not been able to find a solution in the framework
+	/// Allows us to force a specific order when validation errors are displayed out of order
+	/// </summary>
+	public int? SortOrder { get; set; }
 }

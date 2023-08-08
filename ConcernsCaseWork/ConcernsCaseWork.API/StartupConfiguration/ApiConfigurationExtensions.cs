@@ -20,6 +20,7 @@ public static class ApiConfigurationExtensions
 		});
 
 		services.AddControllers();
+
 		services.AddApiVersioning(config =>
 		{
 			config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);

@@ -24,7 +24,8 @@ public static class CaseSummaryResponseFactory
 			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
-			UpdatedAt = caseSummary.UpdatedAt
+			UpdatedAt = caseSummary.UpdatedAt,
+			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt
 		};
 	}
 	

@@ -177,7 +177,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 				SelectedId = selectedId,
 				Required = true,
 				DisplayName = "decision outcome",
-				ErrorTextForRequiredField = "Select a decision outcome"
+				ErrorTextForRequiredField = "Select a decision outcome",
+				SortOrder = 1
 			};
 		}
 
@@ -203,7 +204,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			return new OptionalDateTimeUiComponent("decision-made", nameof(DecisionMadeDate), "When was the decision made?")
 			{
 				Date = date,
-				DisplayName = "Date decision was made"
+				DisplayName = "Date decision was made",
+				SortOrder = 2
 			};
 		}
 
@@ -212,7 +214,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			return new OptionalDateTimeUiComponent("take-effect", nameof(DecisionEffectiveFromDate), "When did or does the decision take effect?")
 			{
 				Date = date,
-				DisplayName = "Date decision takes effect"
+				DisplayName = "Date decision takes effect",
+				SortOrder = 3
 			};
 		}
 	}

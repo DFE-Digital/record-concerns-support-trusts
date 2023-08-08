@@ -1,10 +1,10 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import getConfig from '../getConfig.js';
-import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js'
+import { buildCase, buildClosedCase, buildClosedConcern, buildConcern } from '../helpers/caseBuilder.js';
 
 export const options = {
-    vus: 400,
+    vus: 1,
     duration: '30s',
     // httpDebug: 'full',
 };
@@ -43,23 +43,7 @@ export default function () {
 }
 
 function createCase() {
-    const request =
-    {
-        createdAt: new Date().toISOString(),
-        reviewAt: new Date().toISOString(),
-        createdBy: uuidv4(),
-        trustUkprn: "10058598",
-        deEscalation: new Date().toISOString(),
-        issue: "test",
-        currentStatus: "current status",
-        caseAim: "case aim",
-        deEscalationPoint: "de-escalation point",
-        nextSteps: "next steps",
-        caseHistory: "case history",
-        statusId: 1,
-        ratingId: 4,
-        territory: 1
-    };
+    const request = buildCase();
 
     const response = http.post(
         `${config.url}/v2/concerns-cases`,
@@ -78,18 +62,7 @@ function createCase() {
 }
 
 function createConcern(caseId) {
-    const request = {
-        createdAt: new Date().toISOString(),
-        reviewAt: new Date().toISOString(),
-        name: "Governance and compliance",
-        description: "Compliance",
-        reason: "Governance and compliance: Compliance",
-        caseUrn: caseId,
-        typeId: 23,
-        ratingId: 4,
-        statusId: 1,
-        meansOfReferralId: 1
-    };
+    const request = buildConcern(caseId);
 
     const response = http.post(
         `${config.url}/v2/concerns-records/`,

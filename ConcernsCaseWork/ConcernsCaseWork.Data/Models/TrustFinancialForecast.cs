@@ -15,4 +15,5 @@ public class TrustFinancialForecast: IAuditable
 	public DateTimeOffset UpdatedAt { get; set; }
 	public DateTimeOffset? ClosedAt { get; set; }
 	public string Notes { get; set; }
+	public DateTime? DeletedAt { get; set; }
 }

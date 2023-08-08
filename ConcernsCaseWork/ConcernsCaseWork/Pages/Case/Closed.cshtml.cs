@@ -26,7 +26,9 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public List<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
-		
+
+		public PaginationModel Pagination { get; set; }
+
 		public ClosedPageModel(ICaseSummaryService caseSummaryService, 
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<ClosedPageModel> logger,
@@ -50,7 +52,11 @@ namespace ConcernsCaseWork.Pages.Case
 					EventPayloadJson = "",
 					EventUserName = GetUserName()
 				});
-				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(GetUserName());
+				var caseGroup = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(GetUserName(), PageNumber);
+
+				ClosedCases = caseGroup.Cases;
+				Pagination = caseGroup.Pagination;
+				Pagination.Url = "/case/closed";
 			}
 			catch (Exception ex)
 			{

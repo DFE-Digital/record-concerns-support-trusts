@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
 
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).Throws(new Exception("Bad request"));
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName, 1)).Throws(new Exception("Bad request"));
 			
 			var sut = SetupHomePageModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 
@@ -78,8 +78,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			var activeCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
 			var activeTeamCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
 			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
+			var caseGroup = new CaseSummaryGroupModel<ActiveCaseSummaryModel>()
+			{
+				Cases = activeCases,
+			};
 			
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName, 1)).ReturnsAsync(caseGroup);
 			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
 			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
@@ -109,10 +113,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
+			var caseGroup = new CaseSummaryGroupModel<ActiveCaseSummaryModel>()
+			{
+				Cases = new List<ActiveCaseSummaryModel>(),
+			};
 
 			mockCaseSummaryService
-				.Setup(model => model.GetActiveCaseSummariesByCaseworker(It.IsAny<string>()))
-				.ReturnsAsync(new List<ActiveCaseSummaryModel>());
+				.Setup(model => model.GetActiveCaseSummariesByCaseworker(It.IsAny<string>(), 1))
+				.ReturnsAsync(caseGroup);
 
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))

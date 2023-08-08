@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Service.Configuration;
+﻿using ConcernsCaseWork.API.Contracts.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace ConcernsCaseWork.Service.Trusts

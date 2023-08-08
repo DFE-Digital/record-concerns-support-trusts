@@ -1,9 +1,11 @@
+using Azure.Core;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +37,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
@@ -47,22 +49,46 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker)
+	public async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker);
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker, page);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn)
+	public async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn);
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn, page);
 		return await BuildClosedCaseSummaryModel(caseSummaries);
+	}
+
+	private async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(ApiListWrapper<ActiveCaseSummaryDto> caseSummaries)
+	{
+		var result = new CaseSummaryGroupModel<ActiveCaseSummaryModel>();
+
+		var cases = await BuildActiveCaseSummaryModel(caseSummaries.Data);
+
+		result.Cases = cases;
+		result.Pagination = PaginationMapping.ToModel(caseSummaries.Paging);
+
+		return result;
+	}
+
+	private async Task<CaseSummaryGroupModel<ClosedCaseSummaryModel>> BuildClosedCaseSummaryModel(ApiListWrapper<ClosedCaseSummaryDto> caseSummaries)
+	{
+		var result = new CaseSummaryGroupModel<ClosedCaseSummaryModel>();
+
+		var cases = await BuildClosedCaseSummaryModel(caseSummaries.Data);
+
+		result.Cases = cases;
+		result.Pagination = PaginationMapping.ToModel(caseSummaries.Paging);
+
+		return result;
 	}
 
 	private async Task<List<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(IEnumerable<ActiveCaseSummaryDto> caseSummaries)
@@ -89,7 +115,8 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
-					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),
+					CaseLastUpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CaseLastUpdatedAt),
 				};
 			
 			sortedCaseSummaries.Add(summary);

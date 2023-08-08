@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.API.Features.ConcernsRecord;
+using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.UseCases;
@@ -40,8 +42,7 @@ namespace ConcernsCaseWork.API.Controllers
         {
             var createdSRMA = _createSRMAUseCase.Execute(request);
             var response = new ApiSingleResponseV2<SRMAResponse>(createdSRMA);
-
-            return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+			return CreatedAtAction(nameof(GetSRMAById), new { srmaId = createdSRMA.Id }, response);
         }
 
         [HttpGet]
@@ -145,7 +146,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-notes")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateNotes(int srmaId, [StringLength(2000)] string notes, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiSingleResponseV2<SRMAResponse>>> UpdateNotes(int srmaId, [StringLength(SrmaConstants.NotesLength)] string notes, CancellationToken cancellationToken = default)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {

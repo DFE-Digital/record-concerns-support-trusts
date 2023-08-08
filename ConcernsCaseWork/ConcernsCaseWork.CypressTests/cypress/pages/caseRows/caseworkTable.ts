@@ -11,6 +11,23 @@ class CaseworkTable {
             return new CaseRow(el);
         });
     }
+
+    public getCaseIds(): Cypress.Chainable<Array<string>>
+    {
+        Logger.Log("Getting all displayed case ids");
+
+        const result: Array<string> = [];
+
+        return cy.containsByTestId("case-id")
+        .each($el =>
+        {
+            result.push($el.text());
+        })
+        .then(() =>
+        {
+            return result;
+        });
+    }
 }
 
 const caseworkTable = new CaseworkTable();
