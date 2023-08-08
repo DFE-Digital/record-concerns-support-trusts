@@ -30,7 +30,8 @@ namespace ConcernsCaseWork.API.Factories
                 StatusId = concernsCase.StatusId,
                 RatingId = concernsCase.RatingId,
                 Territory = concernsCase.Territory,
-                TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber
+                TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber,
+				CaseLastUpdatedAt = concernsCase.CaseLastUpdatedAt
             };
         }
     }
