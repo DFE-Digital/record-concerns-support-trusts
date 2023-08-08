@@ -6,6 +6,7 @@ public abstract record CaseSummaryResponse
 	public string CreatedBy { get; set; }
 	public DateTime CreatedAt { get; set; }
 	public DateTime UpdatedAt { get; set; }
+	public DateTime? CaseLastUpdatedAt { get; set; }
 	public string StatusName { get; set; }
 	public string TrustUkPrn { get; set; }
 	public IEnumerable<ActionOrDecision> Decisions { get; set; }

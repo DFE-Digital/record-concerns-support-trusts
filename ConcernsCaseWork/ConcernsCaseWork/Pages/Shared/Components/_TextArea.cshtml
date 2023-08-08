@@ -6,6 +6,7 @@
 @{
     var nonce = Context.GetNonce();
     var displayName = !string.IsNullOrEmpty(@Model.Text.DisplayName) ? @Model.Text.DisplayName : @Model.Heading;
+    var required = Model.Text.Required == true ? "true" : "false";
 
     var modelPath = $"{Model.Name}.Text.{displayName}";
     ViewContext.ModelState.TryGetValue(modelPath, out ModelStateEntry modelState);
@@ -15,15 +16,18 @@
 }
 <div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
 	<fieldset class="govuk-fieldset">
-        <h2 class="govuk-heading-m">@Model.Heading</h2>
+        @if (!string.IsNullOrEmpty(Model.Heading))
+        {
+            <h2 class="govuk-heading-m">@Model.Heading</h2>
+        }
         @if (!string.IsNullOrEmpty(Model.HintText))
         {
             <div class="govuk-hint">@Model.HintText</div>
         }
-		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
+		<div class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="@Model.Text.MaxLength">
 			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
                 <partial name="Components/_ValidationErrorDetail" model="@errors" />
-				<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-label="@displayName">@Model.Text.StringContents</textarea>
+				<textarea class="govuk-textarea govuk-js-concerns-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-label="@displayName">@Model.Text.StringContents</textarea>
 			</div>
 			<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 				You can enter up to @Model.Text.MaxLength characters
@@ -32,10 +36,5 @@
 	</fieldset>
 	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@displayName" />
 	<input type="hidden" name="@(Model.Name).Text.MaxLength" value="@Model.Text.MaxLength" />
+    <input type="hidden" name="@(Model.Name).Text.Required" value="@required" />
 </div>
-
-<script type="application/javascript" nonce="@nonce">
-	$(function () {
-        autoResizer();
-	});
-</script>

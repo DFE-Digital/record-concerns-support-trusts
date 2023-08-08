@@ -55,6 +55,59 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.CityTechnologyCollege", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AddressLine1")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("AddressLine3")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("CompaniesHouseNumber")
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("County")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Postcode")
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
+
+                    b.Property<string>("Town")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("UKPRN")
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CityTechnologyCollege", "concerns", t =>
+                        {
+                            t.HasTrigger("CityTechnologyCollege_Trigger");
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
                     b.Property<int>("DecisionId")
@@ -116,6 +169,77 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionDrawdownFacilityAgreed", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Yes"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "No"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PaymentUnderExistingArrangement"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionFrameworkCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionFrameworkCategory", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "EnablingFinancialRecovery"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BuildingFinancialCapacity"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "FacilitatingTransferFinanciallyTriggered"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "FacilitatingTransferEducationallyTriggered"
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -150,6 +274,12 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("DecisionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionDrawdownFacilityAgreedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionFrameworkCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("DecisionId", "DecisionTypeId");
@@ -484,6 +614,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<string>("CaseHistory")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CaseLastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("ClosedAt")
                         .HasColumnType("datetime2");
@@ -2461,8 +2594,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("VARCHAR(5000)");
 
                     b.Property<int?>("ReasonId")
                         .HasColumnType("int");
@@ -2622,6 +2755,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ForecastingToolRanAt")
                         .HasColumnType("nvarchar(max)");

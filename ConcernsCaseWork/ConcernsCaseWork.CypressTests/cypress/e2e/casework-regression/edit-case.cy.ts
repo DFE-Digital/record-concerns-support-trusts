@@ -15,6 +15,7 @@ import EditNextStepsPage from "cypress/pages/createCase/editNextStepsPage";
 import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Editing a case", () =>
 {
@@ -36,13 +37,18 @@ describe("Editing a case", () =>
 		cy.login();
 	});
 
-    it(("Should create a case with only required fields"), () => {
+    it("Should be able to edit a case", () => {
         Logger.Log("Create a case");
         createCasePage
             .createCase()
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
         Logger.Log("Create a valid concern");
         createConcernPage
@@ -140,22 +146,31 @@ describe("Editing a case", () =>
             .withTerritory("North and UTC - North West")
             .apply();
 
-
         Logger.Log("Edit Issue")
         caseManagementPage
             .showAllConcernDetails()
             .editIssue();
 
         editIssuePage
-            .hasIssue("This is an issue")
+            .hasIssue("This is an issue");
+
+        editIssuePage
+            .clearIssue()
+            .apply()
+            .hasValidationError("Issue is required");
+
+        editIssuePage
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
 
+        // Ensure the correct character count when new lines are used
+        editIssuePage
+            .withIssue("Testing \n the character count \n with \n\n\n new lines")
+            .hasCharacterCountMessage("You have 1,945 characters remaining");
+
         Logger.Log("Checking accessibility on edit issue");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editIssuePage
             .withIssue("New Issue")
@@ -174,12 +189,9 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit current status");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editCurrentStatusPage
             .withCurrentStatus("New Status")
             .apply();
-
 
         Logger.Log("Edit Case Aim")
         caseManagementPage
@@ -193,8 +205,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case aim");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseAimPage
             .withCaseAim("New Case aim")
@@ -213,8 +223,6 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit de-escalation point");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editDeEscalationPage
             .withDeescalationPoint("New de-descalation point")
             .apply();
@@ -232,8 +240,6 @@ describe("Editing a case", () =>
         Logger.Log("Checking accessibility on edit next steps");
         cy.excuteAccessibilityTests();
 
-        cy.waitForJavascript();
-
         editNextStepsPage
             .withNextSteps("New next step")
             .apply();
@@ -250,8 +256,6 @@ describe("Editing a case", () =>
 
         Logger.Log("Checking accessibility on edit case history");
         cy.excuteAccessibilityTests();
-
-        cy.waitForJavascript();
 
         editCaseHistoryPage
             .withCaseHistory("New case history")

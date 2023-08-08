@@ -158,3 +158,9 @@
 	color: govuk-colour("white");
   }
 }
+
+.autocomplete__error {
+	.autocomplete__input {
+		border-color: #d4351c;
+	}
+}

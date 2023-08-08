@@ -1,3 +1,44 @@
+## 26.0.0
+* Ability to add Cases to CTCs
+* Remove redundant code replace by components
+* Enabling work on Api for adding Sub questions to Decision work
+* Fix incorrect character count display in UI
+* Ability to Soft Delete TFF for a Case via Api
+* Amend subnav on trust page to better reflect the design
+
+## 25.0.0
+* Add pagination to get active cases by owner and get closed cases by owner APIs
+* Your active casework redesign - Add pagination
+* Trust Overview Redesign - Add Open/Closed sub-navs
+* Trust Overview Design - Add pagination to sub-navs
+
+## 24.0.0
+* Increase SRMA notes field limit
+* Iterate hint text on Create Case page based on user feedback
+* Amend Create case button to adopt combined Concerns and Non Concerns Journey
+* Fixed radio button selection changing values in another radio group
+
+## 23.0.0
+
+* Ability to change case owner using keyboard only input
+* Ability to select Trust in Trust Search using keyboard only input
+* Fix typo on Error Message Page
+* Ensure consistent use of term Case Owner
+* Show Error Summary and Error message next to each answer for Reassign Case Owner, Close Case and Find a Trust Error Pages
+* Ensure Error Message order is consistent with field on case creation page
+* Fix issue with Decision ID not being visible in Closed Notice to Improve Information
+* Ability to return paged results to Get Case By Trust Endpoint
+* Add Feature toggle to switch to Updated Trust Search Endpoint
+
+## 22.0.0
+
+* Added ability to Create a Concerns case from a Proactive Engagement Case (Non Concerns case)
+* Added soft delete functionality to Concerns, Decision, Notice to Improve and Notice to Improve Warning Letter
+* Provactive Engagement Case layout changes
+* Error message improvements for Trust Financial Forecast, Decisions & SRMA error messages
+* New KPI to track when case owner is changed
+* Added Fake Trust to enable Production smoke testing
+
 ## 21.0.0
 
 * Amended Case Create flow to allow for non concerns

@@ -4,8 +4,6 @@ using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
-using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
@@ -74,7 +72,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_NotCreatedResourceRequest_Returns_NotFound()
 		{
-			var warningLetterID = 1;
+			var warningLetterID = 10000000;
 
 			var result = await _client.DeleteAsync($"/v2/case-actions/nti-warning-letter/{warningLetterID}");
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -83,14 +81,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_ValidResourceRequest_Returns_NoContent()
 		{
-			var warningLetterID = 1;
-
 			//Create the case
 			ConcernCaseRequest createCaseRequest = Builder<ConcernCaseRequest>.CreateNew()
 				.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
 				.With(c => c.Description = "")
 				.With(c => c.CrmEnquiry = "")
-				.With(c => c.TrustUkprn = "100223")
+				.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
 				.With(c => c.ReasonAtReview = "")
 				.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
 				.With(c => c.Issue = "Here is the issue")
@@ -102,7 +98,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				.With(c => c.DirectionOfTravel = "Up")
 				.With(c => c.StatusId = 1)
 				.With(c => c.RatingId = 2)
-				.With(c => c.TrustCompaniesHouseNumber = "12345678")
+				.With(c => c.TrustCompaniesHouseNumber = DatabaseModelBuilder.CreateUkPrn())
 				.Build();
 
 			var createCaseResponse = await _client.PostAsync($"v2/concerns-cases", createCaseRequest.ConvertToJson());

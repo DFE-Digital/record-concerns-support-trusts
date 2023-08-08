@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_NotCreatedResourceRequest_Returns_NotFound()
 		{
-			var noticeToImproveId = 1;
+			var noticeToImproveId = 1000000;
 
 			var result = await _client.DeleteAsync($"/v2/case-actions/notice-to-improve/{noticeToImproveId}");
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
 				.With(c => c.Description = "")
 				.With(c => c.CrmEnquiry = "")
-				.With(c => c.TrustUkprn = "100223")
+				.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
 				.With(c => c.ReasonAtReview = "")
 				.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
 				.With(c => c.Issue = "Here is the issue")

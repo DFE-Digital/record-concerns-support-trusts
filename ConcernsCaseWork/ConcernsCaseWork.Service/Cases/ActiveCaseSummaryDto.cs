@@ -2,12 +2,13 @@ using ConcernsCaseWork.Service.Ratings;
 
 namespace ConcernsCaseWork.Service.Cases;
 
-public abstract record CaseSummaryDto
+public record CaseSummaryDto
 {
 	public long CaseUrn { get; set; }
 	public string CreatedBy { get; set; }
 	public DateTime CreatedAt { get; set; }
 	public DateTime UpdatedAt { get; set; }
+	public DateTime? CaseLastUpdatedAt { get; set; }
 	public string StatusName { get; set; }
 	public RatingDto Rating { get; set; }
 	public string TrustUkPrn { get; set; }

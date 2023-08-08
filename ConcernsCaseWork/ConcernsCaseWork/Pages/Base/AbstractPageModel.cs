@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.PageHistory;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
 
@@ -14,8 +14,10 @@ namespace ConcernsCaseWork.Pages.Base
 	{
 		public const string ErrorOnGetPage = ErrorConstants.ErrorOnGetPage;
 		public const string ErrorOnPostPage = ErrorConstants.ErrorOnPostPage;
-		public SortOrder? ErrorSortOrder { get; set; }
-		
+
+		[BindProperty(SupportsGet = true)]
+		public int PageNumber { get; set; } = 1;
+
 		// Configured in startup
 		public static IPageHistoryStorageHandler PageHistoryStorageHandler { get; set; }
 		

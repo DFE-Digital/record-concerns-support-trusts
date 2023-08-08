@@ -26,6 +26,13 @@ export default class EditIssuePage {
         return this;
     }
 
+    public clearIssue(): this
+    {
+        cy.getByTestId(`issue`).clear();
+
+        return this;
+    }
+
     public withIssue(value: string): this
     {
         Logger.Log(`With issue ${value}`);
@@ -38,6 +45,13 @@ export default class EditIssuePage {
     public withExceedingTextLimit(): this {
 
         cy.getByTestId('issue').clear().invoke("val", "x".repeat(2001));
+
+        return this;
+    }
+
+    public hasCharacterCountMessage(value: string): this {
+        Logger.Log(`Has character count message ${value}`);
+        cy.contains(value);
 
         return this;
     }

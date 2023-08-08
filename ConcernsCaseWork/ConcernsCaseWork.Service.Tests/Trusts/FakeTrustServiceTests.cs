@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Service.Configuration;
+﻿using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Service.Trusts;
 using FluentAssertions;
 using Microsoft.Extensions.Options;

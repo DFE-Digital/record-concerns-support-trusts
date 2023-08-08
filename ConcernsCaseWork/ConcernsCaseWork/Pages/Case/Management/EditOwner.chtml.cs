@@ -22,8 +22,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty(SupportsGet = true)] public int Urn { get; init; }
 
 		public string CurrentCaseOwner { get; set; }
+
 		public string CaseNumber { get; set; }
-		public bool ShowValidationMessage { get; set; }
+
 		[TempData]
 		public bool CaseOwnerChanged { get; set; }
 
@@ -36,17 +37,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_teamsService = teamsService;
 			_logger = logger;
 		}
-
 		public async Task<ActionResult> OnGet()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				var caseModel = await _caseModelService.GetCaseByUrn(Urn);
-
-				CurrentCaseOwner = caseModel.CreatedBy;
-				CaseNumber = caseModel.Urn.ToString();
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
@@ -56,57 +53,25 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return Page();
 		}
-
-		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked,int valueInList)
+		public async Task<ActionResult> OnPost(string selectedOwner, string currentOwner, int valueInList)
 		{
 			_logger.LogMethodEntered();
-			var isValid = true;
+
+			if (valueInList == -1 || string.IsNullOrWhiteSpace(selectedOwner))
+			{
+				await LoadPage();
+
+				ModelState.AddModelError("SelectedCaseOwner", "A case owner must be selected");
+
+				return Page();
+			}
+
 			if (selectedOwner == currentOwner)
 			{
 				return Redirect($"/case/{Urn}/management");
 			}
-			if (valuePicked)
-			{
-				if (string.IsNullOrEmpty(selectedOwner))
-				{
-					isValid = false;
-				}
 
-				if (string.IsNullOrWhiteSpace(selectedOwner))
-				{
-					isValid = false;
-				}
-
-				if (valueInList == -1)
-				{
-					isValid = false;
-				}
-				if (isValid)
-                {
-                	return await UpdateCaseOwner(selectedOwner);
-                }
-			}
-			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
-			CurrentCaseOwner = caseModel.CreatedBy;
-			CaseNumber = caseModel.Urn.ToString();
-			ShowValidationMessage = true;
-			return Page();
-			
-		}
-
-		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
-		{
-			try
-			{
-				await _caseModelService.PatchOwner(Urn, selectedOwner);
-				CaseOwnerChanged = true;
-				return  Redirect($"/case/{Urn}/management"); 
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-			}
-			return Redirect($"/case/{Urn}/management");
+			return await UpdateCaseOwner(selectedOwner);
 		}
 
 		public async Task<ActionResult> OnGetTeamList()
@@ -124,6 +89,27 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				_logger.LogErrorMsg(ex);
 				return new JsonResult(new string[] { });
 			}
+		}
+
+		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
+		{
+			try
+			{
+				await _caseModelService.PatchOwner(Urn, selectedOwner);
+				CaseOwnerChanged = true;
+				return  Redirect($"/case/{Urn}/management"); 
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+			}
+			return Redirect($"/case/{Urn}/management");
+		}
+
+		private async Task LoadPage()
+		{
+			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
+			CurrentCaseOwner = caseModel.CreatedBy;
 		}
 	}
 }

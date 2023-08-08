@@ -101,6 +101,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public void LoadPageComponents()
 		{
 			Territory = CaseComponentBuilder.BuildTerritory(nameof(Territory), Territory?.SelectedId);
+			Territory.Heading = "";
 		}
 	}
 }

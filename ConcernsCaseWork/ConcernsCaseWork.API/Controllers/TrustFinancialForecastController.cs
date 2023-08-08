@@ -1,7 +1,10 @@
+using Azure.Core;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -19,22 +22,25 @@ namespace ConcernsCaseWork.API.Controllers
 	    private readonly IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase;
 	    private readonly IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> _updateTrustFinancialForecast;
 	    private readonly IUseCaseAsync<CloseTrustFinancialForecastRequest, int> _closeFinancialTrustForecast;
+		private readonly IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> _deleteFinancialTrustForecast;
 
-	    public TrustFinancialForecastController(
+		public TrustFinancialForecastController(
 		    ILogger<TrustFinancialForecastController> logger,
 		    IUseCaseAsync<CreateTrustFinancialForecastRequest, int> createTrustFinancialForecast,
 		    IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
 		    IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>  updateTrustFinancialForecast, 
 		    IUseCaseAsync<CloseTrustFinancialForecastRequest, int> closeFinancialTrustForecast, 
-		    IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase)
-	    {
+		    IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase,
+		    IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> deleteFinancialTrustForecast)
+		{
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createTrustFinancialForecast = createTrustFinancialForecast ?? throw new ArgumentNullException(nameof(createTrustFinancialForecast));
 		    _getTrustFinancialForecast = getTrustFinancialForecast ?? throw new ArgumentNullException(nameof(getTrustFinancialForecast));
 		    _updateTrustFinancialForecast = updateTrustFinancialForecast ?? throw new ArgumentNullException(nameof(updateTrustFinancialForecast));
 		    _closeFinancialTrustForecast = closeFinancialTrustForecast ?? throw new ArgumentNullException(nameof(closeFinancialTrustForecast));
-		    _getTrustFinancialForecastsForCase = getTrustFinancialForecastsForCase ?? throw new ArgumentNullException(nameof(getTrustFinancialForecastsForCase));
-	    }
+			_getTrustFinancialForecastsForCase = getTrustFinancialForecastsForCase ?? throw new ArgumentNullException(nameof(getTrustFinancialForecastsForCase));
+			_deleteFinancialTrustForecast = deleteFinancialTrustForecast ?? throw new ArgumentNullException(nameof(deleteFinancialTrustForecast));
+		}
 
 	    [HttpPost]
 	    [MapToApiVersion("2.0")]
@@ -55,7 +61,7 @@ namespace ConcernsCaseWork.API.Controllers
 		    var response = new ApiSingleResponseV2<string>(createdId.ToString());
 
 		    LogInfo($"Returning Id of created response. Case Urn {caseUrn}, Trust Financial Forecast Id {response}");
-		    return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+			return CreatedAtAction(nameof(GetById), new { caseUrn= caseUrn, id = createdId }, response);
 	    }
 
 	    [HttpGet("{id:int}")]
@@ -141,7 +147,34 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new OkObjectResult(response);
 	    }
 
-	    private bool ValidateIdHasValue(int id, string methodName)
+		[HttpDelete("{id:int}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete(int caseUrn, int id, CancellationToken cancellationToken = default)
+		{
+			LogInfo($"Attempting to delete Trust Financial Forecast by Urn {caseUrn}, Id {id}");
+
+			if (!ValidateIdHasValue(caseUrn, nameof(Close))
+				|| !ValidateIdHasValue(id, nameof(Close)))
+			{
+				return BadRequest();
+			}
+			var getRequest = new GetTrustFinancialForecastByIdRequest { CaseUrn = caseUrn, TrustFinancialForecastId = id };
+			var getResponse = await _getTrustFinancialForecast.Execute(getRequest, cancellationToken);
+			if (getResponse == null)
+			{
+				LogInfo($"Deleting Trust Financial Forecast failed: No Trust Financial Forecast Matching Id {id} was found in case {caseUrn}");
+				return NotFound();
+			}
+			var request = new DeleteTrustFinancialForecastRequest { CaseUrn = caseUrn, TrustFinancialForecastId = id };
+
+			await _deleteFinancialTrustForecast.Execute(request, cancellationToken);
+			LogInfo($"Successfully Deleted Trust Financial Forecast matching Id {request.TrustFinancialForecastId} for case {request.CaseUrn}");
+
+			return NoContent();
+		}
+
+
+		private bool ValidateIdHasValue(int id, string methodName)
 	    {
 		    if (id > 0) return true;
 		    

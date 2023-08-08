@@ -26,5 +26,6 @@ namespace ConcernsCaseWork.API.ResponseModels
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
         public string TrustCompaniesHouseNumber { get; set; }
-    }
+		public DateTime? CaseLastUpdatedAt { get; set; }
+	}
 }
