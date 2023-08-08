@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Mappers
 				DateStarted = ntiModel.DateStarted,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ConditionsMapping = ntiModel.Conditions?.Select(c => c.Id).ToArray(),
-				SumissionDecisionId = ntiModel.SumissionDecisionId,
+				SumissionDecisionId = ntiModel.SubmissionDecisionId,
 				DateNTILifted = ntiModel.DateNTILifted,
 				DateNTIClosed = ntiModel.DateNTIClosed
 			};
@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Mappers
 				ClosedStatusId = ntiDto.ClosedStatusId,
 				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId.Value)) : null,
 				ClosedAt = ntiDto.ClosedAt,
-				SumissionDecisionId = ntiDto.SumissionDecisionId,
+				SubmissionDecisionId = ntiDto.SumissionDecisionId,
 				DateNTILifted = ntiDto.DateNTILifted,
 				DateNTIClosed = ntiDto.DateNTIClosed
 			};

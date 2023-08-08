@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Configuration;
+﻿using ConcernsCaseWork.API.Contracts.Configuration;
+using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;

@@ -9,12 +9,6 @@
     Model.FindTrustModel.Nonce = nonce;
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
-}
-
 <div class="govuk-width-container">
 
     <partial name="_BannerError" />
@@ -42,7 +36,7 @@
 		            value="continue">
 			    Continue
 		    </button>
-		    <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
+            <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button" data-testid="cancel-trust-search">Cancel</a>
 	    </div>
     </form>
 </div>

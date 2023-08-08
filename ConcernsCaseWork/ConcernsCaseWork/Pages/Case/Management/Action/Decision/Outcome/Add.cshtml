@@ -124,25 +124,7 @@
                 </form>
 
                 <script type="application/javascript" nonce="@nonce">
-
-					function formatCurrency(element) {
-
-						let currencyFormatter = new Intl.NumberFormat("en-GB", {
-							style: "currency",
-							currency: "GBP"
-						});
-
-						const onlyNumbersRegex = /[^\d\.]/g;
-
-						const amount = element.val().replace(onlyNumbersRegex, "");
-
-						const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
-						element.val(formattedCurrency);
-					}
-
 					$(function () {
-						let validator = formValidator($("#add-decision-outcome-form")[0]);
-
 						$totalAmountRequestedObj = $('#total-amount-approved');
 
 						$(document).ready(function() {
@@ -155,8 +137,6 @@
 
                         var submitButton = $('#add-decision-outcome-button')[0];
                         disableOnSubmit(submitButton);
-
-						autoResizer();
 					});
                 </script>
             }

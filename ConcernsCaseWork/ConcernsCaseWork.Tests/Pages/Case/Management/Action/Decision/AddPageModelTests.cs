@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var expectedDecision = new CreateDecisionRequest()
 			{
-				DecisionTypes = new DecisionType[] { }
+				DecisionTypes = new DecisionTypeQuestion[] { }
 			};
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
@@ -55,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
 
 			sut.CaseUrn.Should().Be(expectedUrn);
-			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+			sut.DecisionTypeQuestions.Should().NotBeEmpty();
 			sut.SaveAndContinueButtonText.Should().Be("Save and return to case overview");
 		}
 
@@ -66,9 +67,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			const int expectedDecisionId = 1;
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
-			getDecisionResponse.DecisionTypes = new DecisionType[] {
-				DecisionType.NoticeToImprove,
-				DecisionType.OtherFinancialSupport
+			getDecisionResponse.DecisionTypes = new DecisionTypeQuestion[] {
+
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.NoticeToImprove
+				},
+				new DecisionTypeQuestion()
+				{
+					Id = DecisionType.OtherFinancialSupport
+				}
 			};
 			getDecisionResponse.ReceivedRequestDate = new DateTimeOffset(new DateTime(2022, 5, 2));
 
@@ -133,6 +141,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Year = "2022"
 			};
 
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel>();
+
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			var page = await sut.OnPostAsync() as RedirectResult;
@@ -153,9 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithDecisionId(1)
 				.BuildSut();
 
-			sut.Decision.DecisionTypes = new DecisionType[] {
-				DecisionType.NonRepayableFinancialSupport
-			};
+		
 
 			sut.ReceivedRequestDate = _fixture.Create<OptionalDateTimeUiComponent>();
 			sut.ReceivedRequestDate.Date = new OptionalDateModel()
@@ -165,12 +173,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				Year = "2022"
 			};
 
-			sut.Notes = _fixture.Create<TextAreaUiComponent>();
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel> { new DecisionTypeQuestionModel() { Id = DecisionType.NonRepayableFinancialSupport } };
+
+            sut.Notes = _fixture.Create<TextAreaUiComponent>();
 
 			var page = await sut.OnPostAsync() as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
-			sut.Decision.DecisionTypes.Should().Contain(DecisionType.NonRepayableFinancialSupport);
+			sut.Decision.DecisionTypes.Should().Contain(x => x.Id == DecisionType.NonRepayableFinancialSupport);
 			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 
@@ -186,6 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.ReceivedRequestDate = _fixture.Create <OptionalDateTimeUiComponent>();
 			sut.ReceivedRequestDate.Date = new OptionalDateModel();
 			sut.Notes = _fixture.Create<TextAreaUiComponent>();
+			sut.DecisionTypeQuestions = new List<DecisionTypeQuestionModel>();
 
 			var page = await sut.OnPostAsync();
 

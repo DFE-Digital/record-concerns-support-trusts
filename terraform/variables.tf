@@ -70,6 +70,12 @@ variable "enable_cdn_frontdoor" {
   default     = false
 }
 
+variable "container_apps_allow_ips_inbound" {
+  description = "Restricts access to the Container Apps by creating a network security group rule that only allow inbound traffic from the provided list of IPs"
+  type        = list(string)
+  default     = []
+}
+
 variable "enable_dns_zone" {
   description = "Conditionally create a DNS zone"
   type        = bool
@@ -116,6 +122,12 @@ variable "cdn_frontdoor_host_add_response_headers" {
   type        = list(map(string))
 }
 
+variable "cdn_frontdoor_forwarding_protocol" {
+  description = "Azure CDN Front Door forwarding protocol"
+  type        = string
+  default     = "HttpsOnly"
+}
+
 variable "redis_cache_sku" {
   description = "Redis Cache SKU"
   type        = string
@@ -139,6 +151,16 @@ variable "monitor_email_receivers" {
 variable "enable_event_hub" {
   description = "Send Azure Container App logs to an Event Hub sink"
   type        = bool
+}
+
+variable "enable_logstash_consumer" {
+  description = "Create an Event Hub consumer group for Logstash"
+  type        = bool
+}
+
+variable "eventhub_export_log_analytics_table_names" {
+  description = "List of Log Analytics table names that you want to export to Event Hub. See https://learn.microsoft.com/en-gb/azure/azure-monitor/logs/logs-data-export?tabs=portal#supported-tables for a list of supported tables"
+  type        = list(string)
 }
 
 variable "monitor_endpoint_healthcheck" {
@@ -191,19 +213,16 @@ variable "cdn_frontdoor_rate_limiting_threshold" {
   type        = number
 }
 
-variable "monitor_enable_slack_webhook" {
-  description = "Enable slack webhooks to send monitoring notifications to a channel"
-  type        = bool
-}
-
-variable "monitor_slack_webhook_receiver" {
-  description = "A Slack App webhook URL"
-  type        = string
-}
-
-variable "monitor_slack_channel" {
-  description = "Slack channel name/id to send messages to"
-  type        = string
+variable "existing_logic_app_workflow" {
+  description = "Name, and Resource Group of an existing Logic App Workflow. Leave empty to create a new Resource"
+  type = object({
+    name : string
+    resource_group_name : string
+  })
+  default = {
+    name                = ""
+    resource_group_name = ""
+  }
 }
 
 variable "existing_network_watcher_name" {
@@ -230,6 +249,12 @@ variable "mssql_server_admin_password" {
 variable "mssql_database_name" {
   description = "The name of the MSSQL database to create. Must be set if `enable_mssql_database` is true"
   type        = string
+}
+
+variable "mssql_server_public_access_enabled" {
+  description = "Enable public internet access to your MSSQL instance. Be sure to specify 'mssql_firewall_ipv4_allow_list' to restrict inbound connections"
+  type        = bool
+  default     = false
 }
 
 variable "mssql_firewall_ipv4_allow_list" {

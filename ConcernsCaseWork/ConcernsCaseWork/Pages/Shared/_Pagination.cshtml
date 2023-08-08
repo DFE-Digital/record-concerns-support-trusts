@@ -1,0 +1,157 @@
+﻿@using ConcernsCaseWork.Models;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@using System.Web;
+@model PaginationModel
+@{
+    var prefix = !string.IsNullOrEmpty(Model.ElementIdPrefix) ? Model.ElementIdPrefix : "";
+
+    var ariaDisabled = "aria-disabled=true";
+
+    var nextPageLink = $"{Model.Url}/?pageNumber={Model.Next}";
+    var nextDisabled = !Model.Next.HasValue;
+    var nextDisabledStyle = nextDisabled ? "govuk-pagination__link-disabled aria-disabled=true" : "";
+    var nextDisabledAria = nextDisabled ? ariaDisabled : "";
+
+    var previousPageLink = $"{Model.Url}/?pageNumber={Model.Previous}";
+    var previousDisabled = !Model.Previous.HasValue;
+    var previousDisabledStyle = previousDisabled ? "govuk-pagination__link-disabled aria-disabled=true" : "";
+    var previousDisabledAria = previousDisabled ? ariaDisabled : "";
+
+    var nonce = Context.GetNonce();
+
+    var paginationContainerId = $"{prefix}pagination-container";
+    var nextButtonId = $"{prefix}next-page";
+    var nextPageValueId = $"{prefix}next-page-value";
+    var previousButtonId = $"{prefix}previous-page";
+    var previousPageValueId = $"{prefix}previous-page-value";
+    var pagesToDisplay = new List<int>() { 1, Model.PageNumber, Model.TotalPages };
+    if (Model.Previous.HasValue)
+        pagesToDisplay.Add((int)Model.Previous);
+    if (Model.Next.HasValue)
+        pagesToDisplay.Add((int)Model.Next);
+}
+
+@if (Model.TotalPages > 1)
+{
+    <nav id="@paginationContainerId" class="govuk-pagination" role="navigation" aria-label="results">
+
+        <div class="govuk-pagination__prev @previousDisabledStyle">
+            <input type="hidden" id="@previousPageValueId" value="@Model.Previous" />
+            <a class="govuk-link govuk-pagination__link" @previousDisabledAria href="@previousPageLink" rel="prev"
+                id="@previousButtonId" data-testid="@previousButtonId">
+                <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg"
+                    height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                    <path
+                        d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z">
+                    </path>
+                </svg>
+                <span class="govuk-pagination__link-title">Previous</span>
+            </a>
+        </div>
+
+        <nav class="govuk-pagination" role="navigation" aria-label="Pagination">
+            <ol class="govuk-pagination__list" role="navigation" aria-label="Page navigation">
+                @for (var pageIdx = 0; pageIdx < Model.TotalPages; pageIdx++)
+                {
+                    var pageNumber = pageIdx + 1;
+                    var isCurrentPage = Model.PageNumber == pageNumber;
+                    var markAsSelected = isCurrentPage ? "govuk-pagination__item--current" : "";
+                    var pageNumberLinkId = $"{prefix}page-{pageNumber}";
+                    var ariaCurrentPage = isCurrentPage ? "aria-current=true" : "";
+                    var ariaLabel = isCurrentPage ? $"Current page, page {pageNumber}" : $"Go to page {pageNumber}";
+
+                    if (pagesToDisplay.Contains(pageNumber))
+                    {
+                        if (Model.Previous.HasValue && Model.Previous == pageNumber && ((Model.Previous - 1) > 1))
+                        {
+                            <li class="govuk-pagination__item">
+                                <span class="govuk-pagination__item govuk-pagination__item--ellipses" aria-hidden="true">&ctdot;</span>
+                            </li>
+                        }
+                        <li class="govuk-pagination__item @markAsSelected">
+                            <a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@pageNumber" @ariaCurrentPage
+                                aria-label="@ariaLabel" id="@pageNumberLinkId" data-testid="@pageNumberLinkId"
+                                data-page-number-link="@pageNumber">
+                                @pageNumber
+                            </a>
+                        </li>
+                        if (Model.Next.HasValue && Model.Next == pageNumber && ((Model.Next + 1) < Model.TotalPages))
+                        {
+                            <li class="govuk-pagination__item">
+                                <span class="govuk-pagination__item govuk-pagination__item--ellipses" aria-hidden="true">&ctdot;</span>
+                            </li>
+                        }
+                    }
+                }
+            </ol>
+        </nav>
+
+
+        <div class="govuk-pagination__next @nextDisabledStyle">
+            <input type="hidden" id="@nextPageValueId" value="@Model.Next" />
+            <a class="govuk-link govuk-pagination__link" @nextDisabledAria href="@nextPageLink" rel="next"
+                id="@nextButtonId" data-testid="@nextButtonId">
+                <span class="govuk-pagination__link-title">Next</span>
+                <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg"
+                    height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                    <path
+                        d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+    // When pagination is used on the screen without a full page refresh
+    if (!string.IsNullOrEmpty(Model.ContentContainerId))
+    {
+        <script type="application/javascript" nonce="@nonce">
+
+            $(function () {
+                onPageMoved();
+
+                function onPageMoved() {
+                    $("#@nextButtonId").on("click", function (e) {
+                        e.preventDefault();
+
+                        const pageNumber = $('#@nextPageValueId').val();
+
+                        refreshContent(pageNumber);
+                    });
+
+                    $("#@previousButtonId").on("click", function (e) {
+                        e.preventDefault();
+
+                        const pageNumber = $('#@previousPageValueId').val();
+
+                        refreshContent(pageNumber);
+                    });
+
+                    var numberedPageLinks = $('#@paginationContainerId').find('[data-page-number-link]');
+
+                    numberedPageLinks.each(function () {
+                        const pageNumber = $(this).data('page-number-link');
+
+                        $(this).click(function (e) {
+
+                            e.preventDefault();
+
+                            refreshContent(pageNumber);
+                        });
+                    });
+                }
+
+                function refreshContent(pageNumber) {
+
+                    const url = `@Html.Raw(Model.Url)&pageNumber=${pageNumber}`;
+
+                    $.get(url)
+                        .done(function (response) {
+                            $("#@Model.ContentContainerId").html(response);
+                            onPageMoved();
+                        });
+                }
+            });
+        </script>
+    }
+}
+

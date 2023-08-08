@@ -21,6 +21,7 @@ locals {
   mssql_firewall_ipv4_allow_list                = var.mssql_firewall_ipv4_allow_list
   mssql_azuread_admin_username                  = var.mssql_azuread_admin_username
   mssql_azuread_admin_object_id                 = var.mssql_azuread_admin_object_id
+  mssql_server_public_access_enabled            = var.mssql_server_public_access_enabled
   redis_cache_sku                               = var.redis_cache_sku
   redis_cache_capacity                          = var.redis_cache_capacity
   enable_cdn_frontdoor                          = var.enable_cdn_frontdoor
@@ -28,6 +29,7 @@ locals {
   dns_zone_domain_name                          = var.dns_zone_domain_name
   dns_ns_records                                = var.dns_ns_records
   dns_txt_records                               = var.dns_txt_records
+  container_apps_allow_ips_inbound              = var.container_apps_allow_ips_inbound
   cdn_frontdoor_custom_domains                  = var.cdn_frontdoor_custom_domains
   cdn_frontdoor_host_redirects                  = var.cdn_frontdoor_host_redirects
   cdn_frontdoor_host_add_response_headers       = var.cdn_frontdoor_host_add_response_headers
@@ -36,16 +38,17 @@ locals {
   cdn_frontdoor_rate_limiting_threshold         = var.cdn_frontdoor_rate_limiting_threshold
   cdn_frontdoor_origin_fqdn_override            = var.cdn_frontdoor_origin_fqdn_override
   cdn_frontdoor_origin_host_header_override     = var.cdn_frontdoor_origin_host_header_override
+  cdn_frontdoor_forwarding_protocol             = var.cdn_frontdoor_forwarding_protocol
   key_vault_access_users                        = toset(var.key_vault_access_users)
   key_vault_access_ipv4                         = var.key_vault_access_ipv4
   tfvars_filename                               = var.tfvars_filename
   enable_event_hub                              = var.enable_event_hub
+  enable_logstash_consumer                      = var.enable_logstash_consumer
+  eventhub_export_log_analytics_table_names     = var.eventhub_export_log_analytics_table_names
   enable_monitoring                             = var.enable_monitoring
   monitor_email_receivers                       = var.monitor_email_receivers
   monitor_endpoint_healthcheck                  = var.monitor_endpoint_healthcheck
-  monitor_enable_slack_webhook                  = var.monitor_enable_slack_webhook
-  monitor_slack_webhook_receiver                = var.monitor_slack_webhook_receiver
-  monitor_slack_channel                         = var.monitor_slack_channel
+  existing_logic_app_workflow                   = var.existing_logic_app_workflow
   existing_network_watcher_name                 = var.existing_network_watcher_name
   existing_network_watcher_resource_group_name  = var.existing_network_watcher_resource_group_name
 }

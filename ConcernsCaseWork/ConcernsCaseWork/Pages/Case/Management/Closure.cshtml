@@ -4,88 +4,44 @@
 @model ConcernsCaseWork.Pages.Case.Management.ClosurePageModel
 
 @{
-	ViewData["Title"] = "Case closure";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Case closure";
+    var nonce = HttpContext.GetNonce();
+    var backLink = $"/case/{Model.CaseId}/management";
 }
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="@backLink"></back-link>
+    </div>
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error"/>
-			}
-			else if (@TempData["OpenActions.Message"] != null) 
-			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-				<div class="govuk-error-summary__body" data-testid="case-closure-validation-errors">
-					<ul class="govuk-list govuk-error-summary__list">
-						@foreach (var msg in TempData["OpenActions.Message"] as IEnumerable<string>)
-						{
-							<li class="govuk-error-message">@msg</li>
-						}
-					</ul>
-				</div>
-			</div>
-			}
-			else
-			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-				<h1 class="govuk-heading-l"> Close case @Model.CaseModel.Urn </h1>
-				<h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <partial name="_ValidationErrors" />
 
-				<form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
+                <h1 class="govuk-heading-l"> Close case @Model.CaseId</h1>
+                <h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
-					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
+                <form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 
-						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="case-outcomes">
-								Rationale for closure
-							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
-						</div>
-						<div id="case-outcomes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 200 characters
-						</div>
-					</div>
-					
-					<!--Close case-->
-					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" id="close-case-button" data-module="govuk-button">
-						Close case
-					</button>
+                    <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
 
-				</form>
+                    <!--Close case-->
+                    <button data-prevent-double-click="true" class="govuk-button" id="close-case-button" data-module="govuk-button">
+                        Close case
+                    </button>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#close-case-form")[0]);
-						validator.addValidator('case-outcomes', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'You have not recorded rationale for closure'
-						},
-						{
-							method: function(field) {
-								return field.value.trim().length <= 200;
-							},
-							message: 'Your rationale for closure contains too many characters'
-						}]);
-
-						autoResizer();
-					});
-				</script>
-			}
-		</div>
-	</div>
+                </form>
+            }
+        </div>
+    </div>
 </div>

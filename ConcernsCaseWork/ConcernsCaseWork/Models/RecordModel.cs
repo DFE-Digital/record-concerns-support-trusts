@@ -19,9 +19,13 @@
 		
 		public RatingModel RatingModel { get; }
 		
-		public long StatusId { get; }
+		public long StatusId { get; set; }
 		
 		public StatusModel StatusModel { get; }
+
+		public RecordModel()
+		{ 
+		}
 		
 		public RecordModel(
 			long caseUrn, 

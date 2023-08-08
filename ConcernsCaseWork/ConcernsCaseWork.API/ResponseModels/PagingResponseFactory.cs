@@ -4,24 +4,30 @@ namespace ConcernsCaseWork.API.ResponseModels
 {
 	public static class PagingResponseFactory
 	{
-		public static PagingResponse Create(int page, int count, int recordCount, HttpRequest request)
+		public static PagingResponse Create(int page, int recordsPerPage, int recordCount, HttpRequest request)
 		{
+			var totalItemsSeen = page * recordsPerPage;
+			int totalPages = (int)Math.Ceiling((double)recordCount / recordsPerPage);
+
 			var pagingResponse = new PagingResponse
 			{
 				RecordCount = recordCount,
-				Page = page
+				Page = page,
+				HasNext = totalItemsSeen < recordCount,
+				HasPrevious = (totalItemsSeen - recordsPerPage) > 0,
+				TotalPages = totalPages
 			};
 
-			if ((count * page) >= recordCount) return pagingResponse;
+			if (totalItemsSeen >= recordCount) return pagingResponse;
 
 			var queryAttributes = request.Query
-				.Where(q => q.Key != nameof(page) && q.Key != nameof(count))
+				.Where(q => q.Key != nameof(page) && q.Key != "count")
 				.Select(q => new KeyValuePair<string, string>(q.Key, q.Value));
 
 			var queryBuilder = new QueryBuilder(queryAttributes)
 			{
-				{nameof(page), $"{page + 1}"}, 
-				{nameof(count), $"{count}"}
+				{"page", $"{page + 1}"}, 
+				{"count", $"{recordsPerPage}"}
 			};
 
 			pagingResponse.NextPageUrl = $"{request.Path}{queryBuilder}";

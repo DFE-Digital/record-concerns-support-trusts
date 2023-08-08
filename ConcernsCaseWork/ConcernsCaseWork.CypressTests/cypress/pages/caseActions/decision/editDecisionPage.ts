@@ -135,6 +135,49 @@ export class EditDecisionPage
 		return this;
 	}
 
+	public withDrawdownFacilityAgreed(type: string, value: string): this {
+		Logger.Log(`With ${type} drawdown facility agreed ${value}`);
+
+		cy.getByTestId(`${type}-${value}`).click();
+
+		return this;
+	}
+
+	public hasDrawdownFacilityAgreed(type: string, value: string): this {
+		Logger.Log(`Has ${type} drawdown facility agreed ${value}`);
+		
+		cy.getByTestId(`${type}-${value}`).should("be.checked");
+
+		return this;
+	}
+
+	public withFrameworkCategory(type: string, value): this {
+		Logger.Log(`With ${type} framework category ${value}`);
+
+		cy.getByTestId(`${type}-${value}`).click();
+
+		return this;
+	}
+
+	public hasFrameworkCategory(type: string, value): this {
+		Logger.Log(`Has ${type} framework category ${value}`);
+
+		cy.getByTestId(`${type}-${value}`).should("be.checked");
+
+		return this;
+	}
+
+	public hasNoEnabledOrSelectedSubQuestions(type: string): this {
+		Logger.Log(`${type} sub questions are not enabled`);
+
+		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
+		
+		elements.should("not.be.enabled");
+		elements.should("not.be.checked");
+		
+		return this;
+	}
+
 	public withTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.Log(`With total Amount Requested ${totalAmountRequested}`);
 
@@ -176,7 +219,18 @@ export class EditDecisionPage
 	}
 
 	public save(): this {
-		cy.get('#add-decision-button').click();
+
+		Logger.Log("Saving decision");
+
+		cy.getById('add-decision-button').click();
+
+		return this;
+	}
+
+	public cancel(): this {
+		Logger.Log("Cancelling edit decision");
+
+		cy.getById("cancel-link-event").click();
 
 		return this;
 	}

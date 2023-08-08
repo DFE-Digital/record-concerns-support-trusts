@@ -42,7 +42,7 @@ public class UpdateDecision : IUseCaseAsync<(int urn, int decisionId, UpdateDeci
                 }
 
                 concernsCase.UpdateDecision(request.decisionId, decisionUpdates, DateTimeOffset.Now);
-
+                
                 await _concernsCaseGateway.UpdateExistingAsync(concernsCase);
 
                 return _responseFactory.Create(request.urn, request.decisionId);

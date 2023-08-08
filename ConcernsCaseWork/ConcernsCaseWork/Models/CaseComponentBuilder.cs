@@ -9,6 +9,8 @@ namespace ConcernsCaseWork.Models
 {
 	public class CaseComponentBuilder
 	{
+		private const string NarritiveHintText = "This information can be used in Stage 1 and Stage 2 meetings.";
+
 		public static RadioButtonsUiComponent BuildTerritory(string name, int? selectedId = null)
 		{
 			var radioItems = Enum.GetValues(typeof(Territory))
@@ -149,6 +151,78 @@ namespace ConcernsCaseWork.Models
 				HintFromPartialView = "_RiskManagementFramework"
 			};
 		}
+
+		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
+		=> new("issue", name, "Issue")
+		{
+			HintText = NarritiveHintText,
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = value,
+				DisplayName = "Issue",
+				Required = true
+			}
+		};
+
+		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)
+		=> new("current-status", name, "Current status")
+		{
+			HintText = NarritiveHintText,
+			Text = new ValidateableString()
+			{
+				MaxLength = 4000,
+				StringContents = value,
+				DisplayName = "Current status",
+			}
+		};
+
+		public static TextAreaUiComponent BuildCaseAim(string name, string? value = null)
+		=> new("case-aim", name, "Case aim")
+		{
+			HintText = NarritiveHintText,
+			Text = new ValidateableString()
+			{
+				MaxLength = 1000,
+				StringContents = value,
+				DisplayName = "Case aim"
+			}
+		};
+
+		public static TextAreaUiComponent BuildDeEscalationPoint(string name, string? value = null)
+		=> new("de-escalation-point", name, "De-escalation point")
+		{
+			HintText = NarritiveHintText,
+			Text = new ValidateableString()
+			{
+				MaxLength = 1000,
+				StringContents = value,
+				DisplayName = "De-escalation point"
+			}
+		};
+
+		public static TextAreaUiComponent BuildNextSteps(string name, string? value = null)
+		=> new("next-steps", name, "Next steps")
+		{
+			HintText = NarritiveHintText,
+			Text = new ValidateableString()
+			{
+				MaxLength = 4000,
+				StringContents = value,
+				DisplayName = "Next steps"
+			}
+		};
+
+		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
+		=> new("case-history", name, "Case history")
+		{
+			Text = new ValidateableString()
+			{
+				MaxLength = 4300,
+				StringContents = value,
+				DisplayName = "Case history"
+			}
+		};
 
 		private static SubRadioItem BuildSubRadioItem(string label, ConcernType concernType)
 		{

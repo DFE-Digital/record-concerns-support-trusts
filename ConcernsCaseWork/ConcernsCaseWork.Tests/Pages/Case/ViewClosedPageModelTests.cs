@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Configuration;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;

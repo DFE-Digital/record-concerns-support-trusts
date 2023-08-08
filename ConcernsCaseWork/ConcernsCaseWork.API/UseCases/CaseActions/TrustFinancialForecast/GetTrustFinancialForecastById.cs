@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 
@@ -24,7 +25,10 @@ public class GetTrustFinancialForecastById : IUseCaseAsync<GetTrustFinancialFore
 		await EnsureCaseExists(request.CaseUrn, cancellationToken);
             
 		var response = await _trustFinancialForecastGateway.GetById(request.TrustFinancialForecastId, cancellationToken);
-		
+		if (response == null)
+		{
+			return null;
+		}
 		return response.ToResponseModel();
 	}
 	

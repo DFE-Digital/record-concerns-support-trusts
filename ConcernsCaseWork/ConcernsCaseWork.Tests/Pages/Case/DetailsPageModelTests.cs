@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
@@ -8,20 +9,13 @@ using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Tests.Helpers;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,8 +24,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class DetailsPageModelTests
 	{
-		private static ConcurrentQueue<ITelemetry> TelemetryItems { get; } = new ConcurrentQueue<ITelemetry>();
-		
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()
 		{
@@ -75,25 +69,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.IsAssignableFrom<CreateCaseModel>(createCaseModel);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
-			
-			Assert.That(createCaseModel, Is.Not.Null);
-			Assert.That(createCaseModel.Issue, Is.EqualTo(expectedCreateCaseModel.Issue));
-			Assert.That(createCaseModel.StatusId, Is.EqualTo(expectedCreateCaseModel.StatusId));
-			Assert.That(createCaseModel.CaseAim, Is.EqualTo(expectedCreateCaseModel.CaseAim));
-			Assert.That(createCaseModel.CreatedAt, Is.EqualTo(expectedCreateCaseModel.CreatedAt));
-			Assert.That(createCaseModel.CreatedBy, Is.EqualTo(expectedCreateCaseModel.CreatedBy));
-			Assert.That(createCaseModel.CrmEnquiry, Is.EqualTo(expectedCreateCaseModel.CrmEnquiry));
-			Assert.That(createCaseModel.CurrentStatus, Is.EqualTo(expectedCreateCaseModel.CurrentStatus));
-			Assert.That(createCaseModel.DeEscalation, Is.EqualTo(expectedCreateCaseModel.DeEscalation));
-			Assert.That(createCaseModel.NextSteps, Is.EqualTo(expectedCreateCaseModel.NextSteps));
-			Assert.That(createCaseModel.CaseHistory, Is.EqualTo(expectedCreateCaseModel.CaseHistory));
-			Assert.That(createCaseModel.RagRating, Is.EqualTo(expectedCreateCaseModel.RagRating));
-			Assert.That(createCaseModel.ReviewAt, Is.EqualTo(expectedCreateCaseModel.ReviewAt));
-			Assert.That(createCaseModel.UpdatedAt, Is.EqualTo(expectedCreateCaseModel.UpdatedAt));
-			Assert.That(createCaseModel.DeEscalationPoint, Is.EqualTo(expectedCreateCaseModel.DeEscalationPoint));
-			Assert.That(createCaseModel.DirectionOfTravel, Is.EqualTo(expectedCreateCaseModel.DirectionOfTravel));
-			Assert.That(createCaseModel.ReasonAtReview, Is.EqualTo(expectedCreateCaseModel.ReasonAtReview));
-			Assert.That(createCaseModel.TrustUkPrn, Is.EqualTo(expectedCreateCaseModel.TrustUkPrn));
 
 			Assert.That(trustDetailsModel, Is.Not.Null);
 			Assert.That(trustDetailsModel.TrustNameCounty, Is.Not.Null);
@@ -104,16 +79,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 			
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
@@ -153,16 +118,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
@@ -189,25 +144,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
 		}
 
 		[Test]
@@ -238,18 +174,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				mockLogger.Object, 
 				mockTrustService.Object,	
 				true);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "issue", new StringValues("issue") },
-					{ "current-status", new StringValues("current-status") },
-					{ "next-steps", new StringValues("next-steps") },
-					{ "case-aim", new StringValues("case-aim") },
-					{ "de-escalation-point", new StringValues("de-escalation-point") },
-					{ "case-history", new StringValues("case-history") }
-				});
-			
+
+			pageModel.Issue = _fixture.Create<TextAreaUiComponent>();
+			pageModel.CaseAim = _fixture.Create<TextAreaUiComponent>();
+			pageModel.NextSteps = _fixture.Create<TextAreaUiComponent>();
+			pageModel.CaseHistory = _fixture.Create<TextAreaUiComponent>();
+			pageModel.CurrentStatus = _fixture.Create<TextAreaUiComponent>();
+			pageModel.DeEscalationPoint = _fixture.Create<TextAreaUiComponent>();
+
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
@@ -259,91 +191,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.PageName, Is.EqualTo("management/index"));
-		}
-		
-		[Test]
-		public async Task WhenOnPost_MissingFormParameters_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockTrustService = new Mock<ITrustService>();
-			
-			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
-			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
-
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
-			
-			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockTrustModelService.Object, mockUserStateCachedService.Object, 
-				mockLogger.Object, 
-				mockTrustService.Object,
-				true);
-			
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			
-			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-		}
-		
-		[Test]
-		public async Task WhenOnPost_EmptyFormParameters_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockTrustService = new Mock<ITrustService>();
-			
-			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
-			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
-
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
-			
-			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockTrustModelService.Object, mockUserStateCachedService.Object, 
-				mockLogger.Object,
-				mockTrustService.Object,
-				true);
-			
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "issue", new StringValues("") },
-					{ "current-status", new StringValues("") },
-					{ "next-steps", new StringValues("") },
-					{ "case-aim", new StringValues("") },
-					{ "de-escalation-point", new StringValues("") },
-					{ "case-history", new StringValues("case-history") }
-				});
-			
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			
-			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
 		
 		private static DetailsPageModel SetupDetailsModel(
@@ -356,7 +203,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			//return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient())
 			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient() ,mockTrustService)
 			{
 				PageContext = pageContext,

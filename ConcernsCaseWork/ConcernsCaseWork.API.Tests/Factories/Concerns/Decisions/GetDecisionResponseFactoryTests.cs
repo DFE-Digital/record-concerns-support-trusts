@@ -59,8 +59,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(expectedBusinessAreas);
 
-
-			result.DecisionTypes.Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
+            result.DecisionTypes.Select(t => t.Id).Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
                 opt => opt.WithStrictOrdering());
             result.DecisionStatus.Should().HaveSameValueAs(decision.Status);
             result.Title.Should().Be(decision.GetTitle());
@@ -147,7 +146,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
                     submissionRequired: fixture.Create<bool>(),
                     submissionDocumentLink: new string(fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
                     receivedRequestDate: DateTimeOffset.Now,
-                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
+                    decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, API.Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
                     DateTimeOffset.Now
