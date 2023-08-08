@@ -148,7 +148,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			{
 				Page = 1,
 				RecordCount = 1,
-				NextPageUrl = null
+				NextPageUrl = null,
+				TotalPages = 1
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(new List<ConcernsCaseResponse> { concernsCaseResponse }, expectedPagingResponse);
 
@@ -253,7 +254,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			{
 				Page = 1,
 				RecordCount = 4,
-				NextPageUrl = null
+				NextPageUrl = null,
+				TotalPages = 1
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
 			result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -314,121 +316,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var response = await controller.GetActiveSummariesForUsersTeam(ownerId, CancellationToken.None);
 
 			var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
-			response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
-		}
-
-		[Fact]
-		public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
-		{
-			var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
-			var ownerId = "some.user";
-			var data = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(4).Build();
-
-			mockService.Setup(a => a.Execute(ownerId))
-				.ReturnsAsync(data);
-
-			var controller = new ConcernsCaseController(
-				_mockLogger.Object,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				mockService.Object
-			);
-			var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
-
-			var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
-			response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
-		}
-
-		[Fact]
-		public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
-		{
-			var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
-			var ownerId = "some.user";
-			var data = new List<ActiveCaseSummaryResponse>();
-
-			mockService.Setup(a => a.Execute(ownerId))
-				.ReturnsAsync(data);
-
-			var controller = new ConcernsCaseController(
-				_mockLogger.Object,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				mockService.Object
-			);
-			var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
-
-			var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
-			response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
-		}
-
-		[Fact]
-		public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
-		{
-			var mockService = new Mock<IGetClosedConcernsCaseSummariesByOwner>();
-			var ownerId = "some.user";
-			var data = Builder<ClosedCaseSummaryResponse>.CreateListOfSize(4).Build();
-
-			mockService.Setup(a => a.Execute(ownerId))
-				.ReturnsAsync(data);
-
-			var controller = new ConcernsCaseController(
-				_mockLogger.Object,
-				null,
-				null,
-				null,
-				null, null,
-				mockService.Object,
-				null,
-				null,
-				null,
-				null
-			);
-			var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
-
-			var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
-			response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
-		}
-
-		[Fact]
-		public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
-		{
-			var mockService = new Mock<IGetClosedConcernsCaseSummariesByOwner>();
-			var ownerId = "some.user";
-			var data = new List<ClosedCaseSummaryResponse>();
-
-			mockService.Setup(a => a.Execute(ownerId))
-				.ReturnsAsync(data);
-
-			var controller = new ConcernsCaseController(
-				_mockLogger.Object,
-				null,
-				null,
-				null,
-				null,
-				null,
-				mockService.Object,
-				null,
-				null,
-				null,
-				null
-			);
-			var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
-
-			var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 			response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
 		}
 	}

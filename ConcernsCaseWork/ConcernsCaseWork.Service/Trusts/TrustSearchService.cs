@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Service.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;

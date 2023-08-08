@@ -1,6 +1,7 @@
-﻿using ConcernsCaseWork.Service.Base;
+﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Configuration;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Configuration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,8 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 	[Parallelizable(ParallelScope.All)]
 	public class CaseSearchServiceTests
 	{
+		public static readonly Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenGetCasesByPageSearch_ReturnsCasesFromTrams()
 		{
@@ -72,7 +75,11 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
-			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, new ApiListWrapper<CaseDto>.Pagination(1, 200, string.Empty));
+			var pagination = _fixture.Create<Pagination>();
+			pagination.Page = 1;
+			pagination.RecordCount = 200;
+
+			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, pagination);
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(c => c.GetCases(It.IsAny<PageSearch>()))

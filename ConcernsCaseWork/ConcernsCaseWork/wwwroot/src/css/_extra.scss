@@ -1744,3 +1744,39 @@ label.govuk-label .govuk-tag {
 	display: block;
 	text-transform: unset;
 }
+
+/* ==========================================================================
+   # Pagination
+   ========================================================================== */
+.govuk-pagination__link-disabled {
+	pointer-events: none;
+	opacity: 0.5;
+
+	a {
+		color: #b1b4b6 !important;
+	}
+
+	svg {
+		color: #b1b4b6;
+	}
+}
+
+/* ==========================================================================
+   # Sub Navs
+   ========================================================================== */
+.moj-sub-navigation__link {
+	cursor: pointer;
+}
+
+
+.moj-sub-navigation__link[aria-current=page] {
+	font-weight: 600;
+}
+/* ==========================================================================
+	# Conditional radio buttons
+   ========================================================================== */
+.govuk-radios__conditional--disabled {
+	h2 {
+		color: #b1b4b6;
+	}
+}

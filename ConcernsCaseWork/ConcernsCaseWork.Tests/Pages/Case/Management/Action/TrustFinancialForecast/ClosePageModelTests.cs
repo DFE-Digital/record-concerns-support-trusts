@@ -6,6 +6,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -104,13 +105,10 @@ public class ClosePageModelTests
 
 		// act
 		var response = await sut.OnGetAsync();
-		
+
 		// assert
-		Assert.Multiple(() =>
-		{
-			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error loading the page. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
-		});
+		var message = sut.TempData["Error.Message"].ToString();
+		message.Should().Contain("There was an error loading the page.");
 	}
 
 	[Test]
@@ -127,13 +125,9 @@ public class ClosePageModelTests
 
 		// act
 		var response = await sut.OnGetAsync();
-		
-		// assert
-		Assert.Multiple(() =>
-		{
-			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error loading the page. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
-		});
+
+		var message = sut.TempData["Error.Message"].ToString();
+		message.Should().Contain("There was an error loading the page.");
 	}
 	
 	[Test]

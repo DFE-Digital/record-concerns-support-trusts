@@ -15,6 +15,7 @@ import EditNextStepsPage from "cypress/pages/createCase/editNextStepsPage";
 import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 
 describe("Editing a case", () =>
 {
@@ -43,6 +44,11 @@ describe("Editing a case", () =>
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
         Logger.Log("Create a valid concern");
         createConcernPage
@@ -157,6 +163,11 @@ describe("Editing a case", () =>
             .withExceedingTextLimit()
             .apply()
             .hasValidationError("Issue must be 2000 characters or less");
+
+        // Ensure the correct character count when new lines are used
+        editIssuePage
+            .withIssue("Testing \n the character count \n with \n\n\n new lines")
+            .hasCharacterCountMessage("You have 1,945 characters remaining");
 
         Logger.Log("Checking accessibility on edit issue");
         cy.excuteAccessibilityTests();

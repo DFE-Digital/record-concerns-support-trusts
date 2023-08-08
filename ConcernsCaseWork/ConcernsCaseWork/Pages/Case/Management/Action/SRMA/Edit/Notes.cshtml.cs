@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -19,8 +19,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<EditNotesPageModel> _logger;
 
-		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
-		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
+		[BindProperty(SupportsGet = true, Name = "caseUrn")] 
+		public int CaseId { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "srmaId")] 
+		public int SrmaId { get; set; }
 
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
@@ -90,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			HintText = "Case owners can record any information they want that feels relevant to the action",
 			Text = new ValidateableString()
 			{
-				MaxLength = 2000,
+				MaxLength = SrmaConstants.NotesLength,
 				StringContents = contents,
 				DisplayName = "Notes"
 			}

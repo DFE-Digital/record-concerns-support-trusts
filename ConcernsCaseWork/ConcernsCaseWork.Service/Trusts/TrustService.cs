@@ -1,8 +1,10 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 using System.Web;
 
@@ -12,16 +14,24 @@ namespace ConcernsCaseWork.Service.Trusts
 	{
 		private readonly ILogger<TrustService> _logger;
 		private readonly IFakeTrustService _fakeTrustService;
+		private readonly IFeatureManager _featureManager;
+		private readonly ICityTechnologyCollegeService _cityTechnologyCollegeService;
+
+		private const string EndpointV3 = "v3";
 
 		public TrustService(
 			IHttpClientFactory clientFactory, 
 			ILogger<TrustService> logger, 
 			ICorrelationContext correlationContext, 
 			IClientUserInfoService userInfoService,
-			IFakeTrustService fakeTrustService) : base(clientFactory, logger, correlationContext, userInfoService)
+			IFakeTrustService fakeTrustService,
+			ICityTechnologyCollegeService cityTechnologyCollegeService,
+			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 			_fakeTrustService = fakeTrustService;
+			_featureManager = featureManager;
+			_cityTechnologyCollegeService = cityTechnologyCollegeService;
 		}
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -60,8 +70,18 @@ namespace ConcernsCaseWork.Service.Trusts
 					return fakeTrust;
 				}
 
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
+				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
+
+
+				TrustDetailsDto cityTechnologyCollege = await CheckForCTCByUKPRN(ukPrn);
+				if (cityTechnologyCollege != null)
+				{
+					return cityTechnologyCollege;
+				}
+
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{endpointVersion}/trust/{ukPrn}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -75,22 +95,64 @@ namespace ConcernsCaseWork.Service.Trusts
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-				// Deserialize content to POCO
-				var apiWrapperTrustDetails = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content);
+				var apiWrapperTrustDetails = ProcessSearchByUkPrnResponse(content, v3Enabled);
 
-				// Unwrap response
-				if (apiWrapperTrustDetails is { Data: { } })
-				{
-					return apiWrapperTrustDetails.Data;
-				}
-
-				throw new Exception("Academies API error unwrap response");
+				return apiWrapperTrustDetails;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
+		}
+		
+		private async Task<TrustDetailsDto> CheckForCTCByUKPRN(string ukPrn)
+		{
+			TrustDetailsDto cityTechnologyCollege = null;
+
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled); ;
+			if (ShouldCTCBeIncludedInTrustSearch)
+			{
+				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
+
+
+				try
+				{
+					cityTechnologyCollege = await _cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
+					if (cityTechnologyCollege != null)
+					{
+						_logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
+					_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+				}
+			}
+			else
+			{
+				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+			}
+			return cityTechnologyCollege;
+		}
+
+		private static TrustDetailsDto ProcessSearchByUkPrnResponse(string content, bool v3Enabled)
+		{
+			if (!v3Enabled)
+			{
+				return JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content).Data;
+			}
+
+			var v3Response = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsV3Dto>>(content);
+			var v2Response = new TrustDetailsDto()
+			{
+				IfdData = v3Response.Data.TrustData,
+				Establishments = v3Response.Data.Establishments,
+				GiasData = v3Response.Data.GiasData
+			};
+
+			return v2Response;
 		}
 
 		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -110,12 +172,32 @@ namespace ConcernsCaseWork.Service.Trusts
 					return fakeTrust;
 				}
 
-				// Create a request
-				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
+				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
+				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
+				Int32 maxResultsFromApi = maxRecordsPerPage;
+				TrustSearchResponseDto ctcList = await Test(trustSearch.GroupName);
+				if (ctcList != null)
+				{
+					maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
+				}
+
+				// Create a request
+				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxResultsFromApi)}";
 				var response = await GetByPagination<TrustSearchDto>(endpoint);
 
-				return new TrustSearchResponseDto { NumberOfMatches = response.Paging.RecordCount, Trusts = response.Data };
+				//Combine the results of Trusts and CTC Searches
+				List<TrustSearchDto> combinedMatches = new List<TrustSearchDto>();
+				if (ctcList !=null && ctcList.Trusts.Count() >0)
+				{
+					combinedMatches.AddRange(ctcList.Trusts);
+				}
+				if (response.Data !=null)
+				{
+					combinedMatches.AddRange(response.Data);
+				}
+
+				return new TrustSearchResponseDto { NumberOfMatches = combinedMatches.Count(), Trusts = combinedMatches };
 			}
 			catch (Exception ex)
 			{
@@ -123,6 +205,36 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				throw;
 			}
+		}
+
+		private async Task<TrustSearchResponseDto> Test(string GroupName)
+		{
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled);
+
+			TrustSearchResponseDto ctcList = null;
+
+			if (ShouldCTCBeIncludedInTrustSearch)
+			{
+				_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
+				try
+				{
+					ctcList = await _cityTechnologyCollegeService.GetCollegeByPagination(GroupName);
+					if (ctcList != null)
+					{
+						_logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
+					_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+				}
+			}
+			else
+			{
+				_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch False. Skipping Check from CTC list");
+			}
+			return ctcList;
 		}
 
 		private bool IsNumeric(string input)

@@ -66,7 +66,7 @@ describe("Testing reassigning cases", () =>
         editCaseMangementPage
             .clearCaseOwner()
             .save()
-            .hasValidationError("A valid case owner must be selected")
+            .hasValidationError("A case owner must be selected")
             .hasCaseOwner(email);
 
         Logger.Log("Checking accessibility on edit case owner");

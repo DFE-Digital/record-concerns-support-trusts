@@ -1,3 +1,4 @@
+import { getUkLocalDateFormatted } from "cypress/support/formatDate";
 import { EnvApi } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
 import { GetConcernResponse, ResponseWrapper } from "./apiDomain";
@@ -19,13 +20,15 @@ class ConcernsApi extends ApiBase
 
     public post(caseId: number): Cypress.Chainable
     {
+        const currentDate = getUkLocalDateFormatted();
+
         return cy.request({
             method: 'POST',
             url: Cypress.env(EnvApi) + "/v2/concerns-records/",
             headers: this.getHeaders(),
             body: {
-                "createdAt": new Date().toISOString(),
-                "reviewAt": new Date().toISOString(),
+                "createdAt": currentDate,
+                "reviewAt": currentDate,
                 "name": "Governance and compliance",
                 "description": "Compliance",
                 "reason": "Governance and compliance: Compliance",

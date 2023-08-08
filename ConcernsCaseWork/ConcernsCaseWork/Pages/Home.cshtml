@@ -1,6 +1,8 @@
 ﻿@page
+@using ConcernsCaseWork.API.Contracts.Configuration;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.HomePageModel
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
 @{
     ViewData["Title"] = "Home";
@@ -31,7 +33,7 @@
 
                 <div class="govuk-tabs__panel" id="your-casework">
                     <div class="govuk-button-group concerns-align-buttons-right-in-govuk-button-group">
-                        <a class="govuk-button" asp-page="/case/index" role="button" data-testid="create-case-button">
+                        <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
                             Create case
                         </a>
                         <a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
@@ -44,6 +46,8 @@
 
                     <!-- Active casework -->
                     <partial name="_CasesActive" model="Model.ActiveCases" />
+
+                    <partial name="_Pagination" model="Model.Pagination" />
                 </div>
             </div>
         </div>

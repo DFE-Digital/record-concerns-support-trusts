@@ -34,8 +34,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	[BindProperty]
 	public RadioButtonsUiComponent CaseType { get; set; }
 
-	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
-
 	public SelectCaseTypePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectCaseTypePageModel> logger,
@@ -86,7 +84,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 			switch (selectedCaseType)
 			{
 				case API.Contracts.Case.CaseType.Concerns:
-					return Redirect("/case/concern/index");
+					return Redirect("/case/concern");
 				case API.Contracts.Case.CaseType.NonConcerns:
 					return Redirect("/case/territory");
 				default:
@@ -107,7 +105,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		var enumValues = new[]
 		{
 			new { CaseType = API.Contracts.Case.CaseType.Concerns, HintText = "This includes narrative, actions or decisions related to any new concern(s)" },
-			new { CaseType = API.Contracts.Case.CaseType.NonConcerns, HintText = "For example, a proactive School Resource Management Adviser (SRMA)" }
+			new { CaseType = API.Contracts.Case.CaseType.NonConcerns, HintText = "This includes proactive SRMA (School Resource Management Adviser), TFF (Trust Financial Forecast) activity and decisions" }
 		};
 
 		var radioItems = enumValues.Select(v =>

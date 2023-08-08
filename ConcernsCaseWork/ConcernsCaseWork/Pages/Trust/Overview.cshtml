@@ -1,61 +1,27 @@
 ﻿@page "/trust/{id:long}/overview"
+@using ConcernsCaseWork.API.Contracts.Configuration;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Trust.OverviewPageModel
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
 @{
-	ViewData["Title"] = "Trust Overview";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Trust Overview";
+    var nonce = HttpContext.GetNonce();
 }
 
-@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.TrustDetailsModel is null)
-{
-	<div class="govuk-width-container">
-		<partial name="_BannerError"/>
-		<div class="moj-banner__message">
-			<p class="govuk-body">@TempData["Error.Message"]</p>
-		</div>
-	</div>
-    <script type="application/javascript" nonce="@nonce">
-        $(function () {
-            showGlobalError();
-		});
-    </script>
-}
-else
-{
-	<div class="govuk-width-container">
-		<div class="govuk-button-group">
-			<a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
-				Your casework
-			</a>
-			<a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
-				Find trust
-			</a>
-		</div>
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">Trust Overview</span>
-			@Model.TrustDetailsModel.GiasData.GroupNameTitle
-		</h1>
-		<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
-		<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
-
-		<table class="govuk-table  govuk-!-margin-top-9">
-			<caption class="govuk-table__caption govuk-table__caption--m">
-				<div class="govuk-button-group flexalign__right">
-					<a asp-page="../case/concern/index" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-						Create case
-					</a>
-				</div>
-				Active cases
-			</caption>
-			<partial name="_TrustActiveCases" model="@Model.ActiveCases"/>
-		</table>
-        <table class="govuk-table  govuk-!-margin-top-9">
-            <caption class="govuk-table__caption govuk-table__caption--m">
-                Closed cases
-            </caption>
-			<partial name="_TrustClosedCases" model="@Model.ClosedCases"/>
-		</table>
-	</div>
-}
+<div class="govuk-width-container">
+    <div class="govuk-button-group">
+        <a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
+            Your casework
+        </a>
+        <a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
+            Find trust
+        </a>
+    </div>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-m">Trust Overview</span>
+        @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle
+    </h1>
+    <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
+</div>

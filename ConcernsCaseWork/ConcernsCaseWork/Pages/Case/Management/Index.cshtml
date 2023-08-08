@@ -10,6 +10,10 @@
 @{
     ViewData["Title"] = "Case management";
     var nonce = HttpContext.GetNonce();
+
+    var errorClass = "govuk-error-message";
+    var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
+    var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
 }
 
 <div class="govuk-width-container">
@@ -21,15 +25,21 @@
     }
     else
     {
+        <partial name="_ValidationErrors" />
+
         <div class="buttons-topOfPage">
             <div class="govuk-width-container">
                 <back-link url="/" label="Back to casework"></back-link>
             </div>
             @if (Model.IsEditableCase)
             {
-                <a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
-                    Close case
-                </a>
+                <form method="post">
+
+                    <button role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
+                        Close case
+                    </button>
+
+                </form>
             }
         </div>
         @if (@Model.CaseOwnerChanged)
@@ -59,7 +69,7 @@
             @Model.CaseModel.Urn
         </h1>
 
-        <h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+        <h2 class="govuk-heading-m">@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
         <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
@@ -91,25 +101,25 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Trust</th>
                             <td class="govuk-table__cell" data-testid="trust_Field">
-                                @Model.TrustDetailsModel.GiasData.GroupName
+                                @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right"></td>
                         </tr>
-                        
-                    @if (!Model.CaseModel.IsConcernsCase())
-                    {
-	                    <tr class="govuk-table__row">
-		                    <th scope="row" class="govuk-table-case-details__header">Concerns</th>
-		                    <td class="govuk-table__cell" data-testid="concern_Field">
+
+                        @if (!Model.CaseModel.IsConcernsCase())
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+                                <td class="govuk-table__cell" data-testid="concern_Field">
 
                                     <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
-				                    Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
-			                    </a>
-		                    </td>
-		                    <td class="govuk-table__cell govuk-table__header__right"></td>
-	                    </tr>
-                    }
-                    @if (Model.CaseModel.IsConcernsCase())
+                                        Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
+                                    </a>
+                                </td>
+                                <td class="govuk-table__cell govuk-table__header__right"></td>
+                            </tr>
+                        }
+                        @if (Model.CaseModel.IsConcernsCase())
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
@@ -147,8 +157,10 @@
                         }
                         @if (Model.CaseModel.IsConcernsCase())
                         {
-                            <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+                            <tr class="govuk-table__row" id="container-Concerns">
+                                <th scope="row" class="govuk-table-case-details__header">
+                                    <span class="@concernsErrorClass">Concerns</span>
+                                 </th>
                                 <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
 
                                     <table class="govuk-table">
@@ -411,10 +423,10 @@
                 }
 
                 <table id="open-case-actions" class="govuk-table">
-                    <thead class="govuk-table__head">
+                    <thead class="govuk-table__head" id="container-CaseActions">
                         <tr class="govuk-table__row tr__large">
                             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                Active actions and decisions
+                                <span>Active actions and decisions</span>
                             </th>
                             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
                             </th>
@@ -440,7 +452,7 @@
                             <tr class="govuk-table__row" data-testid="row-@action.Name">
                                 <td class="govuk-table__cell">
                                     <a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
-                                        <span>@action.Name</span>
+                                        <span class="@caseActionsErrorClass">@action.Name</span>
                                     </a>
                                 </td>
                                 <td class="govuk-table__cell" data-testid="status">
@@ -458,21 +470,7 @@
 
             </div>
             <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-                <partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
-                <partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
-
-                <table class="govuk-table  govuk-!-margin-top-9">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
-                        Active cases
-                    </caption>
-                    <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
-                </table>
-                <table class="govuk-table  govuk-!-margin-top-9">
-                    <caption class="govuk-table__caption govuk-table__caption--m">
-                        Closed cases
-                    </caption>
-                    <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
-                </table>
+                <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
             </div>
         </div>
 
