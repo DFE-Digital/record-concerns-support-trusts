@@ -13,6 +13,7 @@ using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Models.CaseActions;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using Microsoft.Kiota.Abstractions;
 using System;
 using System.Data;
 using System.Linq;
@@ -86,6 +87,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				options => options.ExcludingMissingMembers()
 					.Excluding(f=> f.Id)
 				);
+
+			await AssertCaseLastUpdatedDateMatchesSRMACreatedAt(createdConcern, createdSRMA);
 		}
 
 		[Fact]
@@ -106,6 +109,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.Status.Should().Be(newStatus);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
@@ -126,6 +131,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.Reason.Should().Be(newReason);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
@@ -145,6 +152,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.DateOffered.Date.Should().Be(newOfferedDate.Date);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
@@ -164,6 +173,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.Notes.Should().Be(newNotes);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
@@ -186,10 +197,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			patchResponse.Data.DateVisitStart.Value.Date.Should().Be(newStartDate.Date);
 			patchResponse.Data.DateVisitEnd.Value.Date.Should().Be(newEndDate.Date);
 
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
-		public async Task When_UpdateDateAccepted_Patch_Return_OK()
+		public async Task When_UpdateDateAcceptedWithValue_Patch_Return_OK()
 		{
 			//Arrange
 			var createdConcern = await CreateCase();
@@ -205,10 +217,32 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.DateAccepted.Value.Date.Should().Be(newDate.Date);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
 		[Fact]
-		public async Task When_UpdateDateReportSent_Patch_Return_OK()
+		public async Task When_UpdateDateAcceptedWithNullValue_Patch_Return_OK()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-date-accepted?acceptedDate=", null);
+			var patchResponse = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<SRMAResponse>>();
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			patchResponse.Data.Should().NotBeNull();
+
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
+		}
+
+
+		[Fact]
+		public async Task When_UpdateDateReportSentWithValue_Patch_Return_OK()
 		{
 			//Arrange
 			var createdConcern = await CreateCase();
@@ -224,7 +258,29 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.DateReportSentToTrust.Value.Date.Should().Be(newDate.Date);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
+
+		[Fact]
+		public async Task When_UpdateDateReportSentWithNullValue_Patch_Return_OK()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-date-report-sent?dateReportSent=", null);
+			var patchResponse = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<SRMAResponse>>();
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			patchResponse.Data.Should().NotBeNull();
+			patchResponse.Data.DateReportSentToTrust.Should().BeNull();
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
+		}
+
 
 		[Fact]
 		public async Task When_UpdateDateClosed_Patch_Return_OK()
@@ -242,6 +298,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			patchResponse.Data.Should().NotBeNull();
 			patchResponse.Data.ClosedAt.Should().NotBe(createdSRMA.ClosedAt);
+
+			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
+
 		}
 
 		private async Task<ConcernsCaseResponse> CreateCase()
@@ -314,6 +373,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			getResponseSRMA.Should().NotBeNull();
 
 			return getResponseSRMA.Data;
+		}
+
+		protected async Task AssertCaseLastUpdatedDateMatchesSRMACreatedAt(ConcernsCaseResponse createdCase, SRMAResponse createdSrma)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdSrma.CreatedAt);
+		}
+
+		protected async Task AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(ConcernsCaseResponse createdCase, SRMAResponse updatedSrma)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, updatedSrma.UpdatedAt.Value);
+		}
+
+		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTime date)
+		{
+			var updatedCase = await GetCase(caseUrn);
+			updatedCase.CaseLastUpdatedAt.Should().Be(date);
 		}
 	}
 }
