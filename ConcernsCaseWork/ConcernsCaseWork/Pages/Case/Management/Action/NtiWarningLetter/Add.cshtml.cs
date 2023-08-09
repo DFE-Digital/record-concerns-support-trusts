@@ -292,7 +292,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 		=> new("nti-notes", nameof(Notes), "Notes (optional)")
 		{
-			HintText = "Case owners can record any information they want that feels relevant to the action",
+			HintText = "Case owners can record any information they want that feels relevant to the action.",
 			Text = new ValidateableString()
 			{
 				MaxLength = 2000,
