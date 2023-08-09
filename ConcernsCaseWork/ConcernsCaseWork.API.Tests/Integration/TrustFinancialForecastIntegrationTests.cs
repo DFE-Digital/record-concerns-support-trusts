@@ -17,6 +17,12 @@ using Xunit;
 using System.Net.Http.Json;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
+using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
+using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
+using ConcernsCaseWork.CoreTypes;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
@@ -35,28 +41,168 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Post_CaseNotExistReturns_NotFound()
+		{
+			//Arrange
+			var request = _fixture.Create<CreateTrustFinancialForecastRequest>();
+			request.CaseUrn = _fixture.Create<int>();
+
+			//Act
+			var result = await _client.PostAsync(Post.CreateTFF(request.CaseUrn), request.ConvertToJson());
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+		[Fact]
+		public async Task When_Post_Returns_201Response()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var request = _fixture.Create<CreateTrustFinancialForecastRequest>();
+			//Todo Revisit why difference in date accuracy is an issue here. UI only displays to Date level so this is acceptable in short term.
+			request.TrustRespondedAt = _fixture.Create<DateTime>().Date;
+			request.SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>().Date;
+			request.CaseUrn = createdConcern.Urn;
+
+			//Act
+			var createdTFF = await CreateAndGetTFF(request);
+
+			//Assert
+			createdTFF.Should().BeEquivalentTo(request);
+		}
+
+		[Fact]
+		public async Task When_Put_UpdateTFF_ReturnOK()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+			var request = CreateTFFUpdateRequest(createdConcern, createdTFF);
+
+			//Act
+			var result = await _client.PutAsync(Put.UpdateTFF(request), request.ConvertToJson());
+			var response = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<String>>();
+			var updatedTFF = await GetTFF(Get.ItemById(request.CaseUrn, request.TrustFinancialForecastId));
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			response.Data.Should().NotBeNull();
+			updatedTFF.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+		}
+
+		[Fact]
+		public async Task When_Patch_CloseAnOpenTFF_ReturnOK()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+			var request = new CloseTrustFinancialForecastRequest { CaseUrn = createdConcern.Urn, TrustFinancialForecastId = createdTFF.TrustFinancialForecastId, Notes = _fixture.Create<String>() };
+
+			//Act
+			var result = await _client.PatchAsync(Patch.UpdateTFF(request), request.ConvertToJson());
+			var patchResponse = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<String>>();
+			var updatedTFF = await GetTFF(Get.ItemById(request.CaseUrn, request.TrustFinancialForecastId));
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			patchResponse.Data.Should().NotBeNull();
+			updatedTFF.Notes.Should().Be(request.Notes);
+			updatedTFF.ClosedAt.Should().NotBeNull();
+			updatedTFF.ClosedAt.Value.Date.Should().Be(System.DateTime.Now.Date);
+			updatedTFF.UpdatedAt.DateTime.ToString("dd/MM/yyyy hh:MM").Should().Be(System.DateTime.Now.ToString("dd/MM/yyyy hh:MM"));
+		}
+
+
+		[Fact]
+		public async Task When_Put_ClosedTFF_ReturnInternalServerError()
+		{
+			//Observation: 08/08/2023 Api returns an Internal Server Error if we try to update and existing Closed TFF.
+			//Todo: Consider amending to retur Bad Request as part of separate refactor
+
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+			await CloseTFF(createdConcern, createdTFF);
+			var request = new CloseTrustFinancialForecastRequest { CaseUrn = createdConcern.Urn, TrustFinancialForecastId = createdTFF.TrustFinancialForecastId, Notes = _fixture.Create<String>() };
+
+			//Act
+			var updateRequest = CreateTFFUpdateRequest(createdConcern, createdTFF);
+			var updateResponse = await _client.PutAsync(Put.UpdateTFF(updateRequest), request.ConvertToJson());
+
+			//Assert
+			updateResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+		}
+
+		[Fact]
 		public async Task When_Delete_InvalidRequest_Returns_BadRequest()
 		{
-			var urn = "1";
-			var noticeToImproveId = 0;
-			var result = await _client.DeleteAsync($"/v2/concerns-cases/{urn}/trustfinancialforecast/{noticeToImproveId}");
+			//Arrange
+			var urn = 1;
+			var TrustFinancialForecastId = 0;
+			
+			//Act
+			var result = await _client.DeleteAsync(Delete.DeleteTFF(urn, TrustFinancialForecastId));
+			
+			//Assert
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
 
 		[Fact]
 		public async Task When_Delete_NotCreatedResourceRequest_Returns_NotFound()
 		{
-			var urn = "1";
-			var noticeToImproveId = 1000000;
-			var result = await _client.DeleteAsync($"/v2/concerns-cases/{urn}/trustfinancialforecast/{noticeToImproveId}");
+			//Arrange
+			var urn = 1;
+			var TrustFinancialForecastId = 1000000;
+
+			//Act
+			var result = await _client.DeleteAsync(Delete.DeleteTFF(urn, TrustFinancialForecastId));
+
+			//Assert
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 		[Fact]
 		public async Task When_Delete_ValidResourceRequest_Returns_NoContent()
 		{
-			//Create the case
-			ConcernCaseRequest createCaseRequest = Builder<ConcernCaseRequest>.CreateNew()
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+
+			//Act
+			var deleteResponse = await _client.DeleteAsync(Delete.DeleteTFF(createdTFF.CaseUrn, createdTFF.TrustFinancialForecastId));
+			var getResponseNotFound = await _client.GetAsync(Delete.DeleteTFF(createdTFF.CaseUrn, createdTFF.TrustFinancialForecastId));
+
+			//Assert
+			deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+		protected UpdateTrustFinancialForecastRequest CreateTFFUpdateRequest(ConcernsCaseResponse createdConcern, TrustFinancialForecastResponse createdTFF)
+		{
+			var request = _fixture.Create<UpdateTrustFinancialForecastRequest>();
+			request.CaseUrn = createdConcern.Urn;
+			request.TrustFinancialForecastId = createdTFF.TrustFinancialForecastId;
+			//Todo Revisit why difference in date accuracy is an issue here.
+			request.TrustRespondedAt = _fixture.Create<DateTime>().Date;
+			request.SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>().Date;
+			return request;
+		}
+
+		protected async Task<TrustFinancialForecastResponse> GetTFF(string url)
+		{
+			var getResponse = await _client.GetAsync(url);
+			var getResponseContent = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<TrustFinancialForecastResponse>>();
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseContent.Data.Should().NotBeNull();
+
+			return getResponseContent.Data;
+		}
+
+		private async Task<ConcernsCaseResponse> CreateCase()
+		{
+			ConcernCaseRequest createRequest = Builder<ConcernCaseRequest>.CreateNew()
 				.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
 				.With(c => c.Description = "")
 				.With(c => c.CrmEnquiry = "")
@@ -72,39 +218,117 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				.With(c => c.DirectionOfTravel = "Up")
 				.With(c => c.StatusId = 1)
 				.With(c => c.RatingId = 2)
-				.With(c => c.TrustCompaniesHouseNumber = "12345678")
+				.With(c => c.TrustCompaniesHouseNumber = DatabaseModelBuilder.CreateUkPrn())
 				.Build();
 
-			var createCaseResponse = await _client.PostAsync($"v2/concerns-cases", createCaseRequest.ConvertToJson());
-			var response = await createCaseResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-			var CaseUrn = response.Data.Urn;
-			//create the tff
-			var request = Builder<CreateTrustFinancialForecastRequest>.CreateNew()
-				.With(c => c.CaseUrn = CaseUrn)
-				.With(c => c.SRMAOfferedAfterTFF = SRMAOfferedAfterTFF.Yes)
-				.With(c => c.ForecastingToolRanAt = ForecastingToolRanAt.CurrentYearSpring)
-				.With(c => c.WasTrustResponseSatisfactory = WasTrustResponseSatisfactory.Satisfactory)
-				.With(c => c.Notes = "Here are the notes")
-				.With(c => c.SFSOInitialReviewHappenedAt = System.DateTime.UtcNow)
-				.With(c => c.TrustRespondedAt = System.DateTime.UtcNow)
-				.Build();
+			HttpRequestMessage httpRequestMessage = new()
+			{
+				Method = HttpMethod.Post,
+				RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+				Content = JsonContent.Create(createRequest)
+			};
 
-			var result = await _client.PostAsync($"/v2/concerns-cases/{CaseUrn}/trustfinancialforecast", request.ConvertToJson());
+			var response = await _client.SendAsync(httpRequestMessage);
+
+			response.StatusCode.Should().Be(HttpStatusCode.Created);
+			ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+			return result.Data;
+		}
+
+		private async Task<TrustFinancialForecastResponse> CreateAndGetTFF(CreateTrustFinancialForecastRequest request)
+		{
+			var result = await _client.PostAsync($"/v2/concerns-cases/{request.CaseUrn}/trustfinancialforecast", request.ConvertToJson());
+			var resultContent = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<String>>();
+			var createdEntityUrl = result.Headers.Location;
+
+			var getResponse = await _client.GetAsync(createdEntityUrl);
+			var getResponseContent = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<TrustFinancialForecastResponse>>();
+
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
+			resultContent.Should().NotBeNull();
 
-			var createdTFF = result.Headers.Location;
-			//check for the tff
-			var getResponse = await _client.GetAsync(createdTFF);
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseContent.Data.Should().NotBeNull();
 
-			//delete the tff
-			var deleteResponse = await _client.DeleteAsync(createdTFF);
-			deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
+			return getResponseContent.Data;
+		}
 
-			//check it is not returned
-			var getResponseNotFound = await _client.GetAsync(createdTFF);
-			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		private async Task<TrustFinancialForecastResponse> CreateTFFforCase(Int32 caseUrn)
+		{
+			var request = _fixture.Create<CreateTrustFinancialForecastRequest>();
+			//Todo Revisit why difference in date accuracy is an issue here.
+			request.TrustRespondedAt = _fixture.Create<DateTime>().Date;
+			request.SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>().Date;
+			request.CaseUrn = caseUrn;
+			return await CreateAndGetTFF(request);
+		}
+
+		private async Task<ConcernsCaseResponse> GetCase(Int32 urn)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseCase.Data.Should().NotBeNull();
+
+			return getResponseCase.Data;
+		}
+		protected async Task CloseTFF(ConcernsCaseResponse createdConcern, TrustFinancialForecastResponse createdTFF)
+		{
+			var request = new CloseTrustFinancialForecastRequest { CaseUrn = createdConcern.Urn, TrustFinancialForecastId = createdTFF.TrustFinancialForecastId, Notes = _fixture.Create<String>() };
+			var result = await _client.PatchAsync(Patch.UpdateTFF(request), request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+		}
+
+		public static class Get
+		{
+			public static string ItemById(int urn, int id)
+			{
+				return $"/v2/concerns-cases/{urn}/trustfinancialforecast/{id}";
+			}
+		}
+
+		public static class Put
+		{
+			public static string UpdateTFF(UpdateTrustFinancialForecastRequest request)
+			{
+				return UpdateTFF(request.CaseUrn, request.TrustFinancialForecastId);
+			}
+
+			public static string UpdateTFF(int urn, int id)
+			{
+				return $"/v2/concerns-cases/{urn}/trustfinancialforecast/{id}";
+			}
+		}
+
+		public static class Patch
+		{
+			public static string UpdateTFF(CloseTrustFinancialForecastRequest request)
+			{
+				return UpdateTFF(request.CaseUrn, request.TrustFinancialForecastId);
+			}
+
+			public static string UpdateTFF(int urn, int id)
+			{
+				return $"/v2/concerns-cases/{urn}/trustfinancialforecast/{id}";
+			}
+		}
+
+		public static class Post
+		{
+			public static string CreateTFF(int urn)
+			{
+				return $"/v2/concerns-cases/{urn}/trustfinancialforecast";
+			}
+		}
+
+		public static class Delete
+		{
+			public static string DeleteTFF(int urn, int id)
+			{
+				return $"/v2/concerns-cases/{urn}/trustfinancialforecast/{id}";
+			}
 		}
 
 	}
