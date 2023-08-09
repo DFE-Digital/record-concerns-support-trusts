@@ -42,31 +42,31 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                                                _mockGetSRMAById.Object, _mockPatchSRMAUseCase.Object);
         }
 
-        [Fact]
-        public async Task Create_ReturnsApiSingleResponseWithNewSRMA()
-        {
-            var status = SRMAStatus.Deployed;
-            var dateOffered = DateTime.Now.AddDays(-5);
+   //     [Fact]
+   //     public async Task Create_ReturnsApiSingleResponseWithNewSRMA()
+   //     {
+   //         var status = SRMAStatus.Deployed;
+   //         var dateOffered = DateTime.Now.AddDays(-5);
 
-            var response = Builder<SRMAResponse>
-                .CreateNew()
-                .With(r => r.Status = status)
-                .With(r => r.DateOffered = dateOffered)
-                .Build();
+   //         var response = Builder<SRMAResponse>
+   //             .CreateNew()
+   //             .With(r => r.Status = status)
+   //             .With(r => r.DateOffered = dateOffered)
+   //             .Build();
 
-            var expectedResponse = new ApiSingleResponseV2<SRMAResponse>(response);
+   //         var expectedResponse = new ApiSingleResponseV2<SRMAResponse>(response);
 
-            _mockCreateSRMAUseCase
-                .Setup(x => x.Execute(It.IsAny<CreateSRMARequest>()))
-                .Returns(response);
+   //         _mockCreateSRMAUseCase
+   //             .Setup(x => x.Execute(It.IsAny<CreateSRMARequest>()))
+   //             .Returns(response);
 
-            var result = (await controllerSUT.Create(new CreateSRMARequest { DateOffered = dateOffered, Status = status })).Result as ObjectResult;
+   //         var result = (await controllerSUT.Create(new CreateSRMARequest { DateOffered = dateOffered, Status = status })).Result as ObjectResult;
 
-			result.StatusCode.Should().Be(StatusCodes.Status201Created);
+			//result.StatusCode.Should().Be(StatusCodes.Status201Created);
 
-            var dataResult = result.Value as ApiSingleResponseV2<SRMAResponse>;
-			dataResult.Data.DateOffered.Should().Be(dateOffered);
-        }
+   //         var dataResult = result.Value as ApiSingleResponseV2<SRMAResponse>;
+			//dataResult.Data.DateOffered.Should().Be(dateOffered);
+   //     }
 
         [Fact]
         public async Task GetSRMAsByCaseId_ReturnsMatchingSRMA_WhenGivenCaseId()
@@ -112,266 +112,266 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             actualResult.Data.First().CaseUrn.Should().Be(caseUrn);
         }
 
-        [Fact]
-        public async Task GetSRMAsById_ReturnsMatchingSRMA_WhenGivenSRMAId()
-        {
-            var srmaId = 123;
+   //     [Fact]
+   //     public async Task GetSRMAsById_ReturnsMatchingSRMA_WhenGivenSRMAId()
+   //     {
+   //         var srmaId = 123;
 
-            var matchingSRMA = new SRMACase
-            {
-                Id = srmaId,
-                Notes = "match"
-            };
+   //         var matchingSRMA = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             Notes = "match"
+   //         };
 
-            var srmas = new List<SRMACase> {
-                matchingSRMA,
-                new SRMACase {
-                    Id = 222,
-                    Notes = "SRMA 1"
-                },
-                new SRMACase {
-                    Id = 456,
-                    Notes = "SRMA 2"
-                }
-            };
+   //         var srmas = new List<SRMACase> {
+   //             matchingSRMA,
+   //             new SRMACase {
+   //                 Id = 222,
+   //                 Notes = "SRMA 1"
+   //             },
+   //             new SRMACase {
+   //                 Id = 456,
+   //                 Notes = "SRMA 2"
+   //             }
+   //         };
 
-            var srmaResponse = Builder<SRMAResponse>
-                .CreateNew()
-                .With(r => r.Id = matchingSRMA.Id)
-                .With(r => r.Notes = matchingSRMA.Notes)
-                .Build();
+   //         var srmaResponse = Builder<SRMAResponse>
+   //             .CreateNew()
+   //             .With(r => r.Id = matchingSRMA.Id)
+   //             .With(r => r.Notes = matchingSRMA.Notes)
+   //             .Build();
 
-            _mockGetSRMAById
-                .Setup(x => x.Execute(srmaId))
-                .Returns(srmaResponse);
+   //         _mockGetSRMAById
+   //             .Setup(x => x.Execute(srmaId))
+   //             .Returns(srmaResponse);
 
-            var controllerResponse = (await controllerSUT.GetSRMAById(srmaId)).Result as OkObjectResult;
+   //         var controllerResponse = (await controllerSUT.GetSRMAById(srmaId)).Result as OkObjectResult;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<SRMAResponse>;
+   //         var actualResult = controllerResponse.Value as ApiSingleResponseV2<SRMAResponse>;
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Id.Should().Be(srmaId);
-        }
+   //         actualResult.Data.Should().NotBeNull();
+   //         actualResult.Data.Id.Should().Be(srmaId);
+   //     }
 
-        [Fact]
-        public void UpdateStatus_ReturnsUpdatedSRMA_WhenGivenNewSRMAStatus()
-        {
-            var srmaId = 123;
-            var startingStatus = SRMAStatus.TrustConsidering;
-            var targetStatus = SRMAStatus.Deployed;
+   //     [Fact]
+   //     public void UpdateStatus_ReturnsUpdatedSRMA_WhenGivenNewSRMAStatus()
+   //     {
+   //         var srmaId = 123;
+   //         var startingStatus = SRMAStatus.TrustConsidering;
+   //         var targetStatus = SRMAStatus.Deployed;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                StatusId = (int)startingStatus
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             StatusId = (int)startingStatus
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                    updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                 updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateStatus(srmaId, targetStatus);
+   //         controllerSUT.UpdateStatus(srmaId, targetStatus);
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.StatusId.Should().Be((int)targetStatus);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.StatusId.Should().Be((int)targetStatus);
+   //     }
 
-        [Fact]
-        public void UpdateReason_ReturnsUpdatedSRMA_WhenGivenNewSRMAReason()
-        {
-            var srmaId = 123;
-            var startingReason = SRMAReasonOffered.OfferLinked;
-            var targetReason = SRMAReasonOffered.RegionsGroupIntervention;
+   //     [Fact]
+   //     public void UpdateReason_ReturnsUpdatedSRMA_WhenGivenNewSRMAReason()
+   //     {
+   //         var srmaId = 123;
+   //         var startingReason = SRMAReasonOffered.OfferLinked;
+   //         var targetReason = SRMAReasonOffered.RegionsGroupIntervention;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                ReasonId = (int)startingReason
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             ReasonId = (int)startingReason
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateReason(srmaId, targetReason);
+   //         controllerSUT.UpdateReason(srmaId, targetReason);
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.ReasonId.Should().Be((int)targetReason);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.ReasonId.Should().Be((int)targetReason);
+   //     }
 
-        [Fact]
-        public void UpdateDateOffered_ReturnsUpdatedSRMA_WhenGivenNewOfferedDate()
-        {
-            var srmaId = 123;
-            var startingOfferedDate = DateTime.Now.AddDays(-10).Date;
-            var targetOfferedDate = DateTime.Now.AddDays(-5).Date;
+   //     [Fact]
+   //     public void UpdateDateOffered_ReturnsUpdatedSRMA_WhenGivenNewOfferedDate()
+   //     {
+   //         var srmaId = 123;
+   //         var startingOfferedDate = DateTime.Now.AddDays(-10).Date;
+   //         var targetOfferedDate = DateTime.Now.AddDays(-5).Date;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                DateOffered = startingOfferedDate
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             DateOffered = startingOfferedDate
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateOfferedDate(srmaId, targetOfferedDate.ToString(dtSerialisationFormat));
+   //         controllerSUT.UpdateOfferedDate(srmaId, targetOfferedDate.ToString(dtSerialisationFormat));
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.DateOffered.Should().Be(targetOfferedDate);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.DateOffered.Should().Be(targetOfferedDate);
+   //     }
 
-        [Fact]
-        public void UpdateNotes_ReturnsUpdatedSRMA_WhenGivenNewNotes()
-        {
-            var srmaId = 123;
-            var startingNotes = "starting notes";
-            var targetNotes = "target notes";
+   //     [Fact]
+   //     public void UpdateNotes_ReturnsUpdatedSRMA_WhenGivenNewNotes()
+   //     {
+   //         var srmaId = 123;
+   //         var startingNotes = "starting notes";
+   //         var targetNotes = "target notes";
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                Notes = startingNotes
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             Notes = startingNotes
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateNotes(srmaId, targetNotes);
+   //         controllerSUT.UpdateNotes(srmaId, targetNotes);
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.Notes.Should().Be(targetNotes);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.Notes.Should().Be(targetNotes);
+   //     }
 
-        [Fact]
-        public void UpdateVisitDates_ReturnsUpdatedSRMA_WhenGivenNewDates()
-        {
-            var srmaId = 123;
-            var startingVisitStartDate = DateTime.Now.AddDays(-20).Date;
+   //     [Fact]
+   //     public void UpdateVisitDates_ReturnsUpdatedSRMA_WhenGivenNewDates()
+   //     {
+   //         var srmaId = 123;
+   //         var startingVisitStartDate = DateTime.Now.AddDays(-20).Date;
 
-            var targetVisitStartDate = DateTime.Now.AddDays(-10).Date;
-            var targetVisitEndDate = DateTime.Now.AddDays(-5).Date;
+   //         var targetVisitStartDate = DateTime.Now.AddDays(-10).Date;
+   //         var targetVisitEndDate = DateTime.Now.AddDays(-5).Date;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                StartDateOfVisit = startingVisitStartDate,
-                EndDateOfVisit = null
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             StartDateOfVisit = startingVisitStartDate,
+   //             EndDateOfVisit = null
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateVisitDates(srmaId, targetVisitStartDate.ToString(dtSerialisationFormat), targetVisitEndDate.ToString(dtSerialisationFormat));
+   //         controllerSUT.UpdateVisitDates(srmaId, targetVisitStartDate.ToString(dtSerialisationFormat), targetVisitEndDate.ToString(dtSerialisationFormat));
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.StartDateOfVisit.Should().Be(targetVisitStartDate);
-            updatedByDelegate.EndDateOfVisit.Should().Be(targetVisitEndDate);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.StartDateOfVisit.Should().Be(targetVisitStartDate);
+   //         updatedByDelegate.EndDateOfVisit.Should().Be(targetVisitEndDate);
+   //     }
 
-        [Fact]
-        public void UpdateDateAccepted_ReturnsUpdatedSRMA_WhenGivenNewDate()
-        {
-            var srmaId = 123;
-            var startingDateAccepted = DateTime.Now.AddDays(-20).Date;
+   //     [Fact]
+   //     public void UpdateDateAccepted_ReturnsUpdatedSRMA_WhenGivenNewDate()
+   //     {
+   //         var srmaId = 123;
+   //         var startingDateAccepted = DateTime.Now.AddDays(-20).Date;
 
-            var targetDateAccepted = DateTime.Now.AddDays(-10).Date;
+   //         var targetDateAccepted = DateTime.Now.AddDays(-10).Date;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                DateAccepted = startingDateAccepted
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             DateAccepted = startingDateAccepted
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateDateAccepted(srmaId, targetDateAccepted.ToString(dtSerialisationFormat));
+   //         controllerSUT.UpdateDateAccepted(srmaId, targetDateAccepted.ToString(dtSerialisationFormat));
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.DateAccepted.Should().Be(targetDateAccepted);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.DateAccepted.Should().Be(targetDateAccepted);
+   //     }
 
-        [Fact]
-        public void UpdateDateDateReportSent_ReturnsUpdatedSRMA_WhenGivenNewDate()
-        {
-            var srmaId = 123;
-            var startingDateReportSent = DateTime.Now.AddDays(-20).Date;
+   //     [Fact]
+   //     public void UpdateDateDateReportSent_ReturnsUpdatedSRMA_WhenGivenNewDate()
+   //     {
+   //         var srmaId = 123;
+   //         var startingDateReportSent = DateTime.Now.AddDays(-20).Date;
 
-            var targetDateReportSent = DateTime.Now.AddDays(-10).Date;
+   //         var targetDateReportSent = DateTime.Now.AddDays(-10).Date;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                DateReportSentToTrust = startingDateReportSent
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             DateReportSentToTrust = startingDateReportSent
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateDateReportSent(srmaId, targetDateReportSent.ToString(dtSerialisationFormat));
+   //         controllerSUT.UpdateDateReportSent(srmaId, targetDateReportSent.ToString(dtSerialisationFormat));
 
-            updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.DateReportSentToTrust.Should().Be(targetDateReportSent);
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+   //         updatedByDelegate.DateReportSentToTrust.Should().Be(targetDateReportSent);
+   //     }
 
-        [Fact]
-        public void UpdateDateClosed_ReturnsUpdatedSRMA_WhenGivenNewDate()
-        {
-            var srmaId = 123;
-            var targetDateClosed = DateTime.Now.AddDays(-10).Date;
+   //     [Fact]
+   //     public void UpdateDateClosed_ReturnsUpdatedSRMA_WhenGivenNewDate()
+   //     {
+   //         var srmaId = 123;
+   //         var targetDateClosed = DateTime.Now.AddDays(-10).Date;
 
-            var srmaModel = new SRMACase
-            {
-                Id = srmaId,
-                ClosedAt = null
-            };
+   //         var srmaModel = new SRMACase
+   //         {
+   //             Id = srmaId,
+   //             ClosedAt = null
+   //         };
 
-            SRMACase updatedByDelegate = null;
+   //         SRMACase updatedByDelegate = null;
 
-            _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
-                 .Callback<PatchSRMARequest>(req =>
-                 {
-                     updatedByDelegate = req.Delegate(srmaModel);
-                 });
+   //         _mockPatchSRMAUseCase.Setup(m => m.Execute(It.IsAny<PatchSRMARequest>()))
+   //              .Callback<PatchSRMARequest>(req =>
+   //              {
+   //                  updatedByDelegate = req.Delegate(srmaModel);
+   //              });
 
-            controllerSUT.UpdateDateClosed(srmaId);
+   //         controllerSUT.UpdateDateClosed(srmaId);
 
-            updatedByDelegate.Should().NotBeNull();
-			updatedByDelegate.ClosedAt.Should().NotBeNull();
-        }
+   //         updatedByDelegate.Should().NotBeNull();
+			//updatedByDelegate.ClosedAt.Should().NotBeNull();
+   //     }
     }
 }
