@@ -15,9 +15,6 @@ namespace ConcernsCaseWork.API.Features.Decision
 	{
 		public class Command : IRequest<CommandResult>
 		{
-			private const int _maxUrlLength = 2048;
-			private const int _maxCaseNumberLength = 20;
-
 			public int ConcernsCaseUrn { get; set; } 
 			public DecisionTypeQuestion[] DecisionTypes { get; set; }
 

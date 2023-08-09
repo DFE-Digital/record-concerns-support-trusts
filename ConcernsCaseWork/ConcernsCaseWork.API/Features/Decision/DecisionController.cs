@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Route("v{version:apiVersion}/concerns-cases/{urn:int}/decisions/")]
+	[Route("v{version:apiVersion}/concerns-cases/{concernsCaseUrn:int}/decisions/")]
 	public class DecisionController : ControllerBase
 	{
 		private readonly IMediator _mediator;
@@ -56,6 +56,20 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 		*/
 
+		[HttpGet("{decisionId}")]
+		[ProducesResponseType((int)HttpStatusCode.OK)]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
+		public async Task<IActionResult> GetByID([FromRoute] GetByID.Query query)
+		{
+			var model = await _mediator.Send(query);
+			if (model == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+		}
+
 		[HttpPost(Name = "CreateDecision")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -66,6 +80,17 @@ namespace ConcernsCaseWork.API.Features.Decision
 			var response = new ApiSingleResponseV2<Create.CommandResult>(commandResult);
 
 			return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+		}
+
+		[HttpPut("{decisionId}")]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.Created)]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Update([FromBody] Update.Command command, CancellationToken cancellationToken = default)
+		{
+			var commandResult = await _mediator.Send(command);
+			var model = await _mediator.Send(new GetByID.Query() { DecisionId = commandResult });
+			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
 		}
 	}
 }

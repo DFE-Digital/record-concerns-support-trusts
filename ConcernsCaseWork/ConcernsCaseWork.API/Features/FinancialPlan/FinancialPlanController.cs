@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		}
 
 
-		[HttpPatch]
+		[HttpPut]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
