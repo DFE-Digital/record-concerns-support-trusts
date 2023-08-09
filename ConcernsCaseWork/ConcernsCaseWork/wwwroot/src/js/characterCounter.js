@@ -1754,23 +1754,23 @@ Change Log:
 	var CHARACTER_COUNT_TRANSLATIONS = {
 		// Characters
 		charactersUnderLimit: {
-			one: 'You have %{count} character remaining',
-			other: 'You have %{count} characters remaining'
+			one: 'You have %{count} character remaining.',
+			other: 'You have %{count} characters remaining.'
 		},
-		charactersAtLimit: 'You have 0 characters remaining',
+		charactersAtLimit: 'You have 0 characters remaining.',
 		charactersOverLimit: {
-			one: 'You have %{count} character too many',
-			other: 'You have %{count} characters too many'
+			one: 'You have %{count} character too many.',
+			other: 'You have %{count} characters too many.'
 		},
 		// Words
 		wordsUnderLimit: {
-			one: 'You have %{count} word remaining',
-			other: 'You have %{count} words remaining'
+			one: 'You have %{count} word remaining.',
+			other: 'You have %{count} words remaining.'
 		},
-		wordsAtLimit: 'You have 0 words remaining',
+		wordsAtLimit: 'You have 0 words remaining.',
 		wordsOverLimit: {
-			one: 'You have %{count} word too many',
-			other: 'You have %{count} words too many'
+			one: 'You have %{count} word too many.',
+			other: 'You have %{count} words too many.'
 		},
 		textareaDescription: {
 			other: ''
