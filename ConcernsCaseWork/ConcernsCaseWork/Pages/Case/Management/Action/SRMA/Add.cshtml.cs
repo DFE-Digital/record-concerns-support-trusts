@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 			=> new("srma-notes", nameof(Notes), "Notes (optional)")
 			{
-				HintText = "Case owners can record any information they want that feels relevant to the action",
+				HintText = "Case owners can record any information they want that feels relevant to the action.",
 				Text = new ValidateableString()
 				{
 					MaxLength = SrmaConstants.NotesLength,
