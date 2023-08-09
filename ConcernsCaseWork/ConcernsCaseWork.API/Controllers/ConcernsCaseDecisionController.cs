@@ -71,7 +71,6 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 	    }
 
-		*/
 
 
 
@@ -100,7 +99,9 @@ namespace ConcernsCaseWork.API.Controllers
 		    }
 	    }
 
-	    [HttpPut("{decisionId:int}")]
+
+
+		[HttpPut("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<UpdateDecisionResponse>>> UpdateDecision(int urn, int decisionId, UpdateDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
@@ -119,6 +120,9 @@ namespace ConcernsCaseWork.API.Controllers
 		    LogInfo($"Returning update response. Concerns Case Urn {result.ConcernsCaseUrn}, DecisionId {result.DecisionId}");
 		    return new OkObjectResult(response);
 	    }
+
+		*/
+
 	    
 	    [HttpPatch("{decisionId:int}/close")]
 	    [MapToApiVersion("2.0")]
