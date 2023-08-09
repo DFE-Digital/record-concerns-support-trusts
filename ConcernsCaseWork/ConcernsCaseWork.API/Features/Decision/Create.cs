@@ -77,7 +77,6 @@ namespace ConcernsCaseWork.API.Features.Decision
 				var DecisionCreatedNotification = new DecisionCreatedNotification() { Id = decision.DecisionId, CaseId = concernsCase.Id };
 				await _mediator.Publish(DecisionCreatedNotification);
 
-
 				return new CommandResult()
 				{
 					ConcernsCaseUrn = decision.ConcernsCaseId,

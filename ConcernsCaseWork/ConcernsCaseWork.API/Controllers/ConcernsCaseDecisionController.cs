@@ -121,7 +121,6 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new OkObjectResult(response);
 	    }
 
-		*/
 
 	    
 	    [HttpPatch("{decisionId:int}/close")]
@@ -145,7 +144,10 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new OkObjectResult(response);
 	    }
 
-	    [HttpGet()]
+		*/
+
+
+		[HttpGet()]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken = default)
 	    {

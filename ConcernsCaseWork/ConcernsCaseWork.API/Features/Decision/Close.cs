@@ -9,25 +9,11 @@ namespace ConcernsCaseWork.API.Features.Decision
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
 
-	public class Update
+	public class Close
 	{
-		public class DecisionModel
+		public class CloseDecisionModel
 		{
-			public DecisionTypeQuestion[] DecisionTypes { get; set; }
-
-			public decimal TotalAmountRequested { get; set; }
-
 			public string SupportingNotes { get; set; }
-
-			public DateTimeOffset? ReceivedRequestDate { get; set; }
-
-			public string SubmissionDocumentLink { get; set; }
-
-			public bool? SubmissionRequired { get; set; }
-
-			public bool? RetrospectiveApproval { get; set; }
-
-			public string CrmCaseNumber { get; set; }
 		}
 
 		public class CommandResult
@@ -41,9 +27,9 @@ namespace ConcernsCaseWork.API.Features.Decision
 			public int ConcernsCaseUrn { get; }
 			public int DecisionId { get; }
 
-			public DecisionModel Model { get; set; }
+			public CloseDecisionModel Model { get; set; }
 
-			public Command(int concernsCaseUrn, int DecisionId, DecisionModel model)
+			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionModel model)
 			{
 				this.ConcernsCaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
@@ -68,13 +54,11 @@ namespace ConcernsCaseWork.API.Features.Decision
 						.Include(x => x.Decisions)
 						.ThenInclude(x => x.DecisionTypes)
 						.Include(x => x.Decisions)
+						.ThenInclude(x => x.Outcome)
+						.ThenInclude(x => x.BusinessAreasConsulted)
 						.SingleOrDefaultAsync(c => c.Id == request.ConcernsCaseUrn);
 
-				var decisionTypes = request.Model.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
-
-				var updatedDecision = Decision.CreateNew(request.Model.CrmCaseNumber, request.Model.RetrospectiveApproval, request.Model.SubmissionRequired, request.Model.SubmissionDocumentLink, request.Model.ReceivedRequestDate.Value, decisionTypes, request.Model.TotalAmountRequested, request.Model.SupportingNotes, DateTime.Now);
-
-				concernCase.UpdateDecision(request.DecisionId, updatedDecision, updatedDecision.UpdatedAt);
+				concernCase.CloseDecision(request.DecisionId, request.Model.SupportingNotes, DateTime.Now);
 
 				await _context.SaveChangesAsync();
 

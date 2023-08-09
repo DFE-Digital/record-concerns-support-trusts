@@ -86,11 +86,29 @@ namespace ConcernsCaseWork.API.Features.Decision
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Update([FromBody] Update.Command command, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] Update.DecisionModel putModel, CancellationToken cancellationToken = default)
 		{
+			var command = new Update.Command(concernsCaseUrn, decisionId, putModel);
 			var commandResult = await _mediator.Send(command);
-			var model = await _mediator.Send(new GetByID.Query() { DecisionId = commandResult });
+
+			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.ConcernsCaseUrn, DecisionId = commandResult.DecisionId });
 			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+
 		}
+
+		[HttpPatch("{decisionId}/close")]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.Created)]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Close(int concernsCaseUrn, int decisionId, [FromBody] Close.CloseDecisionModel closeModel, CancellationToken cancellationToken = default)
+		{
+			var command = new Close.Command(concernsCaseUrn, decisionId, closeModel);
+			var commandResult = await _mediator.Send(command);
+
+			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.ConcernsCaseUrn, DecisionId = commandResult.DecisionId });
+			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+
+		}
+
 	}
 }

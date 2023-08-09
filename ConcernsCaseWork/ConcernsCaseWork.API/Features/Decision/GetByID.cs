@@ -47,12 +47,10 @@ namespace ConcernsCaseWork.API.Features.Decision
 		public class Handler : IRequestHandler<Query, Result>
 		{
 			private readonly ConcernsDbContext _context;
-			private readonly MapperConfiguration _mapperConfiguration;
 
-			public Handler(ConcernsDbContext context, MapperConfiguration mapperConfiguration)
+			public Handler(ConcernsDbContext context)
 			{
 				_context = context;
-				_mapperConfiguration = mapperConfiguration;
 			}
 
 			public async Task<Result> Handle(Query request, CancellationToken cancellationToken)

@@ -40,6 +40,8 @@ public class CloseDecisionIntegrationTests
 		var cCase = await CreateCase();
 		var decisionId = await CreateDecisionWithOutcome(cCase.Id);
 
+		var now = DateTimeOffset.Now;
+
 		var request = new CloseDecisionRequest()
 		{
 			SupportingNotes = _fixture.Create<string>()
@@ -58,8 +60,10 @@ public class CloseDecisionIntegrationTests
 		response.Data.CaseUrn.Should().Be(cCase.Urn);
 
 		var dbDecision = GetContext().Decisions.Single(d => d.DecisionId == decisionId);
-		dbDecision.ClosedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromMinutes(1));
+		dbDecision.ClosedAt.Should().BeCloseTo(now, TimeSpan.FromMinutes(1));
 		dbDecision.SupportingNotes.Should().Be(request.SupportingNotes);
+
+		cCase.CaseLastUpdatedAt.Should().BeCloseTo(now, TimeSpan.FromMinutes(1));
 	}
 	
 	[Fact]
