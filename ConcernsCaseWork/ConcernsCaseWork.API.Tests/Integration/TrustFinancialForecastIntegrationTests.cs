@@ -23,6 +23,7 @@ using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
 using ConcernsCaseWork.CoreTypes;
+using FluentAssertions.Extensions;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
@@ -132,7 +133,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
-		public async Task When_Put_UpdateTFFWithInvalidNotesLength_ReturnBadRequest2()
+		public async Task When_Put_UpdateTFFWithInvalidNotesLength_ReturnBadRequest()
 		{
 			//Arrange
 			var createdConcern = await CreateCase();
@@ -163,6 +164,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			response.Data.Should().NotBeNull();
 			updatedTFF.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+			await AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(createdConcern, updatedTFF);
 		}
 
 		[Fact]
@@ -184,7 +186,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updatedTFF.Notes.Should().Be(request.Notes);
 			updatedTFF.ClosedAt.Should().NotBeNull();
 			updatedTFF.ClosedAt.Value.Date.Should().Be(System.DateTime.Now.Date);
-			updatedTFF.UpdatedAt.DateTime.ToString("dd/MM/yyyy hh:MM").Should().Be(System.DateTime.Now.ToString("dd/MM/yyyy hh:MM"));
+			await AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(createdConcern, updatedTFF);
 		}
 
 
@@ -385,13 +387,19 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		protected async Task AssertCaseLastUpdatedDateMatchesTFFCreatedAt(ConcernsCaseResponse createdCase, TrustFinancialForecastResponse createdTFF)
 		{
-			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdTFF.CreatedAt.DateTime);
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdTFF.CreatedAt);
 		}
 
-		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTime date)
+		protected async Task AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(ConcernsCaseResponse createdCase, TrustFinancialForecastResponse updatedTFF)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, updatedTFF.UpdatedAt);
+		}
+
+
+		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTimeOffset date)
 		{
 			var updatedCase = await GetCase(caseUrn);
-			updatedCase.CaseLastUpdatedAt.Should().Be(date);
+			updatedCase.CaseLastUpdatedAt.Should().Be(date.DateTime);
 		}
 
 		public static class Get
