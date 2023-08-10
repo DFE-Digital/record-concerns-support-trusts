@@ -240,6 +240,12 @@ variable "enable_mssql_database" {
   type        = bool
 }
 
+variable "mssql_sku_name" {
+  description = "Specifies the name of the SKU used by the database"
+  type        = string
+  default     = "Basic"
+}
+
 variable "mssql_server_admin_password" {
   description = "The administrator password for the MSSQL server. Must be set if `enable_mssql_database` is true"
   type        = string
