@@ -16,6 +16,7 @@ locals {
   container_scale_rule_concurrent_request_count = var.container_scale_rule_concurrent_request_count
   enable_redis_cache                            = var.enable_redis_cache
   enable_mssql_database                         = var.enable_mssql_database
+  mssql_sku_name                                = var.mssql_sku_name
   mssql_server_admin_password                   = var.mssql_server_admin_password
   mssql_database_name                           = var.mssql_database_name
   mssql_firewall_ipv4_allow_list                = var.mssql_firewall_ipv4_allow_list
