@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			createdNTI.WarningLetterConditionsMapping.Should().HaveCount(2);
 			createdNTI.WarningLetterReasonsMapping.Should().HaveCount(3);
 
-			//await AssertCaseLastUpdatedDateMatchesNTICreatedAt(createdCase, createdNTI);
+			await AssertCaseLastUpdatedDateMatchesNTICreatedAt(createdCase, createdNTI);
 		}
 
 		[Fact]
@@ -201,6 +201,33 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			return getResponseContent.Data;
 		}
+
+		protected async Task AssertCaseLastUpdatedDateMatchesNTICreatedAt(ConcernsCaseResponse createdCase, NTIWarningLetterResponse createdNti)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdNti.CreatedAt);
+		}
+		protected async Task AssertCaseLastUpdatedDateMatchesNTIUpdatedAt(ConcernsCaseResponse createdCase, NTIWarningLetterResponse updatedNti)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, updatedNti.UpdatedAt.Value);
+		}
+
+		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTime date)
+		{
+			var updatedCase = await GetCase(caseUrn);
+			updatedCase.CaseLastUpdatedAt.Should().Be(date);
+		}
+
+		private async Task<ConcernsCaseResponse> GetCase(Int32 urn)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseCase.Data.Should().NotBeNull();
+
+			return getResponseCase.Data;
+		}
+
 
 		public static class Post
 		{
