@@ -2,6 +2,7 @@ using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 using NotFoundException = ConcernsCaseWork.API.Exceptions.NotFoundException;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
@@ -20,16 +21,22 @@ public class CloseTrustFinancialForecast : IUseCaseAsync<CloseTrustFinancialFore
 	public async Task<int> Execute(CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken)
 	{
 		EnsureRequestIsValid(request);
-		
-		await EnsureCaseExists(request.CaseUrn, cancellationToken);
+
+		var cc = GetCase(request.CaseUrn);
 
 		var trustFinancialForecast = await GetTrustFinancialForecastToUpdate(request.TrustFinancialForecastId, cancellationToken);
 		
 		EnsureTrustFinancialForecastCanBeClosed(trustFinancialForecast);
 
 		UpdateTrustFinancialForecastValues(request, trustFinancialForecast);
-            
-		return await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
+
+		var result = await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
+
+		cc.CaseLastUpdatedAt = trustFinancialForecast.UpdatedAt.DateTime;
+
+		await _concernsCaseGateway.UpdateExistingAsync(cc);
+
+		return result;
 	}
 
 	private static void EnsureRequestIsValid(CloseTrustFinancialForecastRequest request)
@@ -45,12 +52,14 @@ public class CloseTrustFinancialForecast : IUseCaseAsync<CloseTrustFinancialFore
 		}
 	}
 
-	private async Task EnsureCaseExists(int caseUrn, CancellationToken cancellationToken)
+	private ConcernsCase GetCase(int caseUrn)
 	{
-		if (! await _concernsCaseGateway.CaseExists(caseUrn, cancellationToken))
-        {
-        	throw new NotFoundException($"Concerns Case {caseUrn} not found");
-        }
+		var cc = _concernsCaseGateway.GetConcernsCaseByUrn(caseUrn);
+		if (cc == null)
+		{
+			throw new NotFoundException($"Concerns Case {caseUrn} not found");
+		}
+		return cc;
 	}
 
 	private static void EnsureTrustFinancialForecastCanBeClosed(Data.Models.TrustFinancialForecast trustFinancialForecast)
