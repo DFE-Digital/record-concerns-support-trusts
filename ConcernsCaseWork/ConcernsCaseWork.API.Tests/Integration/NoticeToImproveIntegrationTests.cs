@@ -4,8 +4,10 @@ using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.API.UseCases.CaseActions.SRMA;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -21,14 +23,6 @@ using static ConcernsCaseWork.API.Tests.Integration.TrustFinancialForecastIntegr
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public static class FixtureExtensions
-	{
-		public static int CreateInt(this IFixture fixture, int min, int max)
-		{
-			return fixture.Create<int>() % (max - min + 1) + min;
-		}
-	}
-
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
 	public class NoticeToImproveIntegrationTests
 	{
@@ -48,17 +42,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			//Arrange
 			var createdCase = await CreateCase();
-			//var statusList = await GetStatusListAsync();
-
 			var request = CreateNoticeToImproveRequestForCase(createdCase.Urn);
 
 			//Arrange and Act
-			var createdTFF = await CreateAndGetNTI(request);
+			var createdNTI = await CreateAndGetNTI(request);
 
 			//Assert
-			createdTFF.Should().BeEquivalentTo(request);
-			createdTFF.NoticeToImproveConditionsMapping.Should().HaveCount(2);
-			createdTFF.NoticeToImproveReasonsMapping.Should().HaveCount(3);
+			createdNTI.Should().BeEquivalentTo(request);
+			createdNTI.NoticeToImproveConditionsMapping.Should().HaveCount(2);
+			createdNTI.NoticeToImproveReasonsMapping.Should().HaveCount(3);
+			
+			await AssertCaseLastUpdatedDateMatchesNTICreatedAt(createdCase, createdNTI);
 		}
 
 		[Fact]
@@ -78,6 +72,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			response.Data.Should().NotBeNull();
 			updatedNTI.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+			await AssertCaseLastUpdatedDateMatchesNTIUpdatedAt(createdConcern, updatedNTI);
 		}
 
 		[Fact]
@@ -297,15 +292,30 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return request;
 		}
 
-		protected async Task<List<NoticeToImproveStatus>> GetStatusListAsync()
+		protected async Task AssertCaseLastUpdatedDateMatchesNTICreatedAt(ConcernsCaseResponse createdCase, NoticeToImproveResponse createdNti)
 		{
-			var getResponse = await _client.GetAsync(Get.StatusList());
-			var getResponseContent = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<List<NoticeToImproveStatus>>>();
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdNti.CreatedAt);
+		}
+		protected async Task AssertCaseLastUpdatedDateMatchesNTIUpdatedAt(ConcernsCaseResponse createdCase, NoticeToImproveResponse updatedNti)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, updatedNti.UpdatedAt.Value);
+		}
+
+		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTime date)
+		{
+			var updatedCase = await GetCase(caseUrn);
+			updatedCase.CaseLastUpdatedAt.Should().Be(date);
+		}
+
+		private async Task<ConcernsCaseResponse> GetCase(Int32 urn)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-			getResponseContent.Data.Should().NotBeNull();
+			getResponseCase.Data.Should().NotBeNull();
 
-			return getResponseContent.Data;
+			return getResponseCase.Data;
 		}
 
 		public static class Get
@@ -313,11 +323,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			public static string ItemById(long id)
 			{
 				return $"/v2/case-actions/notice-to-improve/{id}";
-			}
-
-			public static string StatusList()
-			{
-				return $"/v2/case-actions/notice-to-improve/all-statuses";
 			}
 		}
 
