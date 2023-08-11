@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast
 {
@@ -18,12 +19,19 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast
         public async Task<int> Execute(CreateTrustFinancialForecastRequest request, CancellationToken cancellationToken)
         {
 	        EnsureRequestIsValid(request);
+
+			var cc = GetCase(request.CaseUrn);
 		
-	        await EnsureCaseExists(request.CaseUrn, cancellationToken);
 
 	        var model = BuildTrustFinancialForecast(request);
 	        
-            return await _trustFinancialForecastGateway.Update(model, cancellationToken);
+            var result =  await _trustFinancialForecastGateway.Update(model, cancellationToken);
+
+			cc.CaseLastUpdatedAt = model.CreatedAt.DateTime;
+
+			await _concernsCaseGateway.UpdateExistingAsync(cc);
+
+			return result;
         }
         
         private static void EnsureRequestIsValid(CreateTrustFinancialForecastRequest request)
@@ -39,13 +47,15 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast
 	        }
         }
 
-        private async Task EnsureCaseExists(int caseUrn, CancellationToken cancellationToken)
-        {
-	        if (! await _concernsCaseGateway.CaseExists(caseUrn, cancellationToken))
-	        {
-		        throw new NotFoundException($"Concerns Case {caseUrn} not found");
-	        }
-        }
+		private ConcernsCase GetCase(int caseUrn)
+		{
+			var cc = _concernsCaseGateway.GetConcernsCaseByUrn(caseUrn);
+			if (cc == null)
+			{
+				throw new NotFoundException($"Concerns Case {caseUrn} not found");
+			}
+			return cc;
+		}
 
         private static Data.Models.TrustFinancialForecast BuildTrustFinancialForecast(CreateTrustFinancialForecastRequest request)
         {

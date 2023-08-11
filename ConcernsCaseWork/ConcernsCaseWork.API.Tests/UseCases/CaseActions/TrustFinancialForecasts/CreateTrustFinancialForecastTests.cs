@@ -7,6 +7,7 @@ using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using System;
@@ -111,8 +112,8 @@ public class CreateTrustFinancialForecastTests
 		var trustFinancialForecastId = _fixture.Create<int>();
 		
 		var request = CreateCreateTrustFinancialForecastRequest(caseUrn);
-		
-		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+
+		mockCaseGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.Update(It.IsAny<TrustFinancialForecast>(), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(trustFinancialForecastId);
