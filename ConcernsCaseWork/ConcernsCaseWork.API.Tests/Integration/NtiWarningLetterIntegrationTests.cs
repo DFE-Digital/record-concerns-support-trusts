@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			response.Data.Should().NotBeNull();
 			updatedNTI.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
-			//await AssertCaseLastUpdatedDateMatchesNTIUpdatedAt(createdConcern, updatedNTI);
+			await AssertCaseLastUpdatedDateMatchesNTIUpdatedAt(createdConcern, updatedNTI);
 		}
 
 
