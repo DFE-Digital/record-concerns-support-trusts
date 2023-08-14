@@ -7,8 +7,8 @@
     var caseExists = Model.CaseUrn.HasValue;
 
     ViewData["Title"] = caseExists ? "Add Case Details" : "New Case Details";
-    var buttonName = caseExists ? "Add to case" : "Create case";
-    var heading = caseExists ? "Add to case" : "Create case";
+    var buttonName = caseExists ? "Add to case" : "Create a case";
+    var heading = caseExists ? "Add to case" : "Create a case";
 
     var nonce = HttpContext.GetNonce();
 }
