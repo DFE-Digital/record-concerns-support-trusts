@@ -1,10 +1,11 @@
 name: Security scanner tests
 
 on:
-  workflow_run:
-    workflows: ["Deploy to environment"]
-    types:
-      - completed
+  workflow_dispatch:
+  # workflow_run:
+  #   workflows: ["Deploy to environment"]
+  #   types:
+  #     - completed
 
 env:
   ZAP_ADDRESS: localhost
