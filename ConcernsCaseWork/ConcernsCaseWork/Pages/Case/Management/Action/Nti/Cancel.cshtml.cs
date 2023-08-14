@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 		=> new("nti-notes", nameof(Notes), "Finalise notes (optional)")
 		{
-			HintText = "Case owners can record any information they want that feels relevant to the action",
+			HintText = "Case owners can record any information they want that feels relevant to the action.",
 			Text = new ValidateableString()
 			{
 				MaxLength = 2000,

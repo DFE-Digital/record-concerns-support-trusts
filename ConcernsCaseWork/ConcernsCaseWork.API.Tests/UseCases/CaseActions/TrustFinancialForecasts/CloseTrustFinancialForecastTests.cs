@@ -3,11 +3,13 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
+using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
 using System;
@@ -74,10 +76,7 @@ public class CloseTrustFinancialForecastTests
 		
 		var request = new CloseTrustFinancialForecastRequest { CaseUrn = caseUrn, TrustFinancialForecastId = trustFinancialForecastId, Notes = notes };
 
-		mockCaseGateWay
-			.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>()))
-			.ReturnsAsync(true);
-
+		mockCaseGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
 		var sut = new CloseTrustFinancialForecast(mockCaseGateWay.Object, mockTrustFinancialForecastGateway.Object);
 		
 		// act
@@ -190,9 +189,11 @@ public class CloseTrustFinancialForecastTests
 		var notes = _fixture.Create<string>();
 		
 		var request = new CloseTrustFinancialForecastRequest { CaseUrn = caseUrn, TrustFinancialForecastId = id, Notes = notes };
-		
-		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
-		
+		var cc = Builder<ConcernsCase>
+			.CreateNew().Build();
+
+		mockCaseGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(cc);
+
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetById(It.Is<int>(r => r == id), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(trustFinancialForecast);
@@ -232,9 +233,9 @@ public class CloseTrustFinancialForecastTests
 				TrustFinancialForecastId = id, 
 				Notes = _fixture.Create<string>() 
 			};
-		
-		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
-		
+
+		mockCaseGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
+
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetById(It.Is<int>(r => r == id), 
 				It.IsAny<CancellationToken>()))
