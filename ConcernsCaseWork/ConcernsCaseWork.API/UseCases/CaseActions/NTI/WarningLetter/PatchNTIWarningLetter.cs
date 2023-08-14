@@ -1,17 +1,21 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter
 {
     public class PatchNTIWarningLetter : IUseCase<PatchNTIWarningLetterRequest, NTIWarningLetterResponse>
     {
-        private readonly INTIWarningLetterGateway _gateway;
+		private readonly IConcernsCaseGateway _concernsCaseGateway;
+		private readonly INTIWarningLetterGateway _gateway;
 
-        public PatchNTIWarningLetter(INTIWarningLetterGateway gateway)
+        public PatchNTIWarningLetter(INTIWarningLetterGateway gateway, IConcernsCaseGateway concernsCaseGateway)
         {
             _gateway = gateway;
+			_concernsCaseGateway = concernsCaseGateway;
         }
 
         public NTIWarningLetterResponse Execute(PatchNTIWarningLetterRequest request)
@@ -21,8 +25,24 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter
 
         public async Task<NTIWarningLetterResponse> ExecuteAsync(PatchNTIWarningLetterRequest request)
         {
-            var patchedNTIWarningLetter = await _gateway.PatchNTIWarningLetter(NTIWarningLetterFactory.CreateDBModel(request));
-            return NTIWarningLetterFactory.CreateResponse(patchedNTIWarningLetter);
+			var cc = GetCase(request.CaseUrn);
+
+			var patchedNTIWarningLetter = await _gateway.PatchNTIWarningLetter(NTIWarningLetterFactory.CreateDBModel(request));
+			
+			cc.CaseLastUpdatedAt = patchedNTIWarningLetter.UpdatedAt;
+			await _concernsCaseGateway.UpdateExistingAsync(cc);
+
+			return NTIWarningLetterFactory.CreateResponse(patchedNTIWarningLetter);
         }
-    }
+
+		private ConcernsCase GetCase(int caseUrn)
+		{
+			var cc = _concernsCaseGateway.GetConcernsCaseByUrn(caseUrn);
+			if (cc == null)
+			{
+				throw new NotFoundException($"Concerns Case {caseUrn} not found");
+			}
+			return cc;
+		}
+	}
 }

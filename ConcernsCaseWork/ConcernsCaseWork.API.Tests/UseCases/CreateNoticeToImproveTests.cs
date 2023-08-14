@@ -74,10 +74,13 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 			};
 			
 			var mockGateway = new Mock<INoticeToImproveGateway>();
-            
-            mockGateway.Setup(g => g.CreateNoticeToImprove(It.IsAny<NoticeToImprove>())).Returns(Task.FromResult(noticeToImproveDbModel));
-            
-            var useCase = new CreateNoticeToImprove(mockGateway.Object);
+			var mockCaseGateway = new Mock<IConcernsCaseGateway>();
+
+
+			mockGateway.Setup(g => g.CreateNoticeToImprove(It.IsAny<NoticeToImprove>())).Returns(Task.FromResult(noticeToImproveDbModel));
+			mockCaseGateway.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
+
+			var useCase = new CreateNoticeToImprove(mockGateway.Object, mockCaseGateway.Object);
             
             var result = useCase.Execute(createNoticeToImproveRequest);
 
