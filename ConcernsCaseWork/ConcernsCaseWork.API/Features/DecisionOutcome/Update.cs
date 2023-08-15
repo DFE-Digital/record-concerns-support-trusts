@@ -115,7 +115,9 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 					DecisionOutcomeBusinessId = b
 				}).ToList();
 
-				decision.Outcome.UpdatedAt = DateTimeOffset.Now;
+				var now = DateTimeOffset.Now;
+				decision.UpdatedAt = now;
+				decision.Outcome.UpdatedAt = now;
 
 				await _context.SaveChangesAsync();
 

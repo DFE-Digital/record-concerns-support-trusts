@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 			{
 				ConcernsCase cc = await _context.ConcernsCase.SingleOrDefaultAsync(f => f.Id == notification.CaseId, cancellationToken: cancellationToken);
                 DecisionOutcome decisionOutcome = await _context.DecisionOutcomes.SingleOrDefaultAsync(f => f.DecisionOutcomeId == notification.Id, cancellationToken: cancellationToken);
-				cc.CaseLastUpdatedAt = decisionOutcome.UpdatedAt.DateTime;
+				cc.CaseLastUpdatedAt = decisionOutcome.CreatedAt.DateTime;
 				await _context.SaveChangesAsync();
 			}
 		}

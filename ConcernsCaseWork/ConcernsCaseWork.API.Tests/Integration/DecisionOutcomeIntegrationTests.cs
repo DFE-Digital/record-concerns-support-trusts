@@ -211,6 +211,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updateResult.DecisionId.Should().Be(decisionId);
 			updateResult.DecisionOutcomeId.Should().Be(createOutcomeResponse.DecisionOutcomeId);
 
+			var updatedCase = await GetCase(caseId);
 			var updatedDecision = await GetDecision(caseId, decisionId);
 
 			updatedDecision.Outcome.Status.Should().Be(request.Status);
@@ -219,6 +220,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updatedDecision.Outcome.DecisionMadeDate.Should().Be(request.DecisionMadeDate);
 			updatedDecision.Outcome.TotalAmount.Should().Be(request.TotalAmount);
 			updatedDecision.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(request.BusinessAreasConsulted);
+
+			updatedCase.CaseLastUpdatedAt.Value.Date.Should().Be(updatedDecision.UpdatedAt.Date);
 		}
 
 		[Fact]
@@ -361,6 +364,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 
 			return result.Data;
+		}
+
+		private async Task<ConcernsCaseResponse> GetCase(int urn)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseCase.Data.Should().NotBeNull();
+
+			return getResponseCase.Data;
 		}
 
 		private async Task<CreateDecisionOutcomeResponse> SetupPutTest()
