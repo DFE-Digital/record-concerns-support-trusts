@@ -58,10 +58,12 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 			};
 			
 			var mockGateway = new Mock<INTIUnderConsiderationGateway>();
-            
-            mockGateway.Setup(g => g.CreateNTIUnderConsideration(It.IsAny<NTIUnderConsideration>())).Returns(Task.FromResult(considerationDbModel));
-            
-            var useCase = new CreateNTIUnderConsideration(mockGateway.Object);
+			var mockCaseGateway = new Mock<IConcernsCaseGateway>();
+
+			mockGateway.Setup(g => g.CreateNTIUnderConsideration(It.IsAny<NTIUnderConsideration>())).Returns(Task.FromResult(considerationDbModel));
+			mockCaseGateway.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
+
+			var useCase = new CreateNTIUnderConsideration(mockGateway.Object, mockCaseGateway.Object);
             
             var result = useCase.Execute(createConsiderationRequest);
 
