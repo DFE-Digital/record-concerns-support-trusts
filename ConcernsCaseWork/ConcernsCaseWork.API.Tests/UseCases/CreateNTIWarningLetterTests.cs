@@ -74,10 +74,12 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 			};
 			
 			var mockGateway = new Mock<INTIWarningLetterGateway>();
-            
-            mockGateway.Setup(g => g.CreateNTIWarningLetter(It.IsAny<NTIWarningLetter>())).Returns(Task.FromResult(warningLetterDbModel));
-            
-            var useCase = new CreateNTIWarningLetter(mockGateway.Object);
+			var mockCaseGateway = new Mock<IConcernsCaseGateway>();
+
+			mockGateway.Setup(g => g.CreateNTIWarningLetter(It.IsAny<NTIWarningLetter>())).Returns(Task.FromResult(warningLetterDbModel));
+			mockCaseGateway.Setup(x => x.GetConcernsCaseByUrn(caseUrn, It.IsAny<bool>())).Returns(Builder<ConcernsCase>.CreateNew().Build());
+
+			var useCase = new CreateNTIWarningLetter(mockGateway.Object, mockCaseGateway.Object);
             
             var result = useCase.Execute(createWarningLetterRequest);
 
