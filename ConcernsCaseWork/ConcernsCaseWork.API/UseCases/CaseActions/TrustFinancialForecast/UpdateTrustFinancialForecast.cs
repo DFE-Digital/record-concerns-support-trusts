@@ -2,6 +2,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 
@@ -20,15 +21,21 @@ public class UpdateTrustFinancialForecast : IUseCaseAsync<UpdateTrustFinancialFo
 	{
 		EnsureRequestIsValid(request);
 
-		await EnsureCaseExists(request.CaseUrn, cancellationToken);
+		var cc = GetCase(request.CaseUrn);
 
 		var trustFinancialForecast = await GetTrustFinancialForecastToUpdate(request.TrustFinancialForecastId, cancellationToken);
 		
 		EnsureTrustFinancialForecastCanBeEdited(trustFinancialForecast);
 
 		UpdateTrustFinancialForecastValues(request, trustFinancialForecast);
-            
-		return await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
+
+		var result = await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
+
+		cc.CaseLastUpdatedAt = trustFinancialForecast.UpdatedAt.DateTime;
+
+		await _concernsCaseGateway.UpdateExistingAsync(cc);
+
+		return result;
 	}
 
 	private static void EnsureRequestIsValid(UpdateTrustFinancialForecastRequest request)
@@ -44,13 +51,16 @@ public class UpdateTrustFinancialForecast : IUseCaseAsync<UpdateTrustFinancialFo
 		}
 	}
 
-	private async Task EnsureCaseExists(int caseUrn, CancellationToken cancellationToken)
+	private ConcernsCase GetCase(int caseUrn)
 	{
-		if (! await _concernsCaseGateway.CaseExists(caseUrn, cancellationToken))
+		var cc = _concernsCaseGateway.GetConcernsCaseByUrn(caseUrn);
+		if (cc == null)
 		{
 			throw new NotFoundException($"Concerns Case {caseUrn} not found");
 		}
+		return cc;
 	}
+
 
 	private static void EnsureTrustFinancialForecastCanBeEdited(Data.Models.TrustFinancialForecast trustFinancialForecast)
 	{

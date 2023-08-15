@@ -23,6 +23,7 @@ using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
 using ConcernsCaseWork.CoreTypes;
+using FluentAssertions.Extensions;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
@@ -38,6 +39,49 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			_client = apiTestFixture.Client;
 			_fixture = new();
 			_randomGenerator = new RandomGenerator();
+		}
+
+
+
+		[Fact]
+		public async Task When_GET_TFFNotExistReturns_NotFound()
+		{
+			//Arrange
+			var id = _fixture.Create<int>();
+			var CaseUrn = _fixture.Create<int>();
+
+			//Act
+			var result = await _client.GetAsync(Get.ItemById(CaseUrn,id));
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+
+		[Fact]
+		public async Task When_Post_CaseWithInvalidCaseUrn_BadRequest()
+		{
+			//Arrange
+			var request = CreateRequestWithInvalidCaseId();
+
+			//Act
+			var result = await _client.PostAsync(Post.CreateTFF(request.CaseUrn), request.ConvertToJson());
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
+
+		[Fact]
+		public async Task When_Post_CaseWithNotesFieldLongerThan2000_BadRequest()
+		{
+			//Arrange
+			var request = CreateRequestWithInvalidNotes();
+
+			//Act
+			var result = await _client.PostAsync(Post.CreateTFF(request.CaseUrn), request.ConvertToJson());
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
 
 		[Fact]
@@ -70,6 +114,37 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Assert
 			createdTFF.Should().BeEquivalentTo(request);
+			await AssertCaseLastUpdatedDateMatchesTFFCreatedAt(createdConcern, createdTFF);
+		}
+
+		[Fact]
+		public async Task When_Put_UpdateTFFWithInvalidCaseId_ReturnBadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+			var request = UpdateRequestWithInvalidCaseId();
+
+			//Act
+			var result = await _client.PutAsync(Put.UpdateTFF(request), request.ConvertToJson());
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
+
+		[Fact]
+		public async Task When_Put_UpdateTFFWithInvalidNotesLength_ReturnBadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdTFF = await CreateTFFforCase(createdConcern.Urn);
+			var request = UpdateRequestWithInvalidNotes();
+
+			//Act
+			var result = await _client.PutAsync(Put.UpdateTFF(request), request.ConvertToJson());
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		}
 
 		[Fact]
@@ -89,6 +164,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			response.Data.Should().NotBeNull();
 			updatedTFF.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
+			await AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(createdConcern, updatedTFF);
 		}
 
 		[Fact]
@@ -110,7 +186,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updatedTFF.Notes.Should().Be(request.Notes);
 			updatedTFF.ClosedAt.Should().NotBeNull();
 			updatedTFF.ClosedAt.Value.Date.Should().Be(System.DateTime.Now.Date);
-			updatedTFF.UpdatedAt.DateTime.ToString("dd/MM/yyyy hh:MM").Should().Be(System.DateTime.Now.ToString("dd/MM/yyyy hh:MM"));
+			await AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(createdConcern, updatedTFF);
 		}
 
 
@@ -279,6 +355,51 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var request = new CloseTrustFinancialForecastRequest { CaseUrn = createdConcern.Urn, TrustFinancialForecastId = createdTFF.TrustFinancialForecastId, Notes = _fixture.Create<String>() };
 			var result = await _client.PatchAsync(Patch.UpdateTFF(request), request.ConvertToJson());
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
+		}
+
+		protected CreateTrustFinancialForecastRequest CreateRequestWithInvalidCaseId()
+		{
+			var request = _fixture.Create<CreateTrustFinancialForecastRequest>();
+			request.CaseUrn = 0;
+			return request;
+		}
+
+		protected CreateTrustFinancialForecastRequest CreateRequestWithInvalidNotes()
+		{
+			var request = _fixture.Create<CreateTrustFinancialForecastRequest>();
+			request.Notes = string.Join("", _fixture.CreateMany<char>(2001));
+			return request;
+		}
+
+		protected UpdateTrustFinancialForecastRequest UpdateRequestWithInvalidCaseId()
+		{
+			var request = _fixture.Create<UpdateTrustFinancialForecastRequest>();
+			request.CaseUrn = 0;
+			return request;
+		}
+
+		protected UpdateTrustFinancialForecastRequest UpdateRequestWithInvalidNotes()
+		{
+			var request = _fixture.Create<UpdateTrustFinancialForecastRequest>();
+			request.Notes = string.Join("", _fixture.CreateMany<char>(2001));
+			return request;
+		}
+
+		protected async Task AssertCaseLastUpdatedDateMatchesTFFCreatedAt(ConcernsCaseResponse createdCase, TrustFinancialForecastResponse createdTFF)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, createdTFF.CreatedAt);
+		}
+
+		protected async Task AssertCaseLastUpdatedDateMatchesTFFUpdatedAt(ConcernsCaseResponse createdCase, TrustFinancialForecastResponse updatedTFF)
+		{
+			await AssertCaseLastUpdatedDateValid(createdCase.Urn, updatedTFF.UpdatedAt);
+		}
+
+
+		protected async Task AssertCaseLastUpdatedDateValid(Int32 caseUrn, DateTimeOffset date)
+		{
+			var updatedCase = await GetCase(caseUrn);
+			updatedCase.CaseLastUpdatedAt.Should().Be(date.DateTime);
 		}
 
 		public static class Get

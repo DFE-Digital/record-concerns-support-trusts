@@ -4,7 +4,7 @@
 @model ConcernsCaseWork.Pages.Trust.IndexPageModel
 
 @{
-    ViewData["Title"] = "Find trust";
+    ViewData["Title"] = "Find a trust";
 	Model.FindTrustModel.Nonce = HttpContext.GetNonce();
     var validationErrors = TempData["Error.Message"] as IEnumerable<string>;
 }

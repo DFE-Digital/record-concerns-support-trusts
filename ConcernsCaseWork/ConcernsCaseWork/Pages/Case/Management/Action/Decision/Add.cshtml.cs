@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				new DecisionTypeQuestionModel()
 				{
 					Id = DecisionType.RepayableFinancialSupport,
-					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
+					Hint = "Trusts must pay back repayable funding in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
 				},
 				new DecisionTypeQuestionModel()
 				{
@@ -304,7 +304,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 		=> new("case-decision-notes", nameof(Notes), "Supporting notes (optional)")
 		{
-			HintText = "Case owners can record any information they want that feels relevant to the action",
+			HintText = "Case owners can record any information they want that feels relevant to the action.",
 			Text = new ValidateableString()
 			{
 				MaxLength = DecisionConstants.MaxSupportingNotesLength,
