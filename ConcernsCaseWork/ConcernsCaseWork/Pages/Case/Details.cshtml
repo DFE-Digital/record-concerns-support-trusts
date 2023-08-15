@@ -7,43 +7,43 @@
     var caseExists = Model.CaseUrn.HasValue;
 
     ViewData["Title"] = caseExists ? "Add Case Details" : "New Case Details";
-    var buttonName = caseExists ? "Add to case" : "Create a case";
-    var heading = caseExists ? "Add to case" : "Create a case";
+    var buttonName = caseExists ? "Add to case" : "Create this case";
+    var heading = caseExists ? "Add to case" : "Create this case";
 
     var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
     <span class="govuk-caption-l">@heading</span>
 
     <h1 class="govuk-heading-l">Concern details</h1>
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error"/>
-	}
-	else
-	{
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
         <partial name="_ValidationErrors" />
 
-		<!-- Trust summary and records -->
-		<dl class="govuk-summary-list">
-			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
-			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
-			<partial name="_RatingSummary" model="Model.CreateCaseModel"/>
-			<partial name="_TerritorySummary" model="Model.CreateCaseModel.Territory"/>
-		</dl>
+        <!-- Trust summary and records -->
+        <dl class="govuk-summary-list">
+            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+            <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+            <partial name="_RatingSummary" model="Model.CreateCaseModel" />
+            <partial name="_TerritorySummary" model="Model.CreateCaseModel.Territory" />
+        </dl>
 
-		<div class="govuk-grid-row">
-			<div class="govuk-grid-column-two-thirds">
-				<!-- FORM -->
-				<form role="form" method="post" id="case-details-form" novalidate>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <!-- FORM -->
+                <form role="form" method="post" id="case-details-form" novalidate>
 
                     <h2 class="govuk-heading-m govuk-!-margin-top-6">Add concern details</h2>
-					<div id="initial-details-hint" class="govuk-hint">
+                    <div id="initial-details-hint" class="govuk-hint">
                         You only need to enter the issue to create the case. You can add other information now or later.
-					</div>
+                    </div>
 
                     <partial name="Components/_TextArea" model="Model.Issue" />
 
@@ -57,24 +57,24 @@
 
                     <partial name="Components/_TextArea" model="Model.CaseHistory" />
 
-					<div class="govuk-button-group">
+                    <div class="govuk-button-group">
                         <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
                             @buttonName
                         </button>
-				
-						<a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
-							Cancel
-						</a>
-					</div>
 
-				</form>
-			</div>
-		</div>
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
+                        <a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <script type="application/javascript" nonce="@nonce">
+            $(function () {
                 var submitButton = $('#create-case-button')[0];
                 disableOnSubmit(submitButton);
-			});
-		</script>
-	}
+            });
+        </script>
+    }
 </div>
