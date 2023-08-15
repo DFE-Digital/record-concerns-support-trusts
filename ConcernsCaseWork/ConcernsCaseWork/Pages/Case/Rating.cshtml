@@ -5,7 +5,7 @@
 
 @{
     ViewData["Title"] = "Add Case Rating";
-    var heading = Model.CaseUrn.HasValue ? "Add to case" : "Create case";
+    var heading = Model.CaseUrn.HasValue ? "Add to case" : "Create a case";
     var nonce = HttpContext.GetNonce();
 }
 
