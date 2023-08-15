@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -55,19 +56,29 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 			public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
 			{
-				var exp = _context.ConcernsCase
-						.Include(x => x.Decisions)
-						.ThenInclude(x => x.DecisionTypes)
-						.Include(x => x.Decisions)
-						.ThenInclude(x => x.Outcome)
-						.ThenInclude(x => x.BusinessAreasConsulted);
+				var concernCase = await _context.ConcernsCase
+					.Include(x => x.Decisions)
+					.ThenInclude(x => x.DecisionTypes)
+					.Include(x => x.Decisions)
+					.ThenInclude(x => x.Outcome)
+					.ThenInclude(x => x.BusinessAreasConsulted)
+					.FirstOrDefaultAsync(o => o.Urn == request.ConcernsCaseUrn);
 
-				var concernsCase = exp.FirstOrDefault(c => c.Urn == request.ConcernsCaseUrn);
-				var decision = concernsCase?.Decisions.FirstOrDefault(x => x.DecisionId == request.DecisionId);
+				if (concernCase == null)
+				{
+					throw new NotFoundException($"Not Found: Concern with id {request.ConcernsCaseUrn}");
+				}
+
+				var decision = concernCase.Decisions.FirstOrDefault(d => d.DecisionId == request.DecisionId);
+
+				if (decision == null)
+				{
+					throw new NotFoundException($"Not Found: Decision with id {request.DecisionId}, Case {request.ConcernsCaseUrn}");
+				}
 
 				Result result = new Result()
 				{
-					ConcernsCaseUrn = concernsCase.Id,
+					ConcernsCaseUrn = concernCase.Id,
 					DecisionId = decision.DecisionId,
 					DecisionTypes = decision.DecisionTypes.Select(x => {
 						return new DecisionTypeQuestion()

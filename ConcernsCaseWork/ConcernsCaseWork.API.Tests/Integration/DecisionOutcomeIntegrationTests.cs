@@ -21,6 +21,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
 	public class DecisionOutcomeIntegrationTests
 	{
+
 		private readonly HttpClient _client;
 		private readonly Fixture _autoFixture;
 		private readonly ApiTestFixture _testFixture;

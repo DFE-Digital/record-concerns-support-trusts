@@ -64,17 +64,22 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var concernCase = await _context.ConcernsCase
+				var concernsCase = await _context.ConcernsCase
 						.Include(x => x.Decisions)
 						.ThenInclude(x => x.DecisionTypes)
 						.Include(x => x.Decisions)
 						.SingleOrDefaultAsync(c => c.Id == request.ConcernsCaseUrn);
 
+				if (concernsCase == null)
+				{
+					throw new InvalidOperationException($"Concerns Case {request.ConcernsCaseUrn} not found");
+				}
+
 				var decisionTypes = request.Model.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
 				var updatedDecision = Decision.CreateNew(request.Model.CrmCaseNumber, request.Model.RetrospectiveApproval, request.Model.SubmissionRequired, request.Model.SubmissionDocumentLink, request.Model.ReceivedRequestDate.Value, decisionTypes, request.Model.TotalAmountRequested, request.Model.SupportingNotes, DateTime.Now);
 
-				concernCase.UpdateDecision(request.DecisionId, updatedDecision, updatedDecision.UpdatedAt);
+				concernsCase.UpdateDecision(request.DecisionId, updatedDecision, updatedDecision.UpdatedAt);
 
 				await _context.SaveChangesAsync();
 

@@ -26,4 +26,10 @@
       <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Features\Decision\Outcome\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Features\Decision\Outcome\" />
+    </ItemGroup>
 </Project>
