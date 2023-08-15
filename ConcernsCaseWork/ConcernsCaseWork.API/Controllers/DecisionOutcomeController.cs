@@ -25,6 +25,9 @@ namespace ConcernsCaseWork.API.Controllers
 			_logger = logger;
 		}
 
+
+		/*
+
 		[HttpPost]
 		[ApiVersion("2.0")]
 		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(
@@ -50,6 +53,8 @@ namespace ConcernsCaseWork.API.Controllers
 
 			return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created };
 		}
+
+
 
 		[HttpPut]
 		[ApiVersion("2.0")]
@@ -85,5 +90,9 @@ namespace ConcernsCaseWork.API.Controllers
 
 			return new ObjectResult(result) { StatusCode = StatusCodes.Status200OK };
 		}
+
+		*/
+
+
 	}
 }

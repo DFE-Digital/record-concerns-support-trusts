@@ -8,30 +8,35 @@ namespace ConcernsCaseWork.API.Features.Decision
 	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
+	using ConcernsCaseWork.Data.Exceptions;
+	using ConcernsCaseWork.API.Exceptions;
 
 	public class Close
 	{
 		public class CloseDecisionModel
 		{
+			private const int _maxSupportingNotesLength = 2000;
+
+			[StringLength(_maxSupportingNotesLength, ErrorMessage = "Notes must be 2000 characters or less", MinimumLength = 0)]
 			public string SupportingNotes { get; set; }
 		}
 
 		public class CommandResult
 		{
-			public int ConcernsCaseUrn { get; set; }
+			public int CaseUrn { get; set; }
 			public int DecisionId { get; set; }
 		}
 
 		public class Command : IRequest<CommandResult>
 		{
-			public int ConcernsCaseUrn { get; }
+			public int CaseUrn { get; }
 			public int DecisionId { get; }
 
 			public CloseDecisionModel Model { get; set; }
 
 			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionModel model)
 			{
-				this.ConcernsCaseUrn = concernsCaseUrn;
+				this.CaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
 				this.Model = model;
 			}
@@ -50,24 +55,39 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
 			{
-				var concernCase = await _context.ConcernsCase
+				var concernsCase = await _context.ConcernsCase
 						.Include(x => x.Decisions)
 						.ThenInclude(x => x.DecisionTypes)
 						.Include(x => x.Decisions)
 						.ThenInclude(x => x.Outcome)
 						.ThenInclude(x => x.BusinessAreasConsulted)
-						.SingleOrDefaultAsync(c => c.Id == request.ConcernsCaseUrn);
+						.SingleOrDefaultAsync(c => c.Id == request.CaseUrn);
 
-				concernCase.CloseDecision(request.DecisionId, request.Model.SupportingNotes, DateTime.Now);
+				if (concernsCase == null)
+				{
+					throw new NotFoundException($"Concerns Case {request.CaseUrn} not found");
+				}
 
-				await _context.SaveChangesAsync();
+				try
+				{
+					concernsCase.CloseDecision(request.DecisionId, request.Model.SupportingNotes, DateTime.Now);
+					await _context.SaveChangesAsync();
+				}
+				catch (EntityNotFoundException ex)
+				{
+					throw new NotFoundException(ex.Message);
+				}
+				catch (StateChangeNotAllowedException ex)
+				{
+					throw new OperationNotCompletedException(ex.Message);
+				}
 
-				var concernCreatedNotification = new DecisionUpdatedNotification() { Id = request.DecisionId, CaseId = request.ConcernsCaseUrn, };
+				var concernCreatedNotification = new DecisionUpdatedNotification() { Id = request.DecisionId, CaseId = request.CaseUrn };
 				await _mediator.Publish(concernCreatedNotification);
 
 				return new CommandResult()
 				{
-					ConcernsCaseUrn = request.ConcernsCaseUrn,
+					CaseUrn = request.CaseUrn,
 					DecisionId = request.DecisionId
 				};
 			}
