@@ -27,9 +27,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Features\Decision\Outcome\" />
+      <None Remove="Features\DecisionOutcome\" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Features\Decision\Outcome\" />
+      <Folder Include="Features\DecisionOutcome\" />
     </ItemGroup>
 </Project>

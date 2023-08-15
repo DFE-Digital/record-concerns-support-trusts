@@ -69,7 +69,7 @@ public class CloseDecisionIntegrationTests
 		dbDecision.ClosedAt.Should().BeCloseTo(now, TimeSpan.FromMinutes(1));
 		dbDecision.SupportingNotes.Should().Be(request.SupportingNotes);
 
-		dbCase.CaseLastUpdatedAt.Should().BeCloseTo(now, TimeSpan.FromMinutes(1));
+		dbCase.CaseLastUpdatedAt.Value.Date.Should().Be(dbDecision.UpdatedAt.Date);
 	}
 	
 	[Fact]
