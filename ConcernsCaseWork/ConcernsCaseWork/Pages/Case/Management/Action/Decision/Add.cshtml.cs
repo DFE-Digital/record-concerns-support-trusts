@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				new DecisionTypeQuestionModel()
 				{
 					Id = DecisionType.RepayableFinancialSupport,
-					Hint = "Trusts must pay back repayable funding in line with an agreed repayment plan, ideally within 3 years.. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
+					Hint = "Trusts must pay back repayable funding in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
 				},
 				new DecisionTypeQuestionModel()
 				{
