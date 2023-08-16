@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
@@ -68,6 +69,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var areasConsulted = decision.Outcome.BusinessAreasConsulted.Select(b => b.DecisionOutcomeBusinessId).ToList();
 			areasConsulted.Should().BeEquivalentTo(request.BusinessAreasConsulted);
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.Outcome.CreatedAt.DateTime);
 		}
 
 		[Fact]
@@ -101,6 +106,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			decision.Outcome.DecisionEffectiveFromDate.Should().BeNull();
 			decision.Outcome.Authorizer.Should().BeNull();
 			decision.Outcome.BusinessAreasConsulted.Should().BeEmpty();
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.Outcome.CreatedAt.DateTime);
 		}
 
 		[Fact]
@@ -211,6 +220,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updateResult.DecisionId.Should().Be(decisionId);
 			updateResult.DecisionOutcomeId.Should().Be(createOutcomeResponse.DecisionOutcomeId);
 
+			var updatedCase = await GetCase(caseId);
 			var updatedDecision = await GetDecision(caseId, decisionId);
 
 			updatedDecision.Outcome.Status.Should().Be(request.Status);
@@ -219,6 +229,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updatedDecision.Outcome.DecisionMadeDate.Should().Be(request.DecisionMadeDate);
 			updatedDecision.Outcome.TotalAmount.Should().Be(request.TotalAmount);
 			updatedDecision.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(request.BusinessAreasConsulted);
+
+			updatedCase.CaseLastUpdatedAt.Value.Should().Be(updatedDecision.UpdatedAt.DateTime);
 		}
 
 		[Fact]
@@ -236,6 +248,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var putResult = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{decisionId}/outcome", request.ConvertToJson());
 			putResult.StatusCode.Should().Be(HttpStatusCode.OK);
 
+			var updatedCase = await GetCase(caseId);
 			var updatedDecision = await GetDecision(caseId, decisionId);
 
 			updatedDecision.Outcome.Status.Should().Be(request.Status);
@@ -244,6 +257,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			updatedDecision.Outcome.DecisionMadeDate.Should().BeNull();
 			updatedDecision.Outcome.TotalAmount.Should().BeNull();
 			updatedDecision.Outcome.BusinessAreasConsulted.Should().BeEmpty();
+			updatedCase.CaseLastUpdatedAt.Value.Should().Be(updatedDecision.UpdatedAt.DateTime);
+
 		}
 
 		[Fact]
@@ -361,6 +376,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 
 			return result.Data;
+		}
+
+		private async Task<ConcernsCaseResponse> GetCase(int urn)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/urn/{urn}");
+			var getResponseCase = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			getResponseCase.Data.Should().NotBeNull();
+
+			return getResponseCase.Data;
 		}
 
 		private async Task<CreateDecisionOutcomeResponse> SetupPutTest()

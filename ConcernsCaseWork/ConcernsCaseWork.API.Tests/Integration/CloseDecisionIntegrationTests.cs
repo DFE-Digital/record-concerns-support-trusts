@@ -22,6 +22,9 @@ namespace ConcernsCaseWork.API.Tests.Integration;
 [Collection(ApiTestCollection.ApiTestCollectionName)]
 public class CloseDecisionIntegrationTests
 {
+
+
+
 	private readonly HttpClient _client;
 	private readonly Fixture _fixture;
 	private readonly ApiTestFixture _apiTestFixture;
@@ -40,6 +43,8 @@ public class CloseDecisionIntegrationTests
 		var cCase = await CreateCase();
 		var decisionId = await CreateDecisionWithOutcome(cCase.Id);
 
+		var now = DateTime.Now;
+
 		var request = new CloseDecisionRequest()
 		{
 			SupportingNotes = _fixture.Create<string>()
@@ -57,9 +62,14 @@ public class CloseDecisionIntegrationTests
 		response.Data.DecisionId.Should().Be(decisionId);
 		response.Data.CaseUrn.Should().Be(cCase.Urn);
 
-		var dbDecision = GetContext().Decisions.Single(d => d.DecisionId == decisionId);
-		dbDecision.ClosedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromMinutes(1));
+		var _context = GetContext();
+
+		var dbDecision = _context.Decisions.Single(d => d.DecisionId == decisionId);
+		var dbCase = _context.ConcernsCase.Single(c => c.Urn == cCase.Urn);
+		dbDecision.ClosedAt.Should().BeCloseTo(now, TimeSpan.FromMinutes(1));
 		dbDecision.SupportingNotes.Should().Be(request.SupportingNotes);
+
+		dbCase.CaseLastUpdatedAt.Value.Date.Should().Be(dbDecision.UpdatedAt.Date);
 	}
 	
 	[Fact]

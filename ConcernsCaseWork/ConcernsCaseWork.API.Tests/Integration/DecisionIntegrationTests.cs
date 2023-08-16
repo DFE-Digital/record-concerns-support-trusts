@@ -34,6 +34,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		private readonly DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
 		private readonly DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
 
+
+
 		public DecisionIntegrationTests(ApiTestFixture apiTestFixture)
 		{
 			_client = apiTestFixture.Client;
@@ -44,11 +46,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Get_HasNoOutcome_Returns_200()
 		{
-			var request = _autoFixture.Create<CreateDecisionRequest>();
-			request.TotalAmountRequested = 100;
-
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
+
+			var request = _autoFixture.Create<CreateDecisionRequest>();
+			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = concernsCaseId;
 
 			var createdDecision = await CreateDecision(concernsCaseId, request);
 
@@ -67,13 +70,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Get_HasOutcome_Returns_200()
 		{
-			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
-			decisionRequest.TotalAmountRequested = 100;
-
-			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
-
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
+
+			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
+			decisionRequest.TotalAmountRequested = 100;
+			decisionRequest.ConcernsCaseUrn = concernsCaseId;
+
+			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
 
 			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
 
@@ -101,16 +105,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Post_Returns_201Response()
 		{
+			var concernsCase = await CreateConcernsCase();
+			var concernsCaseId = concernsCase.Id;
+
 			var request = _autoFixture.Create<CreateDecisionRequest>();
 			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = concernsCaseId;
 
 			var expectedDecisionFrameworkCategory = (Contracts.Enums.DecisionFrameworkCategory)1;
 
 			request.DecisionTypes.ToList().First().DecisionFrameworkCategoryId = expectedDecisionFrameworkCategory;
 
-			var concernsCase = await CreateConcernsCase();
-			var concernsCaseId = concernsCase.Id;
-
+			
 			var decisionToAdd = await CreateDecision(concernsCase.Id, request);
 
 			var result = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions", request.ConvertToJson());
@@ -119,15 +125,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionToAdd.DecisionId}");
 
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
-			var decision = wrapper.Data;
+			var createdDecision = wrapper.Data;
 
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
-			decision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
+			createdDecision.ConcernsCaseUrn.Should().Be(request.ConcernsCaseUrn);
+			createdDecision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
 			{
 				options.Excluding(r => r.Id);
 
 				return options;
 			});
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
+			concernsCase.CaseLastUpdatedAt.Value.Date.Should().Be(createdDecision.CreatedAt.DateTime.Date);
 		}
 
 		[Fact]
@@ -174,8 +185,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 				return options;
 			});
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.UpdatedAt.DateTime);
 		}
-		
+
 		[Fact]
 		public async Task When_Delete_HasNoResource_Returns_404()
 		{
@@ -190,13 +205,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_Delete_HasResource_Returns_204()
 		{
 			//BuilderSetup.DisablePropertyNamingFor<ConcernsRecord, DateTime?>(f => f.DeletedAt);
-			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
-			decisionRequest.TotalAmountRequested = 100;
+			
 
 			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
 
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
+
+			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
+			decisionRequest.TotalAmountRequested = 100;
+			decisionRequest.ConcernsCaseUrn = concernsCaseId;
 
 			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
 
