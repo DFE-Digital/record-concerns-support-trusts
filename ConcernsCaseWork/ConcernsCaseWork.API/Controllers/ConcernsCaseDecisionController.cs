@@ -40,6 +40,8 @@ namespace ConcernsCaseWork.API.Controllers
 			_deleteDecision = deleteDecisionUsedCase ?? throw new ArgumentNullException(nameof(deleteDecisionUsedCase));
 		}
 
+		/*
+
 		[HttpPost]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionResponse>>> Create(int urn, CreateDecisionRequest request, CancellationToken cancellationToken = default)
@@ -69,6 +71,9 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 	    }
 
+
+
+
 	    [HttpGet("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<GetDecisionResponse>>> GetById(int urn, int decisionId, CancellationToken cancellationToken = default)
@@ -94,7 +99,9 @@ namespace ConcernsCaseWork.API.Controllers
 		    }
 	    }
 
-	    [HttpPut("{decisionId:int}")]
+
+
+		[HttpPut("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<UpdateDecisionResponse>>> UpdateDecision(int urn, int decisionId, UpdateDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
@@ -113,8 +120,9 @@ namespace ConcernsCaseWork.API.Controllers
 		    LogInfo($"Returning update response. Concerns Case Urn {result.ConcernsCaseUrn}, DecisionId {result.DecisionId}");
 		    return new OkObjectResult(response);
 	    }
-	    
-	    [HttpPatch("{decisionId:int}/close")]
+
+
+		[HttpPatch("{decisionId:int}/close")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<CloseDecisionResponse>>> CloseDecision(int urn, int decisionId, CloseDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
@@ -135,7 +143,10 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new OkObjectResult(response);
 	    }
 
-	    [HttpGet()]
+		*/
+
+
+		[HttpGet()]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken = default)
 	    {
