@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
-			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.CreatedAt.DateTime);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.Outcome.CreatedAt.DateTime);
 		}
 
 		[Fact]
@@ -109,7 +109,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
-			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.CreatedAt.DateTime);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.Outcome.CreatedAt.DateTime);
 		}
 
 		[Fact]
