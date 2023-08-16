@@ -138,8 +138,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
-
-
 			concernsCase.CaseLastUpdatedAt.Value.Date.Should().Be(createdDecision.CreatedAt.DateTime.Date);
 		}
 
@@ -187,8 +185,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 				return options;
 			});
+
+			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
+			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
+			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.UpdatedAt.DateTime);
 		}
-		
+
 		[Fact]
 		public async Task When_Delete_HasNoResource_Returns_404()
 		{
