@@ -15,7 +15,8 @@ namespace ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan
         public DateTime UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public string Notes { get; set; }
+		public DateTime? DeletedAt { get; set; }
 
-        public FinancialPlanStatus Status { get; set; }
+		public FinancialPlanStatus Status { get; set; }
     }
 }
