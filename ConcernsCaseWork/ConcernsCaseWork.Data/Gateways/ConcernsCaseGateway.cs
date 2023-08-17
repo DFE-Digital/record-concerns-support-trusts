@@ -111,5 +111,5 @@ namespace ConcernsCaseWork.Data.Gateways
 		        .Distinct()
 		        .ToArrayAsync(cancellationToken);
         }
-    }
+	}
 }

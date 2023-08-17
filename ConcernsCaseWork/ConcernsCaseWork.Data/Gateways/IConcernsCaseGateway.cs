@@ -13,5 +13,5 @@ namespace ConcernsCaseWork.Data.Gateways
         Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase);
         Task<bool> CaseExists(int urn, CancellationToken cancellationToken = default);
         Task<string[]> GetOwnersOfOpenCases(CancellationToken cancellationToken = default);
-    }
+	}
 }

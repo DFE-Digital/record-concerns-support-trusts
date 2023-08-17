@@ -5,6 +5,7 @@ using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
@@ -54,25 +55,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	[Fact]
 	public async Task CanCreateNewConcernCase()
 	{
-		ConcernCaseRequest createRequest = Builder<ConcernCaseRequest>.CreateNew()
-			.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
-			.With(c => c.Description = "")
-			.With(c => c.CrmEnquiry = "")
-			.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
-			.With(c => c.ReasonAtReview = "")
-			.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
-			.With(c => c.Issue = "Here is the issue")
-			.With(c => c.CurrentStatus = "Case status")
-			.With(c => c.CaseAim = "Here is the aim")
-			.With(c => c.DeEscalationPoint = "Point of de-escalation")
-			.With(c => c.CaseHistory = "Case history")
-			.With(c => c.NextSteps = "Here are the next steps")
-			.With(c => c.DirectionOfTravel = "Up")
-			.With(c => c.StatusId = 1)
-			.With(c => c.RatingId = 2)
-			.With(c => c.TrustCompaniesHouseNumber = DatabaseModelBuilder.CreateUkPrn())
-			.Build();
-
+		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -406,8 +389,81 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		error.Should().Contain("The field TrustCompaniesHouseNumber must be a string with a maximum length of 8.");
 	}
 
+	[Fact]
+	public async Task When_Delete_NotCreatedResourceRequest_Returns_NotFound()
+	{
+		var caseUrn = 1000000;
 
+		var result = await _client.DeleteAsync(Delete.DeleteCase(caseUrn));
+		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+	}
 
+	[Fact]
+	public async Task When_Delete_ValidResourceRequest_Returns_NoContent()
+	{
+		//Arrange
+		var createRequest = CreateConcernCaseCreateRequest();
+		var createResult = await CreateConcernCase(createRequest);
+
+		//Act
+		var result = await _client.DeleteAsync(Delete.DeleteCase(createResult.Urn));
+		var getResponseNotFound = await _client.GetAsync(Get.Case(createResult.Urn));
+
+		//Assert
+		result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+		getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
+	}
+
+	[Fact]
+	public async Task When_Delete_CaseWithConcernAndAllCaseActions_Returns_BadRequest()
+	{
+		//Arrange
+		var createCaseRequest = CreateConcernCaseCreateRequest();
+		var createResult = await CreateConcernCase(createCaseRequest);
+		CreateConcernAndAllCaseActionsForCase(createResult.Urn);
+
+		//Act
+		var result = await _client.DeleteAsync(Delete.DeleteCase(createResult.Urn));
+		string error = await result.Content.ReadAsStringAsync();
+
+		//Assert
+		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		error.Should().Contain("Cannot deleted Case. Case has related concern(s) and case actions");
+	}
+
+	[Fact]
+	public async Task When_Delete_CaseWithConcernAndNoCaseActions_Returns_BadRequest()
+	{
+		//Arrange
+		var createCaseRequest = CreateConcernCaseCreateRequest();
+		var createResult = await CreateConcernCase(createCaseRequest);
+		CreateConcern(createResult.Urn);
+
+		//Act
+		var result = await _client.DeleteAsync(Delete.DeleteCase(createResult.Urn));
+		string error = await result.Content.ReadAsStringAsync();
+
+		//Assert
+		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		error.Should().Contain("Cannot deleted Case. Case has related concern(s)");
+	}
+
+	[Fact]
+	public async Task When_Delete_CaseWithNoConcernAndAllCaseActions_Returns_BadRequest()
+	{
+		//Arrange
+		var createCaseRequest = CreateConcernCaseCreateRequest();
+		var createResult = await CreateConcernCase(createCaseRequest);
+		CreateAllCaseActionCase(createResult.Urn);
+
+		//Act
+		var result = await _client.DeleteAsync(Delete.DeleteCase(createResult.Urn));
+		string error = await result.Content.ReadAsStringAsync();
+
+		//Assert
+		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		error.Should().Contain("Cannot deleted Case. Case has related case actions");
+	}
 
 	[Fact]
 	public async Task GetConcernsCaseByOwnerId()
@@ -558,6 +614,103 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			context.ConcernsCase.Remove(concernsCase);
 			context.SaveChanges();
 			throw;
+		}
+	}
+
+	private ConcernCaseRequest CreateConcernCaseCreateRequest()
+	{
+		ConcernCaseRequest createRequest = Builder<ConcernCaseRequest>.CreateNew()
+			.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
+			.With(c => c.Description = "")
+			.With(c => c.CrmEnquiry = "")
+			.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
+			.With(c => c.ReasonAtReview = "")
+			.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
+			.With(c => c.Issue = "Here is the issue")
+			.With(c => c.CurrentStatus = "Case status")
+			.With(c => c.CaseAim = "Here is the aim")
+			.With(c => c.DeEscalationPoint = "Point of de-escalation")
+			.With(c => c.CaseHistory = "Case history")
+			.With(c => c.NextSteps = "Here are the next steps")
+			.With(c => c.DirectionOfTravel = "Up")
+			.With(c => c.StatusId = 1)
+			.With(c => c.RatingId = 2)
+			.With(c => c.TrustCompaniesHouseNumber = DatabaseModelBuilder.CreateUkPrn())
+			.Build();
+
+		return createRequest;
+	}
+
+	private void CreateConcernAndAllCaseActionsForCase(int Id)
+	{
+		CreateConcern(Id);
+		CreateAllCaseActionCase(Id);
+
+	}
+
+	protected void CreateConcern(int Id)
+	{
+		using ConcernsDbContext context = _testFixture.GetContext();
+		var cr = DatabaseModelBuilder.BuildConcernsRecord();
+		cr.CaseId = Id;
+
+		context.ConcernsRecord.Add(cr);
+		context.SaveChanges();
+	}
+
+	protected void CreateAllCaseActionCase(int Id)
+	{
+		using ConcernsDbContext context = _testFixture.GetContext();
+
+		var cd = DatabaseModelBuilder.BuildDecision(Id);
+
+		var fp = DatabaseModelBuilder.BuildFinancialPlan(Id);
+		var nti = DatabaseModelBuilder.BuildNoticeToImprove(Id);
+		var ntiuc = DatabaseModelBuilder.BuildNTIUnderConsideration(Id);
+		var ntiwl = DatabaseModelBuilder.BuildNTIWarningLetter(Id);
+		var smra = DatabaseModelBuilder.BuildSrma(Id);
+		var tff = DatabaseModelBuilder.BuildTrustFinancialForecast(Id);
+
+		context.Decisions.Add(cd);
+		context.FinancialPlanCases.Add(fp);
+		context.NoticesToImprove.Add(nti);
+		context.NTIUnderConsiderations.Add(ntiuc);
+		context.NTIWarningLetters.Add(ntiwl);
+		context.SRMACases.Add(smra);
+		context.TrustFinancialForecasts.Add(tff);
+
+
+		context.SaveChanges();
+	}
+
+	protected async Task<ConcernsCaseResponse> CreateConcernCase(ConcernCaseRequest createRequest)
+	{
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+			Content = JsonContent.Create(createRequest)
+		};
+
+		var createResponse = await _client.SendAsync(httpRequestMessage);
+		ApiSingleResponseV2<ConcernsCaseResponse> createResult = await createResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		return createResult.Data;
+	}
+
+	public static class Delete
+	{
+		public static string DeleteCase(int urn)
+		{
+			return $"/v2/concerns-cases/{urn}";
+		}
+	}
+
+	public static class Get
+	{
+		public static string Case(int urn)
+		{
+			return $"/v2/concerns-cases/urn/{urn}";
 		}
 	}
 }
