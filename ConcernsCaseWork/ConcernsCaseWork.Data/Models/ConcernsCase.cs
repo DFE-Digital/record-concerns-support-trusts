@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Data.Models
 		/// Stores date when the entire case was last updated e.g. Changes such as adding concern or case action.
 		/// </summary>
 		public DateTime? CaseLastUpdatedAt { get; set; }
-
+		public DateTime? DeletedAt { get; set; }
 
 		public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
