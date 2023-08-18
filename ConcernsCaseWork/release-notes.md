@@ -1,3 +1,10 @@
+## 27.0.0
+* Display sub questions for three deicsion types to capture information on related funding
+* Your/Team casework Last Updated field reflects the date of most recent change when creating or updating a concern and any case action.
+* Enhanced Pagination with the use of Ellipsis
+* Amends to risk rating hint text
+* Amends to Find Trust and Create Case text
+
 ## 26.0.0
 * Ability to add Cases to CTCs
 * Remove redundant code replace by components

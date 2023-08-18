@@ -11,6 +11,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
 {
     public class FinancialPlanFactoryTests
     {
+
+
+
         [Fact]
         public void CreateDBModel_ExpectedFinancialPlanCase_WhenCreateFinancialPlanRequestProvided()
         {
@@ -138,9 +141,10 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DateViablePlanReceived = dtCreated,
                 Notes = "Test notes abc",
                 StatusId = 1,
-                UpdatedAt = dtCreated
+                UpdatedAt = dtCreated,
+				DeletedAt = dtNow
 
-            };
+			};
 
             var financialPlanCase = Builder<FinancialPlanCase>.CreateNew()
                 .With(r => r.Id = details.Id)
@@ -154,6 +158,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.Notes = details.Notes)
                 .With(r => r.StatusId = details.StatusId)
                 .With(r => r.UpdatedAt = details.UpdatedAt)
+                .With(r => r.DeletedAt = details.DeletedAt)
                 .Build();
 
             var expectedFinancialPlanResponse = new FinancialPlanResponse
@@ -168,14 +173,13 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DateViablePlanReceived = details.DateViablePlanReceived,
                 Notes = details.Notes,
                 StatusId = details.StatusId,
-                UpdatedAt = details.UpdatedAt
+                UpdatedAt = details.UpdatedAt,
+                DeletedAt = details.DeletedAt
             };
 
             var response = FinancialPlanFactory.CreateResponse(financialPlanCase);
 
             response.Should().BeEquivalentTo(expectedFinancialPlanResponse);
         }
-
-
     }
 }
