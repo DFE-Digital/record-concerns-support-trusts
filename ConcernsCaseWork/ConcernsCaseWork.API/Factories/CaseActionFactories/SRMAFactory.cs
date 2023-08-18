@@ -44,8 +44,7 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 CloseStatus = (Data.Enums.SRMAStatus)(model.CloseStatusId ?? 0),
                 UpdatedAt = model.UpdatedAt,
                 ClosedAt = model.ClosedAt,
-                CreatedBy = model.CreatedBy,
-                DeletedAt = model.DeletedAt
+                CreatedBy = model.CreatedBy
             };
         }
  

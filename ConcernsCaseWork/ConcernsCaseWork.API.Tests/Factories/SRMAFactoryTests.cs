@@ -11,6 +11,8 @@ using SRMAStatus = ConcernsCaseWork.Data.Enums.SRMAStatus;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
+
+
     public class SRMAFactoryTests
     {
         [Fact]
@@ -131,8 +133,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 CloseStatus = (SRMAStatus)(details.CloseStatusId ?? 0),
                 UpdatedAt = details.UpdatedAt,
                 ClosedAt = details.ClosedAt,
-                CreatedBy = details.CreatedBy,
-                DeletedAt = details.DeletedAt
+                CreatedBy = details.CreatedBy
             };
 
             var response = SRMAFactory.CreateResponse(srmaModel);

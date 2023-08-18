@@ -178,7 +178,6 @@ namespace ConcernsCaseWork.API.Features.SRMA
 
 		[HttpDelete("{srmaId}")]
 		[MapToApiVersion("2.0")]
-		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
 		{
 			await _mediator.Send(command);
