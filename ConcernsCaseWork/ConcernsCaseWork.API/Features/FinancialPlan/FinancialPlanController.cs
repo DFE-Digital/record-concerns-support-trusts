@@ -53,5 +53,15 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
 			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
 		}
+
+		[HttpDelete("{Id}")]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
+		{
+			await _mediator.Send(command);
+		
+			return NoContent();
+		}
 	}
 }

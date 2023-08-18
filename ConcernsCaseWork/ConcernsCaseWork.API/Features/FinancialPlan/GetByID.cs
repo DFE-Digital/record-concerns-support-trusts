@@ -28,6 +28,8 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			public DateTime UpdatedAt { get; set; }
 			public DateTime? ClosedAt { get; set; }
 			public string Notes { get; set; }
+			public DateTime? DeletedAt { get; set; }
+
 
 			public StatusModel Status { get; set; }
 

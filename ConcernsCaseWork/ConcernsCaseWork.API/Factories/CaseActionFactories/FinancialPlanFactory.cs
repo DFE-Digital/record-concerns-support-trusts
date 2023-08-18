@@ -57,6 +57,7 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 Status = model.Status,
                 UpdatedAt = model.UpdatedAt,
                 StatusId=model.StatusId,
+                DeletedAt = model.DeletedAt
             };
         }
 
