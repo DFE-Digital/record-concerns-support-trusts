@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases
 {

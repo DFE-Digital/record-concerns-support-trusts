@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    [Migration("20230817083525_AddDeletedAtToCase")]
+    [Migration("20230818135457_AddDeletedAtToCase")]
     partial class AddDeletedAtToCase
     {
         /// <inheritdoc />
@@ -1057,6 +1057,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateViablePlanReceived")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
