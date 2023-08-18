@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data.Migrations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
@@ -16,8 +17,9 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public string Notes { get; set; }
+		public DateTime? DeletedAt { get; set; }
 
-        [ForeignKey(nameof(StatusId))]
+		[ForeignKey(nameof(StatusId))]
         public virtual FinancialPlanStatus Status { get; set; }
     }
 }

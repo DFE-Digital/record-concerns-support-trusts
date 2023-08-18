@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
     public class CreateNTIWarningLetterTests
 	{
 	    [Fact]
-        public void CreateNTIWarningLetter_ShouldCreateAndReturnFinancialPlanResponse_WhenGivenCreateNTIWarningLetterRequest()
+        public void CreateNTIWarningLetter_ShouldCreateAndReturnNTIWarningResponse_WhenGivenCreateNTIWarningLetterRequest()
         {
 			var caseUrn = 544;
 			var now = DateTime.Now;

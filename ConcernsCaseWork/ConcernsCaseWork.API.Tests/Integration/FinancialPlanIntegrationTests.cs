@@ -1,10 +1,12 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Models.CaseActions;
 using FizzWare.NBuilder;
 using FluentAssertions;
@@ -109,6 +111,41 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var updatedFinancialPlan = await GetFinancialPlanByID(request.Id);
 			updatedFinancialPlan.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
 			updatedCase.CaseLastUpdatedAt.Should().Be(updatedFinancialPlan.UpdatedAt);
+		}
+
+		[Fact]
+		public async Task When_Delete_Return_204Response()
+		{
+			//Arrange
+			var createdCase = await CreateCase();
+			var createdFinancialPlan = await CreateFinancialPlan(createdCase.Urn);
+
+			//Act
+			var result = await _client.DeleteAsync($"/v2/case-actions/financial-plan/{createdFinancialPlan.Id}");
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+			var getResponse = await _client.GetAsync($"/v2/case-actions/financial-plan/{createdFinancialPlan.Id}");
+
+			getResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+		[Fact]
+		public async Task When_Delete_WithMissingFinancial_Returns_404Response()
+		{
+			//Arrange
+			var createdFinancialPlanId = -1;
+
+			//Act
+			var result = await _client.DeleteAsync($"/v2/case-actions/financial-plan/{createdFinancialPlanId}");
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Financial Plan with id {createdFinancialPlanId}");
 		}
 
 		private async Task<ConcernsCaseResponse> CreateCase()
