@@ -56,5 +56,20 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
 			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
 		}
+
+
+		[HttpDelete("{id}")]
+		[ProducesResponseType((int)HttpStatusCode.NoContent)]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
+		public async Task<IActionResult> Delete([FromRoute] Delete.Query query)
+		{
+			var model = await _mediator.Send(new GetByID.Query() { Id = query.Id });
+			if (model == null)
+			{
+				return NotFound();
+			}
+			await _mediator.Send(query);
+			return NoContent();
+		}
 	}
 }

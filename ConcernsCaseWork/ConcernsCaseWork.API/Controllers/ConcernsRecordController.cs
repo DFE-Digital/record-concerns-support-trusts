@@ -79,26 +79,24 @@ namespace ConcernsCaseWork.API.Controllers
 			var response = new ApiResponseV2<ConcernsRecordResponse>(records, pagingResponse);
 			return Ok(response);
 		}
+		//[HttpDelete("{id}")]
+		//[MapToApiVersion("2.0")]
+		//public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Delete(int id, CancellationToken cancellationToken = default)
+		//{
+		//	_logger.LogInformation($"Attempting to delete Concerns Record {id}");
 
+		//	var concernsRecord = _getConcernsRecord.Execute(id);
+		//	if (concernsRecord == null)
+		//	{
+		//		_logger.LogInformation($"Deleting Concerns Record failed: No Concerns Record matching Id {id} was found");
+		//		return NotFound();
+		//	}
 
-		[HttpDelete("{id}")]
-		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Delete(int id, CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to delete Concerns Record {id}");
+		//	_deleteConcernsRecord.Execute(id);
 
-			var concernsRecord = _getConcernsRecord.Execute(id);
-			if (concernsRecord == null)
-			{
-				_logger.LogInformation($"Deleting Concerns Record failed: No Concerns Record matching Id {id} was found");
-				return NotFound();
-			}
+		//	_logger.LogInformation($"Successfully deleted Concerns Record {id}");
 
-			_deleteConcernsRecord.Execute(id);
-
-			_logger.LogInformation($"Successfully deleted Concerns Record {id}");
-
-			return NoContent();
-		}
+		//	return NoContent();
+		//}
 	}
 }
