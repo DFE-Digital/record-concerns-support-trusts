@@ -30,5 +30,8 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 
 		builder.Property(x => x.TrustCompaniesHouseNumber)
 			.HasMaxLength(8);
+
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
+
 	}
 }
