@@ -45,6 +45,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -70,6 +71,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				_mockLogger.Object,
 				null,
 				getConcernsCaseByUrn.Object,
+				null,
 				null,
 				null,
 				null,
@@ -107,6 +109,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -134,6 +137,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				getConcernsCaseByTrustUkprn.Object,
+				null,
 				null,
 				null,
 				null,
@@ -182,6 +186,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -216,6 +221,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -237,6 +243,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 			var controller = new ConcernsCaseController(
 				_mockLogger.Object,
+				null,
 				null,
 				null,
 				null,
@@ -281,6 +288,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				mockService.Object,
 				null
 			);
@@ -302,6 +310,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 			var controller = new ConcernsCaseController(
 				_mockLogger.Object,
+				null,
 				null,
 				null,
 				null,
