@@ -67,18 +67,18 @@ namespace ConcernsCaseWork.API.Controllers
 		//	return Ok(response);
 		//}
 
-		[HttpGet("case/urn/{urn}")]
-		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ConcernsRecordResponse>>> GetByCaseUrn(int urn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to get Concerns Case {urn}");
-			var records = _getConcernsRecordsByCaseUrn.Execute(urn);
+		//[HttpGet("case/urn/{urn}")]
+		//[MapToApiVersion("2.0")]
+		//public async Task<ActionResult<ApiResponseV2<ConcernsRecordResponse>>> GetByCaseUrn(int urn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
+		//{
+		//	_logger.LogInformation($"Attempting to get Concerns Case {urn}");
+		//	var records = _getConcernsRecordsByCaseUrn.Execute(urn);
 
-			_logger.LogInformation($"Returning Records for Case urn: {urn}");
-			var pagingResponse = PagingResponseFactory.Create(page, count, records.Count, Request);
-			var response = new ApiResponseV2<ConcernsRecordResponse>(records, pagingResponse);
-			return Ok(response);
-		}
+		//	_logger.LogInformation($"Returning Records for Case urn: {urn}");
+		//	var pagingResponse = PagingResponseFactory.Create(page, count, records.Count, Request);
+		//	var response = new ApiResponseV2<ConcernsRecordResponse>(records, pagingResponse);
+		//	return Ok(response);
+		//}
 		//[HttpDelete("{id}")]
 		//[MapToApiVersion("2.0")]
 		//public async Task<ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>>> Delete(int id, CancellationToken cancellationToken = default)

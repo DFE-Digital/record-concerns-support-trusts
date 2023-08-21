@@ -45,6 +45,15 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 			return Ok(model);
 		}
 
+		[HttpGet("case/urn/{urn}")]
+		[MapToApiVersion("2.0")]
+		[ProducesResponseType((int)HttpStatusCode.OK)]
+		public async Task<IActionResult> GetByID([FromRoute] ListByCaseUrn.Query query)
+		{
+			var model = await _mediator.Send(query);
+			return Ok(model);
+		}
+
 		[HttpPatch("{Id}", Name = nameof(Update))]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
