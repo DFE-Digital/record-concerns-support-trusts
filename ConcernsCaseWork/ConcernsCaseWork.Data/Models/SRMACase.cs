@@ -20,6 +20,8 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
+		public DateTime? DeletedAt { get; set; }
+
 
 		// Entity framework will make this VARCHAR(MAX) over 4000, without specifying
 		[Column(TypeName = "VARCHAR(5000)")]
