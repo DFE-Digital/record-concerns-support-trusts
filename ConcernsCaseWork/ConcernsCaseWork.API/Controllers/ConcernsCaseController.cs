@@ -20,6 +20,7 @@ namespace ConcernsCaseWork.API.Controllers
 		private readonly IGetConcernsCaseByUrn _getConcernsCaseByUrn;
 		private readonly IGetConcernsCaseByTrustUkprn _getConcernsCaseByTrustUkprn;
 		private readonly IUpdateConcernsCase _updateConcernsCase;
+		private readonly IDeleteConcernsCase _deleteConcernsCase;
 		private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
 		private readonly IGetActiveConcernsCaseSummariesForUsersTeam _getActiveConcernsCaseSummariesForUsersTeam;
 		private readonly IGetActiveConcernsCaseSummariesByOwner _getActiveConcernsCaseSummariesByOwner;
@@ -33,6 +34,7 @@ namespace ConcernsCaseWork.API.Controllers
 			IGetConcernsCaseByUrn getConcernsCaseByUrn,
 			IGetConcernsCaseByTrustUkprn getConcernsCaseByTrustUkprn,
 			IUpdateConcernsCase updateConcernsCase,
+			IDeleteConcernsCase deleteConcernsCase,
 			IGetConcernsCasesByOwnerId getConcernsCasesByOwnerId,
 			IGetClosedConcernsCaseSummariesByOwner getClosedConcernsCaseSummaries,
 			IGetActiveConcernsCaseSummariesByTrust getActiveConcernsCaseSummariesByTrust,
@@ -45,6 +47,7 @@ namespace ConcernsCaseWork.API.Controllers
 			_getConcernsCaseByUrn = getConcernsCaseByUrn;
 			_getConcernsCaseByTrustUkprn = getConcernsCaseByTrustUkprn;
 			_updateConcernsCase = updateConcernsCase;
+			_deleteConcernsCase = deleteConcernsCase;
 			_getConcernsCasesByOwnerId = getConcernsCasesByOwnerId;
 			_getClosedConcernsCaseSummariesByOwner = getClosedConcernsCaseSummaries;
 			_getActiveConcernsCaseSummariesByTrust = getActiveConcernsCaseSummariesByTrust;
@@ -272,6 +275,38 @@ namespace ConcernsCaseWork.API.Controllers
 
 			return Ok(response);
 		}
+
+
+		[HttpDelete("{urn}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete(int urn, CancellationToken cancellationToken = default)
+		{
+			_logger.LogInformation($"Attempting to delete Concerns Case {urn}");
+
+
+			_logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
+			var concernsCase = _getConcernsCaseByUrn.Execute(urn);
+
+			if (concernsCase == null)
+			{
+				_logger.LogInformation($"Deleting Concerns Case failed: No Concerns Case matching Urn {urn} was found");
+				return NotFound();
+			}
+
+			_logger.LogInformation($"Found Concerns case with Urn {urn}");
+
+			var result = _deleteConcernsCase.Execute(urn);
+			if (result.IsFailure)
+			{
+				_logger.LogInformation($"Failed to delete Concerns Case due to bad request");
+				return BadRequest(result.Error.Message);
+			}
+
+			_logger.LogInformation($"Successfully deleted Concerns Case for URN {urn}");
+
+			return NoContent();
+		}
+
 
 		private PagingResponse BuildPaginationResponse(int recordCount, int? page = null, int? count = null)
 		{
