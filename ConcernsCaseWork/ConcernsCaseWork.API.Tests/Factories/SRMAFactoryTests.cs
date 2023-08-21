@@ -11,6 +11,8 @@ using SRMAStatus = ConcernsCaseWork.Data.Enums.SRMAStatus;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
+
+
     public class SRMAFactoryTests
     {
         [Fact]
@@ -31,7 +33,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Status = SRMAStatus.TrustConsidering,
                 Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
                 Notes = "notes notes notes",
-                CreatedBy = "Test User"
+                CreatedBy = "Test User",
 
             };
 
@@ -92,7 +94,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 CloseStatusId = (int?)null,
                 UpdatedAt = dtNow,
                 ClosedAt = (DateTime?)null,
-                CreatedBy = "TestUser"
+                CreatedBy = "TestUser",
+                DeletedAt = dtNow.AddDays(30)
             };
 
             var srmaModel = Builder<SRMACase>.CreateNew()
@@ -111,6 +114,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.UpdatedAt = details.UpdatedAt)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .With(r => r.CreatedBy= details.CreatedBy)
+                .With(r => r.DeletedAt = details.DeletedAt)
                 .Build();
 
             var expectedCreateSRMAResponse = new SRMAResponse
