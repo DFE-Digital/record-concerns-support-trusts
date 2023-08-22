@@ -28,8 +28,10 @@
 
     <ItemGroup>
       <None Remove="Features\DecisionOutcome\" />
+      <None Remove="Features\NTIUnderConsideration\" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Features\DecisionOutcome\" />
+      <Folder Include="Features\NTIUnderConsideration\" />
     </ItemGroup>
 </Project>
