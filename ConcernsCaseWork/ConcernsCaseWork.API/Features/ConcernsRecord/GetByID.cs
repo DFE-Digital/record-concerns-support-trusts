@@ -8,10 +8,10 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
 	public class GetByID
 	{
-		public class Query : IRequest<Result>
-		{
-			public int Id { get; set; }
-		}
+			public class Query : IRequest<Result>
+			{
+				public int Id { get; set; }
+			}
 
 		public class Result
 		{
