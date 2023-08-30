@@ -55,7 +55,11 @@ namespace ConcernsCaseWork.API.Controllers
         public async Task<ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>>> GetNTIUnderConsiderationById(long underConsiderationId, CancellationToken cancellationToken = default)
         {
             var consideration = _getNtiUnderConsiderationByIdUseCase.Execute(underConsiderationId);
-            var response = new ApiSingleResponseV2<NTIUnderConsiderationResponse>(consideration);
+			if (consideration == null)
+			{
+				return NotFound();
+			}
+			var response = new ApiSingleResponseV2<NTIUnderConsiderationResponse>(consideration);
 
             return Ok(response);
         }

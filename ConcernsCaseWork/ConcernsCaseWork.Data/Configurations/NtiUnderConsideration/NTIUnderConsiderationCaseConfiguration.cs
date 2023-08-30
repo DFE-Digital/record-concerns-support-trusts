@@ -15,5 +15,6 @@ public class NTIUnderConsiderationCaseConfiguration : IEntityTypeConfiguration<N
 		builder.HasOne(x => x.ClosedStatus);
 		
 		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
+		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 	}
 }

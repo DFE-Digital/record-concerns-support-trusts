@@ -109,9 +109,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			//Act
 			var result = await _client.DeleteAsync($"/v2/case-actions/nti-under-consideration/{createdNTI.Id}");
+			var getResponseNotFound = await _client.GetAsync($"/v2/case-actions/nti-under-consideration/{createdNTI.Id}");
 
 			//Assert
 			result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 		[Fact]
