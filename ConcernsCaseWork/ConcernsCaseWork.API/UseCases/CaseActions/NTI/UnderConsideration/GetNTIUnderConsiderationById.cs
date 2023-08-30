@@ -1,6 +1,8 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
+﻿using ConcernsCaseWork.API.Factories;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.UnderConsideration
 {
@@ -21,7 +23,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.UnderConsideration
         public async Task<NTIUnderConsiderationResponse> ExecuteAsync(long underConsiderationId)
         {
             var consideration = await _gateway.GetNTIUnderConsiderationById(underConsiderationId);
-            return NTIUnderConsiderationFactory.CreateResponse(consideration);
+			return consideration == null ? null : NTIUnderConsiderationFactory.CreateResponse(consideration);
         }
     }
 }
