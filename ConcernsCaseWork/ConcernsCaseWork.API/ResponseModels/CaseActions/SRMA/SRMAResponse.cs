@@ -19,5 +19,6 @@ namespace ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? ClosedAt { get; set; }
 		public string CreatedBy { get; set; }
+
 	}
 }

@@ -176,6 +176,15 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			}
 		}
 
+		[HttpDelete("{srmaId}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
+		{
+			await _mediator.Send(command);
+
+			return NoContent();
+		}
+
 		private DateTime? DeserialiseDateTime(string value)
 		{
 			var dateTimeFormatInfo = CultureInfo.InvariantCulture.DateTimeFormat;
