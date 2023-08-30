@@ -49,7 +49,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field Notes must be a string with a maximum length of 2000.");
 		}
 
-
 		[Fact]
 		public async Task When_Post_Returns_201Response()
 		{
@@ -100,6 +99,39 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field CreatedBy must be a string with a maximum length of 300.");
 			error.Should().Contain("The field Notes must be a string with a maximum length of 2000.");
 		}
+
+		[Fact]
+		public async Task When_Delete_Return_204Response()
+		{
+			//Arrange
+			var createdCase = await CreateCase();
+			var createdNTI = await CreateNTIforCase(createdCase.Urn);
+
+			//Act
+			var result = await _client.DeleteAsync($"/v2/case-actions/nti-under-consideration/{createdNTI.Id}");
+			var getResponseNotFound = await _client.GetAsync($"/v2/case-actions/nti-under-consideration/{createdNTI.Id}");
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NoContent);
+			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+
+		[Fact]
+		public async Task When_Delete_WithMissingNTIUnderConsideration_Returns_404Response()
+		{
+			//Arrange
+			var createdSRMAId = -1;
+
+			//Act
+			var result = await _client.DeleteAsync($"/v2/case-actions/nti-under-consideration/{createdSRMAId}");
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: NTI Under Consideration with id {createdSRMAId}");
+		}
+
 
 		private async Task<ConcernsCaseResponse> CreateCase()
 		{
