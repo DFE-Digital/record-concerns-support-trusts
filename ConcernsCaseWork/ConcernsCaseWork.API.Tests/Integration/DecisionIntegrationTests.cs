@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
@@ -101,6 +102,68 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(outcomeRequest.BusinessAreasConsulted);
 		}
+
+
+		[Fact]
+		public async Task When_Get_DecisionsByCaseUrn_Returns_200()
+		{
+			//Arrange
+			var createdConcern = await CreateConcernsCase();
+			var decisionRequestOne = _autoFixture.Create<CreateDecisionRequest>();
+			decisionRequestOne.TotalAmountRequested = 100;
+			decisionRequestOne.ConcernsCaseUrn = createdConcern.Id;
+
+			var decisionRequestTwo = _autoFixture.Create<CreateDecisionRequest>();
+			decisionRequestTwo.TotalAmountRequested = 200;
+			decisionRequestTwo.ConcernsCaseUrn = createdConcern.Id;
+
+			var createdDecisionOne = await CreateDecision(createdConcern.Id, decisionRequestOne);
+			var createdDecisionTwo = await CreateDecision(createdConcern.Id, decisionRequestTwo);
+
+
+			var DecisionOne = await GetDecision(createdDecisionOne);
+			var DecisionTwo = await GetDecision(createdDecisionTwo);
+
+			List<GetDecisionResponse> expected = new List<GetDecisionResponse>() { DecisionOne, DecisionTwo };
+
+			//Act
+			var result = await _client.GetAsync($"/v2/concerns-cases/{createdConcern.Id}/decisions");
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			ApiResponseV2<DecisionSummaryResponse> content = await result.Content.ReadFromJsonAsync<ApiResponseV2<DecisionSummaryResponse>>();
+			content.Data.Count().Should().Be(expected.Count);
+
+
+			foreach (var expectedItem in expected)
+			{
+				var item = content.Data.FirstOrDefault(f => f.DecisionId == expectedItem.DecisionId);
+				item.ClosedAt.Should().Be(expectedItem.ClosedAt);
+				item.ConcernsCaseUrn.Should().Be(expectedItem.ConcernsCaseUrn);
+				item.CreatedAt.Should().Be(expectedItem.CreatedAt);
+				item.Outcome.Should().BeNull();
+				item.Status.Should().Be(expectedItem.DecisionStatus);
+				item.Title.Should().Be(expectedItem.Title);
+				item.UpdatedAt.Should().Be(expectedItem.UpdatedAt);
+			}
+		}
+
+		protected async Task<GetDecisionResponse> GetDecision(CreateDecisionResponse createDecisionResponse)
+		{
+			return await GetDecision(createDecisionResponse.ConcernsCaseUrn, createDecisionResponse.DecisionId);
+		}
+
+		private async Task<GetDecisionResponse> GetDecision(int caseID, int decisionID)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{caseID}/decisions/{decisionID}");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
+			var result = wrapper.Data;
+
+			return result;
+		}
+
 
 		[Fact]
 		public async Task When_Post_Returns_201Response()
