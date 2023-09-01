@@ -53,6 +53,16 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
 		}
 
+		[HttpGet]
+		[Route("case/{caseUrn}")]
+		[ProducesResponseType((int)HttpStatusCode.OK)]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
+		public async Task<IActionResult> ListByCaseUrn([FromRoute] ListByCaseUrn.Query query)
+		{
+			var model = await _mediator.Send(query);
+			return Ok(model);
+		}
+
 		[HttpPatch]
 		[Route("{srmaId}/update-status")]
 		[MapToApiVersion("2.0")]

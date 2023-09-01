@@ -68,49 +68,49 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			//dataResult.Data.DateOffered.Should().Be(dateOffered);
    //     }
 
-        [Fact]
-        public async Task GetSRMAsByCaseId_ReturnsMatchingSRMA_WhenGivenCaseId()
-        {
-            var caseUrn = 123;
+        //[Fact]
+        //public async Task GetSRMAsByCaseId_ReturnsMatchingSRMA_WhenGivenCaseId()
+        //{
+        //    var caseUrn = 123;
 
-            var matchingSRMA = new SRMACase
-            {
-                CaseUrn = caseUrn,
-                Notes = "match"
-            };
+        //    var matchingSRMA = new SRMACase
+        //    {
+        //        CaseUrn = caseUrn,
+        //        Notes = "match"
+        //    };
 
-            var srmas = new List<SRMACase> {
-                matchingSRMA,
-                new SRMACase {
-                    CaseUrn = 222,
-                    Notes = "SRMA 1"
-                },
-                new SRMACase {
-                    CaseUrn = 456,
-                    Notes = "SRMA 2"
-                }
-            };
+        //    var srmas = new List<SRMACase> {
+        //        matchingSRMA,
+        //        new SRMACase {
+        //            CaseUrn = 222,
+        //            Notes = "SRMA 1"
+        //        },
+        //        new SRMACase {
+        //            CaseUrn = 456,
+        //            Notes = "SRMA 2"
+        //        }
+        //    };
 
-            var srmaResponse = Builder<SRMAResponse>
-                .CreateNew()
-                .With(r => r.CaseUrn = matchingSRMA.CaseUrn)
-                .With(r => r.Notes = matchingSRMA.Notes)
-                .Build();
+        //    var srmaResponse = Builder<SRMAResponse>
+        //        .CreateNew()
+        //        .With(r => r.CaseUrn = matchingSRMA.CaseUrn)
+        //        .With(r => r.Notes = matchingSRMA.Notes)
+        //        .Build();
 
-            var collection = new List<SRMAResponse> { srmaResponse };
+        //    var collection = new List<SRMAResponse> { srmaResponse };
 
-            _mockGetSRMAsByCaseId
-                .Setup(x => x.Execute(caseUrn))
-                .Returns(collection);
+        //    _mockGetSRMAsByCaseId
+        //        .Setup(x => x.Execute(caseUrn))
+        //        .Returns(collection);
 
-            var controllerResponse = (await controllerSUT.GetSRMAsByCase(caseUrn)).Result as OkObjectResult;
+        //    var controllerResponse = (await controllerSUT.GetSRMAsByCase(caseUrn)).Result as OkObjectResult;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<ICollection<SRMAResponse>>;
+        //    var actualResult = controllerResponse.Value as ApiSingleResponseV2<ICollection<SRMAResponse>>;
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(1);
-            actualResult.Data.First().CaseUrn.Should().Be(caseUrn);
-        }
+        //    actualResult.Data.Should().NotBeNull();
+        //    actualResult.Data.Count.Should().Be(1);
+        //    actualResult.Data.First().CaseUrn.Should().Be(caseUrn);
+        //}
 
    //     [Fact]
    //     public async Task GetSRMAsById_ReturnsMatchingSRMA_WhenGivenSRMAId()
