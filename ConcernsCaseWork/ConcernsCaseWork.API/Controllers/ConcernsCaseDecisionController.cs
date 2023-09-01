@@ -166,57 +166,37 @@ namespace ConcernsCaseWork.API.Controllers
 		//    return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(results));
 	 //   }
 
-		[HttpDelete("{decisionId:int}")]
-		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Delete(int urn, int decisionId, CancellationToken cancellationToken = default)
-		{
-			LogInfo($"Attempting to delete Concerns Decision by Urn {urn}, DecisionId {decisionId}");
+		//[HttpDelete("{decisionId:int}")]
+		//[MapToApiVersion("2.0")]
+		//public async Task<IActionResult> Delete(int urn, int decisionId, CancellationToken cancellationToken = default)
+		//{
+		//	LogInfo($"Attempting to delete Concerns Decision by Urn {urn}, DecisionId {decisionId}");
 
-			if (!ValidateUrn(urn, nameof(Delete)) || !ValidateDecisionId(decisionId, nameof(Delete)))
-			{
-				return BadRequest();
-			}
+		//	if (!ValidateUrn(urn, nameof(Delete)) || !ValidateDecisionId(decisionId, nameof(Delete)))
+		//	{
+		//		return BadRequest();
+		//	}
 
-			var decisionResponse = await _getDecisionUserCase.Execute(new GetDecisionRequest(urn, decisionId), cancellationToken);
-			if (decisionResponse == null)
-			{
-				LogInfo($"Deleting Concern Decision failed: No Decision matching Urn {urn}, DecisionId {decisionId} was found");
+		//	var decisionResponse = await _getDecisionUserCase.Execute(new GetDecisionRequest(urn, decisionId), cancellationToken);
+		//	if (decisionResponse == null)
+		//	{
+		//		LogInfo($"Deleting Concern Decision failed: No Decision matching Urn {urn}, DecisionId {decisionId} was found");
 
-				return NotFound();
-			}
+		//		return NotFound();
+		//	}
 
-			await _deleteDecision.Execute(new DeleteDecisionRequest(urn, decisionId), cancellationToken);
-			LogInfo($"Successfully Deleted Concern Decision By Urn {urn}, DecisionId {decisionId}");
+		//	await _deleteDecision.Execute(new DeleteDecisionRequest(urn, decisionId), cancellationToken);
+		//	LogInfo($"Successfully Deleted Concern Decision By Urn {urn}, DecisionId {decisionId}");
 
-			return NoContent();
-		}
+		//	return NoContent();
+		//}
 
 
-		private bool ValidateUrn(int urn, string methodName)
-	    {
-		    if (urn <= 0)
-		    {
-			    LogInfo($"{methodName} found invalid urn value");
-			    return false;
-		    }
 
-		    return true;
-	    }
 
-	    private bool ValidateDecisionId(int decisionId, string methodName)
-	    {
-		    if (decisionId <= 0)
-		    {
-			    LogInfo($"{methodName} found invalid decisionId value");
-			    return false;
-		    }
-
-		    return true;
-	    }
-
-	    private void LogInfo(string msg, [CallerMemberName] string caller = "")
-	    {
-		    _logger.LogInformation($"{caller} {msg}");
-	    }
+	    //private void LogInfo(string msg, [CallerMemberName] string caller = "")
+	    //{
+		   // _logger.LogInformation($"{caller} {msg}");
+	    //}
     }
 }
