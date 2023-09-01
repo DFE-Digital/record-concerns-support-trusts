@@ -146,25 +146,25 @@ namespace ConcernsCaseWork.API.Controllers
 		*/
 
 
-		[HttpGet()]
-	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken = default)
-	    {
-		    LogInfo($"Entered {nameof(GetDecisions)}, Urn {urn}");
+		//[HttpGet()]
+	 //   [MapToApiVersion("2.0")]
+	 //   public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken = default)
+	 //   {
+		//    LogInfo($"Entered {nameof(GetDecisions)}, Urn {urn}");
 
-		    if (!ValidateUrn(urn, nameof(GetDecisions)))
-		    {
-			    return BadRequest();
-		    }
+		//    if (!ValidateUrn(urn, nameof(GetDecisions)))
+		//    {
+		//	    return BadRequest();
+		//    }
 
-		    var results = await _getDecisionsUserCase.Execute(new GetDecisionsRequest(urn), cancellationToken);
-		    if (results is null)
-		    {
-			    return NotFound();
-		    }
+		//    var results = await _getDecisionsUserCase.Execute(new GetDecisionsRequest(urn), cancellationToken);
+		//    if (results is null)
+		//    {
+		//	    return NotFound();
+		//    }
 
-		    return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(results));
-	    }
+		//    return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(results));
+	 //   }
 
 		[HttpDelete("{decisionId:int}")]
 		[MapToApiVersion("2.0")]

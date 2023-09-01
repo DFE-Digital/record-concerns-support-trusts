@@ -57,6 +57,14 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 		}
 
+		[HttpGet()]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> GetDecisions([FromRoute] ListByCaseUrn.Query query)
+		{
+			var model = await _mediator.Send(query);
+			return Ok(model);
+		}
+
 		[HttpPatch("{decisionId}/close")]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
