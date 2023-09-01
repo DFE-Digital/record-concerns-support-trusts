@@ -55,16 +55,16 @@ namespace ConcernsCaseWork.API.Controllers
    //         return Ok(response);
    //     }
 
-        [HttpGet]
-        [Route("case/{caseUrn}")]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiSingleResponseV2<ICollection<SRMAResponse>>>> GetSRMAsByCase(int caseUrn, CancellationToken cancellationToken = default)
-        {
-            var srmas = _getSRMAsByCaseIdUseCase.Execute(caseUrn);
-            var response = new ApiSingleResponseV2<ICollection<SRMAResponse>>(srmas);
+        //[HttpGet]
+        //[Route("case/{caseUrn}")]
+        //[MapToApiVersion("2.0")]
+        //public async Task<ActionResult<ApiSingleResponseV2<ICollection<SRMAResponse>>>> GetSRMAsByCase(int caseUrn, CancellationToken cancellationToken = default)
+        //{
+        //    var srmas = _getSRMAsByCaseIdUseCase.Execute(caseUrn);
+        //    var response = new ApiSingleResponseV2<ICollection<SRMAResponse>>(srmas);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         //[HttpPatch]
         //[Route("{srmaId}/update-status")]

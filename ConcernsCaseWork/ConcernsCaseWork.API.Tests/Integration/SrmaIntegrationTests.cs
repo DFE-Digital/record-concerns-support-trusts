@@ -1,4 +1,6 @@
 ﻿using AutoFixture;
+using Azure;
+using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
@@ -15,6 +17,7 @@ using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Kiota.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -37,6 +40,36 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			_client = apiTestFixture.Client;
 			_fixture = new();
 			_randomGenerator = new RandomGenerator();
+		}
+
+		[Fact]
+		public async Task When_GetByCaseUrn_ReturnOK()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var requestOne = _fixture.Create<CreateSRMARequest>();
+			requestOne.Id = 0;
+			requestOne.CaseUrn = createdConcern.Urn;
+			requestOne.Reason = Data.Enums.SRMAReasonOffered.RegionsGroupIntervention;
+
+
+			var requestTwo = _fixture.Create<CreateSRMARequest>();
+			requestTwo.Id = 0;
+			requestTwo.CaseUrn = createdConcern.Urn;
+			requestTwo.Reason = Data.Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight;
+
+			var createdSRMAOne = await CreateSRMA(requestOne);
+			var createdSRMATwo = await CreateSRMA(requestTwo);
+			List<SRMAResponse> expected = new List<SRMAResponse>() { createdSRMAOne, createdSRMATwo };
+
+			//Act
+			var result = await _client.GetAsync($"/v2/case-actions/srma/case/{createdConcern.Urn}");
+			
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.OK);
+			ApiResponseV2<SRMAResponse> content = await result.Content.ReadFromJsonAsync<ApiResponseV2<SRMAResponse>>();
+			content.Data.Count().Should().Be(expected.Count);
+			content.Data.Should().BeEquivalentTo(expected);
 		}
 
 		[Fact]
