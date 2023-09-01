@@ -1,7 +1,11 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Controllers;
+using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
@@ -11,10 +15,12 @@ namespace ConcernsCaseWork.API.Features.Decision
 	public class DecisionController : ControllerBase
 	{
 		private readonly IMediator _mediator;
+		private readonly ILogger<DecisionController> _logger;
 
-		public DecisionController(IMediator mediator)
+		public DecisionController(IMediator mediator, ILogger<DecisionController> logger)
 		{
 			_mediator = mediator;
+			_logger = logger;
 		}
 
 		[HttpGet("{decisionId}")]
@@ -57,6 +63,14 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 		}
 
+		[HttpGet()]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> GetDecisions([FromRoute] ListByCaseUrn.Query query)
+		{
+			var model = await _mediator.Send(query);
+			return Ok(model);
+		}
+
 		[HttpPatch("{decisionId}/close")]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
@@ -69,6 +83,46 @@ namespace ConcernsCaseWork.API.Features.Decision
 			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.CaseUrn, DecisionId = commandResult.DecisionId });
 
 			return Ok(new ApiSingleResponseV2<Close.CommandResult>(commandResult));
+		}
+
+		[HttpDelete("{decisionId:int}")]
+		[MapToApiVersion("2.0")]
+		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
+		{
+			if (!ValidateUrn(command.ConcernsCaseUrn, nameof(Delete)) || !ValidateDecisionId(command.DecisionId, nameof(Delete)))
+			{
+				return BadRequest();
+			}
+			await _mediator.Send(command);
+
+			return NoContent();
+		}
+
+		private bool ValidateUrn(int urn, string methodName)
+		{
+			if (urn <= 0)
+			{
+				LogInfo($"{methodName} found invalid urn value");
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool ValidateDecisionId(int decisionId, string methodName)
+		{
+			if (decisionId <= 0)
+			{
+				LogInfo($"{methodName} found invalid decisionId value");
+				return false;
+			}
+
+			return true;
+		}
+
+		private void LogInfo(string msg, [CallerMemberName] string caller = "")
+		{
+			_logger.LogInformation($"{caller} {msg}");
 		}
 	}
 }
