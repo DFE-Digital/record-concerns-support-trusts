@@ -11,6 +11,8 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		[Description("Facilitating transfer - financially agreed")]
 		FacilitatingTransferFinanciallyAgreed = 3,
 		[Description("Facilitating transfer - educationally triggered")]
-		FacilitatingTransferEducationallyTriggered = 4
+		FacilitatingTransferEducationallyTriggered = 4,
+		[Description("Emergency funding")]
+		EmergencyFunding = 5
 	}
 }
