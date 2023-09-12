@@ -66,6 +66,7 @@ namespace ConcernsCaseWork.Pages
 				await RecordUserSignIn(team);
 
 				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(GetUserName(), PageNumber);
+				activeCaseGroup.Pagination.Url = this.Url.Page("TeamCasework");
 
 				ActiveTeamCases = activeCaseGroup.Cases;
 				Pagination = activeCaseGroup.Pagination;
