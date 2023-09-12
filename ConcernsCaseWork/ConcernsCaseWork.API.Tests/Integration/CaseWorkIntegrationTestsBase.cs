@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var expectedCases = cases.Take(2).ToList();
 
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/active/team?page=1&count=2");
+			var getResponse = await _client.GetAsync(url);
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
