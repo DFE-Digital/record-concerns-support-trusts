@@ -1,3 +1,11 @@
+## 28.0.0
+* Add Emergency funding option to Framework Categories for Repayable and Non Repayable Decision Types
+* Soft Delete SRMA via Api
+* Soft Delete Financial Plan via Api
+* Soft Delete Case via Api
+* Soft Delete Nti Under Consideration via Api
+
+
 ## 27.1.0
 * Change the RMF guidance link
 
