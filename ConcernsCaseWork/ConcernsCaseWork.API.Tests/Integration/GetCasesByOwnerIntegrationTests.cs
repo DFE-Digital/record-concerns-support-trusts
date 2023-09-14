@@ -18,81 +18,29 @@ using Xunit;
 namespace ConcernsCaseWork.API.Tests.Integration
 {
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
-	public class GetCasesByOwnerIntegrationTests
+	public class GetCasesByOwnerIntegrationTests:CaseWorkIntegrationTestsBase
 	{
-		private readonly Fixture _fixture;
-		private readonly HttpClient _client;
-		private readonly ApiTestFixture _testFixture;
 
-		public GetCasesByOwnerIntegrationTests(ApiTestFixture apiTestFixture)
+		public GetCasesByOwnerIntegrationTests(ApiTestFixture apiTestFixture) : base(apiTestFixture)
 		{
-			_client = apiTestFixture.Client;
-			_fixture = new();
-			_testFixture = apiTestFixture;
+
 		}
 
 		[Fact]
 		public async Task When_HasActiveCasesWithCaseActions_Returns_CorrectInformation_200()
 		{
 			var owner = _fixture.Create<string>();
-			List<ConcernsCase> cases = new List<ConcernsCase>();
 
-			var expectedCase = CreateCase(owner);
-
-			cases.Add(expectedCase);
-
-			using var context = _testFixture.GetContext();
-
-			await context.SaveCases(cases);
-			await context.CreateOpenCaseActions(expectedCase.Id);
-			await context.CreateClosedCaseActions(expectedCase.Id);
-
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/active");
-			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-			var result = wrapper.Data.ToList();
-
-			var actualCase = result.First();
-			actualCase.CaseUrn.Should().Be(expectedCase.Id);
-			actualCase.CreatedAt.Should().Be(expectedCase.CreatedAt);
-			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
-			actualCase.CaseLastUpdatedAt.Should().Be(expectedCase.CaseLastUpdatedAt);
-
-			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
-			actualCase.StatusName.Should().Be(CaseStatus.Live.ToString());
-
-			actualCase.ActiveConcerns.Should().HaveCount(1);
-			var concern = actualCase.ActiveConcerns.First();
-			concern.Name.Should().Be(ConcernType.FinancialDeficit.Description());
-			concern.Rating.Id.Should().Be((int)ConcernRating.AmberGreen);
-			concern.Rating.Name.Should().Be(ConcernRating.AmberGreen.Description());
-
-			CaseSummaryAssert.AssertCaseActions(actualCase);
+			await HasActiveCasesWithCaseActions_Returns_CorrectInformation_200(owner, $"/v2/concerns-cases/summary/{owner}/active");
 		}
 
 		[Fact]
 		public async Task When_HasActiveCases_Returns_AllCases_200()
 		{
+			//Arrange
 			var owner = _fixture.Create<string>();
 			var differentOwner = _fixture.Create<string>();
-			List<ConcernsCase> cases = new List<ConcernsCase>();
-			List<ConcernsCase> casesDifferentOwner = new List<ConcernsCase>();
-			List<ConcernsCase> closedCases = new List<ConcernsCase>();
-
-			for (var idx = 0; idx < 5; idx++)
-			{
-				cases.Add(CreateCase(owner));
-				casesDifferentOwner.Add(CreateCase(differentOwner));
-				closedCases.Add(DatabaseModelBuilder.CloseCase(CreateCase(owner)));
-			}
-
-			using var context = _testFixture.GetContext();
-
-			await context.SaveCases(cases);
-			await context.SaveCases(casesDifferentOwner);
-			await context.SaveCases(closedCases);
-
+			var cases = await CreateCasesWithDifferentOwners(owner, differentOwner);
 			var expectedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/active");
@@ -125,22 +73,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			var owner = _fixture.Create<string>();
 
-			var cases = await BulkCreateActiveCases(owner);
-
-			var expectedCases = cases.Take(2).ToList();
-
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/summary/{owner}/active?page=1&count=2");
-			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiResponseV2<ActiveCaseSummaryResponse>>();
-			var result = wrapper.Data.ToList();
-
-			result.Should().HaveCount(2);
-			CaseSummaryAssert.AssertCaseList(result.Cast<CaseSummaryResponse>().ToList(), expectedCases);
-			wrapper.Paging.RecordCount.Should().Be(10);
-			wrapper.Paging.TotalPages.Should().Be(5);
-			wrapper.Paging.HasNext.Should().BeTrue();
-			wrapper.Paging.HasPrevious.Should().BeFalse();
+			await HasActiveCases_PaginationOnlyNext_Returns_200(owner, owner, $"/v2/concerns-cases/summary/{owner}/active?page=1&count=2");
 		}
 
 		[Fact]
@@ -386,25 +319,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			return result;
 		}
-
-		private async Task<List<ConcernsCase>> BulkCreateActiveCases(string owner)
-		{
-			using var context = _testFixture.GetContext();
-
-			List<ConcernsCase> cases = new List<ConcernsCase>();
-
-			for (var idx = 0; idx < 10; idx++)
-			{
-				cases.Add(CreateCase(owner));
-			}
-
-			await context.SaveCases(cases);
-
-			var orderedCases = cases.OrderByDescending(c => c.CreatedAt).ToList();
-
-			return orderedCases;
-		}
-
 
 		private async Task<List<ConcernsCase>> BulkCreateClosedCases(string owner)
 		{

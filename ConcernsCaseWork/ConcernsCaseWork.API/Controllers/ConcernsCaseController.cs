@@ -181,13 +181,26 @@ namespace ConcernsCaseWork.API.Controllers
 		[HttpGet]
 		[Route("summary/{userId}/active/team")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId, CancellationToken cancellationToken = default)
+		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId,
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
 		{
 			_logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
-			var caseSummaries = await _getActiveConcernsCaseSummariesForUsersTeam.Execute(userId, cancellationToken);
+
+			var parameters = new GetCaseSummariesForUsersTeamParameters()
+			{
+				UserID = userId,
+				Page = page,
+				Count = count
+			};
+
+			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getActiveConcernsCaseSummariesForUsersTeam.Execute(parameters, cancellationToken);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
 			_logger.LogInformation("Returning active Concerns cases for User Id {UserId}", userId);
-			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
 		}

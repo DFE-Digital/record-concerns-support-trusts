@@ -1,7 +1,6 @@
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Gateways;
-
 namespace ConcernsCaseWork.API.UseCases;
 
 public class GetActiveConcernsCaseSummariesForUsersTeam : IGetActiveConcernsCaseSummariesForUsersTeam
@@ -17,24 +16,24 @@ public class GetActiveConcernsCaseSummariesForUsersTeam : IGetActiveConcernsCase
 		_teamCaseworkGateway = teamCaseworkGateway;
 	}
 
-	public async Task<IList<ActiveCaseSummaryResponse>> Execute(string ownerId, CancellationToken cancellationToken = default)
+	public async Task<(IList<ActiveCaseSummaryResponse>, int)> Execute(GetCaseSummariesForUsersTeamParameters parameters, CancellationToken cancellationToken = default)
 	{
-		var team = await _teamCaseworkGateway.GetByOwnerId(ownerId, cancellationToken);
+		var team = await _teamCaseworkGateway.GetByOwnerId(parameters.UserID, cancellationToken);
 
 		if (team == null)
 		{
-			return new List<ActiveCaseSummaryResponse>();
+			return (new List<ActiveCaseSummaryResponse>(), 0);
 		}
 
-		var teamMembers = team.TeamMembers.Select(x => x.TeamMember).ToArray();
+		parameters.teamMemberIds = team.TeamMembers.Select(x => x.TeamMember).ToArray();
 
-		if (!teamMembers.Any())
+		if (!parameters.teamMemberIds.Any())
 		{
-			return new List<ActiveCaseSummaryResponse>();
+			return (new List<ActiveCaseSummaryResponse>(), 0);
 		}
-		
-		var caseSummaries = await _caseSummaryGateway.GetActiveCaseSummariesByTeamMembers(teamMembers);
-		
-		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
+
+		(IList<ActiveCaseSummaryVm> caseSummaries, int recordCount) = await _caseSummaryGateway.GetActiveCaseSummariesByTeamMembers(parameters);
+
+		return (caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList(), recordCount);
 	}
 }

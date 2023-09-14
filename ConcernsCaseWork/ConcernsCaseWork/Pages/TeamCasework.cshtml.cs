@@ -5,6 +5,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.ApplicationInsights;
@@ -29,6 +30,7 @@ namespace ConcernsCaseWork.Pages
 		private TelemetryClient _telemetry;
 
 		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
+		public PaginationModel Pagination { get; set; }
 
 		public TeamCaseworkPageModel(
 			ILogger<TeamCaseworkPageModel> logger,
@@ -63,7 +65,11 @@ namespace ConcernsCaseWork.Pages
 				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 				await RecordUserSignIn(team);
 
-				ActiveTeamCases = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(GetUserName());
+				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(GetUserName(), PageNumber);
+				activeCaseGroup.Pagination.Url = this.Url.Page("TeamCasework");
+
+				ActiveTeamCases = activeCaseGroup.Cases;
+				Pagination = activeCaseGroup.Pagination;
 			}
 			catch (Exception ex)
 			{
