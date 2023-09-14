@@ -6,13 +6,20 @@ export class CaseBuilder
 {
     public static buildOpenCase(): CreateCaseRequest
     {
+        var createdbyUserName = Cypress.env(EnvUsername);
+        var result = this.buildOpenCaseWithCreatedBy(createdbyUserName);
+        return result;
+    }
+
+    public static buildOpenCaseWithCreatedBy(createdBy): CreateCaseRequest
+    {
         const currentDate = getUkLocalDateFormatted();
 
         const result: CreateCaseRequest =
         {
             createdAt: currentDate,
             reviewAt: currentDate,
-            createdBy: Cypress.env(EnvUsername),
+            createdBy: createdBy,
             trustUkprn: this.chooseRandomTrust(),
             deEscalation: currentDate,
             issue: "test",
@@ -25,6 +32,23 @@ export class CaseBuilder
             ratingId: 4,
             territory: 1
         };
+
+        return result;
+    }
+
+    public static bulkCreateOpenCasesWithOwner(numberToCreate, createdBy): Array<CreateCaseRequest>
+    {
+        const result: Array<CreateCaseRequest> = [];
+
+        const now  = getUkLocalDate();
+
+        for (let idx = 1; idx <= numberToCreate; idx++)
+        {
+            const request = this.buildOpenCaseWithCreatedBy(createdBy);
+            request.createdAt = <string>now.plus(idx).toISO();
+
+            result.push(request);
+        }
 
         return result;
     }

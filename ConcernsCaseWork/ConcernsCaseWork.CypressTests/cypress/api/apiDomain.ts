@@ -55,6 +55,11 @@ export type GetOpenCasesByOwnerResponse =
 
 };
 
+export type GetOpenCasesForTeamByOwnerResponse =
+{
+
+};
+
 export type GetOpenCasesByTrustResponse =
 {
 
@@ -90,4 +95,21 @@ export type GetCityTechnologyCollegeResponse =
     town: string,
     county: string,
     postcode: string,
+};
+
+export type PutTeamRequest =
+{
+    OwnerID: string;
+    TeamMembers: Array<string>;
+};
+
+export type PutTeamResponse =
+{
+
+};
+
+export type GetTeamByOwnerResponse =
+{
+    ownerid: string;
+    teamMembers: Array<string>;
 };
