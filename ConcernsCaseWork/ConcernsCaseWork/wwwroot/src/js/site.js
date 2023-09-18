@@ -18,7 +18,7 @@ characterCounts.forEach((characterCount) => {
 });
 
 setScrollableErrorElements();
-autoResizer();
+autoResizeTextAreaOnLoad();
 
 function setScrollableErrorElements() {
 
@@ -125,25 +125,11 @@ window.formatCurrency = function (element) {
 	element.val(formattedCurrency);
 }
 
-function autoResizer() {
+function autoResizeTextAreaOnLoad() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
 	for (let i = 0; i < multipleFields.length; i++) {
-		multipleFields[i].addEventListener('input', autoResizeHeight);
-
 		// Force height when textarea contains data
 		$(multipleFields[i]).height(multipleFields[i].scrollHeight);
-	}
-
-	// auto resize multiple textarea
-	function autoResizeHeight() {
-		this.style.height = "auto";
-		this.style.height = this.scrollHeight + "px";
-
-		if ($("#" + this.id + "").val().length > 0) {
-			this.style.borderColor = "green";
-		} else {
-			this.style.borderColor = "black";
-		}
 	}
 }
 
