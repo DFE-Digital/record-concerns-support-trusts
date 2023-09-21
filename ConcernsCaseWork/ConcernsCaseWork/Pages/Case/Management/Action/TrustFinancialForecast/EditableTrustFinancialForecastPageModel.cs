@@ -46,7 +46,7 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		};
 		
 	private static RadioButtonsUiComponent BuildSRMAOfferedAfterTFFComponent(int? selectedId = null) 
-		=> new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFF), "SRMA offered after trust financial forecast (TFF)?")
+		=> new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFF), "SRMA offered after TFF?")
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
