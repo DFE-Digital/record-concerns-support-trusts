@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditIssuePageModel
 
 @{
-	ViewData["Title"] = "Edit Issue";
+	ViewData["Title"] = "Edit issue";
 	var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }

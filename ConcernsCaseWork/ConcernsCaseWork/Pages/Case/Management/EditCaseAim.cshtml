@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditCaseAimPageModel
 
 @{
-	ViewData["Title"] = "Edit Case aim";
+	ViewData["Title"] = "Edit case aim";
 	var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }

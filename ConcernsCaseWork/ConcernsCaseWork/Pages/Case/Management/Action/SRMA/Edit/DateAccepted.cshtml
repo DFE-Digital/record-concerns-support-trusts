@@ -5,7 +5,7 @@
 @model EditDateAcceptedPageModel
 
 @{
-    ViewData["Title"] = "SRMA Date Accepted";
+    ViewData["Title"] = "Date SRMA accepted";
     ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["caseUrn"]}/management/action/srma/{@RouteData.Values["srmaId"]}";
     var nonce = HttpContext.GetNonce();

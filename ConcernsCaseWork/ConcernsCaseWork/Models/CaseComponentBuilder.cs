@@ -82,11 +82,11 @@ namespace ConcernsCaseWork.Models
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = "ESFA activity, TFF or other departmental activity"
+					HintText = "ESFA activity, TFF or other departmental activity."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies"
+					HintText = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies."
 				}
 			};
 
