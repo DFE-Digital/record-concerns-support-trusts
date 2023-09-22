@@ -4,6 +4,7 @@ using MediatR;
 namespace ConcernsCaseWork.API.Features.Decision
 {
 	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Exceptions;
 	using ConcernsCaseWork.Data.Models;
@@ -12,13 +13,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 	public class Close
 	{
-		public class CommandResult
-		{
-			public int CaseUrn { get; set; }
-			public int DecisionId { get; set; }
-		}
-
-		public class Command : IRequest<CommandResult>
+		public class Command : IRequest<CloseDecisionResponse>
 		{
 			public int CaseUrn { get; }
 			public int DecisionId { get; }
@@ -33,7 +28,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			}
 		}
 
-		public class CommandHandler : IRequestHandler<Command, CommandResult>
+		public class CommandHandler : IRequestHandler<Command, CloseDecisionResponse>
 		{
 			private readonly ConcernsDbContext _context;
 			private readonly IMediator _mediator;
@@ -44,7 +39,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				_mediator = mediator;
 			}
 
-			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<CloseDecisionResponse> Handle(Command request, CancellationToken cancellationToken)
 			{
 				var concernsCase = await _context.ConcernsCase
 						.Include(x => x.Decisions)
@@ -76,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				var concernCreatedNotification = new DecisionUpdatedNotification() { Id = request.DecisionId, CaseId = request.CaseUrn };
 				await _mediator.Publish(concernCreatedNotification);
 
-				return new CommandResult()
+				return new CloseDecisionResponse()
 				{
 					CaseUrn = request.CaseUrn,
 					DecisionId = request.DecisionId
