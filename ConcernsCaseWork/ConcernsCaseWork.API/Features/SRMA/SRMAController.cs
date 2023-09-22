@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.Data.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +36,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			var command = new Create.Command(request);
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { srmaId = commandResult });
-			return CreatedAtAction(nameof(GetByID), new { srmaId = model.Id }, new ApiSingleResponseV2<GetByID.Result>(model));
+			return CreatedAtAction(nameof(GetByID), new { srmaId = model.Id }, new ApiSingleResponseV2<SRMAResponse>(model));
 		}
 
 		[HttpGet]
@@ -49,7 +50,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 				return NotFound();
 			}
 
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<SRMAResponse>(model));
 		}
 
 		[HttpGet]
@@ -59,7 +60,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		public async Task<IActionResult> ListByCaseUrn([FromRoute] ListByCaseUrn.Query query)
 		{
 			var model = await _mediator.Send(query);
-			return Ok(model);
+			return Ok(new ApiSingleResponseV2<ICollection<SRMAResponse>>(model));
 		}
 
 		[HttpPatch]

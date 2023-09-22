@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -23,12 +24,13 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		public async Task<IActionResult> GetByID([FromRoute] GetByID.Query query)
 		{
 			var model = await _mediator.Send(query);
+
 			if (model == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 		[HttpPost()]
@@ -40,7 +42,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			var command = new Create.Command(request);
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<GetByID.Result>(model));
+			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 
@@ -53,7 +55,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			var command = new Update.Command(request);
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 		[HttpDelete("{Id}")]
