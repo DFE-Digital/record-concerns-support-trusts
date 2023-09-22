@@ -1,78 +1,32 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.Decisions;
-using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.API.Features.Decision.Outcome
 {
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
-	using System.ComponentModel.DataAnnotations;
-	using System.Globalization;
+	using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 	using ConcernsCaseWork.API.Exceptions;
+	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 
 	public class Create
 	{
-		public class DecisionOutcomeModel
-		{
-			public DecisionOutcomeModel()
-			{
-				BusinessAreasConsulted = new List<Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea>();
-			}
-
-			public int DecisionOutcomeId { get; set; }
-
-			public int DecisionId { get; set; }
-
-			[Required]
-			[EnumDataType(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus), ErrorMessage = "Select a decision outcome status")]
-			public API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus Status { get; set; }
-
-			[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
-			public decimal? TotalAmount { get; set; }
-
-			public DateTimeOffset? DecisionMadeDate { get; set; }
-
-			public DateTimeOffset? DecisionEffectiveFromDate { get; set; }
-
-			[EnumDataType(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer))]
-			public API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer? Authorizer { get; set; }
-
-			public List<Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea> BusinessAreasConsulted { get; set; }
-
-			public DateTimeOffset CreatedAt { get; set; }
-			public DateTimeOffset UpdatedAt { get; set; }
-		}
-
-		public class Command : IRequest<CommandResult>
+		public class Command : IRequest<CreateDecisionOutcomeResponse>
 		{
 			public int ConcernsCaseUrn { get; }
 			public int DecisionId { get; }
-			public DecisionOutcomeModel Model { get; set; }
+			public CreateDecisionOutcomeRequest Request { get; set; }
 
-			public Command(int concernsCaseUrn, int DecisionId, DecisionOutcomeModel model)
+			public Command(int concernsCaseUrn, int DecisionId, CreateDecisionOutcomeRequest request)
 			{
 				this.ConcernsCaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
-				this.Model = model;
+				this.Request = request;
 			}
 
 		}
 
-		public class CommandResult
-		{
-			public int ConcernsCaseUrn { get; set; }
-
-			public int DecisionId { get; set; }
-
-			public int DecisionOutcomeId { get; set; }
-
-			public Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome Outcome { get; set; }
-		}
-
-		public class CommandHandler : IRequestHandler<Command, CommandResult>
+		public class CommandHandler : IRequestHandler<Command, CreateDecisionOutcomeResponse>
 		{
 			private readonly ConcernsDbContext _context;
 			private readonly IMediator _mediator;
@@ -84,7 +38,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 				_mediator = mediator;
 			}
 
-			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<CreateDecisionOutcomeResponse> Handle(Command request, CancellationToken cancellationToken)
 			{
 				var concernCase = await _context.ConcernsCase
 					.Include(x => x.Decisions)
@@ -112,15 +66,15 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 				}
 
 				var now = DateTime.Now;
-				var outcome = new DecisionOutcome()
+				var outcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
 				{
 					DecisionId = request.DecisionId,
-					Status = request.Model.Status,
-					TotalAmount = request.Model.TotalAmount,
-					DecisionMadeDate = request.Model.DecisionMadeDate,
-					DecisionEffectiveFromDate = request.Model.DecisionEffectiveFromDate,
-					Authorizer = request.Model.Authorizer,
-					BusinessAreasConsulted = request.Model.BusinessAreasConsulted.Select(b => new DecisionOutcomeBusinessAreaMapping()
+					Status = request.Request.Status,
+					TotalAmount = request.Request.TotalAmount,
+					DecisionMadeDate = request.Request.DecisionMadeDate,
+					DecisionEffectiveFromDate = request.Request.DecisionEffectiveFromDate,
+					Authorizer = request.Request.Authorizer,
+					BusinessAreasConsulted = request.Request.BusinessAreasConsulted.Select(b => new DecisionOutcomeBusinessAreaMapping()
 					{
 						DecisionOutcomeBusinessId = b
 					}).ToList(),
@@ -134,12 +88,11 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 				var decisionCreatedNotification = new DecisionOutcomeCreatedNotification() { Id = result.Entity.DecisionOutcomeId, CaseId = request.ConcernsCaseUrn };
 				await _mediator.Publish(decisionCreatedNotification);
 
-				return new CommandResult()
+				return new CreateDecisionOutcomeResponse()
 				{
 					ConcernsCaseUrn = request.ConcernsCaseUrn,
 					DecisionId = request.DecisionId,
 					DecisionOutcomeId = result.Entity.DecisionOutcomeId,
-					Outcome = result.Entity
 				};
 			}
 		}
@@ -162,7 +115,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 			public async Task Handle(DecisionOutcomeCreatedNotification notification, CancellationToken cancellationToken)
 			{
 				ConcernsCase cc = await _context.ConcernsCase.SingleOrDefaultAsync(f => f.Id == notification.CaseId, cancellationToken: cancellationToken);
-                DecisionOutcome decisionOutcome = await _context.DecisionOutcomes.SingleOrDefaultAsync(f => f.DecisionOutcomeId == notification.Id, cancellationToken: cancellationToken);
+                var decisionOutcome = await _context.DecisionOutcomes.SingleOrDefaultAsync(f => f.DecisionOutcomeId == notification.Id, cancellationToken: cancellationToken);
 				cc.CaseLastUpdatedAt = decisionOutcome.CreatedAt.DateTime;
 				await _context.SaveChangesAsync();
 			}
