@@ -26,8 +26,6 @@
 //		}
 
 
-//		/*
-
 //		[HttpPost]
 //		[ApiVersion("2.0")]
 //		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(
@@ -90,9 +88,5 @@
 
 //			return new ObjectResult(result) { StatusCode = StatusCodes.Status200OK };
 //		}
-
-//		*/
-
-
 //	}
 //}
