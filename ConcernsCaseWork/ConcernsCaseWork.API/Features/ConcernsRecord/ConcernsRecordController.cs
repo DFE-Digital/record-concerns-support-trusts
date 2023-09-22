@@ -26,8 +26,8 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 		{
 			var command = new Create.Command(request);
 			var commandResult = await _mediator.Send(command);
-			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<GetByID.Result>(model));
+			var record = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return CreatedAtAction(nameof(GetByID), new { Id = record.Id }, new ApiSingleResponseV2<ConcernsRecordResponse>(record));
 		}
 
 		[HttpGet("{Id}:int", Name = nameof(GetByID))]
@@ -47,10 +47,12 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 		[HttpGet("case/urn/{urn}")]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.OK)]
-		public async Task<IActionResult> GetByID([FromRoute] ListByCaseUrn.Query query)
+		public async Task<IActionResult> GetByCaseId([FromRoute] ListByCaseUrn.Query query)
 		{
-			var model = await _mediator.Send(query);
-			return Ok(model);
+			var records = await _mediator.Send(query);
+
+			var response = new ApiResponseV2<ConcernsRecordResponse>(records, null);
+			return Ok(response);
 		}
 
 		[HttpPatch("{Id}", Name = nameof(Update))]
@@ -61,8 +63,8 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 		{
 			var command = new Update.Command(Id, request);
 			var commandResult = await _mediator.Send(command);
-			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			var record = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(record));
 		}
 
 
