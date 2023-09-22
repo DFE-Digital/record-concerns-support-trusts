@@ -1,26 +1,17 @@
-﻿using MediatR;
-using ConcernsCaseWork.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data;
+using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.Decisions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-	using ConcernsCaseWork.Data.Models;
-	using Microsoft.EntityFrameworkCore;
-	using ConcernsCaseWork.Data.Exceptions;
+	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
+	using ConcernsCaseWork.Data.Exceptions;
+	using ConcernsCaseWork.Data.Models;
+	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+	using Microsoft.EntityFrameworkCore;
 
 	public class Close
 	{
-		public class CloseDecisionModel
-		{
-			private const int _maxSupportingNotesLength = 2000;
-
-			[StringLength(_maxSupportingNotesLength, ErrorMessage = "Notes must be 2000 characters or less", MinimumLength = 0)]
-			public string SupportingNotes { get; set; }
-		}
-
 		public class CommandResult
 		{
 			public int CaseUrn { get; set; }
@@ -32,13 +23,13 @@ namespace ConcernsCaseWork.API.Features.Decision
 			public int CaseUrn { get; }
 			public int DecisionId { get; }
 
-			public CloseDecisionModel Model { get; set; }
+			public CloseDecisionRequest Request { get; set; }
 
-			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionModel model)
+			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionRequest request)
 			{
 				this.CaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
-				this.Model = model;
+				this.Request = request;
 			}
 		}
 
@@ -70,7 +61,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				try
 				{
-					concernsCase.CloseDecision(request.DecisionId, request.Model.SupportingNotes, DateTime.Now);
+					concernsCase.CloseDecision(request.DecisionId, request.Request.SupportingNotes, DateTime.Now);
 					await _context.SaveChangesAsync();
 				}
 				catch (EntityNotFoundException ex)
