@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Data.Models
 			
 		}
 
-		protected ConcernsRecord(int caseUrn, int typeId, int ratingId, int meansOfReferralId, int statusId)
+		protected ConcernsRecord(int caseUrn, int typeId, int ratingId, int? meansOfReferralId, int statusId)
 		{
 			this.CaseId = caseUrn;
 			this.TypeId = typeId;
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Data.Models
 			this.StatusId = statusId;
 		}
 
-		public static ConcernsRecord Create(int caseUrn, int typeId, int ratingId, int meansOfReferralId, int statusId)
+		public static ConcernsRecord Create(int caseUrn, int typeId, int ratingId, int? meansOfReferralId, int statusId)
 		{
 			return new ConcernsRecord(caseUrn,typeId, ratingId, meansOfReferralId, statusId);
 		}
