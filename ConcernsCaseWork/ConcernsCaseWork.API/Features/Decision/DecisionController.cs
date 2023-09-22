@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				return NotFound();
 			}
 
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<GetDecisionResponse>(model));
 		}
 
 		[HttpPost(Name = "CreateDecision")]
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			var commandResult = await _mediator.Send(command);
 
 			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.ConcernsCaseUrn, DecisionId = commandResult.DecisionId });
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<GetDecisionResponse>(model));
 
 		}
 
@@ -68,8 +68,9 @@ namespace ConcernsCaseWork.API.Features.Decision
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> GetDecisions([FromRoute] ListByCaseUrn.Query query)
 		{
-			var model = await _mediator.Send(query);
-			return Ok(model);
+			var decisions = await _mediator.Send(query);
+
+			return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(decisions));
 		}
 
 		[HttpPatch("{decisionId}/close")]
@@ -81,9 +82,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			var command = new Close.Command(concernsCaseUrn, decisionId, request);
 			var commandResult = await _mediator.Send(command);
 
-			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.CaseUrn, DecisionId = commandResult.DecisionId });
-
-			return Ok(new ApiSingleResponseV2<Close.CommandResult>(commandResult));
+			return Ok(new ApiSingleResponseV2<CloseDecisionResponse>(commandResult));
 		}
 
 		[HttpDelete("{decisionId:int}")]
