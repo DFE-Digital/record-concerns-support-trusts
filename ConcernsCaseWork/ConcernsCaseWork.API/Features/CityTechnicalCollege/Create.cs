@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Models;
-using FluentValidation;
+﻿using ConcernsCaseWork.API.Contracts.Trusts;
+using ConcernsCaseWork.Data;
 using MediatR;
 
 namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
@@ -13,15 +12,12 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		}
 		public class Command : IRequest<int>
 		{
-			public string Name { get; set; }
-			public string UKPRN { get; set; }
-			public string CompaniesHouseNumber { get; set; }
-			public string AddressLine1 { get; set; }
-			public string AddressLine2 { get; set; }
-			public string AddressLine3 { get; set; }
-			public string Town { get; set; }
-			public string County { get; set; }
-			public string Postcode { get; set; }
+			public CityTechnologyCollege Request { get; }
+
+			public Command(CityTechnologyCollege request)
+			{
+				Request = request;
+			}
 		}
 
 		public class CommandHandler : IRequestHandler<Command, Int32>
@@ -33,9 +29,10 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 				_context = context;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
-				var ctc = CityTechnologyCollege.Create(request.Name, request.UKPRN, request.CompaniesHouseNumber);
+				var request = command.Request;
+				var ctc = Data.Models.CityTechnologyCollege.Create(request.Name, request.UKPRN, request.CompaniesHouseNumber);
 
 				ctc.ChangeAddress(request.AddressLine1, request.AddressLine2, request.AddressLine3, request.Town, request.County, request.Postcode);
 
