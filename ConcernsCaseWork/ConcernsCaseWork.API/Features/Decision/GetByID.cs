@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 {
 	public class GetByID
 	{
-		public class Query : IRequest<Result>
+		public class Query : IRequest<GetDecisionResponse>
 		{
 			[Range(1, int.MaxValue, ErrorMessage = "The ConcernsCaseUrn must be greater than zero")]
 			public int ConcernsCaseUrn { get; set; }
@@ -23,29 +23,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			public int DecisionId { get; set; }
 		}
 
-		public class Result
-		{
-			public int ConcernsCaseUrn { get; set; }
-			public int DecisionId { get; set; }
-			public DecisionTypeQuestion[] DecisionTypes { get; set; }
-			public decimal TotalAmountRequested { get; set; }
-			public string SupportingNotes { get; set; }
-			public DateTimeOffset ReceivedRequestDate { get; set; }
-			public string SubmissionDocumentLink { get; set; }
-			public bool? SubmissionRequired { get; set; }
-			public bool? RetrospectiveApproval { get; set; }
-			public string CrmCaseNumber { get; set; }
-			public DateTimeOffset CreatedAt { get; set; }
-			public DateTimeOffset UpdatedAt { get; set; }
-			public DecisionStatus DecisionStatus { get; set; }
-			public DateTimeOffset? ClosedAt { get; set; }
-			public string Title { get; set; }
-			public DecisionOutcome? Outcome { get; set; }
-			public bool IsEditable { get; set; }
-
-		}
-
-		public class Handler : IRequestHandler<Query, Result>
+		public class Handler : IRequestHandler<Query, GetDecisionResponse>
 		{
 			private readonly ConcernsDbContext _context;
 
@@ -54,7 +32,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				_context = context;
 			}
 
-			public async Task<Result> Handle(Query request, CancellationToken cancellationToken)
+			public async Task<GetDecisionResponse> Handle(Query request, CancellationToken cancellationToken)
 			{
 				var concernCase = await _context.ConcernsCase
 					.Include(x => x.Decisions)
@@ -76,7 +54,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Not Found: Decision with id {request.DecisionId}, Case {request.ConcernsCaseUrn}");
 				}
 
-				Result result = new Result()
+				var result = new GetDecisionResponse()
 				{
 					ConcernsCaseUrn = concernCase.Id,
 					DecisionId = decision.DecisionId,
