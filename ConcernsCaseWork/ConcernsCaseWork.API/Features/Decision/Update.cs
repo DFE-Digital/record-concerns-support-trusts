@@ -5,6 +5,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 {
 	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models;
 	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 	using Microsoft.EntityFrameworkCore;
@@ -47,7 +48,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				if (concernsCase == null)
 				{
-					throw new InvalidOperationException($"Concerns Case {request.ConcernsCaseUrn} not found");
+					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
 				var decisionTypes = request.Request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();

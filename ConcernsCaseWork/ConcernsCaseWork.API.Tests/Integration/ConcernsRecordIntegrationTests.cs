@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
@@ -317,6 +318,24 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == content.Data.CaseUrn);
 			concernsCase.CaseLastUpdatedAt.Should().Be(content.Data.UpdatedAt);
+		}
+
+		[Fact]
+		public async Task Update_RecordDoesNotExist_Returns_404()
+		{
+			var recordId = 1000000;
+
+			ConcernsRecordRequest updateRequest = new ConcernsRecordRequest();
+
+			HttpRequestMessage httpRequestMessage = new()
+			{
+				Method = HttpMethod.Patch,
+				RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{recordId}"),
+				Content = JsonContent.Create(updateRequest)
+			};
+
+			HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 

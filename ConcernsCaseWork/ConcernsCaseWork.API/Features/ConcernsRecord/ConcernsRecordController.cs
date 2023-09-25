@@ -61,10 +61,18 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
 		public async Task<IActionResult> Update(int Id, [FromBody] ConcernsRecordRequest request, CancellationToken cancellationToken = default)
 		{
+			var existingRecord = await _mediator.Send(new GetByID.Query() { Id = Id });
+
+			if (existingRecord == null)
+			{
+				return NotFound($"Concerns record {Id} not found");
+			}
+
 			var command = new Update.Command(Id, request);
 			var commandResult = await _mediator.Send(command);
-			var record = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(record));
+
+			var result = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(result));
 		}
 
 

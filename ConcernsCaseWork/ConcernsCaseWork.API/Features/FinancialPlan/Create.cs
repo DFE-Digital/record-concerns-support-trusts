@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
@@ -33,6 +34,13 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			public async Task<long> Handle(Command command, CancellationToken cancellationToken)
 			{
 				var request = command.Request;
+
+				var existingCase = await _context.ConcernsCase.SingleOrDefaultAsync(c => c.Id == request.CaseUrn);
+
+				if (existingCase == null) 
+				{
+					throw new NotFoundException($"Concerns case {request.CaseUrn}");
+				}
 
 				FinancialPlanCase fp = new FinancialPlanCase()
 				{

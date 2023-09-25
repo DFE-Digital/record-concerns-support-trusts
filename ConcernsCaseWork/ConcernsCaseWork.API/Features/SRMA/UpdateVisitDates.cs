@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.Data;
 using MediatR;
 
 namespace ConcernsCaseWork.API.Features.SRMA
@@ -39,6 +40,10 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			{
 				var srma = await _context.SRMACases.FindAsync(request.srmaId);
 
+				if (srma == null)
+				{
+					throw new NotFoundException($"SRMA {request.srmaId}");
+				}
 
 				srma.StartDateOfVisit = request.StartDate;
 				srma.EndDateOfVisit = request.EndDate;
