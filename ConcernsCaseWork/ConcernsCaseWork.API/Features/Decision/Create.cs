@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 {
 	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 	using System.Globalization;
 
@@ -50,6 +51,11 @@ namespace ConcernsCaseWork.API.Features.Decision
 							.ThenInclude(x => x.BusinessAreasConsulted);
 
 				var concernsCase = exp.FirstOrDefault(c => c.Urn == request.ConcernsCaseUrn);
+
+				if (concernsCase == null) 
+				{
+					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
+				}
 
 				var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
