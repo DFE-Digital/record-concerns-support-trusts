@@ -51,6 +51,13 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
+				var decision = concernsCase.Decisions.SingleOrDefault(d => d.DecisionId == request.DecisionId);
+
+				if (decision == null)
+				{
+					throw new NotFoundException($"Decision {request.DecisionId}");
+				}
+
 				var decisionTypes = request.Request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
 				var updatedDecision = Decision.CreateNew(request.Request.CrmCaseNumber, request.Request.RetrospectiveApproval, request.Request.SubmissionRequired, request.Request.SubmissionDocumentLink, request.Request.ReceivedRequestDate.Value, decisionTypes, request.Request.TotalAmountRequested, request.Request.SupportingNotes, DateTime.Now);

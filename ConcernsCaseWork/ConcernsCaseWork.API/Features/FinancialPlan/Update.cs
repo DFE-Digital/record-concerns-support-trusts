@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Azure.Core.HttpHeader;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {
@@ -35,35 +36,30 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			{
 				var request = command.Request;
 
-				var existingCase = await _context.ConcernsCase.SingleOrDefaultAsync(c => c.Id == request.CaseUrn);
+				var existingFinancialPlan = await _context.FinancialPlanCases.SingleOrDefaultAsync(e => e.Id == request.Id && e.CaseUrn == request.CaseUrn);
 
-				if (existingCase == null)
+				if (existingFinancialPlan == null)
 				{
-					throw new NotFoundException($"Concerns case {request.CaseUrn}");
+					throw new NotFoundException($"Case {request.CaseUrn} financial plan {request.Id}");
 				}
 
-				var fp = new FinancialPlanCase
-				{
-					Id = request.Id,
-					CaseUrn = request.CaseUrn,
-					Name = request.Name,
-					ClosedAt = request.ClosedAt,
-					CreatedAt = request.CreatedAt,
-					CreatedBy = request.CreatedBy,
-					DatePlanRequested = request.DatePlanRequested,
-					DateViablePlanReceived = request.DateViablePlanReceived,
-					Notes = request.Notes,
-					StatusId = request.StatusId,
-					UpdatedAt = request.UpdatedAt,
-				};
+				existingFinancialPlan.Name = request.Name;
+				existingFinancialPlan.ClosedAt = request.ClosedAt;
+				existingFinancialPlan.CreatedAt = request.CreatedAt;
+				existingFinancialPlan.CreatedBy = request.CreatedBy;
+				existingFinancialPlan.DatePlanRequested = request.DatePlanRequested;
+				existingFinancialPlan.DateViablePlanReceived = request.DateViablePlanReceived;
+				existingFinancialPlan.Notes = request.Notes;
+				existingFinancialPlan.StatusId = request.StatusId;
+				existingFinancialPlan.UpdatedAt = request.UpdatedAt;
 
-				var tracked = _context.Update(fp);
+				var tracked = _context.Update(existingFinancialPlan);
 				await _context.SaveChangesAsync();
 
-				var updatedNotification = new FinancialPlanUpdatedNotification() { Id = fp.Id, CaseId = fp.CaseUrn, };
+				var updatedNotification = new FinancialPlanUpdatedNotification() { Id = existingFinancialPlan.Id, CaseId = existingFinancialPlan.CaseUrn, };
 				await _mediator.Publish(updatedNotification);
 
-				return fp.Id;
+				return existingFinancialPlan.Id;
 			}
 		}
 
