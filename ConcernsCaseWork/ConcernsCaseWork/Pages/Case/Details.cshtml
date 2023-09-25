@@ -6,7 +6,7 @@
 @{
     var caseExists = Model.CaseUrn.HasValue;
 
-    ViewData["Title"] = caseExists ? "Add Case Details" : "New Case Details";
+    ViewData["Title"] = caseExists ? "Add Case Details" : "Concern details";
     var buttonName = caseExists ? "Add to case" : "Create this case";
     var heading = caseExists ? "Add to case" : "Create this case";
 

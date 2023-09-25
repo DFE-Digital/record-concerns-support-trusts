@@ -5,7 +5,7 @@
 @model EditDateReportSentPageModel
 
 @{
-    ViewData["Title"] = "SRMA Report Sent";
+    ViewData["Title"] = "Date SMRA report sent";
     ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["caseUrn"]}/management/action/srma/{@RouteData.Values["srmaId"]}";
     var nonce = HttpContext.GetNonce();
@@ -27,7 +27,7 @@
 
 				<h1 class="govuk-heading-l">
 					<span class="govuk-caption-m">SRMA</span>
-					Date report sent to Trust
+					Date report sent to trust
 				</h1>
 
 				<form role="form" method="post" id="edit-dates-of-visit-form" novalidate>

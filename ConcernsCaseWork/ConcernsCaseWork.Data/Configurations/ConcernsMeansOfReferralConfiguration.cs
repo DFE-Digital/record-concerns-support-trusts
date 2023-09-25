@@ -18,7 +18,7 @@ public class ConcernsMeansOfReferralConfiguration : IEntityTypeConfiguration<Con
 			{
 				Id = 1,
 				Name = "Internal",
-				Description = "ESFA activity, TFF or other departmental activity",
+				Description = "ESFA activity, TFF or other departmental activity.",
 				CreatedAt = new DateTime(2022, 7, 28),
 				UpdatedAt = new DateTime(2023, 1, 27)
 			},
@@ -26,7 +26,7 @@ public class ConcernsMeansOfReferralConfiguration : IEntityTypeConfiguration<Con
 			{
 				Id = 2,
 				Name = "External",
-				Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies",
+				Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies.",
 				CreatedAt = new DateTime(2022, 7, 28),
 				UpdatedAt = new DateTime(2022, 11, 09)
 			});
