@@ -63,8 +63,9 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 		{
 			var command = new Update.Command(Id, request);
 			var commandResult = await _mediator.Send(command);
-			var record = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(record));
+
+			var result = await _mediator.Send(new GetByID.Query() { Id = commandResult });
+			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(result));
 		}
 
 

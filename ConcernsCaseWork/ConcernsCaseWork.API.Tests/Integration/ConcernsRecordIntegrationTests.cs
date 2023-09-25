@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
@@ -108,6 +109,27 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == linkedCase.Id);
 			concernsCase.CaseLastUpdatedAt.Should().Be(createdRecord.CreatedAt);
+		}
+
+		[Fact]
+		public async Task Post_CaseDoesNotExist_Returns_404()
+		{
+			var request = new ConcernsRecordRequest();
+			request.CaseUrn = 1000000;
+
+			HttpRequestMessage httpRequestMessage = new()
+			{
+				Method = HttpMethod.Post,
+				RequestUri = new Uri("https://notarealdomain.com/v2/concerns-records"),
+				Content = JsonContent.Create(request)
+			};
+
+			HttpResponseMessage result = await _client.SendAsync(httpRequestMessage);
+
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {request.CaseUrn}");
 		}
 
 		[Fact]
@@ -317,6 +339,28 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == content.Data.CaseUrn);
 			concernsCase.CaseLastUpdatedAt.Should().Be(content.Data.UpdatedAt);
+		}
+
+		[Fact]
+		public async Task Update_RecordDoesNotExist_Returns_404()
+		{
+			var recordId = 1000000;
+
+			ConcernsRecordRequest updateRequest = new ConcernsRecordRequest();
+			updateRequest.CaseUrn = 2000000;
+
+			HttpRequestMessage httpRequestMessage = new()
+			{
+				Method = HttpMethod.Patch,
+				RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{recordId}"),
+				Content = JsonContent.Create(updateRequest)
+			};
+
+			HttpResponseMessage result = await _client.SendAsync(httpRequestMessage);
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {updateRequest.CaseUrn} record {recordId}");
 		}
 
 
