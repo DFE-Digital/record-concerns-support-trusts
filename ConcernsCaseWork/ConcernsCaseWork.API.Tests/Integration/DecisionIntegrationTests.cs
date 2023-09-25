@@ -288,6 +288,25 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Put_DecisionDoesNotExist_Returns_404()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var decisionId = 1000000;
+
+			var request = _autoFixture.Create<CreateDecisionRequest>();
+			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = caseId;
+
+			var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{decisionId}", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Decision {decisionId}");
+		}
+
+		[Fact]
 		public async Task When_Delete_HasNoResource_Returns_404()
 		{
 			var concernsCaseId = 987654321;

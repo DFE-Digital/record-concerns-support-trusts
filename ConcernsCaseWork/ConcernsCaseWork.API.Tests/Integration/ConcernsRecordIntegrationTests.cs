@@ -112,6 +112,27 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task Post_CaseDoesNotExist_Returns_404()
+		{
+			var request = new ConcernsRecordRequest();
+			request.CaseUrn = 1000000;
+
+			HttpRequestMessage httpRequestMessage = new()
+			{
+				Method = HttpMethod.Post,
+				RequestUri = new Uri("https://notarealdomain.com/v2/concerns-records"),
+				Content = JsonContent.Create(request)
+			};
+
+			HttpResponseMessage result = await _client.SendAsync(httpRequestMessage);
+
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {request.CaseUrn}");
+		}
+
+		[Fact]
 		public async Task PostInvalidConcernsRecordRequest_Returns_ValidationErrors()
 		{
 			ConcernsRecordRequest request = _autoFixture.Create<ConcernsRecordRequest>();
@@ -326,6 +347,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var recordId = 1000000;
 
 			ConcernsRecordRequest updateRequest = new ConcernsRecordRequest();
+			updateRequest.CaseUrn = 2000000;
 
 			HttpRequestMessage httpRequestMessage = new()
 			{
@@ -334,8 +356,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				Content = JsonContent.Create(updateRequest)
 			};
 
-			HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
-			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+			HttpResponseMessage result = await _client.SendAsync(httpRequestMessage);
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {updateRequest.CaseUrn} record {recordId}");
 		}
 
 
