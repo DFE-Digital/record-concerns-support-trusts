@@ -1,14 +1,5 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases.CaseActions.SRMA;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using ConcernsCaseWork.Data.Enums;
-using ConcernsCaseWork.API.Contracts.Srma;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace ConcernsCaseWork.API.Features.NTIUnderConsideration
 {

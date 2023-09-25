@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.Trusts;
+using ConcernsCaseWork.API.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -52,10 +53,11 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		[HttpPost(Name = nameof(Create))]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Create([FromBody] Create.Command command)
+		public async Task<IActionResult> Create([FromBody] CityTechnologyCollege request)
 		{
+			var command = new Create.Command(request);
 			var response = await _mediator.Send(command);
-			return CreatedAtAction(nameof(GetByUKPRN), new { UKPRN = command.UKPRN }, null);
+			return CreatedAtAction(nameof(GetByUKPRN), new { UKPRN = request.UKPRN }, null);
 		}
 	}
 }

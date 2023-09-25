@@ -1,14 +1,9 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.API.Contracts.Trusts;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Service.Trusts
 {
@@ -28,20 +23,6 @@ namespace ConcernsCaseWork.Service.Trusts
 			ICorrelationContext correlationContext,
 			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
-
-		}
-
-		protected class CityTechnologyCollege
-		{
-			public string Name { get; set; }
-			public string UKPRN { get; set; }
-			public string CompaniesHouseNumber { get; set; }
-			public string AddressLine1 { get; set; }
-			public string AddressLine2 { get; set; }
-			public string AddressLine3 { get; set; }
-			public string County { get; set; }
-			public string Town { get; set; }
-			public string Postcode { get; set; }
 
 		}
 

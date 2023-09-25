@@ -4,42 +4,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
 
 	public class Update
 	{
-		public class ConcernModel
-		{
-			public DateTime CreatedAt { get; set; }
-			public DateTime UpdatedAt { get; set; }
-			public DateTime ReviewAt { get; set; }
-			public DateTime? ClosedAt { get; set; }
-
-			[StringLength(300)]
-			public string Name { get; set; }
-
-			[StringLength(300)]
-			public string Description { get; set; }
-
-			[StringLength(300)]
-			public string Reason { get; set; }
-			public int CaseUrn { get; set; }
-			public int TypeId { get; set; }
-			public int RatingId { get; set; }
-			public int StatusId { get; set; }
-			public int? MeansOfReferralId { get; set; }
-		}
 		public class Command : IRequest<int>
 		{
 			public int Id { get; }
 
-			public ConcernModel Model { get; set; }
+			public ConcernsRecordRequest Request { get; set; }
 
-			public Command(int id, ConcernModel model)
+			public Command(int id, ConcernsRecordRequest request)
 			{
-				this.Id = id;
-				this.Model = model;
+				Id = id;
+				Request = request;
 			}
 		}
 
@@ -58,21 +38,21 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 			{
 				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(f => f.Id == request.Id);
 
-				cr.CreatedAt = request.Model.CreatedAt;
-				cr.UpdatedAt = request.Model.UpdatedAt;
-				cr.ReviewAt = request.Model.ReviewAt;
-				cr.ClosedAt = request.Model.ClosedAt;
+				cr.CreatedAt = request.Request.CreatedAt;
+				cr.UpdatedAt = request.Request.UpdatedAt;
+				cr.ReviewAt = request.Request.ReviewAt;
+				cr.ClosedAt = request.Request.ClosedAt;
 				//Taken Previous Logic from Factory (ConcernsCaseWork.API.Factories ConcernsCaseFactory)
-				cr.Name = request.Model.Name ?? cr.Name;
-				cr.Description = request.Model.Description ?? cr.Name;
-				cr.Reason = request.Model.Reason ?? cr.Name;
+				cr.Name = request.Request.Name ?? cr.Name;
+				cr.Description = request.Request.Description ?? cr.Name;
+				cr.Reason = request.Request.Reason ?? cr.Name;
 
-				cr.StatusId = request.Model.StatusId;
-				cr.RatingId = request.Model.RatingId;
-				cr.TypeId = request.Model.TypeId;
-				if (request.Model.MeansOfReferralId.HasValue && request.Model.MeansOfReferralId > 0)
+				cr.StatusId = request.Request.StatusId;
+				cr.RatingId = request.Request.RatingId;
+				cr.TypeId = request.Request.TypeId;
+				if (request.Request.MeansOfReferralId.HasValue && request.Request.MeansOfReferralId > 0)
 				{
-					cr.MeansOfReferralId = request.Model.MeansOfReferralId;
+					cr.MeansOfReferralId = request.Request.MeansOfReferralId;
 				}
 
 				await _context.SaveChangesAsync();
