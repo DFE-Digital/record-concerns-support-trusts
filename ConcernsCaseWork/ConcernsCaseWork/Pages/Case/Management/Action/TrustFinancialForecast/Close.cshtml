@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 @{
-	ViewData["Title"] = "Close trust Financial forecast";
+	ViewData["Title"] = "Close TFF (trust financial forecast)";
 }
 
 @section BeforeMain {
@@ -27,17 +27,17 @@
 				<partial name="_ValidationErrors"/>
 				<form role="form" method="post" id="close-trust-financial-forecast-form" novalidate>
 					
-					<h1 class="govuk-heading-l">
-						<span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-						Close trust financial forecast (TFF)
-					</h1>
+                    <h1 class="govuk-heading-l">
+                        <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                        Close TFF (trust financial forecast)
+                    </h1>
 	
 					<partial name="Shared/Components/_TextArea" model="@Model.Notes"/>
 
 					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-trust-financial-forecast-button" name="action">
-							Close trust financial forecast (TFF)
-						</button>
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-trust-financial-forecast-button" name="action">
+                            Close TFF
+                        </button>
 					</div>
 				</form>
 			}

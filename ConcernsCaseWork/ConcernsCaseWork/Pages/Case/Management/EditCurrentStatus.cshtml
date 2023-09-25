@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditCurrentStatusPageModel
 
 @{
-	ViewData["Title"] = "Edit Current status";
+	ViewData["Title"] = "Edit current status";
 	var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 

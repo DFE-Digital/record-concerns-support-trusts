@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Service.Cases
 		RecoveryPlan,
 		[Description("SRMA (School Resource Management Adviser)")]
 		Srma,
-		[Description("TFF (Trust Financial Forecast)")]
+		[Description("TFF (trust financial forecast)")]
 		TrustFinancialForecast,
 		[Description("NTI: Under consideration")]
 		NtiUnderConsideration,

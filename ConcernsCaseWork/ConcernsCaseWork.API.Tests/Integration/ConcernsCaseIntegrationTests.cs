@@ -590,11 +590,11 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		content.Data.Count().Should().Be(2);
 
 		content.Data.First().Name.Should().Be("Internal");
-		content.Data.First().Description.Should().Be("ESFA activity, TFF or other departmental activity");
+		content.Data.First().Description.Should().Be("ESFA activity, TFF or other departmental activity.");
 		content.Data.First().Id.Should().BeGreaterThan(0);
 
 		content.Data.Last().Name.Should().Be("External");
-		content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies");
+		content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies.");
 		content.Data.Last().Id.Should().BeGreaterThan(0);
 	}
 
