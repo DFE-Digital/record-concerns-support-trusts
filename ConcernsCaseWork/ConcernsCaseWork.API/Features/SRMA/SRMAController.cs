@@ -68,9 +68,9 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Update(int srmaId, SRMAStatus status, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> UpdateStatus(int srmaId, SRMAStatus status, CancellationToken cancellationToken = default)
 		{
-			var command = UpdateStatus.Command.Create(srmaId, status);
+			var command = SRMA.UpdateStatus.Command.Create(srmaId, status);
 			var commandResult = await _mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
@@ -78,9 +78,9 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[HttpPatch]
 		[Route("{srmaId}/update-reason")]
 		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Update(int srmaId, SRMAReasonOffered reason, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> UpdateReason(int srmaId, SRMAReasonOffered reason, CancellationToken cancellationToken = default)
 		{
-			var command = UpdateReason.Command.Create(srmaId, reason);
+			var command = SRMA.UpdateReason.Command.Create(srmaId, reason);
 			var commandResult = await _mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[HttpPatch]
 		[Route("{srmaId}/update-closed-date")]
 		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Update([FromRoute] UpdateDateClosed.Command command, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> UpdateClosedDate([FromRoute] UpdateDateClosed.Command command, CancellationToken cancellationToken = default)
 		{
 			var commandResult = await _mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[HttpPatch]
 		[Route("{srmaId}/update-offered-date")]
 		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Update(int srmaId, string offeredDate, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> UpdateOfferedDate(int srmaId, string offeredDate, CancellationToken cancellationToken = default)
 		{
 			try
 			{
@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 				}
 				else
 				{
-					var command = UpdateOfferedDate.Command.Create(srmaId, date.Value);
+					var command = SRMA.UpdateOfferedDate.Command.Create(srmaId, date.Value);
 					var commandResult = await _mediator.Send(command);
 					return await GetByID(new GetByID.Query() { srmaId = commandResult });
 				}
@@ -171,11 +171,11 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[HttpPatch]
 		[Route("{srmaId}/update-visit-dates")]
 		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Update(int srmaId, string startDate, string endDate, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> UpdateVisitDates(int srmaId, string startDate, string endDate, CancellationToken cancellationToken = default)
 		{
 			try
 			{
-				var command = UpdateVisitDates.Command.Create(srmaId, DeserialiseDateTime(startDate), DeserialiseDateTime(endDate));
+				var command = SRMA.UpdateVisitDates.Command.Create(srmaId, DeserialiseDateTime(startDate), DeserialiseDateTime(endDate));
 				var commandResult = await _mediator.Send(command);
 				return await GetByID(new GetByID.Query() { srmaId = commandResult });
 			}
