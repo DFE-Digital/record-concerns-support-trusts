@@ -1,39 +1,23 @@
-﻿using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
-using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.SRMA
 {
-	using ConcernsCaseWork.API.Contracts.Srma;
+	using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 	using ConcernsCaseWork.Data.Enums;
-	using Microsoft.EntityFrameworkCore;
-	using System.ComponentModel.DataAnnotations;
 
 	public class Create
 	{
 
 		public class Command : IRequest<int>
 		{
-			[Required]
-			public int Id { get; set; }
-			[Required]
-			public int CaseUrn { get; set; }
-			public DateTime CreatedAt { get; set; }
+			public CreateSRMARequest Request { get; }
 
-			[StringLength(300)]
-			public string CreatedBy { get; set; }
-			public DateTime DateOffered { get; set; }
-			public DateTime? DateAccepted { get; set; }
-			public DateTime? DateReportSentToTrust { get; set; }
-			public DateTime? DateVisitStart { get; set; }
-			public DateTime? DateVisitEnd { get; set; }
-			public SRMAStatus Status { get; set; }
-
-			[StringLength(SrmaConstants.NotesLength)]
-			public string Notes { get; set; }
-			public SRMAReasonOffered? Reason { get; set; }
+			public Command(CreateSRMARequest request)
+			{
+				Request = request;
+			}
 		}
 
 		public class CommandHandler : IRequestHandler<Command, Int32>
@@ -47,8 +31,9 @@ namespace ConcernsCaseWork.API.Features.SRMA
 				_mediator = mediator;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
+				var request = command.Request;
 				var srma =  new SRMACase()
 				{
 					Id = request.Id,

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
 
@@ -11,24 +12,12 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 	{
 		public class Command : IRequest<int>
 		{
-			public DateTime CreatedAt { get; set; }
-			public DateTime UpdatedAt { get; set; }
-			public DateTime ReviewAt { get; set; }
-			public DateTime? ClosedAt { get; set; }
+			public ConcernsRecordRequest Request { get; }
 
-			[StringLength(300)]
-			public string Name { get; set; }
-
-			[StringLength(300)]
-			public string Description { get; set; }
-
-			[StringLength(300)]
-			public string Reason { get; set; }
-			public int CaseUrn { get; set; }
-			public int TypeId { get; set; }
-			public int RatingId { get; set; }
-			public int StatusId { get; set; }
-			public int MeansOfReferralId { get; set; }
+			public Command(ConcernsRecordRequest request)
+			{
+				Request = request;
+			}
 		}
 
 		public class CommandHandler : IRequestHandler<Command, Int32>
@@ -42,8 +31,9 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 				_mediator = mediator;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
+				var request = command.Request;
 				ConcernsRecord cr = ConcernsRecord.Create(request.CaseUrn, request.TypeId, request.RatingId, request.MeansOfReferralId, request.StatusId);
 
 				cr.ChangeNameDescriptionAndReason(request.Name, request.Description, request.Reason);
