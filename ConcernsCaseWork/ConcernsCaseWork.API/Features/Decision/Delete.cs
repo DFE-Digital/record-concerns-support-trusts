@@ -16,12 +16,10 @@ namespace ConcernsCaseWork.API.Features.Decision
 		public class CommandHandler : IRequestHandler<Command>
 		{
 			private readonly ConcernsDbContext _context;
-			private readonly IMediator _mediator;
 
-			public CommandHandler(ConcernsDbContext context, IMediator mediator)
+			public CommandHandler(ConcernsDbContext context)
 			{
 				_context = context;
-				_mediator = mediator;
 			}
 
 			public async Task Handle(Command request, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -20,13 +21,13 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 		[HttpPost(Name = "CreateDecisionOutcome")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Create(int concernsCaseUrn, int decisionId, [FromBody] Create.DecisionOutcomeModel createModel)
+		public async Task<IActionResult> Create(int concernsCaseUrn, int decisionId, [FromBody] CreateDecisionOutcomeRequest request)
 		{
-			var command = new Create.Command(concernsCaseUrn, decisionId, createModel);
+			var command = new Create.Command(concernsCaseUrn, decisionId, request);
 
 			var commandResult = await _mediator.Send(command);
 
-			var response = new ApiSingleResponseV2<Create.CommandResult>(commandResult);
+			var response = new ApiSingleResponseV2<CreateDecisionOutcomeResponse>(commandResult);
 
 			return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 		}
@@ -35,12 +36,12 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] Update.DecisionOutcomeModel putModel, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] UpdateDecisionOutcomeRequest request, CancellationToken cancellationToken = default)
 		{
-			var command = new Update.Command(concernsCaseUrn, decisionId, putModel);
+			var command = new Update.Command(concernsCaseUrn, decisionId, request);
 			var commandResult = await _mediator.Send(command);
 
-			return Ok(new ApiSingleResponseV2<Update.CommandResult>(commandResult));
+			return Ok(new ApiSingleResponseV2<UpdateDecisionOutcomeResponse>(commandResult));
 		}
 	}
 }

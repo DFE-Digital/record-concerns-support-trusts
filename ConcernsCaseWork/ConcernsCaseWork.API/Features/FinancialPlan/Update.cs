@@ -1,11 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
-using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using static ConcernsCaseWork.API.Features.ConcernsRecord.Update;
+using static Azure.Core.HttpHeader;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {
@@ -14,25 +13,12 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 
 		public class Command : IRequest<long>
 		{
-			[Required]
-			public long Id { get; set; }
-			[Required]
-			public int CaseUrn { get; set; }
+			public PatchFinancialPlanRequest Request { get; }
 
-			[StringLength(300)]
-			public string Name { get; set; }
-			public long? StatusId { get; set; }
-			public DateTime? DatePlanRequested { get; set; }
-			public DateTime? DateViablePlanReceived { get; set; }
-			public DateTime CreatedAt { get; set; }
-
-			[StringLength(300)]
-			public string CreatedBy { get; set; }
-			public DateTime UpdatedAt { get; set; }
-			public DateTime? ClosedAt { get; set; }
-
-			[StringLength(2000)]
-			public string Notes { get; set; }
+			public Command(PatchFinancialPlanRequest request)
+			{
+				Request = request;
+			}
 		}
 
 		public class CommandHandler : IRequestHandler<Command, long>
@@ -46,30 +32,34 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 				_mediator = mediator;
 			}
 
-			public async Task<long> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<long> Handle(Command command, CancellationToken cancellationToken)
 			{
-				var fp = new FinancialPlanCase
-				{
-					Id = request.Id,
-					CaseUrn = request.CaseUrn,
-					Name = request.Name,
-					ClosedAt = request.ClosedAt,
-					CreatedAt = request.CreatedAt,
-					CreatedBy = request.CreatedBy,
-					DatePlanRequested = request.DatePlanRequested,
-					DateViablePlanReceived = request.DateViablePlanReceived,
-					Notes = request.Notes,
-					StatusId = request.StatusId,
-					UpdatedAt = request.UpdatedAt,
-				};
+				var request = command.Request;
 
-				var tracked = _context.Update<FinancialPlanCase>(fp);
+				var existingFinancialPlan = await _context.FinancialPlanCases.SingleOrDefaultAsync(e => e.Id == request.Id && e.CaseUrn == request.CaseUrn);
+
+				if (existingFinancialPlan == null)
+				{
+					throw new NotFoundException($"Case {request.CaseUrn} financial plan {request.Id}");
+				}
+
+				existingFinancialPlan.Name = request.Name;
+				existingFinancialPlan.ClosedAt = request.ClosedAt;
+				existingFinancialPlan.CreatedAt = request.CreatedAt;
+				existingFinancialPlan.CreatedBy = request.CreatedBy;
+				existingFinancialPlan.DatePlanRequested = request.DatePlanRequested;
+				existingFinancialPlan.DateViablePlanReceived = request.DateViablePlanReceived;
+				existingFinancialPlan.Notes = request.Notes;
+				existingFinancialPlan.StatusId = request.StatusId;
+				existingFinancialPlan.UpdatedAt = request.UpdatedAt;
+
+				var tracked = _context.Update(existingFinancialPlan);
 				await _context.SaveChangesAsync();
 
-				var updatedNotification = new FinancialPlanUpdatedNotification() { Id = fp.Id, CaseId = fp.CaseUrn, };
+				var updatedNotification = new FinancialPlanUpdatedNotification() { Id = existingFinancialPlan.Id, CaseId = existingFinancialPlan.CaseUrn, };
 				await _mediator.Publish(updatedNotification);
 
-				return fp.Id;
+				return existingFinancialPlan.Id;
 			}
 		}
 

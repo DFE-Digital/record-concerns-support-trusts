@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Controllers;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -34,17 +33,19 @@ namespace ConcernsCaseWork.API.Features.Decision
 				return NotFound();
 			}
 
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<GetDecisionResponse>(model));
 		}
 
 		[HttpPost(Name = "CreateDecision")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Create([FromBody] Create.Command command)
+		public async Task<IActionResult> Create([FromBody] CreateDecisionRequest request)
 		{
+			var command = new Create.Command(request);
+
 			var commandResult = await _mediator.Send(command);
 
-			var response = new ApiSingleResponseV2<Create.CommandResult>(commandResult);
+			var response = new ApiSingleResponseV2<CreateDecisionResponse>(commandResult);
 
 			return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 		}
@@ -53,13 +54,13 @@ namespace ConcernsCaseWork.API.Features.Decision
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] Update.DecisionModel putModel, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] UpdateDecisionRequest request, CancellationToken cancellationToken = default)
 		{
-			var command = new Update.Command(concernsCaseUrn, decisionId, putModel);
+			var command = new Update.Command(concernsCaseUrn, decisionId, request);
 			var commandResult = await _mediator.Send(command);
 
 			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.ConcernsCaseUrn, DecisionId = commandResult.DecisionId });
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<GetDecisionResponse>(model));
 
 		}
 
@@ -67,22 +68,21 @@ namespace ConcernsCaseWork.API.Features.Decision
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> GetDecisions([FromRoute] ListByCaseUrn.Query query)
 		{
-			var model = await _mediator.Send(query);
-			return Ok(model);
+			var decisions = await _mediator.Send(query);
+
+			return Ok(new ApiSingleResponseV2<DecisionSummaryResponse[]>(decisions));
 		}
 
 		[HttpPatch("{decisionId}/close")]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Close(int concernsCaseUrn, int decisionId, [FromBody] Close.CloseDecisionModel closeModel, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Close(int concernsCaseUrn, int decisionId, [FromBody] CloseDecisionRequest request, CancellationToken cancellationToken = default)
 		{
-			var command = new Close.Command(concernsCaseUrn, decisionId, closeModel);
+			var command = new Close.Command(concernsCaseUrn, decisionId, request);
 			var commandResult = await _mediator.Send(command);
 
-			var model = await _mediator.Send(new GetByID.Query() { ConcernsCaseUrn = commandResult.CaseUrn, DecisionId = commandResult.DecisionId });
-
-			return Ok(new ApiSingleResponseV2<Close.CommandResult>(commandResult));
+			return Ok(new ApiSingleResponseV2<CloseDecisionResponse>(commandResult));
 		}
 
 		[HttpDelete("{decisionId:int}")]

@@ -1,57 +1,33 @@
-﻿using MediatR;
-using ConcernsCaseWork.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data;
+using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.Decisions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models;
+	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 	using Microsoft.EntityFrameworkCore;
 
 	public class Update
 	{
-		public class DecisionModel
-		{
-			public DecisionTypeQuestion[] DecisionTypes { get; set; }
-
-			public decimal TotalAmountRequested { get; set; }
-
-			public string SupportingNotes { get; set; }
-
-			public DateTimeOffset? ReceivedRequestDate { get; set; }
-
-			public string SubmissionDocumentLink { get; set; }
-
-			public bool? SubmissionRequired { get; set; }
-
-			public bool? RetrospectiveApproval { get; set; }
-
-			public string CrmCaseNumber { get; set; }
-		}
-
-		public class CommandResult
-		{
-			public int ConcernsCaseUrn { get; set; }
-			public int DecisionId { get; set; }
-		}
-
-		public class Command : IRequest<CommandResult>
+		public class Command : IRequest<UpdateDecisionResponse>
 		{
 			public int ConcernsCaseUrn { get; }
 			public int DecisionId { get; }
 
-			public DecisionModel Model { get; set; }
+			public UpdateDecisionRequest Request { get; set; }
 
-			public Command(int concernsCaseUrn, int DecisionId, DecisionModel model)
+			public Command(int concernsCaseUrn, int DecisionId, UpdateDecisionRequest request)
 			{
 				this.ConcernsCaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
-				this.Model = model;
+				this.Request = request;
 			}
 		}
 
-		public class CommandHandler : IRequestHandler<Command, CommandResult>
+		public class CommandHandler : IRequestHandler<Command, UpdateDecisionResponse>
 		{
 			private readonly ConcernsDbContext _context;
 			private readonly IMediator _mediator;
@@ -62,7 +38,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				_mediator = mediator;
 			}
 
-			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<UpdateDecisionResponse> Handle(Command request, CancellationToken cancellationToken)
 			{
 				var concernsCase = await _context.ConcernsCase
 						.Include(x => x.Decisions)
@@ -72,12 +48,19 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				if (concernsCase == null)
 				{
-					throw new InvalidOperationException($"Concerns Case {request.ConcernsCaseUrn} not found");
+					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
-				var decisionTypes = request.Model.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decision = concernsCase.Decisions.SingleOrDefault(d => d.DecisionId == request.DecisionId);
 
-				var updatedDecision = Decision.CreateNew(request.Model.CrmCaseNumber, request.Model.RetrospectiveApproval, request.Model.SubmissionRequired, request.Model.SubmissionDocumentLink, request.Model.ReceivedRequestDate.Value, decisionTypes, request.Model.TotalAmountRequested, request.Model.SupportingNotes, DateTime.Now);
+				if (decision == null)
+				{
+					throw new NotFoundException($"Decision {request.DecisionId}");
+				}
+
+				var decisionTypes = request.Request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+
+				var updatedDecision = Decision.CreateNew(request.Request.CrmCaseNumber, request.Request.RetrospectiveApproval, request.Request.SubmissionRequired, request.Request.SubmissionDocumentLink, request.Request.ReceivedRequestDate.Value, decisionTypes, request.Request.TotalAmountRequested, request.Request.SupportingNotes, DateTime.Now);
 
 				concernsCase.UpdateDecision(request.DecisionId, updatedDecision, updatedDecision.UpdatedAt);
 
@@ -86,7 +69,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				var concernCreatedNotification = new DecisionUpdatedNotification() { Id = request.DecisionId, CaseId = request.ConcernsCaseUrn, };
 				await _mediator.Publish(concernCreatedNotification);
 
-				return new CommandResult()
+				return new UpdateDecisionResponse()
 				{
 					ConcernsCaseUrn = request.ConcernsCaseUrn,
 					DecisionId = request.DecisionId

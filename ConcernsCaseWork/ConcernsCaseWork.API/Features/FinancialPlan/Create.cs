@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static Azure.Core.HttpHeader;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {
@@ -12,23 +12,12 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 	{
 		public class Command : IRequest<long>
 		{
-			[Required]
-			public int CaseUrn { get; set; }
+			public CreateFinancialPlanRequest Request { get; }
 
-			[StringLength(300)]
-			public string Name { get; set; }
-			public long? StatusId { get; set; }
-			public DateTime? DatePlanRequested { get; set; }
-			public DateTime? DateViablePlanReceived { get; set; }
-			public DateTime CreatedAt { get; set; }
-
-			[StringLength(300)]
-			public string CreatedBy { get; set; }
-			public DateTime UpdatedAt { get; set; }
-			public DateTime? ClosedAt { get; set; }
-
-			[StringLength(2000)]
-			public string Notes { get; set; }
+			public Command(CreateFinancialPlanRequest request)
+			{
+				Request = request;
+			}
 		}
 
 		public class CommandHandler : IRequestHandler<Command, long>
@@ -42,8 +31,17 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 				_mediator = mediator;
 			}
 
-			public async Task<long> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<long> Handle(Command command, CancellationToken cancellationToken)
 			{
+				var request = command.Request;
+
+				var existingCase = await _context.ConcernsCase.SingleOrDefaultAsync(c => c.Id == request.CaseUrn);
+
+				if (existingCase == null) 
+				{
+					throw new NotFoundException($"Concerns case {request.CaseUrn}");
+				}
+
 				FinancialPlanCase fp = new FinancialPlanCase()
 				{
 					CaseUrn = request.CaseUrn,

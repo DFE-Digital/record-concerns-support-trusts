@@ -2,16 +2,17 @@
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.ResponseModels;
 	using ConcernsCaseWork.Data.Models;
 
 	public class MappingProfile : Profile
 	{
 		public MappingProfile()
 		{
-			CreateMap<ConcernsRecord, GetByID.Result>()
+			CreateMap<ConcernsRecord, ConcernsRecordResponse>()
 				.ForMember(dest => dest.CaseUrn, opt => opt.MapFrom(src => src.ConcernsCase.Urn));
 
-			CreateMap<ConcernsRecord, ListByCaseUrn.Result.ResultItem>()
+			CreateMap<ConcernsRecord, ConcernsRecordResponse>()
 				.ForMember(dest => dest.CaseUrn, opt => opt.MapFrom(src => src.CaseId));
 
 		}
