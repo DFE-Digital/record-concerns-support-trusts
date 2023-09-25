@@ -1,48 +1,34 @@
-﻿using MediatR;
-using ConcernsCaseWork.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data;
+using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.Decisions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-	using ConcernsCaseWork.Data.Models;
-	using Microsoft.EntityFrameworkCore;
-	using ConcernsCaseWork.Data.Exceptions;
+	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
+	using ConcernsCaseWork.Data.Exceptions;
+	using ConcernsCaseWork.Data.Models;
+	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+	using Microsoft.EntityFrameworkCore;
 
 	public class Close
 	{
-		public class CloseDecisionModel
-		{
-			private const int _maxSupportingNotesLength = 2000;
-
-			[StringLength(_maxSupportingNotesLength, ErrorMessage = "Notes must be 2000 characters or less", MinimumLength = 0)]
-			public string SupportingNotes { get; set; }
-		}
-
-		public class CommandResult
-		{
-			public int CaseUrn { get; set; }
-			public int DecisionId { get; set; }
-		}
-
-		public class Command : IRequest<CommandResult>
+		public class Command : IRequest<CloseDecisionResponse>
 		{
 			public int CaseUrn { get; }
 			public int DecisionId { get; }
 
-			public CloseDecisionModel Model { get; set; }
+			public CloseDecisionRequest Request { get; set; }
 
-			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionModel model)
+			public Command(int concernsCaseUrn, int DecisionId, CloseDecisionRequest request)
 			{
 				this.CaseUrn = concernsCaseUrn;
 				this.DecisionId = DecisionId;
-				this.Model = model;
+				this.Request = request;
 			}
 		}
 
-		public class CommandHandler : IRequestHandler<Command, CommandResult>
+		public class CommandHandler : IRequestHandler<Command, CloseDecisionResponse>
 		{
 			private readonly ConcernsDbContext _context;
 			private readonly IMediator _mediator;
@@ -53,7 +39,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				_mediator = mediator;
 			}
 
-			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<CloseDecisionResponse> Handle(Command request, CancellationToken cancellationToken)
 			{
 				var concernsCase = await _context.ConcernsCase
 						.Include(x => x.Decisions)
@@ -70,7 +56,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				try
 				{
-					concernsCase.CloseDecision(request.DecisionId, request.Model.SupportingNotes, DateTime.Now);
+					concernsCase.CloseDecision(request.DecisionId, request.Request.SupportingNotes, DateTime.Now);
 					await _context.SaveChangesAsync();
 				}
 				catch (EntityNotFoundException ex)
@@ -85,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				var concernCreatedNotification = new DecisionUpdatedNotification() { Id = request.DecisionId, CaseId = request.CaseUrn };
 				await _mediator.Publish(concernCreatedNotification);
 
-				return new CommandResult()
+				return new CloseDecisionResponse()
 				{
 					CaseUrn = request.CaseUrn,
 					DecisionId = request.DecisionId
