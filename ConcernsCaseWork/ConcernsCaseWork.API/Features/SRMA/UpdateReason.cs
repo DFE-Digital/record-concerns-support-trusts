@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Enums;
 using MediatR;
 
@@ -37,6 +38,11 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
 			{
 				var srma = await _context.SRMACases.FindAsync(request.srmaId);
+
+				if (srma == null)
+				{
+					throw new NotFoundException($"SRMA {request.srmaId}");
+				}
 
 				srma.ReasonId = (int)request.Reason;
 				srma.UpdatedAt = DateTime.Now;

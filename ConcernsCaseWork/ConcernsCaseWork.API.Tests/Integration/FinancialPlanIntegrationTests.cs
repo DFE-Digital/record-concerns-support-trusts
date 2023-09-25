@@ -1,13 +1,10 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
-using ConcernsCaseWork.Models.CaseActions;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
@@ -89,6 +86,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Post_CaseDoesNotExist_Returns_404()
+		{
+			var request = _fixture.Create<CreateFinancialPlanRequest>();
+			request.CaseUrn = 1000000;
+			request.StatusId = 1;
+
+			var result = await _client.PostAsync($"/v2/case-actions/financial-plan", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {request.CaseUrn}");
+		}
+
+		[Fact]
 		public async Task When_Patch_Returns_200Response()
 		{
 			//Arrange
@@ -111,6 +122,38 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var updatedFinancialPlan = await GetFinancialPlanByID(request.Id);
 			updatedFinancialPlan.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
 			updatedCase.CaseLastUpdatedAt.Should().Be(updatedFinancialPlan.UpdatedAt);
+		}
+
+		[Fact]
+		public async Task When_Patch_CaseDoesNotExist_Returns_404()
+		{
+			var request = _fixture.Create<PatchFinancialPlanRequest>();
+			request.CaseUrn = 1000000;
+			request.StatusId = 1;
+
+			var result = await _client.PatchAsync($"/v2/case-actions/financial-plan", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Case {request.CaseUrn} financial plan {request.Id}");
+		}
+
+		[Fact]
+		public async Task When_Patch_FinancialPlanDoesNotExist_Returns_404()
+		{
+			//Arrange
+			var request = _fixture.Create<PatchFinancialPlanRequest>();
+			var createdConcern = await CreateCase();
+
+			request.CaseUrn = createdConcern.Urn;
+			request.StatusId = 1;
+			request.Id = 1000000;
+
+			var result = await _client.PatchAsync($"/v2/case-actions/financial-plan", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Case {request.CaseUrn} financial plan {request.Id}");
 		}
 
 		[Fact]

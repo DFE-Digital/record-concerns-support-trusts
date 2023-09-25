@@ -9,6 +9,7 @@ using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data;
+using ConcernsCaseWork.Data.Migrations;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FizzWare.NBuilder;
@@ -205,6 +206,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Post_CaseDoesNotExist_Returns_404()
+		{
+			var caseId = 1000000;
+
+			var request = _autoFixture.Create<CreateDecisionRequest>();
+			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = caseId;
+
+			var result = await _client.PostAsync($"/v2/concerns-cases/{caseId}/decisions", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {caseId}");
+		}
+
+		[Fact]
 		public async Task When_Put_Returns_200Response()
 		{
 			// arrange
@@ -252,6 +269,41 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
 			concernsCase.CaseLastUpdatedAt.Value.Should().Be(decision.UpdatedAt.DateTime);
+		}
+
+		[Fact]
+		public async Task When_Put_CaseDoesNotExist_Returns_404()
+		{
+			var caseId = 1000000;
+
+			var request = _autoFixture.Create<CreateDecisionRequest>();
+			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = caseId;
+
+			var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/1", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case {caseId}");
+		}
+
+		[Fact]
+		public async Task When_Put_DecisionDoesNotExist_Returns_404()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var decisionId = 1000000;
+
+			var request = _autoFixture.Create<CreateDecisionRequest>();
+			request.TotalAmountRequested = 100;
+			request.ConcernsCaseUrn = caseId;
+
+			var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{decisionId}", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Decision {decisionId}");
 		}
 
 		[Fact]

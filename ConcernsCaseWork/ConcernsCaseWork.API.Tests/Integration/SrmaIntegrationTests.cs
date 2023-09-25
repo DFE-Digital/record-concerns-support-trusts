@@ -1,21 +1,13 @@
 ﻿using AutoFixture;
-using Azure;
-using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
-using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
-using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Data.Enums;
-using ConcernsCaseWork.Models.CaseActions;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using Microsoft.Kiota.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -312,6 +304,26 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			patchResponse.Data.DateReportSentToTrust.Should().BeNull();
 
 			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
+		}
+
+		[Theory]
+		[InlineData("update-date-report-sent?dateReportSent=02-01-2020")]
+		[InlineData("update-notes?notes=NewNotes")]
+		[InlineData("update-reason?reason=1")]
+		[InlineData("update-status?status=1")]
+		[InlineData("update-closed-date")]
+		[InlineData("update-visit-dates?startDate=02-01-2020&endDate=02-01-2020")]
+		[InlineData("update-date-accepted?acceptedDate=02-01-2020")]
+		[InlineData("update-offered-date?offeredDate=02-01-2020")]
+		public async Task When_Update_SrmaDoesNotExist_Returns_404(string updateUrl)
+		{
+			var srmaId = 1000000;
+
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{srmaId}/{updateUrl}", null);
+			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: SRMA {srmaId}");
 		}
 
 		[Fact]
