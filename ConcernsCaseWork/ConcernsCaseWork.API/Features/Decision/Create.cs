@@ -8,38 +8,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
+	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 	using System.Globalization;
 
 	public class Create
 	{
-		public class Command : IRequest<CommandResult>
+		public class Command : IRequest<CreateDecisionResponse>
 		{
-			public int ConcernsCaseUrn { get; set; } 
-			public DecisionTypeQuestion[] DecisionTypes { get; set; }
+			public CreateDecisionRequest Request { get; }
 
-			public decimal TotalAmountRequested { get; set; }
-
-			public string SupportingNotes { get; set; }
-
-			public DateTimeOffset? ReceivedRequestDate { get; set; }
-
-			public string SubmissionDocumentLink { get; set; }
-
-			public bool? SubmissionRequired { get; set; }
-
-			public bool? RetrospectiveApproval { get; set; }
-
-			public string CrmCaseNumber { get; set; }
+			public Command(CreateDecisionRequest request)
+			{
+				Request = request;
+			}
 		}
 
-		public class CommandResult
-		{
-			public int ConcernsCaseUrn { get; set; }
-			public int DecisionId { get; set; }
-		}
-
-		public class CommandHandler : IRequestHandler<Command, CommandResult>
+		public class CommandHandler : IRequestHandler<Command, CreateDecisionResponse>
 		{
 			private readonly ConcernsDbContext _context;
 			private readonly IMediator _mediator;
@@ -51,8 +38,10 @@ namespace ConcernsCaseWork.API.Features.Decision
 				_mediator = mediator;
 			}
 
-			public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<CreateDecisionResponse> Handle(Command command, CancellationToken cancellationToken)
 			{
+				var request = command.Request;
+
 				var now = DateTimeOffset.Now;
 				var exp = _context.ConcernsCase
 							.Include(x => x.Decisions)
@@ -62,6 +51,11 @@ namespace ConcernsCaseWork.API.Features.Decision
 							.ThenInclude(x => x.BusinessAreasConsulted);
 
 				var concernsCase = exp.FirstOrDefault(c => c.Urn == request.ConcernsCaseUrn);
+
+				if (concernsCase == null) 
+				{
+					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
+				}
 
 				var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
@@ -77,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 				var DecisionCreatedNotification = new DecisionCreatedNotification() { Id = decision.DecisionId, CaseId = concernsCase.Id };
 				await _mediator.Publish(DecisionCreatedNotification);
 
-				return new CommandResult()
+				return new CreateDecisionResponse()
 				{
 					ConcernsCaseUrn = decision.ConcernsCaseId,
 					DecisionId = decision.DecisionId

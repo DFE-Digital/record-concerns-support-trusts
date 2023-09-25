@@ -4,42 +4,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.Exceptions;
+	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
 
 	public class Update
 	{
-		public class ConcernModel
-		{
-			public DateTime CreatedAt { get; set; }
-			public DateTime UpdatedAt { get; set; }
-			public DateTime ReviewAt { get; set; }
-			public DateTime? ClosedAt { get; set; }
-
-			[StringLength(300)]
-			public string Name { get; set; }
-
-			[StringLength(300)]
-			public string Description { get; set; }
-
-			[StringLength(300)]
-			public string Reason { get; set; }
-			public int CaseUrn { get; set; }
-			public int TypeId { get; set; }
-			public int RatingId { get; set; }
-			public int StatusId { get; set; }
-			public int? MeansOfReferralId { get; set; }
-		}
 		public class Command : IRequest<int>
 		{
 			public int Id { get; }
 
-			public ConcernModel Model { get; set; }
+			public ConcernsRecordRequest Request { get; set; }
 
-			public Command(int id, ConcernModel model)
+			public Command(int id, ConcernsRecordRequest request)
 			{
-				this.Id = id;
-				this.Model = model;
+				Id = id;
+				Request = request;
 			}
 		}
 
@@ -54,25 +35,30 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 				_mediator = mediator;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
-				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(f => f.Id == request.Id);
+				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(r => r.Id == command.Id && r.CaseId == command.Request.CaseUrn);
 
-				cr.CreatedAt = request.Model.CreatedAt;
-				cr.UpdatedAt = request.Model.UpdatedAt;
-				cr.ReviewAt = request.Model.ReviewAt;
-				cr.ClosedAt = request.Model.ClosedAt;
-				//Taken Previous Logic from Factory (ConcernsCaseWork.API.Factories ConcernsCaseFactory)
-				cr.Name = request.Model.Name ?? cr.Name;
-				cr.Description = request.Model.Description ?? cr.Name;
-				cr.Reason = request.Model.Reason ?? cr.Name;
-
-				cr.StatusId = request.Model.StatusId;
-				cr.RatingId = request.Model.RatingId;
-				cr.TypeId = request.Model.TypeId;
-				if (request.Model.MeansOfReferralId.HasValue && request.Model.MeansOfReferralId > 0)
+				if (cr == null)
 				{
-					cr.MeansOfReferralId = request.Model.MeansOfReferralId;
+					throw new NotFoundException($"Concerns case {command.Request.CaseUrn} record {command.Id}");
+				}
+
+				cr.CreatedAt = command.Request.CreatedAt;
+				cr.UpdatedAt = command.Request.UpdatedAt;
+				cr.ReviewAt = command.Request.ReviewAt;
+				cr.ClosedAt = command.Request.ClosedAt;
+				//Taken Previous Logic from Factory (ConcernsCaseWork.API.Factories ConcernsCaseFactory)
+				cr.Name = command.Request.Name ?? cr.Name;
+				cr.Description = command.Request.Description ?? cr.Name;
+				cr.Reason = command.Request.Reason ?? cr.Name;
+
+				cr.StatusId = command.Request.StatusId;
+				cr.RatingId = command.Request.RatingId;
+				cr.TypeId = command.Request.TypeId;
+				if (command.Request.MeansOfReferralId.HasValue && command.Request.MeansOfReferralId > 0)
+				{
+					cr.MeansOfReferralId = command.Request.MeansOfReferralId;
 				}
 
 				await _context.SaveChangesAsync();

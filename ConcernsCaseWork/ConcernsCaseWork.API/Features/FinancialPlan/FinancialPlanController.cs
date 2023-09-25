@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,26 +21,28 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		[HttpGet("{Id}")]
 		[ProducesResponseType((int)HttpStatusCode.OK)]
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
-		public async Task<IActionResult> GetByID([FromRoute]GetByID.Query query)
+		public async Task<IActionResult> GetByID([FromRoute] GetByID.Query query)
 		{
 			var model = await _mediator.Send(query);
+
 			if (model == null)
 			{
 				return NotFound();
 			}
 
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 		[HttpPost()]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Create([FromBody] Create.Command command, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Create([FromBody] CreateFinancialPlanRequest request, CancellationToken cancellationToken = default)
 		{
+			var command = new Create.Command(request);
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<GetByID.Result>(model));
+			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 
@@ -47,11 +50,12 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-		public async Task<IActionResult> Update([FromBody] Update.Command command, CancellationToken cancellationToken = default)
+		public async Task<IActionResult> Update([FromBody] PatchFinancialPlanRequest request, CancellationToken cancellationToken = default)
 		{
+			var command = new Update.Command(request);
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
-			return Ok(new ApiSingleResponseV2<GetByID.Result>(model));
+			return Ok(new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
 		[HttpDelete("{Id}")]
@@ -60,7 +64,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
 		{
 			await _mediator.Send(command);
-		
+
 			return NoContent();
 		}
 	}
