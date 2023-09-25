@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,13 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 
 			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
+				var existingCase = await _context.ConcernsCase.SingleOrDefaultAsync(f => f.Urn == command.Request.CaseUrn);
+
+				if (existingCase == null)
+				{
+					throw new NotFoundException($"Concerns case {command.Request.CaseUrn}");
+				}
+
 				var request = command.Request;
 				ConcernsRecord cr = ConcernsRecord.Create(request.CaseUrn, request.TypeId, request.RatingId, request.MeansOfReferralId, request.StatusId);
 

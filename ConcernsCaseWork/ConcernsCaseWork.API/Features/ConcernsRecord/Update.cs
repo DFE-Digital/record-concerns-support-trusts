@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
@@ -34,25 +35,30 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 				_mediator = mediator;
 			}
 
-			public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+			public async Task<int> Handle(Command command, CancellationToken cancellationToken)
 			{
-				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(f => f.Id == request.Id);
+				ConcernsRecord cr = await _context.ConcernsRecord.SingleOrDefaultAsync(r => r.Id == command.Id && r.CaseId == command.Request.CaseUrn);
 
-				cr.CreatedAt = request.Request.CreatedAt;
-				cr.UpdatedAt = request.Request.UpdatedAt;
-				cr.ReviewAt = request.Request.ReviewAt;
-				cr.ClosedAt = request.Request.ClosedAt;
-				//Taken Previous Logic from Factory (ConcernsCaseWork.API.Factories ConcernsCaseFactory)
-				cr.Name = request.Request.Name ?? cr.Name;
-				cr.Description = request.Request.Description ?? cr.Name;
-				cr.Reason = request.Request.Reason ?? cr.Name;
-
-				cr.StatusId = request.Request.StatusId;
-				cr.RatingId = request.Request.RatingId;
-				cr.TypeId = request.Request.TypeId;
-				if (request.Request.MeansOfReferralId.HasValue && request.Request.MeansOfReferralId > 0)
+				if (cr == null)
 				{
-					cr.MeansOfReferralId = request.Request.MeansOfReferralId;
+					throw new NotFoundException($"Concerns case {command.Request.CaseUrn} record {command.Id}");
+				}
+
+				cr.CreatedAt = command.Request.CreatedAt;
+				cr.UpdatedAt = command.Request.UpdatedAt;
+				cr.ReviewAt = command.Request.ReviewAt;
+				cr.ClosedAt = command.Request.ClosedAt;
+				//Taken Previous Logic from Factory (ConcernsCaseWork.API.Factories ConcernsCaseFactory)
+				cr.Name = command.Request.Name ?? cr.Name;
+				cr.Description = command.Request.Description ?? cr.Name;
+				cr.Reason = command.Request.Reason ?? cr.Name;
+
+				cr.StatusId = command.Request.StatusId;
+				cr.RatingId = command.Request.RatingId;
+				cr.TypeId = command.Request.TypeId;
+				if (command.Request.MeansOfReferralId.HasValue && command.Request.MeansOfReferralId > 0)
+				{
+					cr.MeansOfReferralId = command.Request.MeansOfReferralId;
 				}
 
 				await _context.SaveChangesAsync();
