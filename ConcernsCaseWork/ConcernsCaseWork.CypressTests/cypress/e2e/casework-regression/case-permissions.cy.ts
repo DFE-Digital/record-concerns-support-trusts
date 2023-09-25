@@ -264,7 +264,7 @@ describe("Testing permissions on cases and case actions", () => {
         editTffPage.save();
 
         actionSummaryTable
-            .getOpenAction("Trust Financial Forecast (TFF)")
+            .getOpenAction("TFF (trust financial forecast)")
             .then((row) =>
             {
                 row.select();
