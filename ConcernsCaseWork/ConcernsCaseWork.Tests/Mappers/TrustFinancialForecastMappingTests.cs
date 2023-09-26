@@ -107,7 +107,7 @@ public class TrustFinancialForecastMappingTests
 		// assert
 		Assert.Multiple(() =>
 		{
-			Assert.That(result.Name, Is.EqualTo("Trust Financial Forecast (TFF)"));
+			Assert.That(result.Name, Is.EqualTo("TFF (trust financial forecast)"));
 			Assert.That(result.ClosedDate, Is.EqualTo("30 August 2024"));
 			Assert.That(result.OpenedDate, Is.EqualTo("05 September 2021"));
 			Assert.That(result.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/trustfinancialforecast/{testData.Id}"));
@@ -157,7 +157,7 @@ public class TrustFinancialForecastMappingTests
 		// assert
 		Assert.Multiple(() =>
 		{
-			Assert.That(result.Name, Is.EqualTo("Trust Financial Forecast (TFF)"));
+			Assert.That(result.Name, Is.EqualTo("TFF (trust financial forecast)"));
 			Assert.That(result.ClosedDate, Is.EqualTo(""));
 			Assert.That(result.OpenedDate, Is.EqualTo("05 September 2021"));
 			Assert.That(result.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/trustfinancialforecast/{testData.Id}"));
