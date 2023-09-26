@@ -4,12 +4,14 @@
 @using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Pages.Case.Management.EditOwnerPageModel
 @{
-    var nonce = HttpContext.GetNonce();
+	var nonce = HttpContext.GetNonce();
 
-    var errors = ViewData.ModelState.ToValidationResult();
+	var errors = ViewData.ModelState.ToValidationResult();
 
-    var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
-    var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
+	ViewData["Title"] = "Change owner";
+
+	var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
+	var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
 }
 
 <div class="govuk-width-container">

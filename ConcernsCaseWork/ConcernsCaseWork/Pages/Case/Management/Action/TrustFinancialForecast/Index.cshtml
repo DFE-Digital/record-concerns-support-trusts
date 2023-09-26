@@ -25,13 +25,13 @@
     {
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-m">Case ID @Model.Urn</span>
-            Trust Financial Forecast (TFF)
+            TFF (trust financial forecast)
         </h1>
 
         @if (Model.TrustFinancialForecastModel.IsEditable)
         {
             <div class="govuk-hint" data-testid="decision-extra-info">
-                Review information before editing, leaving or continuing to closing trust financial forecast (TFF).
+                Review information before editing, leaving or continuing to close TFF.
             </div>
         }
         @if (Model.TrustFinancialForecastModel.IsClosed)
@@ -117,7 +117,7 @@
         @if (Model.TrustFinancialForecastModel.IsEditable)
         {
             <div class="govuk-button-group">
-                <close-button url="@Request.Path/close" id="trust-financial-forecast-close-button" label="Continue to close financial trust forecast (TFF)"></close-button>
+                <close-button url="@Request.Path/close" id="trust-financial-forecast-close-button" label="Continue to close TFF"></close-button>
             </div>
         }
     }

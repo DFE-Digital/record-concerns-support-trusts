@@ -13,7 +13,7 @@ public static class TrustFinancialForecastMapping
 		var result = new ActionSummaryModel()
 		{
 			ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
-			Name = "Trust Financial Forecast (TFF)",
+			Name = "TFF (trust financial forecast)",
 			OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 			RelativeUrl = $"/case/{model.CaseUrn}/management/action/trustfinancialforecast/{model.TrustFinancialForecastId}",
 			StatusName = (model.ClosedAt.HasValue) ? "Completed" : "In progress",

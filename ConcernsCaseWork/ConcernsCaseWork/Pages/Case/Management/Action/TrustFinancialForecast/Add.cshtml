@@ -4,7 +4,7 @@
 @using ConcernsCaseWork.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @{
-	ViewData[ViewDataConstants.Title] = "Create Trust Financial Forecast (TFF)";
+	ViewData[ViewDataConstants.Title] = "Add trust financial forecast ";
 }
 
 @section BeforeMain {
@@ -27,10 +27,10 @@
 		{
 			<partial name="_ValidationErrors" />
 
-			<h1 class="govuk-heading-l">
-				<span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-				Trust financial forecast (TFF)
-			</h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                TFF (trust financial forecast)
+            </h1>
 			
 			<div class="govuk-hint" id="financial-plan-hint">
 				<a target="_blank" href="@Model.ReferenceDocUrl" class="govuk-link" rel="noreferrer noopener">
