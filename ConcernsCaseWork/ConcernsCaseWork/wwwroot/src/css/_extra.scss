@@ -1785,6 +1785,7 @@ label.govuk-label .govuk-tag {
 
 
 body,
+button,
 p,
 h1,
 h2,
@@ -1794,6 +1795,7 @@ h5,
 h6,
 a,
 span,
+label,
 div,
 table,
 th,
@@ -1802,6 +1804,7 @@ blockquote,
 li,
 dt,
 dd,
-tr {
+tr,
+caption{
 	font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important;
 }
