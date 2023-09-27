@@ -72,9 +72,9 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 				label: { enabled: false }, // Create case failed
 				listitem: { enabled: false }, // homepage
 				"page-has-heading-one": { enabled: false }, // homepage
-				"aria-input-field-name": { enabled: false }, // reassign
-				"aria-required-children": { enabled: false }, // reassign
-				"label-title-only": { enabled: false }, // reassign
+				// "aria-input-field-name": { enabled: false }, // reassign
+				// "aria-required-children": { enabled: false }, // reassign
+				// "label-title-only": { enabled: false }, // reassign
 				"aria-allowed-attr": { enabled: false }, // smoke
 				"duplicate-id-aria": { enabled: false }, // smoke
 				"empty-table-header": { enabled: false }, // smoke
