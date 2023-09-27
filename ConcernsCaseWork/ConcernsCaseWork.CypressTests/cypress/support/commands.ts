@@ -80,7 +80,7 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 				"empty-table-header": { enabled: false }, // smoke
 				"color-contrast": { enabled: false }, // decisions
 				"empty-heading": { enabled: false }, // srma
-				"duplicate-id-active": { enabled: false }, // nti
+				// "duplicate-id-active": { enabled: false }, // nti
 			},
 		},
 		undefined,
