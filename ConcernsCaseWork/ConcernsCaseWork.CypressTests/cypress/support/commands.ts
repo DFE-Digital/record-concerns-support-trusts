@@ -67,7 +67,7 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 		{
 			// These will be fixed one by one
 			rules: {
-				"aria-allowed-role": { enabled: false },
+				// "aria-allowed-role": { enabled: false },
 				region: { enabled: false },
 				// label: { enabled: false }, // Create case failed
 				listitem: { enabled: false }, // homepage
