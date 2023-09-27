@@ -31,7 +31,7 @@
                 <h1 class="govuk-heading-l"> Close case @Model.CaseId</h1>
                 <h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
-                <form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
+                <form asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 
                     <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
 
