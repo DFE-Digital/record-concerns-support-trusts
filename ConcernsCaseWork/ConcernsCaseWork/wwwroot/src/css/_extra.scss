@@ -1778,3 +1778,33 @@ label.govuk-label .govuk-tag {
 		color: #b1b4b6;
 	}
 }
+
+/* ==========================================================================
+	# Dfe front-end override
+   ========================================================================== */
+
+
+body,
+button,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+span,
+label,
+div,
+table,
+th,
+td,
+blockquote,
+li,
+dt,
+dd,
+tr,
+caption{
+	font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important;
+}
