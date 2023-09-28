@@ -26,7 +26,7 @@
                 value="true"
                 @(Model.Checked ? "checked" : "")
                 type="checkbox">
-            <label class="govuk-label govuk-checkboxes__label" for="@(Model.Name).Checked">
+            <label class="govuk-label govuk-checkboxes__label" for="@Model.ElementRootId">
                 @Model.Text
             </label>
             <input name="@(Model.Name).Checked" type="hidden" value="false">

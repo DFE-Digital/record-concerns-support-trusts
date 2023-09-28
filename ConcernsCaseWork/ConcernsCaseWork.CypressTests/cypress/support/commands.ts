@@ -69,8 +69,8 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 			rules: {
 				// "aria-allowed-role": { enabled: false },
 				region: { enabled: false },
-				label: { enabled: false }, // Create case failed
-				listitem: { enabled: false }, // homepage
+				// label: { enabled: false }, // Create case failed
+				// listitem: { enabled: false }, // homepage
 				"page-has-heading-one": { enabled: false }, // homepage
 				"aria-input-field-name": { enabled: false }, // reassign
 				"aria-required-children": { enabled: false }, // reassign

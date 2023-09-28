@@ -50,7 +50,7 @@
                                 If yes, paste the CRM enquiry number below. If no, leave the field blank.
                             </div>
 
-                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
+                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber" aria-label="Is this decision linked to a CRM case">
                         </fieldset>
                     </div>
 
@@ -133,7 +133,7 @@
                                     <label class="govuk-label" for="submission-required-link">
                                         If yes, paste in a link to the submission document on Sharepoint.
                                     </label>
-                                    <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink">
+                                    <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
                                 </div>
                             </div>
 
@@ -200,7 +200,8 @@
                                        id="total-amount-request"
                                        name="Decision.TotalAmountRequested"
                                        type="text"
-                                       value="@Model.Decision.TotalAmountRequested">
+                                       value="@Model.Decision.TotalAmountRequested"
+                                       aria-label="What was the total amount requested">
                             </div>
                         </fieldset>
                     </div>
