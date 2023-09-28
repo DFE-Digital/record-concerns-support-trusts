@@ -159,7 +159,7 @@ jobs:
 
       - name: Upload screenshots
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: screenshots-${{ needs.set-env.outputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
@@ -172,7 +172,7 @@ jobs:
 
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: reports-${{ needs.set-env.outputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
