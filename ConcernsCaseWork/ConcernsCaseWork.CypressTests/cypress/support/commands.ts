@@ -79,8 +79,8 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 				"duplicate-id-aria": { enabled: false }, // smoke
 				"empty-table-header": { enabled: false }, // smoke
 				"color-contrast": { enabled: false }, // decisions
-				"empty-heading": { enabled: false }, // srma
-				"duplicate-id-active": { enabled: false }, // nti
+				// "empty-heading": { enabled: false }, // srma
+				// "duplicate-id-active": { enabled: false }, // nti
 			},
 		},
 		undefined,
