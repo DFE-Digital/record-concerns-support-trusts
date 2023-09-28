@@ -4,89 +4,73 @@ import { AdminClaim, EnvUsername } from "cypress/constants/cypressConstants";
 import caseMangementPage from "../../pages/caseMangementPage";
 import editCaseMangementPage from "../../pages/editCaseManagementPage";
 
+describe("Testing reassigning cases", () => {
+	let caseId: number;
+	let email: string;
+	let name: string;
 
-describe("Testing reassigning cases", () =>
-{
-    let caseId: number;
-    let email: string;
-    let name: string;
+	beforeEach(() => {
+		// Testing reassign requires admin permission
+		cy.login({
+			role: AdminClaim,
+		});
 
-    beforeEach(() =>
-    {
-        // Testing reassign requires admin permission
-        cy.login(
-            {
-                role: AdminClaim
-            }
-        );
+		cy.basicCreateCase().then((id) => {
+			caseId = id;
+		});
 
-        cy.basicCreateCase()
-        .then((id =>
-        {
-            caseId = id;
-        }));
+		email = Cypress.env(EnvUsername);
+		name = email.split("@")[0];
+	});
 
-        email = Cypress.env(EnvUsername);
-        name = email.split("@")[0];
-    });
+	it("Should be able to edit an existing case owner", () => {
+		Logger.Log("editing the existing case owner");
 
-    it("Should be able to edit an existing case owner", () =>
-    {
-        Logger.Log("editing the existing case owner");
+		// switch the case owner
+		updateCaseOwner(caseId);
 
-        // switch the case owner
-        updateCaseOwner(caseId);
+		caseMangementPage.hasCaseOwner("Automation User").editCaseOwner();
 
-        caseMangementPage
-            .hasCaseOwner("Automation User")
-            .editCaseOwner();
+		editCaseMangementPage
+			.hasCaseOwner("Automation.User@education.gov.uk")
+			.withCaseOwner("sv")
+			.selectCaseOwnerOption()
+			.hasCaseOwner(email);
 
-        editCaseMangementPage
-            .hasCaseOwner("Automation.User@education.gov.uk")
-            .withCaseOwner("sv")
-            .selectCaseOwnerOption()
-            .hasCaseOwner(email)
-            .save();
+		Logger.Log("Checking accessibility on edit case owner");
+		cy.excuteAccessibilityTests();
 
-        caseMangementPage
-            .hasCaseOwnerReassignedBanner()
-            .hasCaseOwner(name);
+		editCaseMangementPage.save();
 
-        caseMangementPage.editCaseOwner();
+		caseMangementPage.hasCaseOwnerReassignedBanner().hasCaseOwner(name);
 
-        Logger.Log("We get no results found if there are no matching results");
-            editCaseMangementPage
-                .withCaseOwner("fghhj")
-                .hasNoCaseOwnerResults();
+		caseMangementPage.editCaseOwner();
 
-        Logger.Log("Checking accessibility on edit case owner");
-        cy.excuteAccessibilityTests();	
+		Logger.Log("We get no results found if there are no matching results");
+		editCaseMangementPage.withCaseOwner("fghhj").hasNoCaseOwnerResults();
 
-        Logger.Log("We cannot set a blank case owner");
-        editCaseMangementPage
-            .clearCaseOwner()
-            .save()
-            .hasValidationError("A case owner must be selected")
-            .hasCaseOwner(email);
+		Logger.Log("We cannot set a blank case owner");
+		editCaseMangementPage
+			.clearCaseOwner()
+			.save()
+			.hasValidationError("A case owner must be selected")
+			.hasCaseOwner(email);
 
-        Logger.Log("Checking accessibility on edit case owner");
-        cy.excuteAccessibilityTests();
+		Logger.Log("Checking accessibility on edit case owner");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("We do not get a notification if we do not change the case owner");
-        editCaseMangementPage.save();
-        caseMangementPage
-            .hasNoCaseOwnerReassignedBanner()
-            .hasCaseOwner(name);
-    });
-    
-    function updateCaseOwner(caseId: number) {
-        caseApi.get(caseId)
-        .then((caseResponse) =>
-        {
-            caseResponse.createdBy = "Automation.User@education.gov.uk";
-            caseApi.patch(caseId, caseResponse);
-            cy.reload();
-        })
-    }
+		Logger.Log(
+			"We do not get a notification if we do not change the case owner"
+		);
+		editCaseMangementPage.save();
+		caseMangementPage.hasNoCaseOwnerReassignedBanner().hasCaseOwner(name);
+	});
 
+	function updateCaseOwner(caseId: number) {
+		caseApi.get(caseId).then((caseResponse) => {
+			caseResponse.createdBy = "Automation.User@education.gov.uk";
+			caseApi.patch(caseId, caseResponse);
+			cy.reload();
+		});
+	}
 });
