@@ -31,6 +31,11 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 		builder.Property(x => x.TrustCompaniesHouseNumber)
 			.HasMaxLength(8);
 
+		builder.HasOne(x => x.Division)
+			.WithMany()
+			.IsRequired(false) 
+			.HasForeignKey(x => x.DivisionFK);
+
 		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 
 	}

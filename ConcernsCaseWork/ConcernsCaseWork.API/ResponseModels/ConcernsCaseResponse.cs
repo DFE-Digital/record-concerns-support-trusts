@@ -27,5 +27,6 @@ namespace ConcernsCaseWork.API.ResponseModels
         public Territory? Territory { get; set; }
         public string TrustCompaniesHouseNumber { get; set; }
 		public DateTime? CaseLastUpdatedAt { get; set; }
+		public int? DivisionFK { get; set; }
 	}
 }

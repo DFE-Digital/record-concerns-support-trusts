@@ -51,8 +51,9 @@ namespace ConcernsCaseWork.API.RequestModels
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
-        
-        [StringLength(8)]
+        public int? DivisionFK { get; set; }
+
+		[StringLength(8)]
         [AllowNull]
         [CanBeNull]
         public string TrustCompaniesHouseNumber { get; set; }        

@@ -190,7 +190,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				1,
 				2,
 				Fixture.Create<Territory>(), 
-				trustCompaniesHouseNumber?? Fixture.CreateMany<char>(8).ToString()
+				trustCompaniesHouseNumber?? Fixture.CreateMany<char>(8).ToString(),
+				Fixture.Create<int>()
 			);
 		}
 		

@@ -51,5 +51,7 @@ namespace ConcernsCaseWork.Redis.Models
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
 		
 		public string TrustCompaniesHouseNumber { get; set; }
+
+		public int? DivisionFK { get; set; }
 	}
 }
