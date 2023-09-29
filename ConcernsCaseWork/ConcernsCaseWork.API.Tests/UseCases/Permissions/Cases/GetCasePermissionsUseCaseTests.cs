@@ -2,8 +2,7 @@
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.UseCases.Permissions.Cases;
-using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
+using ConcernsCaseWork.API.Features.Permissions;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.UserContext;
