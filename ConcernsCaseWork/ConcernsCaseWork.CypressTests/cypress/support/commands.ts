@@ -71,7 +71,7 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 				region: { enabled: false },
 				// label: { enabled: false }, // Create case failed
 				// listitem: { enabled: false }, // homepage
-				"page-has-heading-one": { enabled: false }, // homepage
+				// "page-has-heading-one": { enabled: false }, // homepage
 				// "aria-input-field-name": { enabled: false }, // reassign
 				// "aria-required-children": { enabled: false }, // reassign
 				// "label-title-only": { enabled: false }, // reassign
