@@ -1,31 +1,16 @@
 ﻿using AutoFixture;
-using Azure.Core;
-using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Extensions;
-using FizzWare.NBuilder;
 using FluentAssertions;
-using Microsoft.Graph.Models;
-using Microsoft.Graph.Models.TermStore;
-using Pipelines.Sockets.Unofficial.Buffers;
-using StackExchange.Redis;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
-using static ConcernsCaseWork.Data.Gateways.CaseSummaryVm;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
