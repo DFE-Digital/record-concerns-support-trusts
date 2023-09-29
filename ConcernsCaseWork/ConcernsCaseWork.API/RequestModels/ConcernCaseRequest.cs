@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using JetBrains.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -51,7 +52,7 @@ namespace ConcernsCaseWork.API.RequestModels
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
-        public int? DivisionFK { get; set; }
+        public Division? DivisionId { get; set; }
 
 		[StringLength(8)]
         [AllowNull]

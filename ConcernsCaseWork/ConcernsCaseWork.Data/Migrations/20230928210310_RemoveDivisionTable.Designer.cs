@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230928210310_RemoveDivisionTable")]
+    partial class RemoveDivisionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,45 +55,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.ToTable("AuditLog", "concerns", t =>
                         {
                             t.HasTrigger("AuditLog_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.CaseDivision", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id")
-                        .HasName("PK__CDivision__C5B214360AF620234");
-
-                    b.ToTable("Division", "concerns", t =>
-                        {
-                            t.HasTrigger("Division_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "SFSO (Schools Financial Support and Oversight)",
-                            UpdatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Regions Group",
-                            UpdatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -693,9 +657,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("DirectionOfTravel")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DivisionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Issue")
                         .HasColumnType("nvarchar(max)");
 
@@ -735,8 +696,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK__CCase__C5B214360AF620234");
-
-                    b.HasIndex("DivisionId");
 
                     b.HasIndex("RatingId");
 
@@ -2899,10 +2858,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsCase", b =>
                 {
-                    b.HasOne("ConcernsCaseWork.Data.Models.CaseDivision", "Division")
-                        .WithMany()
-                        .HasForeignKey("DivisionId");
-
                     b.HasOne("ConcernsCaseWork.Data.Models.ConcernsRating", "Rating")
                         .WithMany()
                         .HasForeignKey("RatingId")
@@ -2914,8 +2869,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Division");
 
                     b.Navigation("Rating");
 

@@ -61,14 +61,18 @@ namespace ConcernsCaseWork.API.Controllers
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Create(ConcernCaseRequest request, CancellationToken cancellationToken = default)
 		{
 			var validator = new ConcernsCaseRequestValidator();
-			if (validator.Validate(request).IsValid)
+
+			var validationResult = validator.Validate(request);
+
+			if(!validationResult.IsValid)
 			{
-				var createdConcernsCase = _createConcernsCase.Execute(request);
-				var response = new ApiSingleResponseV2<ConcernsCaseResponse>(createdConcernsCase);
-				return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+				_logger.LogInformation($"Failed to create Concerns Case due to bad request");
+				return new BadRequestObjectResult(validationResult.Errors);
 			}
-			_logger.LogInformation($"Failed to create Concerns Case due to bad request");
-			return BadRequest();
+
+			var createdConcernsCase = _createConcernsCase.Execute(request);
+			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(createdConcernsCase);
+			return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 		}
 
 		[HttpGet]
@@ -114,24 +118,28 @@ namespace ConcernsCaseWork.API.Controllers
 		{
 			_logger.LogInformation($"Attempting to update Concerns Case {urn}");
 			var validator = new ConcernsCaseRequestValidator();
-			if (validator.Validate(request).IsValid)
+
+			var validationResult = validator.Validate(request);
+
+			if (!validationResult.IsValid)
 			{
-				var updatedAcademyConcernsCase = _updateConcernsCase.Execute(urn, request);
-				if (updatedAcademyConcernsCase == null)
-				{
-					_logger.LogInformation(
-						$"Updating Concerns Case failed: No Concerns Case matching Urn {urn} was found");
-					return NotFound();
-				}
-
-				_logger.LogInformation($"Successfully Updated Concerns Case {urn}");
-				_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
-
-				var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
-				return Ok(response);
+				_logger.LogInformation($"Failed to update Concerns Case due to bad request");
+				return new BadRequestObjectResult(validationResult.Errors);
 			}
-			_logger.LogInformation($"Failed to update Concerns Case due to bad request");
-			return BadRequest();
+
+			var updatedAcademyConcernsCase = _updateConcernsCase.Execute(urn, request);
+			if (updatedAcademyConcernsCase == null)
+			{
+				_logger.LogInformation(
+					$"Updating Concerns Case failed: No Concerns Case matching Urn {urn} was found");
+				return NotFound();
+			}
+
+			_logger.LogInformation($"Successfully Updated Concerns Case {urn}");
+			_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
+
+			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
+			return Ok(response);			
 		}
 
 		[HttpGet]

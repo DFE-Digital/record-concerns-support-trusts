@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace ConcernsCaseWork.API.Contracts.Enums;
+namespace ConcernsCaseWork.API.Contracts.Case;
 
 public enum Division
 {

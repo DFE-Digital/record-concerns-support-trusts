@@ -1,7 +1,7 @@
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 
 namespace ConcernsCaseWork.Data.Configurations;
 
@@ -17,14 +17,14 @@ public class CaseDivisionConfiguration : IEntityTypeConfiguration<CaseDivision>
 		builder.HasData(
 			new CaseDivision
 			{
-				Id = (int)Division.SFSO,
+				Id = Division.SFSO,
 				Name = "SFSO (Schools Financial Support and Oversight)",
 				CreatedAt = new DateTime(2023, 9, 27),
 				UpdatedAt = new DateTime(2023, 9, 27)
 			},
 			new CaseDivision
 			{
-				Id = (int)Division.RegionsGroup,
+				Id = Division.RegionsGroup,
 				Name = "Regions Group",
 				CreatedAt = new DateTime(2023, 9, 27),
 				UpdatedAt = new DateTime(2023, 9, 27)
