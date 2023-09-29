@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Controllers;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;
@@ -15,10 +14,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
+using ConcernsCaseWork.API.Features.NTIUnderConsideration;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class NTIUnderConsiderationControllerTests
+	public class NTIUnderConsiderationControllerTests
     {
         private readonly Mock<ILogger<NTIUnderConsiderationController>> _mockLogger;
         private readonly Mock<IUseCase<CreateNTIUnderConsiderationRequest, NTIUnderConsiderationResponse>> _mockCreateNtiUnderConsiderationUseCase;
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             _mockGetAllReasons = new Mock<IUseCase<object, List<NTIUnderConsiderationReason>>>();
 
             controllerSUT = new NTIUnderConsiderationController(_mockLogger.Object, _mockCreateNtiUnderConsiderationUseCase.Object, _mockGetNtiUnderConsiderationByIdUseCase.Object,
-                _mockGetNtiUnderConsiderationByCaseUrnUseCase.Object, _mockPatchNTIUnderConsiderationUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object);
+                _mockGetNtiUnderConsiderationByCaseUrnUseCase.Object, _mockPatchNTIUnderConsiderationUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object, null);
         }
 
         [Fact]

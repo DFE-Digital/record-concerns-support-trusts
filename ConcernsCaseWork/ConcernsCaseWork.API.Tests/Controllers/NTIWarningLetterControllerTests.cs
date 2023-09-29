@@ -1,25 +1,24 @@
-﻿using ConcernsCaseWork.API.Controllers;
+﻿using ConcernsCaseWork.API.Features.NTIWarningLetter;
 using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class NTIWarningLetterControllerTests
+	public class NTIWarningLetterControllerTests
     {
         private readonly Mock<ILogger<NTIWarningLetterController>> _mockLogger;
         private readonly Mock<IUseCase<CreateNTIWarningLetterRequest, NTIWarningLetterResponse>> _mockCreateNtiWarningLetterUseCase;

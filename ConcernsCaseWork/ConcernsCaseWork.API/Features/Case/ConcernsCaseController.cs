@@ -1,10 +1,7 @@
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases;
-using ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.Validators;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 

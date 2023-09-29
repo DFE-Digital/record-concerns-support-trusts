@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
@@ -7,23 +8,11 @@ using ConcernsCaseWork.API.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
-using System.Net.Http.Json;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan;
-using ConcernsCaseWork.CoreTypes;
-using FluentAssertions.Extensions;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
