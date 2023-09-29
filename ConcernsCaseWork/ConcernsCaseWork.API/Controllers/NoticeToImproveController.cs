@@ -1,10 +1,7 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiVersion("2.0")]
+	[ApiVersion("2.0")]
     [Route("v{version:apiVersion}/case-actions/notice-to-improve")]
     [ApiController]
     public class NoticeToImproveController : Controller
