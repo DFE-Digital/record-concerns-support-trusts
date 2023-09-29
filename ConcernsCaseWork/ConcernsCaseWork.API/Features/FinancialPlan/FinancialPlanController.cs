@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
+using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -13,9 +15,17 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 	public class FinancialPlanController : Controller
 	{
 		private readonly IMediator _mediator;
-		public FinancialPlanController(IMediator mediator)
+		private readonly IUseCase<int, List<FinancialPlanResponse>> _getFinancialPlansByCaseUseCase;
+		private readonly IUseCase<object, List<FinancialPlanStatus>> _getAllStatuses;
+
+		public FinancialPlanController(
+			IMediator mediator,
+			IUseCase<int, List<FinancialPlanResponse>> getFinancialPlansByCase,
+			IUseCase<object, List<FinancialPlanStatus>> getAllStatuses)
 		{
 			_mediator = mediator;
+			_getFinancialPlansByCaseUseCase = getFinancialPlansByCase;
+			_getAllStatuses = getAllStatuses;
 		}
 
 		[HttpGet("{Id}")]
@@ -43,6 +53,50 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			var commandResult = await _mediator.Send(command);
 			var model = await _mediator.Send(new GetByID.Query() { Id = commandResult });
 			return CreatedAtAction(nameof(GetByID), new { Id = model.Id }, new ApiSingleResponseV2<FinancialPlanResponse>(model));
+		}
+
+		[HttpGet]
+		[Route("case/{caseUrn}")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanResponse>>>> GetFinancialPlansByCaseId(int caseUrn, CancellationToken cancellationToken = default)
+		{
+			var fps = _getFinancialPlansByCaseUseCase.Execute(caseUrn);
+			var response = new ApiSingleResponseV2<List<FinancialPlanResponse>>(fps);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("all-statuses")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
+		{
+			var statuses = _getAllStatuses.Execute(null);
+			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("closure-statuses")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetClosureStatuses(CancellationToken cancellationToken = default)
+		{
+			var statuses = _getAllStatuses.Execute(null).Where(s => s.IsClosedStatus).ToList();
+			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("open-statuses")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetOpenStatuses(CancellationToken cancellationToken = default)
+		{
+			var statuses = _getAllStatuses.Execute(null).Where(s => !s.IsClosedStatus).ToList();
+			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+
+			return Ok(response);
 		}
 
 
