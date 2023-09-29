@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.UseCases;
+﻿using ConcernsCaseWork.API.Features.TeamCasework;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.UseCases
 {
-    public class GetConcernsCaseworkTeamTests
+	public class GetConcernsCaseworkTeamTests
     {
         [Fact]
         public async Task GetConcernsCaseworkTeam_Implements_IGetConcernsCaseworkTeam()
