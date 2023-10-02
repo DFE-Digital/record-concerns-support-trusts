@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.RequestModels;
+﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

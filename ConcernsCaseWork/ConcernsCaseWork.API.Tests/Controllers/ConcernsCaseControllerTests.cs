@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using ConcernsCaseWork.API.Features.Case;
+using ConcernsCaseWork.API.Contracts.Case;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {

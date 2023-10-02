@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ConcernsCaseWork.API.RequestModels
+namespace ConcernsCaseWork.API.Contracts.Case
 {
     public class ConcernCaseRequest
     {
