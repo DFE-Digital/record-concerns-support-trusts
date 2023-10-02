@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;

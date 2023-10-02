@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.API.RequestModels;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
