@@ -8,7 +8,7 @@
 		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
             <div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
                 <h2 class="govuk-heading-m">@Model.Heading</h2>
-                <input class="govuk-input govuk-input--width-20" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" type="text" value="@Model.Text.StringContents">
+                <input class="govuk-input govuk-input--width-20" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" type="text" value="@Model.Text.StringContents" aria-label="@Model.Heading">
             </div>
 
 		</div>
