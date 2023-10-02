@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -106,9 +104,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			var enumValues = new List<SRMAStatus>()
 			{
-				Enums.SRMAStatus.TrustConsidering,
-				Enums.SRMAStatus.PreparingForDeployment,
-				Enums.SRMAStatus.Deployed
+				API.Contracts.Srma.SRMAStatus.TrustConsidering,
+				API.Contracts.Srma.SRMAStatus.PreparingForDeployment,
+				API.Contracts.Srma.SRMAStatus.Deployed
 			};
 
 			var radioItems = enumValues.Select(v =>

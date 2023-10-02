@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;

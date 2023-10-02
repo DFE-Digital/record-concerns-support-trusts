@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.CaseActions;
@@ -25,8 +23,8 @@ namespace ConcernsCaseWork.Mappers
 				DateVisitEnd = srmaDto.DateVisitEnd,
 				DateVisitStart = srmaDto.DateVisitStart,
 				Notes = srmaDto.Notes,
-				Reason = (Enums.SRMAReasonOffered)(srmaDto.Reason ?? SRMAReasonOffered.Unknown),
-				Status = (Enums.SRMAStatus)srmaDto.Status,
+				Reason = (SRMAReasonOffered)(srmaDto.Reason ?? SRMAReasonOffered.Unknown),
+				Status = (SRMAStatus)srmaDto.Status,
 				UpdatedAt = srmaDto.UpdatedAt
 			};
 		}

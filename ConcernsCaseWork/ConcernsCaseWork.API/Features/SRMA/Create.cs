@@ -4,8 +4,7 @@ using MediatR;
 
 namespace ConcernsCaseWork.API.Features.SRMA
 {
-	using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
-	using ConcernsCaseWork.Data.Enums;
+	using ConcernsCaseWork.API.Contracts.Srma;
 
 	public class Create
 	{

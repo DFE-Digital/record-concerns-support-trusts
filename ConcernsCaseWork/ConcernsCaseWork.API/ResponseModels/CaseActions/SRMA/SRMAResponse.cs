@@ -1,8 +1,8 @@
-﻿using ConcernsCaseWork.Data.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
 
 namespace ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA
 {
-    public class SRMAResponse
+	public class SRMAResponse
     {
 		public int Id { get; set; }
 		public int CaseUrn { get; set; }
