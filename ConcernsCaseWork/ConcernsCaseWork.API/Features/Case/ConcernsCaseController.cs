@@ -58,14 +58,18 @@ namespace ConcernsCaseWork.API.Features.Case
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Create(ConcernCaseRequest request, CancellationToken cancellationToken = default)
 		{
 			var validator = new ConcernsCaseRequestValidator();
-			if (validator.Validate(request).IsValid)
+
+			var validationResult = validator.Validate(request);
+
+			if(!validationResult.IsValid)
 			{
-				var createdConcernsCase = _createConcernsCase.Execute(request);
-				var response = new ApiSingleResponseV2<ConcernsCaseResponse>(createdConcernsCase);
-				return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
+				_logger.LogInformation($"Failed to create Concerns Case due to bad request");
+				return new BadRequestObjectResult(validationResult.Errors);
 			}
-			_logger.LogInformation($"Failed to create Concerns Case due to bad request");
-			return BadRequest();
+
+			var createdConcernsCase = _createConcernsCase.Execute(request);
+			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(createdConcernsCase);
+			return new ObjectResult(response) { StatusCode = StatusCodes.Status201Created };
 		}
 
 		[HttpGet]
@@ -111,24 +115,28 @@ namespace ConcernsCaseWork.API.Features.Case
 		{
 			_logger.LogInformation($"Attempting to update Concerns Case {urn}");
 			var validator = new ConcernsCaseRequestValidator();
-			if (validator.Validate(request).IsValid)
+
+			var validationResult = validator.Validate(request);
+
+			if (!validationResult.IsValid)
 			{
-				var updatedAcademyConcernsCase = _updateConcernsCase.Execute(urn, request);
-				if (updatedAcademyConcernsCase == null)
-				{
-					_logger.LogInformation(
-						$"Updating Concerns Case failed: No Concerns Case matching Urn {urn} was found");
-					return NotFound();
-				}
-
-				_logger.LogInformation($"Successfully Updated Concerns Case {urn}");
-				_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
-
-				var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
-				return Ok(response);
+				_logger.LogInformation($"Failed to update Concerns Case due to bad request");
+				return new BadRequestObjectResult(validationResult.Errors);
 			}
-			_logger.LogInformation($"Failed to update Concerns Case due to bad request");
-			return BadRequest();
+
+			var updatedAcademyConcernsCase = _updateConcernsCase.Execute(urn, request);
+			if (updatedAcademyConcernsCase == null)
+			{
+				_logger.LogInformation(
+					$"Updating Concerns Case failed: No Concerns Case matching Urn {urn} was found");
+				return NotFound();
+			}
+
+			_logger.LogInformation($"Successfully Updated Concerns Case {urn}");
+			_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
+
+			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
+			return Ok(response);			
 		}
 
 		[HttpGet]
@@ -171,9 +179,9 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			_logger.LogInformation($"Returning active Concerns cases for User Id {ownerId} page {page} count {count}", ownerId);
 			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
-
-			return Ok(response);
-		}
+            
+	        return Ok(response);
+        }
 
 		[HttpGet]
 		[Route("summary/{userId}/active/team")]
@@ -203,15 +211,15 @@ namespace ConcernsCaseWork.API.Features.Case
 		}
 
 		[HttpGet]
-		[Route("summary/{ownerId}/closed")]
-		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(
+        [Route("summary/{ownerId}/closed")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(
 			string ownerId,
 			int? page = null,
 			int? count = null,
 			CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
+        {
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
 
 			var parameters = new GetCaseSummariesByOwnerParameters()
 			{
@@ -225,15 +233,15 @@ namespace ConcernsCaseWork.API.Features.Case
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
 			_logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId} page {page} count {count}");
-			var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
-
-			return Ok(response);
-		}
-
-		[HttpGet]
-		[Route("summary/bytrust/{trustukprn}/active")]
-		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(
+	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
+            
+	        return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("summary/bytrust/{trustukprn}/active")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(
 			string trustukprn,
 			int? page = null,
 			int? count = null,
