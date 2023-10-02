@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 
 namespace ConcernsCaseWork.API.ResponseModels
@@ -27,5 +28,6 @@ namespace ConcernsCaseWork.API.ResponseModels
         public Territory? Territory { get; set; }
         public string TrustCompaniesHouseNumber { get; set; }
 		public DateTime? CaseLastUpdatedAt { get; set; }
+		public Division? Division { get; set; }
 	}
 }

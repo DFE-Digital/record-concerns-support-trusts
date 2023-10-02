@@ -1,13 +1,11 @@
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-using System.Text.Json;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    public class ConcernsCase : IAuditable
+	public class ConcernsCase : IAuditable
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -35,8 +33,9 @@ namespace ConcernsCaseWork.Data.Models
         public int RatingId { get; set; }
 
         public Territory? Territory { get; set; }
+        public Division? DivisionId { get; set; }
 
-        public string? TrustCompaniesHouseNumber { get; set; }
+		public string? TrustCompaniesHouseNumber { get; set; }
 
 		/// <summary>
 		/// Stores date when the entire case was last updated e.g. Changes such as adding concern or case action.
@@ -46,7 +45,8 @@ namespace ConcernsCaseWork.Data.Models
 
 		public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
-        public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
+        public virtual CaseDivision? Division { get; set; }
+		public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
 
         public virtual ICollection<Decision> Decisions { get; private set; } = new List<Decision>();
 
