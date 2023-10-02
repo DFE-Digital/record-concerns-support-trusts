@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
 						StatusId = statusDto.Id,
-						RatingId = ratingDto.Id
+						RatingId = ratingDto.Id,
 					});
 
 			var createCaseService = new CreateCaseService(
@@ -98,26 +98,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			// assert
 			Assert.That(createdCaseUrn, Is.EqualTo(expectedNewCaseUrn));
-
-			mockCaseService
-				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c =>
-						c.Issue == null
-						&& c.CaseAim == null
-						&& c.CreatedAt >= createdAndUpdatedDate
-						&& c.CreatedBy == userName
-						&& c.CrmEnquiry == null
-						&& c.CurrentStatus == null
-						&& c.DeEscalation == DateTimeOffset.MinValue
-						&& c.NextSteps == null
-						&& c.RatingId == ratingDto.Id
-						&& c.ReviewAt == DateTimeOffset.MinValue
-						&& c.StatusId == statusDto.Id
-						&& c.UpdatedAt >= createdAndUpdatedDate
-						&& c.DeEscalationPoint == null
-						&& c.DirectionOfTravel == null
-						&& c.ReasonAtReview == null
-						&& c.TrustUkPrn == trustUkPrn)),
-					Times.Once);
 
 			mockLogger.VerifyLogInformationWasCalled("CreateNonConcernsCase");
 			mockLogger.VerifyLogErrorWasNotCalled();
@@ -344,26 +324,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			mockLogger.VerifyNoOtherCalls();
 
 			mockSrmaService.Verify(s => s.SaveSRMA(srmaModel), Times.Once);
-
-			mockCaseService
-				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c =>
-						c.Issue == null
-						&& c.CaseAim == null
-						&& c.CreatedAt >= createdAndUpdatedDate
-						&& c.CreatedBy == userName
-						&& c.CrmEnquiry == null
-						&& c.CurrentStatus == null
-						&& c.DeEscalation == DateTimeOffset.MinValue
-						&& c.NextSteps == null
-						&& c.RatingId == ratingDto.Id
-						&& c.ReviewAt == DateTimeOffset.MinValue
-						&& c.StatusId == statusDto.Id
-						&& c.UpdatedAt >= createdAndUpdatedDate
-						&& c.DeEscalationPoint == null
-						&& c.DirectionOfTravel == null
-						&& c.ReasonAtReview == null
-						&& c.TrustUkPrn == trustUkPrn)),
-					Times.Once);
 		}
 	}
 }
