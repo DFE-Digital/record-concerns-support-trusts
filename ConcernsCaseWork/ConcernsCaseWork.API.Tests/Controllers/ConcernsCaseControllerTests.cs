@@ -1,4 +1,3 @@
-using ConcernsCaseWork.API.Controllers;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
@@ -12,6 +11,7 @@ using Moq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using ConcernsCaseWork.API.Features.Case;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {

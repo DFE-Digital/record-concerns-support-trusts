@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.Controllers;
+﻿using ConcernsCaseWork.API.Features.TeamCasework;
 using ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
@@ -15,7 +15,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class ConcernsTeamCaseworkControllerTests
+	public class ConcernsTeamCaseworkControllerTests
     {
         private readonly Mock<ILogger<ConcernsTeamCaseworkController>> _mockLogger = new Mock<ILogger<ConcernsTeamCaseworkController>>();
 
