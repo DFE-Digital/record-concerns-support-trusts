@@ -1,17 +1,15 @@
+using ConcernsCaseWork.API.Features.Case;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases;
-using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.Features.Case;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
