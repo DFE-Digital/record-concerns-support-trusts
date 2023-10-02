@@ -69,7 +69,8 @@ public class CreateCaseService : ICreateCaseService
 				statusDto.Id,
 				ratingDto.Id,
 				null,
-				trustCompaniesHouseNumber);
+				trustCompaniesHouseNumber,
+				null);
 
 			var newCase = await _caseService.PostCase(dto);
 			return newCase.Urn;
