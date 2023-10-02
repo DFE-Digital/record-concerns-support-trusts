@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Controllers;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.UseCases;
@@ -15,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.API.Features.NoticeToImprove;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
