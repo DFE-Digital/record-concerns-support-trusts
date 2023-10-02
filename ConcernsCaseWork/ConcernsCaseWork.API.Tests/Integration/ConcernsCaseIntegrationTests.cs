@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
@@ -84,6 +85,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
+		createdCase.DivisionId.Should().Be(createRequest.Division);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
@@ -138,6 +140,43 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
+	public async Task CanCreateNewConcernCase_WithNullDivision()
+	{
+		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
+		createRequest.Division = null;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+			Content = JsonContent.Create(createRequest)
+		};
+
+		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
+		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+
+		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
+
+		// call API
+		var response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.Created);
+		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		await using ConcernsDbContext context = _testFixture.GetContext();
+
+		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
+
+		createdCase.Should().NotBeNull();
+		expected.Data.Urn = createdCase!.Urn;
+
+		result.Should().BeEquivalentTo(expected);
+		createdCase.DivisionId.Should().Be(createRequest.Division);
+		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
+	}
+
+
+	[Fact]
 	public async Task PostInvalidConcernCaseRequest_Returns_ValidationErrors()
 	{
 		ConcernCaseRequest request = _autoFixture.Create<ConcernCaseRequest>();
@@ -167,6 +206,35 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		error.Should().Contain("The field CreatedBy must be a string with a maximum length of 254.");
 		error.Should().Contain("The field TrustCompaniesHouseNumber must be a string with a maximum length of 8.");
 	}
+
+	[Fact]
+	public async Task PostCaseWithInvalidDivision_Returns_BadRequest()
+	{
+		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
+		createRequest.Division = 0;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+			Content = JsonContent.Create(createRequest)
+		};
+
+		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
+		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+
+		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
+
+		// call API
+		var response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+		string error = await response.Content.ReadAsStringAsync();
+
+		error.Should().Contain("Division can not be 0");
+	}
+
 
 	[Fact]
 	public async Task CanGetConcernCaseByUrn()
@@ -325,7 +393,8 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			Territory = Territory.Midlands_And_West__SouthWest,
 			StatusId = 2,
 			RatingId = 1,
-			TrustCompaniesHouseNumber = "12345678"
+			TrustCompaniesHouseNumber = "12345678",
+			DivisionId = Division.SFSO
 		};
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
@@ -337,6 +406,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.CrmEnquiry = "")
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
+			.With(cr => cr.Division = Division.RegionsGroup)
 			.With(cr => cr.RatingId = 1).Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -357,6 +427,125 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
+	public async Task UpdateConcernsCase_With_InvalidDivisionAndRating_Returns_BadRequest()
+	{
+		ConcernsCase currentConcernsCase = new()
+		{
+			CreatedAt = _randomGenerator.DateTime(),
+			UpdatedAt = _randomGenerator.DateTime(),
+			ReviewAt = _randomGenerator.DateTime(),
+			ClosedAt = _randomGenerator.DateTime(),
+			CreatedBy = _randomGenerator.NextString(3, 10),
+			Description = "", // not used
+			CrmEnquiry = "", // not used
+			TrustUkprn = _randomGenerator.NextString(3, 10),
+			ReasonAtReview = "", // not used
+			DeEscalation = _randomGenerator.DateTime(),
+			Issue = _randomGenerator.NextString(3, 10),
+			CurrentStatus = _randomGenerator.NextString(3, 10),
+			CaseAim = _randomGenerator.NextString(3, 10),
+			DeEscalationPoint = _randomGenerator.NextString(3, 10),
+			NextSteps = _randomGenerator.NextString(3, 10),
+			CaseHistory = _randomGenerator.NextString(3, 10),
+			DirectionOfTravel = _randomGenerator.NextString(3, 10),
+			Territory = Territory.Midlands_And_West__SouthWest,
+			StatusId = 2,
+			RatingId = 1,
+			TrustCompaniesHouseNumber = "12345678",
+			DivisionId = Division.RegionsGroup
+		};
+
+		AddConcernsCaseToDatabase(currentConcernsCase);
+
+		int urn = currentConcernsCase.Urn;
+
+		ConcernCaseRequest updateRequest = Builder<ConcernCaseRequest>.CreateNew()
+			.With(cr => cr.Description = "")
+			.With(cr => cr.CrmEnquiry = "")
+			.With(cr => cr.ReasonAtReview = "")
+			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
+			.With(cr => cr.Division = 0)
+			.With(cr => cr.RatingId = 0).Build();
+
+		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
+		expectedConcernsCase.Urn = urn;
+		ConcernsCaseResponse expectedContent = ConcernsCaseResponseFactory.Create(expectedConcernsCase);
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Patch,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/{urn}"),
+			Content = JsonContent.Create(updateRequest)
+		};
+		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+		string error = await response.Content.ReadAsStringAsync();
+
+		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+		error.Should().Contain("Division can not be 0");
+		error.Should().Contain("Ratings Urn can not be 0");
+	}
+
+	[Fact]
+	public async Task UpdateConcernsCase_WithNullDivision_ShouldReturnTheUpdatedConcernsCase()
+	{
+		ConcernsCase currentConcernsCase = new()
+		{
+			CreatedAt = _randomGenerator.DateTime(),
+			UpdatedAt = _randomGenerator.DateTime(),
+			ReviewAt = _randomGenerator.DateTime(),
+			ClosedAt = _randomGenerator.DateTime(),
+			CreatedBy = _randomGenerator.NextString(3, 10),
+			Description = "", // not used
+			CrmEnquiry = "", // not used
+			TrustUkprn = _randomGenerator.NextString(3, 10),
+			ReasonAtReview = "", // not used
+			DeEscalation = _randomGenerator.DateTime(),
+			Issue = _randomGenerator.NextString(3, 10),
+			CurrentStatus = _randomGenerator.NextString(3, 10),
+			CaseAim = _randomGenerator.NextString(3, 10),
+			DeEscalationPoint = _randomGenerator.NextString(3, 10),
+			NextSteps = _randomGenerator.NextString(3, 10),
+			CaseHistory = _randomGenerator.NextString(3, 10),
+			DirectionOfTravel = _randomGenerator.NextString(3, 10),
+			Territory = Territory.Midlands_And_West__SouthWest,
+			StatusId = 2,
+			RatingId = 1,
+			TrustCompaniesHouseNumber = "12345678",
+			DivisionId = Division.SFSO
+		};
+
+		AddConcernsCaseToDatabase(currentConcernsCase);
+
+		int urn = currentConcernsCase.Urn;
+
+		ConcernCaseRequest updateRequest = Builder<ConcernCaseRequest>.CreateNew()
+			.With(cr => cr.Description = "")
+			.With(cr => cr.CrmEnquiry = "")
+			.With(cr => cr.ReasonAtReview = "")
+			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
+			.With(cr => cr.Division = null)
+			.With(cr => cr.RatingId = 1).Build();
+
+		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
+		expectedConcernsCase.Urn = urn;
+		ConcernsCaseResponse expectedContent = ConcernsCaseResponseFactory.Create(expectedConcernsCase);
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Patch,
+			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/{urn}"),
+			Content = JsonContent.Create(updateRequest)
+		};
+		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
+		ApiSingleResponseV2<ConcernsCaseResponse> content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		response.StatusCode.Should().Be(HttpStatusCode.OK);
+		content.Data.Should().BeEquivalentTo(expectedContent);
+	}
+
+
+	[Fact]
 	public async Task PatchInvalidConcernCaseRequest_Returns_ValidationErrors()
 	{
 		ConcernCaseRequest request = _autoFixture.Create<ConcernCaseRequest>();
@@ -371,9 +560,11 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		request.ReasonAtReview = new string('a', 201);
 		request.CreatedBy = new string('a', 255);
 		request.TrustCompaniesHouseNumber = new string('1', 9);
+		request.Division = 0;
 
 		HttpResponseMessage result = await _client.PatchAsync("/v2/concerns-cases/1", request.ConvertToJson());
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
 
 		string error = await result.Content.ReadAsStringAsync();
 		error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 12.");
