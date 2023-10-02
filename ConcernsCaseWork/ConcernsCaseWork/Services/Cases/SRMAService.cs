@@ -1,11 +1,12 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Service.CaseActions;
+using ConcernsCaseWork.Service.Permissions;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using ConcernsCaseWork.Service.Permissions;
-using ConcernsCaseWork.Service.CaseActions;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -72,12 +73,12 @@ namespace ConcernsCaseWork.Services.Cases
 			await _srmaProvider.SetOfferedDate(srmaId, offeredDate);
 		}
 
-		public async Task SetReason(long srmaId, Enums.SRMAReasonOffered reason)
+		public async Task SetReason(long srmaId, API.Contracts.Srma.SRMAReasonOffered reason)
 		{
 			await _srmaProvider.SetReason(srmaId, (SRMAReasonOffered)reason);
 		}
 
-		public async Task SetStatus(long srmaId, Enums.SRMAStatus status)
+		public async Task SetStatus(long srmaId, API.Contracts.Srma.SRMAStatus status)
 		{
 			await _srmaProvider.SetStatus(srmaId, (SRMAStatus)status);
 		}

@@ -1,10 +1,8 @@
-﻿using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.Data.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
+namespace ConcernsCaseWork.API.Contracts.Srma
 {
-    public class CreateSRMARequest
+	public class CreateSRMARequest
     {
 		[Required]
 		public int Id { get; set; }

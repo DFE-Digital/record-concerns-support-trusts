@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
