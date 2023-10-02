@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration
+namespace ConcernsCaseWork.API.Contracts.NtiUnderConsideration
 {
     public class PatchNTIUnderConsiderationRequest
     {

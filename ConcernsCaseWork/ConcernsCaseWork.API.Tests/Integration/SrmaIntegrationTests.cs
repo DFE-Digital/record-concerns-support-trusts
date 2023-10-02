@@ -1,11 +1,10 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.RequestModels;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.Data.Enums;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
@@ -42,13 +41,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var requestOne = _fixture.Create<CreateSRMARequest>();
 			requestOne.Id = 0;
 			requestOne.CaseUrn = createdConcern.Urn;
-			requestOne.Reason = Data.Enums.SRMAReasonOffered.RegionsGroupIntervention;
+			requestOne.Reason = SRMAReasonOffered.RegionsGroupIntervention;
 
 
 			var requestTwo = _fixture.Create<CreateSRMARequest>();
 			requestTwo.Id = 0;
 			requestTwo.CaseUrn = createdConcern.Urn;
-			requestTwo.Reason = Data.Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight;
+			requestTwo.Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight;
 
 			var createdSRMAOne = await CreateSRMA(requestOne);
 			var createdSRMATwo = await CreateSRMA(requestTwo);
@@ -102,7 +101,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var request = _fixture.Create<CreateSRMARequest>();
 			request.Id = 0;
 			request.CaseUrn = createdConcern.Urn;
-			request.Reason = Data.Enums.SRMAReasonOffered.RegionsGroupIntervention;
+			request.Reason = SRMAReasonOffered.RegionsGroupIntervention;
 
 			//Act
 			var createdSRMA = await CreateSRMA(request);
@@ -431,7 +430,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var request = _fixture.Create<CreateSRMARequest>();
 			request.Id = 0;
 			request.CaseUrn = caseUrn;
-			request.Reason = Data.Enums.SRMAReasonOffered.RegionsGroupIntervention;
+			request.Reason = SRMAReasonOffered.RegionsGroupIntervention;
 			return await CreateSRMA(request);
 		}
 

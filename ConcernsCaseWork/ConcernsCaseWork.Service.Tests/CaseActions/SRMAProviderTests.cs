@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.UserContext;
@@ -23,14 +24,14 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test1"
 			},
 			new SRMADto
 			{
 				Id = 655,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test2"
 			},
 			new SRMADto
@@ -65,7 +66,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test"
 			};
 
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test"
 			};
 
@@ -122,7 +123,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test",
 				DateAccepted = dateAccepted
 			};
@@ -153,7 +154,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test",
 				ClosedAt = dateClosed
 			};
@@ -184,7 +185,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = "Test",
 				DateReportSentToTrust = dateReportSent
 			};
@@ -215,7 +216,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				Notes = notes
 			};
 
@@ -244,7 +245,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				DateOffered = offeredDate
 			};
 
@@ -274,7 +275,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
-				Reason = SRMAReasonOffered.RDDIntervention,
+				Reason = SRMAReasonOffered.RegionsGroupIntervention,
 				DateVisitStart = visitStartDate,
 				DateVisitEnd = visitEndDate
 			};
@@ -305,7 +306,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			{
 				Id = 654,
 				Status = status,
-				Reason = SRMAReasonOffered.RDDIntervention
+				Reason = SRMAReasonOffered.RegionsGroupIntervention
 			};
 
 			var httpClientFactory = CreateMockFactory(expectedSRMADto);

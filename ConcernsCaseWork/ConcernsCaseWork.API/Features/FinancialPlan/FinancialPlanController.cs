@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.UseCases;

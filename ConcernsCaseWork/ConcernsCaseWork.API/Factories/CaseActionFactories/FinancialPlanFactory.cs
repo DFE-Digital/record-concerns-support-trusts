@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {
-    public static class FinancialPlanFactory
+	public static class FinancialPlanFactory
     {
         public static FinancialPlanCase CreateDBModel(CreateFinancialPlanRequest createFinancialPlanRequest)
         {

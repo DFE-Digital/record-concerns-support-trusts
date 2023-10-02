@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove
+namespace ConcernsCaseWork.API.Contracts.NtiUnderConsideration
 {
-    public class CreateNoticeToImproveRequest
-    {
+    public class CreateNTIUnderConsiderationRequest
+	{
 		[Required]
         public int CaseUrn { get; set; }
-        public int? StatusId { get; set; }
-        public DateTime? DateStarted { get; set; }
         
         [StringLength(2000)]
         public string Notes { get; set; }
+
+        public ICollection<int> UnderConsiderationReasonsMapping { get; set; }
 
         [StringLength(300)]
         public string CreatedBy { get; set; }
@@ -18,8 +18,5 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove
         public DateTime? UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public int? ClosedStatusId { get; set; }
-
-        public ICollection<int> NoticeToImproveReasonsMapping { get; set; }
-        public ICollection<int> NoticeToImproveConditionsMapping { get; set; }
     }
 }

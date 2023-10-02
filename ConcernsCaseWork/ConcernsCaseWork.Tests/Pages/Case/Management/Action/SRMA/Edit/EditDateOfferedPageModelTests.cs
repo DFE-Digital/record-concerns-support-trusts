@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;

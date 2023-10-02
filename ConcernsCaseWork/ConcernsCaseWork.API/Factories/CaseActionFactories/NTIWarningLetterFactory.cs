@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
+﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {
-    public static class NTIWarningLetterFactory
+	public static class NTIWarningLetterFactory
     {
         public static NTIWarningLetter CreateDBModel(CreateNTIWarningLetterRequest createNTIWarningLetterRequest)
         {

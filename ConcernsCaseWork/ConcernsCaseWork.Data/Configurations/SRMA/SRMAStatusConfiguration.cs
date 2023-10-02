@@ -13,8 +13,8 @@ public class SRMAStatusConfiguration : IEntityTypeConfiguration<SRMAStatus>
 		builder.HasKey(e => e.Id);
     
 		builder.HasData(
-    		Enum.GetValues(typeof(Enums.SRMAStatus)).Cast<Enums.SRMAStatus>()
-    			.Where(enm => enm != Enums.SRMAStatus.Unknown)
+    		Enum.GetValues(typeof(API.Contracts.Srma.SRMAStatus)).Cast<API.Contracts.Srma.SRMAStatus>()
+    			.Where(enm => enm != API.Contracts.Srma.SRMAStatus.Unknown)
     			.Select(enm => new SRMAStatus
     			{
     				Id = (int)enm,

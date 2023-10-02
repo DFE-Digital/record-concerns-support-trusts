@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {
-    public static class NoticeToImproveFactory
+	public static class NoticeToImproveFactory
     {
         public static NoticeToImprove CreateDBModel(CreateNoticeToImproveRequest createNoticeToImproveRequest)
         {
