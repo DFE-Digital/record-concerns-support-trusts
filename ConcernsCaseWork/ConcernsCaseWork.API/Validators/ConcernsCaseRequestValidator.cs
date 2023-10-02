@@ -1,9 +1,9 @@
-using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using FluentValidation;
 
 namespace ConcernsCaseWork.API.Validators
 {
-    public class ConcernsCaseRequestValidator : AbstractValidator<ConcernCaseRequest>
+	public class ConcernsCaseRequestValidator : AbstractValidator<ConcernCaseRequest>
     {
         public ConcernsCaseRequestValidator()
         {

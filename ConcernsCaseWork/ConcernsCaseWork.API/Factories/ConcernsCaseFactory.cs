@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.Data.Migrations;
 using ConcernsCaseWork.Data.Models;

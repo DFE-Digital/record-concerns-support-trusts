@@ -1,11 +1,10 @@
-﻿using MediatR;
-using ConcernsCaseWork.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data;
+using MediatR;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
+	using ConcernsCaseWork.API.Contracts.Case;
 	using ConcernsCaseWork.API.Exceptions;
-	using ConcernsCaseWork.API.RequestModels;
 	using ConcernsCaseWork.Data.Models;
 	using Microsoft.EntityFrameworkCore;
 
