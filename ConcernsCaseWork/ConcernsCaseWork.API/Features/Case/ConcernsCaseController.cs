@@ -1,5 +1,4 @@
-using ConcernsCaseWork.API.Features.Case;
-using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Validators;
 using ConcernsCaseWork.Data.Gateways;

@@ -1,5 +1,4 @@
-using ConcernsCaseWork.API.RequestModels;
-using ConcernsCaseWork.Data.Migrations;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories

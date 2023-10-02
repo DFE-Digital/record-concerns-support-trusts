@@ -1,7 +1,6 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.Features.Case

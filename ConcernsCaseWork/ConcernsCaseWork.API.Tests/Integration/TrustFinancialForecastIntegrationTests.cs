@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;

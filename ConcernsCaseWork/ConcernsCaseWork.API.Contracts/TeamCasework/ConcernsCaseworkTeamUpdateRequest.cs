@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework
+namespace ConcernsCaseWork.API.Contracts.TeamCasework
 {
     public class ConcernsCaseworkTeamUpdateRequest
     {

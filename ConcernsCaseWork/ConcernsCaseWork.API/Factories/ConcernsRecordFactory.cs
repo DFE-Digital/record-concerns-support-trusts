@@ -1,9 +1,9 @@
-using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories
 {
-    public static class ConcernsRecordFactory
+	public static class ConcernsRecordFactory
     {
         public static ConcernsRecord Create(
             ConcernsRecordRequest concernsRecordRequest, 

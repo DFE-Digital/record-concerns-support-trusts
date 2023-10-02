@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
 using NUnit.Framework;
 

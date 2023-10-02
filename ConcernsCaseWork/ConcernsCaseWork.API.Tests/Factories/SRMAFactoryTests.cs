@@ -1,19 +1,15 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
 using Xunit;
-using SRMAStatus = ConcernsCaseWork.Data.Enums.SRMAStatus;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-
-
-    public class SRMAFactoryTests
+	public class SRMAFactoryTests
     {
         [Fact]
         public void CreateDBModel_ExpectedSRMACase_WhenCreateSRMARequestProvided()
@@ -30,8 +26,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DateVisitStart = dtNow.AddDays(27),
                 DateVisitEnd = dtNow.AddDays(26),
                 DateAccepted = dtNow.AddDays(25),
-                Status = SRMAStatus.TrustConsidering,
-                Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
+                Status = Contracts.Srma.SRMAStatus.TrustConsidering,
+                Reason = Contracts.Srma.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
                 Notes = "notes notes notes",
                 CreatedBy = "Test User",
 
@@ -88,8 +84,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DateVisitStart = dtNow.AddDays(27),
                 DateVisitEnd = dtNow.AddDays(26),
                 DateAccepted = dtNow.AddDays(25),
-                Status = SRMAStatus.TrustConsidering,
-                Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
+                Status = Contracts.Srma.SRMAStatus.TrustConsidering,
+                Reason = Contracts.Srma.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
                 Notes = "notes notes notes",
                 CloseStatusId = (int?)null,
                 UpdatedAt = dtNow,
@@ -130,7 +126,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Reason = details.Reason,
                 Notes = details.Notes,
                 CreatedAt = details.CreatedAt,
-                CloseStatus = (SRMAStatus)(details.CloseStatusId ?? 0),
+                CloseStatus = (Contracts.Srma.SRMAStatus)(details.CloseStatusId ?? 0),
                 UpdatedAt = details.UpdatedAt,
                 ClosedAt = details.ClosedAt,
                 CreatedBy = details.CreatedBy

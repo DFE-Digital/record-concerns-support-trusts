@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework;
+using ConcernsCaseWork.API.Contracts.TeamCasework;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
