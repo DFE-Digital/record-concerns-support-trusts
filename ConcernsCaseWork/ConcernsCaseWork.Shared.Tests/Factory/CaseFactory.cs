@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
@@ -191,7 +192,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				2,
 				Fixture.Create<Territory>(), 
 				trustCompaniesHouseNumber?? Fixture.CreateMany<char>(8).ToString(),
-				Fixture.Create<int>()
+				Fixture.Create<Division>()
 			);
 		}
 		

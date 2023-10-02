@@ -85,7 +85,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
-		createdCase.DivisionId.Should().Be(createRequest.DivisionId);
+		createdCase.DivisionId.Should().Be(createRequest.Division);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
@@ -143,7 +143,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	public async Task CanCreateNewConcernCase_WithNullDivision()
 	{
 		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.DivisionId = null;
+		createRequest.Division = null;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -171,7 +171,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
-		createdCase.DivisionId.Should().Be(createRequest.DivisionId);
+		createdCase.DivisionId.Should().Be(createRequest.Division);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
@@ -211,7 +211,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	public async Task PostCaseWithInvalidDivision_Returns_BadRequest()
 	{
 		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.DivisionId = 0;
+		createRequest.Division = 0;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -406,7 +406,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.CrmEnquiry = "")
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
-			.With(cr => cr.DivisionId = Division.RegionsGroup)
+			.With(cr => cr.Division = Division.RegionsGroup)
 			.With(cr => cr.RatingId = 1).Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -464,7 +464,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.CrmEnquiry = "")
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
-			.With(cr => cr.DivisionId = 0)
+			.With(cr => cr.Division = 0)
 			.With(cr => cr.RatingId = 0).Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -524,7 +524,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.CrmEnquiry = "")
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
-			.With(cr => cr.DivisionId = null)
+			.With(cr => cr.Division = null)
 			.With(cr => cr.RatingId = 1).Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -560,7 +560,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		request.ReasonAtReview = new string('a', 201);
 		request.CreatedBy = new string('a', 255);
 		request.TrustCompaniesHouseNumber = new string('1', 9);
-		request.DivisionId = 0;
+		request.Division = 0;
 
 		HttpResponseMessage result = await _client.PatchAsync("/v2/concerns-cases/1", request.ConvertToJson());
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);

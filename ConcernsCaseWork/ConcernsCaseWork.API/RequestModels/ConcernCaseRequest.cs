@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.RequestModels
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
-        public Division? DivisionId { get; set; }
+        public Division? Division { get; set; }
 
 		[StringLength(8)]
         [AllowNull]

@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.API.Validators
             RuleFor(x => x.RatingId).GreaterThanOrEqualTo(1)
                 .WithMessage("Ratings Urn can not be 0");
 
-            RuleFor(x => (int?)x.DivisionId).GreaterThanOrEqualTo(1)
+            RuleFor(x => (int?)x.Division).GreaterThanOrEqualTo(1)
 				.WithMessage("Division can not be 0");
 		}
     }

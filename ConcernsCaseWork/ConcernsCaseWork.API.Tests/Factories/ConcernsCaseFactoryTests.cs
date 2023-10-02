@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.StatusId = 3)
                 .With(c => c.RatingId = 3)
                 .With(c => c.Territory = Territory.South_And_South_East__South_East)
-                .With(c => c.DivisionId = Division.RegionsGroup)
+                .With(c => c.Division = Division.RegionsGroup)
                 .Build();
 
             var expected = new ConcernsCase
@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 StatusId = request.StatusId,
                 RatingId = request.RatingId,
                 TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
-				DivisionId = request.DivisionId,
+				DivisionId = request.Division,
 				CaseLastUpdatedAt = request.CreatedAt
             };
 

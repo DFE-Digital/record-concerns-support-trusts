@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -52,6 +53,6 @@ namespace ConcernsCaseWork.Redis.Models
 		
 		public string TrustCompaniesHouseNumber { get; set; }
 
-		public int? DivisionFK { get; set; }
+		public Division? Division { get; set; }
 	}
 }

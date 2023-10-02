@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.RatingId,
 				createCaseModel.Territory,
 				createCaseModel.TrustCompaniesHouseNumber,
-				createCaseModel.DivisionFK);
+				createCaseModel.Division);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)

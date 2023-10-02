@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Factories
                 RatingId = concernsCase.RatingId,
                 Territory = concernsCase.Territory,
                 TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber,
-                DivisionId = concernsCase.DivisionId,
+                Division = concernsCase.DivisionId,
 				CaseLastUpdatedAt = concernsCase.CaseLastUpdatedAt
             };
         }

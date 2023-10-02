@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.API.Factories
 				RatingId = request.RatingId,
 				Territory = request.Territory,
 				TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
-				DivisionId = request.DivisionId
+				DivisionId = request.Division
 			};
 
 			return cc;

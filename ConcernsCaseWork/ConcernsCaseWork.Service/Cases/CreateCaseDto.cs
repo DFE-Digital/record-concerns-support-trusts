@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Enums;
 using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.Cases
@@ -53,8 +54,8 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("territory")]
 		public Territory? Territory { get; set; }
 
-		[JsonProperty("divisionFK")]
-		public int? DivisionFK { get; set; }
+		[JsonProperty("division")]
+		public Division? Division { get; set; }
 
 		/// <summary>
 		/// Deteriorating, unchanged, improved
@@ -73,10 +74,10 @@ namespace ConcernsCaseWork.Service.Cases
 			string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId, Territory? territory, string trustCompaniesHouseNumber, int? divisionFK) => 
+			long ratingId, Territory? territory, string trustCompaniesHouseNumber, Division? divisionFK) => 
 			(CreatedAt, UpdatedAt, ReviewAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
-				StatusId, RatingId, Territory, TrustCompaniesHouseNumber, DivisionFK) = 
+				StatusId, RatingId, Territory, TrustCompaniesHouseNumber, Division) = 
 			(createdAt, updatedAt, reviewAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
 				statusId, ratingId, territory, trustCompaniesHouseNumber, divisionFK);
