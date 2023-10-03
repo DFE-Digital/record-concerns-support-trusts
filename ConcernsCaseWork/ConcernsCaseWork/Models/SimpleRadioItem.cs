@@ -19,6 +19,8 @@ public record SimpleRadioItem
 
 	public int? Id { get; set; }
 
+	public bool? Disabled { get; set; }
+
 	/// <summary>
 	/// Need an identifier for each radio option
 	/// We can bind to the name, but that changes and it means the tests keep breaking

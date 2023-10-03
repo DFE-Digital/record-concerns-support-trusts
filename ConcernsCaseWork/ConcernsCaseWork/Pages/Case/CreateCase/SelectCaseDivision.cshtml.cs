@@ -1,7 +1,9 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Configuration;
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -11,117 +13,130 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.FeatureManagement.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class SelectTrustPageModel : AbstractPageModel
+public class SelectCaseDivisionPageModel : AbstractPageModel
 {
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedUserService;
-	private readonly ILogger<SelectTrustPageModel> _logger;
+	private readonly ILogger<SelectCaseDivisionPageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
-	private const int _searchQueryMinLength = 3;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
 
-	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
-
-	[FromQuery(Name = "step")]
-	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
-
 	[BindProperty]
-	public FindTrustModel FindTrustModel { get; set; }
+	public RadioButtonsUiComponent CaseDivision { get; set; }
 
-	public SelectTrustPageModel(ITrustModelService trustModelService,
+	public SelectCaseDivisionPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
-		ILogger<SelectTrustPageModel> logger,
+		ILogger<SelectCaseDivisionPageModel> logger,
 		IClaimsPrincipalHelper claimsPrincipalHelper)
 	{
 		_trustModelService = Guard.Against.Null(trustModelService);
 		_cachedUserService = Guard.Against.Null(cachedUserService);
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
-		FindTrustModel = new();
 	}
 
 	public async Task<IActionResult> OnGet()
 	{
 		_logger.LogMethodEntered();
-
+		
 		try
 		{
-			if (CreateCaseStep == CreateCaseSteps.SelectCaseType)
-			{
-				await SetTrustAddress();
-			}
-			else
-			{
-				ResetCurrentStep();
-			}
+			await SetTrustAddress();
+			LoadPageComponents();
 		}
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-
-			TempData["Error.Message"] = ErrorOnGetPage;
+			SetErrorMessage(ErrorOnGetPage);
 		}
 
 		return Page();
 	}
-
-	private void ResetCurrentStep()
-	{
-		CreateCaseStep = CreateCaseSteps.SearchForTrust;
-	}
-
-	public async Task<ActionResult> OnPostSelectedTrust()
+	
+	public async Task<IActionResult> OnPost()
 	{
 		_logger.LogMethodEntered();
-
+		
 		try
 		{
 			if (!ModelState.IsValid)
 			{
-				TempData["Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				await SetTrustAddress();
+				LoadPageComponents();
+
 				return Page();
 			}
+			
+			var selectedCaseDivision = (Division)CaseDivision.SelectedId;
 
-			if (!TrustUkPrnIsValid())
+			var userName = GetUserName();
+			var userState = await _cachedUserService.GetData(userName);
+			userState.CreateCaseModel = new CreateCaseModel();
+			userState.CreateCaseModel.Division = selectedCaseDivision;
+
+			await _cachedUserService.StoreData(userName, userState);
+
+			return RedirectToPage("SelectCaseType");
+			/*
+			switch (selectedCaseManager)
 			{
-				throw new Exception($"Selected trust is incorrect - {FindTrustModel.SelectedTrustUkprn}");
+				case Division.SFSO:
+					return Redirect("/case/concern");
+				case Division.RegionsGroup:
+					return Redirect("/case/territory");
+				default:
+					throw new Exception($"Unrecognised case manager {selectedCaseManager}");
 			}
 
-			await CacheTrustUkPrn();
-
-			SetNextStep();
-
-			return RedirectToPage("SelectCaseDivision");
+			*/
 		}
 		catch (Exception ex)
 		{
-			return HandleExceptionForAjaxCall(ex);
+			_logger.LogErrorMsg(ex);
+			SetErrorMessage(ErrorOnPostPage);
 		}
-
-		async Task CacheTrustUkPrn()
-		{
-			var userName = GetUserName();
-			var userState = await _cachedUserService.GetData(userName) ??  new UserState(GetUserName());
-			userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
-			await _cachedUserService.StoreData(userName, userState);
-		}
-
-		void SetNextStep() => CreateCaseStep = CreateCaseSteps.SelectCaseType;
+		
+		return Page();
 	}
 
-	private bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(FindTrustModel.SelectedTrustUkprn) || FindTrustModel.SelectedTrustUkprn.Contains('-') || FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength);
+	private RadioButtonsUiComponent BuildCaseManagerComponent(int? selectedId = null)
+	{
+		var enumValues = new[]
+		{
+			new { CaseDivision = API.Contracts.Case.Division.SFSO },
+			new { CaseDivision = API.Contracts.Case.Division.RegionsGroup }
+		};
+
+		var radioItems = enumValues.Select(v =>
+		{
+			return new SimpleRadioItem(v.CaseDivision.Description(), (int)v.CaseDivision) { TestId = v.CaseDivision.ToString(), Disabled = v.CaseDivision == Division.RegionsGroup };
+		}).ToArray();
+
+
+		return new(ElementRootId: "case-division", Name: nameof(CaseDivision), "Who is managing this case?")
+		{
+			RadioItems = radioItems,
+			SelectedId = selectedId,
+			Required = true,
+			DisplayName = "case division"
+		};
+	}
+
+	private void LoadPageComponents()
+	{
+		CaseDivision = BuildCaseManagerComponent(CaseDivision?.SelectedId);
+	}
 
 	private async Task SetTrustAddress()
 	{
@@ -131,36 +146,16 @@ public class SelectTrustPageModel : AbstractPageModel
 		{
 			throw new Exception($"Could not retrieve cache for user '{userName}'");
 		}
-
+		
 		if (string.IsNullOrEmpty(userState.TrustUkPrn))
 		{
 			throw new Exception($"Could not retrieve trust from cache for user '{userName}'");
 		}
-
+		
 		var trustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
 
 		TrustAddress = trustAddress ?? throw new Exception($"Could not find trust with UK PRN of {userState.TrustUkPrn}");
 	}
 
-	private ObjectResult HandleExceptionForAjaxCall(Exception ex)
-	{
-		_logger.LogErrorMsg(ex);
-
-		return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-	}
-
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
-
-	public enum CaseTypes
-	{
-		NotSelected,
-		Concern,
-		NonConcern
-	}
-
-	public enum CreateCaseSteps
-	{
-		SearchForTrust,
-		SelectCaseType
-	}
 }
