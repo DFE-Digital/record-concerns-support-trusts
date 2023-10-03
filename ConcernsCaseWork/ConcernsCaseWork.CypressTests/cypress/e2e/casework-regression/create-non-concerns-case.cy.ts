@@ -154,20 +154,15 @@ describe("Creating a non concerns case", () => {
 
 		Logger.Log("Create an invalid sub concern");
 		createConcernPage
-			.withConcernType("Financial")
+			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
 			.withMeansOfReferral("External")
-			.addConcern()
-			.hasValidationError("Select concern subtype");
-
-		Logger.Log("Create a valid concern");
-		createConcernPage.withSubConcernType("Financial: Deficit").addConcern();
+			.addConcern();
 
 		Logger.Log("Adding another concern during case creation");
 		createConcernPage
 			.addAnotherConcern()
-			.withConcernType("Governance and compliance")
-			.withSubConcernType("Governance and compliance: Compliance")
+			.withConcernType("Financial compliance")
 			.withConcernRating("Amber-Green")
 			.withMeansOfReferral("Internal")
 			.addConcern()
@@ -217,8 +212,8 @@ describe("Creating a non concerns case", () => {
 		caseManagementPage
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
-			.hasConcerns("Governance and compliance: Compliance", ["Amber", "Green"])
-			.hasConcerns("Financial: Deficit", ["Red", "Amber"])
+			.hasConcerns("Financial compliance", ["Amber", "Green"])
+			.hasConcerns("Deficit", ["Red", "Amber"])
 			.hasTerritory("North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")

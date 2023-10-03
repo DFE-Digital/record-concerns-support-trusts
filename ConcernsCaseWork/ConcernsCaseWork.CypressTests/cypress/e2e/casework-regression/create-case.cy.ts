@@ -265,7 +265,7 @@ describe("Creating a case", () => {
 			);
 	});
 
-	it.only("Should create additional concerns", () => {
+	it("Should create additional concerns", () => {
 		Logger.Log("Create a case");
 		createCasePage
 			.createCase()
