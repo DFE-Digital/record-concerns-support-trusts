@@ -10,6 +10,10 @@ import caseApi from "cypress/api/caseApi";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import validationComponent from "cypress/pages/validationComponent";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import {
+	SourceOfConcernExternal,
+	SourceOfConcernInternal,
+} from "cypress/constants/selectorConstants";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -63,7 +67,7 @@ describe("Creating a case", () => {
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Check Concern details are correctly populated");
@@ -194,7 +198,7 @@ describe("Creating a case", () => {
 		createConcernPage
 			.withConcernType("Force majeure")
 			.withConcernRating("Amber-Green")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Check Concern details are correctly populated");
@@ -280,7 +284,7 @@ describe("Creating a case", () => {
 		createConcernPage
 			.withConcernType("Suspected fraud")
 			.withConcernRating("Red-Plus")
-			.withMeansOfReferral("Internal")
+			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern();
 
 		Logger.Log("Adding another concern during case creation");
@@ -288,7 +292,7 @@ describe("Creating a case", () => {
 			.addAnotherConcern()
 			.withConcernType("Financial compliance")
 			.withConcernRating("Amber-Green")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern()
 			.nextStep();
 
@@ -314,7 +318,7 @@ describe("Creating a case", () => {
 		createConcernPage
 			.withConcernType("Irregularity")
 			.withConcernRating("Red-Amber")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		caseManagementPage
