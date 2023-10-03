@@ -96,8 +96,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
-			.withConcernType("Financial")
-			.withSubConcernType("Financial: Deficit")
+			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
 			.withMeansOfReferral("External")
 			.addConcern();
@@ -105,7 +104,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
 		createConcernPage.nextStep();
@@ -118,7 +117,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
 
@@ -130,7 +129,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus")
 			.hasTerritory("North and UTC - North East");
@@ -488,7 +487,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				.hasCreatedDate(toDisplayDate(now))
 				.hasClosedDate(toDisplayDate(now))
 				.hasTrust(trustName)
-				.hasConcern("Financial: Deficit");
+				.hasConcern("Deficit");
 
 			Logger.Log("Checking accessibility on Closed Case Details");
 			cy.excuteAccessibilityTests();

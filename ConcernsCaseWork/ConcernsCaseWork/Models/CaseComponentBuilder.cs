@@ -72,7 +72,8 @@ namespace ConcernsCaseWork.Models
 				RadioItems = radioItems,
 				SelectedId = selectedId,
 				Required = true,
-				DisplayName = "concern risk rating",			
+				DisplayName = "concern risk rating",
+				HintFromPartialView = "_RiskManagementFramework"
 			};
 		}
 
@@ -82,11 +83,11 @@ namespace ConcernsCaseWork.Models
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = "ESFA activity, TFF or other departmental activity."
+					HintText = "For example, management letter, external review of governance, ESFA activity or other departmental activity."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies."
+					HintText = "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
 				}
 			};
 
@@ -96,7 +97,7 @@ namespace ConcernsCaseWork.Models
 					return new SimpleRadioItem(v.enumValue.Description(), (int)v.enumValue) { TestId = v.enumValue.Description(), HintText = v.HintText };
 				}).ToArray();
 
-			return new(ElementRootId: "means-of-referral", name, "Means of referral")
+			return new(ElementRootId: "means-of-referral", name, "What was the source of the concern?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
