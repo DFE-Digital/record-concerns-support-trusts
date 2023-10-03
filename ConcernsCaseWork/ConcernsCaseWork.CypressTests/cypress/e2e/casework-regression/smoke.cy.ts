@@ -37,6 +37,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
 
 describe("Smoke - Testing closing of cases when there are case actions and concerns", () => {
 	let caseId: string;
@@ -98,7 +99,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Check Concern details are correctly populated");

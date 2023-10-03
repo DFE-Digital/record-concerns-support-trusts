@@ -12,6 +12,7 @@ import { CaseBuilder } from "cypress/api/caseBuilder";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import { PaginationComponent } from "cypress/pages/paginationComponent";
 import { CreateCaseRequest } from "cypress/api/apiDomain";
+import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
 
 describe("User interactions via Find Trust route", () => {
 	const createConcernPage = new CreateConcernPage();
@@ -95,7 +96,7 @@ describe("User interactions via Find Trust route", () => {
 			createConcernPage
 				.withConcernType("Deficit")
 				.withConcernRating("Red-Amber")
-				.withMeansOfReferral("External")
+				.withMeansOfReferral(SourceOfConcernExternal)
 				.addConcern();
 
 			Logger.Log("Check Concern details are correctly populated");

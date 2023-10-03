@@ -16,6 +16,7 @@ import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
 
 describe("Editing a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -51,7 +52,7 @@ describe("Editing a case", () => {
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Check Concern details are correctly populated");

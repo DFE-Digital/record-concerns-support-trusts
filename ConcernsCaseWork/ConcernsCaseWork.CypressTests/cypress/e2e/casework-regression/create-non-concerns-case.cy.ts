@@ -18,6 +18,10 @@ import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage"
 import actionTable from "cypress/pages/caseRows/caseActionTable";
 import concernsApi from "cypress/api/concernsApi";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import {
+	SourceOfConcernExternal,
+	SourceOfConcernInternal,
+} from "cypress/constants/selectorConstants";
 
 describe("Creating a non concerns case", () => {
 	let email: string;
@@ -156,7 +160,7 @@ describe("Creating a non concerns case", () => {
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Adding another concern during case creation");
@@ -164,7 +168,7 @@ describe("Creating a non concerns case", () => {
 			.addAnotherConcern()
 			.withConcernType("Financial compliance")
 			.withConcernRating("Amber-Green")
-			.withMeansOfReferral("Internal")
+			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern()
 			.nextStep();
 
