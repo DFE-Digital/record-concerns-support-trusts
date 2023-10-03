@@ -1,16 +1,11 @@
-﻿using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -91,12 +86,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					return Page();
 				}
 
-				var typeId = (ConcernType)(ConcernType.SelectedSubId.HasValue ? ConcernType.SelectedSubId : ConcernType.SelectedId);
-
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = CaseUrn,
-					TypeId = (long)typeId,
+					TypeId = (long)ConcernType.SelectedId,
 					Type = "",
 					SubType = "",
 					RatingId = ConcernRiskRating.SelectedId.Value,
@@ -128,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
-			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId);
 
 			CaseModel = caseModel;
 

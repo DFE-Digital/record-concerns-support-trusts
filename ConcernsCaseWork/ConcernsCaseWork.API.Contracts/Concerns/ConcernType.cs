@@ -4,28 +4,28 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 {
 	public enum ConcernType
 	{
-		[Description("Financial: Deficit")]
+		[Description("Deficit")]
 		FinancialDeficit = 3,
 
-		[Description("Financial: Projected deficit")]
+		[Description("Projected deficit")]
 		FinancialProjectedDeficit = 4,
 
 		[Description("Force majeure")]
 		ForceMajeure = 7,
 
-		[Description("Governance and compliance: Governance")]
+		[Description("Financial governance")]
 		Governance = 8,
 
-		[Description("Financial: Viability")]
+		[Description("Viability")]
 		FinancialViability = 20,
 
-		[Description("Irregularity: Irregularity")]
+		[Description("Irregularity")]
 		Irregularity = 21,
 
-		[Description("Irregularity: Suspected fraud")]
+		[Description("Suspected fraud")]
 		IrregularitySuspectedFraud = 22,
 
-		[Description("Governance and compliance: Compliance")]
+		[Description("Financial compliance")]
 		Compliance = 23,
 
 		Safeguarding = 24
