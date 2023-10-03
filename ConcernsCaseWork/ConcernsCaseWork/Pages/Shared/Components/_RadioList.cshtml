@@ -72,7 +72,7 @@
                     {
                         // Identify which options have sub items so we can validate them
                         // This handles radio lists where some items have sub options and some do not
-                        <input type="hidden" name="@Model.Name.@nameof(Model.OptionsWithSubItems)" value="@radioItem.Id" />
+                        @*<input type="hidden" name="@Model.Name.@nameof(Model.OptionsWithSubItems)" value="@radioItem.Id" />*@
 
                         <div class="govuk-radios__conditional" id="@radioItemSubContainerId">
                             <div class="govuk-form-group">

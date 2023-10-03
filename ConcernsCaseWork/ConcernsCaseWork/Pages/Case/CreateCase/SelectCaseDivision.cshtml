@@ -1,9 +1,7 @@
-@page "/case/create/type"
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model SelectCaseTypePageModel
-
+﻿@page "/case/create/division"
+@model ConcernsCaseWork.Pages.Case.CreateCase.SelectCaseDivisionModel
 @{
-    ViewData["Title"] = "New case";
+    ViewData["Title"] = "Case division";
 }
 
 @section BeforeMain {
@@ -12,7 +10,7 @@
     </div>
 }
 
-<div class="govuk-width-container" id="choosecasetype">
+<div class="govuk-width-container">
 
     <partial name="_BannerError" />
 
@@ -36,7 +34,7 @@
                 </div>
             </dl>
 
-            <partial name="Components/_RadioList" model="Model.CaseType" />
+            <partial name="Components/_RadioList" model="Model.CaseDivision" />
 
             <div class="govuk-button-group">
                 <button data-prevent-double-click="true"
