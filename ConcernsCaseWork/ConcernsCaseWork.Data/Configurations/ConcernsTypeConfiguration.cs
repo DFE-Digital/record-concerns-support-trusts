@@ -17,18 +17,18 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			new ConcernsType
 			{
 				Id = 3,
-				Name = "Financial",
-				Description = "Deficit",
+				Name = "Deficit",
+				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
-				UpdatedAt = new DateTime(2021, 11, 17)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 4,
-				Name = "Financial",
-				Description = "Projected deficit",
+				Name = "Projected deficit",
+				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
-				UpdatedAt = new DateTime(2021, 11, 17)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
@@ -36,47 +36,47 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 				Name = "Force majeure",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
-				UpdatedAt = new DateTime(2021, 11, 17)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 8,
-				Name = "Governance and compliance",
-				Description = "Governance",
+				Name = "Financial governance",
+				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
-				UpdatedAt = new DateTime(2021, 11, 17)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 20,
-				Name = "Financial",
-				Description = "Viability",
+				Name = "Viability",
+				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
-				UpdatedAt = new DateTime(2022, 12, 20)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 21,
 				Name = "Irregularity",
-				Description = "Irregularity",
+				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
-				UpdatedAt = new DateTime(2022, 12, 20)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 22,
-				Name = "Irregularity",
-				Description = "Suspected fraud",
+				Name = "Suspected fraud",
+				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
-				UpdatedAt = new DateTime(2022, 12, 20)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
 				Id = 23,
-				Name = "Governance and compliance",
-				Description = "Compliance",
+				Name = "Financial compliance",
+				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
-				UpdatedAt = new DateTime(2022, 12, 20)
+				UpdatedAt = new DateTime(2023, 10, 03)
 			},
 			new ConcernsType
 			{
