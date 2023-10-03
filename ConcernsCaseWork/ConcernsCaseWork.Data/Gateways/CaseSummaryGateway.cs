@@ -1,4 +1,5 @@
 using Azure;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -165,7 +166,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, "Action: Trust Financial Forecast (TFF)"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast))
 				.ToArray()
 		});
 	}
@@ -208,7 +209,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 							.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, action.ClosedAt.Value.DateTime, "Action: Trust Financial Forecast (TFF)"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, action.ClosedAt.Value.DateTime, CaseSummaryConstants.TrustFinancialForecast))
 							.ToArray()
 		});
 	}

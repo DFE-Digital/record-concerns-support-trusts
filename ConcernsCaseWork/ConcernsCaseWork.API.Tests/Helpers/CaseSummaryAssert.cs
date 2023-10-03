@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace ConcernsCaseWork.API.Tests.Helpers
 
 			actualCase.TrustFinancialForecasts.Should().HaveCount(1);
 			var tff = actualCase.TrustFinancialForecasts.First();
-			tff.Name.Should().Be("Action: Trust Financial Forecast (TFF)");
+			tff.Name.Should().Be(CaseSummaryConstants.TrustFinancialForecast);
 		}
 
 		public static void AssertCaseList(List<CaseSummaryResponse> actualCases, List<ConcernsCase> expectedCases)
