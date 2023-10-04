@@ -219,7 +219,7 @@ describe("Editing a case", () => {
 			.hasCaseHistory("This is the case history")
 			.withExceedingTextLimit()
 			.apply()
-			.hasValidationError("Case history must be 4300 characters or less");
+			.hasValidationError("Case notes must be 4300 characters or less");
 
 		Logger.Log("Checking accessibility on edit case history");
 		cy.excuteAccessibilityTests();
