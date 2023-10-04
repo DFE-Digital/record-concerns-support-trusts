@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
@@ -54,12 +53,29 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 DatePlanRequested = model.DatePlanRequested,
                 DateViablePlanReceived= model.DateViablePlanReceived,
                 Notes = model.Notes,
-                Status = model.Status,
+                Status = CreateStatusResponse(model.Status),
                 UpdatedAt = model.UpdatedAt,
                 StatusId=model.StatusId,
                 DeletedAt = model.DeletedAt
             };
         }
 
+		public static FinancialPlanStatusResponse CreateStatusResponse(FinancialPlanStatus model)
+		{
+			if (model == null)
+			{
+				return null;
+			}
+
+			return new FinancialPlanStatusResponse
+			{
+				Id = model.Id,
+				Name = model.Name,
+				Description = model.Description,
+				CreatedAt = model.CreatedAt,
+				UpdatedAt = model.UpdatedAt,
+				IsClosedStatus = model.IsClosedStatus
+			};
+		}
     }
 }
