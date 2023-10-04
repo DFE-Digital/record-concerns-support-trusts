@@ -151,7 +151,7 @@ describe("Creating a case", () => {
 			"Case aim must be 1000 characters or less",
 			"De-escalation point must be 1000 characters or less",
 			"Next steps must be 4000 characters or less",
-			"Case history must be 4300 characters or less",
+			"Case notes must be 4300 characters or less",
 		]);
 
 		Logger.Log("Checking accessibility on concerns case confirmation");
