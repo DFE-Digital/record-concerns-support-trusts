@@ -16,6 +16,7 @@ import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Editing a case", () =>
 {
@@ -44,6 +45,11 @@ describe("Editing a case", () =>
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
         Logger.Log("Create a valid concerns case type");
         selectCaseTypePage

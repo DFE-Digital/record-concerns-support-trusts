@@ -37,6 +37,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Smoke - Testing closing of cases when there are case actions and concerns", () => {
 	let caseId: string;
@@ -90,6 +91,11 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.withTrustName(trustName)
 			.selectOption()
 			.confirmOption();
+
+		Logger.Log("Create a valid case division");
+		selectCaseDivisionPage
+			.withCaseDivision("SFSO")
+			.continue();
 
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();

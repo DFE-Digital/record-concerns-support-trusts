@@ -10,6 +10,7 @@ import caseApi from "cypress/api/caseApi";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import validationComponent from "cypress/pages/validationComponent";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Creating a case", () =>
 {
@@ -39,6 +40,23 @@ describe("Creating a case", () =>
 
         createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy");
+
+        Logger.Log("Check RegionsGroup is disabled");
+        selectCaseDivisionPage
+            .hasBeenDisabled("RegionsGroup")
+
+        Logger.Log("You must select a division error");
+        selectCaseDivisionPage
+            .continue()
+            .hasValidationError("Select case division");
+
+        Logger.Log("Checking accessibility on select case division");
+        cy.excuteAccessibilityTests();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
         Logger.Log("You must select a case error");
         selectCaseTypePage
@@ -214,6 +232,11 @@ describe("Creating a case", () =>
         createCaseSummary
             .hasTrustSummaryDetails("Ashton West End Primary Academy");
 
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
+
         Logger.Log("Create a valid concerns case type");
             selectCaseTypePage
                 .withCaseType("Concerns")
@@ -306,6 +329,11 @@ describe("Creating a case", () =>
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
         Logger.Log("Create a valid concerns case type");
         selectCaseTypePage
