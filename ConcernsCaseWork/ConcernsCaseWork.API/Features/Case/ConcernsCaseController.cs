@@ -1,6 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.Validators;
 using ConcernsCaseWork.Data.Gateways;
 using Microsoft.AspNetCore.Mvc;

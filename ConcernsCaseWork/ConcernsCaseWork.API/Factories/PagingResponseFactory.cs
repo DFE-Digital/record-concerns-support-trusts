@@ -1,7 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace ConcernsCaseWork.API.ResponseModels
+namespace ConcernsCaseWork.API.Factories
 {
 	public static class PagingResponseFactory
 	{
@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.API.ResponseModels
 				RecordCount = recordCount,
 				Page = page,
 				HasNext = totalItemsSeen < recordCount,
-				HasPrevious = (totalItemsSeen - recordsPerPage) > 0,
+				HasPrevious = totalItemsSeen - recordsPerPage > 0,
 				TotalPages = totalPages
 			};
 
@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.ResponseModels
 
 			var queryBuilder = new QueryBuilder(queryAttributes)
 			{
-				{"page", $"{page + 1}"}, 
+				{"page", $"{page + 1}"},
 				{"count", $"{recordsPerPage}"}
 			};
 

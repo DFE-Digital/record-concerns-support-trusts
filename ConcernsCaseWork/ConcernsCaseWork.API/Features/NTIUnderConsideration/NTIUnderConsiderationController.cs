@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using MediatR;

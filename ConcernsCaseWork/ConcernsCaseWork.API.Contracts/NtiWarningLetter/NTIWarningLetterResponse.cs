@@ -1,6 +1,6 @@
-﻿namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter
+﻿namespace ConcernsCaseWork.API.Contracts.NtiWarningLetter
 {
-    public class NTIWarningLetterResponse
+	public class NTIWarningLetterResponse
 	{
 		public long Id { get; set; }
 		public int CaseUrn { get; set; }

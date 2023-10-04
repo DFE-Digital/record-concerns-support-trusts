@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
