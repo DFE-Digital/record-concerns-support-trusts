@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;

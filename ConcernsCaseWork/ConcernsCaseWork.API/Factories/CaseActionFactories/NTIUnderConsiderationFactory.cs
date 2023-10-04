@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories

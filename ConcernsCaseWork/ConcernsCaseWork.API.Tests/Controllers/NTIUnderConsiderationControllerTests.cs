@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.API.Features.NTIUnderConsideration;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;

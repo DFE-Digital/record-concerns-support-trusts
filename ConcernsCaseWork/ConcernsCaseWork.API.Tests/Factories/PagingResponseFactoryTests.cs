@@ -1,5 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Factories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;

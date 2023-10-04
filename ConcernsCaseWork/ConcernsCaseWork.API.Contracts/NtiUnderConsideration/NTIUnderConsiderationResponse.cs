@@ -1,6 +1,6 @@
-﻿namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration
+﻿namespace ConcernsCaseWork.API.Contracts.NtiUnderConsideration
 {
-    public class NTIUnderConsiderationResponse
+	public class NTIUnderConsiderationResponse
 	{
 		public long Id { get; set; }
 		public int CaseUrn { get; set; }
