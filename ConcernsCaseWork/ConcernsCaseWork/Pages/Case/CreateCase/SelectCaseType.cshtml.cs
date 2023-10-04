@@ -31,6 +31,8 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
 
+	public CreateCaseModel CreateCaseModel { get; private set; }
+
 	[BindProperty]
 	public RadioButtonsUiComponent CaseType { get; set; }
 
@@ -52,6 +54,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		try
 		{
 			await SetTrustAddress();
+			await SetCreateCaseModel();
 			LoadPageComponents();
 		}
 		catch (Exception ex)
@@ -138,12 +141,8 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	private async Task SetTrustAddress()
 	{
 		var userName = GetUserName();
-		var userState = await _cachedUserService.GetData(userName);
-		if (userState == null)
-		{
-			throw new Exception($"Could not retrieve cache for user '{userName}'");
-		}
-		
+		var userState = await GetUserState();
+
 		if (string.IsNullOrEmpty(userState.TrustUkPrn))
 		{
 			throw new Exception($"Could not retrieve trust from cache for user '{userName}'");
@@ -152,6 +151,27 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		var trustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
 
 		TrustAddress = trustAddress ?? throw new Exception($"Could not find trust with UK PRN of {userState.TrustUkPrn}");
+	}
+
+	private async Task SetCreateCaseModel()
+	{
+		var userName = GetUserName();
+		var userState = await GetUserState();
+
+		//Todo: should check for null user create case model 
+
+		CreateCaseModel = userState.CreateCaseModel;
+	}
+
+	private async Task<UserState> GetUserState()
+	{
+		var userName = GetUserName();
+
+		var userState = await _cachedUserService.GetData(userName);
+		if (userState is null)
+			throw new Exception($"Could not retrieve cache for user '{userName}'");
+
+		return userState;
 	}
 
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
