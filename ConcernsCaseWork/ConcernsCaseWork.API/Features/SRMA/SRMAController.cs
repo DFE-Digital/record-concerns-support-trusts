@@ -1,8 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using ConcernsCaseWork.Data.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

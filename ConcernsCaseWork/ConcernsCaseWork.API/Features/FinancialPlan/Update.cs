@@ -1,10 +1,9 @@
-﻿using ConcernsCaseWork.API.Exceptions;
-using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Azure.Core.HttpHeader;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {

@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class NTIUnderConsiderationFactoryTests
+	public class NTIUnderConsiderationFactoryTests
     {
         [Fact]
         public void CreateDBModel_ExpectedNTIUnderConsideration_WhenCreateNTIUnderConsiderationRequestProvided()

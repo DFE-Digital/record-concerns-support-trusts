@@ -1,5 +1,5 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Features.Case;
-using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using FizzWare.NBuilder;
 using FluentAssertions;

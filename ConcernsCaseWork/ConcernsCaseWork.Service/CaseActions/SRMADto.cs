@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Service.CaseActions
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+
+namespace ConcernsCaseWork.Service.CaseActions
 {
 	[Serializable]
 	public class SRMADto

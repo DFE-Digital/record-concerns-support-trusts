@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.NoticeToImprove;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class NoticeToImproveFactoryTests
+	public class NoticeToImproveFactoryTests
     {
        [Fact]
        public void CreateDBModel_ExpectedNoticeToImprove_WhenCreateNoticeToImproveRequestProvided()

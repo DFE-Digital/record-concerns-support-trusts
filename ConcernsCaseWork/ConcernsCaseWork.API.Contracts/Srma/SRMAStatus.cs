@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿
+using System.ComponentModel;
 
-namespace ConcernsCaseWork.Enums
+namespace ConcernsCaseWork.API.Contracts.Srma
 {
-	public enum SRMAStatus
-	{
+    public enum SRMAStatus
+    {
 		Unknown = 0,
-		
+
 		[Description("Trust considering")]
 		TrustConsidering = 1,
 

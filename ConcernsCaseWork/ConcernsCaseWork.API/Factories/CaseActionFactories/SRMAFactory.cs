@@ -1,11 +1,10 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {
-    public static class SRMAFactory
+	public static class SRMAFactory
     {
         public static SRMACase CreateDBModel(CreateSRMARequest createSRMARequest)
         {
@@ -20,7 +19,7 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 EndDateOfVisit = createSRMARequest.DateVisitEnd,
                 DateAccepted = createSRMARequest.DateAccepted,
                 StatusId = (int)createSRMARequest.Status,
-                ReasonId = (int?)(createSRMARequest.Reason == SRMAReasonOffered.Unknown ? null : createSRMARequest.Reason),
+                ReasonId = (int?)(createSRMARequest.Reason == Contracts.Srma.SRMAReasonOffered.Unknown ? null : createSRMARequest.Reason),
                 Notes = createSRMARequest.Notes,
                 CreatedBy = createSRMARequest.CreatedBy
             };
@@ -38,10 +37,10 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 DateVisitStart = model.StartDateOfVisit,
                 DateVisitEnd = model.EndDateOfVisit,
                 DateAccepted = model.DateAccepted,
-                Status = (Data.Enums.SRMAStatus)model.StatusId,
-                Reason = (SRMAReasonOffered?)model.ReasonId,
+                Status = (Contracts.Srma.SRMAStatus)model.StatusId,
+                Reason = (Contracts.Srma.SRMAReasonOffered?)model.ReasonId,
                 Notes = model.Notes,
-                CloseStatus = (Data.Enums.SRMAStatus)(model.CloseStatusId ?? 0),
+                CloseStatus = (Contracts.Srma.SRMAStatus)(model.CloseStatusId ?? 0),
                 UpdatedAt = model.UpdatedAt,
                 ClosedAt = model.ClosedAt,
                 CreatedBy = model.CreatedBy

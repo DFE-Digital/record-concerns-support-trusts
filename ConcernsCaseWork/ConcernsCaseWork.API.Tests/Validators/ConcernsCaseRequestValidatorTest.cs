@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Validators;
 using FizzWare.NBuilder;
 using FluentValidation.TestHelper;
@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Validators
 {
-    public class ConcernsCaseRequestValidatorTest
+	public class ConcernsCaseRequestValidatorTest
     {
         [Fact]
         public void ShouldHaveError_WhenRatingIdIs0()

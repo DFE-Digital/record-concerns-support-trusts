@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels
+namespace ConcernsCaseWork.API.Contracts.Case
 {
     public class ConcernsRecordRequest
     {

@@ -1,20 +1,20 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.API.Features.NTIUnderConsideration;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.Features.NTIUnderConsideration;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
