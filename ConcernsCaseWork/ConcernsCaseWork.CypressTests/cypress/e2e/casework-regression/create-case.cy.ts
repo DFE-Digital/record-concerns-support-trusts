@@ -41,6 +41,23 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
+		Logger.Log("Check RegionsGroup is disabled");
+        selectCaseDivisionPage
+            .hasBeenDisabled("RegionsGroup")
+
+        Logger.Log("You must select a division error");
+        selectCaseDivisionPage
+            .continue()
+            .hasValidationError("Select case division");
+
+        Logger.Log("Checking accessibility on select case division");
+        cy.excuteAccessibilityTests();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
+
 		Logger.Log("You must select a case error");
 		selectCaseTypePage.continue().hasValidationError("Select case type");
 
