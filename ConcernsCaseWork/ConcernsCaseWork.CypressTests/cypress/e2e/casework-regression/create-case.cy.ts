@@ -302,6 +302,11 @@ describe("Creating a case", () => {
 			.selectOption()
 			.confirmOption();
 
+		Logger.Log("Create a valid case division");
+		selectCaseDivisionPage
+			.withCaseDivision("SFSO")
+			.continue();
+
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 

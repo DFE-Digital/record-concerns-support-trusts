@@ -49,7 +49,7 @@ describe("Trust overview ", () =>
                     row
                         .hasCaseId(caseId)
                         .hasCreatedDate(toDisplayDate(now))
-                        .hasConcern("Governance and compliance: Compliance")
+                        .hasConcern("Financial compliance")
                         .hasRiskToTrust("Amber")
                         .hasRiskToTrust("Green")
                 });
