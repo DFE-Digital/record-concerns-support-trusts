@@ -41,8 +41,9 @@
                 <form method="post" id="case-details-form" novalidate>
 
                     <h2 class="govuk-heading-m govuk-!-margin-top-6">Add concern details</h2>
-                    <div id="initial-details-hint" class="govuk-hint">
-                        You only need to enter the issue to create the case. You can add other information now or later.
+                    <div class="govuk-hint">
+                        <p>You only need to enter the issue to create the case. You can add other information now or later. Include information for each concern if the case has multiple concerns.</p>
+                        <p>The information in these fields will be used in risk review meetings with senior staff.</p>
                     </div>
 
                     <partial name="Components/_TextArea" model="Model.Issue" />

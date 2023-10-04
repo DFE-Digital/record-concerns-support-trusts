@@ -24,6 +24,12 @@
         {
             <div class="govuk-hint">@Model.HintText</div>
         }
+
+        @if (!string.IsNullOrEmpty(Model.HintFromPartialView))
+        {
+            <partial name="@Model.HintFromPartialView" />
+        }
+
 		<div class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="@Model.Text.MaxLength">
 			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
                 <partial name="Components/_ValidationErrorDetail" model="@errors" />
