@@ -1,8 +1,7 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
@@ -10,7 +9,6 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;

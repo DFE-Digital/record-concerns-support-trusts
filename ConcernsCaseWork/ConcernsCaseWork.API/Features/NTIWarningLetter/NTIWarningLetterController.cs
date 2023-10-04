@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
+﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;

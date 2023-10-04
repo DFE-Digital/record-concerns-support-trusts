@@ -9,6 +9,7 @@ using System;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using System.Collections.Generic;
 using System.Reflection.PortableExecutable;
+using ConcernsCaseWork.API.Contracts.Srma;
 
 namespace ConcernsCaseWork.Tests.Mappers;
 
@@ -105,8 +106,8 @@ public class SrmaMappingTests
 			DateVisitEnd = _fixture.Create<DateTime>(),
 			CreatedBy = _fixture.Create<string>(),
 			Notes = _fixture.Create<string>(),
-			Status = _fixture.Create<Enums.SRMAStatus>(),
-			SRMAReasonOffered = _fixture.Create<Enums.SRMAReasonOffered>(),
+			Status = _fixture.Create<SRMAStatus>(),
+			SRMAReasonOffered = _fixture.Create<SRMAReasonOffered>(),
 			CreatedAt = _fixture.Create<DateTime>(),
 			UpdatedAt = _fixture.Create<DateTime>(),
 			ClosedAt = _fixture.Create<DateTime>()

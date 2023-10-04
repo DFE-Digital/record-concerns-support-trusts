@@ -13,8 +13,8 @@ public class SRMAReasonConfiguration : IEntityTypeConfiguration<SRMAReason>
 		builder.HasKey(e => e.Id);
 		
 		builder.HasData(
-			Enum.GetValues(typeof(Enums.SRMAReasonOffered)).Cast<Enums.SRMAReasonOffered>()
-				.Where(enm => enm != Enums.SRMAReasonOffered.Unknown)
+			Enum.GetValues(typeof(API.Contracts.Srma.SRMAReasonOffered)).Cast<API.Contracts.Srma.SRMAReasonOffered>()
+				.Where(enm => enm != API.Contracts.Srma.SRMAReasonOffered.Unknown)
 				.Select(enm => new SRMAStatus
 				{
 					Id = (int)enm,

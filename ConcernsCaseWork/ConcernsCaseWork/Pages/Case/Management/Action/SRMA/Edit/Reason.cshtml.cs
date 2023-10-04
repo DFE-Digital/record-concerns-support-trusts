@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -91,9 +92,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		{
 			var enumValues = new List<SRMAReasonOffered>()
 			{
-				Enums.SRMAReasonOffered.OfferLinked,
-				Enums.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
-				Enums.SRMAReasonOffered.RegionsGroupIntervention
+				API.Contracts.Srma.SRMAReasonOffered.OfferLinked,
+				API.Contracts.Srma.SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
+				API.Contracts.Srma.SRMAReasonOffered.RegionsGroupIntervention
 			};
 
 			var radioItems = enumValues.Select(v =>

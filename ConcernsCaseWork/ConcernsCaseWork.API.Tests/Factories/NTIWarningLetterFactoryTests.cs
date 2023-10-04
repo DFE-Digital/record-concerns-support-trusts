@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
+﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class NTIWarningLetterFactoryTests
+	public class NTIWarningLetterFactoryTests
     {
         [Fact]
         public void CreateDBModel_ExpectedNTIWarningLetter_WhenCreateNTIWarningLetterRequestProvided()

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using AutoFixture;
 using System.Linq;
 using FluentAssertions;
+using ConcernsCaseWork.API.Contracts.Srma;
 
 namespace ConcernsCaseWork.Tests.Pages.Validators
 {
@@ -35,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			//arrange
 			var closedAt = DateTime.Now;
 			var srmaValidator = new SRMAValidator();
-			var srmaModels = SrmaFactory.BuildListSrmaModel(Enums.SRMAStatus.Unknown, Enums.SRMAReasonOffered.Unknown, closedAt);
+			var srmaModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.Unknown, SRMAReasonOffered.Unknown, closedAt);
 
 			// act
 			string validationError = srmaValidator.Validate(srmaModels);

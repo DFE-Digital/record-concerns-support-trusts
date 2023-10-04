@@ -1,24 +1,15 @@
 ﻿using AutoFixture;
-using Azure;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.API.RequestModels;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using FizzWare.NBuilder;
 using FluentAssertions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
-using Tavis.UriTemplates;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
