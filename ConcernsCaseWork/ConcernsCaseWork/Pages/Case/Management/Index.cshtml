@@ -225,30 +225,24 @@
                         }
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
+                            <th scope="row" class="govuk-table-case-details__header">Managed by</th>
                             <td class="govuk-table__cell" data-testid="territory_Field">
-                                @if (Model.CaseModel.Territory == null)
-                                {
-                                    <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
+                                @{
+                                    RenderValue(Model.CaseModel.Territory?.Description());
                                 }
-                                else
-                                {
-                                    @Model.CaseModel.Territory?.Description()
-                                }
-
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change SFSO territory">
-                                        Change<span class="govuk-visually-hidden"> SFSO territory</span>
+                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change managed by">
+                                        Change
                                     </a>
                                 }
                             </td>
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Case owner</th>
+                            <th scope="row" class="govuk-table-case-details__header">Owned by</th>
                             <td class="govuk-table__cell" data-testid="case owner_field">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
@@ -256,8 +250,8 @@
                             <td class="govuk-table__cell govuk-table__header__right">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
-                                        Change<span class="govuk-visually-hidden">Case owner</span>
+                                    <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change owned by">
+                                        Change
                                     </a>
                                 }
                             </td>
@@ -289,9 +283,6 @@
                                         Issue
                                     </span>
                                 </h2>
-                                <div class="govuk-accordion__section-summary govuk-hint" id="accordion-issue-heading-hint">
-                                    This information can be used in Stage 1 and Stage 2 meetings.
-                                </div>
                             </div>
                             <div id="accordion-issue-content" class="govuk-accordion__section-content" aria-labelledby="accordion-issue-heading">
                                 @if (Model.IsEditableCase)
@@ -310,9 +301,6 @@
                                 <h2 class="govuk-accordion__section-heading">
                                     <span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
                                 </h2>
-                                <div class="govuk-accordion__section-summary govuk-hint" id="accordion-status-heading-hint">
-                                    This information can be used in Stage 1 and Stage 2 meetings.
-                                </div>
                             </div>
                             <div id="accordion-status-content" class="govuk-accordion__section-content" aria-labelledby="accordion-status-heading">
                                 @if (Model.IsEditableCase)
@@ -331,9 +319,6 @@
                                 <h2 class="govuk-accordion__section-heading">
                                     <span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
                                 </h2>
-                                <div class="govuk-accordion__section-summary govuk-hint" id="accordion-case-aim-heading-hint">
-                                    This information can be used in Stage 1 and Stage 2 meetings.
-                                </div>
                             </div>
                             <div id="accordion-case-aim-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-aim-heading">
                                 @if (Model.IsEditableCase)
@@ -353,9 +338,6 @@
                                 <h2 class="govuk-accordion__section-heading">
                                     <span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
                                 </h2>
-                                <div class="govuk-accordion__section-summary govuk-hint" id="accordion-de-escalation-point-heading-hint">
-                                    This information can be used in Stage 1 and Stage 2 meetings.
-                                </div>
                             </div>
                             <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content" aria-labelledby="accordion-de-escalation-point-heading">
                                 @if (Model.IsEditableCase)
@@ -375,9 +357,6 @@
                                 <h2 class="govuk-accordion__section-heading">
                                     <span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
                                 </h2>
-                                <div class="govuk-accordion__section-summary govuk-hint" id="accordion-next-steps-heading-hint">
-                                    This information can be used in Stage 1 and Stage 2 meetings.
-                                </div>
                             </div>
                             <div id="accordion-next-steps-content" class="govuk-accordion__section-content" aria-labelledby="accordion-next-steps-heading">
                                 @if (Model.IsEditableCase)
@@ -487,3 +466,32 @@
         </script>
     }
 </div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}
