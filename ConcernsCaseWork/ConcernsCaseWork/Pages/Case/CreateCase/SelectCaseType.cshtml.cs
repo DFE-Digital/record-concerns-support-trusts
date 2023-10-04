@@ -80,7 +80,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 				return Page();
 			}
 			
-			await CreateCasePlaceholder();
+		
 
 			var selectedCaseType = (CaseType)CaseType.SelectedId;
 
@@ -89,7 +89,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 				case API.Contracts.Case.CaseType.Concerns:
 					return Redirect("/case/concern");
 				case API.Contracts.Case.CaseType.NonConcerns:
-					return Redirect("/case/territory");
+					return Redirect("/case/create/nonconcerns/details");
 				default:
 					throw new Exception($"Unrecognised case type {selectedCaseType}");
 			}
@@ -130,14 +130,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		CaseType = BuildCaseTypeComponent(CaseType?.SelectedId);
 	}
 
-	private async Task CreateCasePlaceholder()
-	{
-		var userName = GetUserName();
-		var userState = await _cachedUserService.GetData(userName);
-		userState.CreateCaseModel = new CreateCaseModel();
-		await _cachedUserService.StoreData(userName, userState);
-	}
-
 	private async Task SetTrustAddress()
 	{
 		var userName = GetUserName();
@@ -157,8 +149,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	{
 		var userName = GetUserName();
 		var userState = await GetUserState();
-
-		//Todo: should check for null user create case model 
 
 		CreateCaseModel = userState.CreateCaseModel;
 	}
