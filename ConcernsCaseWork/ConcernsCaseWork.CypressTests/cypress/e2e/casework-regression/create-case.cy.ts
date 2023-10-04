@@ -14,6 +14,7 @@ import {
 	SourceOfConcernExternal,
 	SourceOfConcernInternal,
 } from "cypress/constants/selectorConstants";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -189,8 +190,15 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-		Logger.Log("Create a valid concerns case type");
-		selectCaseTypePage.withCaseType("Concerns").continue();
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 

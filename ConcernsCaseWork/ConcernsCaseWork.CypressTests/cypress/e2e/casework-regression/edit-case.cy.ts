@@ -17,6 +17,7 @@ import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Editing a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -45,8 +46,15 @@ describe("Editing a case", () => {
 			.selectOption()
 			.confirmOption();
 
-		Logger.Log("Create a valid concerns case type");
-		selectCaseTypePage.withCaseType("Concerns").continue();
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
+
+        Logger.Log("Create a valid concerns case type");
+        selectCaseTypePage
+            .withCaseType("Concerns")
+            .continue();
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
