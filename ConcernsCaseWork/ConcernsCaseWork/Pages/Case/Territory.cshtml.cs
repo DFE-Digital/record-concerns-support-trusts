@@ -81,12 +81,16 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.CreateCaseModel.Territory = (Territory)Territory.SelectedId;
 				await _userStateCache.StoreData(GetUserName(), userState);
 
+				return Redirect("/case/create/type");
+				/*
 				if (userState.CreateCaseModel.CreateRecordsModel.Count == 0)
 				{
 					return Redirect("/case/create/nonconcerns/details");
 				}
 				
 				return RedirectToPage("details");
+
+				*/
 			}
 			catch (Exception ex)
 			{
