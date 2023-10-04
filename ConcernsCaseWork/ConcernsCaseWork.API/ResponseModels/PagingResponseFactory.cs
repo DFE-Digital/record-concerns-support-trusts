@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Common;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ConcernsCaseWork.API.ResponseModels

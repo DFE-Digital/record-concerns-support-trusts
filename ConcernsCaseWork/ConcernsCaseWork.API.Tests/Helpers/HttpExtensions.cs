@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.Common;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Factories;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Gateways;
 

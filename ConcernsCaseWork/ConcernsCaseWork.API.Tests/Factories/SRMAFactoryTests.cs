@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;

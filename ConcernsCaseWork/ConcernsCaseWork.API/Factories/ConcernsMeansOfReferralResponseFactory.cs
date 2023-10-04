@@ -1,9 +1,9 @@
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories
 {
-    public static class ConcernsMeansOfReferralResponseFactory
+	public static class ConcernsMeansOfReferralResponseFactory
     {
         public static ConcernsMeansOfReferralResponse Create(ConcernsMeansOfReferral concernsMeansOfReferral)
         {

@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 

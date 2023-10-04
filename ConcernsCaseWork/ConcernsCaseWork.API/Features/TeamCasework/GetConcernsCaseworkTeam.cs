@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
-using ConcernsCaseWork.API.UseCases;
+﻿using ConcernsCaseWork.API.Contracts.TeamCasework;
 using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.Features.TeamCasework

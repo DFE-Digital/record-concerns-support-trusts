@@ -1,9 +1,9 @@
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories
 {
-    public class ConcernsCaseResponseFactory
+	public class ConcernsCaseResponseFactory
     {
         public static ConcernsCaseResponse Create(ConcernsCase concernsCase)
         {
