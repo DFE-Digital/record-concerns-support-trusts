@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System.Collections.Generic;

@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;

@@ -1,9 +1,7 @@
-﻿using ConcernsCaseWork.API.Contracts.Srma;
-
-namespace ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA
+﻿namespace ConcernsCaseWork.API.Contracts.Srma
 {
 	public class SRMAResponse
-    {
+	{
 		public int Id { get; set; }
 		public int CaseUrn { get; set; }
 		public DateTime CreatedAt { get; set; }

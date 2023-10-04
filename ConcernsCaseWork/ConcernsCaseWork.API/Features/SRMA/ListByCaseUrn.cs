@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
+using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
