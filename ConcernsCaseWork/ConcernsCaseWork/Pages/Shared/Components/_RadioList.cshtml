@@ -36,6 +36,7 @@
                 var testId = !string.IsNullOrEmpty(radioItem.TestId) ? radioItem.TestId : radioItem.Label;
                 var radioItemSubContainerId = $"sub-item-container-{radioItem.Id}";
                 var radioItemElementId = $"{Model.ElementRootId}-{radioItem.Id}";
+                var disabled = radioItem.Disabled;
 				
 				<div class="govuk-radios__item">
 					<input class="govuk-radios__input"
@@ -45,6 +46,7 @@
 					       data-testid="@testId" 
 					       value="@radioItem.Id"
                            data-aria-controls="@radioItemSubContainerId"
+                           disabled="@disabled"
 					       @isChecked />
 
                     <label class="govuk-label govuk-radios__label" for="@radioItemElementId">

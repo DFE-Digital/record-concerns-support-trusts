@@ -22,6 +22,7 @@ import {
 	SourceOfConcernExternal,
 	SourceOfConcernInternal,
 } from "cypress/constants/selectorConstants";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Creating a non concerns case", () => {
 	let email: string;
@@ -51,6 +52,19 @@ describe("Creating a non concerns case", () => {
 	it("Should validate adding a case", () => {
 		Logger.Log("Create a case");
 		createCasePage.withTrustName(trustName).selectOption().confirmOption();
+
+		Logger.Log("You must select a division error");
+        selectCaseDivisionPage
+            .continue()
+            .hasValidationError("Select case division");
+
+        Logger.Log("Checking accessibility on select case division");
+        cy.excuteAccessibilityTests();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
 		Logger.Log("Create a valid Non-concern case type");
 		selectCaseTypePage.withCaseType("NonConcerns").continue();
@@ -133,6 +147,11 @@ describe("Creating a non concerns case", () => {
 	it("Converting non conern to concern case", () => {
 		Logger.Log("Create a case");
 		createCasePage.withTrustName(trustName).selectOption().confirmOption();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
 		Logger.Log("Create a valid Non-concern case type");
 		selectCaseTypePage.withCaseType("NonConcerns").continue();
