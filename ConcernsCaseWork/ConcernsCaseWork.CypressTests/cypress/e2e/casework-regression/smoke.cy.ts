@@ -37,6 +37,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Smoke - Testing closing of cases when there are case actions and concerns", () => {
@@ -102,16 +103,15 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
-			.withConcernType("Financial")
-			.withSubConcernType("Financial: Deficit")
+			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
-			.withMeansOfReferral("External")
+			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
 		createConcernPage.nextStep();
@@ -124,7 +124,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
 
@@ -136,7 +136,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasConcernType("Financial: Deficit")
+			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus")
 			.hasTerritory("North and UTC - North East");
@@ -494,7 +494,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				.hasCreatedDate(toDisplayDate(now))
 				.hasClosedDate(toDisplayDate(now))
 				.hasTrust(trustName)
-				.hasConcern("Financial: Deficit");
+				.hasConcern("Deficit");
 
 			Logger.Log("Checking accessibility on Closed Case Details");
 			cy.excuteAccessibilityTests();
@@ -504,7 +504,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		Logger.Log("Validate Closed Case has correct details");
 		viewClosedCasePage
-			.hasConcerns("Financial: Deficit")
+			.hasConcerns("Deficit")
 			.hasTerritory("North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
