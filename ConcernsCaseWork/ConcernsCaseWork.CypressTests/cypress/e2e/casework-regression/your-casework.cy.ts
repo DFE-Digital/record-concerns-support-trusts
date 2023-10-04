@@ -42,7 +42,7 @@ describe("Your casework tests", () =>
                         .hasCaseId(caseId)
                         .hasCreatedDate(toDisplayDate(now))
                         .hasTrust(trustName)
-                        .hasConcern("Governance and compliance: Compliance")
+                        .hasConcern("Financial compliance")
                         .hasRiskToTrust("Amber")
                         .hasRiskToTrust("Green")
                 })

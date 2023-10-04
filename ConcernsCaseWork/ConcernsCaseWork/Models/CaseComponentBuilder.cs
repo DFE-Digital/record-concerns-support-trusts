@@ -72,7 +72,8 @@ namespace ConcernsCaseWork.Models
 				RadioItems = radioItems,
 				SelectedId = selectedId,
 				Required = true,
-				DisplayName = "concern risk rating",			
+				DisplayName = "concern risk rating",
+				HintFromPartialView = "_RiskManagementFramework"
 			};
 		}
 
@@ -82,11 +83,11 @@ namespace ConcernsCaseWork.Models
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = "ESFA activity, TFF or other departmental activity."
+					HintText = "For example, management letter, external review of governance, ESFA activity or other departmental activity."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies."
+					HintText = "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
 				}
 			};
 
@@ -96,7 +97,7 @@ namespace ConcernsCaseWork.Models
 					return new SimpleRadioItem(v.enumValue.Description(), (int)v.enumValue) { TestId = v.enumValue.Description(), HintText = v.HintText };
 				}).ToArray();
 
-			return new(ElementRootId: "means-of-referral", name, "Means of referral")
+			return new(ElementRootId: "means-of-referral", name, "What was the source of the concern?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
@@ -105,49 +106,26 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernType(string name, int? selectedId = null, int? selectedSubId = null)
+		public static RadioButtonsUiComponent BuildConcernType(string name, int? selectedId = null)
 		{
-			// The id's of financial, irregularity and governance are completely made up
-			// This is so we can validate the selection, but do not clash with existing values for real selections
-			// Only the sub options for all but force majeure are the real values
 			var radioItems = new List<SimpleRadioItem>()
 			{
-				new SimpleRadioItem("Financial", 101)
-				{
-					SubRadioItems = new List<SubRadioItem>()
-					{
-						BuildSubRadioItem(ConcernType.FinancialDeficit.Description(), ConcernType.FinancialDeficit),
-						BuildSubRadioItem(ConcernType.FinancialProjectedDeficit.Description(), ConcernType.FinancialProjectedDeficit),
-						BuildSubRadioItem(ConcernType.FinancialViability.Description(), ConcernType.FinancialViability)
-					}
-				},
-				new SimpleRadioItem("Force majeure", (int)ConcernType.ForceMajeure),
-				new SimpleRadioItem("Governance and compliance", 102)
-				{
-					SubRadioItems = new List<SubRadioItem>()
-					{
-						BuildSubRadioItem("Governance", ConcernType.Governance),
-						BuildSubRadioItem("Compliance", ConcernType.Compliance)
-					}
-				},
-				new SimpleRadioItem("Irregularity", 103)
-				{
-					SubRadioItems = new List<SubRadioItem>()
-					{
-						BuildSubRadioItem("Irregularity", ConcernType.Irregularity),
-						BuildSubRadioItem(ConcernType.IrregularitySuspectedFraud.Description(), ConcernType.IrregularitySuspectedFraud)
-					}
-				}
+				new SimpleRadioItem(ConcernType.FinancialDeficit.Description(), (int)ConcernType.FinancialDeficit) { TestId = ConcernType.FinancialDeficit.Description() },
+				new SimpleRadioItem(ConcernType.FinancialProjectedDeficit.Description(), (int)ConcernType.FinancialProjectedDeficit) { TestId = ConcernType.FinancialProjectedDeficit.Description() },
+				new SimpleRadioItem(ConcernType.FinancialViability.Description(), (int)ConcernType.FinancialViability) { TestId = ConcernType.FinancialViability.Description() },
+				new SimpleRadioItem(ConcernType.Compliance.Description(), (int)ConcernType.Compliance) { TestId = ConcernType.Compliance.Description() },
+				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
+				new SimpleRadioItem(ConcernType.ForceMajeure.Description(), (int)ConcernType.ForceMajeure) { TestId = ConcernType.ForceMajeure.Description() },
+				new SimpleRadioItem(ConcernType.Irregularity.Description(), (int)ConcernType.Irregularity) { TestId = ConcernType.Irregularity.Description() },
+				new SimpleRadioItem(ConcernType.IrregularitySuspectedFraud.Description(), (int)ConcernType.IrregularitySuspectedFraud) { TestId = ConcernType.IrregularitySuspectedFraud.Description() }
 			};
 
 			return new(ElementRootId: "concern-type", name, "Select concern type")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
-				SelectedSubId = selectedSubId,
 				Required = true,
 				DisplayName = "concern type",
-				SubItemDisplayName = "concern subtype",
 				HintFromPartialView = "_RiskManagementFramework"
 			};
 		}

@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 				var ragRatingName = ragRatingId.Description();
 
-				var typeId = (ConcernType)(ConcernType.SelectedSubId.HasValue ? ConcernType.SelectedSubId : ConcernType.SelectedId);
+				var typeId = (ConcernType)ConcernType.SelectedId;
 
 				if (!Enum.IsDefined(typeof(ConcernType), typeId))
 					throw new InvalidOperationException($"Unrecognised concern type {typeId}");
@@ -213,7 +213,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			CreateRecordsModel = new List<CreateRecordModel>();
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
-			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId, ConcernType?.SelectedSubId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId);
 			ConcernType.SortOrder = 1;
 
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);

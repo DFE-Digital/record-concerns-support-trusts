@@ -1,647 +1,597 @@
 import { Logger } from "../common/logger";
 
 class CaseManagementPage {
+	//locators
+	getHeadingText() {
+		return cy.get('h1[class="govuk-heading-l"]');
+	}
+
+	getAddToCaseBtn() {
+		return cy.get('[role="button"]').contains("Add to case");
+	}
+
+	getTrustOverviewTab() {
+		return cy.get('[id="tab_trust-overview"]');
+	}
+
+	getCloseCaseBtn() {
+		return cy.get("#close-case-button");
+	}
 
-    //locators
-    getHeadingText() {
-        return cy.get('h1[class="govuk-heading-l"]');
-    }
+	getCaseID() {
+		return cy.get("[name=caseID]");
+	}
 
-    getAddToCaseBtn() {
-        return cy.get('[role="button"]').contains('Add to case');
-    }
-
-    getTrustOverviewTab() {
-        return cy.get('[id="tab_trust-overview"]');
-    }
-
-    getCloseCaseBtn() {
-        return cy.get('#close-case-button');
-    }
-
-    getCaseID() {
-        return cy.get('[name=caseID]');
-    }
+	getBackBtn() {
+		return cy.get('[id="back-link-event"]');
+	}
 
-    getBackBtn() {
-        return cy.get('[id="back-link-event"]');
-    }
+	getCaseIDText() {
+		return this.getHeadingText()
+			.invoke("text")
+			.then((text) => {
+				var splitText = text.split("\n")[2];
+				console.log("splitText " + splitText);
+				return splitText.trim();
+			});
+	}
 
-    getCaseIDText() {
+	public createCase(): this {
+		Logger.Log("Creating case");
 
-        return this.getHeadingText().invoke('text').then((text) => {
-            var splitText = text.split('\n')[2]
-            console.log("splitText " + splitText)
-            return splitText.trim();
-        });
-    }
+		cy.getByTestId("create-case-button").click();
 
-    public createCase(): this
-    {
-        Logger.Log("Creating case");
+		return this;
+	}
 
-        cy.getByTestId("create-case-button").click();
+	public hasCaseHistory(value: string): this {
+		Logger.Log(`Has case history ${value}`);
+		cy.getByTestId("case-history").should("contain.text", value);
 
-        return this;
-    }
+		return this;
+	}
 
-    public hasCaseHistory(value: string): this {
-        Logger.Log(`Has case history ${value}`);
-        cy.getByTestId("case-history").should("contain.text", value);
+	public hasClosedCaseValidationError(value: string): this {
+		cy.getById("errorSummary").should("contain.text", value);
 
-        return this;
-    }
+		return this;
+	}
 
-    public hasClosedCaseValidationError(value: string): this {
-        cy.getById("errorSummary").should("contain.text", value);
+	public showAllConcernDetails(): this {
+		Logger.Log("Showing all concerns details");
 
-        return this;
-    }
+		const id = ".govuk-accordion__show-all";
 
-    public showAllConcernDetails(): this {
-        Logger.Log("Showing all concerns details");
+		cy.get(id)
+			.invoke("text")
+			.then((text) => {
+				if (text === "Show all sections") cy.get(id).click();
+			});
 
-        const id = ".govuk-accordion__show-all";
+		return this;
+	}
 
-        cy.get(id).invoke("text")
-            .then((text) => {
-                if (text === "Show all sections")
-                    cy.get(id).click();
-            });
+	public editConcern(): this {
+		Logger.Log("Editing the concern");
+		this.getEditConcern().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editConcern(): this {
-        Logger.Log("Editing the concern");
-        this.getEditConcern().click();
+	public canEditConcern(): this {
+		Logger.Log("Can edit the concern");
+		this.getEditConcern();
 
-        return this;
-    }
+		return this;
+	}
+	public cannotEditConcern(): this {
+		Logger.Log("Cannot edit the concern");
+		this.getEditConcern().should("not.exist");
 
-    public canEditConcern(): this
-    {
-        Logger.Log("Can edit the concern");
-        this.getEditConcern();
+		return this;
+	}
 
-        return this;
-    }
-    public cannotEditConcern(): this
-    {
-        Logger.Log("Cannot edit the concern");
-        this.getEditConcern().should("not.exist");
+	public addAnotherConcern(): this {
+		Logger.Log("Adding another concern");
+		cy.getByTestId("add-additional-concern").click();
 
-        return this;
-    }
+		return this;
+	}
+	public addAnotherConcernForNonConcern(): this {
+		Logger.Log("Adding another concern for non concern journey");
+		cy.getByTestId("Add_Button_Concern").click();
 
-    public addAnotherConcern(): this
-    {
-        Logger.Log("Adding another concern");
-        cy.getByTestId("add-additional-concern").click();
+		return this;
+	}
+	public editRiskToTrust(): this {
+		Logger.Log("Editing the risk to trust");
+		this.getEditRiskToTrust().click();
 
-        return this;
-    }
-    public addAnotherConcernForNonConcern(): this
-    {
-        Logger.Log("Adding another concern for non concern journey");
-        cy.getByTestId("Add_Button_Concern").click();
+		return this;
+	}
 
-        return this;
-    }
-    public editRiskToTrust(): this {
-        Logger.Log("Editing the risk to trust");
-        this.getEditRiskToTrust().click();
+	public canEditRiskToTrust(): this {
+		Logger.Log("Can edit the risk to trust");
+		this.getEditRiskToTrust();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditRiskToTrust(): this {
-        Logger.Log("Can edit the risk to trust");
-        this.getEditRiskToTrust();
+	public cannotEditRiskToTrust(): this {
+		Logger.Log("Cannot edit the risk to trust");
+		this.getEditRiskToTrust().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditRiskToTrust(): this {
-        Logger.Log("Cannot edit the risk to trust");
-        this.getEditRiskToTrust().should("not.exist");
+	public editDirectionOfTravel(): this {
+		Logger.Log("Editing the direction of travel");
+		this.getEditDirectionOfTravel().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editDirectionOfTravel(): this {
-        Logger.Log("Editing the direction of travel");
-        this.getEditDirectionOfTravel().click();
+	public canEditDirectionOfTravel(): this {
+		Logger.Log("Can edit the direction of travel");
+		this.getEditDirectionOfTravel();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditDirectionOfTravel(): this {
-        Logger.Log("Can edit the direction of travel");
-        this.getEditDirectionOfTravel();
+	public cannotEditDirectionOfTravel(): this {
+		Logger.Log("Cannot edit the direction of travel");
+		this.getEditDirectionOfTravel().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditDirectionOfTravel(): this {
-        Logger.Log("Cannot edit the direction of travel");
-        this.getEditDirectionOfTravel().should("not.exist");
+	public editTerritory(): this {
+		Logger.Log("Editing the territory");
+		this.getEditTerritory().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editTerritory(): this
-    {
-        Logger.Log("Editing the territory");
-        this.getEditTerritory().click();
+	public canEditTerritory(): this {
+		Logger.Log("Can edit the territory");
+		this.getEditTerritory();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditTerritory(): this
-    {
-        Logger.Log("Can edit the territory");
-        this.getEditTerritory();
+	public cannotEditTerritory(): this {
+		Logger.Log("Cannot edit the territory");
+		this.getEditTerritory().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditTerritory(): this
-    {
-        Logger.Log("Cannot edit the territory");
-        this.getEditTerritory().should("not.exist");
+	public hasCaseOwner(value: string): this {
+		Logger.Log(`Has case owner ${value}`);
 
-        return this;
-    }
+		// Can be improved later
+		// Currently its driven by the casing of the email when the user logs in
+		// We can't control this, so safer to ignore case for now
+		cy.getByTestId("case owner_field").contains(value, { matchCase: false });
 
-    public hasCaseOwner(value: string): this {
-        Logger.Log(`Has case owner ${value}`);
+		return this;
+	}
 
-        // Can be improved later
-        // Currently its driven by the casing of the email when the user logs in
-        // We can't control this, so safer to ignore case for now
-        cy.getByTestId("case owner_field").contains(value, { matchCase: false });
+	public editCaseOwner(): this {
+		Logger.Log("Editing case owner");
 
-        return this;
-    }
+		this.getEditCaseOwner().click();
 
-    public editCaseOwner(): this
-    {
-        Logger.Log("Editing case owner");
+		return this;
+	}
 
-        this.getEditCaseOwner().click();
+	public canEditCaseOwner(): this {
+		Logger.Log("Can edit case owner");
 
-        return this;
-    }
+		this.getEditCaseOwner();
 
-    public canEditCaseOwner(): this
-    {
-        Logger.Log("Can edit case owner");
+		return this;
+	}
 
-        this.getEditCaseOwner();
+	public cannotEditCaseOwner(): this {
+		Logger.Log("Cannot edit case owner");
+		this.getEditCaseOwner().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditCaseOwner(): this
-    {
-        Logger.Log("Cannot edit case owner");
-        this.getEditCaseOwner().should("not.exist");
+	public hasCaseOwnerReassignedBanner(): this {
+		Logger.Log("Has case reassigned banner");
 
-        return this;
-    }
+		this.getCaseOwnerReassignedBanner().should(
+			"contain.text",
+			"Case has been reassigned"
+		);
 
-    public hasCaseOwnerReassignedBanner(): this
-    {
-        Logger.Log("Has case reassigned banner");
+		return this;
+	}
 
-        this.getCaseOwnerReassignedBanner().should("contain.text", "Case has been reassigned");
+	public hasNoCaseOwnerReassignedBanner(): this {
+		Logger.Log("Has no case reassigned banner");
 
-        return this;
-    }
+		this.getCaseOwnerReassignedBanner().should("not.exist");
 
-    public hasNoCaseOwnerReassignedBanner(): this
-    {
-        Logger.Log("Has no case reassigned banner");
+		return this;
+	}
 
-        this.getCaseOwnerReassignedBanner().should("not.exist");
+	public editIssue(): this {
+		Logger.Log("Editing the issue");
+		this.getEditIssue().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editIssue(): this
-    {
-        Logger.Log("Editing the issue");
-        this.getEditIssue().click();
+	public canEditIssue() {
+		Logger.Log("Can edit the issue");
+		this.getEditIssue();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditIssue() {
-        Logger.Log("Can edit the issue");
-        this.getEditIssue();
+	public cannotEditIssue() {
+		Logger.Log("Cannot edit the issue");
+		this.getEditIssue().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditIssue() {
-        Logger.Log("Cannot edit the issue");
-        this.getEditIssue().should("not.exist");
+	public editCurrentStatus(): this {
+		Logger.Log("Editing the current status");
+		this.getEditCurrentStatus().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editCurrentStatus(): this
-    {
-        Logger.Log("Editing the current status");
-        this.getEditCurrentStatus().click();
+	public canEditCurrentStatus() {
+		Logger.Log("Can edit the current status");
+		this.getEditCurrentStatus();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditCurrentStatus() {
-        Logger.Log("Can edit the current status");
-        this.getEditCurrentStatus();
+	public cannotEditCurrentStatus() {
+		Logger.Log("Cannot edit the current status");
+		this.getEditCurrentStatus().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditCurrentStatus() {
-        Logger.Log("Cannot edit the current status");
-        this.getEditCurrentStatus().should("not.exist");
+	public editCaseAim(): this {
+		Logger.Log("Editing the case aim");
+		this.getEditCaseAim().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editCaseAim(): this
-    {
-        Logger.Log("Editing the case aim");
-        this.getEditCaseAim().click();
+	public canEditCaseAim() {
+		Logger.Log("Can edit the case aim");
+		this.getEditCaseAim();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditCaseAim() {
-        Logger.Log("Can edit the case aim");
-        this.getEditCaseAim();
+	public cannotEditCaseAim() {
+		Logger.Log("Cannot edit the case aim");
+		this.getEditCaseAim().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditCaseAim() {
-        Logger.Log("Cannot edit the case aim");
-        this.getEditCaseAim().should("not.exist");
+	public editDeEscalationPoint(): this {
+		Logger.Log("Editing the de-escalation point");
+		this.getEditDeEscalationPoint().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editDeEscalationPoint(): this
-    {
-        Logger.Log("Editing the de-escalation point");
-        this.getEditDeEscalationPoint().click();
+	public canEditDeEscalationPoint() {
+		Logger.Log("Can edit the de-escalation point");
+		this.getEditDeEscalationPoint();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditDeEscalationPoint() {
-        Logger.Log("Can edit the de-escalation point");
-        this.getEditDeEscalationPoint();
+	public cannotEditDeEscalactionPoint() {
+		Logger.Log("Cannot edit the de-escalation point");
+		this.getEditDeEscalationPoint().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditDeEscalactionPoint() {
-        Logger.Log("Cannot edit the de-escalation point");
-        this.getEditDeEscalationPoint().should("not.exist");
+	public editNextSteps(): this {
+		Logger.Log("Editing the next steps");
+		this.getEditNextSteps().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editNextSteps(): this
-    {
-        Logger.Log("Editing the next steps");
-        this.getEditNextSteps().click();
+	public canEditNextSteps() {
+		Logger.Log("Can edit the next steps");
+		this.getEditNextSteps();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditNextSteps() {
-        Logger.Log("Can edit the next steps");
-        this.getEditNextSteps();
+	public cannotEditNextSteps() {
+		Logger.Log("Cannot edit the next steps");
+		this.getEditNextSteps().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditNextSteps() {
-        Logger.Log("Cannot edit the next steps");
-        this.getEditNextSteps().should("not.exist");
+	public editCaseHistory(): this {
+		Logger.Log("Editing the case history");
+		this.getEditCaseHistory().click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public editCaseHistory(): this
-    {
-        Logger.Log("Editing the case history");
-        this.getEditCaseHistory().click();
+	public canEditCaseHistory() {
+		Logger.Log("Can edit the case history");
+		this.getEditCaseHistory();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canEditCaseHistory() {
-        Logger.Log("Can edit the case history");
-        this.getEditCaseHistory();
+	public cannotEditCaseHistory() {
+		Logger.Log("Cannot edit the case history");
+		this.getEditCaseHistory().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotEditCaseHistory() {
-        Logger.Log("Cannot edit the case history");
-        this.getEditCaseHistory().should("not.exist");
+	public withRationaleForClosure(reason: string): this {
+		Logger.Log(`With rationale for closure ${reason}`);
+		cy.getById("case-outcomes").clear().type(reason);
 
-        return this;
-    }
+		return this;
+	}
 
-    public withRationaleForClosure(reason: string): this {
-        Logger.Log(`With rationale for closure ${reason}`)
-        cy.getById("case-outcomes").clear().type(reason);
+	public withRationaleForClosureExceedingLimit(): this {
+		Logger.Log(`With rationale for closure that exceeds the limit`);
+		cy.getById("case-outcomes").clear().invoke("val", "x1".repeat(200));
 
-        return this;
-    }
+		return this;
+	}
 
-    public withRationaleForClosureExceedingLimit(): this {
-        Logger.Log(`With rationale for closure that exceeds the limit`)
-        cy.getById("case-outcomes").clear().invoke("val", "x1".repeat(200));
+	public hasValidationError(value: string): this {
+		Logger.Log(`Has validation error ${value}`);
+		cy.getById("errorSummary").should("contain.text", value);
 
-        return this;
-    }
+		return this;
+	}
 
-    public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
-        cy.getById("errorSummary").should("contain.text", value);
+	public addCaseAction(action: string): this {
+		Logger.Log(`Adding case action ${action}`);
+		this.getAddCaseAction().click();
+		cy.getByTestId(action).check();
+		cy.getByTestId("add-action-to-case").click();
 
-        return this;
-    }
+		return this;
+	}
 
-    public addCaseAction(action: string): this
-    {
-        Logger.Log(`Adding case action ${action}`);
-        this.getAddCaseAction().click();
-        cy.getByTestId(action).check();
-        cy.getByTestId("add-action-to-case").click();
+	public canAddCaseAction() {
+		Logger.Log("Can add case action");
+		this.getAddCaseAction();
 
-        return this;
-    }
+		return this;
+	}
 
-    public canAddCaseAction()
-    {
-        Logger.Log("Can add case action")
-        this.getAddCaseAction();
+	public cannotAddCaseAction() {
+		Logger.Log("Cannot add case action");
+		this.getAddCaseAction().should("not.exist");
 
-        return this;
-    }
+		return this;
+	}
 
-    public cannotAddCaseAction()
-    {
-        Logger.Log("Cannot add case action")
-        this.getAddCaseAction().should("not.exist");
+	private getEditConcern() {
+		return cy.getByTestId("edit-concern");
+	}
 
-        return this;
-    }
+	private getEditRiskToTrust() {
+		return cy.getByTestId("edit-risk-to-trust");
+	}
 
-    private getEditConcern()
-    {
-        return cy.getByTestId("edit-concern");
-    }
+	private getEditDirectionOfTravel() {
+		return cy.getByTestId("edit-direction-of-travel");
+	}
 
-    private getEditRiskToTrust()
-    {
-        return cy.getByTestId("edit-risk-to-trust");
-    }
+	private getEditTerritory() {
+		return cy.getByTestId("edit_Button_SFSO");
+	}
 
-    private getEditDirectionOfTravel()
-    {
-        return cy.getByTestId("edit-direction-of-travel")
-    }
+	private getEditCaseOwner() {
+		return cy.getByTestId("edit-case-owner");
+	}
 
-    private getEditTerritory()
-    {
-        return cy.getByTestId("edit_Button_SFSO");
-    }
+	private getCaseOwnerReassignedBanner() {
+		return cy.getByTestId("case-reassigned-success");
+	}
 
-    private getEditCaseOwner()
-    {
-        return cy.getByTestId("edit-case-owner");
-    }
+	private getEditIssue() {
+		return cy.getByTestId("edit-issue");
+	}
 
-    private getCaseOwnerReassignedBanner()
-    {
-        return cy.getByTestId("case-reassigned-success");
-    }
+	private getEditCurrentStatus() {
+		return cy.getByTestId("edit-current-status");
+	}
 
-    private getEditIssue()
-    {
-        return cy.getByTestId("edit-issue");
-    }
+	private getEditCaseAim() {
+		return cy.getByTestId("edit-case-aim");
+	}
 
-    private getEditCurrentStatus()
-    {
-        return cy.getByTestId("edit-current-status");
-    }
+	private getEditDeEscalationPoint() {
+		return cy.getByTestId("edit-de-escalation-point");
+	}
 
-    private getEditCaseAim()
-    {
-        return cy.getByTestId("edit-case-aim");
-    }
+	private getEditNextSteps() {
+		return cy.getByTestId("edit-next-steps");
+	}
 
-    private getEditDeEscalationPoint()
-    {
-        return cy.getByTestId("edit-de-escalation-point");
-    }
+	private getEditCaseHistory() {
+		return cy.getByTestId("edit-case-history");
+	}
 
-    private getEditNextSteps()
-    {
-        return cy.getByTestId("edit-next-steps");
-    }
+	private getAddCaseAction() {
+		return cy.getByTestId("add-case-action");
+	}
 
-    private getEditCaseHistory()
-    {
-        return cy.getByTestId("edit-case-history");
-    }
+	public getTrust(): Cypress.Chainable<string> {
+		return cy.getByTestId(`trust_Field`).invoke("text");
+	}
 
-    private getAddCaseAction()
-    {
-        return cy.getByTestId("add-case-action");
-    }
+	public viewTrustOverview(): this {
+		Logger.Log("Viewing trust overview");
 
-    public getTrust(): Cypress.Chainable<string> {
-        return cy.getByTestId(`trust_Field`).invoke('text');
-    }
+		this.getTrustOverviewTab().click();
 
-    public viewTrustOverview(): this {
-        Logger.Log("Viewing trust overview");
+		return this;
+	}
 
-        this.getTrustOverviewTab().click();
+	// has methods
+	public hasTrust(value: string): this {
+		Logger.Log(`Has trust ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`trust_Field`).should("contain.text", value);
 
-    // has methods
-    public hasTrust(value: string): this
-    {
-        Logger.Log(`Has trust ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`trust_Field`).should("contain.text", value);
+	// has methods
+	public hasTrustContain(value: string): this {
+		Logger.Log(`Has trust ${value}`);
 
-        return this;
-    }
+		cy.getByTestId("trust_Field").contains(value, { matchCase: false });
 
-        // has methods
-    public hasTrustContain(value: string): this
-    {
-        Logger.Log(`Has trust ${value}`);
+		return this;
+	}
 
-        cy.getByTestId("trust_Field").contains(value, { matchCase: false });
+	public hasRiskToTrust(value: string): this {
+		Logger.Log(`Has risk to trust ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`risk_to_trust_Field`).should("contain.text", value);
 
-    public hasRiskToTrust(value: string): this
-    {
-        Logger.Log(`Has risk to trust ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`risk_to_trust_Field`).should("contain.text", value);
+	public hasDirectionOfTravel(value: string): this {
+		Logger.Log(`Has direction of travel ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`direction-of-travel`).should("contain.text", value);
 
-    public hasDirectionOfTravel(value: string): this
-    {
-        Logger.Log(`Has direction of travel ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`direction-of-travel`).should("contain.text", value);
+	public hasConcerns(concern: string, ratingTags: Array<string>): this {
+		Logger.Log(`Has concerns ${concern}`);
 
-        return this;
-    }
+		cy.getByTestId(`concerns_Field`).should("contain.text", concern);
 
-    public hasConcerns(concern: string, ratingTags: Array<string>): this
-    {
-        Logger.Log(`Has concerns ${concern}`);
+		let concernsRow = cy.getByTestId("concerns_Field").contains(concern);
 
-        cy.getByTestId(`concerns_Field`).should("contain.text", concern);
+		let parentRow = concernsRow.parent();
 
-        let concernsRow = cy.getByTestId("concerns_Field").contains(concern);
+		parentRow
+			.find("td")
+			.eq(1)
+			.then((element) => {
+				ratingTags.forEach((rating) => {
+					expect(element.text()).to.contain(rating);
+				});
+			});
 
-        let parentRow = concernsRow.parent();
+		return this;
+	}
 
-        parentRow.find("td").eq(1).then((element) =>
-        {
-            ratingTags.forEach(rating =>
-            {
-                expect(element.text()).to.contain(rating);
-            });
-        });
+	public hasTerritory(value: string): this {
+		Logger.Log(`Has territory ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`territory_Field`).should("contain.text", value);
 
-    public hasTerritory(value: string): this
-    {
-        Logger.Log(`Has territory ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`territory_Field`).should("contain.text", value);
+	public hasIssue(value: string): this {
+		Logger.Log(`Has issue ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`issue`).should("contain.text", value);
 
-    public hasIssue(value: string): this
-    {
-        Logger.Log(`Has issue ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`issue`).should("contain.text", value);
+	public hasCurrentStatus(value: string): this {
+		Logger.Log(`Has status ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`status`).should("contain.text", value);
 
-    public hasCurrentStatus(value: string): this
-    {
-        Logger.Log(`Has status ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`status`).should("contain.text", value);
+	public hasCaseAim(value: string): this {
+		Logger.Log(`Has caseAim ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`case-aim`).should("contain.text", value);
 
-    public hasCaseAim(value: string): this
-    {
-        Logger.Log(`Has caseAim ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`case-aim`).should("contain.text", value);
+	public hasDeEscalationPoint(value: string): this {
+		Logger.Log(`Has deEscalationPoint ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`de-escalation-point`).should("contain.text", value);
 
-    public hasDeEscalationPoint(value: string): this
-    {
-        Logger.Log(`Has deEscalationPoint ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`de-escalation-point`).should("contain.text", value);
+	public hasNextSteps(value: string): this {
+		Logger.Log(`Has nextSteps ${value}`);
 
-        return this;
-    }
+		cy.getByTestId(`next-steps`).should("contain.text", value);
 
-    public hasNextSteps(value: string): this
-    {
-        Logger.Log(`Has nextSteps ${value}`);
+		return this;
+	}
 
-        cy.getByTestId(`next-steps`).should("contain.text", value);
+	public hasEmptyCurrentStatus(): this {
+		this.hasCurrentStatus("");
 
-        return this;
-    }
+		return this;
+	}
 
-    public hasEmptyCurrentStatus(): this
-    {
-        this.hasCurrentStatus("");
+	public hasEmptyCaseAim(): this {
+		this.hasCaseAim("");
 
-        return this;
-    }
+		return this;
+	}
 
-    public hasEmptyCaseAim(): this
-    {
+	public hasEmptyDeEscalationPoint(): this {
+		this.hasDeEscalationPoint("");
 
-        this.hasCaseAim("");
+		return this;
+	}
 
-        return this;
-    }
+	public hasEmptyNextSteps(): this {
+		this.hasNextSteps("");
 
-    public hasEmptyDeEscalationPoint(): this
-    {
-        this.hasDeEscalationPoint("");
+		return this;
+	}
 
-        return this;
-    }
+	public hasEmptyCaseHistory(): this {
+		this.hasCaseHistory("");
 
-    public hasEmptyNextSteps(): this
-    {
+		return this;
+	}
 
-        this.hasNextSteps("");
+	public hasNoCaseNarritiveFields(): this {
+		Logger.Log("Has no case narritive fields");
+		cy.getByTestId("case-narritive-fields-container").should("not.exist");
 
-        return this;
-    }
-
-    public hasEmptyCaseHistory(): this
-    {
-        this.hasCaseHistory("");
-
-        return this;
-    }
-    
-    public hasNoCaseNarritiveFields(): this
-    {
-        Logger.Log("Has no case narritive fields");
-        cy.getByTestId("case-narritive-fields-container").should("not.exist");
-
-        return this;
-    }
+		return this;
+	}
 }
 
 export default new CaseManagementPage();

@@ -16,35 +16,35 @@ import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
+import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
-describe("Editing a case", () =>
-{
+describe("Editing a case", () => {
 	const createCasePage = new CreateCasePage();
-    const createConcernPage = new CreateConcernPage();
-    const addDetailsPage = new AddDetailsPage();
-    const addTerritoryPage = new AddTerritoryPage();
-    const addConcernDetailsPage = new AddConcernDetailsPage();
-    const editRiskToTrust = new EditRiskToTrustPage();
-    const editDirectionOfTravel = new EditDirectionOfTravelPage();
-    const editIssuePage = new EditIssuePage();
-    const editCurrentStatusPage = new EditCurrentStatusPage();
-    const editCaseAimPage = new EditCaseAimPage();
-    const editDeEscalationPage = new EditDeEscalationPointPage();
-    const editNextStepsPage = new EditNextStepsPage();
-    const editCaseHistoryPage = new EditCaseHistoryPage();
-    
+	const createConcernPage = new CreateConcernPage();
+	const addDetailsPage = new AddDetailsPage();
+	const addTerritoryPage = new AddTerritoryPage();
+	const addConcernDetailsPage = new AddConcernDetailsPage();
+	const editRiskToTrust = new EditRiskToTrustPage();
+	const editDirectionOfTravel = new EditDirectionOfTravelPage();
+	const editIssuePage = new EditIssuePage();
+	const editCurrentStatusPage = new EditCurrentStatusPage();
+	const editCaseAimPage = new EditCaseAimPage();
+	const editDeEscalationPage = new EditDeEscalationPointPage();
+	const editNextStepsPage = new EditNextStepsPage();
+	const editCaseHistoryPage = new EditCaseHistoryPage();
+
 	beforeEach(() => {
 		cy.login();
 	});
 
-    it("Should be able to edit a case", () => {
-        Logger.Log("Create a case");
-        createCasePage
-            .createCase()
-            .withTrustName("Ashton West End Primary Academy")
-            .selectOption()
-            .confirmOption();
+	it("Should be able to edit a case", () => {
+		Logger.Log("Create a case");
+		createCasePage
+			.createCase()
+			.withTrustName("Ashton West End Primary Academy")
+			.selectOption()
+			.confirmOption();
 
         Logger.Log("Create a valid case division");
         selectCaseDivisionPage
@@ -56,240 +56,198 @@ describe("Editing a case", () =>
             .withCaseType("Concerns")
             .continue();
 
-        Logger.Log("Create a valid concern");
-        createConcernPage
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withConcernRating("Red")
-            .withMeansOfReferral("External")
-            .addConcern();
+		Logger.Log("Create a valid concern");
+		createConcernPage
+			.withConcernType("Deficit")
+			.withConcernRating("Red")
+			.withMeansOfReferral(SourceOfConcernExternal)
+			.addConcern();
 
-        Logger.Log("Check Concern details are correctly populated");
-        createConcernPage
-            .nextStep();
+		Logger.Log("Check Concern details are correctly populated");
+		createConcernPage.nextStep();
 
-        Logger.Log("Populate risk to trust");
-        addDetailsPage
-            .withRiskToTrust("Red-Plus")
-            .nextStep();
+		Logger.Log("Populate risk to trust");
+		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
-        Logger.Log("Populate territory");
-        addTerritoryPage
-            .withTerritory("North and UTC - North East")
-            .nextStep();
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-        Logger.Log("Add concern details with valid text limit");
-        addConcernDetailsPage
-            .withIssue("This is an issue")
-            .withCurrentStatus("This is the current status")
-            .withCaseAim("This is the case aim")
-            .withDeEscalationPoint("This is the de-escalation point")
-            .withNextSteps("This is the next steps")
-            .withCaseHistory("This is the case history")
-            .createCase();
+		Logger.Log("Add concern details with valid text limit");
+		addConcernDetailsPage
+			.withIssue("This is an issue")
+			.withCurrentStatus("This is the current status")
+			.withCaseAim("This is the case aim")
+			.withDeEscalationPoint("This is the de-escalation point")
+			.withNextSteps("This is the next steps")
+			.withCaseHistory("This is the case history")
+			.createCase();
 
-        Logger.Log("Verify case details");
-        caseManagementPage
-            .hasRiskToTrust("Red Plus")
-            .hasDirectionOfTravel("Deteriorating")
-            .hasConcerns("Financial: Deficit", ["Red"])
-            .hasTerritory("North and UTC - North East")
-            .hasIssue("This is an issue");
+		Logger.Log("Verify case details");
+		caseManagementPage
+			.hasRiskToTrust("Red Plus")
+			.hasDirectionOfTravel("Deteriorating")
+			.hasConcerns("Deficit", ["Red"])
+			.hasTerritory("North and UTC - North East")
+			.hasIssue("This is an issue");
 
-        Logger.Log("Edit risk to trust");
-        caseManagementPage
-             .editRiskToTrust();
+		Logger.Log("Edit risk to trust");
+		caseManagementPage.editRiskToTrust();
 
-        editRiskToTrust
-            .hasRiskToTrust("Red-Plus");
+		editRiskToTrust.hasRiskToTrust("Red-Plus");
 
-        Logger.Log("Checking accessibility on edit risk to trust");
-        cy.excuteAccessibilityTests();
-        
-        editRiskToTrust
-            .withRiskToTrust("Red")
-            .apply();
+		Logger.Log("Checking accessibility on edit risk to trust");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit direction of travel");
-        caseManagementPage
-            .editDirectionOfTravel();
+		editRiskToTrust.withRiskToTrust("Red").apply();
 
-        editDirectionOfTravel
-            .hasDirectionOfTravel("Deteriorating");
+		Logger.Log("Edit direction of travel");
+		caseManagementPage.editDirectionOfTravel();
 
-        Logger.Log("Checking accessibility on direction of travel");
-        cy.excuteAccessibilityTests();
+		editDirectionOfTravel.hasDirectionOfTravel("Deteriorating");
 
-        editDirectionOfTravel
-            .withDirectionOfTravel("Improving")
-            .apply();
+		Logger.Log("Checking accessibility on direction of travel");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit a concern");
-        caseManagementPage
-            .editConcern();
+		editDirectionOfTravel.withDirectionOfTravel("Improving").apply();
 
-        addDetailsPage
-            .hasRating("Red");
+		Logger.Log("Edit a concern");
+		caseManagementPage.editConcern();
 
-        Logger.Log("Checking accessibility on edit concern");
-        cy.excuteAccessibilityTests();
+		addDetailsPage.hasRating("Red");
 
-        addDetailsPage
-            .withRiskToTrust("Amber-Green")
-            .apply();
+		Logger.Log("Checking accessibility on edit concern");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit a territory")
-        caseManagementPage
-            .editTerritory();
+		addDetailsPage.withRiskToTrust("Amber-Green").apply();
 
-        addTerritoryPage
-            .hasTerritory("North and UTC - North East");
+		Logger.Log("Edit a territory");
+		caseManagementPage.editTerritory();
 
-        Logger.Log("Checking accessibility on edit territory");
-        cy.excuteAccessibilityTests();
+		addTerritoryPage.hasTerritory("North and UTC - North East");
 
-        addTerritoryPage
-            .withTerritory("North and UTC - North West")
-            .apply();
+		Logger.Log("Checking accessibility on edit territory");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit Issue")
-        caseManagementPage
-            .showAllConcernDetails()
-            .editIssue();
+		addTerritoryPage.withTerritory("North and UTC - North West").apply();
 
-        editIssuePage
-            .hasIssue("This is an issue");
+		Logger.Log("Edit Issue");
+		caseManagementPage.showAllConcernDetails().editIssue();
 
-        editIssuePage
-            .clearIssue()
-            .apply()
-            .hasValidationError("Issue is required");
+		editIssuePage.hasIssue("This is an issue");
 
-        editIssuePage
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("Issue must be 2000 characters or less");
+		editIssuePage.clearIssue().apply().hasValidationError("Issue is required");
 
-        // Ensure the correct character count when new lines are used
-        editIssuePage
-            .withIssue("Testing \n the character count \n with \n\n\n new lines")
-            .hasCharacterCountMessage("You have 1,945 characters remaining");
+		editIssuePage
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError("Issue must be 2000 characters or less");
 
-        Logger.Log("Checking accessibility on edit issue");
-        cy.excuteAccessibilityTests();
+		// Ensure the correct character count when new lines are used
+		editIssuePage
+			.withIssue("Testing \n the character count \n with \n\n\n new lines")
+			.hasCharacterCountMessage("You have 1,945 characters remaining");
 
-        editIssuePage
-            .withIssue("New Issue")
-            .apply();
+		Logger.Log("Checking accessibility on edit issue");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit Current Status")
-        caseManagementPage
-            .editCurrentStatus();
+		editIssuePage.withIssue("New Issue").apply();
 
-        editCurrentStatusPage
-            .hasCurrentStatus("This is the current status")
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("Current status must be 4000 characters or less");
+		Logger.Log("Edit Current Status");
+		caseManagementPage.editCurrentStatus();
 
-        Logger.Log("Checking accessibility on edit current status");
-        cy.excuteAccessibilityTests();
+		editCurrentStatusPage
+			.hasCurrentStatus("This is the current status")
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError("Current status must be 4000 characters or less");
 
-        editCurrentStatusPage
-            .withCurrentStatus("New Status")
-            .apply();
+		Logger.Log("Checking accessibility on edit current status");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit Case Aim")
-        caseManagementPage
-            .editCaseAim();
+		editCurrentStatusPage.withCurrentStatus("New Status").apply();
 
-        editCaseAimPage
-            .hasCaseAim("This is the case aim")
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("Case aim must be 1000 characters or less");
+		Logger.Log("Edit Case Aim");
+		caseManagementPage.editCaseAim();
 
-        Logger.Log("Checking accessibility on edit case aim");
-        cy.excuteAccessibilityTests();
+		editCaseAimPage
+			.hasCaseAim("This is the case aim")
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError("Case aim must be 1000 characters or less");
 
-        editCaseAimPage
-            .withCaseAim("New Case aim")
-            .apply();
+		Logger.Log("Checking accessibility on edit case aim");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit Deescalation point")
-        caseManagementPage
-            .editDeEscalationPoint();
+		editCaseAimPage.withCaseAim("New Case aim").apply();
 
-        editDeEscalationPage
-            .hasDeescalationPoint("This is the de-escalation point")
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("De-escalation point must be 1000 characters or less");
+		Logger.Log("Edit Deescalation point");
+		caseManagementPage.editDeEscalationPoint();
 
-        Logger.Log("Checking accessibility on edit de-escalation point");
-        cy.excuteAccessibilityTests();
+		editDeEscalationPage
+			.hasDeescalationPoint("This is the de-escalation point")
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError(
+				"De-escalation point must be 1000 characters or less"
+			);
 
-        editDeEscalationPage
-            .withDeescalationPoint("New de-descalation point")
-            .apply();
+		Logger.Log("Checking accessibility on edit de-escalation point");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit next steps")
-        caseManagementPage
-            .editNextSteps();
+		editDeEscalationPage
+			.withDeescalationPoint("New de-descalation point")
+			.apply();
 
-        editNextStepsPage
-            .hasNextSteps("This is the next steps")
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("Next steps must be 4000 characters or less");
+		Logger.Log("Edit next steps");
+		caseManagementPage.editNextSteps();
 
-        Logger.Log("Checking accessibility on edit next steps");
-        cy.excuteAccessibilityTests();
+		editNextStepsPage
+			.hasNextSteps("This is the next steps")
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError("Next steps must be 4000 characters or less");
 
-        editNextStepsPage
-            .withNextSteps("New next step")
-            .apply();
+		Logger.Log("Checking accessibility on edit next steps");
+		cy.excuteAccessibilityTests();
 
-        Logger.Log("Edit Case history")
-        caseManagementPage
-            .editCaseHistory();
+		editNextStepsPage.withNextSteps("New next step").apply();
 
-        editCaseHistoryPage
-            .hasCaseHistory("This is the case history")
-            .withExceedingTextLimit()
-            .apply()
-            .hasValidationError("Case history must be 4300 characters or less");
+		Logger.Log("Edit Case history");
+		caseManagementPage.editCaseHistory();
 
-        Logger.Log("Checking accessibility on edit case history");
-        cy.excuteAccessibilityTests();
+		editCaseHistoryPage
+			.hasCaseHistory("This is the case history")
+			.withExceedingTextLimit()
+			.apply()
+			.hasValidationError("Case history must be 4300 characters or less");
 
-        editCaseHistoryPage
-            .withCaseHistory("New case history")
-            .apply();
-        
-        Logger.Log("Verify detailes have been changed")
-        caseManagementPage
-            .hasRiskToTrust("Red")
-            .hasDirectionOfTravel("Improving")
-            .hasConcerns("Financial: Deficit", ["Amber", "Green"])
-            .hasTerritory("North and UTC - North West")
-            .hasIssue("New Issue")
-            .hasCurrentStatus("New Status")
-            .hasCaseAim("New Case aim")
-            .hasDeEscalationPoint("New de-descalation point")  
-            .hasNextSteps("New next step")
-            .hasCaseHistory("New case history");
-    });
+		Logger.Log("Checking accessibility on edit case history");
+		cy.excuteAccessibilityTests();
 
-    it("Should raise a validation error if do not select a case action", () => 
-    {
-        cy.basicCreateCase();
+		editCaseHistoryPage.withCaseHistory("New case history").apply();
 
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.getAddToCaseBtn().click();
-        AddToCasePage.hasValidationError("Select an action or decision");
+		Logger.Log("Verify detailes have been changed");
+		caseManagementPage
+			.hasRiskToTrust("Red")
+			.hasDirectionOfTravel("Improving")
+			.hasConcerns("Deficit", ["Amber", "Green"])
+			.hasTerritory("North and UTC - North West")
+			.hasIssue("New Issue")
+			.hasCurrentStatus("New Status")
+			.hasCaseAim("New Case aim")
+			.hasDeEscalationPoint("New de-descalation point")
+			.hasNextSteps("New next step")
+			.hasCaseHistory("New case history");
+	});
 
-        Logger.Log("Checking accessibility on when a not selecting a case action");
-        cy.excuteAccessibilityTests();
-    });
+	it("Should raise a validation error if do not select a case action", () => {
+		cy.basicCreateCase();
+
+		CaseManagementPage.getAddToCaseBtn().click();
+		AddToCasePage.getAddToCaseBtn().click();
+		AddToCasePage.hasValidationError("Select an action or decision");
+
+		Logger.Log("Checking accessibility on when a not selecting a case action");
+		cy.excuteAccessibilityTests();
+	});
 });
