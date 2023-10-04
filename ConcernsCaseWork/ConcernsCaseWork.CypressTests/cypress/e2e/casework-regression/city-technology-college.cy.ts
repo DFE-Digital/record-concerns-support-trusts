@@ -53,8 +53,6 @@ describe("Creating a case for a city technology college", () =>
         ctcApi.get(ctcRequest.ukprn)
             .then(response => {
 
-                console.log(response);
-
                 if(response.ukprn == null)
                 {
                     ctcApi.post(ctcRequest);
