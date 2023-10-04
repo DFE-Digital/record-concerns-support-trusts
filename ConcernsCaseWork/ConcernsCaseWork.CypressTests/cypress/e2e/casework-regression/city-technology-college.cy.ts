@@ -10,12 +10,11 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import ctcApi from "../../api/cityTechnologyCollegeApi";
 import { CreateCityTechnologyCollegeRequest } from "cypress/api/apiDomain";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("Creating a case for a city technology college", () =>
 {
 	const createCasePage = new CreateCasePage();
-    const createConcernPage = new CreateConcernPage();
-    const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
 
@@ -54,6 +53,8 @@ describe("Creating a case for a city technology college", () =>
         ctcApi.get(ctcRequest.ukprn)
             .then(response => {
 
+                console.log(response);
+
                 if(response.ukprn == null)
                 {
                     ctcApi.post(ctcRequest);
@@ -68,6 +69,11 @@ describe("Creating a case for a city technology college", () =>
             .withTrustName(ctcRequest.name)
             .selectOption()
             .confirmOption();
+
+        Logger.Log("Create a valid case division");
+        selectCaseDivisionPage
+            .withCaseDivision("SFSO")
+            .continue();
 
         Logger.Log("Create a valid Non-concern case type");
         selectCaseTypePage
