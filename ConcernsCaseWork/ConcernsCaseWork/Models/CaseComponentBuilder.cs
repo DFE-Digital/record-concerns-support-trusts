@@ -133,7 +133,7 @@ namespace ConcernsCaseWork.Models
 		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
 		=> new("issue", name, "Issue")
 		{
-			HintText = NarritiveHintText,
+			HintFromPartialView = "_IssueHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 2000,
@@ -144,9 +144,9 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)
-		=> new("current-status", name, "Current status")
+		=> new("current-status", name, "Current status (optional)")
 		{
-			HintText = NarritiveHintText,
+			HintFromPartialView = "_CurrentStatusHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 4000,
@@ -156,9 +156,9 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCaseAim(string name, string? value = null)
-		=> new("case-aim", name, "Case aim")
+		=> new("case-aim", name, "Case aim (optional)")
 		{
-			HintText = NarritiveHintText,
+			HintFromPartialView = "_CaseAimHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 1000,
@@ -168,9 +168,9 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildDeEscalationPoint(string name, string? value = null)
-		=> new("de-escalation-point", name, "De-escalation point")
+		=> new("de-escalation-point", name, "De-escalation point (optional)")
 		{
-			HintText = NarritiveHintText,
+			HintFromPartialView = "_DeescalationPointHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 1000,
@@ -180,9 +180,9 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildNextSteps(string name, string? value = null)
-		=> new("next-steps", name, "Next steps")
+		=> new("next-steps", name, "Next steps (optional)")
 		{
-			HintText = NarritiveHintText,
+			HintFromPartialView = "_NextStepsHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 4000,
@@ -192,19 +192,15 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
-		=> new("case-history", name, "Case history")
+		=> new("case-history", name, "Case notes (optional)")
 		{
+			HintFromPartialView = "_CaseHistoryHint",
 			Text = new ValidateableString()
 			{
 				MaxLength = 4300,
 				StringContents = value,
-				DisplayName = "Case history"
+				DisplayName = "Case notes"
 			}
 		};
-
-		private static SubRadioItem BuildSubRadioItem(string label, ConcernType concernType)
-		{
-			return new SubRadioItem(label, (int)concernType) { TestId = concernType.Description() };
-		}
 	}
 }
