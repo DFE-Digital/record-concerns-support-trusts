@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ConcernsCaseWork.API.Contracts.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data;
@@ -86,7 +83,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			
 			}
 
-			private DecisionOutcome CreateDecisionOutcome(Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome? entity)
+			private DecisionOutcome CreateDecisionOutcome(Data.Models.Decisions.Outcome.DecisionOutcome? entity)
 			{
 				if (entity == null)
 				{

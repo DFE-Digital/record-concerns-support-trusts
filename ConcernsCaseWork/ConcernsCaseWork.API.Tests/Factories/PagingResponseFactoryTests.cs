@@ -1,14 +1,15 @@
-using ConcernsCaseWork.API.ResponseModels;
-using System.Collections.Generic;
+using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Features.Paging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Moq;
+using System.Collections.Generic;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class PagingResponseFactoryTests
+	public class PagingResponseFactoryTests
     {
         [Fact]
         public void CreatingPagingResponse_WithRecordCountLessThanCount_Should_ReturnPagingResponseWithNullNextPageUrl()

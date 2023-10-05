@@ -1,6 +1,5 @@
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Exceptions;
-using ConcernsCaseWork.API.ResponseModels;
-using System.IO;
 using System.Net;
 using System.Text;
 
@@ -108,8 +107,6 @@ public class ExceptionHandlerMiddleware
 		parameters.Logger.LogError(parameters.Exception.StackTrace);
 		parameters.Context.Response.ContentType = "application/json";
 		parameters.Context.Response.StatusCode = (int)parameters.StatusCode;
-
-
 
 		await parameters.Context.Response.WriteAsync(new ErrorResponse()
 		{

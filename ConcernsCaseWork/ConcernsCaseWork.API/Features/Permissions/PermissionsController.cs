@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Mvc;
