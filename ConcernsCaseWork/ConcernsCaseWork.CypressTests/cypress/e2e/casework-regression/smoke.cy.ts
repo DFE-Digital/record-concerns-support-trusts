@@ -97,6 +97,9 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		selectCaseDivisionPage
 			.withCaseDivision("SFSO")
 			.continue();
+	
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
@@ -111,6 +114,8 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
@@ -124,22 +129,22 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
-
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
-			.hasRiskToTrust("Red Plus")
-			.hasTerritory("North and UTC - North East");
+			.hasRiskToTrust("Red Plus");
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage
