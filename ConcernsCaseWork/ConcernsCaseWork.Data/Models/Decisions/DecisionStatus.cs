@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
+﻿namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionStatus
 	{
@@ -12,10 +12,8 @@
 		public DecisionStatus(Enums.Concerns.DecisionStatus status) : this()
 		{
 			if (!Enum.IsDefined(typeof(Enums.Concerns.DecisionStatus), status))
-			{
 				throw new ArgumentOutOfRangeException(nameof(status),
 					"The given value is not one a supported decision status");
-			}
 			Id = status;
 		}
 	}

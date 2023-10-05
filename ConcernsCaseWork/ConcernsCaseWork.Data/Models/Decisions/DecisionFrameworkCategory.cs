@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
+﻿namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionFrameworkCategory
 	{
@@ -12,10 +12,8 @@
 		public DecisionFrameworkCategory(API.Contracts.Decisions.FrameworkCategory frameworkCategory) : this()
 		{
 			if (!Enum.IsDefined(typeof(API.Contracts.Decisions.FrameworkCategory), frameworkCategory))
-			{
 				throw new ArgumentOutOfRangeException(nameof(frameworkCategory),
 					"The given value is not a supported decision framework category");
-			}
 			Id = frameworkCategory;
 		}
 	}

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome
+namespace ConcernsCaseWork.Data.Models.Decisions.Outcome
 {
-	public record DecisionOutcome: IAuditable
+	public record DecisionOutcome : IAuditable
 	{
 		public DecisionOutcome()
 		{

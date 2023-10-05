@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
+﻿namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionDrawdownFacilityAgreed
 	{
@@ -12,10 +12,8 @@
 		public DecisionDrawdownFacilityAgreed(API.Contracts.Decisions.DrawdownFacilityAgreed facilityAgreed) : this()
 		{
 			if (!Enum.IsDefined(typeof(API.Contracts.Decisions.DrawdownFacilityAgreed), facilityAgreed))
-			{
 				throw new ArgumentOutOfRangeException(nameof(facilityAgreed),
 					"The given value is not one a supported decision drawdown facility");
-			}
 			Id = facilityAgreed;
 		}
 	}
