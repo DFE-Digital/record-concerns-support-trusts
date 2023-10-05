@@ -1,11 +1,10 @@
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
-using ConcernsCaseWork.Data.Models;
 
-namespace ConcernsCaseWork.API.Factories.CaseActionFactories;
+namespace ConcernsCaseWork.API.Features.TrustFinancialForecast;
 
 public static class TrustFinancialForecastFactory
 {
-	public static TrustFinancialForecastResponse ToResponseModel(this TrustFinancialForecast trustFinancialForecast)
+	public static TrustFinancialForecastResponse ToResponseModel(this Data.Models.TrustFinancialForecast trustFinancialForecast)
 	{
 		return new TrustFinancialForecastResponse
 		{

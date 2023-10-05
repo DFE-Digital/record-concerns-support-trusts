@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.Factories;
+using ConcernsCaseWork.API.Features.MeansOfReferral;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System;

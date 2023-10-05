@@ -1,7 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace ConcernsCaseWork.API.Factories
+namespace ConcernsCaseWork.API.Features.Paging
 {
 	public static class PagingResponseFactory
 	{

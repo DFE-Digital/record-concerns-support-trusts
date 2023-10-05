@@ -1,6 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Factories;
+using ConcernsCaseWork.API.Features.Case;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System;
