@@ -1,6 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.Factories;
+using ConcernsCaseWork.API.Features.Paging;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.ConcernsType

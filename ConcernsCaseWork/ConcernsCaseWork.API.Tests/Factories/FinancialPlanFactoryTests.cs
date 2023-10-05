@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
+using ConcernsCaseWork.API.Features.FinancialPlan;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;

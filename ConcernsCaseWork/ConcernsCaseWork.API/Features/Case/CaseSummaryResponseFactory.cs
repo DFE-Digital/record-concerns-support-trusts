@@ -1,8 +1,8 @@
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
-namespace ConcernsCaseWork.API.Factories;
+namespace ConcernsCaseWork.API.Features.Case;
 
 public static class CaseSummaryResponseFactory
 {
@@ -28,7 +28,7 @@ public static class CaseSummaryResponseFactory
 			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt
 		};
 	}
-	
+
 	public static ClosedCaseSummaryResponse Create(ClosedCaseSummaryVm caseSummary)
 	{
 		return new ClosedCaseSummaryResponse
@@ -50,22 +50,22 @@ public static class CaseSummaryResponseFactory
 			UpdatedAt = caseSummary.UpdatedAt
 		};
 	}
-	
+
 	private static CaseSummaryResponse.Concern Create(CaseSummaryVm.Concern concern)
-		=> new (concern.Name, ConcernsRatingResponseFactory.Create(concern.Rating), concern.CreatedAt);
-	
+		=> new(concern.Name, ConcernsRatingResponseFactory.Create(concern.Rating), concern.CreatedAt);
+
 	private static IEnumerable<CaseSummaryResponse.Concern> Create(IEnumerable<CaseSummaryVm.Concern> concerns)
 		=> concerns == null ? Array.Empty<CaseSummaryResponse.Concern>() : concerns.Select(Create);
 
 	private static CaseSummaryResponse.ActionOrDecision Create(CaseSummaryVm.Action action)
-		=> new (action.CreatedAt, action.ClosedAt, action.Name);
-	
+		=> new(action.CreatedAt, action.ClosedAt, action.Name);
+
 	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<CaseSummaryVm.Action> actions)
 		=> actions == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : actions.Select(Create);
-	
-	private static CaseSummaryResponse.ActionOrDecision Create(Decision decision)
-		=> new (decision.CreatedAt.DateTime, decision.ClosedAt?.DateTime, "Decision: " + decision.GetTitle());
-	
-	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Decision> decisions)
+
+	private static CaseSummaryResponse.ActionOrDecision Create(Data.Models.Concerns.Case.Management.Actions.Decisions.Decision decision)
+		=> new(decision.CreatedAt.DateTime, decision.ClosedAt?.DateTime, "Decision: " + decision.GetTitle());
+
+	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Data.Models.Concerns.Case.Management.Actions.Decisions.Decision> decisions)
 		=> decisions == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : decisions.Select(Create);
 }

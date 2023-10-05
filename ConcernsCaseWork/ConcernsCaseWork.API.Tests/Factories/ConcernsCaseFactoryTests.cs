@@ -1,12 +1,12 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
 using Xunit;
+using ConcernsCaseWork.API.Features.Case;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {

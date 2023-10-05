@@ -1,5 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Validators;
+using ConcernsCaseWork.API.Features.Case;
 using FizzWare.NBuilder;
 using FluentValidation.TestHelper;
 using Xunit;

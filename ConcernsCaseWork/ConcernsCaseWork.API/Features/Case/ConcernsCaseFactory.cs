@@ -1,7 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Models;
 
-namespace ConcernsCaseWork.API.Factories
+namespace ConcernsCaseWork.API.Features.Case
 {
 	public class ConcernsCaseFactory
 	{
@@ -40,9 +40,7 @@ namespace ConcernsCaseWork.API.Factories
 		public static ConcernsCase Update(ConcernsCase original, ConcernCaseRequest updateRequest)
 		{
 			if (updateRequest == null)
-			{
 				return original;
-			}
 
 			var toMerge = Create(updateRequest);
 
