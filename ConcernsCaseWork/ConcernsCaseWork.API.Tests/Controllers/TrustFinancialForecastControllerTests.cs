@@ -1,10 +1,10 @@
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Features.TrustFinancialForecast;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

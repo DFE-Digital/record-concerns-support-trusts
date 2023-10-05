@@ -1,5 +1,6 @@
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Features.Paging;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.ConcernsRating

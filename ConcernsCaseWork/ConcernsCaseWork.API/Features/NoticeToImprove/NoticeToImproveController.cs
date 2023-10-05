@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
+﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;

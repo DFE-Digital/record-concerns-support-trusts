@@ -1,16 +1,13 @@
-﻿using MediatR;
-using ConcernsCaseWork.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using ConcernsCaseWork.Data;
+using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision.Outcome
 {
-	using ConcernsCaseWork.API.Contracts.Decisions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-	using ConcernsCaseWork.Data.Models;
-	using Microsoft.EntityFrameworkCore;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
-	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+	using ConcernsCaseWork.API.Exceptions;
+	using ConcernsCaseWork.Data.Models;
+	using ConcernsCaseWork.Data.Models.Decisions.Outcome;
+	using Microsoft.EntityFrameworkCore;
 
 	public class Update
 	{

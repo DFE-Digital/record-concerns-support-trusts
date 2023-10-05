@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.TeamCasework;
-using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 

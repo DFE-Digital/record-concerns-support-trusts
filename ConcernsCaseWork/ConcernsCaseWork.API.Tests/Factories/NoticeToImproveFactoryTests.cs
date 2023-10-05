@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.API.Features.NoticeToImprove;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
