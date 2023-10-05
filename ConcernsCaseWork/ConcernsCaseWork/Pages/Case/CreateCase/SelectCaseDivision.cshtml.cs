@@ -87,8 +87,6 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 
 			await _cachedUserService.StoreData(userName, userState);
 
-			//return RedirectToPage("SelectCaseType");
-			
 			switch (selectedCaseDivision)
 			{
 				case Division.SFSO:
