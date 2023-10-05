@@ -1,5 +1,5 @@
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 
 namespace ConcernsCaseWork.Data.Gateways;
 

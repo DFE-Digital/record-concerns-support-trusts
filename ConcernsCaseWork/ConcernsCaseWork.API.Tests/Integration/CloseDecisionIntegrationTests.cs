@@ -6,7 +6,7 @@ using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -218,7 +218,7 @@ public class CloseDecisionIntegrationTests
 	{
 		var decision = BuildDecision();
 		decision.ConcernsCaseId = cCaseId;
-		decision.Outcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome();
+		decision.Outcome = new Data.Models.Decisions.Outcome.DecisionOutcome();
 
 		await using (var ctxt = GetContext())
 		{

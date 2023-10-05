@@ -7,7 +7,7 @@ using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -404,7 +404,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				UpdatedAt = DateTimeOffset.Now,
 				Status = Data.Enums.Concerns.DecisionStatus.InProgress,
 				ClosedAt = null, 
-				Outcome  = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
+				Outcome  = new Data.Models.Decisions.Outcome.DecisionOutcome()
 				{
 					DecisionOutcomeId = 1,
 					DecisionId = 2,

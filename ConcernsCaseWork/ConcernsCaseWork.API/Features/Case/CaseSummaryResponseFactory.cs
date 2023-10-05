@@ -63,9 +63,9 @@ public static class CaseSummaryResponseFactory
 	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<CaseSummaryVm.Action> actions)
 		=> actions == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : actions.Select(Create);
 
-	private static CaseSummaryResponse.ActionOrDecision Create(Data.Models.Concerns.Case.Management.Actions.Decisions.Decision decision)
+	private static CaseSummaryResponse.ActionOrDecision Create(Data.Models.Decisions.Decision decision)
 		=> new(decision.CreatedAt.DateTime, decision.ClosedAt?.DateTime, "Decision: " + decision.GetTitle());
 
-	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Data.Models.Concerns.Case.Management.Actions.Decisions.Decision> decisions)
+	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Data.Models.Decisions.Decision> decisions)
 		=> decisions == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : decisions.Select(Create);
 }
