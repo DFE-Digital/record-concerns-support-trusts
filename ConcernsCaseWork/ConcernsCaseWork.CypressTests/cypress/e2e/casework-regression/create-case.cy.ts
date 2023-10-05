@@ -90,7 +90,7 @@ describe("Creating a case", () => {
 		 createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("North and UTC - North East");
 
 		Logger.Log("Attempt to create an invalid concern");
 		createConcernPage.addConcern();
