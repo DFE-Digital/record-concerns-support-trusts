@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.TeamCasework;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data.Models;

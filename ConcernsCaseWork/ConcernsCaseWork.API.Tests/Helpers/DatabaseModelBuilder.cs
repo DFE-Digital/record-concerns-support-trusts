@@ -2,7 +2,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using MoreLinq;
 using System;
 using System.Collections.Generic;

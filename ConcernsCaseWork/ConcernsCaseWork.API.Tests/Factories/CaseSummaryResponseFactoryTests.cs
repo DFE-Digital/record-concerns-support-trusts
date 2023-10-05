@@ -1,8 +1,8 @@
 using AutoFixture;
-using ConcernsCaseWork.API.Factories;
+using ConcernsCaseWork.API.Features.Case;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using System;
