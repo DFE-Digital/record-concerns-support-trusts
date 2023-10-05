@@ -54,7 +54,7 @@ export class CreateCaseSummary
 
     public hasManagedBy(value: string): this
     {
-        Logger.Log(`Has Territory ${value}`);
+        Logger.Log(`Has Managed By ${value}`);
 
         cy.getByTestId(`managed-by`).should(
 			"contain.text",
