@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditCaseHistoryPageModel
 
 @{
-    ViewData["Title"] = "Edit case history";
+    ViewData["Title"] = "Edit case notes";
     var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
@@ -25,7 +25,7 @@
                 <partial name="_ValidationErrors" />
 
                 <h1 class="govuk-heading-l">
-                    Edit case history
+                    Edit case notes
                 </h1>
 
 				<form asp-page-handler="CaseHistory" method="post" id="case-history-form" novalidate>

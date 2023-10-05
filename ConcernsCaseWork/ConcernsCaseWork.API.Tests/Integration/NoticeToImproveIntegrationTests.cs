@@ -1,8 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.NoticeToImprove;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.NoticeToImprove;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using FizzWare.NBuilder;

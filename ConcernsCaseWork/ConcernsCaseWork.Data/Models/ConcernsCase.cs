@@ -1,7 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Exceptions;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 
 namespace ConcernsCaseWork.Data.Models
 {

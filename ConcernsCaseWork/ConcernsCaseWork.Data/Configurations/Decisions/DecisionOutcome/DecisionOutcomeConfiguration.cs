@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ConcernsCaseWork.Data.Configurations.Decisions.DecisionOutcome;
 
-public class DecisionOutcomeConfiguration : IEntityTypeConfiguration<Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome>
+public class DecisionOutcomeConfiguration : IEntityTypeConfiguration<Models.Decisions.Outcome.DecisionOutcome>
 {
-	public void Configure(EntityTypeBuilder<Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome> builder)
+	public void Configure(EntityTypeBuilder<Models.Decisions.Outcome.DecisionOutcome> builder)
 	{
 		builder.ToTable("DecisionOutcome", "concerns");
 		builder.HasKey(x => x.DecisionOutcomeId);

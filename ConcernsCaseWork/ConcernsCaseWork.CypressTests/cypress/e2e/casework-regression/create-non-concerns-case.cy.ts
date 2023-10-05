@@ -216,7 +216,7 @@ describe("Creating a non concerns case", () => {
 			.hasValidationError("Next steps must be 4000 characters or less")
 			.hasValidationError("De-escalation point must be 1000 characters or less")
 			.hasValidationError("Case aim must be 1000 characters or less")
-			.hasValidationError("Case history must be 4300 characters or less");
+			.hasValidationError("Case notes must be 4300 characters or less");
 
 		Logger.Log("Checking accessibility on concerns case confirmation");
 		cy.excuteAccessibilityTests();

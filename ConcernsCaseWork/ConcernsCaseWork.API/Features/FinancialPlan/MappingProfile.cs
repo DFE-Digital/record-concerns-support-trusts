@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		public MappingProfile()
 		{
 			CreateMap<FinancialPlanCase, FinancialPlanResponse>();
-			CreateMap<FinancialPlanStatus, FinancialPlanStatus>();
+			CreateMap<FinancialPlanStatus, FinancialPlanStatusResponse>();
 		}
 	}
 }

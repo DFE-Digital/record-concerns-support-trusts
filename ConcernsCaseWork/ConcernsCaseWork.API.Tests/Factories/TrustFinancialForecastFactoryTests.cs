@@ -1,5 +1,5 @@
 using AutoFixture;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
+using ConcernsCaseWork.API.Features.TrustFinancialForecast;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using Xunit;

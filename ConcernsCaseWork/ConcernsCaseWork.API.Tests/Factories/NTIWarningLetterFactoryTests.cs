@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
+using ConcernsCaseWork.API.Features.NTIWarningLetter;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
