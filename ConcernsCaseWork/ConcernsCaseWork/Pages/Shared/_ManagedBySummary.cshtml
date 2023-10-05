@@ -6,6 +6,6 @@
 	<dd class="govuk-summary-list__value" data-testid="managed-by">
 		@Model.Division
 		<br />
-		@(Model.Division == API.Contracts.Case.Division.SFSO ? Model.Territory.Description() : "//TODO : Area")
+		@(Model.Division == API.Contracts.Case.Division.SFSO ? Model.Territory?.Description() : "//TODO : Area")
 	</dd>
 </div>

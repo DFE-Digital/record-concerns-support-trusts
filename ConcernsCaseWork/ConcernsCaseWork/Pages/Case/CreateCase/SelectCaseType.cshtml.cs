@@ -75,6 +75,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 			if (!ModelState.IsValid)
 			{
 				await SetTrustAddress();
+				await SetCreateCaseModel();
 				LoadPageComponents();
 
 				return Page();

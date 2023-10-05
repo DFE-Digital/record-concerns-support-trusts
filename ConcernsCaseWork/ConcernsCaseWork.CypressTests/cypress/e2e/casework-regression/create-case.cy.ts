@@ -58,6 +58,26 @@ describe("Creating a case", () => {
             .withCaseDivision("SFSO")
             .continue();
 
+		Logger.Log("Check division details are correctly populated");
+		createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+
+		Logger.Log("Check unpopulated territory throws validation error");
+		addTerritoryPage.nextStep().hasValidationError("Select SFSO territory");
+
+		Logger.Log("Checking accessibility on territory");
+		cy.excuteAccessibilityTests();
+
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+
+		Logger.Log("Check territory details are correctly populated");
+		createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East");
+
 		Logger.Log("You must select a case error");
 		selectCaseTypePage.continue().hasValidationError("Select case type");
 
@@ -67,7 +87,10 @@ describe("Creating a case", () => {
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
-		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
+		 createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 
 		Logger.Log("Attempt to create an invalid concern");
 		createConcernPage.addConcern();
@@ -91,6 +114,8 @@ describe("Creating a case", () => {
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
@@ -110,28 +135,22 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
-
-		Logger.Log("Check unpopulated territory throws validation error");
-		addTerritoryPage.nextStep().hasValidationError("Select SFSO territory");
-
-		Logger.Log("Checking accessibility on territory");
-		cy.excuteAccessibilityTests();
-
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
-			.hasRiskToTrust("Red Plus")
-			.hasTerritory("North and UTC - North East");
+			.hasRiskToTrust("Red Plus");
 
 		addConcernDetailsPage.createCase().hasValidationError("Issue is required");
 
@@ -212,6 +231,9 @@ describe("Creating a case", () => {
             .withCaseDivision("SFSO")
             .continue();
 
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+
         Logger.Log("Create a valid concerns case type");
         selectCaseTypePage
             .withCaseType("Concerns")
@@ -229,6 +251,8 @@ describe("Creating a case", () => {
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernRiskRating("Amber Green")
 			.hasConcernType("Force majeure");
 
@@ -242,22 +266,22 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Force majeure")
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red");
-
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Force majeure")
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red")
-			.hasTerritory("North and UTC - North East");
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();
@@ -307,6 +331,9 @@ describe("Creating a case", () => {
 			.withCaseDivision("SFSO")
 			.continue();
 
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
@@ -328,9 +355,6 @@ describe("Creating a case", () => {
 
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
-
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();
