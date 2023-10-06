@@ -52,14 +52,20 @@ export class CreateCaseSummary
         return this;
     }
 
-    public hasManagedBy(value: string): this
+    public hasManagedBy(division: string, territory: string): this
     {
-        Logger.Log(`Has Managed By ${value}`);
+        Logger.Log(`Has Managed By ${division} ${territory}`);
 
         cy.getByTestId(`managed-by`).should(
 			"contain.text",
-			value
+			division
 		);
+
+        cy.getByTestId(`managed-by`).should(
+			"contain.text",
+			territory
+		);
+
         return this;
     }
 }

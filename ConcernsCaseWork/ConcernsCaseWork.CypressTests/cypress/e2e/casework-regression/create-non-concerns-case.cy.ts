@@ -81,8 +81,7 @@ describe("Creating a non concerns case", () => {
 		Logger.Log("Verify case details");
 		caseManagementPage
 			.hasTrust(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy(territory)
+			.hasManagedBy("SFSO", territory)
 			.hasCaseOwner(name);
 
 		Logger.Log("Ensure we cannot see the narritive fields");
@@ -238,8 +237,7 @@ describe("Creating a non concerns case", () => {
 			.hasRiskToTrust("Red Plus")
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
 			.hasConcerns("Deficit", ["Red", "Amber"])
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
 			.hasCaseAim("This is the case aim")

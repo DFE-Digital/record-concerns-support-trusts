@@ -1,6 +1,6 @@
 import { EnvApi, EnvUsername } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
-import { CreateCaseRequest, CreateCaseResponse, GetClosedCasesByOwnerResponse, GetOpenCasesByOwnerResponse,GetOpenCasesForTeamByOwnerResponse, GetOpenCasesByTrustResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper, PutTeamRequest, PutTeamResponse,GetTeamByOwnerResponse } from "./apiDomain";
+import { CreateCaseRequest, CreateCaseResponse, GetOpenCasesByOwnerResponse,GetOpenCasesForTeamByOwnerResponse, GetOpenCasesByTrustResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper, PutTeamRequest, PutTeamResponse,GetTeamByOwnerResponse } from "./apiDomain";
 import { CaseBuilder } from "./caseBuilder";
 
 class CaseApi extends ApiBase {
