@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Models
 				return new SimpleRadioItem(label, (int)r.Id) { IsHtmlLabel = true, TestId = r.Name, };
 			});
 
-			return new(ElementRootId: "rag-rating", name, "What is the risk to the trust?")
+			return new(ElementRootId: "rag-rating", name, "What is the overall risk to the trust?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
