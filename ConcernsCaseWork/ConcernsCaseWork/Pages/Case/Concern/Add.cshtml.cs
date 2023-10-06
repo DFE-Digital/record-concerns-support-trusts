@@ -25,7 +25,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly IUserStateCachedService _userStateCache;
 		private TelemetryClient _telemetryClient;
 		private ICaseModelService _caseModelService;
-		
+
+		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public CaseModel CaseModel { get; private set; }
@@ -80,7 +81,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 				if (string.IsNullOrEmpty(trustUkPrn))
 					throw new Exception("Cache TrustUkprn is null");
-			
+
+				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 				await GetCaseModel();
