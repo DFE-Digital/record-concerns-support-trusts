@@ -61,7 +61,7 @@ describe("Creating a case", () => {
 		Logger.Log("Check division details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
+			.hasManagedBy("SFSO", "");
 
 		Logger.Log("Check unpopulated territory throws validation error");
 		addTerritoryPage.nextStep().hasValidationError("Select SFSO territory");
@@ -75,8 +75,7 @@ describe("Creating a case", () => {
 		Logger.Log("Check territory details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East")
 
 		Logger.Log("You must select a case error");
 		selectCaseTypePage.continue().hasValidationError("Select case type");
@@ -89,8 +88,7 @@ describe("Creating a case", () => {
 
 		 createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East");
 
 		Logger.Log("Attempt to create an invalid concern");
 		createConcernPage.addConcern();
@@ -114,8 +112,7 @@ describe("Creating a case", () => {
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
@@ -135,8 +132,7 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
@@ -146,8 +142,7 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
@@ -191,7 +186,7 @@ describe("Creating a case", () => {
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
 			.hasConcerns("Deficit", ["Red", "Amber"])
-			.hasTerritory("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
 			.hasCaseAim("This is the case aim")
@@ -251,8 +246,7 @@ describe("Creating a case", () => {
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernRiskRating("Amber Green")
 			.hasConcernType("Force majeure");
 
@@ -266,8 +260,7 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Force majeure")
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red");
@@ -277,8 +270,7 @@ describe("Creating a case", () => {
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Force majeure")
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red")
@@ -291,7 +283,7 @@ describe("Creating a case", () => {
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red")
 			.hasConcerns("Force majeure", ["Amber", "Green"])
-			.hasTerritory("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasEmptyCurrentStatus()
 			.hasEmptyCaseAim()

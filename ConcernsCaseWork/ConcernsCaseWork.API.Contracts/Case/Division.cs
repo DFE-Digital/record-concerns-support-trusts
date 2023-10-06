@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.API.Contracts.Case;
 
 public enum Division
 {
-	[Description("SFSO (Schools Financial Support and Oversight)")]
+	[Description("SFSO")]
 	SFSO = 1,
 	[Description("Regions Group")]
 	RegionsGroup = 2,

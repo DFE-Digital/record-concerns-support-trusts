@@ -20,11 +20,12 @@ export class ViewClosedCasePage
         return this;
     }
 
-    public hasTerritory(value: string): this
+    public hasManagedBy(division: string, territory: string): this
     {
-        Logger.Log(`Has territory ${value}`);
+        Logger.Log(`Has managed by ${division} ${territory}`);
 
-        cy.getByTestId(`territory_field`).should(`contain.text`, value);
+        cy.getByTestId(`territory_field`).should(`contain.text`, division);
+        cy.getByTestId(`territory_field`).should(`contain.text`, territory);
 
         return this;
     }
@@ -137,11 +138,8 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has closed case action`);
 
-        // cy.get("#close-case-actions td")
-        //         .contains(value)
-
-                cy.get("#close-case-actions td")
-                .should(`contain.text`, value)
+        cy.get("#close-case-actions td")
+        .should(`contain.text`, value)
 
 
         return this;

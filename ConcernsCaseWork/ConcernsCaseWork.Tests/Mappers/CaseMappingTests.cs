@@ -71,6 +71,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 			Assert.That(caseModel.Territory, Is.EqualTo(caseDto.Territory));
 			caseModel.IsArchived.Should().BeFalse();
+			caseModel.Division.Should().Be(caseDto.Division);
 		}
 
 		[Test]

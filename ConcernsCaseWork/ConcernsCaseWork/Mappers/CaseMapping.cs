@@ -59,7 +59,8 @@ namespace ConcernsCaseWork.Mappers
 				StatusId = caseDto.StatusId,
 				StatusName = status,
 				RatingId = caseDto.RatingId,
-				IsArchived = caseDto.Urn.ToString().StartsWith("1")
+				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
+				Division = caseDto.Division
 			};
 		}
 
