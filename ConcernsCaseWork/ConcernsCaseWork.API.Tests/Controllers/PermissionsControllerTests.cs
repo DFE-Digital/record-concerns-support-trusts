@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.API.Contracts.Permissions;
+﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Features.Permissions;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

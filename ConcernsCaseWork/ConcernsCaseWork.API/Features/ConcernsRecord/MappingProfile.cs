@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
-	using ConcernsCaseWork.API.ResponseModels;
+	using ConcernsCaseWork.API.Contracts.Concerns;
 	using ConcernsCaseWork.Data.Models;
 
 	public class MappingProfile : Profile

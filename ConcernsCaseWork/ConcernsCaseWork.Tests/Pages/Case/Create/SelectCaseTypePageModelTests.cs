@@ -298,7 +298,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 
 		[Test]
 		[TestCase(CaseType.Concerns, "/case/concern")]
-		[TestCase(CaseType.NonConcerns, "/case/territory")]
+		[TestCase(CaseType.NonConcerns, "/case/create/nonconcerns/details")]
 		public async Task WhenOnPost_WithConcernsType_RedirectsToConcernsCreatePage(CaseType selectedCaseType, string expectedUrl)
 		{
 			// arrange
@@ -338,38 +338,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasNotCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-		
-		[Test]
-		public async Task WhenOnPost_WithCurrentUserNotFound_ReturnsError()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectCaseTypePageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-			
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Throws(new NullReferenceException("Some error message"));
-
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
-
-			// act
-			var result = await sut.OnPost();
-			
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(default));
-				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-				Assert.That(result, Is.TypeOf<PageResult>());
-			});
-			
-			mockLogger.VerifyLogInformationWasCalled("OnPost");
-			mockLogger.VerifyLogErrorWasCalled("Some error message");
 			mockLogger.VerifyNoOtherCalls();
 		}
 

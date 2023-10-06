@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
+﻿using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

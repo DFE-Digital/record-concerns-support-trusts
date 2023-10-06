@@ -40,6 +40,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		public TrustAddressModel TrustAddress { get; private set; }
 
+		public CreateCaseModel CreateCaseModel { get; private set; }
+
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 
 		[BindProperty]
@@ -121,25 +123,24 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				// Redis state
 				var userState = await GetUserState();
 
+
 				// Create a case model
 				if (!userState.CreateCaseModel.CreateRecordsModel.Any())
 				{
 					var currentDate = DateTimeOffset.Now;
-					userState.CreateCaseModel = new CreateCaseModel
-					{
-						CreatedAt = currentDate,
-						ReviewAt = currentDate,
-						UpdatedAt = currentDate,
-						CreatedBy = GetUserName(),
-						DeEscalation = currentDate,
-						RagRatingName = ragRatingName,
-						RagRating = RatingMapping.FetchRag(ragRatingName),
-						RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
-						TrustUkPrn = userState.TrustUkPrn
-					};
+
+					userState.CreateCaseModel.CreatedAt = currentDate;
+					userState.CreateCaseModel.ReviewAt = currentDate;
+					userState.CreateCaseModel.UpdatedAt = currentDate;
+					userState.CreateCaseModel.CreatedBy = GetUserName();
+					userState.CreateCaseModel.DeEscalation = currentDate;
+					userState.CreateCaseModel.RagRatingName = ragRatingName;
+					userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
+					userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
+					userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
+					userState.CreateCaseModel.TrustUkPrn = userState.TrustUkPrn;
 				}
-				
+
 				var createRecordModel = new CreateRecordModel
 				{
 					TypeId = (long)typeId,
@@ -210,6 +211,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				throw new Exception("Cache TrustUkprn is null");
 		
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
+			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = new List<CreateRecordModel>();
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
 

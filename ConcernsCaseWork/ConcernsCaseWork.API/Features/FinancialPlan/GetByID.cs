@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {

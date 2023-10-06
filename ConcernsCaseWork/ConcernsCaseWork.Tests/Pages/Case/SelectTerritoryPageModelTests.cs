@@ -240,11 +240,11 @@ public class SelectTerritoryPageModelTests
 		var pageResponse = await sut.OnPostAsync();
 
 		// assert
-		Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
-		var page = pageResponse as RedirectToPageResult;
+		Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+		var page = pageResponse as RedirectResult;
 		
 		Assert.That(page, Is.Not.Null);
-		Assert.That(page.PageName, Is.EqualTo("details"));
+		Assert.That(page.Url, Is.EqualTo($"/case/create/type"));
 	}
 
 	[Test]
@@ -275,7 +275,7 @@ public class SelectTerritoryPageModelTests
 		var page = pageResponse as RedirectResult;
 
 		Assert.That(page, Is.Not.Null);
-		Assert.That(page.Url, Is.EqualTo("/case/create/nonconcerns/details"));
+		Assert.That(page.Url, Is.EqualTo("/case/create/type"));
 	}
 	
 	[Test]

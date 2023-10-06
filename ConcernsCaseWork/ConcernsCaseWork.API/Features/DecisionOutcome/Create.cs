@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 {
 	using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 	using ConcernsCaseWork.API.Exceptions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
+	using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 
 	public class Create
 	{
@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 				}
 
 				var now = DateTime.Now;
-				var outcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
+				var outcome = new Data.Models.Decisions.Outcome.DecisionOutcome()
 				{
 					DecisionId = command.DecisionId,
 					Status = command.Request.Status,

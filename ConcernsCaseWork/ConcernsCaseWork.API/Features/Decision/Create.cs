@@ -1,8 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.Decisions;
-using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +8,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-	using System.Globalization;
+	using ConcernsCaseWork.Data.Models.Decisions;
 
 	public class Create
 	{

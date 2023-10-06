@@ -1,6 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Features.Case;
-using ConcernsCaseWork.API.ResponseModels;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

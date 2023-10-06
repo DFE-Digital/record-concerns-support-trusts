@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.Features.MeansOfReferral

@@ -1,19 +1,17 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Extensions;
 using FluentAssertions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.API.Tests.Integration

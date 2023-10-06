@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Data.Enums;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 {
-    public class DecisionTests
+	public class DecisionTests
     {
         [Fact]
         public void Can_Create_New_Decision()

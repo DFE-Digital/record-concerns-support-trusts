@@ -51,6 +51,9 @@ describe("Editing a case", () => {
             .withCaseDivision("SFSO")
             .continue();
 
+		Logger.Log("Populate territory");
+		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+
         Logger.Log("Create a valid concerns case type");
         selectCaseTypePage
             .withCaseType("Concerns")
@@ -69,8 +72,7 @@ describe("Editing a case", () => {
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+		
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage

@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models;
-	using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+	using ConcernsCaseWork.Data.Models.Decisions;
 	using Microsoft.EntityFrameworkCore;
 
 	public class Update
