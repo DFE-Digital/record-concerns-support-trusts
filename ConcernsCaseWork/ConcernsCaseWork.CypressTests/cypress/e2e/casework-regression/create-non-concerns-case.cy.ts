@@ -144,7 +144,7 @@ describe("Creating a non concerns case", () => {
 		});
 	});
 
-	it.only("Converting non conern to concern case", () => {
+	it("Converting non conern to concern case", () => {
 		Logger.Log("Create a case");
 		createCasePage.withTrustName(trustName).selectOption().confirmOption();
 

@@ -97,12 +97,26 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		selectCaseDivisionPage
 			.withCaseDivision("SFSO")
 			.continue();
+
+		createCaseSummary
+			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO");
 	
 		Logger.Log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
+		createCaseSummary
+			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East");
+
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
+
+		createCaseSummary
+			.hasTrustSummaryDetails(trustName)
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East");
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
