@@ -71,16 +71,15 @@
                     }
                     <div class="govuk-summary-list__row">
                         <dt class="dfe-width-30percent govuk-summary-list__key">
-                            SFSO territory
+                            Managed by
                         </dt>
                         <dd class="govuk-summary-list__value" data-testid="territory_field">
-                            @if (Model.CaseModel.Territory == null)
-                            {
-                                <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
+                            @{
+                                RenderValue(Model.CaseModel.Division?.Description());
                             }
-                            else
-                            {
-                                @Model.CaseModel.Territory?.Description()
+                            <br />
+                            @{
+                                RenderValue(Model.CaseModel.Territory?.Description());
                             }
                         </dd>
                     </div>
@@ -215,3 +214,32 @@
         </div>
     </div>
 </div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}

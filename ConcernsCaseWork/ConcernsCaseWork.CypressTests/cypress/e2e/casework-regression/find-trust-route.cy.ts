@@ -165,7 +165,8 @@ describe("User interactions via Find Trust route", () => {
 				.hasTrust(trustName)
 				.hasRiskToTrust("Red Plus")
 				.hasConcerns("Deficit", ["Red", "Amber"])
-				.hasTerritory("North and UTC - North East")
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East")
 				.hasIssue("This is an issue");
 		});
 	});

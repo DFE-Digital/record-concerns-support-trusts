@@ -508,7 +508,7 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public hasTerritory(value: string): this {
+	public hasManagedBy(value: string): this {
 		Logger.Log(`Has territory ${value}`);
 
 		cy.getByTestId(`territory_Field`).should("contain.text", value);

@@ -68,6 +68,8 @@ namespace ConcernsCaseWork.Models
 
 		public Territory? Territory { get; set; }
 
+		public Division? Division { get; set; }
+
 		public bool ShowUpdateMessage { get; set; }
 
 		public bool ShowValidationMessage { get; set; }

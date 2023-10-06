@@ -135,9 +135,6 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		createConcernPage.nextStep();
 
-		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
-
 		Logger.Log(
 			"Check Trust, concern and risk to trust details are correctly populated"
 		);
@@ -147,7 +144,9 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasManagedBy("North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
-			.hasRiskToTrust("Red Plus");
+
+		Logger.Log("Populate risk to trust");
+		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"

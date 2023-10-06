@@ -90,7 +90,8 @@ describe("Creating a case for a city technology college", () =>
         Logger.Log("Verify case details");
         caseManagementPage
             .hasTrustContain(ctcRequest.name)
-            .hasTerritory(territory)
+            .hasManagedBy("SFSO")
+            .hasManagedBy(territory)
             .hasCaseOwner(name);
     });
 });

@@ -110,15 +110,15 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 	{
 		var enumValues = new[]
 		{
-			new { CaseDivision = API.Contracts.Case.Division.SFSO },
-			new { CaseDivision = API.Contracts.Case.Division.RegionsGroup }
+			new { CaseDivision = Division.SFSO },
+			new { CaseDivision = Division.RegionsGroup }
 		};
 
-		var radioItems = enumValues.Select(v =>
+		var radioItems = new List<SimpleRadioItem>()
 		{
-			return new SimpleRadioItem(v.CaseDivision.Description(), (int)v.CaseDivision) { TestId = v.CaseDivision.ToString(), Disabled = v.CaseDivision == Division.RegionsGroup };
-		}).ToArray();
-
+			new SimpleRadioItem("SFSO (Schools Financial Support and Oversight)", (int)Division.SFSO) { TestId = Division.SFSO.ToString() },
+			new SimpleRadioItem("Regions Group", (int)Division.RegionsGroup) { TestId = Division.RegionsGroup.ToString(), Disabled = true },
+		};
 
 		return new(ElementRootId: "case-division", Name: nameof(CaseDivision), "Who is managing this case?")
 		{
