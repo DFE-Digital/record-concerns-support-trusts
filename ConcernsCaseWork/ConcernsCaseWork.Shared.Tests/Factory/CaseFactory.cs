@@ -166,7 +166,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 1,
 					StatusId = 1,
-					RatingId = 1
+					RatingId = 1,
+					Division = Division.SFSO
 				};
 		
 		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null, string trustCompaniesHouseNumber = null)

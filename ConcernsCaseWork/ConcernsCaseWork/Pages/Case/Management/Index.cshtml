@@ -228,13 +228,17 @@
                             <th scope="row" class="govuk-table-case-details__header">Managed by</th>
                             <td class="govuk-table__cell" data-testid="territory_Field">
                                 @{
+                                    RenderValue(Model.CaseModel.Division?.Description());
+                                }
+                                <br />
+                                @{
                                     RenderValue(Model.CaseModel.Territory?.Description());
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change managed by">
+                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change territory">
                                         Change
                                     </a>
                                 }

@@ -89,7 +89,8 @@ describe("Editing a case", () => {
 			.hasRiskToTrust("Red Plus")
 			.hasDirectionOfTravel("Deteriorating")
 			.hasConcerns("Deficit", ["Red"])
-			.hasTerritory("North and UTC - North East")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasIssue("This is an issue");
 
 		Logger.Log("Edit risk to trust");
@@ -233,7 +234,8 @@ describe("Editing a case", () => {
 			.hasRiskToTrust("Red")
 			.hasDirectionOfTravel("Improving")
 			.hasConcerns("Deficit", ["Amber", "Green"])
-			.hasTerritory("North and UTC - North West")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North West")
 			.hasIssue("New Issue")
 			.hasCurrentStatus("New Status")
 			.hasCaseAim("New Case aim")
