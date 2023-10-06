@@ -24,11 +24,10 @@
         <span class="govuk-caption-l">Create a case</span>
         <h1 class="govuk-heading-l">SFSO territory</h1>
 
-		<dl class="govuk-summary-list">
-			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
-			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
-			<partial name="_RatingSummary" model="Model.CreateCaseModel"/>
-		</dl>
+        <dl class="govuk-summary-list">
+            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+        </dl>
 
 		<form method="post" id="case-territory-form" novalidate>
 

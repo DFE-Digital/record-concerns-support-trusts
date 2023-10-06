@@ -87,19 +87,15 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 
 			await _cachedUserService.StoreData(userName, userState);
 
-			return RedirectToPage("SelectCaseType");
-			/*
-			switch (selectedCaseManager)
+			switch (selectedCaseDivision)
 			{
 				case Division.SFSO:
-					return Redirect("/case/concern");
-				case Division.RegionsGroup:
 					return Redirect("/case/territory");
+				case Division.RegionsGroup:
+					return Redirect("/case/area");
 				default:
-					throw new Exception($"Unrecognised case manager {selectedCaseManager}");
+					throw new Exception($"Unrecognised case manager {selectedCaseDivision}");
 			}
-
-			*/
 		}
 		catch (Exception ex)
 		{
