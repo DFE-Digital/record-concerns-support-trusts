@@ -9,8 +9,6 @@ namespace ConcernsCaseWork.Models
 {
 	public class CaseComponentBuilder
 	{
-		private const string NarritiveHintText = "This information can be used in Stage 1 and Stage 2 meetings.";
-
 		public static RadioButtonsUiComponent BuildTerritory(string name, int? selectedId = null)
 		{
 			var radioItems = Enum.GetValues(typeof(Territory))

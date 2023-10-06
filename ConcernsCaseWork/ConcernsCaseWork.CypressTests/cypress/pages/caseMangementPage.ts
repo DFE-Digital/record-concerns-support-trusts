@@ -508,10 +508,11 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public hasTerritory(value: string): this {
-		Logger.Log(`Has territory ${value}`);
+	public hasManagedBy(division: string, territory: string): this {
+		Logger.Log(`Has managed by ${division} ${territory}`);
 
-		cy.getByTestId(`territory_Field`).should("contain.text", value);
+		cy.getByTestId(`territory_Field`).should("contain.text", division);
+		cy.getByTestId(`territory_Field`).should("contain.text", territory);
 
 		return this;
 	}

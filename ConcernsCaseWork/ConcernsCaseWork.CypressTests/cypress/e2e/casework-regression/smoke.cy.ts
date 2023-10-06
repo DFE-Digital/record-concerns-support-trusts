@@ -100,23 +100,21 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO");
+			.hasManagedBy("SFSO", "");
 	
 		Logger.Log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East");
 
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East");
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
@@ -128,34 +126,30 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
 		createConcernPage.nextStep();
-
-		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern and risk to trust details are correctly populated"
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
-			.hasRiskToTrust("Red Plus");
+
+		Logger.Log("Populate risk to trust");
+		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
@@ -524,7 +518,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Validate Closed Case has correct details");
 		viewClosedCasePage
 			.hasConcerns("Deficit")
-			.hasTerritory("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
 			.hasCaseAim("This is the case aim")
