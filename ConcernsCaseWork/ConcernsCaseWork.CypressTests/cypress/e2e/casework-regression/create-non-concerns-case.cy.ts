@@ -66,11 +66,11 @@ describe("Creating a non concerns case", () => {
             .withCaseDivision("SFSO")
             .continue();
 
-		Logger.Log("Create a valid Non-concern case type");
-		selectCaseTypePage.withCaseType("NonConcerns").continue();
-
 		Logger.Log("Populate territory");
 		addTerritoryPage.withTerritory(territory).nextStep();
+
+		Logger.Log("Create a valid Non-concern case type");
+		selectCaseTypePage.withCaseType("NonConcerns").continue();
 
 		Logger.Log("Checking accessibility on non concerns confirmation page");
 		cy.excuteAccessibilityTests();
@@ -153,11 +153,11 @@ describe("Creating a non concerns case", () => {
             .withCaseDivision("SFSO")
             .continue();
 
-		Logger.Log("Create a valid Non-concern case type");
-		selectCaseTypePage.withCaseType("NonConcerns").continue();
-
 		Logger.Log("Populate territory");
 		addTerritoryPage.withTerritory(territory).nextStep();
+
+		Logger.Log("Create a valid Non-concern case type");
+		selectCaseTypePage.withCaseType("NonConcerns").continue();
 
 		Logger.Log("Add non concerns case");
 		addConcernDetailsPage.createCase();
