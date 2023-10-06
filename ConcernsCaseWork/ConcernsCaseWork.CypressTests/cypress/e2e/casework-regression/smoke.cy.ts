@@ -100,23 +100,21 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO");
+			.hasManagedBy("SFSO", "");
 	
 		Logger.Log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East");
 
 		Logger.Log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East");
+			.hasManagedBy("SFSO", "North and UTC - North East");
 
 		Logger.Log("Create a valid concern");
 		createConcernPage
@@ -128,8 +126,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
@@ -140,8 +137,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 
@@ -153,8 +149,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy("North and UTC - North East")
+			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");

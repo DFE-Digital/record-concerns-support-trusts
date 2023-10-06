@@ -138,11 +138,8 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has closed case action`);
 
-        // cy.get("#close-case-actions td")
-        //         .contains(value)
-
-                cy.get("#close-case-actions td")
-                .should(`contain.text`, value)
+        cy.get("#close-case-actions td")
+        .should(`contain.text`, value)
 
 
         return this;
