@@ -230,7 +230,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		string error = await response.Content.ReadAsStringAsync();
 
-		error.Should().Contain("Division can not be 0");
+		error.Should().Contain("Division must have value 0 or 1");
 	}
 
 
@@ -480,7 +480,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-		error.Should().Contain("Division can not be 0");
+		error.Should().Contain("Division must have value 0 or 1");
 		error.Should().Contain("Ratings Urn can not be 0");
 	}
 
