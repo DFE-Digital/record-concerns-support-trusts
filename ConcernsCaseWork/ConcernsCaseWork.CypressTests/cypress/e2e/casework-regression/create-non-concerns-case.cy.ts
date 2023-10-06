@@ -283,8 +283,7 @@ describe("Creating a non concerns case", () => {
 		Logger.Log("Validate Closed Case has correct details");
 		viewClosedCasePage
 			.hasTrust(trustName)
-			.hasManagedBy("SFSO")
-			.hasManagedBy(territory)
+			.hasManagedBy("SFSO", territory)
 			.hasCaseOwner(name)
 			.hasRationaleForClosure("Closing non concerns case")
 			.hasNoCaseNarritiveFields();
