@@ -1,13 +1,13 @@
-using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Features.ConcernsStatus;
 using ConcernsCaseWork.Data.Models;
-using System;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class ConcernsStatusResponseFactoryTests
+	public class ConcernsStatusResponseFactoryTests
     {
         [Fact]
         public void Returns_ConcernsStatusResponse_WhenGiven_ConcernsStatus()

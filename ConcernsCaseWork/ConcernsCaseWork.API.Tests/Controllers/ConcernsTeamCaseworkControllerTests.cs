@@ -1,7 +1,6 @@
-﻿using ConcernsCaseWork.API.Contracts.TeamCasework;
+﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.TeamCasework;
 using ConcernsCaseWork.API.Features.TeamCasework;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

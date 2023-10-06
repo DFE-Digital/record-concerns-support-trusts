@@ -1,14 +1,14 @@
-using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Features.ConcernsRecord;
 using ConcernsCaseWork.Data.Models;
-using System;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class ConcernsRecordResponseFactoryTests
+	public class ConcernsRecordResponseFactoryTests
     {
         [Fact]
         public void ReturnsConcernsRecordResponse_WhenGivenAnConcernsRecord()

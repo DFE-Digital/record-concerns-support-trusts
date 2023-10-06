@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.Features.Case;
 using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.API.Features.ConcernsStatus;
@@ -95,14 +94,6 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetOwnersOfOpenCases, GetOwnersOfOpenCases>();
 			
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
-
-			// concerns factories
-			services.AddScoped<ICreateDecisionResponseFactory, CreateDecisionResponseFactory>();
-			services.AddScoped<IDecisionFactory, DecisionFactory>();
-			services.AddScoped<IGetDecisionResponseFactory, GetDecisionResponseFactory>();
-			services.AddScoped<IGetDecisionsSummariesFactory, GetDecisionsSummariesFactory>();
-			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
-			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
 
 
 			services.AddScoped<IUseCaseAsync<CreateTrustFinancialForecastRequest, int>, CreateTrustFinancialForecast>();

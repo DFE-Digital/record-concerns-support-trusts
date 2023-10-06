@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Trusts;
-using ConcernsCaseWork.API.ResponseModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;

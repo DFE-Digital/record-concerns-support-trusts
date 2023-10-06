@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using Xunit;
 

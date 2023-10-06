@@ -52,11 +52,11 @@ export class CreateCaseSummary
         return this;
     }
 
-    public hasTerritory(value: string): this
+    public hasManagedBy(value: string): this
     {
-        Logger.Log(`Has Territory ${value}`);
+        Logger.Log(`Has Managed By ${value}`);
 
-        cy.getByTestId(`territory`).should(
+        cy.getByTestId(`managed-by`).should(
 			"contain.text",
 			value
 		);

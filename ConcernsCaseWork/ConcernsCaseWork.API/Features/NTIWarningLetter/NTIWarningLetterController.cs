@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
+﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;

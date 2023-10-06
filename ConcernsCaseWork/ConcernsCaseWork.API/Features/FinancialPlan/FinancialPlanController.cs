@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using MediatR;
