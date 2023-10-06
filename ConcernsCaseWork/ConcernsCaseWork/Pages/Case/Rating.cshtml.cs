@@ -33,6 +33,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private TelemetryClient _telemetryClient;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		public CreateCaseModel CreateCaseModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 
@@ -108,7 +109,7 @@ namespace ConcernsCaseWork.Pages.Case
 					
 				}
 
-				return RedirectToPage("territory");
+				return RedirectToPage("details");
 			}
 			catch (Exception ex)
 			{
@@ -147,7 +148,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 				if (string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Cache TrustUkprn is null");
-				
+
+				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();

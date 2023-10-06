@@ -13,6 +13,7 @@ import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import { PaginationComponent } from "cypress/pages/paginationComponent";
 import { CreateCaseRequest } from "cypress/api/apiDomain";
 import { SourceOfConcernExternal } from "cypress/constants/selectorConstants";
+import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
 describe("User interactions via Find Trust route", () => {
 	const createConcernPage = new CreateConcernPage();
@@ -90,7 +91,29 @@ describe("User interactions via Find Trust route", () => {
 
 			createCaseSummary.hasTrustSummaryDetails(trustName);
 
+			Logger.Log("Create a valid case division");
+			selectCaseDivisionPage
+				.withCaseDivision("SFSO")
+				.continue();
+
+			createCaseSummary
+				.hasTrustSummaryDetails(trustName)
+				.hasManagedBy("SFSO");
+
+			Logger.Log("Populate territory");
+			addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+
+			createCaseSummary
+				.hasTrustSummaryDetails(trustName)
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East");
+
 			selectCaseTypePage.withCaseType("Concerns").continue();
+
+			createCaseSummary
+				.hasTrustSummaryDetails(trustName)
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East");
 
 			Logger.Log("Create a valid concern");
 			createConcernPage
@@ -102,6 +125,8 @@ describe("User interactions via Find Trust route", () => {
 			Logger.Log("Check Concern details are correctly populated");
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East")
 				.hasConcernType("Deficit")
 				.hasConcernRiskRating("Red Amber");
 
@@ -115,22 +140,22 @@ describe("User interactions via Find Trust route", () => {
 			);
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East")
 				.hasConcernType("Deficit")
 				.hasConcernRiskRating("Red Amber")
 				.hasRiskToTrust("Red Plus");
-
-			Logger.Log("Populate territory");
-			addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 			Logger.Log(
 				"Check Trust, concern, risk to trust details and territory are correctly populated"
 			);
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasConcernType("Deficit")
+				.hasManagedBy("SFSO")
+				.hasManagedBy("North and UTC - North East") 
+				.hasConcernType("Deficit") 
 				.hasConcernRiskRating("Red Amber")
-				.hasRiskToTrust("Red Plus")
-				.hasTerritory("North and UTC - North East");
+				.hasRiskToTrust("Red Plus");
 
 			Logger.Log("Add concern details with valid text limit");
 			addConcernDetailsPage.withIssue("This is an issue").createCase();
