@@ -523,7 +523,8 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.Log("Validate Closed Case has correct details");
 		viewClosedCasePage
 			.hasConcerns("Deficit")
-			.hasTerritory("North and UTC - North East")
+			.hasManagedBy("SFSO")
+			.hasManagedBy("North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
 			.hasCaseAim("This is the case aim")

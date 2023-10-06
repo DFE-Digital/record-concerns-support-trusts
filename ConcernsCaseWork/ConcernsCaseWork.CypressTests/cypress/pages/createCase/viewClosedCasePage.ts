@@ -20,7 +20,7 @@ export class ViewClosedCasePage
         return this;
     }
 
-    public hasTerritory(value: string): this
+    public hasManagedBy(value: string): this
     {
         Logger.Log(`Has territory ${value}`);
 
