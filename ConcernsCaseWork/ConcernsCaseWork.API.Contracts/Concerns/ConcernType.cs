@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 		ForceMajeure = 7,
 
 		[Description("Financial governance")]
-		Governance = 8,
+		FinancialGovernance = 8,
 
 		[Description("Viability")]
 		FinancialViability = 20,
@@ -28,6 +28,9 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 		[Description("Financial compliance")]
 		Compliance = 23,
 
-		Safeguarding = 24
+		Safeguarding = 24,
+
+		[Description("Governance")]
+		Governance = 25
 	}
 }
