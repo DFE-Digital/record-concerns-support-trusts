@@ -259,6 +259,15 @@
 	<ItemGroup>
 		<None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Remove="Pages\Shared\_NextStepsHint.cshtml" />
+	  <Content Remove="Pages\Shared\_ManagedBySummary.cshtml" />
+	  <Content Remove="Pages\Shared\_CaseHistoryHint.cshtml" />
+	  <Content Remove="Pages\Shared\_CaseAimHint.cshtml" />
+	  <Content Remove="Pages\Shared\_IssueHint.cshtml" />
+	  <Content Remove="Pages\Shared\_CurrentStatusHint.cshtml" />
+	  <Content Remove="Pages\Shared\_DeescalationPointHint.cshtml" />
+	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties appsettings_1json__JsonSchema=" " />
