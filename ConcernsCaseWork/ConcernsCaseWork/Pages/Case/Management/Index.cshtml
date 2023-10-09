@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using ConcernsCaseWork.API.Contracts.Case;
 @using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
 @using ConcernsCaseWork.Service.Status;
@@ -14,6 +15,23 @@
     var errorClass = "govuk-error-message";
     var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
     var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
+
+    var locationDescription = "";
+    var locationChangeLink = "";
+    var locationAria = "";
+
+    if (Model.CaseModel.Division == Division.RegionsGroup)
+    {
+        locationDescription = Model.CaseModel.Territory?.Description();
+        locationChangeLink = $"{Request.Path}/edit-region";
+        locationAria = "Change region";
+    }
+    else
+    {
+        locationDescription = Model.CaseModel.Territory?.Description();
+        locationChangeLink = $"{Request.Path}/edit-territory";
+        locationAria = "Change territory";
+    }
 }
 
 <div class="govuk-width-container">
@@ -232,13 +250,13 @@
                                 }
                                 <br />
                                 @{
-                                    RenderValue(Model.CaseModel.Territory?.Description());
+                                    RenderValue(locationDescription);
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change territory">
+                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@locationChangeLink" aria-label="@locationAria">
                                         Change
                                     </a>
                                 }
