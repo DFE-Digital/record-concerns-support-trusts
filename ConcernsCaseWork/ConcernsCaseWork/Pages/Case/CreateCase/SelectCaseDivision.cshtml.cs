@@ -1,9 +1,6 @@
-using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -13,9 +10,9 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase;
@@ -28,6 +25,7 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 	private readonly IUserStateCachedService _cachedUserService;
 	private readonly ILogger<SelectCaseDivisionPageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+	private readonly IFeatureManager _featureManager;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
@@ -38,12 +36,14 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 	public SelectCaseDivisionPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectCaseDivisionPageModel> logger,
-		IClaimsPrincipalHelper claimsPrincipalHelper)
+		IClaimsPrincipalHelper claimsPrincipalHelper,
+		IFeatureManager featureManager)
 	{
-		_trustModelService = Guard.Against.Null(trustModelService);
-		_cachedUserService = Guard.Against.Null(cachedUserService);
-		_logger = Guard.Against.Null(logger);
-		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+		_trustModelService = trustModelService;
+		_cachedUserService = cachedUserService;
+		_logger = logger;
+		_claimsPrincipalHelper = claimsPrincipalHelper;
+		_featureManager = featureManager;
 	}
 
 	public async Task<IActionResult> OnGet()
@@ -53,7 +53,7 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 		try
 		{
 			await SetTrustAddress();
-			LoadPageComponents();
+			await LoadPageComponents();
 		}
 		catch (Exception ex)
 		{
@@ -73,7 +73,7 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 			if (!ModelState.IsValid)
 			{
 				await SetTrustAddress();
-				LoadPageComponents();
+				await LoadPageComponents();
 
 				return Page();
 			}
@@ -106,18 +106,14 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 		return Page();
 	}
 
-	private RadioButtonsUiComponent BuildCaseManagerComponent(int? selectedId = null)
+	private async Task <RadioButtonsUiComponent> BuildCaseManagerComponent(int? selectedId = null)
 	{
-		var enumValues = new[]
-		{
-			new { CaseDivision = Division.SFSO },
-			new { CaseDivision = Division.RegionsGroup }
-		};
+		var isRegionsGroupEnabled = await _featureManager.IsEnabledAsync(nameof(FeatureFlags.IsRegionsGroupEnabled));
 
 		var radioItems = new List<SimpleRadioItem>()
 		{
 			new SimpleRadioItem("SFSO (Schools Financial Support and Oversight)", (int)Division.SFSO) { TestId = Division.SFSO.ToString() },
-			new SimpleRadioItem("Regions Group", (int)Division.RegionsGroup) { TestId = Division.RegionsGroup.ToString(), Disabled = true },
+			new SimpleRadioItem("Regions Group", (int)Division.RegionsGroup) { TestId = Division.RegionsGroup.ToString(), Disabled = !isRegionsGroupEnabled },
 		};
 
 		return new(ElementRootId: "case-division", Name: nameof(CaseDivision), "Who is managing this case?")
@@ -129,9 +125,9 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 		};
 	}
 
-	private void LoadPageComponents()
+	private async Task LoadPageComponents()
 	{
-		CaseDivision = BuildCaseManagerComponent(CaseDivision?.SelectedId);
+		CaseDivision = await BuildCaseManagerComponent(CaseDivision?.SelectedId);
 	}
 
 	private async Task SetTrustAddress()
