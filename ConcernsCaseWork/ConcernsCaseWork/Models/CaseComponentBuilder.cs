@@ -226,7 +226,7 @@ namespace ConcernsCaseWork.Models
 				SelectedId = selectedId,
 				Required = true,
 				DisplayName = "concern type",
-				HintFromPartialView = "_RiskManagementFramework"
+				HintFromPartialView = "_ConcernTypeHint"
 			};
 		}
 	}
