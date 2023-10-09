@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
-			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(caseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 
 			CaseModel = caseModel;
 

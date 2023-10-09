@@ -40,7 +40,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = (int)API.Contracts.Concerns.ConcernType.Governance,
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialGovernance,
 				Name = "Financial governance",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
@@ -85,6 +85,14 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 				Description = null,
 				CreatedAt = new DateTime(2023, 1, 24),
 				UpdatedAt = new DateTime(2023, 1, 24)
+			},
+			new ConcernsType 
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.Governance,
+				Name = "Governance",
+				Description = null,
+				CreatedAt = new DateTime(2023, 10, 9),
+				UpdatedAt = new DateTime(2023, 10, 9)
 			}
 		);
 	}
