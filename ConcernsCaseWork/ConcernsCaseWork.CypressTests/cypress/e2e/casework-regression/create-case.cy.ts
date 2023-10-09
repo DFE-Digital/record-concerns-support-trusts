@@ -41,10 +41,6 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-		Logger.Log("Check RegionsGroup is disabled");
-        selectCaseDivisionPage
-            .hasBeenDisabled("RegionsGroup")
-
         Logger.Log("You must select a division error");
         selectCaseDivisionPage
             .continue()

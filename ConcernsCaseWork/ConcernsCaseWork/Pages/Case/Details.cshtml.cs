@@ -1,8 +1,8 @@
-﻿using Ardalis.GuardClauses;
+﻿using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Case.CreateCase;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class DetailsPageModel : AbstractPageModel
+	public class DetailsPageModel : CreateCaseBasePageModel
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
@@ -61,14 +61,15 @@ namespace ConcernsCaseWork.Pages.Case
 			IUserStateCachedService userStateCache, 
 			ILogger<DetailsPageModel> logger,
 			TelemetryClient telemetryClient,
-			ITrustService trustService)
+			ITrustService trustService,
+			IClaimsPrincipalHelper claimsPrincipalHelper) : base(userStateCache, claimsPrincipalHelper)
 		{
-			_trustModelService = Guard.Against.Null(trustModelService);
-			_caseModelService = Guard.Against.Null(caseModelService);
-			_userStateCache = Guard.Against.Null(userStateCache);
-			_logger = Guard.Against.Null(logger);
-			_trustService = Guard.Against.Null(trustService);
-			_telemetry = Guard.Against.Null(telemetryClient);
+			_trustModelService = trustModelService;
+			_caseModelService = caseModelService;
+			_userStateCache = userStateCache;
+			_logger = logger;
+			_trustService = trustService;
+			_telemetry = telemetryClient;
 			
 		}
 		
@@ -166,15 +167,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 			CaseHistory = CaseComponentBuilder.BuildCaseHistory(nameof(CaseHistory), CaseHistory?.Text.StringContents);
 			CaseHistory.SortOrder = 6;
-		}
-
-		private async Task<UserState> GetUserState()
-		{
-			var userState = await _userStateCache.GetData(User.Identity?.Name);
-			if (userState is null)
-				throw new Exception("Cache CaseStateData is null");
-			
-			return userState;
 		}
 
 		private async Task<IActionResult> CreateNewCase(CreateCaseModel model, UserState userState)
