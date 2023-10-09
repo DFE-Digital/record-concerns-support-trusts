@@ -6,12 +6,6 @@
 	ViewData["Title"] = "Case type";
 }
 
-@section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="/case/create"></back-link>
-	</div>
-}
-
 <div class="govuk-width-container" id="choosecasetype">
 	
 	<partial name="_BannerError"/>
@@ -49,6 +43,9 @@
 				        value="continue">
 					Continue
 				</button>
+                <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
+                    Cancel
+                </a>
 			</div>
 		</form>
 	}
