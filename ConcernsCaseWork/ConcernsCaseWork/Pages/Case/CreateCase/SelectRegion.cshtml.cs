@@ -2,7 +2,6 @@ using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
@@ -14,11 +13,10 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase
 {
-	public class SelectRegionModel : AbstractPageModel
+	public class SelectRegionModel : CreateCaseBasePageModel
     {
 		private readonly ILogger<SelectRegionModel> _logger;
 		private readonly IUserStateCachedService _userStateCache;
-		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ITrustModelService _trustModelService;
 
 		public TrustDetailsModel TrustDetailsModel { get; set; }
@@ -32,12 +30,11 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 			ITrustModelService trustModelService,
 			IUserStateCachedService userStateCache,
 			ILogger<SelectRegionModel> logger,
-			IClaimsPrincipalHelper claimsPrincipalHelper)
+			IClaimsPrincipalHelper claimsPrincipalHelper) : base(userStateCache, claimsPrincipalHelper)
 		{
 			_trustModelService = trustModelService;
 			_logger = logger;
 			_userStateCache = userStateCache;
-			_claimsPrincipalHelper = claimsPrincipalHelper;
 		}
 
         public async Task<IActionResult> OnGet()
@@ -94,16 +91,5 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 			Region = CaseComponentBuilder.BuildRegion(nameof(Region), Region?.SelectedId);
 		}
-
-		private async Task<UserState> GetUserState()
-		{
-			var userState = await _userStateCache.GetData(GetUserName());
-			if (userState is null)
-				throw new Exception("Could not retrieve cached new case data for user");
-
-			return userState;
-		}
-
-		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }
