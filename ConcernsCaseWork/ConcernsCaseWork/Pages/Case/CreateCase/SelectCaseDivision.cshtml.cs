@@ -90,8 +90,9 @@ public class SelectCaseDivisionPageModel : AbstractPageModel
 			switch (selectedCaseDivision)
 			{
 				case Division.SFSO:
-				case Division.RegionsGroup:
 					return Redirect("/case/territory");
+				case Division.RegionsGroup:
+					return Redirect("/case/create/region");
 				default:
 					throw new Exception($"Unrecognised case manager {selectedCaseDivision}");
 			}
