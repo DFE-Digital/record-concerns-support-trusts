@@ -28,6 +28,24 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
+		public static RadioButtonsUiComponent BuildRegion(string name, int? selectedId = null)
+		{
+			var radioItems = Enum.GetValues(typeof(Region))
+				.Cast<Region>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.Description() };
+				}).ToArray();
+
+			return new(ElementRootId: "region", name, "Which region is managing this case?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "region"
+			};
+		}
+
 		public static RadioButtonsUiComponent BuildRiskToTrust(string name, IList<RatingModel> ratingsModel, int? selectedId = null)
 		{
 			var radioItems = ratingsModel.Select(r =>

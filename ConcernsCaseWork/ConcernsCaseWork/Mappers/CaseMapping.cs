@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Status;
@@ -30,7 +32,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.RatingId,
 				createCaseModel.Territory,
 				createCaseModel.TrustCompaniesHouseNumber,
-				createCaseModel.Division);
+				createCaseModel.Division,
+				createCaseModel.Region);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)
@@ -60,8 +63,10 @@ namespace ConcernsCaseWork.Mappers
 				StatusName = status,
 				RatingId = caseDto.RatingId,
 				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
-				Division = caseDto.Division
-			};
+				Division = caseDto.Division,
+				Region = caseDto.Region,
+				Location = caseDto.Division == Division.RegionsGroup ? caseDto.Region?.Description() : caseDto.Territory?.Description()
+		};
 		}
 
 		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)

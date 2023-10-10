@@ -54,5 +54,7 @@ namespace ConcernsCaseWork.Redis.Models
 		public string TrustCompaniesHouseNumber { get; set; }
 
 		public Division? Division { get; set; }
+
+		public Region? Region { get; set; }
 	}
 }

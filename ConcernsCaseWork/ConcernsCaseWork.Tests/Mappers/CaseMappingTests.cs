@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
@@ -36,14 +38,21 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseDto.DirectionOfTravel, Is.EqualTo(createCaseModel.DirectionOfTravel));
 			Assert.That(createCaseDto.ReasonAtReview, Is.EqualTo(createCaseModel.ReasonAtReview));
 			Assert.That(createCaseDto.TrustUkPrn, Is.EqualTo(createCaseModel.TrustUkPrn));
+			Assert.That(createCaseDto.Division, Is.EqualTo(createCaseModel.Division));
+			Assert.That(createCaseDto.Territory, Is.EqualTo(createCaseModel.Territory));
+			Assert.That(createCaseDto.Region, Is.EqualTo(createCaseModel.Region));
 		}
 		
-		[Test]
-		public void WhenMapCaseDto_Returns_CaseModel()
+		[TestCase(Division.SFSO, Region.London, Territory.National_Operations, "National Operations")]
+		[TestCase(Division.RegionsGroup, Region.London, Territory.National_Operations, "London")]
+		public void WhenMapCaseDto_Returns_CaseModel(Division division, Region region, Territory territory, string location)
 		{
 			// arrange
 			var caseDto = CaseFactory.BuildCaseDto();
 			caseDto.Urn = 22134234;
+			caseDto.Territory = territory;
+			caseDto.Region = region;
+			caseDto.Division = division;
 
 			// act
 			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
@@ -72,6 +81,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel.Territory, Is.EqualTo(caseDto.Territory));
 			caseModel.IsArchived.Should().BeFalse();
 			caseModel.Division.Should().Be(caseDto.Division);
+			caseModel.Region.Should().Be(caseDto.Region);
+			Assert.That(caseModel.Location, Is.EqualTo(location));
 		}
 
 		[Test]

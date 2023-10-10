@@ -1,11 +1,8 @@
-using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
@@ -13,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,12 +17,10 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class SelectCaseTypePageModel : AbstractPageModel
+public class SelectCaseTypePageModel : CreateCaseBasePageModel
 {
 	private readonly ITrustModelService _trustModelService;
-	private readonly IUserStateCachedService _cachedUserService;
 	private readonly ILogger<SelectCaseTypePageModel> _logger;
-	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
@@ -39,12 +33,10 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	public SelectCaseTypePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectCaseTypePageModel> logger,
-		IClaimsPrincipalHelper claimsPrincipalHelper)
+		IClaimsPrincipalHelper claimsPrincipalHelper) : base(cachedUserService, claimsPrincipalHelper)
 	{
-		_trustModelService = Guard.Against.Null(trustModelService);
-		_cachedUserService = Guard.Against.Null(cachedUserService);
-		_logger = Guard.Against.Null(logger);
-		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+		_trustModelService = trustModelService;
+		_logger = logger;
 	}
 
 	public async Task<IActionResult> OnGet()
@@ -53,9 +45,7 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		
 		try
 		{
-			await SetTrustAddress();
-			await SetCreateCaseModel();
-			LoadPageComponents();
+			await LoadPage();
 		}
 		catch (Exception ex)
 		{
@@ -74,15 +64,11 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		{
 			if (!ModelState.IsValid)
 			{
-				await SetTrustAddress();
-				await SetCreateCaseModel();
-				LoadPageComponents();
+				await LoadPage();
 
 				return Page();
 			}
 			
-		
-
 			var selectedCaseType = (CaseType)CaseType.SelectedId;
 
 			switch (selectedCaseType)
@@ -126,44 +112,12 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		};
 	}
 
-	private void LoadPageComponents()
+	private async Task LoadPage()
 	{
+		var userState = await GetUserState();
+		TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
+		CreateCaseModel = userState.CreateCaseModel;
+
 		CaseType = BuildCaseTypeComponent(CaseType?.SelectedId);
 	}
-
-	private async Task SetTrustAddress()
-	{
-		var userName = GetUserName();
-		var userState = await GetUserState();
-
-		if (string.IsNullOrEmpty(userState.TrustUkPrn))
-		{
-			throw new Exception($"Could not retrieve trust from cache for user '{userName}'");
-		}
-		
-		var trustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
-
-		TrustAddress = trustAddress ?? throw new Exception($"Could not find trust with UK PRN of {userState.TrustUkPrn}");
-	}
-
-	private async Task SetCreateCaseModel()
-	{
-		var userName = GetUserName();
-		var userState = await GetUserState();
-
-		CreateCaseModel = userState.CreateCaseModel;
-	}
-
-	private async Task<UserState> GetUserState()
-	{
-		var userName = GetUserName();
-
-		var userState = await _cachedUserService.GetData(userName);
-		if (userState is null)
-			throw new Exception($"Could not retrieve cache for user '{userName}'");
-
-		return userState;
-	}
-
-	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 }
