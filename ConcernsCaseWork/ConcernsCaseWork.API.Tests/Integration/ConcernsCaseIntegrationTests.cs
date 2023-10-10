@@ -319,7 +319,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		ApiResponseV2<ConcernsTypeResponse> content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-		content.Data.Count().Should().Be(9);
+		content.Data.Count().Should().Be(10);
 	}
 
 	[Fact]
