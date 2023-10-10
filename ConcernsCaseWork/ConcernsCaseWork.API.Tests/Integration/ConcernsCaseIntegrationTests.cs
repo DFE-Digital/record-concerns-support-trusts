@@ -84,6 +84,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
 		createdCase.DivisionId.Should().Be(createRequest.Division);
+		createdCase.RegionId.Should().Be(createRequest.RegionId);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
@@ -173,6 +174,42 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
+	[Fact]
+	public async Task CanCreateNewConcernCase_WithNullRegion()
+	{
+		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
+		createRequest.RegionId = null;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+			Content = JsonContent.Create(createRequest)
+		};
+
+		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
+		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+
+		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
+
+		// call API
+		var response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.Created);
+		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		await using ConcernsDbContext context = _testFixture.GetContext();
+
+		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
+
+		createdCase.Should().NotBeNull();
+		expected.Data.Urn = createdCase!.Urn;
+
+		result.Should().BeEquivalentTo(expected);
+		createdCase.RegionId.Should().Be(createRequest.RegionId);
+		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
+	}
+
 
 	[Fact]
 	public async Task PostInvalidConcernCaseRequest_Returns_ValidationErrors()
@@ -230,7 +267,35 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		string error = await response.Content.ReadAsStringAsync();
 
-		error.Should().Contain("Division must have value 0 or 1");
+		error.Should().Contain("Division must have value 1 or 2");
+	}
+
+	[Fact]
+	public async Task PostCaseWithInvalidRegion_Returns_BadRequest()
+	{
+		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
+		createRequest.RegionId = 0;
+
+		HttpRequestMessage httpRequestMessage = new()
+		{
+			Method = HttpMethod.Post,
+			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
+			Content = JsonContent.Create(createRequest)
+		};
+
+		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
+		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+
+		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
+
+		// call API
+		var response = await _client.SendAsync(httpRequestMessage);
+
+		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+		string error = await response.Content.ReadAsStringAsync();
+
+		error.Should().Contain("'Region Id' has a range of values which does not include '0'");
 	}
 
 
@@ -392,7 +457,8 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			StatusId = 2,
 			RatingId = 1,
 			TrustCompaniesHouseNumber = "12345678",
-			DivisionId = Division.SFSO
+			DivisionId = Division.SFSO,
+			RegionId = Region.London
 		};
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
@@ -405,7 +471,9 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
 			.With(cr => cr.Division = Division.RegionsGroup)
-			.With(cr => cr.RatingId = 1).Build();
+			.With(cr => cr.RatingId = 1)
+			.With(cr => cr.RegionId = Region.NorthWest)
+			.Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
 		expectedConcernsCase.Urn = urn;
@@ -480,7 +548,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-		error.Should().Contain("Division must have value 0 or 1");
+		error.Should().Contain("Division must have value 1 or 2");
 		error.Should().Contain("Ratings Urn can not be 0");
 	}
 
