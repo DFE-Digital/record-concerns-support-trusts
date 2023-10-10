@@ -10,7 +10,9 @@ namespace ConcernsCaseWork.API.Features.Case
 			RuleFor(x => x.RatingId).GreaterThanOrEqualTo(1)
 				.WithMessage("Ratings Urn can not be 0");
 
-			RuleFor(x => x.Division).IsInEnum().WithMessage("Division must have value 0 or 1");
+			RuleFor(x => x.Division).IsInEnum().WithMessage("Division must have value 1 or 2");
+
+			RuleFor(x => x.Region).IsInEnum();
 		}
 	}
 }

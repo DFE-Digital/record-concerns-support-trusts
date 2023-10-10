@@ -31,7 +31,8 @@ namespace ConcernsCaseWork.API.Features.Case
 				RatingId = request.RatingId,
 				Territory = request.Territory,
 				TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
-				DivisionId = request.Division
+				DivisionId = request.Division,
+				RegionId = request.Region
 			};
 
 			return cc;
@@ -67,6 +68,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			original.Territory = toMerge.Territory;
 			original.TrustCompaniesHouseNumber = toMerge.TrustCompaniesHouseNumber ?? original.TrustCompaniesHouseNumber; // doesn't for it to become null
 			original.DivisionId = toMerge.DivisionId;
+			original.RegionId = toMerge.RegionId;
+
 			return original;
 		}
 	}
