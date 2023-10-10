@@ -89,60 +89,13 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task CanCreateNewConcernCase_WithNullCompaniesHouseNumber()
+	public async Task CanCreateNewConcernCase_WithMinimumValuesSet()
 	{
-		ConcernCaseRequest createRequest = Builder<ConcernCaseRequest>.CreateNew()
-			.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
-			.With(c => c.Description = "")
-			.With(c => c.CrmEnquiry = "")
-			.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
-			.With(c => c.ReasonAtReview = "")
-			.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
-			.With(c => c.Issue = "Here is the issue")
-			.With(c => c.CurrentStatus = "Case status")
-			.With(c => c.CaseAim = "Here is the aim")
-			.With(c => c.DeEscalationPoint = "Point of de-escalation")
-			.With(c => c.CaseHistory = "Case history")
-			.With(c => c.NextSteps = "Here are the next steps")
-			.With(c => c.DirectionOfTravel = "Up")
-			.With(c => c.StatusId = 1)
-			.With(c => c.RatingId = 2)
-			.With(c => c.TrustCompaniesHouseNumber = null)
-			.Build();
-
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Post,
-			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
-			Content = JsonContent.Create(createRequest)
-		};
-
-		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
-		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
-
-		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
-		response.StatusCode.Should().Be(HttpStatusCode.Created);
-		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-
-		await using ConcernsDbContext context = _testFixture.GetContext();
-
-		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
-		createdCase.Should().NotBeNull();
-		expected.Data.Urn = createdCase!.Urn;
-
-		result.Should().BeEquivalentTo(expected);
-		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
-		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
-	}
-
-	[Fact]
-	public async Task CanCreateNewConcernCase_WithNullDivision()
-	{
-		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.Division = null;
+		ConcernCaseRequest createRequest = new ConcernCaseRequest();
+		createRequest.CreatedBy = _randomGenerator.NextString(3, 10);
+		createRequest.TrustUkprn = DatabaseModelBuilder.CreateUkPrn();
+		createRequest.StatusId = 1;
+		createRequest.RatingId = 2;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -170,44 +123,10 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
-		createdCase.DivisionId.Should().Be(createRequest.Division);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
-	}
-
-	[Fact]
-	public async Task CanCreateNewConcernCase_WithNullRegion()
-	{
-		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.RegionId = null;
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Post,
-			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
-			Content = JsonContent.Create(createRequest)
-		};
-
-		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
-		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
-
-		// call API
-		var response = await _client.SendAsync(httpRequestMessage);
-
-		response.StatusCode.Should().Be(HttpStatusCode.Created);
-		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-
-		await using ConcernsDbContext context = _testFixture.GetContext();
-
-		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
-
-		createdCase.Should().NotBeNull();
-		expected.Data.Urn = createdCase!.Urn;
-
-		result.Should().BeEquivalentTo(expected);
-		createdCase.RegionId.Should().Be(createRequest.RegionId);
-		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
+		createdCase.DivisionId.Should().Be(null);
+		createdCase.RegionId.Should().Be(null);
+		createdCase.TrustCompaniesHouseNumber.Should().Be(null);
 	}
 
 
