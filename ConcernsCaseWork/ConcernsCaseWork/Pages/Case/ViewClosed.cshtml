@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/closed"
+@using ConcernsCaseWork.API.Contracts.Case;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @using ConcernsCaseWork.Extensions
@@ -9,6 +10,8 @@
     ViewData["Title"] = "View Closed case";
     var nonce = HttpContext.GetNonce();
     var caseArchiveLink = "https://educationgovuk.sharepoint.com/:x:/r/sites/efaak/_layouts/15/Doc.aspx?sourcedoc=%7BDDBFCD6E-2A56-4575-85C1-2A5B716B9C3E%7D&file=SFSO%20Case%20Archive.xlsx";
+
+    var locationDescription = Model.CaseModel.Division == Division.RegionsGroup ? Model.CaseModel.Territory?.Description() : Model.CaseModel.Territory?.Description();
 }
 
 @section BeforeMain {
@@ -79,7 +82,7 @@
                             }
                             <br />
                             @{
-                                RenderValue(Model.CaseModel.Territory?.Description());
+                                RenderValue(locationDescription);
                             }
                         </dd>
                     </div>
