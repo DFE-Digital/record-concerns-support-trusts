@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -77,8 +76,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return Page();
 		}
-
-		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 
 		private void LoadPageComponents(CaseModel model)
 		{
