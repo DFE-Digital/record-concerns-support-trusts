@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
@@ -39,11 +40,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-
 				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
 				LoadPageComponents(caseModel);
 
@@ -70,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				var userName = GetUserName();
-				await _caseModelService.PatchTerritory((int)CaseUrn, userName, (Territory)Region.SelectedId);
+				await _caseModelService.PatchRegion((int)CaseUrn, (Region)Region.SelectedId);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
@@ -89,7 +85,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			LoadPageComponents();
 
-			Region.SelectedId = model.Territory.HasValue ? (int)model.Territory.Value : null;
+			Region.SelectedId = model.Region.HasValue ? (int)model.Region.Value : null;
 		}
 
 		public void LoadPageComponents()

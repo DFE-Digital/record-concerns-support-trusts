@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 				}
 
 				var userState = await GetUserState();
-				userState.CreateCaseModel.Territory = (Territory)Region.SelectedId;
+				userState.CreateCaseModel.Region = (Region)Region.SelectedId;
 				await _userStateCache.StoreData(GetUserName(), userState);
 
 				return Redirect("/case/concern");

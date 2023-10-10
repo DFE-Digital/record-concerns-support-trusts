@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ConcernsCaseWork.API.Contracts.Case;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -256,6 +257,15 @@ namespace ConcernsCaseWork.Services.Cases
 
 				throw;
 			}
+		}
+
+		public async Task PatchRegion(int caseUrn, Region? region)
+		{
+			var caseDto = await _caseService.GetCaseByUrn(caseUrn);
+
+			var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, Region = region };
+
+			await _caseService.PatchCaseByUrn(newCaseDto);
 		}
 
 		public async Task<long> PostCase(CreateCaseModel createCaseModel)

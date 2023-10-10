@@ -3,7 +3,6 @@ using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace ConcernsCaseWork.Models
@@ -71,7 +70,7 @@ namespace ConcernsCaseWork.Models
 
 		public Division? Division { get; set; }
 
-		public Territory? Region { get; set; }
+		public Region? Region { get; set; }
 
 		public bool ShowUpdateMessage { get; set; }
 

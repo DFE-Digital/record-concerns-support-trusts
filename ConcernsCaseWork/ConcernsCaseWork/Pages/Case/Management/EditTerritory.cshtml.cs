@@ -42,11 +42,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-				
 				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
 				LoadPageComponents(caseModel);
 				
