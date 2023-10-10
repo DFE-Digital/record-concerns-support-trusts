@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Data.Models
 
         public Territory? Territory { get; set; }
         public Division? DivisionId { get; set; }
+        public Region? RegionId { get; set; }
 
 		public string? TrustCompaniesHouseNumber { get; set; }
 
@@ -46,6 +47,7 @@ namespace ConcernsCaseWork.Data.Models
 		public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
         public virtual CaseDivision? Division { get; set; }
+        public virtual CaseRegion? Region { get; set; }
 		public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
 
         public virtual ICollection<Decision> Decisions { get; private set; } = new List<Decision>();
