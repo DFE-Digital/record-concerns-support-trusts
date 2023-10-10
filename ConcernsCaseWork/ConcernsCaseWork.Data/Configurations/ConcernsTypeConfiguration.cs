@@ -16,7 +16,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 		builder.HasData(
 			new ConcernsType
 			{
-				Id = 3,
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialDeficit,
 				Name = "Deficit",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
@@ -24,7 +24,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 4,
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialProjectedDeficit,
 				Name = "Projected deficit",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
@@ -32,7 +32,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 7,
+				Id = (int)API.Contracts.Concerns.ConcernType.ForceMajeure,
 				Name = "Force majeure",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
@@ -40,7 +40,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 8,
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialGovernance,
 				Name = "Financial governance",
 				Description = null,
 				CreatedAt = new DateTime(2021, 11, 17),
@@ -48,7 +48,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 20,
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialViability,
 				Name = "Viability",
 				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
@@ -56,7 +56,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 21,
+				Id = (int)API.Contracts.Concerns.ConcernType.Irregularity,
 				Name = "Irregularity",
 				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
@@ -64,7 +64,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 22,
+				Id = (int)API.Contracts.Concerns.ConcernType.IrregularitySuspectedFraud,
 				Name = "Suspected fraud",
 				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
@@ -72,7 +72,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 23,
+				Id = (int)API.Contracts.Concerns.ConcernType.Compliance,
 				Name = "Financial compliance",
 				Description = null,
 				CreatedAt = new DateTime(2022, 12, 20),
@@ -80,11 +80,19 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			},
 			new ConcernsType
 			{
-				Id = 24,
+				Id = (int)API.Contracts.Concerns.ConcernType.Safeguarding,
 				Name = "Safeguarding",
 				Description = null,
 				CreatedAt = new DateTime(2023, 1, 24),
 				UpdatedAt = new DateTime(2023, 1, 24)
+			},
+			new ConcernsType 
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.Governance,
+				Name = "Governance",
+				Description = null,
+				CreatedAt = new DateTime(2023, 10, 9),
+				UpdatedAt = new DateTime(2023, 10, 9)
 			}
 		);
 	}
