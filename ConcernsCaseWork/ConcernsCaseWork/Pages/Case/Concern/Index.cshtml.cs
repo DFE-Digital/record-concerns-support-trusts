@@ -215,7 +215,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			CreateRecordsModel = new List<CreateRecordModel>();
 			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
-			ConcernType = CaseComponentBuilder.BuildConcernType(nameof(ConcernType), ConcernType?.SelectedId);
+			ConcernType = CaseComponentBuilder.BuildConcernType(CreateCaseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 			ConcernType.SortOrder = 1;
 
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
