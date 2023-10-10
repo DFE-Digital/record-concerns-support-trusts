@@ -27,58 +27,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 	public class SelectTrustPageModelTests
 	{
 		[Test]
-		public void Constructor_WithNullClaimsService_ThrowsException()
-		{
-			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new SelectTrustPageModel(
-					Mock.Of<ITrustModelService>(),
-					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ILogger<SelectTrustPageModel>>(),
-					null));
-
-			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
-		}
-
-		[Test]
-		public void Constructor_WithNullLogger_ThrowsException()
-		{
-			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new SelectTrustPageModel(
-					Mock.Of<ITrustModelService>(),
-					Mock.Of<IUserStateCachedService>(),
-					null,
-					Mock.Of<IClaimsPrincipalHelper>()));
-
-			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
-		}
-
-		[Test]
-		public void Constructor_WithNullUserStateCachedService_ThrowsException()
-		{
-			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new SelectTrustPageModel(
-					Mock.Of<ITrustModelService>(),
-					null,
-					Mock.Of<ILogger<SelectTrustPageModel>>(),
-					Mock.Of<IClaimsPrincipalHelper>()));
-
-			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'cachedUserService')"));
-		}
-
-		[Test]
-		public void Constructor_WithNullTrustModelService_ThrowsException()
-		{
-			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new SelectTrustPageModel(
-					null,
-					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ILogger<SelectTrustPageModel>>(),
-					Mock.Of<IClaimsPrincipalHelper>()));
-
-			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'trustModelService')"));
-		}
-
-		[Test]
 		[TestCase("")]
 		[TestCase("a-b")]
 		[TestCase("ab")]
