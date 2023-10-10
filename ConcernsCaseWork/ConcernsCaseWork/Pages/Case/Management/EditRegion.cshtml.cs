@@ -65,7 +65,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					return Page();
 				}
 
-				var userName = GetUserName();
 				await _caseModelService.PatchRegion((int)CaseUrn, (Region)Region.SelectedId);
 
 				return Redirect($"/case/{CaseUrn}/management");
@@ -90,7 +89,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public void LoadPageComponents()
 		{
-			Region = CaseComponentBuilder.BuildRegion(nameof(Territory), Region?.SelectedId);
+			Region = CaseComponentBuilder.BuildRegion(nameof(Region), Region?.SelectedId);
 			Region.Heading = "";
 		}
 	}
