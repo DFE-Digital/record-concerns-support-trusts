@@ -31,7 +31,8 @@ namespace ConcernsCaseWork.API.Features.Case
 				RatingId = request.RatingId,
 				Territory = request.Territory,
 				TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
-				DivisionId = request.Division
+				DivisionId = request.Division,
+				RegionId = request.RegionId
 			};
 
 			return cc;
