@@ -32,7 +32,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.RatingId,
 				createCaseModel.Territory,
 				createCaseModel.TrustCompaniesHouseNumber,
-				createCaseModel.Division);
+				createCaseModel.Division,
+				createCaseModel.Region);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)
@@ -63,7 +64,8 @@ namespace ConcernsCaseWork.Mappers
 				RatingId = caseDto.RatingId,
 				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
 				Division = caseDto.Division,
-				Location = caseDto.Division == Division.RegionsGroup ? caseDto.Territory?.Description() : caseDto.Territory?.Description()
+				Region = caseDto.Region,
+				Location = caseDto.Division == Division.RegionsGroup ? caseDto.Region?.Description() : caseDto.Territory?.Description()
 		};
 		}
 

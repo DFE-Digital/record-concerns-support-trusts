@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Concerns;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Extensions;
 using System;
@@ -29,14 +30,14 @@ namespace ConcernsCaseWork.Models
 
 		public static RadioButtonsUiComponent BuildRegion(string name, int? selectedId = null)
 		{
-			var radioItems = Enum.GetValues(typeof(Territory))
-				.Cast<Territory>()
+			var radioItems = Enum.GetValues(typeof(Region))
+				.Cast<Region>()
 				.Select(v =>
 				{
 					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.Description() };
 				}).ToArray();
 
-			return new(ElementRootId: "territory", name, "Which region is managing this case?")
+			return new(ElementRootId: "region", name, "Which region is managing this case?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
