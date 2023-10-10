@@ -123,28 +123,14 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernType(string name, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildConcernType(Division? division, string name, int? selectedId = null)
 		{
-			var radioItems = new List<SimpleRadioItem>()
+			if (division == Division.RegionsGroup)
 			{
-				new SimpleRadioItem(ConcernType.FinancialDeficit.Description(), (int)ConcernType.FinancialDeficit) { TestId = ConcernType.FinancialDeficit.Description() },
-				new SimpleRadioItem(ConcernType.FinancialProjectedDeficit.Description(), (int)ConcernType.FinancialProjectedDeficit) { TestId = ConcernType.FinancialProjectedDeficit.Description() },
-				new SimpleRadioItem(ConcernType.FinancialViability.Description(), (int)ConcernType.FinancialViability) { TestId = ConcernType.FinancialViability.Description() },
-				new SimpleRadioItem(ConcernType.Compliance.Description(), (int)ConcernType.Compliance) { TestId = ConcernType.Compliance.Description() },
-				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
-				new SimpleRadioItem(ConcernType.ForceMajeure.Description(), (int)ConcernType.ForceMajeure) { TestId = ConcernType.ForceMajeure.Description() },
-				new SimpleRadioItem(ConcernType.Irregularity.Description(), (int)ConcernType.Irregularity) { TestId = ConcernType.Irregularity.Description() },
-				new SimpleRadioItem(ConcernType.IrregularitySuspectedFraud.Description(), (int)ConcernType.IrregularitySuspectedFraud) { TestId = ConcernType.IrregularitySuspectedFraud.Description() }
-			};
+				return BuildConcernTypeRegionsGroup(name, selectedId);
+			}
 
-			return new(ElementRootId: "concern-type", name, "Select concern type")
-			{
-				RadioItems = radioItems,
-				SelectedId = selectedId,
-				Required = true,
-				DisplayName = "concern type",
-				HintFromPartialView = "_RiskManagementFramework"
-			};
+			return BuildConcernTypeSfso(name, selectedId);
 		}
 
 		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
@@ -219,5 +205,47 @@ namespace ConcernsCaseWork.Models
 				DisplayName = "Case notes"
 			}
 		};
+
+		private static RadioButtonsUiComponent BuildConcernTypeSfso(string name, int? selectedId = null)
+		{
+			var radioItems = new List<SimpleRadioItem>()
+			{
+				new SimpleRadioItem(ConcernType.FinancialDeficit.Description(), (int)ConcernType.FinancialDeficit) { TestId = ConcernType.FinancialDeficit.Description() },
+				new SimpleRadioItem(ConcernType.FinancialProjectedDeficit.Description(), (int)ConcernType.FinancialProjectedDeficit) { TestId = ConcernType.FinancialProjectedDeficit.Description() },
+				new SimpleRadioItem(ConcernType.FinancialViability.Description(), (int)ConcernType.FinancialViability) { TestId = ConcernType.FinancialViability.Description() },
+				new SimpleRadioItem(ConcernType.Compliance.Description(), (int)ConcernType.Compliance) { TestId = ConcernType.Compliance.Description() },
+				new SimpleRadioItem(ConcernType.FinancialGovernance.Description(), (int)ConcernType.FinancialGovernance) { TestId = ConcernType.FinancialGovernance.Description() },
+				new SimpleRadioItem(ConcernType.ForceMajeure.Description(), (int)ConcernType.ForceMajeure) { TestId = ConcernType.ForceMajeure.Description() },
+				new SimpleRadioItem(ConcernType.Irregularity.Description(), (int)ConcernType.Irregularity) { TestId = ConcernType.Irregularity.Description() },
+				new SimpleRadioItem(ConcernType.IrregularitySuspectedFraud.Description(), (int)ConcernType.IrregularitySuspectedFraud) { TestId = ConcernType.IrregularitySuspectedFraud.Description() }
+			};
+
+			return new(ElementRootId: "concern-type", name, "Select concern type")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "concern type",
+				HintFromPartialView = "_RiskManagementFramework"
+			};
+		}
+
+		private static RadioButtonsUiComponent BuildConcernTypeRegionsGroup(string name, int? selectedId = null)
+		{
+			var radioItems = new List<SimpleRadioItem>()
+			{
+				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
+				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() },
+			};
+
+			return new(ElementRootId: "concern-type", name, "Select concern type")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "concern type",
+				HintFromPartialView = "_ConcernTypeHint"
+			};
+		}
 	}
 }
