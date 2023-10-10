@@ -145,22 +145,22 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public editTerritory(): this {
-		Logger.Log("Editing the territory");
+	public editManagedBy(): this {
+		Logger.Log("Editing managed by");
 		this.getEditTerritory().click();
 
 		return this;
 	}
 
-	public canEditTerritory(): this {
-		Logger.Log("Can edit the territory");
+	public canEditManagedBy(): this {
+		Logger.Log("Can edit managed by");
 		this.getEditTerritory();
 
 		return this;
 	}
 
-	public cannotEditTerritory(): this {
-		Logger.Log("Cannot edit the territory");
+	public cannotEditManagedBy(): this {
+		Logger.Log("Cannot edit managed by");
 		this.getEditTerritory().should("not.exist");
 
 		return this;
@@ -389,7 +389,7 @@ class CaseManagementPage {
 		return this;
 	}
 
-	private getEditConcern() {
+	public getEditConcern() {
 		return cy.getByTestId("edit-concern");
 	}
 
