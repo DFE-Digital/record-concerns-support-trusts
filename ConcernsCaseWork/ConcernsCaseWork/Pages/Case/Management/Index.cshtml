@@ -288,7 +288,7 @@
                                     </span>
                                 </h2>
                             </div>
-                            <div id="accordion-issue-content" class="govuk-accordion__section-content" aria-labelledby="accordion-issue-heading">
+                            <div id="accordion-issue-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Change</a></div>
@@ -306,7 +306,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
                                 </h2>
                             </div>
-                            <div id="accordion-status-content" class="govuk-accordion__section-content" aria-labelledby="accordion-status-heading">
+                            <div id="accordion-status-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Change</a></div>
@@ -324,7 +324,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
                                 </h2>
                             </div>
-                            <div id="accordion-case-aim-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-aim-heading">
+                            <div id="accordion-case-aim-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Change</a></div>
@@ -343,7 +343,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
                                 </h2>
                             </div>
-                            <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content" aria-labelledby="accordion-de-escalation-point-heading">
+                            <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Change</a></div>
@@ -362,7 +362,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
                                 </h2>
                             </div>
-                            <div id="accordion-next-steps-content" class="govuk-accordion__section-content" aria-labelledby="accordion-next-steps-heading">
+                            <div id="accordion-next-steps-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Change</a></div>
@@ -381,7 +381,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case notes</span>
                                 </h2>
                             </div>
-                            <div id="accordion-case-history-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-history-heading">
+                            <div id="accordion-case-history-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case notes">Change</a></div>
