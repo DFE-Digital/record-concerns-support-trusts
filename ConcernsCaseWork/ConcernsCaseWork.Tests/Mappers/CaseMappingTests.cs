@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
@@ -44,6 +45,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var caseDto = CaseFactory.BuildCaseDto();
 			caseDto.Urn = 22134234;
+			caseDto.Territory = Territory.South_And_South_East__London;
 
 			// act
 			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
@@ -72,6 +74,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel.Territory, Is.EqualTo(caseDto.Territory));
 			caseModel.IsArchived.Should().BeFalse();
 			caseModel.Division.Should().Be(caseDto.Division);
+			Assert.That(caseModel.Location, Is.EqualTo("South and East - London"));
 		}
 
 		[Test]

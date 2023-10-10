@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace ConcernsCaseWork.Models
@@ -70,6 +71,8 @@ namespace ConcernsCaseWork.Models
 
 		public Division? Division { get; set; }
 
+		public Territory? Region { get; set; }
+
 		public bool ShowUpdateMessage { get; set; }
 
 		public bool ShowValidationMessage { get; set; }
@@ -84,5 +87,12 @@ namespace ConcernsCaseWork.Models
 		{
 			return StatusId == (int)CaseStatus.Close;
 		}
+
+		/// <summary>
+		/// This differs depending on whether the case is for regions group or SFSO
+		/// SFSO - Territory
+		/// Regions Group - Region
+		/// </summary>
+		public string Location { get; set; }
 	}
 }

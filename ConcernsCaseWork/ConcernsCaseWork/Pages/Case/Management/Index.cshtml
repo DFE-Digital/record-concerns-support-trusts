@@ -16,19 +16,16 @@
     var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
     var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
 
-    var locationDescription = "";
     var locationChangeLink = "";
     var locationAria = "";
 
     if (Model.CaseModel.Division == Division.RegionsGroup)
     {
-        locationDescription = Model.CaseModel.Territory?.Description();
         locationChangeLink = $"{Request.Path}/edit-region";
         locationAria = "Change region";
     }
     else
     {
-        locationDescription = Model.CaseModel.Territory?.Description();
         locationChangeLink = $"{Request.Path}/edit-territory";
         locationAria = "Change territory";
     }
@@ -250,7 +247,7 @@
                                 }
                                 <br />
                                 @{
-                                    RenderValue(locationDescription);
+                                    RenderValue(Model.CaseModel.Location);
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">
