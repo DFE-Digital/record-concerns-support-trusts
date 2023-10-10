@@ -123,7 +123,7 @@ describe("Editing a case", () => {
 		addDetailsPage.withRiskToTrust("Amber-Green").apply();
 
 		Logger.Log("Edit a territory");
-		caseManagementPage.editTerritory();
+		caseManagementPage.editManagedBy();
 
 		addTerritoryPage.hasTerritory("North and UTC - North East");
 
