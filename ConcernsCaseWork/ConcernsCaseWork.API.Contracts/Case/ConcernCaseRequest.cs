@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
         public int RatingId { get; set; }
         public Territory? Territory { get; set; }
         public Division? Division { get; set; }
-        public Region? RegionId { get; set; }
+        public Region? Region { get; set; }
 
 		[StringLength(8)]
         [AllowNull]

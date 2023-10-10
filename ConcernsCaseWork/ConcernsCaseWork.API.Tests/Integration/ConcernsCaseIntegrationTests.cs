@@ -1,4 +1,5 @@
 using AutoFixture;
+using Azure;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
@@ -84,7 +85,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
 		createdCase.DivisionId.Should().Be(createRequest.Division);
-		createdCase.RegionId.Should().Be(createRequest.RegionId);
+		createdCase.RegionId.Should().Be(createRequest.Region);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
@@ -162,10 +163,11 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task PostCaseWithInvalidDivision_Returns_BadRequest()
+	public async Task PostCaseWithInvalidValues_Returns_BadRequest()
 	{
 		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
 		createRequest.Division = 0;
+		createRequest.Region = 0;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -176,8 +178,6 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
 
 		// call API
 		var response = await _client.SendAsync(httpRequestMessage);
@@ -187,36 +187,8 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		string error = await response.Content.ReadAsStringAsync();
 
 		error.Should().Contain("Division must have value 1 or 2");
+		error.Should().Contain("'Region' has a range of values which does not include '0'");
 	}
-
-	[Fact]
-	public async Task PostCaseWithInvalidRegion_Returns_BadRequest()
-	{
-		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.RegionId = 0;
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Post,
-			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
-			Content = JsonContent.Create(createRequest)
-		};
-
-		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
-		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
-
-		// call API
-		var response = await _client.SendAsync(httpRequestMessage);
-
-		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-
-		string error = await response.Content.ReadAsStringAsync();
-
-		error.Should().Contain("'Region Id' has a range of values which does not include '0'");
-	}
-
 
 	[Fact]
 	public async Task CanGetConcernCaseByUrn()
@@ -391,7 +363,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
 			.With(cr => cr.Division = Division.RegionsGroup)
 			.With(cr => cr.RatingId = 1)
-			.With(cr => cr.RegionId = Region.NorthWest)
+			.With(cr => cr.Region = Region.NorthWest)
 			.Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -412,7 +384,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task UpdateConcernsCase_With_InvalidDivisionAndRating_Returns_BadRequest()
+	public async Task UpdateConcernsCase_With_InvalidValues_Returns_BadRequest()
 	{
 		ConcernsCase currentConcernsCase = new()
 		{
@@ -472,7 +444,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task UpdateConcernsCase_WithNullDivision_ShouldReturnTheUpdatedConcernsCase()
+	public async Task UpdateConcernsCase_WithMinimumFields_Returns_200()
 	{
 		ConcernsCase currentConcernsCase = new()
 		{
@@ -497,38 +469,25 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			StatusId = 2,
 			RatingId = 1,
 			TrustCompaniesHouseNumber = "12345678",
-			DivisionId = Division.SFSO
+			DivisionId = Division.SFSO,
+			RegionId = Region.EastMidlands
 		};
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
 
-		int urn = currentConcernsCase.Urn;
+		var request = new ConcernCaseRequest();
+		request.RatingId = 1;
+		request.StatusId = 2;
 
-		ConcernCaseRequest updateRequest = Builder<ConcernCaseRequest>.CreateNew()
-			.With(cr => cr.Description = "")
-			.With(cr => cr.CrmEnquiry = "")
-			.With(cr => cr.ReasonAtReview = "")
-			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
-			.With(cr => cr.Division = null)
-			.With(cr => cr.RatingId = 1).Build();
-
-		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
-		expectedConcernsCase.Urn = urn;
-		ConcernsCaseResponse expectedContent = ConcernsCaseResponseFactory.Create(expectedConcernsCase);
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Patch,
-			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/{urn}"),
-			Content = JsonContent.Create(updateRequest)
-		};
-		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
-		ApiSingleResponseV2<ConcernsCaseResponse> content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-
+		HttpResponseMessage response = await _client.PatchAsync($"/v2/concerns-cases/{currentConcernsCase.Id}", request.ConvertToJson());
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-		content.Data.Should().BeEquivalentTo(expectedContent);
-	}
 
+		var content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		content.Data.Territory.Should().BeNull();
+		content.Data.Region.Should().BeNull();
+		content.Data.Division.Should().BeNull();
+	}
 
 	[Fact]
 	public async Task PatchInvalidConcernCaseRequest_Returns_ValidationErrors()

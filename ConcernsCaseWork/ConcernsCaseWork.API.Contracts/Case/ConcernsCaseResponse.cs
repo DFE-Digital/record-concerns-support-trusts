@@ -28,5 +28,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
 		public string TrustCompaniesHouseNumber { get; set; }
 		public DateTime? CaseLastUpdatedAt { get; set; }
 		public Division? Division { get; set; }
+
+		public Region? Region { get; set; }
 	}
 }
