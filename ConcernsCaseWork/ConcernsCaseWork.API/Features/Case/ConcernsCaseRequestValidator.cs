@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			RuleFor(x => x.Division).IsInEnum().WithMessage("Division must have value 1 or 2");
 
-			RuleFor(x => x.RegionId).IsInEnum();
+			RuleFor(x => x.Region).IsInEnum();
 		}
 	}
 }
