@@ -1,17 +1,12 @@
-using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.FeatureManagement.Mvc;
 using System;
 using System.Linq;
 using System.Net;
@@ -21,18 +16,15 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class SelectTrustPageModel : AbstractPageModel
+public class SelectTrustPageModel : CreateCaseBasePageModel
 {
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedUserService;
 	private readonly ILogger<SelectTrustPageModel> _logger;
-	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private const int _searchQueryMinLength = 3;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
-
-	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 	[FromQuery(Name = "step")]
 	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
@@ -43,12 +35,11 @@ public class SelectTrustPageModel : AbstractPageModel
 	public SelectTrustPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectTrustPageModel> logger,
-		IClaimsPrincipalHelper claimsPrincipalHelper)
+		IClaimsPrincipalHelper claimsPrincipalHelper) : base(cachedUserService, claimsPrincipalHelper)
 	{
-		_trustModelService = Guard.Against.Null(trustModelService);
-		_cachedUserService = Guard.Against.Null(cachedUserService);
-		_logger = Guard.Against.Null(logger);
-		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+		_trustModelService = trustModelService;
+		_cachedUserService = cachedUserService;
+		_logger = logger;
 		FindTrustModel = new();
 	}
 
@@ -71,7 +62,7 @@ public class SelectTrustPageModel : AbstractPageModel
 		{
 			_logger.LogErrorMsg(ex);
 
-			TempData["Error.Message"] = ErrorOnGetPage;
+			SetErrorMessage(ErrorOnGetPage);
 		}
 
 		return Page();
@@ -126,11 +117,7 @@ public class SelectTrustPageModel : AbstractPageModel
 	private async Task SetTrustAddress()
 	{
 		var userName = GetUserName();
-		var userState = await _cachedUserService.GetData(userName);
-		if (userState == null)
-		{
-			throw new Exception($"Could not retrieve cache for user '{userName}'");
-		}
+		var userState = await GetUserState();
 
 		if (string.IsNullOrEmpty(userState.TrustUkPrn))
 		{
@@ -148,8 +135,6 @@ public class SelectTrustPageModel : AbstractPageModel
 
 		return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 	}
-
-	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 
 	public enum CaseTypes
 	{

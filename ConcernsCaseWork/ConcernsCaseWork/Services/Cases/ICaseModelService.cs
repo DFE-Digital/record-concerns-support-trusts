@@ -2,6 +2,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Redis.Models;
 using System.Threading.Tasks;
+using ConcernsCaseWork.API.Contracts.Case;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -22,5 +23,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 		Task<long> PatchCase(int caseUrn,CreateCaseModel createCaseModel);
 		Task PatchOwner(int caseUrn, string owner);
+
+		Task PatchRegion(int caseUrn, Region? region);
 	}
 }
