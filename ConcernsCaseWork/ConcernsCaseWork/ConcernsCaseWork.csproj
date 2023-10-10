@@ -255,10 +255,6 @@
 		  <DependentUpon>EditOwner.cshtml</DependentUpon>
 		</Compile>
 	</ItemGroup>
-
-	<ItemGroup>
-		<None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
-	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties appsettings_1json__JsonSchema=" " />
