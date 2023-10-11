@@ -92,6 +92,6 @@ namespace ConcernsCaseWork.Models
 		/// SFSO - Territory
 		/// Regions Group - Region
 		/// </summary>
-		public string Location { get; set; }
+		public string Area { get; set; }
 	}
 }

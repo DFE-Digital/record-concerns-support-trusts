@@ -90,6 +90,15 @@ export class TrustOverviewPage {
 
         return this;
     }
+
+    public showClosedCases(): this
+    {
+        Logger.Log("Showing closed cases");
+
+        cy.getById("closed-cases-tab").click();
+
+        return this;
+    }
 }
 
 const trustOverviewPage = new TrustOverviewPage();

@@ -1,6 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.API.Extensions;
 
 namespace ConcernsCaseWork.API.Features.Case;
 
@@ -25,7 +26,9 @@ public static class CaseSummaryResponseFactory
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt,
-			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt
+			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt,
+			Division = caseSummary.Division,
+			Area = caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription()
 		};
 	}
 
@@ -47,7 +50,9 @@ public static class CaseSummaryResponseFactory
 			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
-			UpdatedAt = caseSummary.UpdatedAt
+			UpdatedAt = caseSummary.UpdatedAt,
+			Division = caseSummary.Division,
+			Area = caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription()
 		};
 	}
 

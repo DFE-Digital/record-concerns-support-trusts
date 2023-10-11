@@ -80,23 +80,21 @@
             </div>
         }
         <h1 class="govuk-heading-l" name="caseID">
-            <span class="govuk-caption-m">Case ID</span>
-            @Model.CaseModel.Urn
+            <span class="govuk-caption-m">Case ID @Model.CaseModel.Urn</span>
+            @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle
         </h1>
-
-        <h2 class="govuk-heading-m">@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
         <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                     <a class="govuk-tabs__tab" href="#case-details">
-                        Case overview
+                        About the case
                     </a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a class="govuk-tabs__tab" href="#trust-overview">
-                        Trust overview
+                        About the trust
                     </a>
                 </li>
             </ul>
@@ -247,7 +245,7 @@
                                 }
                                 <br />
                                 @{
-                                    RenderValue(Model.CaseModel.Location);
+                                    RenderValue(Model.CaseModel.Area);
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">

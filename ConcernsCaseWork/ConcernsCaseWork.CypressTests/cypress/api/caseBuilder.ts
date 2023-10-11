@@ -30,7 +30,8 @@ export class CaseBuilder
             caseHistory: "case history",
             statusId: 1,
             ratingId: 4,
-            territory: 1
+            territory: 1,
+            division: 1
         };
 
         return result;

@@ -453,6 +453,14 @@ class CaseManagementPage {
 		return this;
 	}
 
+	public viewCase(): this {
+		Logger.Log("Viewing case");
+
+		cy.getById("tab_case-details").click();
+
+		return this;
+	}
+
 	// has methods
 	public hasTrust(value: string): this {
 		Logger.Log(`Has trust ${value}`);
