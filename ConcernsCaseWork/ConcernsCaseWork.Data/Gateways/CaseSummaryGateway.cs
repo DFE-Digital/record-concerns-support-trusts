@@ -136,6 +136,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			TrustUkPrn = cases.TrustUkprn,
 			UpdatedAt = cases.UpdatedAt,
 			CaseLastUpdatedAt = cases.CaseLastUpdatedAt,
+			Division = cases.DivisionId,
+			Region = cases.RegionId,
+			Territory = cases.Territory,
 			ActiveConcerns = from concerns
 				in cases.ConcernsRecords
 							 where concerns.StatusId == 1
@@ -182,6 +185,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			StatusName = cases.Status.Name,
 			TrustUkPrn = cases.TrustUkprn,
 			UpdatedAt = cases.UpdatedAt,
+			Division = cases.DivisionId,
+			Region = cases.RegionId,
+			Territory = cases.Territory,
 			ClosedConcerns =
 							from concerns in cases.ConcernsRecords
 							where concerns.StatusId == 3

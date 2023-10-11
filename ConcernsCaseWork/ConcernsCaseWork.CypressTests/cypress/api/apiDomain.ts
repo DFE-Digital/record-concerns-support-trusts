@@ -24,7 +24,8 @@ export type CreateCaseRequest =
     caseHistory: string,
     statusId: number,
     ratingId: number,
-    territory: 1
+    territory: number,
+    division: number
 };
 
 export type CreateCaseResponse =
@@ -32,6 +33,7 @@ export type CreateCaseResponse =
     urn: number;
     createdBy: string;
     trustCompaniesHouseNumber: string;
+    trustUkprn: string;
 };
 
 export type PatchCaseRequest =
