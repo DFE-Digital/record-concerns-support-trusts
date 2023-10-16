@@ -17,8 +17,8 @@ describe("Case without a division", () =>
         {
             cy.login();
 
-            cy.basicCreateCase().then((id) => {
-                caseId = id;
+            cy.basicCreateCase().then((caseResponse) => {
+                caseId = caseResponse.urn;
             });
         })
 

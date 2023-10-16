@@ -28,7 +28,7 @@ public static class CaseSummaryResponseFactory
 			UpdatedAt = caseSummary.UpdatedAt,
 			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt,
 			Division = caseSummary.Division,
-			Area = caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription()
+			Area = getArea(caseSummary)
 		};
 	}
 
@@ -52,8 +52,13 @@ public static class CaseSummaryResponseFactory
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt,
 			Division = caseSummary.Division,
-			Area = caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription()
+			Area = getArea(caseSummary)
 		};
+	}
+
+	private static string getArea(CaseSummaryVm caseSummary)
+	{
+		return caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription();
 	}
 
 	private static CaseSummaryResponse.Concern Create(CaseSummaryVm.Concern concern)

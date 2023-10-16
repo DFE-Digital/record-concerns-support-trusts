@@ -15,8 +15,8 @@ describe("Testing reassigning cases", () => {
 			role: AdminClaim,
 		});
 
-		cy.basicCreateCase().then((id) => {
-			caseId = id;
+		cy.basicCreateCase().then((caseResponse) => {
+			caseId = caseResponse.urn;
 		});
 
 		email = Cypress.env(EnvUsername);

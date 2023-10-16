@@ -42,9 +42,9 @@ describe("Testing permissions on cases and case actions", () => {
         cy.login();
 
         cy.basicCreateCase()
-        .then((id =>
+        .then((caseResponse =>
         {
-            caseId = id;
+            caseId = caseResponse.urn;
         }));
     });
 

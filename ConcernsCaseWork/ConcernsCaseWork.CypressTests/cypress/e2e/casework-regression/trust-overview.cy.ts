@@ -32,7 +32,7 @@ describe("Trust overview ", () =>
         {
             beforeEach(() => 
             {
-                cy.createCase()
+                cy.basicCreateCase()
                 .then((response: CreateCaseResponse) => {
                     caseId = response.urn + "";
                     trustUkprn = response.trustUkprn;
