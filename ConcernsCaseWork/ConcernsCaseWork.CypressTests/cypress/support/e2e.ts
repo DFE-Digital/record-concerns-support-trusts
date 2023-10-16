@@ -27,8 +27,7 @@ declare global {
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;
             loginWithCredentials(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
-            basicCreateCase(): Chainable<number>;
-            createCase(): Chainable<CreateCaseResponse>;
+            basicCreateCase(): Chainable<CreateCaseResponse>;
             createNonConcernsCase(): Chainable<CreateCaseResponse>;
             closeConcern(): Chainable<Element>;
             closeCase(): Chainable<Element>;
