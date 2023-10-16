@@ -24,9 +24,9 @@ describe("Your casework tests", () =>
 			});
 
 			cy.basicCreateCase()
-			.then((id) =>
+			.then((response) =>
 			{
-				caseId = id + "";
+				caseId = response.urn + "";
 			});
 		});
 

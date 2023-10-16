@@ -54,6 +54,25 @@ export class CaseRow {
         return this;
     }
 
+    public hasManagedBy(division: string, area: string): this
+    {
+        Logger.Log(`Has managed by ${division} ${area}`);
+
+        cy.getByTestId("managed-by").should("contain.text", division);
+        cy.getByTestId("managed-by").should("contain.text", area);
+
+        return this;
+    }
+
+    public hasAction(value: string): this
+    {
+        Logger.Log(`Has action ${value}`);
+
+        cy.getByTestId("actions-and-decisions").should("contain.text", value);
+
+        return this;
+    }
+
     public hasOwner(value: string): this
     {
         Logger.Log(`Has owner ${value}`);
