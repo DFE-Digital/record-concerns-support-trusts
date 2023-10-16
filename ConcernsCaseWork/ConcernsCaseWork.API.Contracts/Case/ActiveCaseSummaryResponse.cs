@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Contracts.Enums;
 
 namespace ConcernsCaseWork.API.Contracts.Case
 {
@@ -18,6 +19,10 @@ namespace ConcernsCaseWork.API.Contracts.Case
 		public IEnumerable<ActionOrDecision> NtisUnderConsideration { get; set; }
 		public IEnumerable<ActionOrDecision> SrmaCases { get; set; }
 		public IEnumerable<ActionOrDecision> TrustFinancialForecasts { get; set; }
+
+		public Division? Division { get; set; }
+
+		public string? Area { get; set; }
 
 		public record ActionOrDecision(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 		public record Concern(string Name, ConcernsRatingResponse Rating, DateTime CreatedAt);

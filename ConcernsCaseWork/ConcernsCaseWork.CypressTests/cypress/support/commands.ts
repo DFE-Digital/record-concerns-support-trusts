@@ -6,6 +6,9 @@ import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 import { Logger } from "../common/logger";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { CaseBuilder } from "cypress/api/caseBuilder";
+import caseMangementPage from "cypress/pages/caseMangementPage";
+import editConcernPage from "cypress/pages/editConcernPage";
+import { CreateCaseRequest } from "cypress/api/apiDomain";
 
 Cypress.Commands.add("getByTestId", (id) => {
 	cy.get(`[data-testid="${id}"]`);
@@ -17,13 +20,6 @@ Cypress.Commands.add("containsByTestId", (id) => {
 
 Cypress.Commands.add("getById", (id) => {
 	cy.get(`[id="${id}"]`);
-});
-
-Cypress.Commands.add("waitForJavascript", () => {
-	// Need to look into this later
-	// Essentially javascript validation is too slow and blocks submission even though the error has been corrected
-	// Might be a more intelligent way to do this in the future
-	cy.wait(1000);
 });
 
 Cypress.Commands.add("login", (params) => {
@@ -90,14 +86,44 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 	Logger.Log("Command finished");
 });
 
-Cypress.Commands.add("basicCreateCase", () => {
+Cypress.Commands.add("createNonConcernsCase", () =>
+{
 	caseApi.post(CaseBuilder.buildOpenCase()).then((caseResponse) => {
+		const caseId = caseResponse.urn;
+
+		cy.visit(`/case/${caseId}/management`);
+		cy.reload();
+
+		return cy.wrap(caseResponse);
+	});
+});
+
+Cypress.Commands.add("basicCreateCase", (request?: CreateCaseRequest) => {
+
+	if (request == null) {
+		request = CaseBuilder.buildOpenCase();
+	}
+
+	caseApi.post(request).then((caseResponse) => {
 		const caseId = caseResponse.urn;
 		concernsApi.post(caseId);
 
 		cy.visit(`/case/${caseId}/management`);
 		cy.reload();
 
-		return cy.wrap(caseResponse.urn);
+		return cy.wrap(caseResponse);
 	});
+});
+
+Cypress.Commands.add("closeConcern", () =>
+{
+	Logger.Log("Closing concern");
+	caseMangementPage.editConcern();
+	editConcernPage.closeConcern().confirmCloseConcern();
+});
+
+Cypress.Commands.add("closeCase", () =>
+{
+	caseMangementPage.getCloseCaseBtn().click();
+	caseMangementPage.withRationaleForClosure("Closing").getCloseCaseBtn().click();
 });

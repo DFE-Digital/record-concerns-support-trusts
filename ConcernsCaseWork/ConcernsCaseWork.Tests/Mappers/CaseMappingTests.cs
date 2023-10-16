@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			caseModel.IsArchived.Should().BeFalse();
 			caseModel.Division.Should().Be(caseDto.Division);
 			caseModel.Region.Should().Be(caseDto.Region);
-			Assert.That(caseModel.Location, Is.EqualTo(location));
+			Assert.That(caseModel.Area, Is.EqualTo(location));
 		}
 
 		[Test]

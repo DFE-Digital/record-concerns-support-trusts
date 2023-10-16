@@ -1,3 +1,5 @@
+using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Decisions;
 
@@ -18,7 +20,10 @@ public abstract record CaseSummaryVm
 	public IEnumerable<Action> NtisUnderConsideration { get; set; }
 	public IEnumerable<Action> SrmaCases { get; set; }
 	public IEnumerable<Action> TrustFinancialForecasts { get; set; }
-	
+	public Division? Division { get; set; }
+	public Region? Region { get; set; }
+	public Territory? Territory { get; set; }
+
 	public record Action(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 	public record Concern(string Name, ConcernsRating Rating, DateTime CreatedAt);
 }
