@@ -1,3 +1,4 @@
+import { CaseBuilder } from "cypress/api/caseBuilder";
 import { Logger } from "cypress/common/logger";
 import caseMangementPage from "cypress/pages/caseMangementPage";
 import closedCasePage from "cypress/pages/closedCasePage";
@@ -17,7 +18,10 @@ describe("Case without a division", () =>
         {
             cy.login();
 
-            cy.basicCreateCase().then((caseResponse) => {
+            const caseRequest = CaseBuilder.buildOpenCase();
+            caseRequest.division = undefined;
+
+            cy.basicCreateCase(caseRequest).then((caseResponse) => {
                 caseId = caseResponse.urn;
             });
         })

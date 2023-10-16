@@ -25,7 +25,7 @@ export type CreateCaseRequest =
     statusId: number,
     ratingId: number,
     territory: number,
-    division: number
+    division?: number
 };
 
 export type CreateCaseResponse =
