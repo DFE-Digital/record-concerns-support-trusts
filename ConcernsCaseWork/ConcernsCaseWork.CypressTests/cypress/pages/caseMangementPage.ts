@@ -27,13 +27,14 @@ class CaseManagementPage {
 	}
 
 	getCaseIDText() {
-		return this.getHeadingText()
-			.invoke("text")
-			.then((text) => {
-				var splitText = text.split("\n")[2];
-				console.log("splitText " + splitText);
-				return splitText.trim();
-			});
+		return cy.getByTestId("heading-case-id")
+		.invoke("text")
+		.then(text =>
+		{
+			const caseId = text.split(" ").pop();
+
+			return caseId;
+		});
 	}
 
 	public createCase(): this {
