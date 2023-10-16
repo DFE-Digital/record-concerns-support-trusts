@@ -173,7 +173,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 	it("Close a TFF", function () {
 		Logger.Log("Create a TFF with populated values");
 		editTFFPage
-			.withForecastingTool("Previous year - Spring")
+			.withForecastingTool("Previous year - Autumn")
 			.withDayReviewHappened("14")
 			.withMonthReviewHappened("02")
 			.withYearReviewHappened("2022")
@@ -225,7 +225,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 		viewTFFPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasDateClosed(toDisplayDate(now))
-			.hasForecastingTool("Previous year - Spring")
+			.hasForecastingTool("Previous year - Autumn")
 			.hasInitialReviewDate("14 February 2022")
 			.hasTrustRespondedDate("15 March 2024")
 			.hasTrustResponse("Not satisfactory")
