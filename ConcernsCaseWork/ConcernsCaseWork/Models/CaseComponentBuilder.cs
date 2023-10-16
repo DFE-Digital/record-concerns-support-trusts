@@ -134,7 +134,7 @@ namespace ConcernsCaseWork.Models
 		}
 
 		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
-		=> new("issue", name, "Issue")
+		=> new("issue", name, "Issue (required)")
 		{
 			HintFromPartialView = "_IssueHint",
 			Text = new ValidateableString()
@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)
-		=> new("current-status", name, "Current status (optional)")
+		=> new("current-status", name, "Current status")
 		{
 			HintFromPartialView = "_CurrentStatusHint",
 			Text = new ValidateableString()
@@ -159,7 +159,7 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCaseAim(string name, string? value = null)
-		=> new("case-aim", name, "Case aim (optional)")
+		=> new("case-aim", name, "Case aim")
 		{
 			HintFromPartialView = "_CaseAimHint",
 			Text = new ValidateableString()
@@ -171,7 +171,7 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildDeEscalationPoint(string name, string? value = null)
-		=> new("de-escalation-point", name, "De-escalation point (optional)")
+		=> new("de-escalation-point", name, "De-escalation point")
 		{
 			HintFromPartialView = "_DeescalationPointHint",
 			Text = new ValidateableString()
@@ -183,7 +183,7 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildNextSteps(string name, string? value = null)
-		=> new("next-steps", name, "Next steps (optional)")
+		=> new("next-steps", name, "Next steps")
 		{
 			HintFromPartialView = "_NextStepsHint",
 			Text = new ValidateableString()
@@ -195,7 +195,7 @@ namespace ConcernsCaseWork.Models
 		};
 
 		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
-		=> new("case-history", name, "Case notes (optional)")
+		=> new("case-history", name, "Case notes")
 		{
 			HintFromPartialView = "_CaseHistoryHint",
 			Text = new ValidateableString()
