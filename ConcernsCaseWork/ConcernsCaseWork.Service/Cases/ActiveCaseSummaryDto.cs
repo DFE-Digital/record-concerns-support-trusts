@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Service.Ratings;
 
 namespace ConcernsCaseWork.Service.Cases;
@@ -19,6 +20,9 @@ public record CaseSummaryDto
 	public IEnumerable<ActionDecisionSummaryDto> NtisUnderConsideration { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> SrmaCases { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> TrustFinancialForecasts { get; set; }
+
+	public Division? Division { get; set; }
+	public string? Area { get; set; }
 	
 	public record ActionDecisionSummaryDto(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 

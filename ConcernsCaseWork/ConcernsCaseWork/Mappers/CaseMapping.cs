@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Mappers
 				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
 				Division = caseDto.Division,
 				Region = caseDto.Region,
-				Location = caseDto.Division == Division.RegionsGroup ? caseDto.Region?.Description() : caseDto.Territory?.Description()
+				Area = caseDto.Division == Division.RegionsGroup ? caseDto.Region?.Description() : caseDto.Territory?.Description()
 		};
 		}
 

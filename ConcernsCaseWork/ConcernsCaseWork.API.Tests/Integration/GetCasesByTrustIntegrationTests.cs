@@ -2,6 +2,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data.Models;
@@ -32,14 +33,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			_testFixture = apiTestFixture;
 		}
 
-		[Fact]
-
-		public async Task When_HasActiveCasesWithCaseActions_Returns_CorrectInformation_200()
+		[Theory]
+		[InlineData(Division.SFSO, "National Operations")]
+		[InlineData(Division.RegionsGroup, "London")]
+		public async Task When_HasActiveCasesWithCaseActions_Returns_CorrectInformation_200(Division division, string expectedArea)
 		{
 			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			var expectedCase = CreateConcernsCase(ukPrn);
+			expectedCase.DivisionId = division;
+			expectedCase.Territory = Territory.National_Operations;
+			expectedCase.RegionId = Region.London;
 
 			var closedConcern = DatabaseModelBuilder.BuildConcernsRecord();
 			closedConcern.TypeId = (int)ConcernType.Irregularity;
@@ -66,6 +71,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 			actualCase.StatusName.Should().Be(CaseStatus.Live.ToString());
+			actualCase.Division.Should().Be(division);
+			actualCase.Area.Should().Be(expectedArea);
 
 			actualCase.ActiveConcerns.Should().HaveCount(1);
 			var concern = actualCase.ActiveConcerns.First();
@@ -212,13 +219,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Should().HaveCount(0);
 		}
 
-		[Fact]
-		public async Task When_HasClosedCasesWithCaseActions_Returns_CorrectInformation_200()
+		[Theory]
+		[InlineData(Division.SFSO, "National Operations")]
+		[InlineData(Division.RegionsGroup, "London")]
+		public async Task When_HasClosedCasesWithCaseActions_Returns_CorrectInformation_200(Division division, string expectedArea)
 		{
 			var ukPrn = DatabaseModelBuilder.CreateUkPrn();
 			List<ConcernsCase> cases = new List<ConcernsCase>();
 
 			var expectedCase = DatabaseModelBuilder.CloseCase(CreateConcernsCase(ukPrn));
+			expectedCase.DivisionId = division;
+			expectedCase.Territory = Territory.National_Operations;
+			expectedCase.RegionId = Region.London;
 
 			cases.Add(expectedCase);
 
@@ -239,6 +251,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			actualCase.CreatedBy.Should().Be(expectedCase.CreatedBy);
 			actualCase.TrustUkPrn.Should().Be(expectedCase.TrustUkprn);
 			actualCase.StatusName.Should().Be(CaseStatus.Close.ToString());
+			actualCase.Division.Should().Be(division);
+			actualCase.Area.Should().Be(expectedArea);
 
 			actualCase.ClosedConcerns.Should().HaveCount(1);
 			var concern = actualCase.ClosedConcerns.First();

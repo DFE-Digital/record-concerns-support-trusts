@@ -21,8 +21,8 @@ describe("Your casework tests", () =>
             now = new Date();
     
             cy.basicCreateCase()
-            .then((id: number) => {
-                caseId = id + "";
+            .then((caseResponse) => {
+                caseId = caseResponse.urn + "";
                 return CaseManagementPage.getTrust()
             })
             .then((trust: string) =>
