@@ -10,10 +10,6 @@ class CaseManagementPage {
 		return cy.get('[role="button"]').contains("Add to case");
 	}
 
-	getTrustOverviewTab() {
-		return cy.get('[id="tab_trust-overview"]');
-	}
-
 	getCloseCaseBtn() {
 		return cy.get("#close-case-button");
 	}
@@ -449,7 +445,7 @@ class CaseManagementPage {
 	public viewTrustOverview(): this {
 		Logger.Log("Viewing trust overview");
 
-		this.getTrustOverviewTab().click();
+		cy.getByTestId("trust-overview-tab").click();
 
 		return this;
 	}
@@ -457,7 +453,7 @@ class CaseManagementPage {
 	public viewCase(): this {
 		Logger.Log("Viewing case");
 
-		cy.getById("tab_case-details").click();
+		cy.getByTestId("case-overview-tab").click();
 
 		return this;
 	}
