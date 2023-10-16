@@ -23,49 +23,27 @@
     </div>
 }
 
-<nav class="moj-sub-navigation" aria-label="Sub navigation">
+<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
-    <ul class="moj-sub-navigation__list">
-        <li class="moj-sub-navigation__item">
-            <a id="active-cases-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Active Cases</a>
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#active-cases">
+                Active Cases
+            </a>
         </li>
-
-        <li class="moj-sub-navigation__item">
-            <a id="closed-cases-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Closed Cases</a>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#closed-cases">
+                Closed Case
+            </a>
         </li>
     </ul>
-</nav>
+    <div class="govuk-tabs__panel" id="active-cases">
 
-<div id="active-cases">
-    <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+        <partial name="_TrustActiveCases" model="@Model.ActiveCaseSummaryGroupModel" />
+
+    </div>
+
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="closed-cases">
+        <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
+    </div>
 </div>
-<div id="closed-cases" hidden>
-    <partial name="_TrustClosedCases" model="@Model.ClosedCaseSummaryGroupModel" />
-</div>
-
-<script type="application/javascript" nonce="@nonce">
-
-    $(function () {
-        onTabMove({ from: "closed", to: "active" });
-
-        onTabMove({ from: "active", to: "closed" });
-
-        function onTabMove(parameters) {
-            const tabToHide = document.getElementById(`${parameters.from}-cases-tab`);
-            const tableToHide = document.getElementById(`${parameters.from}-cases`);
-            const tabToShow = document.getElementById(`${parameters.to}-cases-tab`);
-            const tableToShow = document.getElementById(`${parameters.to}-cases`);
-
-            if (tabToShow) {
-                tabToShow.addEventListener("click", function() {
-                    tableToShow.removeAttribute("hidden");
-                    tabToShow.setAttribute("aria-expanded","true");
-                    tabToShow.setAttribute("aria-current","page");
-                    tableToHide.hidden = true;
-                    tabToHide.removeAttribute("aria-current");
-                });
-            }
-        }
-    });
-
-</script>

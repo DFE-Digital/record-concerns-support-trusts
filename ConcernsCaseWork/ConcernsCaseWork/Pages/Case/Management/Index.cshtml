@@ -86,20 +86,20 @@
 
         <h2 class="govuk-heading-m">@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
-        <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
+        <nav class="moj-sub-navigation" aria-label="Sub navigation">
 
-            <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-                    <a class="govuk-tabs__tab" href="#case-details">
-                        Case overview
-                    </a>
+            <ul class="moj-sub-navigation__list">
+                <li class="moj-sub-navigation__item">
+                    <a id="case-overview-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>Case overview</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab" href="#trust-overview">
-                        Trust overview
-                    </a>
+
+                <li class="moj-sub-navigation__item">
+                    <a id="trust-overview-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>Trust overview</a>
                 </li>
             </ul>
+        </nav>
+
+        <div id="case-overview">
             <div class="govuk-tabs__panel" id="case-details">
 
                 <!-- Case Details -->
@@ -465,23 +465,44 @@
                 <partial name="Shared/_ListClosedActionsForCase" model="Model.ClosedCaseActions" />
 
             </div>
-            <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-                <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
-            </div>
+        </div>
+        <div id="trust-overview" hidden>
+            <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
         </div>
 
         <script type="application/javascript" nonce="@nonce">
-            $(function () {
-                $(".govuk-tabs__tab").on("click", function(){
-                        var url = window.location.href;
 
-                        if(url.includes("#trust-overview")){
-                            $("#close-case-button").css("display", "none");
-                        }else{
-                            $("#close-case-button").css("display", "block");
-                        }
-                });
+            $(function () {
+                onTabMove({ from: "trust-overview", to: "case-overview" });
+
+                onTabMove({ from: "case-overview", to: "trust-overview" });
+
+                function onTabMove(parameters) {
+                    const tabToHide = document.getElementById(`${parameters.from}-tab`);
+                    const tableToHide = document.getElementById(`${parameters.from}`);
+                    const tabToShow = document.getElementById(`${parameters.to}-tab`);
+                    const tableToShow = document.getElementById(`${parameters.to}`);
+
+                    if (tabToShow) {
+                        tabToShow.addEventListener("click", function() {
+                            tableToShow.removeAttribute("hidden");
+                            tabToShow.setAttribute("aria-expanded","true");
+                            tabToShow.setAttribute("aria-current","page");
+                            tableToHide.hidden = true;
+                            tabToHide.removeAttribute("aria-current");
+
+                            if (tabToShow.id === 'trust-overview-tab'){
+                                $("#close-case-button").css("display", "none");
+                            }else{
+                                $("#close-case-button").css("display", "block");
+                            }
+                        });
+
+
+                    }
+                }
             });
+
         </script>
     }
 </div>
@@ -514,3 +535,4 @@
         <span class="govuk-tag ragtag ragtag__grey">Empty</span>
     }
 }
+
