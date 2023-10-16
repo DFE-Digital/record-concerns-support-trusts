@@ -30,9 +30,9 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {},
+      "publishAllPorts": true,
       "useSSL": true,
-      "DockerfileRunArguments": "--link redis:redis",
-      "publishAllPorts": true
+      "DockerfileRunArguments": "--link redis:redis"
     }
   }
 }
