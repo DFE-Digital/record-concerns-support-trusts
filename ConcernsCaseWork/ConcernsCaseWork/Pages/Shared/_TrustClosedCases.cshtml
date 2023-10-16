@@ -1,4 +1,5 @@
-﻿@using ConcernsCaseWork.Models;
+﻿@using ConcernsCaseWork.Extensions;
+@using ConcernsCaseWork.Models;
 @model CaseSummaryGroupModel<ClosedCaseSummaryModel>
 
 <table class="govuk-table  govuk-!-margin-top-6">
@@ -10,17 +11,17 @@
             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
                 Case ID
             </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                Contents
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                Managed by
+            </th>
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
                 Date created
             </th>
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
                 Date closed
-            </th>
-            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                Contents
-            </th>
-            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                Assigned to
             </th>
         </tr>
     </thead>
@@ -38,15 +39,9 @@
         {
             foreach (var closedCase in Model.Cases)
             {
-                <tr class="govuk-table__row tr__large">
-                    <td class="govuk-table__cell">
+                <tr class="govuk-table__row tr__large" data-testid="row-@closedCase.CaseUrn">
+                    <td class="govuk-table__cell" data-testid="case-id">
                         <a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
-                    </td>
-                    <td class="govuk-table__cell">
-                        @closedCase.CreatedAt
-                    </td>
-                    <td class="govuk-table__cell">
-                        @closedCase.ClosedAt
                     </td>
 
                     @if (!closedCase.ClosedConcerns.Any() && !closedCase.ClosedActionsAndDecisions.Any())
@@ -58,7 +53,7 @@
 
                     @if (!closedCase.ClosedConcerns.Any() && closedCase.ClosedActionsAndDecisions.Any())
                     {
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="actions-and-decisions">
                             <div class="concerns-secondary-text-colour">Actions and decisions</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var action in closedCase.ClosedActionsAndDecisions)
@@ -77,7 +72,7 @@
 
                     @if (closedCase.ClosedConcerns.Any())
                     {
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="concern">
                             <div class="concerns-secondary-text-colour">Concerns</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var concern in closedCase.ClosedConcerns)
@@ -87,8 +82,16 @@
                             </ul>
                         </td>
                     }
-                    <td class="govuk-table__cell">
-                        @closedCase.CreatedBy
+                    <td class="govuk-table__cell" data-testid="managed-by">
+                        @closedCase.Division?.Description()
+                        <br />
+                        @closedCase.Area
+                    </td>
+                    <td class="govuk-table__cell" data-testid="created-at">
+                        @closedCase.CreatedAt
+                    </td>
+                    <td class="govuk-table__cell" data-testid="closed-at">
+                        @closedCase.ClosedAt
                     </td>
                 </tr>
             }
