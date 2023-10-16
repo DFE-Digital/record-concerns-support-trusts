@@ -95,7 +95,7 @@ export class TrustOverviewPage {
     {
         Logger.Log("Showing closed cases");
 
-        cy.getById("closed-cases-tab").click();
+        cy.getByTestId("closed-cases-tab").click();
 
         return this;
     }

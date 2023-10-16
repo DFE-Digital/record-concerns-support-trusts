@@ -202,7 +202,7 @@ describe("User interactions via Find Trust route", () => {
 			cy.visit(`/trust/${trustUkPrn}/overview`);
 
 			caseworkTable
-				.getCaseIds()
+				.getOpenCaseIds()
 				.then((caseIds: Array<string>) => {
 					pageOneCases = caseIds;
 
@@ -212,7 +212,7 @@ describe("User interactions via Find Trust route", () => {
 					Logger.Log("Moving to the second page using the direct link");
 					paginationComponent.goToPage("2").isCurrentPage("2");
 
-					return caseworkTable.getCaseIds();
+					return caseworkTable.getOpenCaseIds();
 				})
 				.then((caseIds: Array<string>) => {
 					pageTwoCases = caseIds;
@@ -226,7 +226,7 @@ describe("User interactions via Find Trust route", () => {
 					Logger.Log("Move to the previous page, which is page 1");
 					paginationComponent.previous().isCurrentPage("1");
 
-					return caseworkTable.getCaseIds();
+					return caseworkTable.getOpenCaseIds();
 				})
 				.then((caseIds: Array<string>) => {
 					Logger.Log(
@@ -237,7 +237,7 @@ describe("User interactions via Find Trust route", () => {
 					Logger.Log("Move to the next page, which is page 2");
 					paginationComponent.next().isCurrentPage("2");
 
-					return caseworkTable.getCaseIds();
+					return caseworkTable.getOpenCaseIds();
 				})
 				.then((caseIds: Array<string>) => {
 					Logger.Log(
