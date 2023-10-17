@@ -10,10 +10,6 @@ class CaseManagementPage {
 		return cy.get('[role="button"]').contains("Add to case");
 	}
 
-	getTrustOverviewTab() {
-		return cy.get('[id="tab_trust-overview"]');
-	}
-
 	getCloseCaseBtn() {
 		return cy.get("#close-case-button");
 	}
@@ -27,13 +23,14 @@ class CaseManagementPage {
 	}
 
 	getCaseIDText() {
-		return this.getHeadingText()
-			.invoke("text")
-			.then((text) => {
-				var splitText = text.split("\n")[2];
-				console.log("splitText " + splitText);
-				return splitText.trim();
-			});
+		return cy.getByTestId("heading-case-id")
+		.invoke("text")
+		.then(text =>
+		{
+			const caseId = text.split(" ").pop();
+
+			return caseId;
+		});
 	}
 
 	public createCase(): this {
@@ -145,22 +142,22 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public editTerritory(): this {
-		Logger.Log("Editing the territory");
+	public editManagedBy(): this {
+		Logger.Log("Editing managed by");
 		this.getEditTerritory().click();
 
 		return this;
 	}
 
-	public canEditTerritory(): this {
-		Logger.Log("Can edit the territory");
+	public canEditManagedBy(): this {
+		Logger.Log("Can edit managed by");
 		this.getEditTerritory();
 
 		return this;
 	}
 
-	public cannotEditTerritory(): this {
-		Logger.Log("Cannot edit the territory");
+	public cannotEditManagedBy(): this {
+		Logger.Log("Cannot edit managed by");
 		this.getEditTerritory().should("not.exist");
 
 		return this;
@@ -389,7 +386,7 @@ class CaseManagementPage {
 		return this;
 	}
 
-	private getEditConcern() {
+	public getEditConcern() {
 		return cy.getByTestId("edit-concern");
 	}
 
@@ -448,7 +445,15 @@ class CaseManagementPage {
 	public viewTrustOverview(): this {
 		Logger.Log("Viewing trust overview");
 
-		this.getTrustOverviewTab().click();
+		cy.getByTestId("trust-overview-tab").click();
+
+		return this;
+	}
+
+	public viewCase(): this {
+		Logger.Log("Viewing case");
+
+		cy.getByTestId("case-overview-tab").click();
 
 		return this;
 	}

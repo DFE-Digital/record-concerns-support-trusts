@@ -1,11 +1,9 @@
-﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Case.CreateCase;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
@@ -15,20 +13,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class SelectTerritoryPageModel : AbstractPageModel
+	public class SelectTerritoryPageModel : CreateCaseBasePageModel
 	{
 		private readonly ILogger<SelectTerritoryPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
-		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private TelemetryClient _telemetryClient;
 
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -42,13 +37,12 @@ namespace ConcernsCaseWork.Pages.Case
 			IUserStateCachedService userStateCache,
 			ILogger<SelectTerritoryPageModel> logger, 
 			IClaimsPrincipalHelper claimsPrincipalHelper,
-			TelemetryClient telemetryClient)
+			TelemetryClient telemetryClient) : base(userStateCache, claimsPrincipalHelper)
 		{
-			_trustModelService = Guard.Against.Null(trustModelService);
-			_userStateCache = Guard.Against.Null(userStateCache);
-			_logger = Guard.Against.Null(logger);
-			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
-			_telemetryClient = Guard.Against.Null(telemetryClient);
+			_trustModelService = trustModelService;
+			_userStateCache = userStateCache;
+			_logger = logger;
+			_telemetryClient = telemetryClient;
 		}
 		
 		public async Task OnGetAsync()
@@ -125,9 +119,6 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await GetUserState();
 			var trustUkPrn = userState.TrustUkPrn;
-
-			if (string.IsNullOrEmpty(trustUkPrn))
-				throw new Exception("Cache TrustUkprn is null");
 		
 			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
@@ -144,16 +135,5 @@ namespace ConcernsCaseWork.Pages.Case
 
 			return Page();
 		}
-		
-		private async Task<UserState> GetUserState()
-		{
-			var userState = await _userStateCache.GetData(GetUserName());
-			if (userState is null)
-				throw new Exception("Could not retrieve cached new case data for user");
-			
-			return userState;
-		}
-
-		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

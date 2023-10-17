@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Concerns;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Extensions;
 using System;
@@ -24,6 +25,24 @@ namespace ConcernsCaseWork.Models
 				SelectedId = selectedId,
 				Required = true,
 				DisplayName = "SFSO territory"
+			};
+		}
+
+		public static RadioButtonsUiComponent BuildRegion(string name, int? selectedId = null)
+		{
+			var radioItems = Enum.GetValues(typeof(Region))
+				.Cast<Region>()
+				.Select(v =>
+				{
+					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.Description() };
+				}).ToArray();
+
+			return new(ElementRootId: "region", name, "Which region is managing this case?")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "region"
 			};
 		}
 
@@ -104,7 +123,90 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernType(string name, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildConcernType(Division? division, string name, int? selectedId = null)
+		{
+			if (division == Division.RegionsGroup)
+			{
+				return BuildConcernTypeRegionsGroup(name, selectedId);
+			}
+
+			return BuildConcernTypeSfso(name, selectedId);
+		}
+
+		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
+		=> new("issue", name, "Issue (required)")
+		{
+			HintFromPartialView = "_IssueHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 2000,
+				StringContents = value,
+				DisplayName = "Issue",
+				Required = true
+			}
+		};
+
+		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)
+		=> new("current-status", name, "Current status")
+		{
+			HintFromPartialView = "_CurrentStatusHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 4000,
+				StringContents = value,
+				DisplayName = "Current status",
+			}
+		};
+
+		public static TextAreaUiComponent BuildCaseAim(string name, string? value = null)
+		=> new("case-aim", name, "Case aim")
+		{
+			HintFromPartialView = "_CaseAimHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 1000,
+				StringContents = value,
+				DisplayName = "Case aim"
+			}
+		};
+
+		public static TextAreaUiComponent BuildDeEscalationPoint(string name, string? value = null)
+		=> new("de-escalation-point", name, "De-escalation point")
+		{
+			HintFromPartialView = "_DeescalationPointHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 1000,
+				StringContents = value,
+				DisplayName = "De-escalation point"
+			}
+		};
+
+		public static TextAreaUiComponent BuildNextSteps(string name, string? value = null)
+		=> new("next-steps", name, "Next steps")
+		{
+			HintFromPartialView = "_NextStepsHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 4000,
+				StringContents = value,
+				DisplayName = "Next steps"
+			}
+		};
+
+		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
+		=> new("case-history", name, "Case notes")
+		{
+			HintFromPartialView = "_CaseHistoryHint",
+			Text = new ValidateableString()
+			{
+				MaxLength = 4300,
+				StringContents = value,
+				DisplayName = "Case notes"
+			}
+		};
+
+		private static RadioButtonsUiComponent BuildConcernTypeSfso(string name, int? selectedId = null)
 		{
 			var radioItems = new List<SimpleRadioItem>()
 			{
@@ -112,7 +214,7 @@ namespace ConcernsCaseWork.Models
 				new SimpleRadioItem(ConcernType.FinancialProjectedDeficit.Description(), (int)ConcernType.FinancialProjectedDeficit) { TestId = ConcernType.FinancialProjectedDeficit.Description() },
 				new SimpleRadioItem(ConcernType.FinancialViability.Description(), (int)ConcernType.FinancialViability) { TestId = ConcernType.FinancialViability.Description() },
 				new SimpleRadioItem(ConcernType.Compliance.Description(), (int)ConcernType.Compliance) { TestId = ConcernType.Compliance.Description() },
-				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
+				new SimpleRadioItem(ConcernType.FinancialGovernance.Description(), (int)ConcernType.FinancialGovernance) { TestId = ConcernType.FinancialGovernance.Description() },
 				new SimpleRadioItem(ConcernType.ForceMajeure.Description(), (int)ConcernType.ForceMajeure) { TestId = ConcernType.ForceMajeure.Description() },
 				new SimpleRadioItem(ConcernType.Irregularity.Description(), (int)ConcernType.Irregularity) { TestId = ConcernType.Irregularity.Description() },
 				new SimpleRadioItem(ConcernType.IrregularitySuspectedFraud.Description(), (int)ConcernType.IrregularitySuspectedFraud) { TestId = ConcernType.IrregularitySuspectedFraud.Description() }
@@ -128,77 +230,22 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static TextAreaUiComponent BuildIssue(string name, string? value = null)
-		=> new("issue", name, "Issue")
+		private static RadioButtonsUiComponent BuildConcernTypeRegionsGroup(string name, int? selectedId = null)
 		{
-			HintFromPartialView = "_IssueHint",
-			Text = new ValidateableString()
+			var radioItems = new List<SimpleRadioItem>()
 			{
-				MaxLength = 2000,
-				StringContents = value,
-				DisplayName = "Issue",
-				Required = true
-			}
-		};
+				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
+				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() },
+			};
 
-		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)
-		=> new("current-status", name, "Current status (optional)")
-		{
-			HintFromPartialView = "_CurrentStatusHint",
-			Text = new ValidateableString()
+			return new(ElementRootId: "concern-type", name, "Select concern type")
 			{
-				MaxLength = 4000,
-				StringContents = value,
-				DisplayName = "Current status",
-			}
-		};
-
-		public static TextAreaUiComponent BuildCaseAim(string name, string? value = null)
-		=> new("case-aim", name, "Case aim (optional)")
-		{
-			HintFromPartialView = "_CaseAimHint",
-			Text = new ValidateableString()
-			{
-				MaxLength = 1000,
-				StringContents = value,
-				DisplayName = "Case aim"
-			}
-		};
-
-		public static TextAreaUiComponent BuildDeEscalationPoint(string name, string? value = null)
-		=> new("de-escalation-point", name, "De-escalation point (optional)")
-		{
-			HintFromPartialView = "_DeescalationPointHint",
-			Text = new ValidateableString()
-			{
-				MaxLength = 1000,
-				StringContents = value,
-				DisplayName = "De-escalation point"
-			}
-		};
-
-		public static TextAreaUiComponent BuildNextSteps(string name, string? value = null)
-		=> new("next-steps", name, "Next steps (optional)")
-		{
-			HintFromPartialView = "_NextStepsHint",
-			Text = new ValidateableString()
-			{
-				MaxLength = 4000,
-				StringContents = value,
-				DisplayName = "Next steps"
-			}
-		};
-
-		public static TextAreaUiComponent BuildCaseHistory(string name, string? value = null)
-		=> new("case-history", name, "Case notes (optional)")
-		{
-			HintFromPartialView = "_CaseHistoryHint",
-			Text = new ValidateableString()
-			{
-				MaxLength = 4300,
-				StringContents = value,
-				DisplayName = "Case notes"
-			}
-		};
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				Required = true,
+				DisplayName = "concern type",
+				HintFromPartialView = "_ConcernTypeHint"
+			};
+		}
 	}
 }

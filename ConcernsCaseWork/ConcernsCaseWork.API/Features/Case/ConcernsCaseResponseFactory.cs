@@ -32,7 +32,8 @@ namespace ConcernsCaseWork.API.Features.Case
 				Territory = concernsCase.Territory,
 				TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber,
 				Division = concernsCase.DivisionId,
-				CaseLastUpdatedAt = concernsCase.CaseLastUpdatedAt
+				CaseLastUpdatedAt = concernsCase.CaseLastUpdatedAt,
+				Region = concernsCase.RegionId
 			};
 		}
 	}

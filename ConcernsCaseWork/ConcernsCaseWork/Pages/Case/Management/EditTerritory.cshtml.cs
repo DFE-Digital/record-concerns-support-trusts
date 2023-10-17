@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -9,8 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -45,11 +42,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				if (!ModelState.IsValid)
-				{
-					return Page();
-				}
-				
 				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
 				LoadPageComponents(caseModel);
 				

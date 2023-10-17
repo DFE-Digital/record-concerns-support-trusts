@@ -94,6 +94,94 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.CaseRegion", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id")
+                        .HasName("PK__CRegion__C5B214360AF620234");
+
+                    b.ToTable("Region", "concerns", t =>
+                        {
+                            t.HasTrigger("Region_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "East Midlands",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "East of England",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "London",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "North East",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "North West",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "South East",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "South West",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "West Midlands",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Yorkshire and The Humber",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.CityTechnologyCollege", b =>
                 {
                     b.Property<int>("Id")
@@ -144,469 +232,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.ToTable("CityTechnologyCollege", "concerns", t =>
                         {
                             t.HasTrigger("CityTechnologyCollege_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
-                {
-                    b.Property<int>("DecisionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"));
-
-                    b.Property<DateTimeOffset?>("ClosedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("ConcernsCaseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CrmCaseNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTimeOffset>("ReceivedRequestDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool?>("RetrospectiveApproval")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubmissionDocumentLink")
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
-
-                    b.Property<bool?>("SubmissionRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SupportingNotes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<decimal>("TotalAmountRequested")
-                        .HasColumnType("money");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("DecisionId");
-
-                    b.HasIndex("ConcernsCaseId", "CreatedAt")
-                        .IsUnique();
-
-                    b.ToTable("ConcernsDecision", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecision_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionDrawdownFacilityAgreed", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Yes"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "No"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "PaymentUnderExistingArrangement"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionFrameworkCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionFrameworkCategory", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "EnablingFinancialRecovery"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "BuildingFinancialCapability"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "FacilitatingTransferFinanciallyAgreed"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FacilitatingTransferEducationallyTriggered"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "EmergencyFunding"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionStates", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionStates_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "InProgress"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Closed"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionType", b =>
-                {
-                    b.Property<int>("DecisionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DecisionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DecisionDrawdownFacilityAgreedId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DecisionFrameworkCategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DecisionId", "DecisionTypeId");
-
-                    b.ToTable("ConcernsDecisionType", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionType_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionTypeId", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ConcernsDecisionTypeId", "concerns", t =>
-                        {
-                            t.HasTrigger("ConcernsDecisionTypeId_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "NoticeToImprove"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Section128"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "QualifiedFloatingCharge"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "NonRepayableFinancialSupport"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "RepayableFinancialSupport"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "ShortTermCashAdvance"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "WriteOffRecoverableFunding"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "OtherFinancialSupport"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "EstimatesFundingOrPupilNumberAdjustment"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "EsfaApproval"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "FreedomOfInformationExemptions"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
-                {
-                    b.Property<int>("DecisionOutcomeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"));
-
-                    b.Property<int?>("Authorizer")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DecisionEffectiveFromDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("DecisionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTimeOffset?>("DecisionMadeDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("TotalAmount")
-                        .HasColumnType("money");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("DecisionOutcomeId");
-
-                    b.HasIndex("DecisionId")
-                        .IsUnique();
-
-                    b.ToTable("DecisionOutcome", "concerns", t =>
-                        {
-                            t.HasTrigger("DecisionOutcome_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DecisionOutcomeAuthorizer", "concerns", t =>
-                        {
-                            t.HasTrigger("DecisionOutcomeAuthorizer_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "G7"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "G6"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "RegionalDirector"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "DeputyDirector"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "CounterSigningDeputyDirector"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Director"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Minister"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessArea", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DecisionOutcomeBusinessArea", "concerns", t =>
-                        {
-                            t.HasTrigger("DecisionOutcomeBusinessArea_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "SchoolsFinancialSupportAndOversight"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "BusinessPartner"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Capital"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Funding"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "FinancialProviderMarketOversight"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "RegionsGroup"
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
-                {
-                    b.Property<int>("DecisionOutcomeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DecisionOutcomeBusinessId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DecisionOutcomeId", "DecisionOutcomeBusinessId");
-
-                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns", t =>
-                        {
-                            t.HasTrigger("DecisionOutcomeBusinessAreaMapping_Trigger");
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DecisionOutcomeStatus", "concerns", t =>
-                        {
-                            t.HasTrigger("DecisionOutcomeStatus_Trigger");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Approved"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "ApprovedWithConditions"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "PartiallyApproved"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Withdrawn"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Declined"
                         });
                 });
 
@@ -708,6 +333,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("ReasonAtReview")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RegionId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ReviewAt")
                         .HasColumnType("datetime2");
 
@@ -739,6 +367,8 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("DivisionId");
 
                     b.HasIndex("RatingId");
+
+                    b.HasIndex("RegionId");
 
                     b.HasIndex("StatusId");
 
@@ -1069,6 +699,939 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Safeguarding",
                             UpdatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Governance",
+                            UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Decision", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"));
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ConcernsCaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CrmCaseNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset>("ReceivedRequestDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("RetrospectiveApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubmissionDocumentLink")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<bool?>("SubmissionRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SupportingNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<decimal>("TotalAmountRequested")
+                        .HasColumnType("money");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("DecisionId");
+
+                    b.HasIndex("ConcernsCaseId", "CreatedAt")
+                        .IsUnique();
+
+                    b.ToTable("ConcernsDecision", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecision_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionDrawdownFacilityAgreed", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Yes"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "No"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PaymentUnderExistingArrangement"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionFrameworkCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionFrameworkCategory", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "EnablingFinancialRecovery"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BuildingFinancialCapability"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "FacilitatingTransferFinanciallyAgreed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "FacilitatingTransferEducationallyTriggered"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "EmergencyFunding"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionStates", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionStates_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "InProgress"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Closed"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionType", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DecisionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionDrawdownFacilityAgreedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionFrameworkCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionId", "DecisionTypeId");
+
+                    b.ToTable("ConcernsDecisionType", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionType_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionTypeId", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionTypeId", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionTypeId_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "NoticeToImprove"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Section128"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "QualifiedFloatingCharge"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "NonRepayableFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "RepayableFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "ShortTermCashAdvance"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "WriteOffRecoverableFunding"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "OtherFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "EstimatesFundingOrPupilNumberAdjustment"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "EsfaApproval"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "FreedomOfInformationExemptions"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"));
+
+                    b.Property<int?>("Authorizer")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DecisionEffectiveFromDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DecisionMadeDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("money");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("DecisionOutcomeId");
+
+                    b.HasIndex("DecisionId")
+                        .IsUnique();
+
+                    b.ToTable("DecisionOutcome", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcome_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeAuthorizer", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeAuthorizer_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "G7"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "G6"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RegionalDirector"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "CounterSigningDeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Director"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Minister"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeBusinessArea", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeBusinessArea", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessArea_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "SchoolsFinancialSupportAndOversight"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BusinessPartner"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Capital"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Funding"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "FinancialProviderMarketOversight"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "RegionsGroup"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DecisionOutcomeBusinessId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionOutcomeId", "DecisionOutcomeBusinessId");
+
+                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessAreaMapping_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeStatus_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Approved"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "ApprovedWithConditions"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PartiallyApproved"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Withdrawn"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Declined"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Decision", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"));
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("ConcernsCaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CrmCaseNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset>("ReceivedRequestDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("RetrospectiveApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SubmissionDocumentLink")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<bool?>("SubmissionRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SupportingNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<decimal>("TotalAmountRequested")
+                        .HasColumnType("money");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("DecisionId");
+
+                    b.HasIndex("ConcernsCaseId", "CreatedAt")
+                        .IsUnique();
+
+                    b.ToTable("ConcernsDecision", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecision_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionDrawdownFacilityAgreed", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionDrawdownFacilityAgreed", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Yes"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "No"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PaymentUnderExistingArrangement"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionFrameworkCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionFrameworkCategory", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "EnablingFinancialRecovery"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BuildingFinancialCapability"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "FacilitatingTransferFinanciallyAgreed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "FacilitatingTransferEducationallyTriggered"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "EmergencyFunding"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionStates", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionStates_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "InProgress"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Closed"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionType", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DecisionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionDrawdownFacilityAgreedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DecisionFrameworkCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionId", "DecisionTypeId");
+
+                    b.ToTable("ConcernsDecisionType", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionType_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionTypeId", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionTypeId", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionTypeId_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "NoticeToImprove"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Section128"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "QualifiedFloatingCharge"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "NonRepayableFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "RepayableFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "ShortTermCashAdvance"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "WriteOffRecoverableFunding"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "OtherFinancialSupport"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "EstimatesFundingOrPupilNumberAdjustment"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "EsfaApproval"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "FreedomOfInformationExemptions"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"));
+
+                    b.Property<int?>("Authorizer")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DecisionEffectiveFromDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DecisionMadeDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("money");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("DecisionOutcomeId");
+
+                    b.HasIndex("DecisionId")
+                        .IsUnique();
+
+                    b.ToTable("DecisionOutcome", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcome_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeAuthorizer", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeAuthorizer_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "G7"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "G6"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RegionalDirector"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "CounterSigningDeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Director"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Minister"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeBusinessArea", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeBusinessArea", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessArea_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "SchoolsFinancialSupportAndOversight"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BusinessPartner"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Capital"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Funding"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "FinancialProviderMarketOversight"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "RegionsGroup"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DecisionOutcomeBusinessId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionOutcomeId", "DecisionOutcomeBusinessId");
+
+                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessAreaMapping_Trigger");
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeStatus_Trigger");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Approved"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "ApprovedWithConditions"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PartiallyApproved"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Withdrawn"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Declined"
                         });
                 });
 
@@ -2846,42 +3409,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.ConcernsCase", null)
-                        .WithMany("Decisions")
-                        .HasForeignKey("ConcernsCaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionType", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", null)
-                        .WithMany("DecisionTypes")
-                        .HasForeignKey("DecisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", null)
-                        .WithOne("Outcome")
-                        .HasForeignKey("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", "DecisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", null)
-                        .WithMany("BusinessAreasConsulted")
-                        .HasForeignKey("DecisionOutcomeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeamMember", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", null)
@@ -2902,6 +3429,10 @@ namespace ConcernsCaseWork.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ConcernsCaseWork.Data.Models.CaseRegion", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
                     b.HasOne("ConcernsCaseWork.Data.Models.ConcernsStatus", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -2911,6 +3442,8 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("Division");
 
                     b.Navigation("Rating");
+
+                    b.Navigation("Region");
 
                     b.Navigation("Status");
                 });
@@ -2958,6 +3491,42 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("ConcernsType");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Decision", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.ConcernsCase", null)
+                        .WithMany("Decisions")
+                        .HasForeignKey("ConcernsCaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionType", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.Decisions.Decision", null)
+                        .WithMany("DecisionTypes")
+                        .HasForeignKey("DecisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.Decisions.Decision", null)
+                        .WithOne("Outcome")
+                        .HasForeignKey("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", "DecisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", null)
+                        .WithMany("BusinessAreasConsulted")
+                        .HasForeignKey("DecisionOutcomeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.FinancialPlanCase", b =>
@@ -3134,18 +3703,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("Reason");
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
-                {
-                    b.Navigation("DecisionTypes");
-
-                    b.Navigation("Outcome");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
-                {
-                    b.Navigation("BusinessAreasConsulted");
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", b =>
                 {
                     b.Navigation("TeamMembers");
@@ -3171,6 +3728,18 @@ namespace ConcernsCaseWork.Data.Migrations
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsType", b =>
                 {
                     b.Navigation("FkConcernsRecord");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Decision", b =>
+                {
+                    b.Navigation("DecisionTypes");
+
+                    b.Navigation("Outcome");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.Navigation("BusinessAreasConsulted");
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsideration", b =>
