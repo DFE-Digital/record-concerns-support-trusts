@@ -8,7 +8,7 @@ import { CaseBuilder } from "cypress/api/caseBuilder";
 import { CreateCaseRequest, PutTeamRequest, GetTeamByOwnerResponse } from "cypress/api/apiDomain";
 import paginationComponent from "cypress/pages/paginationComponent";
 
-describe("Your casework tests", () =>
+describe("Team casework tests", () =>
 {
 	 describe("When we create a case for a team member", () => {
 
@@ -24,9 +24,9 @@ describe("Your casework tests", () =>
 			});
 
 			cy.basicCreateCase()
-			.then((id) =>
+			.then((response) =>
 			{
-				caseId = id + "";
+				caseId = response.urn + "";
 			});
 		});
 
@@ -141,7 +141,7 @@ describe("Your casework tests", () =>
             let pageTwoCases: Array<string> = [];
 
             caseworkTable
-                .getCaseIds()
+                .getOpenCaseIds()
                 .then((caseIds: Array<string>) =>
                 {
                     pageOneCases = caseIds;
@@ -151,7 +151,7 @@ describe("Your casework tests", () =>
 
                     Logger.Log("Moving to the second page using the direct link");
                     paginationComponent.goToPage("2");
-                    return caseworkTable.getCaseIds()
+                    return caseworkTable.getOpenCaseIds()
                 })
                 .then((caseIds: Array<string>) =>
                 {
@@ -165,7 +165,7 @@ describe("Your casework tests", () =>
 
                     Logger.Log("Move to the previous page, which is page 1")
                     paginationComponent.previous();
-                    return caseworkTable.getCaseIds()
+                    return caseworkTable.getOpenCaseIds()
                 })
                 .then((caseIds: Array<string>) =>
                 {
@@ -174,7 +174,7 @@ describe("Your casework tests", () =>
 
                     Logger.Log("Move to the next page, which is page 2");
                     paginationComponent.next();
-                    return caseworkTable.getCaseIds();
+                    return caseworkTable.getOpenCaseIds();
                 })
                 .then((caseIds: Array<string>) =>
                 {

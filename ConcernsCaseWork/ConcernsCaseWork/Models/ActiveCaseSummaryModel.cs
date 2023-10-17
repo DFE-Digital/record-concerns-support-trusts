@@ -1,4 +1,4 @@
-using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.API.Contracts.Case;
 using System.Collections.Generic;
 namespace ConcernsCaseWork.Models;
 
@@ -11,6 +11,9 @@ public abstract record CaseSummaryModel
 	public string StatusName { get; set; }
 	public string TrustName { get; set; }
 	public string UpdatedAt { get; set; }
+
+	public Division? Division { get; set; }
+	public string? Area { get; set; }
 }
 
 public record ActiveCaseSummaryModel : CaseSummaryModel

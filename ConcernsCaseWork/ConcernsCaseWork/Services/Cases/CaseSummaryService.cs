@@ -49,12 +49,6 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	//public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForUsersTeam(string caseworker)
-	//{
-	//	var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(caseworker);
-	//	return await BuildActiveCaseSummaryModel(caseSummaries);
-	//}
-
 	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn, int? page = 1)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn, page);
@@ -123,6 +117,8 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
 					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),
 					CaseLastUpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CaseLastUpdatedAt),
+					Division = caseSummary.Division,
+					Area = caseSummary.Area
 				};
 			
 			sortedCaseSummaries.Add(summary);
@@ -153,7 +149,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					StatusName = caseSummary.StatusName,
 					TrustName = trustName,
-					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),
+					Division = caseSummary.Division,
+					Area = caseSummary.Area
 				};
 			
 			sortedCaseSummaries.Add(summary);

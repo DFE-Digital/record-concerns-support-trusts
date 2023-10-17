@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case
@@ -202,8 +204,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-			
-			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger,MockTelemetry.CreateMockTelemetryClient() ,mockTrustService)
+
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+
+			return new DetailsPageModel(
+				mockCaseModelService, 
+				mockTrustModelService, 
+				mockUserStateCachedService, 
+				mockLogger,MockTelemetry.CreateMockTelemetryClient(), 
+				mockTrustService, 
+				mockClaimsPrincipalHelper.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

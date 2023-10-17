@@ -32,5 +32,6 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CaseHistory { get; set; }
 		public Territory? Territory { get; set; }
 		public Division? Division { get; set; }
+		public Region? Region { get; set; }
 	}
 }

@@ -167,7 +167,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Urn = 1,
 					StatusId = 1,
 					RatingId = 1,
-					Division = Division.SFSO
+					Division = Division.SFSO,
+					Region = Region.EastMidlands
 				};
 		
 		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null, string trustCompaniesHouseNumber = null)
@@ -193,7 +194,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				2,
 				Fixture.Create<Territory>(), 
 				trustCompaniesHouseNumber?? Fixture.CreateMany<char>(8).ToString(),
-				Fixture.Create<Division>()
+				Fixture.Create<Division>(),
+				Fixture.Create<Region>()
 			);
 		}
 		

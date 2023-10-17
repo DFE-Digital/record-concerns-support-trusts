@@ -1,4 +1,5 @@
-﻿@using ConcernsCaseWork.Models;
+﻿@using ConcernsCaseWork.Extensions;
+@using ConcernsCaseWork.Models;
 @model CaseSummaryGroupModel<ActiveCaseSummaryModel>
 
 <table class="govuk-table govuk-!-margin-top-6">
@@ -10,14 +11,14 @@
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_4" scope="col">
                 Case ID
             </th>
-            <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
-                Date created
-            </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
                 Contents
             </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                Assigned to
+                Managed by
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
+                Date created
             </th>
         </tr>
     </thead>
@@ -39,9 +40,6 @@
                     <td class="govuk-table__cell" data-testid="case-id">
                         <a class="govuk-link" href="/case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
                     </td>
-                    <td class="govuk-table__cell" data-testid="created-at">
-                        @activeCase.CreatedAt
-                    </td>
 
                     @if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
                     {
@@ -52,7 +50,7 @@
 
                     @if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
                     {
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="actions-and-decisions">
                             <div class="concerns-secondary-text-colour">Actions and decisions</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var action in activeCase.ActiveActionsAndDecisions)
@@ -90,8 +88,13 @@
                             </div>
                         </td>
                     }
-                    <td class="govuk-table__cell">
-                        @activeCase.CreatedBy
+                    <td class="govuk-table__cell" data-testid="managed-by">
+                        @activeCase.Division?.Description()
+                        <br />
+                        @activeCase.Area
+                    </td>
+                    <td class="govuk-table__cell" data-testid="created-at">
+                        @activeCase.CreatedAt
                     </td>
                 </tr>
             }

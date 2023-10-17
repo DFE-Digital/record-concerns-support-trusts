@@ -36,6 +36,11 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 			.IsRequired(false)
 			.HasForeignKey(x => x.DivisionId);
 
+		builder.HasOne(x => x.Region)
+			.WithMany()
+			.IsRequired(false)
+			.HasForeignKey(x => x.RegionId);
+
 		builder.HasQueryFilter(f => !f.DeletedAt.HasValue);
 
 	}

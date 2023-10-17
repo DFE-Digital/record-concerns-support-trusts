@@ -1,4 +1,5 @@
 using AutoFixture;
+using Azure;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
@@ -84,64 +85,18 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		result.Should().BeEquivalentTo(expected);
 		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
 		createdCase.DivisionId.Should().Be(createRequest.Division);
+		createdCase.RegionId.Should().Be(createRequest.Region);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
 	}
 
 	[Fact]
-	public async Task CanCreateNewConcernCase_WithNullCompaniesHouseNumber()
+	public async Task CanCreateNewConcernCase_WithMinimumValuesSet()
 	{
-		ConcernCaseRequest createRequest = Builder<ConcernCaseRequest>.CreateNew()
-			.With(c => c.CreatedBy = _randomGenerator.NextString(3, 10))
-			.With(c => c.Description = "")
-			.With(c => c.CrmEnquiry = "")
-			.With(c => c.TrustUkprn = DatabaseModelBuilder.CreateUkPrn())
-			.With(c => c.ReasonAtReview = "")
-			.With(c => c.DeEscalation = new DateTime(2022, 04, 01))
-			.With(c => c.Issue = "Here is the issue")
-			.With(c => c.CurrentStatus = "Case status")
-			.With(c => c.CaseAim = "Here is the aim")
-			.With(c => c.DeEscalationPoint = "Point of de-escalation")
-			.With(c => c.CaseHistory = "Case history")
-			.With(c => c.NextSteps = "Here are the next steps")
-			.With(c => c.DirectionOfTravel = "Up")
-			.With(c => c.StatusId = 1)
-			.With(c => c.RatingId = 2)
-			.With(c => c.TrustCompaniesHouseNumber = null)
-			.Build();
-
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Post,
-			RequestUri = new Uri("https://notarealdomain.com/v2/concerns-cases"),
-			Content = JsonContent.Create(createRequest)
-		};
-
-		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
-		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
-
-		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
-		response.StatusCode.Should().Be(HttpStatusCode.Created);
-		ApiSingleResponseV2<ConcernsCaseResponse> result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-
-		await using ConcernsDbContext context = _testFixture.GetContext();
-
-		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
-		createdCase.Should().NotBeNull();
-		expected.Data.Urn = createdCase!.Urn;
-
-		result.Should().BeEquivalentTo(expected);
-		createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
-		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
-	}
-
-	[Fact]
-	public async Task CanCreateNewConcernCase_WithNullDivision()
-	{
-		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
-		createRequest.Division = null;
+		ConcernCaseRequest createRequest = new ConcernCaseRequest();
+		createRequest.CreatedBy = _randomGenerator.NextString(3, 10);
+		createRequest.TrustUkprn = DatabaseModelBuilder.CreateUkPrn();
+		createRequest.StatusId = 1;
+		createRequest.RatingId = 2;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -169,8 +124,10 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
-		createdCase.DivisionId.Should().Be(createRequest.Division);
 		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
+		createdCase.DivisionId.Should().Be(null);
+		createdCase.RegionId.Should().Be(null);
+		createdCase.TrustCompaniesHouseNumber.Should().Be(null);
 	}
 
 
@@ -206,10 +163,11 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task PostCaseWithInvalidDivision_Returns_BadRequest()
+	public async Task PostCaseWithInvalidValues_Returns_BadRequest()
 	{
 		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
 		createRequest.Division = 0;
+		createRequest.Region = 0;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{
@@ -221,8 +179,6 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
 
-		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
-
 		// call API
 		var response = await _client.SendAsync(httpRequestMessage);
 
@@ -230,9 +186,9 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		string error = await response.Content.ReadAsStringAsync();
 
-		error.Should().Contain("Division must have value 0 or 1");
+		error.Should().Contain("Division must have value 1 or 2");
+		error.Should().Contain("'Region' has a range of values which does not include '0'");
 	}
-
 
 	[Fact]
 	public async Task CanGetConcernCaseByUrn()
@@ -363,7 +319,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		ApiResponseV2<ConcernsTypeResponse> content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-		content.Data.Count().Should().Be(9);
+		content.Data.Count().Should().Be(10);
 	}
 
 	[Fact]
@@ -392,7 +348,8 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			StatusId = 2,
 			RatingId = 1,
 			TrustCompaniesHouseNumber = "12345678",
-			DivisionId = Division.SFSO
+			DivisionId = Division.SFSO,
+			RegionId = Region.London
 		};
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
@@ -405,7 +362,9 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.ReasonAtReview = "")
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
 			.With(cr => cr.Division = Division.RegionsGroup)
-			.With(cr => cr.RatingId = 1).Build();
+			.With(cr => cr.RatingId = 1)
+			.With(cr => cr.Region = Region.NorthWest)
+			.Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
 		expectedConcernsCase.Urn = urn;
@@ -425,7 +384,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	}
 
 	[Fact]
-	public async Task UpdateConcernsCase_With_InvalidDivisionAndRating_Returns_BadRequest()
+	public async Task UpdateConcernsCase_With_InvalidValues_Returns_BadRequest()
 	{
 		ConcernsCase currentConcernsCase = new()
 		{
@@ -480,12 +439,12 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-		error.Should().Contain("Division must have value 0 or 1");
+		error.Should().Contain("Division must have value 1 or 2");
 		error.Should().Contain("Ratings Urn can not be 0");
 	}
 
 	[Fact]
-	public async Task UpdateConcernsCase_WithNullDivision_ShouldReturnTheUpdatedConcernsCase()
+	public async Task UpdateConcernsCase_WithMinimumFields_Returns_200()
 	{
 		ConcernsCase currentConcernsCase = new()
 		{
@@ -510,38 +469,25 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			StatusId = 2,
 			RatingId = 1,
 			TrustCompaniesHouseNumber = "12345678",
-			DivisionId = Division.SFSO
+			DivisionId = Division.SFSO,
+			RegionId = Region.EastMidlands
 		};
 
 		AddConcernsCaseToDatabase(currentConcernsCase);
 
-		int urn = currentConcernsCase.Urn;
+		var request = new ConcernCaseRequest();
+		request.RatingId = 1;
+		request.StatusId = 2;
 
-		ConcernCaseRequest updateRequest = Builder<ConcernCaseRequest>.CreateNew()
-			.With(cr => cr.Description = "")
-			.With(cr => cr.CrmEnquiry = "")
-			.With(cr => cr.ReasonAtReview = "")
-			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
-			.With(cr => cr.Division = null)
-			.With(cr => cr.RatingId = 1).Build();
-
-		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
-		expectedConcernsCase.Urn = urn;
-		ConcernsCaseResponse expectedContent = ConcernsCaseResponseFactory.Create(expectedConcernsCase);
-
-		HttpRequestMessage httpRequestMessage = new()
-		{
-			Method = HttpMethod.Patch,
-			RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/{urn}"),
-			Content = JsonContent.Create(updateRequest)
-		};
-		HttpResponseMessage response = await _client.SendAsync(httpRequestMessage);
-		ApiSingleResponseV2<ConcernsCaseResponse> content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-
+		HttpResponseMessage response = await _client.PatchAsync($"/v2/concerns-cases/{currentConcernsCase.Id}", request.ConvertToJson());
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-		content.Data.Should().BeEquivalentTo(expectedContent);
-	}
 
+		var content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
+
+		content.Data.Territory.Should().BeNull();
+		content.Data.Region.Should().BeNull();
+		content.Data.Division.Should().BeNull();
+	}
 
 	[Fact]
 	public async Task PatchInvalidConcernCaseRequest_Returns_ValidationErrors()

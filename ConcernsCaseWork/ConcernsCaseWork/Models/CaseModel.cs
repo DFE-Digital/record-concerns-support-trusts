@@ -70,6 +70,8 @@ namespace ConcernsCaseWork.Models
 
 		public Division? Division { get; set; }
 
+		public Region? Region { get; set; }
+
 		public bool ShowUpdateMessage { get; set; }
 
 		public bool ShowValidationMessage { get; set; }
@@ -84,5 +86,12 @@ namespace ConcernsCaseWork.Models
 		{
 			return StatusId == (int)CaseStatus.Close;
 		}
+
+		/// <summary>
+		/// This differs depending on whether the case is for regions group or SFSO
+		/// SFSO - Territory
+		/// Regions Group - Region
+		/// </summary>
+		public string Area { get; set; }
 	}
 }

@@ -1,0 +1,42 @@
+﻿@page "/case/create/region"
+@model ConcernsCaseWork.Pages.Case.CreateCase.SelectRegionModel
+
+@{
+    ViewData["Title"] = "Choose region";
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
+        <partial name="_ValidationErrors" />
+
+        <span class="govuk-caption-l">Create a case</span>
+        <h1 class="govuk-heading-l">Region</h1>
+
+        <dl class="govuk-summary-list">
+            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+        </dl>
+
+        <form method="post" id="case-territory-form" novalidate>
+
+            <partial name="Components/_RadioList" model="Model.Region" />
+
+            <div class="govuk-button-group">
+                <button data-prevent-double-click="true" data-testid="next-step-button" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                    Next step
+                </button>
+                <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    }
+
+</div>

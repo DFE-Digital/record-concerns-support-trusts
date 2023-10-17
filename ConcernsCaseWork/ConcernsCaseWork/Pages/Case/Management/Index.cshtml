@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using ConcernsCaseWork.API.Contracts.Case;
 @using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
 @using ConcernsCaseWork.Service.Status;
@@ -14,6 +15,20 @@
     var errorClass = "govuk-error-message";
     var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
     var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
+
+    var locationChangeLink = "";
+    var locationAria = "";
+
+    if (Model.CaseModel.Division == Division.RegionsGroup)
+    {
+        locationChangeLink = $"{Request.Path}/edit-region";
+        locationAria = "Change region";
+    }
+    else
+    {
+        locationChangeLink = $"{Request.Path}/edit-territory";
+        locationAria = "Change territory";
+    }
 }
 
 <div class="govuk-width-container">
@@ -65,26 +80,24 @@
             </div>
         }
         <h1 class="govuk-heading-l" name="caseID">
-            <span class="govuk-caption-m">Case ID</span>
-            @Model.CaseModel.Urn
+            <span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseModel.Urn</span>
+            @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle
         </h1>
 
-        <h2 class="govuk-heading-m">@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+        <nav class="moj-sub-navigation" aria-label="Sub navigation">
 
-        <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
-
-            <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-                    <a class="govuk-tabs__tab" href="#case-details">
-                        Case overview
-                    </a>
+            <ul class="moj-sub-navigation__list">
+                <li class="moj-sub-navigation__item">
+                    <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab" href="#trust-overview">
-                        Trust overview
-                    </a>
+
+                <li class="moj-sub-navigation__item">
+                    <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
                 </li>
             </ul>
+        </nav>
+
+        <div id="case-overview">
             <div class="govuk-tabs__panel" id="case-details">
 
                 <!-- Case Details -->
@@ -232,13 +245,13 @@
                                 }
                                 <br />
                                 @{
-                                    RenderValue(Model.CaseModel.Territory?.Description());
+                                    RenderValue(Model.CaseModel.Area);
                                 }
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change territory">
+                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@locationChangeLink" aria-label="@locationAria">
                                         Change
                                     </a>
                                 }
@@ -288,7 +301,7 @@
                                     </span>
                                 </h2>
                             </div>
-                            <div id="accordion-issue-content" class="govuk-accordion__section-content" aria-labelledby="accordion-issue-heading">
+                            <div id="accordion-issue-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Change</a></div>
@@ -306,7 +319,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
                                 </h2>
                             </div>
-                            <div id="accordion-status-content" class="govuk-accordion__section-content" aria-labelledby="accordion-status-heading">
+                            <div id="accordion-status-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Change</a></div>
@@ -324,7 +337,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
                                 </h2>
                             </div>
-                            <div id="accordion-case-aim-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-aim-heading">
+                            <div id="accordion-case-aim-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Change</a></div>
@@ -343,7 +356,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
                                 </h2>
                             </div>
-                            <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content" aria-labelledby="accordion-de-escalation-point-heading">
+                            <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Change</a></div>
@@ -362,7 +375,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
                                 </h2>
                             </div>
-                            <div id="accordion-next-steps-content" class="govuk-accordion__section-content" aria-labelledby="accordion-next-steps-heading">
+                            <div id="accordion-next-steps-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Change</a></div>
@@ -381,7 +394,7 @@
                                     <span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case notes</span>
                                 </h2>
                             </div>
-                            <div id="accordion-case-history-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-history-heading">
+                            <div id="accordion-case-history-content" class="govuk-accordion__section-content">
                                 @if (Model.IsEditableCase)
                                 {
                                     <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case notes">Change</a></div>
@@ -450,23 +463,44 @@
                 <partial name="Shared/_ListClosedActionsForCase" model="Model.ClosedCaseActions" />
 
             </div>
-            <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-                <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
-            </div>
+        </div>
+        <div id="trust-overview" hidden>
+            <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
         </div>
 
         <script type="application/javascript" nonce="@nonce">
-            $(function () {
-                $(".govuk-tabs__tab").on("click", function(){
-                        var url = window.location.href;
 
-                        if(url.includes("#trust-overview")){
-                            $("#close-case-button").css("display", "none");
-                        }else{
-                            $("#close-case-button").css("display", "block");
-                        }
-                });
+            $(function () {
+                onTabMove({ from: "trust-overview", to: "case-overview" });
+
+                onTabMove({ from: "case-overview", to: "trust-overview" });
+
+                function onTabMove(parameters) {
+                    const tabToHide = document.getElementById(`${parameters.from}-tab`);
+                    const tableToHide = document.getElementById(`${parameters.from}`);
+                    const tabToShow = document.getElementById(`${parameters.to}-tab`);
+                    const tableToShow = document.getElementById(`${parameters.to}`);
+
+                    if (tabToShow) {
+                        tabToShow.addEventListener("click", function() {
+                            tableToShow.removeAttribute("hidden");
+                            tabToShow.setAttribute("aria-expanded","true");
+                            tabToShow.setAttribute("aria-current","page");
+                            tableToHide.hidden = true;
+                            tabToHide.removeAttribute("aria-current");
+
+                            if (tabToShow.id === 'trust-overview-tab'){
+                                $("#close-case-button").css("display", "none");
+                            }else{
+                                $("#close-case-button").css("display", "block");
+                            }
+                        });
+
+
+                    }
+                }
             });
+
         </script>
     }
 </div>
@@ -499,3 +533,4 @@
         <span class="govuk-tag ragtag ragtag__grey">Empty</span>
     }
 }
+

@@ -12,21 +12,20 @@ class CaseworkTable {
         });
     }
 
-    public getCaseIds(): Cypress.Chainable<Array<string>>
+    public getOpenCaseIds(): Cypress.Chainable<Array<string>>
     {
         Logger.Log("Getting all displayed case ids");
 
         const result: Array<string> = [];
 
-        return cy.containsByTestId("case-id")
+        cy.getById("active-cases")
+        .find(`[data-testid*='case-id']`)
         .each($el =>
         {
-            result.push($el.text());
-        })
-        .then(() =>
-        {
-            return result;
+            result.push($el.text().trim());
         });
+
+        return cy.wrap(result);
     }
 }
 
