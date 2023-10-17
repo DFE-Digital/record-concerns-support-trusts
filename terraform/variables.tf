@@ -287,3 +287,33 @@ variable "cdn_frontdoor_origin_fqdn_override" {
   type        = string
   default     = ""
 }
+
+variable "statuscake_api_token" {
+  description = "API token for StatusCake"
+  type        = string
+  sensitive   = true
+}
+
+variable "statuscake_contact_group_name" {
+  description = "Name of the contact group in StatusCake"
+  type        = string
+  default     = ""
+}
+
+variable "statuscake_contact_group_integrations" {
+  description = "List of Integration IDs to connect to your Contact Group"
+  type        = list(string)
+  default     = []
+}
+
+variable "statuscake_contact_group_email_addresses" {
+  description = "List of email addresses to include in the StatusCake Contact Group"
+  type        = list(string)
+  default     = []
+}
+
+variable "statuscake_monitored_resource_address" {
+  description = "The URL including https:// that you want StatusCake to monitor"
+  type        = string
+  default     = ""
+}

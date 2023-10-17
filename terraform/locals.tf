@@ -51,4 +51,9 @@ locals {
   existing_logic_app_workflow                  = var.existing_logic_app_workflow
   existing_network_watcher_name                = var.existing_network_watcher_name
   existing_network_watcher_resource_group_name = var.existing_network_watcher_resource_group_name
+  statuscake_api_token                         = var.statuscake_api_token
+  statuscake_monitored_resource_address        = var.statuscake_monitored_resource_address == "" ? "https://${local.dns_zone_domain_name}${local.monitor_endpoint_healthcheck}" : var.statuscake_monitored_resource_address
+  statuscake_contact_group_name                = var.statuscake_contact_group_name
+  statuscake_contact_group_integrations        = var.statuscake_contact_group_integrations
+  statuscake_contact_group_email_addresses     = var.statuscake_contact_group_email_addresses
 }
