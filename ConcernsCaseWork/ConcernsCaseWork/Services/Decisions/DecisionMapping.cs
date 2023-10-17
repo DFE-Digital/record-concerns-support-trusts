@@ -6,6 +6,8 @@ using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -41,8 +43,9 @@ namespace ConcernsCaseWork.Services.Decisions
 				DecisionId = decisionResponse.DecisionId,
 				ConcernsCaseUrn = decisionResponse.ConcernsCaseUrn,
 				CrmEnquiryNumber = decisionResponse.CrmCaseNumber,
-				RetrospectiveApproval = decisionResponse.RetrospectiveApproval != true ? "No" : "Yes",
-				SubmissionRequired = decisionResponse.SubmissionRequired != true ? "No" : "Yes",
+				HasCrmCase = BoolToString(decisionResponse.HasCrmCase),
+				RetrospectiveApproval = BoolToString(decisionResponse.RetrospectiveApproval),
+				SubmissionRequired = BoolToString(decisionResponse.SubmissionRequired),
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
 				EsfaReceivedRequestDate = DateTimeHelper.ParseToDisplayDate(receivedRequestDate),
 				TotalAmountRequested = ToCurrencyField(decisionResponse.TotalAmountRequested),
@@ -85,6 +88,7 @@ namespace ConcernsCaseWork.Services.Decisions
 			{
 				ConcernsCaseUrn = getDecisionResponse.ConcernsCaseUrn,
 				CrmCaseNumber = getDecisionResponse.CrmCaseNumber,
+				HasCrmCase = getDecisionResponse.HasCrmCase,
 				DecisionTypes = getDecisionResponse.DecisionTypes,
 				ReceivedRequestDate = GetEsfaReceivedRequestDate(getDecisionResponse),
 				RetrospectiveApproval = getDecisionResponse.RetrospectiveApproval,
@@ -102,11 +106,12 @@ namespace ConcernsCaseWork.Services.Decisions
 			var updateDecisionRequest = new UpdateDecisionRequest()
 			{
 				CrmCaseNumber = createDecisionRequest.CrmCaseNumber,
+				HasCrmCase = createDecisionRequest.HasCrmCase,
 				DecisionTypes = createDecisionRequest.DecisionTypes,
 				TotalAmountRequested = createDecisionRequest.TotalAmountRequested,
 				SupportingNotes = createDecisionRequest.SupportingNotes,
 				ReceivedRequestDate = createDecisionRequest.ReceivedRequestDate,
-				SubmissionDocumentLink = createDecisionRequest.SubmissionRequired == true ? createDecisionRequest.SubmissionDocumentLink : null,
+				SubmissionDocumentLink = createDecisionRequest.SubmissionDocumentLink,
 				RetrospectiveApproval = createDecisionRequest.RetrospectiveApproval,
 				SubmissionRequired = createDecisionRequest.SubmissionRequired
 			};
@@ -207,6 +212,11 @@ namespace ConcernsCaseWork.Services.Decisions
 		private static string? ToCurrencyField(decimal? amount)
 		{
 			return amount?.ToString("C", new CultureInfo("en-GB"));
+		}
+
+		private static string? BoolToString(bool? value)
+		{
+			return value.HasValue ? (value.Value == true ? "Yes" : "No") : null;
 		}
 	}
 }

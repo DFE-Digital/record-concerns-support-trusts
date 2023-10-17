@@ -5,8 +5,8 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 	public class DecisionTypeQuestion
 	{
 		public DecisionType Id { get; set; }
-		public DecisionDrawdownFacilityAgreed? DecisionDrawdownFacilityAgreedId { get; set; }
-		public DecisionFrameworkCategory? DecisionFrameworkCategoryId { get; set; }
+		public DrawdownFacilityAgreed? DecisionDrawdownFacilityAgreedId { get; set; }
+		public FrameworkCategory? DecisionFrameworkCategoryId { get; set; }
 
 		public DecisionTypeQuestion()
 		{

@@ -18,10 +18,25 @@ export class EditDecisionPage
 		return this;
 	}
 
+	public withHasCrmCase(hasCrmCase: string): this {
+		Logger.Log(`With has crm case ${hasCrmCase}`);
+		cy.getByTestId(`has-crm-case-${hasCrmCase}`).click();
+
+		return this;
+	}
+
+	public hasCrmCase(hasCrmCase: string): this {
+		Logger.Log(`Has Crm enquiry ${hasCrmCase}`);
+
+		cy.getByTestId(`has-crm-case-${hasCrmCase}`).should("be.be.checked");
+
+		return this;
+	}
+
 	public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
 		Logger.Log(`With retrospective request ${isRetrospectiveRequest}`);
 
-		cy.getById(`retrospective-approval-${isRetrospectiveRequest}`).click();
+		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
 
 		return this;
 	}
@@ -29,7 +44,7 @@ export class EditDecisionPage
 	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
 		Logger.Log(`Has retrospective request ${isRetrospectiveRequest}`);
 
-		cy.getById(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
+		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
 
 		return this;
 	}
@@ -37,7 +52,7 @@ export class EditDecisionPage
 	public withSubmissionRequired(isSubmissionRequired: string): this {
 		Logger.Log(`With Submission Required ${isSubmissionRequired}`);
 
-		cy.getById(`submission-required-${isSubmissionRequired}`).click();
+		cy.getByTestId(`submission-required-${isSubmissionRequired}`).click();
 
 		return this;
 	}
@@ -45,7 +60,7 @@ export class EditDecisionPage
 	public hasSubmissionRequired(isSubmissionRequired: string): this {
 		Logger.Log(`Has Submission Required ${isSubmissionRequired}`);
 
-		cy.getById(`submission-required-${isSubmissionRequired}`).should("be.checked");
+		cy.getByTestId(`submission-required-${isSubmissionRequired}`).should("be.checked");
 
 		return this;
 	}

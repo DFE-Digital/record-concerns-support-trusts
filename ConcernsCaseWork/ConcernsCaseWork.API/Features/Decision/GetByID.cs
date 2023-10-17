@@ -59,8 +59,8 @@ namespace ConcernsCaseWork.API.Features.Decision
 						return new DecisionTypeQuestion()
 						{
 							Id = (Contracts.Enums.DecisionType)x.DecisionTypeId,
-							DecisionDrawdownFacilityAgreedId = (Contracts.Enums.DecisionDrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId,
-							DecisionFrameworkCategoryId = (Contracts.Enums.DecisionFrameworkCategory?)x.DecisionFrameworkCategoryId
+							DecisionDrawdownFacilityAgreedId = x.DecisionDrawdownFacilityAgreedId,
+							DecisionFrameworkCategoryId = x.DecisionFrameworkCategoryId
 						};
 					}).ToArray(),
 					TotalAmountRequested = decision.TotalAmountRequested,
@@ -70,6 +70,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					SubmissionRequired = decision.SubmissionRequired,
 					RetrospectiveApproval = decision.RetrospectiveApproval,
 					CrmCaseNumber = decision.CrmCaseNumber,
+					HasCrmCase = decision.HasCrmCase,
 					CreatedAt = decision.CreatedAt,
 					UpdatedAt = decision.UpdatedAt,
 					ClosedAt = decision.ClosedAt,

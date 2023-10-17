@@ -48,6 +48,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public List<DecisionTypeQuestionModel> DecisionTypeQuestions { get; set; }
 
+		[BindProperty]
+		public RadioButtonsUiComponent HasCrmCase { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent IsSubmissionRequired { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent RetrospectiveApproval { get; set; }
+
 		public string SaveAndContinueButtonText { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
@@ -94,6 +103,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
 				Decision.DecisionTypes = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
+				Decision.HasCrmCase = HasCrmCase.SelectedId.ToBool();
+				Decision.SubmissionRequired = IsSubmissionRequired.SelectedId.ToBool();
+				Decision.RetrospectiveApproval = RetrospectiveApproval.SelectedId.ToBool();
 
 				if (DecisionId.HasValue)
 				{
@@ -131,6 +143,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			Notes.Text.StringContents = model.SupportingNotes;
 
 			SetDecisionTypeAnswers(DecisionTypeQuestions, model.DecisionTypes);
+
+			HasCrmCase.SelectedId = model.HasCrmCase.ToInt();
+			IsSubmissionRequired.SelectedId = model.SubmissionRequired.ToInt();
+			RetrospectiveApproval.SelectedId = model.RetrospectiveApproval.ToInt();
 		}
 
 		private void LoadPageComponents()
@@ -149,6 +165,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			DecisionTypeQuestions = BuildDecisionTypeQuestionsComponent();
 			SetDecisionTypeAnswers(DecisionTypeQuestions, answers);
+			HasCrmCase = BuildHasCrmCaseComponent();
+			IsSubmissionRequired = BuildIsSubmissionRequiredComponent();
+			RetrospectiveApproval = BuildRetrospectiveApprovalComponent();
+
 		}
 
 		private void SetupPage()
@@ -178,8 +198,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
 			{
 				Id = (DecisionType)q.Id,
-				DecisionDrawdownFacilityAgreedId = (DecisionDrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
-				DecisionFrameworkCategoryId = (DecisionFrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				DecisionDrawdownFacilityAgreedId = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
+				DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
 			}).ToArray();
 
 			return result;
@@ -361,6 +381,53 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					TestId = $"{model.Id}-{value}"
 				};
 			});
+
+			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildHasCrmCaseComponent(int? selectedId = null)
+		{
+			var result = new RadioButtonsUiComponent("has-crm-case", nameof(HasCrmCase), "Is the decision linked to a CRM case?");
+
+			result.RadioItems = new List<SimpleRadioItem>()
+			{
+				new SimpleRadioItem("Yes", 1) { TestId = "has-crm-case-yes" },
+				new SimpleRadioItem("No", 0) { TestId = "has-crm-case-no" }
+			};
+
+			result.SelectedId = selectedId;
+
+			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildIsSubmissionRequiredComponent(int? selectedId = null)
+		{
+			var result = new RadioButtonsUiComponent("submission-required", nameof(IsSubmissionRequired), "Is a submission required?");
+
+			result.RadioItems = new List<SimpleRadioItem>()
+			{
+				new SimpleRadioItem("Yes", 1) { TestId = "submission-required-yes" },
+				new SimpleRadioItem("No", 0) { TestId = "submission-required-no" }
+			};
+
+			result.SelectedId = selectedId;
+			result.HintFromPartialView = "_SubmissionRequiredHint";
+
+			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildRetrospectiveApprovalComponent(int? selectedId = null)
+		{
+			var result = new RadioButtonsUiComponent("retrospective-approval", nameof(RetrospectiveApproval), "Is this a request that requires retrospective approval?");
+
+			result.RadioItems = new List<SimpleRadioItem>()
+			{
+				new SimpleRadioItem("Yes", 1) { TestId = "retrospective-approval-yes" },
+				new SimpleRadioItem("No", 0) { TestId = "retrospective-approval-no" }
+			};
+
+			result.SelectedId = selectedId;
+			result.HintText = "Retrospective approval is required for any decision that requires ESFA approval, but was not approved before the decision was made.";
 
 			return result;
 		}

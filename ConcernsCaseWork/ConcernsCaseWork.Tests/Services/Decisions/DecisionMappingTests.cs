@@ -10,9 +10,7 @@ using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
@@ -59,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.StatusName.Should().Be(expectedStatusName);
 		}
 
-		[TestCase(null, "No")]
+		[TestCase(null, null)]
 		[TestCase(false, "No")]
 		[TestCase(true, "Yes")]
 		public void ToViewDecisionModel_ReturnsCorrectModel(
@@ -72,6 +70,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			apiDecision.DecisionId = 10;
 			apiDecision.RetrospectiveApproval = booleanFlag;
 			apiDecision.SubmissionRequired = booleanFlag;
+			apiDecision.HasCrmCase = booleanFlag;
 			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.TotalAmountRequested = 150000;
 			apiDecision.DecisionTypes = new DecisionTypeQuestion[]
@@ -109,6 +108,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.DecisionId.Should().Be(apiDecision.DecisionId);
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
+			result.HasCrmCase.Should().Be(booleanResolvedValue);
 			result.CrmEnquiryNumber.Should().Be(apiDecision.CrmCaseNumber);
 			result.RetrospectiveApproval.Should().Be(booleanResolvedValue);
 			result.SubmissionRequired.Should().Be(booleanResolvedValue);
@@ -167,6 +167,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			result.CrmCaseNumber.Should().Be(apiDecision.CrmCaseNumber);
+			result.HasCrmCase.Should().Be(apiDecision.HasCrmCase);
 			result.DecisionTypes.Should().BeEquivalentTo(apiDecision.DecisionTypes);
 			result.ReceivedRequestDate.Should().Be(apiDecision.ReceivedRequestDate);
 			result.RetrospectiveApproval.Should().Be(apiDecision.RetrospectiveApproval);
@@ -198,17 +199,6 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.Should().BeEquivalentTo(createDecisionModel, options =>
 				options.Excluding(o => o.ConcernsCaseUrn)
 			);
-		}
-
-		[TestCase(null)]
-		[TestCase(false)]
-		public void ToUpdateDecision_When_SubmissionNotRequired_Returns_NoSubmissionLink(bool? submissionRequired) {
-			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
-			createDecisionModel.SubmissionRequired = submissionRequired;
-
-			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
-
-			result.SubmissionDocumentLink.Should().BeNull();
 		}
 
 		[Test]

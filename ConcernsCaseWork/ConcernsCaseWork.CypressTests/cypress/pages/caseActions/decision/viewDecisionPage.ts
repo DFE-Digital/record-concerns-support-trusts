@@ -26,6 +26,14 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public hasCrmCase(hasCrmCase: string): this {
+		cy.task("log", `Has CRM enquiry ${hasCrmCase}`);
+
+		cy.getByTestId("has-crm-case").should("contain.text", hasCrmCase);
+
+		return this;
+	}
+
 	public hasRetrospectiveRequest(retrospectiveRequest: string): this {
 		cy.task("log", `Has retrospective request ${retrospectiveRequest}`);
 

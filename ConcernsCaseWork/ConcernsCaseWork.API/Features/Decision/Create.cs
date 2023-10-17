@@ -55,10 +55,19 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
-				var decision = Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
-					request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
-					decisionTypes, request.TotalAmountRequested, request.SupportingNotes, now);
-
+				var decision = Decision.CreateNew(new DecisionParameters()
+				{
+					CrmCaseNumber = request.CrmCaseNumber,
+					HasCrmCase = request.HasCrmCase,
+					RetrospectiveApproval = request.RetrospectiveApproval,
+					SubmissionRequired = request.SubmissionRequired, 
+					SubmissionDocumentLink = request.SubmissionDocumentLink, 
+					ReceivedRequestDate = (DateTimeOffset)request.ReceivedRequestDate,
+					DecisionTypes = decisionTypes,
+					TotalAmountRequested = request.TotalAmountRequested, 
+					SupportingNotes = request.SupportingNotes, 
+					Now = now
+				});
 
 				concernsCase.AddDecision(decision, now);
 

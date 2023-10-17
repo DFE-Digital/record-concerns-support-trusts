@@ -74,6 +74,15 @@
                 }
 
                 <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="crm-enquiry-label">Has linked CRM case</th>
+                    <td class="govuk-table__cell" data-testid="has-crm-case">
+                        @{
+                            RenderValue(Model.Decision.HasCrmCase);
+                        }
+                    </td>
+                </tr>
+
+                <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="crm-enquiry-label">CRM enquiry number</th>
                     <td class="govuk-table__cell" data-testid="crm-enquiry-text">
                         @{

@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 
 namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 {
@@ -17,6 +16,9 @@ namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 		public string SubmissionDocumentLink { get; set; }
 		public bool? SubmissionRequired { get; set; }
 		public bool? RetrospectiveApproval { get; set; }
+
+		public bool? HasCrmCase { get; set; }
+
 		public string CrmCaseNumber { get; set; }
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
