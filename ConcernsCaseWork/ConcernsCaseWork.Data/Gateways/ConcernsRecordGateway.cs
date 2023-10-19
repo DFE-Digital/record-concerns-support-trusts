@@ -3,7 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
-    public class ConcernsRecordGateway : IConcernsRecordGateway
+	public interface IConcernsRecordGateway
+	{
+		ConcernsRecord SaveConcernsCase(ConcernsRecord concernsRecord);
+		ConcernsRecord Update(ConcernsRecord concernsRecord);
+		ConcernsRecord GetConcernsRecordByUrn(int urn);
+		void Delete(int id);
+	}
+
+	public class ConcernsRecordGateway : IConcernsRecordGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
 

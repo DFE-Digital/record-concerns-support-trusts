@@ -3,7 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
-    public class ConcernsMeansOfReferralGateway : IConcernsMeansOfReferralGateway
+	public interface IConcernsMeansOfReferralGateway
+	{
+		IList<ConcernsMeansOfReferral> GetMeansOfReferrals();
+		ConcernsMeansOfReferral GetMeansOfReferralById(int id);
+	}
+
+	public class ConcernsMeansOfReferralGateway : IConcernsMeansOfReferralGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
 

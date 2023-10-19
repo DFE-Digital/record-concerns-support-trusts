@@ -4,7 +4,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
-    public class SRMAGateway : ISRMAGateway
+	public interface ISRMAGateway
+	{
+		Task<SRMACase> CreateSRMA(SRMACase request);
+		Task<ICollection<SRMACase>> GetSRMAsByCaseId(int caseId);
+		Task<SRMACase> GetSRMAById(int srmaId);
+		Task<SRMACase> PatchSRMAAsync(int srmaId, Func<SRMACase, SRMACase> patchDelegate);
+	}
+
+	public class SRMAGateway : ISRMAGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<SRMAGateway> _logger;

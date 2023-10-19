@@ -3,7 +3,15 @@ using static Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
-    public class ConcernsTeamCaseworkGateway : IConcernsTeamCaseworkGateway
+	public interface IConcernsTeamCaseworkGateway
+	{
+		Task<ConcernsCaseworkTeam> GetByOwnerId(string ownerId, CancellationToken cancellationToken);
+		Task UpdateCaseworkTeam(ConcernsCaseworkTeam team, CancellationToken cancellationToken);
+		Task AddCaseworkTeam(ConcernsCaseworkTeam team, CancellationToken cancellationToken);
+		Task<string[]> GetTeamOwners(CancellationToken cancellationToken);
+	}
+
+	public class ConcernsTeamCaseworkGateway : IConcernsTeamCaseworkGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
 

@@ -4,6 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
+	public interface IDecisionOutcomeGateway
+	{
+		Task<DecisionOutcome> CreateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
+		Task<DecisionOutcome> UpdateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
+	}
+
 	public class DecisionOutcomeGateway : IDecisionOutcomeGateway
 	{
 		private readonly ConcernsDbContext _concernsDbContext;
@@ -67,11 +73,5 @@ namespace ConcernsCaseWork.Data.Gateways
 				throw;
 			}
 		}
-	}
-
-	public interface IDecisionOutcomeGateway
-	{
-		Task<DecisionOutcome> CreateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
-		Task<DecisionOutcome> UpdateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
 	}
 }
