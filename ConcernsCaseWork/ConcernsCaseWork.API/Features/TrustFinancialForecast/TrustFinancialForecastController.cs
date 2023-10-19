@@ -1,6 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

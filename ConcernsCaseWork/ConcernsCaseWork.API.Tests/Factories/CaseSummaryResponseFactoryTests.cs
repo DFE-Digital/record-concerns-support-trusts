@@ -189,7 +189,7 @@ public class CaseSummaryResponseFactoryTests
 			SubmissionRequired = _fixture.Create<bool>(),
 			SubmissionDocumentLink = new string(_fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
 			ReceivedRequestDate = DateTimeOffset.Now,
-			DecisionTypes = new DecisionType[] { new (Data.Enums.Concerns.DecisionType.NoticeToImprove, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) },
+			DecisionTypes = new DecisionType[] { new (Contracts.Decisions.DecisionType.NoticeToImprove, Contracts.Decisions.DrawdownFacilityAgreed.No, Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) },
 			TotalAmountRequested = _fixture.Create<decimal>(),
 			SupportingNotes = new string(_fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
 			Now = DateTimeOffset.Now

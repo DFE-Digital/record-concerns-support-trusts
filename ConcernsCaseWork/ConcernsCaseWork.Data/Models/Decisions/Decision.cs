@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models.Decisions.Outcome;
-using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Decisions
@@ -51,7 +50,7 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 				RetrospectiveApproval = parameters.RetrospectiveApproval,
 				CrmCaseNumber = parameters.CrmCaseNumber,
 				HasCrmCase = parameters.HasCrmCase,
-				Status = Enums.Concerns.DecisionStatus.InProgress,
+				Status = API.Contracts.Decisions.DecisionStatus.InProgress,
 				CreatedAt = parameters.Now,
 				UpdatedAt = parameters.Now
 			};
@@ -123,7 +122,7 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
 
-		public Enums.Concerns.DecisionStatus Status { get; set; }
+		public API.Contracts.Decisions.DecisionStatus Status { get; set; }
 		public DateTimeOffset? ClosedAt { get; set; }
 
 		public DecisionOutcome Outcome { get; set; }

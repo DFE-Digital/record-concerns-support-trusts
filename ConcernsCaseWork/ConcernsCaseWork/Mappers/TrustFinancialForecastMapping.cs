@@ -1,5 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;

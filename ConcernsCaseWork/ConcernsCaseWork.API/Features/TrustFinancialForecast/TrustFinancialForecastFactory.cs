@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 
 namespace ConcernsCaseWork.API.Features.TrustFinancialForecast;
 

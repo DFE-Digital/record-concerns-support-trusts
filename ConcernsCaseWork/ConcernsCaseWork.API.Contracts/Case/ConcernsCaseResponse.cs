@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
-
-namespace ConcernsCaseWork.API.Contracts.Case
+﻿namespace ConcernsCaseWork.API.Contracts.Case
 {
 	public class ConcernsCaseResponse
 	{

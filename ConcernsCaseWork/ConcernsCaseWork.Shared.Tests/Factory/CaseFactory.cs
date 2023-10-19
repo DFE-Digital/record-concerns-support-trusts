@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Base;

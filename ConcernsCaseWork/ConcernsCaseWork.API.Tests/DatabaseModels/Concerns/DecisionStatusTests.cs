@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
 		[Theory]
 		[MemberData(nameof(DecisionStatusTests.EnumValues))]
-		public void DecisionStatus_Properties_SetByConstructor(Data.Enums.Concerns.DecisionStatus status)
+		public void DecisionStatus_Properties_SetByConstructor(Contracts.Decisions.DecisionStatus status)
 		{
 			var fixture = new Fixture();
 			var expectedId = status;
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
 		public static IEnumerable<object[]> EnumValues()
 		{
-			foreach (var number in Enum.GetValues(typeof(Data.Enums.Concerns.DecisionStatus)))
+			foreach (var number in Enum.GetValues(typeof(Contracts.Decisions.DecisionStatus)))
 			{
 				yield return new object[] { number };
 			}

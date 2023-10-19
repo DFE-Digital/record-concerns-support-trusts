@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;

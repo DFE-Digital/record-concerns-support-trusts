@@ -1,8 +1,4 @@
-﻿
-using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.Decisions;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;

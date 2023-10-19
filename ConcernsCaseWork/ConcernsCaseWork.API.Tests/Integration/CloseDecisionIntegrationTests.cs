@@ -1,7 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
@@ -22,9 +21,6 @@ namespace ConcernsCaseWork.API.Tests.Integration;
 [Collection(ApiTestCollection.ApiTestCollectionName)]
 public class CloseDecisionIntegrationTests
 {
-
-
-
 	private readonly HttpClient _client;
 	private readonly Fixture _fixture;
 	private readonly ApiTestFixture _apiTestFixture;
@@ -251,7 +247,7 @@ public class CloseDecisionIntegrationTests
 		SubmissionRequired = false, 
 		SubmissionDocumentLink = "", 
 		ReceivedRequestDate = new DateTimeOffset(), 
-		DecisionTypes = new DecisionType[] { }, 
+		DecisionTypes = new Data.Models.Decisions.DecisionType[] { }, 
 		TotalAmountRequested = 200, 
 		SupportingNotes = "Notes!", 
 		Now = new DateTimeOffset()

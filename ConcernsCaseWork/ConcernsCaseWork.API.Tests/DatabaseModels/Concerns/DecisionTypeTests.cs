@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
 		[Theory]
 		[MemberData(nameof(DecisionTypeTests.EnumValues))]
-		public void DecisionType_Properties_SetByConstructor(Data.Enums.Concerns.DecisionType decisionTypeEnum)
+		public void DecisionType_Properties_SetByConstructor(Contracts.Decisions.DecisionType decisionTypeEnum)
 		{
 			var fixture = new Fixture();
 			var expectedTypeId = decisionTypeEnum;
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
 		[Theory]
 		[MemberData(nameof(DecisionTypeTests.EnumValues))]
-		public void DecisionType_Properties_SetByConstructor_Accepts_Null(Data.Enums.Concerns.DecisionType decisionTypeEnum)
+		public void DecisionType_Properties_SetByConstructor_Accepts_Null(Contracts.Decisions.DecisionType decisionTypeEnum)
 		{
 			var fixture = new Fixture();
 			var expectedTypeId = decisionTypeEnum;
@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 		[Fact]
 		public void Given_Invalid_DrawdownFacilityAgreed_Constructor_Throws_Exception()
 		{
-			Action action = () => new DecisionType(ConcernsCaseWork.Data.Enums.Concerns.DecisionType.EsfaApproval, 0, 0) { DecisionId = 1 };
+			Action action = () => new DecisionType(Contracts.Decisions.DecisionType.EsfaApproval, 0, 0) { DecisionId = 1 };
 
 			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionDrawdownFacilityAgreed");
 		}
@@ -69,14 +69,14 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 		[Fact]
 		public void Given_Invalid_FrameworkCategory_Constructor_Throws_Exception()
 		{
-			Action action = () => new DecisionType(ConcernsCaseWork.Data.Enums.Concerns.DecisionType.EsfaApproval, ConcernsCaseWork.API.Contracts.Decisions.DrawdownFacilityAgreed.No, 0) { DecisionId = 1 };
+			Action action = () => new DecisionType(Contracts.Decisions.DecisionType.EsfaApproval, Contracts.Decisions.DrawdownFacilityAgreed.No, 0) { DecisionId = 1 };
 
 			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionFrameworkCategory");
 		}
 
 		public static IEnumerable<object[]> EnumValues()
 		{
-			foreach (var number in Enum.GetValues(typeof(Data.Enums.Concerns.DecisionType)))
+			foreach (var number in Enum.GetValues(typeof(Contracts.Decisions.DecisionType)))
 			{
 				yield return new object[] { number };
 			}

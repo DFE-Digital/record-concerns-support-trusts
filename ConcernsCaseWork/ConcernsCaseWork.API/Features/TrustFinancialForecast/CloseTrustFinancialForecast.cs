@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;

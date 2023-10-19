@@ -2,7 +2,7 @@
 {
 	public class DecisionType
 	{
-		public Enums.Concerns.DecisionType DecisionTypeId { get; set; }
+		public API.Contracts.Decisions.DecisionType DecisionTypeId { get; set; }
 		public API.Contracts.Decisions.DrawdownFacilityAgreed? DecisionDrawdownFacilityAgreedId { get; set; }
 		public API.Contracts.Decisions.FrameworkCategory? DecisionFrameworkCategoryId { get; set; }
 
@@ -10,9 +10,9 @@
 		{
 		}
 
-		public DecisionType(Enums.Concerns.DecisionType decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed? decisionDrawdownFacilityAgreed, API.Contracts.Decisions.FrameworkCategory? decisionFrameworkCategory) : this()
+		public DecisionType(API.Contracts.Decisions.DecisionType decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed? decisionDrawdownFacilityAgreed, API.Contracts.Decisions.FrameworkCategory? decisionFrameworkCategory) : this()
 		{
-			if (!Enum.IsDefined(typeof(Enums.Concerns.DecisionType), decisionType))
+			if (!Enum.IsDefined(typeof(API.Contracts.Decisions.DecisionType), decisionType))
 				throw new ArgumentOutOfRangeException(nameof(decisionType),
 					$"{decisionType} value is not one of the supported decision types");
 

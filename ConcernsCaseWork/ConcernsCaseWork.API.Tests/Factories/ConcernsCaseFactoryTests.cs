@@ -1,6 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;

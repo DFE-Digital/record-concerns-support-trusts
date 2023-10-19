@@ -79,8 +79,8 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
             var decisionTypes = new[]
             {
-                new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove, Contracts.Decisions.DrawdownFacilityAgreed.No, Contracts.Decisions.FrameworkCategory.FacilitatingTransferEducationallyTriggered) { DecisionId = decisionId },
-                new DecisionType(Data.Enums.Concerns.DecisionType.OtherFinancialSupport, Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability){ DecisionId = decisionId }
+                new DecisionType(Contracts.Decisions.DecisionType.NoticeToImprove, Contracts.Decisions.DrawdownFacilityAgreed.No, Contracts.Decisions.FrameworkCategory.FacilitatingTransferEducationallyTriggered) { DecisionId = decisionId },
+                new DecisionType(Contracts.Decisions.DecisionType.OtherFinancialSupport, Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability){ DecisionId = decisionId }
             };
 
             var expectation = new
@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             var fixture = new Fixture();
             var sut = CreateRandomDecision(fixture);
-            sut.Status.Should().Be(Data.Enums.Concerns.DecisionStatus.InProgress);
+            sut.Status.Should().Be(Contracts.Decisions.DecisionStatus.InProgress);
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void GetTitle_When_One_DecisionType_Maps_To_DecisionType_Description(Data.Enums.Concerns.DecisionType decisionType)
+        public void GetTitle_When_One_DecisionType_Maps_To_DecisionType_Description(Contracts.Decisions.DecisionType decisionType)
         {
             var decisionTypes = new[]
             {
@@ -198,9 +198,9 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             get
             {
-                foreach (var enumValue in Enum.GetValues(typeof(Data.Enums.Concerns.DecisionType)))
+                foreach (var enumValue in Enum.GetValues(typeof(Contracts.Decisions.DecisionType)))
                 {
-                    yield return new object[] { (Data.Enums.Concerns.DecisionType)enumValue };
+                    yield return new object[] { (Contracts.Decisions.DecisionType)enumValue };
                 }
             }
         }
