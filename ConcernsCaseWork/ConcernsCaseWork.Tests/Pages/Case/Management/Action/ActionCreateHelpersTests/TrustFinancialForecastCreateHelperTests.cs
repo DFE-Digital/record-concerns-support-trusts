@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.TrustFinancialForecast;

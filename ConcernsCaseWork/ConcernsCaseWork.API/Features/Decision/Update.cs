@@ -3,8 +3,7 @@ using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models;
 	using ConcernsCaseWork.Data.Models.Decisions;
@@ -58,7 +57,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Decision {request.DecisionId}");
 				}
 
-				var decisionTypes = request.Request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.Request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
 				var updatedDecision = Decision.CreateNew(new DecisionParameters()
 				{

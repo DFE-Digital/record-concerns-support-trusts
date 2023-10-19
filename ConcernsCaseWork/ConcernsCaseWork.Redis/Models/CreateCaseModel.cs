@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using System;
 using System.Collections.Generic;
 

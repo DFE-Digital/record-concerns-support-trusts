@@ -11,7 +11,7 @@ public class DecisionTypeIdConfiguration : IEntityTypeConfiguration<DecisionType
 		builder.ToTable("ConcernsDecisionTypeId", "concerns");
 		builder.HasKey(x => x.Id);
 		builder.HasData(
-			Enum.GetValues(typeof(Enums.Concerns.DecisionType)).Cast<Enums.Concerns.DecisionType>()
+			Enum.GetValues(typeof(API.Contracts.Decisions.DecisionType)).Cast<API.Contracts.Decisions.DecisionType>()
 				.Select(enm => new DecisionTypeId(enm, enm.ToString())));
 	}
 }

@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +14,7 @@ using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {

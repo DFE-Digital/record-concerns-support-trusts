@@ -2,8 +2,6 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
@@ -225,13 +223,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
 
-			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, DrawdownFacilityAgreed.No, FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
+			var originalDecisionTypes = new List<Data.Models.Decisions.DecisionType>(){ new Data.Models.Decisions.DecisionType(Contracts.Decisions.DecisionType.EsfaApproval, DrawdownFacilityAgreed.No, FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
 			var decisionId = await CreateDecision(concernsCaseId, originalDecisionTypes);
 
 			request.DecisionTypes = null;
 			request.DecisionTypes = new List<DecisionTypeQuestion>() { new DecisionTypeQuestion()
 				{
-					Id = Contracts.Enums.DecisionType.EsfaApproval,
+					Id = Contracts.Decisions.DecisionType.EsfaApproval,
 					DecisionDrawdownFacilityAgreedId = DrawdownFacilityAgreed.PaymentUnderExistingArrangement,
 					DecisionFrameworkCategoryId = FrameworkCategory.BuildingFinancialCapability
 				}
@@ -386,7 +384,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			return result.Entity;
 		}
 
-		private async Task<int> CreateDecision(int cCaseId, List<DecisionType> decisionTypes)
+		private async Task<int> CreateDecision(int cCaseId, List<Data.Models.Decisions.DecisionType> decisionTypes)
 		{
 			var decision = new Decision()
 			{
@@ -402,7 +400,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				HasCrmCase = false,
 				CreatedAt = DateTimeOffset.Now.AddDays(-7),
 				UpdatedAt = DateTimeOffset.Now,
-				Status = Data.Enums.Concerns.DecisionStatus.InProgress,
+				Status = Contracts.Decisions.DecisionStatus.InProgress,
 				ClosedAt = null, 
 				Outcome  = new Data.Models.Decisions.Outcome.DecisionOutcome()
 				{

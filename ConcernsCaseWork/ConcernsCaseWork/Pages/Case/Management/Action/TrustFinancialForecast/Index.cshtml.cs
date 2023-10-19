@@ -1,4 +1,6 @@
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
@@ -6,10 +8,8 @@ using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Constants;
 using System;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 {

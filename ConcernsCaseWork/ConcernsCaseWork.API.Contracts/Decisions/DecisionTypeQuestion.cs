@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
-using System;
+﻿using System;
 namespace ConcernsCaseWork.API.Contracts.Decisions
 {
 	public class DecisionTypeQuestion

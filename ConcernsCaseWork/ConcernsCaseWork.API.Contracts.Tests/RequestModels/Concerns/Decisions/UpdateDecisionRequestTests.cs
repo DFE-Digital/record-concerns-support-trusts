@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using FluentAssertions;
 
 namespace ConcernsCaseWork.API.Tests.RequestModels.Concerns.Decisions
@@ -12,7 +11,7 @@ namespace ConcernsCaseWork.API.Tests.RequestModels.Concerns.Decisions
 		{
 			var fixture = new Fixture();
 			var sut = fixture.Build<UpdateDecisionRequest>()
-				.With(x => x.DecisionTypes, new Contracts.Decisions.DecisionTypeQuestion[] { new Contracts.Decisions.DecisionTypeQuestion() { Id = 0 } })
+				.With(x => x.DecisionTypes, new DecisionTypeQuestion[] { new DecisionTypeQuestion() { Id = 0 } })
 				.Create();
 
 			sut.IsValid().Should().BeFalse();

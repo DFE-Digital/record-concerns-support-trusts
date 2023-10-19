@@ -1,5 +1,5 @@
 using AutoFixture;
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;

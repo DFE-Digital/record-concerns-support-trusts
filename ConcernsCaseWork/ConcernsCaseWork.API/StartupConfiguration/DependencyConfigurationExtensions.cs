@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+﻿using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.Features.Case;
 using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.API.Features.ConcernsStatus;

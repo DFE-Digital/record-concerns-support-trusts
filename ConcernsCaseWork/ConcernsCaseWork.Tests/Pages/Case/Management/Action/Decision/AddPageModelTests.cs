@@ -1,9 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using ConcernsCaseWork.API.Contracts.Decisions;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;

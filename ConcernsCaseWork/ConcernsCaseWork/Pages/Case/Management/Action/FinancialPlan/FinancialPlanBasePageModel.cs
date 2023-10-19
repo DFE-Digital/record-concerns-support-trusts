@@ -1,6 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
@@ -36,8 +34,8 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 	{
 		RadioItems = new SimpleRadioItem[]
 			{
-					new (API.Contracts.Enums.FinancialPlanClosureStatus.ViablePlanReceived.Description(), (int)API.Contracts.Enums.FinancialPlanClosureStatus.ViablePlanReceived),
-					new (API.Contracts.Enums.FinancialPlanClosureStatus.Abandoned.Description(), (int)API.Contracts.Enums.FinancialPlanClosureStatus.Abandoned),
+					new (API.Contracts.FinancialPlan.FinancialPlanClosureStatus.ViablePlanReceived.Description(), (int)API.Contracts.FinancialPlan.FinancialPlanClosureStatus.ViablePlanReceived),
+					new (API.Contracts.FinancialPlan.FinancialPlanClosureStatus.Abandoned.Description(), (int)API.Contracts.FinancialPlan.FinancialPlanClosureStatus.Abandoned),
 			},
 		SelectedId = selectedId,
 		Required = true,

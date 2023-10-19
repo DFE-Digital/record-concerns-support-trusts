@@ -1,7 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.Exceptions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -10,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision

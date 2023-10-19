@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.Contracts.Enums;
 
 namespace ConcernsCaseWork.API.Contracts.Case
 {

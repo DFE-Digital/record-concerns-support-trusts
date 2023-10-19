@@ -1,12 +1,10 @@
-using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using JetBrains.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ConcernsCaseWork.API.Contracts.Case
 {
-    public class ConcernCaseRequest
+	public class ConcernCaseRequest
     {
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

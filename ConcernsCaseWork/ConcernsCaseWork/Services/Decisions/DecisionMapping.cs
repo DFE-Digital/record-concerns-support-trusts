@@ -1,7 +1,6 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;

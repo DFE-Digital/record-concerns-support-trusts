@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 
 namespace ConcernsCaseWork.Data.Models;
 

@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;

@@ -1,5 +1,4 @@
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Redis.Models;
 using System.Threading.Tasks;
 using ConcernsCaseWork.API.Contracts.Case;

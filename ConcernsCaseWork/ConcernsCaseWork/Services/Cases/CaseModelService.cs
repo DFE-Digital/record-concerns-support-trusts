@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;

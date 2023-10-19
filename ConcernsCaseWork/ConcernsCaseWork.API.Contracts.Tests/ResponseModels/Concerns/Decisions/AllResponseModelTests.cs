@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using FluentAssertions.Execution;
 using System.Reflection;
 
 namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
 {
-    public class AllResponseModelTests
+	public class AllResponseModelTests
     {
         [Fact]
         public void All_Constructors_Guard_Against_Null()

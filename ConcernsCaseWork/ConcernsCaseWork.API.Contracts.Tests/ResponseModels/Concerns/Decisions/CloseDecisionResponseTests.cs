@@ -1,6 +1,6 @@
 using AutoFixture;
 using AutoFixture.Idioms;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using FluentAssertions.Execution;
 
 namespace ConcernsCaseWork.API.Contracts.Tests.ResponseModels.Concerns.Decisions;
