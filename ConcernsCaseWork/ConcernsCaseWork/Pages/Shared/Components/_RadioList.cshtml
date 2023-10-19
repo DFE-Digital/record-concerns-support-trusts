@@ -23,6 +23,11 @@
 		    </legend>
         }
 
+        @if (!string.IsNullOrEmpty(Model.HintText))
+        {
+            <div class="govuk-hint">@Model.HintText</div>
+        }
+
         @if (!string.IsNullOrEmpty(Model.HintFromPartialView))
         {
             <partial name="@Model.HintFromPartialView" />

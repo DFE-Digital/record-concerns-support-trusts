@@ -28,6 +28,8 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 
 		public bool? RetrospectiveApproval { get; set; }
 
+		public bool? HasCrmCase { get; set; }
+
 		[StringLength(_maxCaseNumberLength, MinimumLength = 0)]
 		public string CrmCaseNumber { get; set; }
 

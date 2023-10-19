@@ -75,6 +75,7 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.Log("Creating Decision");
 		editDecisionPage
+			.withHasCrmCase("yes")
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest("no")
 			.withSubmissionRequired("yes")
@@ -108,6 +109,7 @@ describe("User can add decisions to an existing case", () => {
 		viewDecisionPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("444")
+			.hasCrmCase("Yes")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.gov.uk")
@@ -127,6 +129,7 @@ describe("User can add decisions to an existing case", () => {
 		Logger.Log("Check existing values are set");
 		editDecisionPage
 			.hasCrmEnquiry("444")
+			.hasCrmCase("yes")
 			.hasRetrospectiveRequest("no")
 			.hasSubmissionRequired("yes")
 			.hasSubmissionLink("www.gov.uk")
@@ -145,9 +148,10 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.Log("Set new values");
 		editDecisionPage
+			.withHasCrmCase("no")
 			.withCrmEnquiry("777")
-			.withRetrospectiveRequest("no")
-			.withSubmissionRequired("yes")
+			.withRetrospectiveRequest("yes")
+			.withSubmissionRequired("no")
 			.withSubmissionLink("www.google.uk")
 			.withDateESFADay("22")
 			.withDateESFAMonth("03")
@@ -179,8 +183,9 @@ describe("User can add decisions to an existing case", () => {
 		Logger.Log("Viewing Edited Decision");
 		viewDecisionPage
 			.hasCrmEnquiry("777")
-			.hasRetrospectiveRequest("No")
-			.hasSubmissionRequired("Yes")
+			.hasCrmCase("No")
+			.hasRetrospectiveRequest("Yes")
+			.hasSubmissionRequired("No")
 			.hasSubmissionLink("www.google.uk")
 			.hasDateESFAReceivedRequest("22 March 2022")
 			.hasTotalAmountRequested("£130,000")
@@ -196,6 +201,7 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.Log("Adding note on the decision that will be closing ");
 		editDecisionPage
+			.withHasCrmCase("yes")
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest("no")
 			.withSubmissionRequired("yes")
@@ -285,6 +291,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasDateOpened(toDisplayDate(now))
 			.hasDateClosed(toDisplayDate(now))
 			.hasCrmEnquiry("444")
+			.hasCrmCase("Yes")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.gov.uk")
@@ -344,8 +351,9 @@ describe("User can add decisions to an existing case", () => {
 		viewDecisionPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("Empty")
-			.hasRetrospectiveRequest("No")
-			.hasSubmissionRequired("No")
+			.hasCrmCase("Empty")
+			.hasRetrospectiveRequest("Empty")
+			.hasSubmissionRequired("Empty")
 			.hasSubmissionLink("Empty")
 			.hasDateESFAReceivedRequest("Empty")
 			.hasTotalAmountRequested("£0.00")

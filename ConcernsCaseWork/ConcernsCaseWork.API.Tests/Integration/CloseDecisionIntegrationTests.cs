@@ -244,7 +244,18 @@ public class CloseDecisionIntegrationTests
 		return decision.DecisionId;
 	}
 	
-	private static Decision BuildDecision() => Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
+	private static Decision BuildDecision() => Decision.CreateNew(new DecisionParameters() 
+	{
+		CrmCaseNumber = "123456", 
+		RetrospectiveApproval = false, 
+		SubmissionRequired = false, 
+		SubmissionDocumentLink = "", 
+		ReceivedRequestDate = new DateTimeOffset(), 
+		DecisionTypes = new DecisionType[] { }, 
+		TotalAmountRequested = 200, 
+		SupportingNotes = "Notes!", 
+		Now = new DateTimeOffset()
+	});
 	
 	private ConcernsDbContext GetContext() => _apiTestFixture.GetContext();
 

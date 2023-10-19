@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -170,9 +171,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.TotalAmountRequested = 100;
 			request.ConcernsCaseUrn = concernsCaseId;
 
-			var expectedDecisionFrameworkCategory = (Contracts.Enums.DecisionFrameworkCategory)1;
-
-			request.DecisionTypes.ToList().First().DecisionFrameworkCategoryId = expectedDecisionFrameworkCategory;
+			request.DecisionTypes.ToList().First().DecisionFrameworkCategoryId = FrameworkCategory.EnablingFinancialRecovery;
 
 			
 			var decisionToAdd = await CreateDecision(concernsCase.Id, request);
@@ -221,19 +220,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			// arrange
 			var request = _autoFixture.Create<UpdateDecisionRequest>();
 			request.TotalAmountRequested = 100;
+			request.HasCrmCase = false;
 
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
 
-			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
+			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, DrawdownFacilityAgreed.No, FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
 			var decisionId = await CreateDecision(concernsCaseId, originalDecisionTypes);
 
 			request.DecisionTypes = null;
-			request.DecisionTypes = new List<Contracts.Decisions.DecisionTypeQuestion>() { new Contracts.Decisions.DecisionTypeQuestion()
+			request.DecisionTypes = new List<DecisionTypeQuestion>() { new DecisionTypeQuestion()
 				{
 					Id = Contracts.Enums.DecisionType.EsfaApproval,
-					DecisionDrawdownFacilityAgreedId = Contracts.Enums.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement,
-					DecisionFrameworkCategoryId = Contracts.Enums.DecisionFrameworkCategory.BuildingFinancialCapacity
+					DecisionDrawdownFacilityAgreedId = DrawdownFacilityAgreed.PaymentUnderExistingArrangement,
+					DecisionFrameworkCategoryId = FrameworkCategory.BuildingFinancialCapability
 				}
 			}.ToArray();
 			
@@ -259,6 +259,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 				return options;
 			});
+
+			decision.HasCrmCase.Should().BeFalse();
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
@@ -313,9 +315,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_HasResource_Returns_204()
 		{
-			//BuilderSetup.DisablePropertyNamingFor<ConcernsRecord, DateTime?>(f => f.DeletedAt);
-			
-
 			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
 
 			var concernsCase = await CreateConcernsCase();
@@ -400,6 +399,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				SubmissionRequired = true,
 				RetrospectiveApproval = false,
 				CrmCaseNumber = "CRM123456",
+				HasCrmCase = false,
 				CreatedAt = DateTimeOffset.Now.AddDays(-7),
 				UpdatedAt = DateTimeOffset.Now,
 				Status = Data.Enums.Concerns.DecisionStatus.InProgress,

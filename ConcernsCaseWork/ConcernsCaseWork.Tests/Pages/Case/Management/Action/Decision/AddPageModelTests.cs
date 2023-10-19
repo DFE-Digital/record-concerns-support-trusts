@@ -283,6 +283,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 					Decision = new CreateDecisionRequest()
 				};
 
+				result.IsSubmissionRequired = _fixture.Create<RadioButtonsUiComponent>();
+				result.HasCrmCase = _fixture.Create<RadioButtonsUiComponent>();
+				result.RetrospectiveApproval = _fixture.Create<RadioButtonsUiComponent>();
+
 				result.CaseUrn = _caseUrnValue;
 
 				if (_decisionId.HasValue) result.DecisionId = _decisionId;

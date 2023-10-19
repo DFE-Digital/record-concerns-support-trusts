@@ -1,9 +1,33 @@
 ﻿using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models.Decisions.Outcome;
+using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Decisions
 {
+	public record DecisionParameters
+	{
+		public string CrmCaseNumber { get; set; }
+
+		public bool? HasCrmCase { get; set; }
+
+		public bool? RetrospectiveApproval { get; set; }
+
+		public bool? SubmissionRequired { get; set; }
+
+		public string SubmissionDocumentLink { get; set; }
+
+		public DateTimeOffset ReceivedRequestDate { get; set; }
+
+		public DecisionType[] DecisionTypes { get; set; }
+
+		public decimal TotalAmountRequested { get; set; }
+
+		public string SupportingNotes { get; set; }
+
+		public DateTimeOffset Now { get; set; }
+	}
+
 	public class Decision : IAuditable
 	{
 		public Decision()
@@ -12,32 +36,24 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		}
 
 		public static Decision CreateNew(
-			string crmCaseNumber,
-			bool? retrospectiveApproval,
-			bool? submissionRequired,
-			string submissionDocumentLink,
-			DateTimeOffset receivedRequestDate,
-			DecisionType[] decisionTypes,
-			decimal totalAmountRequested,
-			string supportingNotes,
-			DateTimeOffset now
-		)
+			DecisionParameters parameters)
 		{
-			ValidateDecisionModel(crmCaseNumber, submissionDocumentLink, totalAmountRequested, supportingNotes);
+			ValidateDecisionModel(parameters.CrmCaseNumber, parameters.SubmissionDocumentLink, parameters.TotalAmountRequested, parameters.SupportingNotes);
 
 			return new Decision
 			{
-				DecisionTypes = decisionTypes?.ToList() ?? new List<DecisionType>(),
-				TotalAmountRequested = totalAmountRequested,
-				SupportingNotes = supportingNotes,
-				ReceivedRequestDate = receivedRequestDate,
-				SubmissionDocumentLink = submissionDocumentLink,
-				SubmissionRequired = submissionRequired,
-				RetrospectiveApproval = retrospectiveApproval,
-				CrmCaseNumber = crmCaseNumber,
+				DecisionTypes = parameters.DecisionTypes?.ToList() ?? new List<DecisionType>(),
+				TotalAmountRequested = parameters.TotalAmountRequested,
+				SupportingNotes = parameters.SupportingNotes,
+				ReceivedRequestDate = parameters.ReceivedRequestDate,
+				SubmissionDocumentLink = parameters.SubmissionDocumentLink,
+				SubmissionRequired = parameters.SubmissionRequired,
+				RetrospectiveApproval = parameters.RetrospectiveApproval,
+				CrmCaseNumber = parameters.CrmCaseNumber,
+				HasCrmCase = parameters.HasCrmCase,
 				Status = Enums.Concerns.DecisionStatus.InProgress,
-				CreatedAt = now,
-				UpdatedAt = now
+				CreatedAt = parameters.Now,
+				UpdatedAt = parameters.Now
 			};
 		}
 
@@ -99,6 +115,8 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 
 		public bool? RetrospectiveApproval { get; set; }
 
+		public bool? HasCrmCase { get; set; }
+
 		[StringLength(MaxCaseNumberLength)]
 		public string CrmCaseNumber { get; set; }
 
@@ -147,6 +165,7 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 			SubmissionRequired = updatedDecision.SubmissionRequired;
 			RetrospectiveApproval = updatedDecision.RetrospectiveApproval;
 			CrmCaseNumber = updatedDecision.CrmCaseNumber;
+			HasCrmCase = updatedDecision.HasCrmCase;
 			UpdatedAt = now;
 		}
 

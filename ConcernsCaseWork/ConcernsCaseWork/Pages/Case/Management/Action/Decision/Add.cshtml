@@ -39,13 +39,11 @@
 
                     <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
 
-                    @* CRM Enquiry Number *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
-                            </legend>
+                    <partial name="Components/_RadioList" model="Model.HasCrmCase" />
 
+                    @* CRM Enquiry Number *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
                             <div id="crm-enquiry-hint" class="govuk-hint">
                                 If yes, paste the CRM enquiry number below. If no, leave the field blank.
                             </div>
@@ -54,90 +52,15 @@
                         </fieldset>
                     </div>
 
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is this a request that requires retrospective approval?</h2>
-                            </legend>
-                            <div id="retrospective-approval-hint" class="govuk-hint">
-                                Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
-                            </div>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                @{
-                                    var retrospectiveApprovalYesChecked = Model.Decision.RetrospectiveApproval.HasValue && Model.Decision.RetrospectiveApproval.Value ? "checked" : "";
-                                    var retrospectiveApprovalNoChecked = Model.Decision.RetrospectiveApproval.HasValue && !Model.Decision.RetrospectiveApproval.Value ? "checked" : "";
-                                }
+                    <partial name="Components/_RadioList" model="Model.RetrospectiveApproval" />
 
-                                <div class="govuk-radios__item">
+                    <partial name="Components/_RadioList" model="Model.IsSubmissionRequired" />
 
-                                    <input class="govuk-radios__input" id="retrospective-approval-yes" name="Decision.RetrospectiveApproval" type="radio" value="true" @retrospectiveApprovalYesChecked>
-
-                                    <label class="govuk-label govuk-radios__label" for="retrospective-approval-yes">
-                                        <span>
-                                            Yes
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__item">
-
-                                    <input class="govuk-radios__input" id="retrospective-approval-no" name="Decision.RetrospectiveApproval" type="radio" value="false" @retrospectiveApprovalNoChecked>
-
-                                    <label class="govuk-label govuk-radios__label" for="retrospective-approval-no">
-                                        <span>
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    @* Submission required *@
                     <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is a submission required?</h2>
-                            </legend>
-                            <div id="submission-required-hint" class="govuk-hint">
-                                Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>.
-                            </div>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                <div class="govuk-radios__item">
-
-                                    @{
-                                        var submissionRequiredYesChecked = Model.Decision.SubmissionRequired.HasValue && Model.Decision.SubmissionRequired.Value ? "checked" : "";
-                                        var submissionRequiredNoChecked = Model.Decision.SubmissionRequired.HasValue && !Model.Decision.SubmissionRequired.Value ? "checked" : "";
-                                    }
-
-                                    <input class="govuk-radios__input" id="submission-required-yes" name="Decision.SubmissionRequired" type="radio" value="true" @submissionRequiredYesChecked>
-
-                                    <label class="govuk-label govuk-radios__label" for="submission-required-yes">
-                                        Yes
-                                    </label>
-                                </div>
-
-                                <div class="govuk-radios__item">
-
-                                    <input class="govuk-radios__input" id="submission-required-no" name="Decision.SubmissionRequired" type="radio" value="false" @submissionRequiredNoChecked>
-
-                                    <label class="govuk-label govuk-radios__label" for="submission-required-no">
-                                        <span>
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="govuk-form-group">
-                                    <label class="govuk-label" for="submission-required-link">
-                                        If yes, paste in a link to the submission document on Sharepoint.
-                                    </label>
-                                    <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
-                                </div>
-                            </div>
-
-                        </fieldset>
+                        <label class="govuk-label" for="submission-required-link">
+                            If yes, paste in a link to the submission document on Sharepoint.
+                        </label>
+                        <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
                     </div>
 
                     @* Date request received *@
