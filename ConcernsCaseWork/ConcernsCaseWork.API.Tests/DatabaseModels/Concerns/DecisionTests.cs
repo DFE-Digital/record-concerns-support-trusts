@@ -36,40 +36,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         }
 
         [Theory]
-        [InlineData(-1000, "caseNumber", "notes", "link", "totalAmountRequested")]
-        [InlineData(1000, "_maxString_", "notes", "link", "crmCaseNumber")]
-        [InlineData(1000, "caseNumber", "_maxString_", "link", "supportingNotes")]
-        [InlineData(1000, "caseNumber", "notes", "_maxString_", "submissionDocumentLink")]
-        public void CreateNew_With_Invalid_Arguments_Throws_Exception(decimal amountRequested, string crmCaseNumber, string supportingNotes, string submissionDocumentLink, string expectedParamName)
-        {
-            var fixture = new Fixture();
-            crmCaseNumber = crmCaseNumber == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxCaseNumberLength + 1) : crmCaseNumber;
-            supportingNotes = supportingNotes == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxSupportingNotesLength + 1) : supportingNotes;
-            submissionDocumentLink = submissionDocumentLink == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxUrlLength + 1) : submissionDocumentLink;
-
-			Action act = () => Decision.CreateNew(new DecisionParameters()
-				{
-					CrmCaseNumber = crmCaseNumber,
-					RetrospectiveApproval = null,
-					SubmissionRequired = null,
-					SubmissionDocumentLink = submissionDocumentLink,
-					ReceivedRequestDate = DateTimeOffset.UtcNow,
-					DecisionTypes = Array.Empty<DecisionType>(),
-					TotalAmountRequested = amountRequested,
-					SupportingNotes = supportingNotes,
-					Now = DateTimeOffset.Now
-				}
-			);
-
-            act.Should().Throw<ArgumentException>().And.ParamName.Should().Be(expectedParamName);
-        }
-
-        private string CreateFixedLengthString(Fixture fixture, int size)
-        {
-            return new string(fixture.CreateMany<char>(size).ToArray());
-        }
-
-        [Theory]
         [InlineData("caseNumber", "notes", "link")]
         [InlineData(null, null, null)]
         public void CreateNew_Sets_Properties(string caseNumber, string notes, string link)

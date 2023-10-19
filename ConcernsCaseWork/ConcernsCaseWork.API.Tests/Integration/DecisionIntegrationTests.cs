@@ -70,7 +70,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(outcomeRequest.BusinessAreasConsulted);
 		}
 
-
 		[Fact]
 		public async Task When_Get_DecisionsByCaseUrn_Returns_200()
 		{
@@ -168,6 +167,27 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Post_InvalidRequest_Returns_400()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var createRequest = _autoFixture.Create<CreateDecisionRequest>();
+			createRequest.TotalAmountRequested = -1;
+			createRequest.SupportingNotes = new string('a', 2001);
+			createRequest.SubmissionDocumentLink = new string('a', 2049);
+
+			var result = await _client.PostAsync($"/v2/concerns-cases/{caseId}/decisions", createRequest.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("The total amount requested must be zero or greater");
+			errorContent.Should().Contain("Notes must be 2000 characters or less");
+			errorContent.Should().Contain("Submission document link must be 2048 or less");
+		}
+
+		[Fact]
 		public async Task When_Put_Returns_200Response()
 		{
 			// arrange
@@ -254,6 +274,33 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var message = await result.Content.ReadAsStringAsync();
 			message.Should().Contain($"Not Found: Decision {decisionId}");
+		}
+
+		[Fact]
+		public async Task When_Put_InvalidRequest_Returns_400()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var createRequest = _autoFixture.Create<CreateDecisionRequest>();
+			createRequest.TotalAmountRequested = 100;
+			createRequest.ConcernsCaseUrn = caseId;
+
+			var createdDecision = await CreateDecision(caseId, createRequest);
+
+			var updateRequest = _autoFixture.Create<CreateDecisionRequest>();
+			updateRequest.TotalAmountRequested = -1;
+			updateRequest.SupportingNotes = new string('a', 2001);
+			updateRequest.SubmissionDocumentLink = new string('a', 2049);
+
+			var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{createdDecision.DecisionId}", updateRequest.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("The total amount requested must be zero or greater");
+			errorContent.Should().Contain("Notes must be 2000 characters or less");
+			errorContent.Should().Contain("Submission document link must be 2048 or less");
 		}
 
 		[Fact]

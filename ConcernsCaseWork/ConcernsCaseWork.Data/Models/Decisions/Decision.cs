@@ -37,8 +37,6 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		public static Decision CreateNew(
 			DecisionParameters parameters)
 		{
-			ValidateDecisionModel(parameters.CrmCaseNumber, parameters.SubmissionDocumentLink, parameters.TotalAmountRequested, parameters.SupportingNotes);
-
 			return new Decision
 			{
 				DecisionTypes = parameters.DecisionTypes?.ToList() ?? new List<DecisionType>(),
@@ -54,40 +52,6 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 				CreatedAt = parameters.Now,
 				UpdatedAt = parameters.Now
 			};
-		}
-
-		/// <summary>
-		/// Validates that the properties of a decision are valid, and should be called before creation/update is made.
-		/// If invalid properties are found an exception is thrown. In future it might be better to return an exceptions collection.
-		/// Some of these validations are good candidates for turning into value types
-		/// </summary>
-		/// <param name="crmCaseNumber"></param>
-		/// <param name="submissionDocumentLink"></param>
-		/// <param name="totalAmountRequested"></param>
-		/// <param name="supportingNotes"></param>
-		/// <exception cref="ArgumentOutOfRangeException"></exception>
-		/// <exception cref="ArgumentException"></exception>
-		private static void ValidateDecisionModel(string crmCaseNumber, string submissionDocumentLink,
-			decimal totalAmountRequested, string supportingNotes)
-		{
-			// some of these validations are good candidates for turning into value types
-			_ = totalAmountRequested >= 0
-				? totalAmountRequested
-				: throw new ArgumentOutOfRangeException(nameof(totalAmountRequested),
-					"The total amount requested cannot be a negative value");
-
-			if (crmCaseNumber?.Length > MaxCaseNumberLength)
-				throw new ArgumentException($"{nameof(crmCaseNumber)} can be a maximum of {MaxCaseNumberLength} characters",
-					nameof(crmCaseNumber));
-
-			if (supportingNotes?.Length > MaxSupportingNotesLength)
-				throw new ArgumentException(
-					$"{nameof(supportingNotes)} can be a maximum of {MaxSupportingNotesLength} characters",
-					nameof(supportingNotes));
-
-			if (submissionDocumentLink?.Length > MaxUrlLength)
-				throw new ArgumentException($"{nameof(submissionDocumentLink)} can be a maximum of {MaxUrlLength} characters",
-					nameof(submissionDocumentLink));
 		}
 
 		public const int MaxUrlLength = 2048;
@@ -153,9 +117,6 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		/// <param name="now"></param>
 		public void Update(Decision updatedDecision, DateTimeOffset now)
 		{
-			_ = updatedDecision ?? throw new ArgumentNullException(nameof(updatedDecision));
-			ValidateDecisionModel(updatedDecision.CrmCaseNumber, updatedDecision.SubmissionDocumentLink, updatedDecision.TotalAmountRequested, updatedDecision.SupportingNotes);
-
 			DecisionTypes = updatedDecision.DecisionTypes ?? Array.Empty<DecisionType>();
 			TotalAmountRequested = updatedDecision.TotalAmountRequested;
 			SupportingNotes = updatedDecision.SupportingNotes;
