@@ -427,7 +427,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			};
 
 			result.SelectedId = selectedId;
-			result.HintText = "Retrospective approval is required for any decision that requires ESFA approval, but was not approved before the decision was made.";
+			result.HintText = "Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.";
 
 			return result;
 		}
