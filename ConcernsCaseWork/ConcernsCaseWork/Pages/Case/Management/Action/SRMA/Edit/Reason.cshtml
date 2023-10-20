@@ -1,4 +1,5 @@
 ﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/reason"
+@using ConcernsCaseWork.API.Contracts.Case;
 @using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
@@ -32,7 +33,17 @@
 
                 <form method="post" id="change-reason-form" novalidate>
 
+                    @* Keep the division across page transitions so we don't have to call the server again after the first load *@
+                    @Html.HiddenFor(m => m.Division)
+
                     <partial name="Components/_RadioList" model="Model.SRMAReasonOffered" />
+
+                    @if (Model.Division == Division.RegionsGroup)
+                    {
+                        <div id="submission-required-hint" class="govuk-hint">
+                            You must book the SRMA visit through your SFSO Territory contact.
+                        </div>
+                    }
 
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
