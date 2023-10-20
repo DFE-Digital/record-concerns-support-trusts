@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.CoreTypes;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -27,6 +28,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
+		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
@@ -43,7 +45,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		[BindProperty]
 		public RadioButtonsUiComponent CaseActionEnum { get; set; }
 
-		public IndexPageModel(IRecordModelService recordModelService,
+		public IndexPageModel(ICaseModelService caseModelService,
+			IRecordModelService recordModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
@@ -52,6 +55,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			ITrustFinancialForecastService trustFinancialForecastService,
 			ILogger<IndexPageModel> logger)
 		{
+			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
@@ -124,21 +128,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		private async Task LoadPage()
 		{
-			var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseId);
+			var caseModel = await _caseModelService.GetCaseByUrn(CaseId);
+			caseModel.RecordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseId);
 
-			var supportedActions = GetSupportedActions(recordsModel);
+			var supportedActions = GetSupportedActions(caseModel);
 			CaseActionEnum = BuildActionComponent(supportedActions);
 		}
 
-		private List<CaseActionEnum> GetSupportedActions(IList<RecordModel> concerns)
+		private List<CaseActionEnum> GetSupportedActions(CaseModel caseModel)
 		{
-			if (concerns.IsNullOrEmpty())
+			if (caseModel.RecordsModel.IsNullOrEmpty())
 			{
 				return new List<CaseActionEnum>()
 				{
 					Service.Cases.CaseActionEnum.Decision,
 					Service.Cases.CaseActionEnum.Srma,
 					Service.Cases.CaseActionEnum.TrustFinancialForecast
+				};
+			}
+
+			if (caseModel.Division == Division.RegionsGroup)
+			{
+				return new List<CaseActionEnum>()
+				{
+					Service.Cases.CaseActionEnum.Decision,
+					Service.Cases.CaseActionEnum.NtiUnderConsideration,
+					Service.Cases.CaseActionEnum.NtiWarningLetter,
+					Service.Cases.CaseActionEnum.Nti,
+					Service.Cases.CaseActionEnum.Srma,
 				};
 			}
 
