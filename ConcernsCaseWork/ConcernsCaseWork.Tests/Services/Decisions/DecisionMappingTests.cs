@@ -233,7 +233,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		}
 
 		[Test]
-		public void ToCreateDecisionRequest_MinimumFieldsFilled_ReturnsCorrectModel()
+		public void ToCreateDecisionOutcomeRequest_MinimumFieldsFilled_ReturnsCorrectModel()
 		{
 			var model = new EditDecisionOutcomeModel()
 			{

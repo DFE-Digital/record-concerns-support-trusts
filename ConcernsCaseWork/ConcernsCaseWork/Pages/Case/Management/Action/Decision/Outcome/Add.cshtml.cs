@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
@@ -9,6 +10,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly IDecisionService _decisionService;
+		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<AddPageModel> _logger;
 
 		[BindProperty]
@@ -52,13 +55,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		[BindProperty(SupportsGet = true, Name = "outcomeId")]
 		public long? OutcomeId { get; set; }
 
+		[BindProperty]
+		public Division? Division { get; set; }
+
 		public string SaveAndContinueButtonText { get; set; }
 
-		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
+		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes { get; set; }
 
-		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
+		public AddPageModel(
+			IDecisionService decisionService,
+			ICaseModelService caseModelService,
+			ILogger<AddPageModel> logger)
 		{
 			_decisionService = decisionService;
+			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 
@@ -69,6 +79,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			try
 			{
 				DecisionOutcome = await CreateDecisionOutcomeModel();
+				
+				var caseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
+				Division = caseModel.Division;
 
 				LoadPageComponents(DecisionOutcome);
 
@@ -146,6 +159,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			DecisionMadeDate = BuildDecisionMadeDateComponent(DecisionMadeDate?.Date);
 			DecisionEffectiveFromDate = BuildDecisionEffectiveFromDateComponent(DecisionEffectiveFromDate?.Date);
 			DecisionOutcomeAuthorizer = BuildDecisionAuthorizerComponent(DecisionOutcomeAuthorizer?.SelectedId);
+			BusinessAreaCheckBoxes = Division == API.Contracts.Case.Division.RegionsGroup ? BuildRegionsGroupBusinessAreaCheckboxes() : BuildBusinessAreaCheckBoxes();
+		}
+
+		private List<DecisionOutcomeBusinessArea> BuildRegionsGroupBusinessAreaCheckboxes()
+		{
+			return new List<DecisionOutcomeBusinessArea>
+			{
+				DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight,
+				DecisionOutcomeBusinessArea.RegionsGroup
+			};
+		}
+
+		private List<DecisionOutcomeBusinessArea> BuildBusinessAreaCheckBoxes()
+		{
+			return Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
 		}
 
 		private void SetupPage()

@@ -45,6 +45,13 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public hasNoRetrospectiveRequestField(): this {
+		Logger.Log("Has no retrospective request");
+		cy.getByTestId("row-retrospective-request").should("not.exist");
+
+		return this;
+	}
+
 	public hasSubmissionRequired(submissionRequired: string): this {
 		cy.task("log", `Has Submission Required ${submissionRequired}`);
 
@@ -78,6 +85,13 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public hasNoDateESFAReceivedRequestField(): this {
+		Logger.Log("Has no date ESFA received");
+		cy.getByTestId("row-esfa-date-requested").should("not.exist");
+
+		return this;
+	}
+
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		cy.task("log", `Has total Amount Requested ${totalAmountRequested}`);
 
@@ -89,9 +103,15 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public hasNoTotalAmountRequestedField(): this {
+		Logger.Log("Has no total amount requested");
+		cy.getByTestId("row-total-amount-requested").should("not.exist");
+
+		return this;
+	}
+
 	public hasTypeOfDecision(typeOfDecision: string): this {
 		cy.task("log", `Has type of decision  ${typeOfDecision}`);
-
 
 		cy.getByTestId("decision-type-text").should(
 			"contain.text",
@@ -164,6 +184,13 @@ export class ViewDecisionPage
 		Logger.Log(`Has total amount approved ${total}`);
 
 		cy.getByTestId("total-amount-approved-text").should("contain.text", total);
+
+		return this;
+	}
+
+	public hasNoTotalAmountApprovedField(): this {
+		Logger.Log("Has no total amount approved");
+		cy.getByTestId("row-total-amount-approved").should("not.exist");
 
 		return this;
 	}

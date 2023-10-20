@@ -11,6 +11,14 @@ export class CaseBuilder
         return result;
     }
 
+    public static buildRegionsGroupCase(): CreateCaseRequest
+    {
+        var result = this.buildOpenCase();
+        result.division = 2;
+
+        return result;
+    }
+
     public static buildOpenCaseWithCreatedBy(createdBy): CreateCaseRequest
     {
         const currentDate = getUkLocalDateFormatted();

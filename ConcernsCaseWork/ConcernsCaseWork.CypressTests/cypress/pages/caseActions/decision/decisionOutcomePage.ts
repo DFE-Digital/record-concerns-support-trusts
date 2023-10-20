@@ -18,6 +18,14 @@ export class DecisionOutcomePage {
 		return this;
 	}
 
+	public hasNoTotalAmountApprovedField(): this {
+		Logger.Log("Has no total amount field");
+
+		cy.getByTestId("container-total-amount-approved").should("not.exist");
+
+		return this;
+	}
+
 	public withDateDecisionMadeDay(dateDecisionMadeDay: string): this {
 		cy.task(
 			"log", `With Decision Made Day ${dateDecisionMadeDay}`
@@ -100,6 +108,20 @@ export class DecisionOutcomePage {
 		cy.task("log", `With decision business area consulted to pick ${businessAreaID}`);
 
 		cy.getByTestId(businessAreaID).click();
+
+		return this;
+	}
+
+	public hasBusinessAreaOptions(areas: Array<string>): this {
+		Logger.Log(`Has business area options ${areas.join()}`);
+
+		cy
+			.getByTestId('container-business-areas')
+			.find('.govuk-checkboxes__label')
+			.should("have.length", areas.length)
+			.each(($elem, index) => {
+				expect($elem.text().trim()).to.equal(areas[index]);
+			});
 
 		return this;
 	}

@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management/action/decision/addOrUpdate/{decisionId:long?}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel;
+@using ConcernsCaseWork.API.Contracts.Case;
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
@@ -8,6 +9,7 @@
     var nonce = HttpContext.GetNonce();
 
     var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+    var isNotRegionsGroupCase = Model.Division != Division.RegionsGroup;
 }
 
 @section BeforeMain {
@@ -38,6 +40,7 @@
                 <form method="post" id="add-decision-form" novalidate>
 
                     <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
+                    @Html.HiddenFor(m => m.Division)
 
                     <partial name="Components/_RadioList" model="Model.HasCrmCase" />
 
@@ -52,7 +55,10 @@
                         </fieldset>
                     </div>
 
-                    <partial name="Components/_RadioList" model="Model.RetrospectiveApproval" />
+                    @if (isNotRegionsGroupCase)
+                    {
+                        <partial name="Components/_RadioList" model="Model.RetrospectiveApproval" />
+                    }
 
                     <partial name="Components/_RadioList" model="Model.IsSubmissionRequired" />
 
@@ -63,11 +69,14 @@
                         <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
                     </div>
 
-                    @* Date request received *@
-                    <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
+                    @if (isNotRegionsGroupCase)
+                    {
+                        @* Date request received *@
+                        <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
+                    }
 
                     @* Types *@
-                    <div class="govuk-form-group govuk-!-margin-top-6">
+                    <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-decision-types">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 <h2 class="govuk-heading-m">What type of decision is it?</h2>
@@ -108,27 +117,30 @@
                         </fieldset>
                     </div>
 
-                    @* Total amount requested *@
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What was the total amount requested? </h2>
-                            </legend>
-                            <div id="total-amount-request-hint" class="govuk-hint">
-                                If no amount was requested, enter £0.
-                            </div>
-                            <div class="govuk-input__wrapper">
-                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                <input class="govuk-input govuk-input--width-6"
-                                       id="total-amount-request"
-                                       name="Decision.TotalAmountRequested"
-                                       type="text"
-                                       value="@Model.Decision.TotalAmountRequested"
-                                       aria-label="What was the total amount requested">
-                            </div>
-                        </fieldset>
-                    </div>
-
+                    @if (isNotRegionsGroupCase)
+                    {
+                        @* Total amount requested *@
+                        <div class="govuk-form-group" data-testid="container-total-amount-requested">
+                            <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                    <h2 class="govuk-heading-m">What was the total amount requested? </h2>
+                                </legend>
+                                <div id="total-amount-request-hint" class="govuk-hint">
+                                    If no amount was requested, enter £0.
+                                </div>
+                                <div class="govuk-input__wrapper">
+                                    <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                    <input class="govuk-input govuk-input--width-6"
+                                           id="total-amount-request"
+                                           name="Decision.TotalAmountRequested"
+                                           type="text"
+                                           value="@Model.Decision.TotalAmountRequested"
+                                           aria-label="What was the total amount requested">
+                                </div>
+                            </fieldset>
+                        </div>
+                    }
+  
                     @* Notes *@
                     <partial name="Components/_TextArea" model="Model.Notes" />
 
@@ -173,13 +185,16 @@
 
                         let totalAmountRequestedElement = $('#total-amount-request');
 
-                        $(document).ready(function() {
-                            formatCurrency(totalAmountRequestedElement);
-                        });
+                        if (totalAmountRequestedElement.length) 
+                        {
+                            $(document).ready(function() {
+                                formatCurrency(totalAmountRequestedElement);
+                            });
 
-                        totalAmountRequestedElement.focusout(function () {
-                            formatCurrency(totalAmountRequestedElement);
-                        });
+                            totalAmountRequestedElement.focusout(function () {
+                                formatCurrency(totalAmountRequestedElement);
+                            });
+                        }
 
                         var submitButton = $('#add-decision-button')[0];
                         disableOnSubmit(submitButton);
