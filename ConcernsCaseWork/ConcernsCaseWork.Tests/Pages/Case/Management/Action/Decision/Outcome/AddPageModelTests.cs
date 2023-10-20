@@ -8,6 +8,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -250,7 +251,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
 
-				var result = new AddPageModel(_mockDecisionService.Object, _mockLogger.Object)
+				var caseModel = _fixture.Create<CaseModel>();
+				caseModel.Urn = _caseUrnValue;
+				var caseModelService = new Mock<ICaseModelService>();
+				caseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
+
+				var result = new AddPageModel(_mockDecisionService.Object, caseModelService.Object, _mockLogger.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,

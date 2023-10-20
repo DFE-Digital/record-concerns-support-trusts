@@ -273,9 +273,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
 
 				var caseModel = _fixture.Create<CaseModel>();
-				caseModel.Urn = _caseUrnValue;
 				var caseModelService = new Mock<ICaseModelService>();
-				caseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<int>())).ReturnsAsync(caseModel);
+				caseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
 
 				var result = new AddPageModel(_mockDecisionService.Object, caseModelService.Object, _mockLogger.Object)
 				{

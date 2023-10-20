@@ -2,9 +2,11 @@
 using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.Permissions;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -80,7 +82,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var permissionsService = new Mock<ICasePermissionsService>();
 			permissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(casePermissions);
 
-			return new IndexPageModel(_mockDecision.Object, permissionsService.Object, logger.Object)
+			var caseModel = _fixture.Create<CaseModel>();
+			var caseModelService = new Mock<ICaseModelService>();
+			caseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
+
+			return new IndexPageModel(_mockDecision.Object, caseModelService.Object, permissionsService.Object, logger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
