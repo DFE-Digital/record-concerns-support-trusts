@@ -179,7 +179,7 @@ describe("Creating a case", () => {
             cy.basicCreateCase(CaseBuilder.buildRegionsGroupCase());
         });
 
-        it.only("Should create and close a decision", () =>
+        it("Should create and close a decision", () =>
         {
             caseManagementPage.addCaseAction("Decision");
 
