@@ -170,7 +170,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(recordModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService
+			var caseModelService = new Mock<ICaseModelService>();
+			caseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(CaseFactory.BuildCaseModel());
+
+			return new IndexPageModel(caseModelService.Object, recordModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService
 				, ntiWarningLetterModelService ?? Mock.Of<INtiWarningLetterModelService>()
 				, ntiModelService ?? Mock.Of<INtiModelService>()
 				, trustFinancialForecastService ?? Mock.Of<ITrustFinancialForecastService>()

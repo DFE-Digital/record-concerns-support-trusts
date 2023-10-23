@@ -6,6 +6,7 @@
 @{
 
     var isClosed = Model.Decision.ClosedDate != string.Empty;
+    var isNotRegionsGroupCase = Model.Division != API.Contracts.Case.Division.RegionsGroup;
 }
 
 @section BeforeMain {
@@ -90,14 +91,19 @@
                         }
                     </td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="retrospective-request-label">Retrospective request?</th>
-                    <td class="govuk-table__cell" data-testid="retrospective-request-text">
-                        @{
-                            RenderValue(Model.Decision.RetrospectiveApproval);
-                        }
-                    </td>
-                </tr>
+
+                @if (isNotRegionsGroupCase)
+                {
+                    <tr class="govuk-table__row" data-testid="row-retrospective-request">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="retrospective-request-label">Retrospective request?</th>
+                        <td class="govuk-table__cell" data-testid="retrospective-request-text">
+                            @{
+                                RenderValue(Model.Decision.RetrospectiveApproval);
+                            }
+                        </td>
+                    </tr>
+                }
+
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="submission-required-label">Submission required?</th>
                     <td class="govuk-table__cell" data-testid="submission-required-text">
@@ -114,22 +120,27 @@
                         }
                     </td>
                 </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="date-esfa-received-label">Date ESFA received request</th>
-                    <td class="govuk-table__cell" data-testid="date-esfa-received-text">
-                        @{
-                            RenderValue(Model.Decision.EsfaReceivedRequestDate);
-                        }
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="amount-requested-label">Total amount requested</th>
-                    <td class="govuk-table__cell" data-testid="amount-requested-text">
-                        @{
-                            RenderValue(Model.Decision.TotalAmountRequested);
-                        }
-                    </td>
-                </tr>
+
+                @if (isNotRegionsGroupCase)
+                {
+                    <tr class="govuk-table__row" data-testid="row-esfa-date-requested">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="date-esfa-received-label">Date ESFA received request</th>
+                        <td class="govuk-table__cell" data-testid="date-esfa-received-text">
+                            @{
+                                RenderValue(Model.Decision.EsfaReceivedRequestDate);
+                            }
+                        </td>
+                    </tr>
+
+                    <tr class="govuk-table__row" data-testid="row-total-amount-requested">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="amount-requested-label">Total amount requested</th>
+                        <td class="govuk-table__cell" data-testid="amount-requested-text">
+                            @{
+                                RenderValue(Model.Decision.TotalAmountRequested);
+                            }
+                        </td>
+                    </tr>
+                }
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-type-label">Type of decision</th>
                     <td class="govuk-table__cell" data-testid="decision-type-text">
@@ -235,14 +246,19 @@
                             }
                         </td>
                     </tr>
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="total-amount-approved-label">Total amount approved</th>
-                        <td class="govuk-table__cell" data-testid="total-amount-approved-text">
-                            @{
-                                RenderValue(Model.Decision.Outcome.TotalAmount);
-                            }
-                        </td>
-                    </tr>
+
+                    @if (isNotRegionsGroupCase)
+                    {
+                        <tr class="govuk-table__row" data-testid="row-total-amount-approved">
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="total-amount-approved-label">Total amount approved</th>
+                            <td class="govuk-table__cell" data-testid="total-amount-approved-text">
+                                @{
+                                    RenderValue(Model.Decision.Outcome.TotalAmount);
+                                }
+                            </td>
+                        </tr>
+                    }
+
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="authorised-by-label">Decision authorised by</th>
                         <td class="govuk-table__cell" data-testid="authoriser-text">
