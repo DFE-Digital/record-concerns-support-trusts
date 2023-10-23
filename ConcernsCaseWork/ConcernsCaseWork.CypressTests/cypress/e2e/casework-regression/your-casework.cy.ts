@@ -7,6 +7,7 @@ import { CreateCaseRequest } from "cypress/api/apiDomain";
 import { CaseBuilder } from "cypress/api/caseBuilder";
 import { Logger } from "cypress/common/logger";
 import paginationComponent from "cypress/pages/paginationComponent";
+import caseMangementPage from "../../pages/caseMangementPage";
 
 describe("Your casework tests", () =>
 {
@@ -126,7 +127,22 @@ describe("Your casework tests", () =>
                 {
                     Logger.Log("On moving to page two, we should get the exact same cases");
                     expect(caseIds).to.deep.equal(pageTwoCases);
-                });
+
+                    // We had relative instead of absolute path links so it didn't work when pagination was added
+                    Logger.Log("Ensure the case loads when clicking the link");
+                    const caseIdToView = caseIds[0];
+                    caseworkTable.getRowByCaseId(caseIdToView)
+                    .then((row) =>
+                    {
+                        row.select();
+                        caseMangementPage.getCaseIDText()
+                    })
+                    .then(managementCaseId =>
+                    {
+                        expect(caseIdToView).to.equal(managementCaseId);
+                    });
+                })
+
         });
     });
 
