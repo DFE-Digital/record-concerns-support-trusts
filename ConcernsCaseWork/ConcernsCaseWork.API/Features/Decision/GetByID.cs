@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data;
 using MediatR;
@@ -58,9 +57,9 @@ namespace ConcernsCaseWork.API.Features.Decision
 					DecisionTypes = decision.DecisionTypes.Select(x => {
 						return new DecisionTypeQuestion()
 						{
-							Id = (Contracts.Enums.DecisionType)x.DecisionTypeId,
-							DecisionDrawdownFacilityAgreedId = (Contracts.Enums.DecisionDrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId,
-							DecisionFrameworkCategoryId = (Contracts.Enums.DecisionFrameworkCategory?)x.DecisionFrameworkCategoryId
+							Id = (DecisionType)x.DecisionTypeId,
+							DecisionDrawdownFacilityAgreedId = x.DecisionDrawdownFacilityAgreedId,
+							DecisionFrameworkCategoryId = x.DecisionFrameworkCategoryId
 						};
 					}).ToArray(),
 					TotalAmountRequested = decision.TotalAmountRequested,
@@ -70,10 +69,11 @@ namespace ConcernsCaseWork.API.Features.Decision
 					SubmissionRequired = decision.SubmissionRequired,
 					RetrospectiveApproval = decision.RetrospectiveApproval,
 					CrmCaseNumber = decision.CrmCaseNumber,
+					HasCrmCase = decision.HasCrmCase,
 					CreatedAt = decision.CreatedAt,
 					UpdatedAt = decision.UpdatedAt,
 					ClosedAt = decision.ClosedAt,
-					DecisionStatus = (Contracts.Enums.DecisionStatus)decision.Status,
+					DecisionStatus = (DecisionStatus)decision.Status,
 					Title = decision.GetTitle(),
 					Outcome = CreateDecisionOutcome(decision.Outcome),
 					IsEditable = decision.ClosedAt == null

@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models.Decisions;
 
@@ -53,12 +52,21 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
-				var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
-				var decision = Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
-					request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
-					decisionTypes, request.TotalAmountRequested, request.SupportingNotes, now);
-
+				var decision = Decision.CreateNew(new DecisionParameters()
+				{
+					CrmCaseNumber = request.CrmCaseNumber,
+					HasCrmCase = request.HasCrmCase,
+					RetrospectiveApproval = request.RetrospectiveApproval,
+					SubmissionRequired = request.SubmissionRequired, 
+					SubmissionDocumentLink = request.SubmissionDocumentLink, 
+					ReceivedRequestDate = (DateTimeOffset)request.ReceivedRequestDate,
+					DecisionTypes = decisionTypes,
+					TotalAmountRequested = request.TotalAmountRequested, 
+					SupportingNotes = request.SupportingNotes, 
+					Now = now
+				});
 
 				concernsCase.AddDecision(decision, now);
 

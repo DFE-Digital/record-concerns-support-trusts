@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+﻿using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Service.TrustFinancialForecast;

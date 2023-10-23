@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;

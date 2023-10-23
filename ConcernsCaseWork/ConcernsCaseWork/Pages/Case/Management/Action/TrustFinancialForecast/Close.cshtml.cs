@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+﻿using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;

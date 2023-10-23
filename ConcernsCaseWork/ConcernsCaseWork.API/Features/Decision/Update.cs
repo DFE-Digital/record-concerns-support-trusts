@@ -3,8 +3,7 @@ using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Models;
 	using ConcernsCaseWork.Data.Models.Decisions;
@@ -58,9 +57,21 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Decision {request.DecisionId}");
 				}
 
-				var decisionTypes = request.Request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x.Id, (API.Contracts.Decisions.DrawdownFacilityAgreed?)x.DecisionDrawdownFacilityAgreedId, (API.Contracts.Decisions.FrameworkCategory?)x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.Request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
 
-				var updatedDecision = Decision.CreateNew(request.Request.CrmCaseNumber, request.Request.RetrospectiveApproval, request.Request.SubmissionRequired, request.Request.SubmissionDocumentLink, request.Request.ReceivedRequestDate.Value, decisionTypes, request.Request.TotalAmountRequested, request.Request.SupportingNotes, DateTime.Now);
+				var updatedDecision = Decision.CreateNew(new DecisionParameters()
+				{
+					CrmCaseNumber = request.Request.CrmCaseNumber,
+					HasCrmCase = request.Request.HasCrmCase,
+					RetrospectiveApproval = request.Request.RetrospectiveApproval,
+					SubmissionRequired = request.Request.SubmissionRequired,
+					SubmissionDocumentLink = request.Request.SubmissionDocumentLink,
+					ReceivedRequestDate = request.Request.ReceivedRequestDate.Value,
+					DecisionTypes = decisionTypes,
+					TotalAmountRequested = request.Request.TotalAmountRequested,
+					SupportingNotes = request.Request.SupportingNotes,
+					Now = DateTime.Now
+				});
 
 				concernsCase.UpdateDecision(request.DecisionId, updatedDecision, updatedDecision.UpdatedAt);
 

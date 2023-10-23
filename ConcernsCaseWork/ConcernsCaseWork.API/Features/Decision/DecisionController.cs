@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;

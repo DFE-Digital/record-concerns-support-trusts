@@ -3,8 +3,7 @@ using MediatR;
 
 namespace ConcernsCaseWork.API.Features.Decision
 {
-	using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-	using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+	using ConcernsCaseWork.API.Contracts.Decisions;
 	using ConcernsCaseWork.API.Exceptions;
 	using ConcernsCaseWork.Data.Exceptions;
 	using ConcernsCaseWork.Data.Models;

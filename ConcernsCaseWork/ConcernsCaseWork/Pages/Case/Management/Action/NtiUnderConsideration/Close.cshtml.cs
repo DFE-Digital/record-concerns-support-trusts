@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
@@ -15,6 +14,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {

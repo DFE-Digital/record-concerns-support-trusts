@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;

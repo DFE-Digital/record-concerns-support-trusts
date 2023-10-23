@@ -4,6 +4,29 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Decisions
 {
+	public record DecisionParameters
+	{
+		public string CrmCaseNumber { get; set; }
+
+		public bool? HasCrmCase { get; set; }
+
+		public bool? RetrospectiveApproval { get; set; }
+
+		public bool? SubmissionRequired { get; set; }
+
+		public string SubmissionDocumentLink { get; set; }
+
+		public DateTimeOffset ReceivedRequestDate { get; set; }
+
+		public DecisionType[] DecisionTypes { get; set; }
+
+		public decimal TotalAmountRequested { get; set; }
+
+		public string SupportingNotes { get; set; }
+
+		public DateTimeOffset Now { get; set; }
+	}
+
 	public class Decision : IAuditable
 	{
 		public Decision()
@@ -12,67 +35,23 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		}
 
 		public static Decision CreateNew(
-			string crmCaseNumber,
-			bool? retrospectiveApproval,
-			bool? submissionRequired,
-			string submissionDocumentLink,
-			DateTimeOffset receivedRequestDate,
-			DecisionType[] decisionTypes,
-			decimal totalAmountRequested,
-			string supportingNotes,
-			DateTimeOffset now
-		)
+			DecisionParameters parameters)
 		{
-			ValidateDecisionModel(crmCaseNumber, submissionDocumentLink, totalAmountRequested, supportingNotes);
-
 			return new Decision
 			{
-				DecisionTypes = decisionTypes?.ToList() ?? new List<DecisionType>(),
-				TotalAmountRequested = totalAmountRequested,
-				SupportingNotes = supportingNotes,
-				ReceivedRequestDate = receivedRequestDate,
-				SubmissionDocumentLink = submissionDocumentLink,
-				SubmissionRequired = submissionRequired,
-				RetrospectiveApproval = retrospectiveApproval,
-				CrmCaseNumber = crmCaseNumber,
-				Status = Enums.Concerns.DecisionStatus.InProgress,
-				CreatedAt = now,
-				UpdatedAt = now
+				DecisionTypes = parameters.DecisionTypes?.ToList() ?? new List<DecisionType>(),
+				TotalAmountRequested = parameters.TotalAmountRequested,
+				SupportingNotes = parameters.SupportingNotes,
+				ReceivedRequestDate = parameters.ReceivedRequestDate,
+				SubmissionDocumentLink = parameters.SubmissionDocumentLink,
+				SubmissionRequired = parameters.SubmissionRequired,
+				RetrospectiveApproval = parameters.RetrospectiveApproval,
+				CrmCaseNumber = parameters.CrmCaseNumber,
+				HasCrmCase = parameters.HasCrmCase,
+				Status = API.Contracts.Decisions.DecisionStatus.InProgress,
+				CreatedAt = parameters.Now,
+				UpdatedAt = parameters.Now
 			};
-		}
-
-		/// <summary>
-		/// Validates that the properties of a decision are valid, and should be called before creation/update is made.
-		/// If invalid properties are found an exception is thrown. In future it might be better to return an exceptions collection.
-		/// Some of these validations are good candidates for turning into value types
-		/// </summary>
-		/// <param name="crmCaseNumber"></param>
-		/// <param name="submissionDocumentLink"></param>
-		/// <param name="totalAmountRequested"></param>
-		/// <param name="supportingNotes"></param>
-		/// <exception cref="ArgumentOutOfRangeException"></exception>
-		/// <exception cref="ArgumentException"></exception>
-		private static void ValidateDecisionModel(string crmCaseNumber, string submissionDocumentLink,
-			decimal totalAmountRequested, string supportingNotes)
-		{
-			// some of these validations are good candidates for turning into value types
-			_ = totalAmountRequested >= 0
-				? totalAmountRequested
-				: throw new ArgumentOutOfRangeException(nameof(totalAmountRequested),
-					"The total amount requested cannot be a negative value");
-
-			if (crmCaseNumber?.Length > MaxCaseNumberLength)
-				throw new ArgumentException($"{nameof(crmCaseNumber)} can be a maximum of {MaxCaseNumberLength} characters",
-					nameof(crmCaseNumber));
-
-			if (supportingNotes?.Length > MaxSupportingNotesLength)
-				throw new ArgumentException(
-					$"{nameof(supportingNotes)} can be a maximum of {MaxSupportingNotesLength} characters",
-					nameof(supportingNotes));
-
-			if (submissionDocumentLink?.Length > MaxUrlLength)
-				throw new ArgumentException($"{nameof(submissionDocumentLink)} can be a maximum of {MaxUrlLength} characters",
-					nameof(submissionDocumentLink));
 		}
 
 		public const int MaxUrlLength = 2048;
@@ -99,13 +78,15 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 
 		public bool? RetrospectiveApproval { get; set; }
 
+		public bool? HasCrmCase { get; set; }
+
 		[StringLength(MaxCaseNumberLength)]
 		public string CrmCaseNumber { get; set; }
 
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
 
-		public Enums.Concerns.DecisionStatus Status { get; set; }
+		public API.Contracts.Decisions.DecisionStatus Status { get; set; }
 		public DateTimeOffset? ClosedAt { get; set; }
 
 		public DecisionOutcome Outcome { get; set; }
@@ -136,9 +117,6 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 		/// <param name="now"></param>
 		public void Update(Decision updatedDecision, DateTimeOffset now)
 		{
-			_ = updatedDecision ?? throw new ArgumentNullException(nameof(updatedDecision));
-			ValidateDecisionModel(updatedDecision.CrmCaseNumber, updatedDecision.SubmissionDocumentLink, updatedDecision.TotalAmountRequested, updatedDecision.SupportingNotes);
-
 			DecisionTypes = updatedDecision.DecisionTypes ?? Array.Empty<DecisionType>();
 			TotalAmountRequested = updatedDecision.TotalAmountRequested;
 			SupportingNotes = updatedDecision.SupportingNotes;
@@ -147,6 +125,7 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 			SubmissionRequired = updatedDecision.SubmissionRequired;
 			RetrospectiveApproval = updatedDecision.RetrospectiveApproval;
 			CrmCaseNumber = updatedDecision.CrmCaseNumber;
+			HasCrmCase = updatedDecision.HasCrmCase;
 			UpdatedAt = now;
 		}
 

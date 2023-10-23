@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
@@ -358,7 +358,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		private async Task<Decision> CreateDecision(int concernsCaseId)
 		{
-			var decisionToAdd = Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
+			var decisionToAdd = Decision.CreateNew(new DecisionParameters()
+			{
+				CrmCaseNumber = "123456", 
+				RetrospectiveApproval = false,
+				SubmissionRequired = false,
+				SubmissionDocumentLink = "",
+				ReceivedRequestDate = new DateTimeOffset(),
+				DecisionTypes = new Data.Models.Decisions.DecisionType[] { },
+				TotalAmountRequested = 200,
+				SupportingNotes = "Notes!",
+				Now = new DateTimeOffset()
+			});
 
 			await using var context = _testFixture.GetContext();
 

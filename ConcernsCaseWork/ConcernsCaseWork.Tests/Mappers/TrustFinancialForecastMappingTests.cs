@@ -1,7 +1,6 @@
 using AutoFixture;
-using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Mappers;
 using FluentAssertions;
 using NUnit.Framework;

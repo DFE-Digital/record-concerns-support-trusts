@@ -2,7 +2,13 @@ using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
-    public class ConcernsTypeGateway : IConcernsTypeGateway
+	public interface IConcernsTypeGateway
+	{
+		ConcernsType GetConcernsTypeById(int urn);
+		IList<ConcernsType> GetTypes();
+	}
+
+	public class ConcernsTypeGateway : IConcernsTypeGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
 

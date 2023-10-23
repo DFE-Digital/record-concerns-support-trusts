@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Tests.DbGateways;
 using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;

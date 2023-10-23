@@ -1,8 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using FizzWare.NBuilder;

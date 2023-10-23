@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Decisions;
 

@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+﻿using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
 

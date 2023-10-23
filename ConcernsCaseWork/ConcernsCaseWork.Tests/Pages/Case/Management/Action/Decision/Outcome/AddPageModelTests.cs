@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;

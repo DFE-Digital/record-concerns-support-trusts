@@ -1,6 +1,6 @@
 using AutoFixture;
 using AutoFixture.Idioms;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using FluentAssertions;
 using FluentAssertions.Execution;
 

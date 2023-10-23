@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 
 namespace ConcernsCaseWork.Service.Decision
 {

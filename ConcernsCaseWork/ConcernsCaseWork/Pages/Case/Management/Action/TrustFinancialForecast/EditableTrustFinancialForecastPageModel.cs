@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
@@ -37,10 +37,10 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
-				new (API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSpring.Description(), (int)API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSpring),
-				new (API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSummer.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSummer),
-				new (API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSpring.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSpring),
-				new (API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSummer.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSummer)
+				new (API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSpring.Description(), (int)API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSpring),
+				new (API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSummer.Description(),(int)API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.CurrentYearSummer),
+				new (API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSpring.Description(),(int)API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSpring),
+				new (API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSummer.Description(),(int)API.Contracts.TrustFinancialForecast.ForecastingToolRanAt.PreviousYearSummer)
 			},
 			SelectedId = selectedId
 		};
@@ -50,8 +50,8 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
-				new (API.Contracts.Enums.TrustFinancialForecast.SRMAOfferedAfterTFF.Yes.Description(), (int)API.Contracts.Enums.TrustFinancialForecast.SRMAOfferedAfterTFF.Yes),
-				new (API.Contracts.Enums.TrustFinancialForecast.SRMAOfferedAfterTFF.No.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.SRMAOfferedAfterTFF.No)
+				new (API.Contracts.TrustFinancialForecast.SRMAOfferedAfterTFF.Yes.Description(), (int)API.Contracts.TrustFinancialForecast.SRMAOfferedAfterTFF.Yes),
+				new (API.Contracts.TrustFinancialForecast.SRMAOfferedAfterTFF.No.Description(),(int)API.Contracts.TrustFinancialForecast.SRMAOfferedAfterTFF.No)
 			},
 			SelectedId = selectedId
 		};
@@ -61,8 +61,8 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
-				new (API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory.Description(), (int)API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory),
-				new (API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory)
+				new (API.Contracts.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory.Description(), (int)API.Contracts.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory),
+				new (API.Contracts.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory.Description(),(int)API.Contracts.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory)
 			},
 			SelectedId = selectedId
 		};

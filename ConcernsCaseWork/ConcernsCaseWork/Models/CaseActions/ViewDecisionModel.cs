@@ -6,9 +6,10 @@ namespace ConcernsCaseWork.Models.CaseActions
 	{
 		public int DecisionId { get; set; }
 		public int ConcernsCaseUrn { get; set; }
+		public string? HasCrmCase { get; set; }
 		public string CrmEnquiryNumber { get; set; }
-		public string RetrospectiveApproval { get; set; }
-		public string SubmissionRequired { get; set; }
+		public string? RetrospectiveApproval { get; set; }
+		public string? SubmissionRequired { get; set; }
 		public string SubmissionLink { get; set; }
 		public string EsfaReceivedRequestDate { get; set; }
 		public string TotalAmountRequested { get; set; }

@@ -1,13 +1,11 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -30,37 +28,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		private readonly DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
 		private readonly DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
 
-
-
 		public DecisionIntegrationTests(ApiTestFixture apiTestFixture)
 		{
 			_client = apiTestFixture.Client;
 			_autoFixture = new();
 			_testFixture = apiTestFixture;
-		}
-
-		[Fact]
-		public async Task When_Get_HasNoOutcome_Returns_200()
-		{
-			var concernsCase = await CreateConcernsCase();
-			var concernsCaseId = concernsCase.Id;
-
-			var request = _autoFixture.Create<CreateDecisionRequest>();
-			request.TotalAmountRequested = 100;
-			request.ConcernsCaseUrn = concernsCaseId;
-
-			var createdDecision = await CreateDecision(concernsCaseId, request);
-
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
-			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
-			var result = wrapper.Data;
-
-			AssertDecision(result, request);
-
-			result.ConcernsCaseUrn.Should().Be(concernsCaseId);
-			result.Outcome.Should().BeNull();
 		}
 
 		[Fact]
@@ -77,7 +49,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
 
-			_ = await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
+			await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -85,11 +57,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 			var result = wrapper.Data;
 
-			AssertDecision(result, decisionRequest);
+			result.Should().BeEquivalentTo(decisionRequest);
 
 			result.Should().NotBeNull();
 			result.Outcome.Should().NotBeNull();
-			result.Outcome!.Status.Should().Be(outcomeRequest.Status);
+			result.Outcome.Status.Should().Be(outcomeRequest.Status);
 			result.Outcome.Authorizer.Should().Be(outcomeRequest.Authorizer);
 			result.Outcome.TotalAmount.Should().Be(100);
 			result.Outcome.DecisionMadeDate.Should().Be(_decisionMadeDate);
@@ -97,7 +69,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(outcomeRequest.BusinessAreasConsulted);
 		}
-
 
 		[Fact]
 		public async Task When_Get_DecisionsByCaseUrn_Returns_200()
@@ -115,7 +86,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var createdDecisionOne = await CreateDecision(createdConcern.Id, decisionRequestOne);
 			var createdDecisionTwo = await CreateDecision(createdConcern.Id, decisionRequestTwo);
 
-
 			var DecisionOne = await GetDecision(createdDecisionOne);
 			var DecisionTwo = await GetDecision(createdDecisionTwo);
 
@@ -128,7 +98,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
 			ApiResponseV2<DecisionSummaryResponse> content = await result.Content.ReadFromJsonAsync<ApiResponseV2<DecisionSummaryResponse>>();
 			content.Data.Count().Should().Be(expected.Count);
-
 
 			foreach (var expectedItem in expected)
 			{
@@ -143,23 +112,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			}
 		}
 
-		protected async Task<GetDecisionResponse> GetDecision(CreateDecisionResponse createDecisionResponse)
-		{
-			return await GetDecision(createDecisionResponse.ConcernsCaseUrn, createDecisionResponse.DecisionId);
-		}
-
-		private async Task<GetDecisionResponse> GetDecision(int caseID, int decisionID)
-		{
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{caseID}/decisions/{decisionID}");
-			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
-			var result = wrapper.Data;
-
-			return result;
-		}
-
-
 		[Fact]
 		public async Task When_Post_Returns_201Response()
 		{
@@ -170,29 +122,28 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.TotalAmountRequested = 100;
 			request.ConcernsCaseUrn = concernsCaseId;
 
-			var expectedDecisionFrameworkCategory = (Contracts.Enums.DecisionFrameworkCategory)1;
+			request.DecisionTypes.ToList().First().DecisionFrameworkCategoryId = FrameworkCategory.EnablingFinancialRecovery;
 
-			request.DecisionTypes.ToList().First().DecisionFrameworkCategoryId = expectedDecisionFrameworkCategory;
+			var createResponse = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions", request.ConvertToJson());
+			createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
 
-			
-			var decisionToAdd = await CreateDecision(concernsCase.Id, request);
+			var createContent = await createResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<CreateDecisionResponse>>();
 
-			var result = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions", request.ConvertToJson());
-			await using var context = _testFixture.GetContext();
+			createContent.Data.DecisionId.Should().BeGreaterThan(0);
+			createContent.Data.ConcernsCaseUrn.Should().Be(concernsCase.Urn);
 
-			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionToAdd.DecisionId}");
+			var decisionId = createContent.Data.DecisionId;
+
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}");
 
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 			var createdDecision = wrapper.Data;
 
-			result.StatusCode.Should().Be(HttpStatusCode.Created);
-			createdDecision.ConcernsCaseUrn.Should().Be(request.ConcernsCaseUrn);
-			createdDecision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
-			{
-				options.Excluding(r => r.Id);
+			createdDecision.Should().BeEquivalentTo(request);
+			createdDecision.Outcome.Should().BeNull();
 
-				return options;
-			});
+			createdDecision.ConcernsCaseUrn.Should().Be(request.ConcernsCaseUrn);
+			createdDecision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes);
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
@@ -216,49 +167,74 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Post_InvalidRequest_Returns_400()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var createRequest = _autoFixture.Create<CreateDecisionRequest>();
+			createRequest.TotalAmountRequested = -1;
+			createRequest.SupportingNotes = new string('a', 2001);
+			createRequest.SubmissionDocumentLink = new string('a', 2049);
+
+			var result = await _client.PostAsync($"/v2/concerns-cases/{caseId}/decisions", createRequest.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("The total amount requested must be zero or greater");
+			errorContent.Should().Contain("Notes must be 2000 characters or less");
+			errorContent.Should().Contain("Submission document link must be 2048 or less");
+		}
+
+		[Fact]
 		public async Task When_Put_Returns_200Response()
 		{
 			// arrange
-			var request = _autoFixture.Create<UpdateDecisionRequest>();
-			request.TotalAmountRequested = 100;
-
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
 
-			var originalDecisionTypes = new List<DecisionType>(){ new DecisionType(Data.Enums.Concerns.DecisionType.EsfaApproval, API.Contracts.Decisions.DrawdownFacilityAgreed.No, API.Contracts.Decisions.FrameworkCategory.FacilitatingTransferFinanciallyAgreed) };
-			var decisionId = await CreateDecision(concernsCaseId, originalDecisionTypes);
+			var createRequest = _autoFixture.Create<CreateDecisionRequest>();
+			createRequest.ConcernsCaseUrn = concernsCaseId;
+			createRequest.TotalAmountRequested = 200;
+			createRequest.HasCrmCase = true;
+			createRequest.RetrospectiveApproval = true;
+			createRequest.SubmissionRequired = true;
 
-			request.DecisionTypes = null;
-			request.DecisionTypes = new List<Contracts.Decisions.DecisionTypeQuestion>() { new Contracts.Decisions.DecisionTypeQuestion()
+			var createResponse = await CreateDecision(concernsCaseId, createRequest);
+			var decisionId = createResponse.DecisionId;
+
+			var updateRequest = _autoFixture.Create<UpdateDecisionRequest>();
+			updateRequest.TotalAmountRequested = 100;
+			updateRequest.HasCrmCase = false;
+			updateRequest.RetrospectiveApproval = false;
+			updateRequest.SubmissionRequired = false;
+
+			updateRequest.DecisionTypes = new List<DecisionTypeQuestion>() { new DecisionTypeQuestion()
 				{
-					Id = Contracts.Enums.DecisionType.EsfaApproval,
-					DecisionDrawdownFacilityAgreedId = Contracts.Enums.DecisionDrawdownFacilityAgreed.PaymentUnderExistingArrangement,
-					DecisionFrameworkCategoryId = Contracts.Enums.DecisionFrameworkCategory.BuildingFinancialCapacity
+					Id = DecisionType.EsfaApproval,
+					DecisionDrawdownFacilityAgreedId = DrawdownFacilityAgreed.PaymentUnderExistingArrangement,
+					DecisionFrameworkCategoryId = FrameworkCategory.BuildingFinancialCapability
 				}
 			}.ToArray();
 			
 			// act
-			var result = await _client
+			var updateResponse = await _client
 				.PutAsync($"/v2/concerns-cases/{concernsCase.Urn}/decisions/{decisionId}", 
-				request.ConvertToJson());
+				updateRequest.ConvertToJson());
 
 			// assert
-			result.StatusCode.Should().Be(HttpStatusCode.OK);
-			var response = await result.Content.ReadFromJsonAsync<ApiSingleResponseV2<UpdateDecisionResponse>>();
-			response.Data.DecisionId.Should().Be(decisionId);
-			response.Data.ConcernsCaseUrn.Should().Be(concernsCase.Urn);
+			updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+			var updateContent = await updateResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<UpdateDecisionResponse>>();
+			updateContent.Data.DecisionId.Should().Be(decisionId);
+			updateContent.Data.ConcernsCaseUrn.Should().Be(concernsCase.Urn);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}");
 
-			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
-			var decision = wrapper.Data;
+			var getContent = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
+			var decision = getContent.Data;
 
-			decision.DecisionTypes.Should().BeEquivalentTo(request.DecisionTypes, (options) =>
-			{
-				options.Excluding(r => r.Id);
-
-				return options;
-			});
+			decision.Should().BeEquivalentTo(updateRequest);
 
 			await using ConcernsDbContext refreshedContext = _testFixture.GetContext();
 			concernsCase = refreshedContext.ConcernsCase.FirstOrDefault(c => c.Id == concernsCaseId);
@@ -301,6 +277,33 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Put_InvalidRequest_Returns_400()
+		{
+			var concernsCase = await CreateConcernsCase();
+			var caseId = concernsCase.Id;
+
+			var createRequest = _autoFixture.Create<CreateDecisionRequest>();
+			createRequest.TotalAmountRequested = 100;
+			createRequest.ConcernsCaseUrn = caseId;
+
+			var createdDecision = await CreateDecision(caseId, createRequest);
+
+			var updateRequest = _autoFixture.Create<CreateDecisionRequest>();
+			updateRequest.TotalAmountRequested = -1;
+			updateRequest.SupportingNotes = new string('a', 2001);
+			updateRequest.SubmissionDocumentLink = new string('a', 2049);
+
+			var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{createdDecision.DecisionId}", updateRequest.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("The total amount requested must be zero or greater");
+			errorContent.Should().Contain("Notes must be 2000 characters or less");
+			errorContent.Should().Contain("Submission document link must be 2048 or less");
+		}
+
+		[Fact]
 		public async Task When_Delete_HasNoResource_Returns_404()
 		{
 			var concernsCaseId = 987654321;
@@ -313,9 +316,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Delete_HasResource_Returns_204()
 		{
-			//BuilderSetup.DisablePropertyNamingFor<ConcernsRecord, DateTime?>(f => f.DeletedAt);
-			
-
 			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
 
 			var concernsCase = await CreateConcernsCase();
@@ -332,7 +332,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-
 			HttpResponseMessage deleteResponse = await _client.DeleteAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 
 			deleteResponse.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -340,17 +339,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var getResponseNotFound = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 			getResponseNotFound.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
-		}
-
-		private void AssertDecision(GetDecisionResponse actual, CreateDecisionRequest expected)
-		{
-			actual.Should().BeEquivalentTo(expected, (options) =>
-			{
-				options.Excluding(r => r.ConcernsCaseUrn);
-				options.Excluding(r => r.DecisionTypes);
-
-				return options;
-			});
 		}
 
 		private async Task<ConcernsCase> CreateConcernsCase()
@@ -374,7 +362,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				NextSteps = "Sample next steps",
 				DirectionOfTravel = "Sample direction of travel",
 				CaseHistory = "Sample case history",
-				Urn = 123456,
 				StatusId = 2,
 				RatingId = 3
 			};
@@ -385,47 +372,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await context.SaveChangesAsync();
 
 			return result.Entity;
-		}
-
-		private async Task<int> CreateDecision(int cCaseId, List<DecisionType> decisionTypes)
-		{
-			var decision = new Decision()
-			{
-				ConcernsCaseId = cCaseId,
-				DecisionTypes = decisionTypes,
-				TotalAmountRequested = 1,
-				SupportingNotes = "Sample supporting notes",
-				ReceivedRequestDate = DateTimeOffset.Now,
-				SubmissionDocumentLink = "https://example.com/document.pdf",
-				SubmissionRequired = true,
-				RetrospectiveApproval = false,
-				CrmCaseNumber = "CRM123456",
-				CreatedAt = DateTimeOffset.Now.AddDays(-7),
-				UpdatedAt = DateTimeOffset.Now,
-				Status = Data.Enums.Concerns.DecisionStatus.InProgress,
-				ClosedAt = null, 
-				Outcome  = new Data.Models.Decisions.Outcome.DecisionOutcome()
-				{
-					DecisionOutcomeId = 1,
-					DecisionId = 2,
-					Status = DecisionOutcomeStatus.Approved,
-					TotalAmount = 1000.50m,
-					DecisionMadeDate = DateTimeOffset.Now,
-					DecisionEffectiveFromDate = DateTimeOffset.Now.AddDays(7),
-					CreatedAt = DateTimeOffset.Now.AddDays(-7),
-					UpdatedAt = DateTimeOffset.Now
-				}
-			};
-			decision.ConcernsCaseId = cCaseId;
-			decision.Outcome = null;
-
-			await using (var ctxt = _testFixture.GetContext())
-			{
-				ctxt.Decisions.Add(decision);
-				await ctxt.SaveChangesAsync();
-			}
-
-			return decision.DecisionId;
 		}
 	
 		private async Task<CreateDecisionOutcomeResponse> CreateDecisionOutcome(int concernsCaseId, int decisionId, CreateDecisionOutcomeRequest request)
@@ -450,6 +396,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var response = await postResult.Content.ReadFromJsonAsync<ApiSingleResponseV2<CreateDecisionResponse>>();
 
 			return response.Data;
+		}
+
+		private async Task<GetDecisionResponse> GetDecision(CreateDecisionResponse createDecisionResponse)
+		{
+			return await GetDecision(createDecisionResponse.ConcernsCaseUrn, createDecisionResponse.DecisionId);
+		}
+
+		private async Task<GetDecisionResponse> GetDecision(int caseID, int decisionID)
+		{
+			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{caseID}/decisions/{decisionID}");
+			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
+			var result = wrapper.Data;
+
+			return result;
 		}
 	}
 }

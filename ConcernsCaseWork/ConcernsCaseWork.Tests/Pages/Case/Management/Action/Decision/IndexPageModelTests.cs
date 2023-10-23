@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
@@ -37,6 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
 			apiDecision.ConcernsCaseUrn = 1;
+			apiDecision.IsEditable = true;
 			_mockDecision.Setup(m => m.GetDecision(1, 2)).ReturnsAsync(apiDecision);
 
 			var pageModel = CreateCasePageModel();

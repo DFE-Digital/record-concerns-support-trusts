@@ -1,4 +1,4 @@
-using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Cases;
