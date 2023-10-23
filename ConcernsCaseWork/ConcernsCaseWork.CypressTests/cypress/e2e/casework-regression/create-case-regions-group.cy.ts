@@ -16,6 +16,7 @@ import editConcernPage from "cypress/pages/editConcernPage";
 import homePage from "cypress/pages/homePage";
 import closedCasePage from "cypress/pages/closedCasePage";
 import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage";
+import addToCasePage from "cypress/pages/caseActions/addToCasePage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -130,6 +131,17 @@ describe("Creating a case", () => {
         caseManagementPage
 			.hasConcerns("Governance", ["Amber", "Green"])
 			.hasConcerns("Safeguarding", ["Red", "Amber"]);
+
+        Logger.Log("Check the available case actions");
+        caseManagementPage.getAddToCaseBtn().click();
+        addToCasePage.hasActions([
+            "Decision",
+            "NTI: Under consideration",
+            "NTI: Warning letter",
+            "NTI: Notice to improve",
+            "SRMA (School Resource Management Adviser)"
+        ])
+        .cancel();
 
         Logger.Log("Close down the concerns");
         caseManagementPage

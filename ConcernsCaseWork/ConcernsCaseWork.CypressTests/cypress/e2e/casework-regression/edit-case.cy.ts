@@ -246,6 +246,17 @@ describe("Editing a case", () => {
 		cy.basicCreateCase();
 
 		CaseManagementPage.getAddToCaseBtn().click();
+
+		AddToCasePage.hasActions([
+            "Decision",
+			"Financial plan",
+            "NTI: Under consideration",
+            "NTI: Warning letter",
+            "NTI: Notice to improve",
+            "SRMA (School Resource Management Adviser)",
+			"TFF (trust financial forecast)"
+        ]);
+
 		AddToCasePage.getAddToCaseBtn().click();
 		AddToCasePage.hasValidationError("Select an action or decision");
 
