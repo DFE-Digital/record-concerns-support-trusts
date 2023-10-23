@@ -191,7 +191,7 @@ describe("Creating a case", () => {
             cy.basicCreateCase(CaseBuilder.buildRegionsGroupCase());
         });
 
-        it("Should create and close a decision", () =>
+        it("Should create a decision", () =>
         {
             caseManagementPage.addCaseAction("Decision");
 
