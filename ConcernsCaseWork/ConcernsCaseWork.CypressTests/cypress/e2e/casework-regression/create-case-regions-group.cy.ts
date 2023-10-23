@@ -21,6 +21,7 @@ import { EditDecisionPage } from "cypress/pages/caseActions/decision/editDecisio
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { ViewDecisionPage } from "cypress/pages/caseActions/decision/viewDecisionPage";
 import { DecisionOutcomePage } from "cypress/pages/caseActions/decision/decisionOutcomePage";
+import addToCasePage from "cypress/pages/caseActions/addToCasePage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -140,6 +141,17 @@ describe("Creating a case", () => {
             caseManagementPage
                 .hasConcerns("Governance", ["Amber", "Green"])
                 .hasConcerns("Safeguarding", ["Red", "Amber"]);
+
+            Logger.Log("Check the available case actions");
+            caseManagementPage.getAddToCaseBtn().click();
+            addToCasePage.hasActions([
+                "Decision",
+                "NTI: Under consideration",
+                "NTI: Warning letter",
+                "NTI: Notice to improve",
+                "SRMA (School Resource Management Adviser)"
+            ])
+            .cancel();
     
             Logger.Log("Close down the concerns");
             caseManagementPage
