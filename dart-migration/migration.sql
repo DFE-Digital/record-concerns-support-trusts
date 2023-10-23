@@ -45,7 +45,30 @@ GO
 
 
 
+-- =============================================
+-- Author:		Elijah Aremu
+-- Create date: 19/10/2023
+-- Description:	Gets the RegionId value for the specified Region
+-- =============================================
+CREATE FUNCTION [dartmigration].[GetRegion]
+(
+	@Region NVARCHAR(200)
+)
+RETURNS INT
+AS
+BEGIN
 
+	DECLARE @RegionId INT = (SELECT Id FROM [sip].[concerns].[Region] WHERE Name = @Region) 
+
+	RETURN @RegionId;
+
+END
+GO
+/****** Object:  UserDefinedFunction [dartmigration].[GetTrustUkPrn]    Script Date: 02/02/2023 16:04:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 
 
@@ -686,7 +709,9 @@ SELECT
 	dartmigration.GetMeansOfReferralId(Means_of_Referral) AS MeansOfReferralId,
 	dartmigration.GetTrustUkPrn(Case_Id, Company_Number, Parent_company_number) AS UkPrn,
 	dartmigration.GetCaseHistory(Case_History, URN, Academy_Name, Enquiry_Number) AS CaseHistory,
-	dartmigration.GetTerritory(Case_Id, RSC) as Territory
+	dartmigration.GetTerritory(Case_Id, RSC) as Territory,
+	COALESCE(Company_Number, Parent_company_number) AS CompaniesHouseNumber,
+	dartmigration.GetRegion(RSC) as RegionId
 FROM    dartmigration.vwConcernCaseRaw
 LEFT OUTER JOIN dartmigration.DartUsers du on Case_Owner = du.DartName
 GO
@@ -799,7 +824,8 @@ GO
 -- =============================================
 CREATE PROCEDURE [dartmigration].[uspExportDartExtractToConcerns_TestData_Step1-Cases]
 (
-	 @CaseUrns [dartmigration].[CaseUrnTableType] READONLY
+	 @CaseUrns [dartmigration].[CaseUrnTableType] READONLY,
+	 @DivisionId INT
 )
 AS
 BEGIN
@@ -844,7 +870,11 @@ BEGIN
 		,[ReviewAt]
 		,[StatusId]
 		,[RatingId]
-		,[Territory])
+		,[Territory]
+		,[TrustCompaniesHouseNumber]
+		,[CaseLastUpdatedAt]
+		,[DivisionId]
+		,[RegionId])
 
 	SELECT
 			Urn,
@@ -868,6 +898,10 @@ BEGIN
 		  ,[StatusId]
 		  ,[RatingId]
 		  ,[Territory]
+		  ,[CompaniesHouseNumber]
+		  ,[UpdatedAt]
+		  ,@DivisionId
+		  ,[RegionId]
 	  FROM [dartmigration].[vwConcernsCaseTransformed] WHERE Urn IN (SELECT CaseUrn FROM @CaseUrnTable)
 
 	  
