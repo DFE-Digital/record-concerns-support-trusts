@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
@@ -6,6 +7,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly IDecisionService _decisionService;
+		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<AddPageModel> _logger;
 
 		[BindProperty]
@@ -53,11 +56,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public RadioButtonsUiComponent RetrospectiveApproval { get; set; }
 
+		[BindProperty]
+		public Division? Division { get; set; }
+
 		public string SaveAndContinueButtonText { get; set; }
 
-		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
+		public AddPageModel(
+			IDecisionService decisionService,
+			ICaseModelService caseModelService,
+			ILogger<AddPageModel> logger)
 		{
 			_decisionService = decisionService;
+			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 
@@ -68,6 +78,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			try
 			{
 				Decision = await CreateDecisionModel();
+
+				var caseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
+				Division = caseModel.Division;
 
 				LoadPageComponents(Decision);
 
@@ -95,8 +108,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-
-				Decision.ReceivedRequestDate = ReceivedRequestDate.Date.ToDateTime() ?? new DateTime();
+				Decision.ReceivedRequestDate = ReceivedRequestDate.Date?.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
 				Decision.DecisionTypes = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
 				Decision.HasCrmCase = HasCrmCase.SelectedId.ToBool();
@@ -159,7 +171,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				answers = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
 			}
 
-			DecisionTypeQuestions = BuildDecisionTypeQuestionsComponent();
+			DecisionTypeQuestions = Division == API.Contracts.Case.Division.RegionsGroup ? BuildRegionsGroupDecisionTypeQuestionsComponent() : BuildDecisionTypeQuestionsComponent();
 			SetDecisionTypeAnswers(DecisionTypeQuestions, answers);
 			HasCrmCase = BuildHasCrmCaseComponent();
 			IsSubmissionRequired = BuildIsSubmissionRequiredComponent();
@@ -201,7 +213,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private static List<DecisionTypeQuestionModel> BuildDecisionTypeQuestionsComponent()
+		private static List<DecisionTypeQuestionModel> BuildDecisionTypes()
 		{
 			var result = new List<DecisionTypeQuestionModel>()
 			{
@@ -263,6 +275,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
 				}
 			};
+
+			return result;
+		}
+
+		private static List<DecisionTypeQuestionModel> BuildRegionsGroupDecisionTypeQuestionsComponent()
+		{
+			var allDecisionTypes = BuildDecisionTypeQuestionsComponent();
+
+			var result = allDecisionTypes.Where(
+				q => q.Id == DecisionType.NoticeToImprove || 
+				q.Id == DecisionType.Section128 || 
+				q.Id == DecisionType.FreedomOfInformationExemptions).ToList();
+
+			return result;
+		}
+
+		private static List<DecisionTypeQuestionModel> BuildDecisionTypeQuestionsComponent()
+		{
+			var result = BuildDecisionTypes();
 
 			result.ForEach(question =>
 			{
