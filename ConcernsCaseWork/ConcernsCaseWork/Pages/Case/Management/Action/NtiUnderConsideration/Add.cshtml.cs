@@ -140,7 +140,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			
 			Notes = BuildNotesComponent(Notes.Text.StringContents);
 		}
-
-		
 	}
 }

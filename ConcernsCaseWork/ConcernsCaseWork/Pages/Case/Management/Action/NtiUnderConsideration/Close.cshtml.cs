@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -121,10 +120,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			var enumValues = new List<NtiClosedStatus>()
+			var enumValues = new List<NtiUnderConsiderationClosedStatus>()
 			{
-				Enums.NtiClosedStatus.ToBeEscalated,
-				Enums.NtiClosedStatus.NoFurtherAction
+				NtiUnderConsiderationClosedStatus.ToBeEscalated,
+				NtiUnderConsiderationClosedStatus.NoFurtherAction
 			};
 
 			var radioItems = enumValues.Select(v =>
@@ -132,7 +131,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
 			}).ToArray();
 
-			return new(ElementRootId: "nti-status", Name: nameof(NtiClosedStatus), "What is the status of the NTI?")
+			return new(ElementRootId: "nti-status", Name: nameof(NTIClosedStatus), "What is the status of the NTI?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
