@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 					NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
 					foreach (var check in NTIReasonsToConsiderForUI)
 					{
-						if (isChecked.Any(x => (int)x == Convert.ToInt32(check.Id)))
+						if (isChecked.Any(x => (int?)x == Convert.ToInt32(check.Id)))
 						{
 							check.IsChecked = true;
 						}

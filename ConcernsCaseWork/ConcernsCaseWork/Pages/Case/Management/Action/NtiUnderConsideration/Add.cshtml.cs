@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 					NTIReasonsToConsider = GetReasons().ToList();
 					foreach (var check in NTIReasonsToConsider)
 					{
-						if (isChecked.Any(x => (int)x == Convert.ToInt32(check.Id)))
+						if (isChecked.Any(x => (int?)x == Convert.ToInt32(check.Id)))
 						{
 							check.IsChecked = true;
 						}

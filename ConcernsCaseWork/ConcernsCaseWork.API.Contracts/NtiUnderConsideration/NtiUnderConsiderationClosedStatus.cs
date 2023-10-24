@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 public enum NtiUnderConsiderationClosedStatus
 {
 	[Description("No further action being taken")]
-	NoFurtherAction =1,
+	NoFurtherAction = 1,
 	[Description("To be escalated")]
-	ToBeEscalated =2
+	ToBeEscalated = 2
 }
