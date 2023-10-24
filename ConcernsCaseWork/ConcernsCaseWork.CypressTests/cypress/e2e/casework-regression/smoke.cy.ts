@@ -405,7 +405,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.withPlanReceivedDay("05")
 			.withPlanReceivedMonth("06")
 			.withPlanReceivedYear("2022")
-			.withReasonForClosure("Viable Plan Received")
+			.withReasonForClosure("Viable plan received")
 			.close();
 
 		Logger.Log("Completing NTI Under Consideration");
