@@ -13,12 +13,13 @@ using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : AbstractPageModel
+	public class EditPageModel : EditNtiUnderConsiderationBaseModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly ILogger<EditPageModel> _logger;
@@ -31,6 +32,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		
 		[BindProperty(SupportsGet = true, Name = "Urn")] 
 		public long CaseUrn { get;  set; }
+
+		[BindProperty(SupportsGet = true, Name = "ntiUCId")]
+		public long NtiId { get; set; }
+
 		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public EditPageModel(
@@ -47,23 +52,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			try
 			{
-				var ntiUcId = ExtractNtiUcIdFromRoute();
-				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(NtiId);
 				if (NtiModel.IsClosed)
 				{
-					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
+					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{NtiId}");
 				}
 				LoadPageComponents();
 				Notes.Text.StringContents = NtiModel.Notes;
-				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
+				NTIReasonsToConsiderForUI = GetReasons(NtiModel).ToList();
 				return Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
 				SetErrorMessage(ErrorOnGetPage);
-				return Page();
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -72,17 +77,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				if (!ModelState.IsValid)
 				{
-					ResetOnValidationError();
+					LoadPageComponents();
 					var data = PopulateNtiFromRequest();
-					var isChecked = data.NtiReasonsForConsidering.Where(c => c != 0);
-					NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
-					foreach (var check in NTIReasonsToConsiderForUI)
-					{
-						if (isChecked.Any(x => (int?)x == Convert.ToInt32(check.Id)))
-						{
-							check.IsChecked = true;
-						}
-					}
+					NTIReasonsToConsiderForUI = GetReasons(NtiModel).ToList();
 					return Page();
 				}
 				
@@ -93,43 +90,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
 				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
 			}
-			catch (InvalidUserInputException ex)
-			{
-				TempData["NTI-UC.Message"] = ex.Message;
-				return RedirectToPage();
-			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
-		}
-
-		private long ExtractNtiUcIdFromRoute()
-		{
-			if (TryGetRouteValueInt64("ntiUCId", out var ntiUcId))
-			{
-				return ntiUcId;
-			}
-			else
-			{
-				throw new Exception("CaseUrn not found in the route");
-			}
-		}
-
-		private IEnumerable<RadioItem> GetReasonsForUI(NtiUnderConsiderationModel ntiModel)
-		{
-			var reasonValues = Enum.GetValues<NtiUnderConsiderationReason>().ToList();
-
-			return reasonValues.Select(r => new RadioItem
-			{
-				Id = Convert.ToString((int)r),
-				Text = EnumHelper.GetEnumDescription(r),
-				IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR == r) == true,
-			});
 		}
 
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
@@ -137,7 +104,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			var reasons = Request.Form["reason"];
 			
 			var nti = new NtiUnderConsiderationModel() { 
-				Id = ExtractNtiUcIdFromRoute(),
+				Id = NtiId,
 				CaseUrn = CaseUrn,
 				Notes =  Notes.Text.StringContents
 			};
@@ -147,26 +114,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		
 		private void LoadPageComponents()
 		{
-			Notes = BuildNotesComponent();
+			Notes = BuildNotesComponent(nameof(Notes), Notes?.Text.StringContents);
 		}
-		
-		private TextAreaUiComponent BuildNotesComponent(string contents = "")
-			=> new("nti-notes", nameof(Notes), "Notes (optional)")
-			{
-				HintText = "Case owners can record any information they want that feels relevant to the action",
-				Text = new ValidateableString()
-				{
-					MaxLength = NotesMaxLength,
-					StringContents = contents,
-					DisplayName = "Notes"
-				}
-			};
-		
-		private void ResetOnValidationError()
-		{
-			
-			Notes = BuildNotesComponent(Notes.Text.StringContents);
-		}
-
 	}
 }
