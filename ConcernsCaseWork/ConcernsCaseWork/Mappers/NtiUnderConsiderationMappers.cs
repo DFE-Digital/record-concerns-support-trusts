@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Mappers
 				CreatedAt = ntiModel.CreatedAt,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ClosedAt = ntiModel.ClosedAt,
-				ClosedStatusId = (int)ntiModel.ClosedStatusId,
+				ClosedStatusId = (int?)ntiModel.ClosedStatusId,
 			};
 		}
 
