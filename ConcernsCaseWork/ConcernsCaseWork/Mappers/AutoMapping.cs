@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
-using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.Trusts;
 
@@ -23,10 +22,6 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<EstablishmentTypeDto, EstablishmentTypeModel>();
 			CreateMap<CensusDto, CensusModel>();
 			CreateMap<IfdDataDto, IfdDataModel>();
-
-			// Case
-			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
-			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
 
 			// Teams
 			CreateMap<ConcernsCaseworkTeamDto, ConcernsTeamCaseworkModel>().ReverseMap();
