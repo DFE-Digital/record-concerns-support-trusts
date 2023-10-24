@@ -1,17 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.Services.FinancialPlan;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.FinancialPlan;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.CoreTypes;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {

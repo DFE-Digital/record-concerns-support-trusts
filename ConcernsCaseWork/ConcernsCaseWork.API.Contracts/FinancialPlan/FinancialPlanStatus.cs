@@ -1,21 +1,19 @@
 ﻿using System.ComponentModel;
 
-namespace ConcernsCaseWork.Enums
+namespace ConcernsCaseWork.API.Contracts.FinancialPlan
 {
 	public enum FinancialPlanStatus
 	{
-		Unknown,
-		
 		[Description("Awaiting plan")]
-		AwaitingPlan,
+		AwaitingPlan = 1,
 
 		[Description("Return to trust for further work")]
-		ReturnToTrust,
+		ReturnToTrust = 2,
 
 		[Description("Viable plan received")]
-		ViablePlanReceived,
+		ViablePlanReceived = 3,
 
 		[Description("Abandoned")]
-		Abandoned
+		Abandoned = 4
 	}
 }

@@ -9,6 +9,7 @@ using FluentAssertions;
 using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -21,8 +22,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
-
 			var testData = new
 			{
 				Id = _fixture.Create<long>(),
@@ -33,7 +32,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedBy = _fixture.Create<string>(),
 				Notes = _fixture.Create<string>(),
 				DatePlanRequested = _fixture.Create<DateTime>(),
-				Status = statuses.First(),
+				Status = FinancialPlanStatus.AwaitingPlan,
 				DatePlanReceived = _fixture.Create<DateTime>(),
 				ClosedStatus = new KeyValuePair<int, string>(_fixture.Create<int>(), _fixture.Create<string>()),
 			};
@@ -45,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.CreatedAt,
 				testData.ClosedAt,
 				testData.CreatedBy,
-				testData.Status.Id,
+				1,
 				testData.DatePlanRequested,
 				testData.DatePlanReceived,
 				testData.Notes,
@@ -55,7 +54,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var casePermission = new GetCasePermissionsResponse() { Permissions  = new List<CasePermission>() { CasePermission.Edit } };
 
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, casePermission);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -63,8 +62,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			{
 				Assert.That(serviceModel.CaseUrn, Is.EqualTo(testData.CaseUrn));
 				Assert.That(serviceModel.Id, Is.EqualTo(testData.Id));
-				Assert.That(serviceModel.Status.Id, Is.EqualTo(testData.Status.Id));
-				Assert.That(serviceModel.Status.Name, Is.EqualTo(testData.Status.Name));
+				Assert.That(serviceModel.Status, Is.EqualTo(testData.Status));
 				Assert.That(serviceModel.Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
@@ -84,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			var casePermission = new GetCasePermissionsResponse();
 
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, casePermission);
 
 			serviceModel.IsEditable.Should().BeFalse();
 		}
@@ -93,8 +91,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoListToDbModelList_ReturnsCorrectModelList()
 		{
 			//arrange
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
-
 			var testData = new
 			{
 				Id = _fixture.Create<long>(),
@@ -105,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedBy = _fixture.Create<string>(),
 				Notes = _fixture.Create<string>(),
 				DatePlanRequested = _fixture.Create<DateTime>(),
-				Status = statuses.First(),
+				Status = FinancialPlanStatus.AwaitingPlan,
 				DatePlanReceived = _fixture.Create<DateTime>(),
 				ClosedStatus = new KeyValuePair<int, string>(_fixture.Create<int>(), _fixture.Create<string>()),
 			};
@@ -119,7 +115,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 					testData.CreatedAt,
 					testData.ClosedAt,
 					testData.CreatedBy,
-					testData.Status.Id,
+					1,
 					testData.DatePlanRequested,
 					testData.DatePlanReceived,
 					testData.Notes,
@@ -128,7 +124,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			};
 
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos, statuses);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -137,8 +133,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Count, Is.EqualTo(1));
 				Assert.That(serviceModel.Single().CaseUrn, Is.EqualTo(testData.CaseUrn));
 				Assert.That(serviceModel.Single().Id, Is.EqualTo(testData.Id));
-				Assert.That(serviceModel.Single().Status.Id, Is.EqualTo(testData.Status.Id));
-				Assert.That(serviceModel.Single().Status.Name, Is.EqualTo(testData.Status.Name));
+				Assert.That(serviceModel.Single().Status, Is.EqualTo(testData.Status));
 				Assert.That(serviceModel.Single().Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.Single().DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.Single().DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
@@ -157,7 +152,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			List<FinancialPlanDto> dtos = null;
 
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos, statuses);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -173,7 +168,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var dtos = new List<FinancialPlanDto>();
 
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos, statuses);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dtos);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -227,7 +222,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			};
 
 			// act
-			var result = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(model, dto, statuses);
+			var result = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(model, dto);
 
 			// assert
 			Assert.That(result, Is.Not.Null);
@@ -260,7 +255,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedBy = _fixture.Create<string>(),
 				Notes = _fixture.Create<string>(),
 				DatePlanRequested = _fixture.Create<DateTime>(),
-				Status = new FinancialPlanStatusModel("AwaitingPlan", 1, true),
+				Status = FinancialPlanStatus.AwaitingPlan,
 				DatePlanReceived = _fixture.Create<DateTime>()
 			};
 

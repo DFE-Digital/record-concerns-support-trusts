@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Service.FinancialPlan;
 using System;
 using System.Collections.Generic;

@@ -1,20 +1,15 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
-using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -32,14 +27,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-			var validStatuses = GetListValidStatuses();
-			
-			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
-				.ReturnsAsync(validStatuses);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 4);
@@ -56,13 +46,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var caseUrn = 1;
 			var dateRequested = new DateTime(2022, 04, 02);
 
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 			pageModel.CaseUrn = caseUrn;
 			pageModel.DatePlanRequested   = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(dateRequested) };
 
@@ -82,14 +71,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
 			var caseUrn = 1;
 			var dateRequested = new DateTime(2022, 03, 03);
 
-			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			pageModel.CaseUrn = caseUrn;
 			pageModel.DatePlanRequested = new OptionalDateTimeUiComponent("", "", "") { Date = new OptionalDateModel(dateRequested) };
@@ -111,7 +99,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 		private static AddPageModel SetupAddPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService, 
-			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
 			ILogger<AddPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
