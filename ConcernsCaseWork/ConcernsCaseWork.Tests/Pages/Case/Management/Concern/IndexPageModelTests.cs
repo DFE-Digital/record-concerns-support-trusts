@@ -4,7 +4,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Concern;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -36,7 +35,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -87,7 +85,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));
