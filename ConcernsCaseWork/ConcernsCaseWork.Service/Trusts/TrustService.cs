@@ -6,6 +6,7 @@ using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
+using System.Net;
 using System.Web;
 
 namespace ConcernsCaseWork.Service.Trusts
@@ -73,8 +74,8 @@ namespace ConcernsCaseWork.Service.Trusts
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
-
 				TrustDetailsDto cityTechnologyCollege = await CheckForCTCByUKPRN(ukPrn);
+
 				if (cityTechnologyCollege != null)
 				{
 					return cityTechnologyCollege;
@@ -126,7 +127,18 @@ namespace ConcernsCaseWork.Service.Trusts
 				}
 				catch (Exception ex)
 				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
+					if (ex is HttpRequestException)
+					{
+						// We can't determine if a 404 is an issue, because we don't know if the uk prn is a technical college
+						// Otherwise we get a large amount of errors raised in the logs
+						var httpRequestException = ex as HttpRequestException;
+						if (httpRequestException.StatusCode == HttpStatusCode.NotFound)
+						{
+							return null;
+						}
+					}
+
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Containing search from Trust List");
 					_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				}
 			}
