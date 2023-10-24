@@ -1,9 +1,9 @@
-﻿using ConcernsCaseWork.API.Contracts.Permissions;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -16,31 +16,35 @@ namespace ConcernsCaseWork.Mappers
 			{
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
-				Reasons = ntiModel.NtiReasonsForConsidering?.Select(r => ToDBModel(r)).ToArray(),
-				UnderConsiderationReasonsMapping = ntiModel.NtiReasonsForConsidering?.Select(r => r.Id).ToArray(),
+				UnderConsiderationReasonsMapping = ntiModel.NtiReasonsForConsidering?.Select(r => (int)r).ToArray(),
 				Notes = ntiModel.Notes,
 				CreatedAt = ntiModel.CreatedAt,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ClosedAt = ntiModel.ClosedAt,
-				ClosedStatusId = ntiModel.ClosedStatusId,
-				ClosedStatusName = ntiModel.ClosedStatusName
+				ClosedStatusId = (int)ntiModel.ClosedStatusId,
 			};
 		}
 
 		public static NtiUnderConsiderationModel ToServiceModel(NtiUnderConsiderationDto ntiDto)
 		{
-			return new NtiUnderConsiderationModel
+			var result = new NtiUnderConsiderationModel
 			{
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
-				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray(),	
+				NtiReasonsForConsidering = ntiDto.UnderConsiderationReasonsMapping?.Select(r => (NtiUnderConsiderationReason)r).ToArray(),	
 				CreatedAt = ntiDto.CreatedAt,
 				Notes = ntiDto.Notes,
 				UpdatedAt = ntiDto.UpdatedAt,
 				ClosedAt = ntiDto.ClosedAt,
-				ClosedStatusId = ntiDto.ClosedStatusId,
-				ClosedStatusName = ntiDto.ClosedStatusName
+				ClosedStatusId = (NtiUnderConsiderationClosedStatus?) ntiDto.ClosedStatusId,
 			};
+
+			if (result.ClosedAt.HasValue)
+			{
+				result.ClosedStatusName = result.ClosedStatusId?.Description();
+			}
+
+			return result;
 		}
 
 		public static NtiUnderConsiderationModel ToServiceModel(NtiUnderConsiderationDto ntiDto, GetCasePermissionsResponse permissionsResponse)
@@ -51,31 +55,13 @@ namespace ConcernsCaseWork.Mappers
 			return result;
 		}
 
-		public static NtiUnderConsiderationReasonDto ToDBModel(NtiReasonForConsideringModel ntiReasonModel)
-		{
-			return new NtiUnderConsiderationReasonDto
-			{
-				Id = ntiReasonModel.Id,
-				Name = ntiReasonModel.Name,
-			};
-		}
-
-		public static  NtiReasonForConsideringModel ToServiceModel(NtiUnderConsiderationReasonDto ntiDto)
-		{
-			return new NtiReasonForConsideringModel
-			{
-				Id = ntiDto.Id,
-				Name = ntiDto.Name
-			};
-		}
-
-		public static ActionSummaryModel ToActionSummary(this NtiUnderConsiderationModel model, IEnumerable<NtiUnderConsiderationStatusDto> statuses)
+		public static ActionSummaryModel ToActionSummary(this NtiUnderConsiderationModel model)
 		{
 			var statusName = "In progress";
 
 			if (model.ClosedAt.HasValue)
 			{
-				statusName = statuses.SingleOrDefault(s => s.Id == model.ClosedStatusId)?.Name ?? string.Empty;
+				statusName = model.ClosedStatusId?.Description();
 			}
 
 			var result = new ActionSummaryModel

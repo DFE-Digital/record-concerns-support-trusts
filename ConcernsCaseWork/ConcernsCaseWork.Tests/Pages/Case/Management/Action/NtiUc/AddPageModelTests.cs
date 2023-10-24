@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;

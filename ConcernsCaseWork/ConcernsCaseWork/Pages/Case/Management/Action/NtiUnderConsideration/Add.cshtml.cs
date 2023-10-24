@@ -1,5 +1,11 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,14 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -76,11 +74,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					ResetOnValidationError();
 					var data = PopulateNtiFromRequest();
-					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c != 0);
 					NTIReasonsToConsider = GetReasons().ToList();
 					foreach (var check in NTIReasonsToConsider)
 					{
-						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						if (isChecked.Any(x => (int)x == Convert.ToInt32(check.Id)))
 						{
 							check.IsChecked = true;
 						}
@@ -115,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			var reasons = Request.Form["reason"];
 			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
+			nti.NtiReasonsForConsidering = reasons.Select(r => (NtiUnderConsiderationReason)int.Parse(r)).ToArray();
 			nti.Notes = Notes.Text.StringContents;
 			return nti;
 		}

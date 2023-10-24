@@ -74,11 +74,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					ResetOnValidationError();
 					var data = PopulateNtiFromRequest();
-					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
+					var isChecked = data.NtiReasonsForConsidering.Where(c => c != 0);
 					NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel).ToList();
 					foreach (var check in NTIReasonsToConsiderForUI)
 					{
-						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
+						if (isChecked.Any(x => (int)x == Convert.ToInt32(check.Id)))
 						{
 							check.IsChecked = true;
 						}
@@ -128,7 +128,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				Id = Convert.ToString((int)r),
 				Text = EnumHelper.GetEnumDescription(r),
-				IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR.Id == (int)r) == true,
+				IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR == r) == true,
 			});
 		}
 
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				CaseUrn = CaseUrn,
 				Notes =  Notes.Text.StringContents
 			};
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
+			nti.NtiReasonsForConsidering = reasons.Select(r => (NtiUnderConsiderationReason)int.Parse(r)).ToArray();
 			return nti;
 		}
 		

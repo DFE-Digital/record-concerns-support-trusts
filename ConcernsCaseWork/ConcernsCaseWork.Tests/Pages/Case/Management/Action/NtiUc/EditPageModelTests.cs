@@ -1,24 +1,17 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
