@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					LoadPageComponents();
 					var data = PopulateNtiFromRequest();
-					NTIReasonsToConsiderForUI = GetReasons(NtiModel).ToList();
+					NTIReasonsToConsiderForUI = GetReasons(data).ToList();
 					return Page();
 				}
 				
