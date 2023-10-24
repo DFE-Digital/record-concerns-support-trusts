@@ -1,22 +1,17 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
@@ -32,10 +27,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", urn);
@@ -57,10 +51,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
 			// act
 			var pageResponse = await pageModel.OnGetAsync();
@@ -79,10 +72,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -104,10 +96,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", urn);
@@ -130,19 +121,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var caseUrn = 3;
 			var ntiId = 4;
 
-			var validStatuses = GetListValidStatuses();
-			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockLogger);
 			var ntiModel = SetupOpenNtiUnderConsiderationModel(ntiId, caseUrn);
-
-			mockNtiStatusesCachedService
-				.Setup(fp => fp.GetAllStatuses())
-				.ReturnsAsync(validStatuses);
 				
 			mockNtiModelService
 				.Setup(fp => fp.GetNtiUnderConsideration(ntiId))
@@ -169,13 +154,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static ClosePageModel SetupClosePageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
-			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService,
 			Mock<ILogger<ClosePageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new ClosePageModel(mockNtiModelService.Object, mockNtiStatusesCachedService.Object, mockLogger.Object)
+			return new ClosePageModel(mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -189,20 +173,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		
 		private static NtiUnderConsiderationModel SetupClosedNtiUnderConsiderationModel(int id, long caseUrn)
 			=> new() { Id = id, CaseUrn = caseUrn, ClosedAt = DateTime.Now};
-
-		private static List<NtiUnderConsiderationStatusDto> GetListValidStatuses() => new List<NtiUnderConsiderationStatusDto>
-		{
-			new ()
-			{
-				Id = 1,
-				Name = "Some status"
-			},
-			new ()
-			{
-				Id = 2,
-				Name = "Another status"
-			}
-		};
 	}
 
 }

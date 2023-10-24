@@ -6,7 +6,6 @@ using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
@@ -155,7 +154,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddScoped<ISRMAService, SRMAService>();
-			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddScoped<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
 			services.AddScoped<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 			services.AddScoped<INtiModelService, NtiModelService>();
@@ -187,8 +185,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
-			services.AddScoped<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
-			services.AddScoped<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
 			services.AddScoped<INtiUnderConsiderationService, NtiUnderConsiderationService>();
 			services.AddScoped<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
 			services.AddScoped<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
@@ -212,9 +208,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IStatusCachedService, StatusCachedService>();
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
-			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
-			services.AddScoped<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
-			services.AddScoped<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
 			services.AddScoped<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
 			services.AddScoped<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();

@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
@@ -32,8 +31,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
@@ -45,8 +42,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockTypeCachedService.Object,
 				mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockNTIUnderConsiderationStatusesCachedService.Object,
-				mockNTIUnderConsiderationReasonsCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object,
 				mockNTIWarningLetterStatusesCachedService.Object,
 				mockTeamsCachedService.Object,
@@ -80,8 +75,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
@@ -93,8 +86,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockTypeCachedService.Object,
                 mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockNTIUnderConsiderationStatusesCachedService.Object,
-				mockNTIUnderConsiderationReasonsCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object,
 				mockNTIWarningLetterStatusesCachedService.Object,
 				mockTeamsCachedService.Object,
@@ -124,8 +115,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			ITypeCachedService mockTypeCachedService, 
 			IUserStateCachedService mockUserStateCachedService,
 			ITrustCachedService mockTrustCachedService,
-			INtiUnderConsiderationStatusesCachedService mockNTIUnderConsiderationStatusesCachedService,
-			INtiUnderConsiderationReasonsCachedService mockNTIUnderConsiderationReasonsCachedService,
 			INtiWarningLetterReasonsCachedService mockNTIWarningLetterReasonCachedService,
 			INtiWarningLetterStatusesCachedService mockNTIWarningLetterStatusesCachedService,
 			ITeamsCachedService mockTeamsCachedService,
@@ -140,8 +129,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockStatusCachedService,
 				mockRatingCachedService,
 				mockTrustCachedService,
-				mockNTIUnderConsiderationStatusesCachedService,
-				mockNTIUnderConsiderationReasonsCachedService,
 				mockNTIWarningLetterReasonCachedService,
 				mockNTIWarningLetterStatusesCachedService,
 				mockTeamsCachedService,

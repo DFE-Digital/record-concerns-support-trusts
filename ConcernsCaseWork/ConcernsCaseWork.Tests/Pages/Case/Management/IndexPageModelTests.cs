@@ -7,9 +7,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -40,7 +38,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<IRecordModelService> _mockRecordModelService = null;
 		private Mock<IRatingModelService> _mockRatingModelService = null;
 		private Mock<ILogger<IndexPageModel>> _mockLogger = null;
-		private Mock<INtiUnderConsiderationStatusesCachedService> _mockNtiStatusesCachedService = null;
 		private Mock<IActionsModelService> _actionsModelService = null;
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
 		private Mock<ICasePermissionsService> _casePermissionsService = null;
@@ -68,10 +65,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			_mockRatingModelService = new Mock<IRatingModelService>();
 			_mockLogger = new Mock<ILogger<IndexPageModel>>();
-
-			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
-				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
 
 			_actionsModelService = new Mock<IActionsModelService>();
 			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
@@ -233,7 +226,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				_mockTrustModelService.Object,
 				_mockRecordModelService.Object,
 				_mockRatingModelService.Object,
-				_mockNtiStatusesCachedService.Object,
 				_mockLogger.Object,
 				_actionsModelService.Object,
 				_caseSummaryService.Object,

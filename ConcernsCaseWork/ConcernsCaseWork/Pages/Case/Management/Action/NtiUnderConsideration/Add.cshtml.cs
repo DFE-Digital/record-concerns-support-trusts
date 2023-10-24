@@ -1,5 +1,8 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,20 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : AbstractPageModel
+	public class AddPageModel : EditNtiUnderConsiderationBaseModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly ILogger<AddPageModel> _logger;
@@ -31,7 +26,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		[BindProperty(SupportsGet = true, Name = "Urn")] 
 		public long CaseUrn { get;  set; }
-		private int _max;
 		
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; }
@@ -43,7 +37,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			_ntiModelService = ntiModelService;
 			_logger = logger;
-			_max = NtiConstants.MaxNotesLength;
 		}
 
 		public IActionResult OnGet()
@@ -54,10 +47,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				LoadPageComponents();
 				NTIReasonsToConsider = GetReasons().ToList();
-				if (CaseUrn == 0)
-				{
-					throw(new InvalidOperationException("Invalid CaseUrn "));
-				}
 			}
 			catch (Exception ex)
 			{
@@ -74,17 +63,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				if (!ModelState.IsValid)
 				{
-					ResetOnValidationError();
+					LoadPageComponents();
 					var data = PopulateNtiFromRequest();
-					var isChecked = data.NtiReasonsForConsidering.Where(c => c.Id != 0);
-					NTIReasonsToConsider = GetReasons().ToList();
-					foreach (var check in NTIReasonsToConsider)
-					{
-						if (isChecked.Any(x => x.Id == Convert.ToInt32(check.Id)))
-						{
-							check.IsChecked = true;
-						}
-					}
+					NTIReasonsToConsider = GetReasons(data).ToList();
 					return Page();
 				}
 				var newNti = PopulateNtiFromRequest();
@@ -100,49 +81,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			return Page();
 		}
 
-		private IEnumerable<RadioItem> GetReasons()
-		{
-			var reasonValues = Enum.GetValues<NtiUnderConsiderationReason>().ToList();
-
-			return reasonValues.Select(r => new RadioItem
-			{
-				Id = Convert.ToString((int)r),
-				Text = EnumHelper.GetEnumDescription(r)
-			});
-		}
-
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
 			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
+			nti.NtiReasonsForConsidering = reasons.Select(r => (NtiUnderConsiderationReason)int.Parse(r)).ToArray();
 			nti.Notes = Notes.Text.StringContents;
 			return nti;
 		}
 		
 		private void LoadPageComponents()
 		{
-			Notes = BuildNotesComponent();
+			Notes = BuildNotesComponent(nameof(Notes), Notes?.Text.StringContents);
 		}
-		
-		private TextAreaUiComponent BuildNotesComponent(string contents = "")
-			=> new("nti-notes", nameof(Notes), "Notes (optional)")
-			{
-				HintText = "Case owners can record any information they want that feels relevant to the action.",
-				Text = new ValidateableString()
-				{
-					MaxLength = _max,
-					StringContents = contents,
-					DisplayName = "Notes"
-				}
-			};
-		
-		private void ResetOnValidationError()
-		{
-			
-			Notes = BuildNotesComponent(Notes.Text.StringContents);
-		}
-
-		
 	}
 }

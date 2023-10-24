@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
@@ -24,7 +23,6 @@ namespace ConcernsCaseWork.Services.Actions
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
-		private readonly INtiUnderConsiderationStatusesCachedService _ntiUcStatusesCachedService;
 		private readonly IDecisionModelService _decisionModelService;
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<ActionsModelService> _logger;
@@ -36,7 +34,6 @@ namespace ConcernsCaseWork.Services.Actions
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
 			ILogger<ActionsModelService> logger, 
-			INtiUnderConsiderationStatusesCachedService ntiUcStatusesCachedService,
 			IDecisionModelService decisionModelService, 
 			ITrustFinancialForecastService trustFinancialForecastService)
 		{
@@ -46,7 +43,6 @@ namespace ConcernsCaseWork.Services.Actions
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
 			_logger = logger;
-			_ntiUcStatusesCachedService = ntiUcStatusesCachedService;
 			_decisionModelService = decisionModelService;
 			_trustFinancialForecastService = trustFinancialForecastService;
 		}
@@ -91,10 +87,8 @@ namespace ConcernsCaseWork.Services.Actions
 
 		private async Task<IEnumerable<ActionSummaryModel>> GetNtisUnderConsideration(long caseUrn)
 		{
-			var statuses = await _ntiUcStatusesCachedService.GetAllStatuses();
-			
 			return (await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn))
-				.Select(a => a.ToActionSummary(statuses));
+				.Select(a => a.ToActionSummary());
 		}
 
 		private async Task<IEnumerable<ActionSummaryModel>> GetNtiWarningLettersForCase(long caseUrn)

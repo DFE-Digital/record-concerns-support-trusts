@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
@@ -32,24 +31,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public AddPageModelTests()
 		{
 			_fixture = new Fixture();
-		}
-		
-		
-		[Test]
-		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-
-			// act
-			pageModel.OnGet();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]

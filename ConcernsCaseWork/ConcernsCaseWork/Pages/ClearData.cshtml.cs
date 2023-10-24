@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using Ardalis.GuardClauses;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
+﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
@@ -12,6 +6,11 @@ using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
@@ -23,8 +22,6 @@ namespace ConcernsCaseWork.Pages
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
-		private readonly INtiUnderConsiderationStatusesCachedService _ntiUnderConsiderationStatusesCachedService;
-		private readonly INtiUnderConsiderationReasonsCachedService _ntiUnderConsiderationReasonsCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonCachedService; 
 		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly ITeamsCachedService _teamsCachedService;
@@ -37,8 +34,6 @@ namespace ConcernsCaseWork.Pages
 			IStatusCachedService statusCachedService, 
 			IRatingCachedService ratingCachedService,
 			ITrustCachedService trustCachedService,
-			INtiUnderConsiderationStatusesCachedService ntiUnderConsiderationStatusesCachedService,
-			INtiUnderConsiderationReasonsCachedService ntiUnderConsiderationReasonsCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonCachedService,
 			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			ITeamsCachedService teamsCachedService,
@@ -49,8 +44,6 @@ namespace ConcernsCaseWork.Pages
 			_ratingCachedService = Guard.Against.Null(ratingCachedService);
 			_trustCachedService = Guard.Against.Null(trustCachedService);
 			_typeCachedService = Guard.Against.Null(typeCachedService);
-			_ntiUnderConsiderationStatusesCachedService = Guard.Against.Null(ntiUnderConsiderationStatusesCachedService);
-			_ntiUnderConsiderationReasonsCachedService = Guard.Against.Null(ntiUnderConsiderationReasonsCachedService);
 			_ntiWarningLetterReasonCachedService = Guard.Against.Null(ntiWarningLetterReasonCachedService);
 			_ntiWarningLetterStatusesCachedService = Guard.Against.Null(ntiWarningLetterStatusesCachedService);
 			_teamsCachedService = Guard.Against.Null(teamsCachedService);
@@ -68,8 +61,6 @@ namespace ConcernsCaseWork.Pages
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();
 			await _trustCachedService.ClearData();
-			await _ntiUnderConsiderationStatusesCachedService.ClearData();
-			await _ntiUnderConsiderationReasonsCachedService.ClearData();
 			await _ntiWarningLetterReasonCachedService.ClearData();
 			await _ntiWarningLetterStatusesCachedService.ClearData();
 			await _teamsCachedService.ClearData(User.Identity?.Name);
