@@ -68,11 +68,7 @@
 
                             if (Model.FinancialPlanModel.Status != null)
                             {
-
-                                var statusName = Model.FinancialPlanModel.Status.Name;
-                                var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
-
-                                <span>@EnumHelper.GetEnumDescription(statusEnum)</span>
+                                RenderValue(Model.FinancialPlanModel.Status.Description());
                             }
                             else
                             {

@@ -34,8 +34,8 @@ public class FinancialPlanBasePageModel : AbstractPageModel
 	{
 		RadioItems = new SimpleRadioItem[]
 			{
-					new (API.Contracts.FinancialPlan.FinancialPlanClosureStatus.ViablePlanReceived.Description(), (int)API.Contracts.FinancialPlan.FinancialPlanClosureStatus.ViablePlanReceived),
-					new (API.Contracts.FinancialPlan.FinancialPlanClosureStatus.Abandoned.Description(), (int)API.Contracts.FinancialPlan.FinancialPlanClosureStatus.Abandoned),
+					new (FinancialPlanStatus.ViablePlanReceived.Description(), (int)FinancialPlanStatus.ViablePlanReceived),
+					new (FinancialPlanStatus.Abandoned.Description(), (int)FinancialPlanStatus.Abandoned),
 			},
 		SelectedId = selectedId,
 		Required = true,

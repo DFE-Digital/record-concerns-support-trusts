@@ -1,31 +1,27 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.Models;
-using Microsoft.Extensions.Logging;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Service.Permissions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Services.FinancialPlan
 {
 	public class FinancialPlanModelService : IFinancialPlanModelService
 	{
 		private readonly IFinancialPlanService _financialPlanService;
-		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<FinancialPlanModelService> _logger;
 
 		public FinancialPlanModelService(
 			IFinancialPlanService financialPlanCachedService, 
-			IFinancialPlanStatusCachedService financialPlanStatusCachedService,
 			ICasePermissionsService casePermissionsService,
 			ILogger<FinancialPlanModelService> logger)
 		{
 			_financialPlanService = financialPlanCachedService;
-			_financialPlanStatusCachedService = financialPlanStatusCachedService;
 			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
@@ -34,27 +30,20 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 		{
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
 
-			var financialPlansDtoTask = _financialPlanService.GetFinancialPlansByCaseUrn(caseUrn);
-			var statusesDtoTask = _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
-
-			await Task.WhenAll(financialPlansDtoTask, statusesDtoTask);
-
-			var financialPlansDto = financialPlansDtoTask.Result;
-			var statusesDto = statusesDtoTask.Result;
+			var financialPlansDto = await _financialPlanService.GetFinancialPlansByCaseUrn(caseUrn);
 
 			// Map the financial plan dtos to model 
-			return FinancialPlanMapping.MapDtoToModel(financialPlansDto, statusesDto);
+			return FinancialPlanMapping.MapDtoToModel(financialPlansDto);
 		}
 
 		public async Task<FinancialPlanModel> GetFinancialPlansModelById(long caseUrn, long financialPlanId)
 		{
 			try
 			{
-				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
 				var permissions = await _casePermissionsService.GetCasePermissions(caseUrn);
 
 				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
-				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto, permissions);
+				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, permissions);
 
 				return financialPlanModel;
 			}
@@ -72,9 +61,8 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			{
 				// Fetch Financial Plan & statuses
 				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(patchFinancialPlanModel.CaseUrn, patchFinancialPlanModel.Id);
-				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
 
-				financialPlanDto = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(patchFinancialPlanModel, financialPlanDto, statusesDto);
+				financialPlanDto = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(patchFinancialPlanModel, financialPlanDto);
 
 				await _financialPlanService.PatchFinancialPlanById(financialPlanDto);
 			}

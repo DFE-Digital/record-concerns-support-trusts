@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

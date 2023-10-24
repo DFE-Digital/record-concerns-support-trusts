@@ -1,24 +1,19 @@
-﻿using ConcernsCaseWork.Constants;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
-using ConcernsCaseWork.Redis.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
@@ -242,7 +237,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				null, 
 				null, 
 				String.Empty, 
-				new FinancialPlanStatusModel(statusName, 1, false), 
+				FinancialPlanStatus.AwaitingPlan,
 				null,
 				DateTime.Now);
 	}

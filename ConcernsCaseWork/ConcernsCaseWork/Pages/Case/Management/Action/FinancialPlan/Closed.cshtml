@@ -73,18 +73,7 @@
                     <th scope="row" class="govuk-table-case-details__header">Status when closed</th>
                     <td class="govuk-table__cell" data-testid="status-text">
                         @{
-
-                            if (Model.FinancialPlanModel.Status != null)
-                            {
-                                var statusName = Model.FinancialPlanModel.Status.Name;
-                                var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
-
-                                <span>@EnumHelper.GetEnumDescription(statusEnum)</span>
-                            }
-                            else
-                            {
-                                RenderEmptyLabel();
-                            }
+                            RenderValue(Model.FinancialPlanModel.Status?.Description());
                         }
                     </td>
                 </tr>

@@ -1,24 +1,17 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
-using ConcernsCaseWork.Redis.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
@@ -48,11 +41,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
@@ -78,7 +69,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 		// arrange
 		var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
@@ -114,7 +104,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var caseUrn = 1;
@@ -153,14 +142,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var caseUrn = 1;
 			var financialPlanId = 2;
-
-			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
-				.ReturnsAsync(GetListValidStatuses());
 
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId));
@@ -198,11 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				PageContext = pageContext, TempData = tempData, Url = new UrlHelper(actionContext), MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
-		
-		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListClosureFinancialPlanStatusDto().ToList();
-		
-		private static IEnumerable<string> GetListValidStatusNames() => GetListValidStatuses().Select(dto => dto.Name);
-		
+						
 		private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")
 			=> new FinancialPlanModel(planId, 
 				caseUrn, 
@@ -210,7 +191,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				null, 
 				null, 
 				String.Empty, 
-				new FinancialPlanStatusModel(statusName, 1, false), 
+				FinancialPlanStatus.AwaitingPlan,
 				null,
 				DateTime.Now);
 	} 

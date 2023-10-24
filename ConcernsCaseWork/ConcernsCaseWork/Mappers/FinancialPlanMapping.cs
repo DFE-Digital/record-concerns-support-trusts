@@ -6,6 +6,8 @@ using ConcernsCaseWork.Service.FinancialPlan;
 using System.Collections.Generic;
 using System.Linq;
 using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.Extensions;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -13,12 +15,8 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public static FinancialPlanModel MapDtoToModel(
 			FinancialPlanDto financialPlanDto, 
-			IList<FinancialPlanStatusDto> statuses,
 			GetCasePermissionsResponse casePermission)
 		{
-			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(financialPlanDto.StatusId) == 0);
-			var selectedStatusId = selectedStatus?.Id;
-
 			var financialPlanModel = new FinancialPlanModel(
 				financialPlanDto.Id,
 				financialPlanDto.CaseUrn,
@@ -26,7 +24,7 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.DatePlanRequested,
 				financialPlanDto.DateViablePlanReceived,
 				financialPlanDto.Notes,
-				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId),
+				StatusIdToFinancialPlanStatus(financialPlanDto),
 				financialPlanDto.ClosedAt,
 				financialPlanDto.UpdatedAt
 				);
@@ -36,7 +34,7 @@ namespace ConcernsCaseWork.Mappers
 			return financialPlanModel;
 		}
 
-		public static IList<FinancialPlanModel> MapDtoToModel(IList<FinancialPlanDto> financialPlanDtos, IList<FinancialPlanStatusDto> statuses)
+		public static IList<FinancialPlanModel> MapDtoToModel(IList<FinancialPlanDto> financialPlanDtos)
 		{
 			var financialPlanModels = new List<FinancialPlanModel>();
 
@@ -54,7 +52,7 @@ namespace ConcernsCaseWork.Mappers
 					financialPlanDto.DatePlanRequested,
 					financialPlanDto.DateViablePlanReceived,
 					financialPlanDto.Notes,
-					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId),
+					StatusIdToFinancialPlanStatus(financialPlanDto),
 					financialPlanDto.ClosedAt, 
 					financialPlanDto.UpdatedAt);
 
@@ -66,18 +64,15 @@ namespace ConcernsCaseWork.Mappers
 		}
 	
 		public static FinancialPlanDto MapPatchFinancialPlanModelToDto(PatchFinancialPlanModel patchFinancialPlanModel,
-			FinancialPlanDto financialPlanDto, IEnumerable<FinancialPlanStatusDto> statuses)
+			FinancialPlanDto financialPlanDto)
 		{
-			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(patchFinancialPlanModel.StatusId) == 0);
-			var selectedStatusId = selectedStatus?.Id;
-
 			var updatedFinancialPlanDto = new FinancialPlanDto(
 				financialPlanDto.Id,
 				financialPlanDto.CaseUrn,
 				financialPlanDto.CreatedAt,
 				patchFinancialPlanModel?.ClosedAt,
 				financialPlanDto.CreatedBy,
-				selectedStatusId ?? financialPlanDto.StatusId,
+				patchFinancialPlanModel.StatusId ?? financialPlanDto.StatusId,
 				patchFinancialPlanModel?.DatePlanRequested,
 				patchFinancialPlanModel?.DateViablePlanReceived,
 				patchFinancialPlanModel?.Notes, 
@@ -99,8 +94,7 @@ namespace ConcernsCaseWork.Mappers
 
 			if (model.Status != null)
 			{
-				var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), model.Status.Name);
-				status = EnumHelper.GetEnumDescription(financialStatusEnum);
+				status = model.Status.Description();
 			}
 
 			var result = new ActionSummaryModel()
@@ -115,6 +109,11 @@ namespace ConcernsCaseWork.Mappers
 			};
 
 			return result;
+		}
+
+		private static FinancialPlanStatus? StatusIdToFinancialPlanStatus(FinancialPlanDto financialPlanDto)
+		{
+			return financialPlanDto.StatusId != null ? (FinancialPlanStatus)financialPlanDto.StatusId : null;
 		}
 	}
 }
