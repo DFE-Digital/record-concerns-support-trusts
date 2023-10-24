@@ -1,5 +1,8 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,13 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Logging;
-using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {

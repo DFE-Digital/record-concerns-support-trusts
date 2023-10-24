@@ -65,6 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
 			routeData.Add("ntiucid", ntiUcId);
+			pageModel.NtiId = ntiUcId;
 
 			// act
 			var response = await pageModel.OnGetAsync();

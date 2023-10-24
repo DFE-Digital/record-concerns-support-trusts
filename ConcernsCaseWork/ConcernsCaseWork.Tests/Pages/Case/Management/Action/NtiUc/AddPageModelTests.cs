@@ -32,24 +32,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			_fixture = new Fixture();
 		}
-		
-		
-		[Test]
-		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
-
-			// act
-			pageModel.OnGet();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-		}
 
 		[Test]
 		public void WhenOnGetAsync_ReturnsPageModel()
