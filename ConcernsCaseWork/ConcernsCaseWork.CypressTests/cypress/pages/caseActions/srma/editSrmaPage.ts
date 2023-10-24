@@ -361,6 +361,24 @@ export class EditSrmaPage {
         return this;
     }
 
+    public verifyTextHint()
+    {
+        Logger.Log("Verify Text Hint ");
+        
+        cy.get('#submission-required-hint').should("exist");
+
+
+        return this;
+    }
+    public verifyTextHintNotDisplayed()
+    {
+        Logger.Log("Verify Text Hint is not displayed");
+        
+        cy.get('#submission-required-hint').should("not.exist");
+
+
+        return this;
+    }
     private getStatus(status: string) {
         return cy.getByTestId(status);
     }
