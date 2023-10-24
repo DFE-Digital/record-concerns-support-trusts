@@ -76,9 +76,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 		[Test]
 		public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
 		{
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
 			var dto = _fixture.Create<FinancialPlanDto>();
-			dto.StatusId = statuses.First().Id;
+			dto.StatusId = (int)FinancialPlanStatus.AwaitingPlan;
 
 			var casePermission = new GetCasePermissionsResponse();
 
@@ -147,8 +146,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapNullDtoListToDbModelList_ReturnsEmptyModelList()
 		{
 			//arrange
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
-
 			List<FinancialPlanDto> dtos = null;
 
 			// act
@@ -163,8 +160,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapEmptyDtoListToDbModelList_ReturnsEmptyModelList()
 		{
 			//arrange
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
-
 			var dtos = new List<FinancialPlanDto>();
 
 			// act
@@ -179,8 +174,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapPatchFinancialPlanModelToDto_ReturnsCorrectModel()
 		{
 			//arrange
-			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
-
 			var testData = new
 			{
 				Id = _fixture.Create<long>(),
@@ -191,7 +184,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedBy = _fixture.Create<string>(),
 				Notes = _fixture.Create<string>(),
 				DatePlanRequested = _fixture.Create<DateTime>(),
-				Status = statuses.First(),
+				Status = FinancialPlanStatus.AwaitingPlan,
 				DatePlanReceived = _fixture.Create<DateTime>(),
 				ClosedStatus = new KeyValuePair<int, string>(_fixture.Create<int>(), _fixture.Create<string>()),
 			};
@@ -215,7 +208,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Id = testData.Id,
 				CaseUrn = testData.CaseUrn,
 				ClosedAt = testData.ClosedAt,
-				StatusId = testData.Status.Id,
+				StatusId = (long)testData.Status,
 				DatePlanRequested = testData.DatePlanRequested,
 				DateViablePlanReceived = testData.DatePlanReceived,
 				Notes = testData.Notes
@@ -230,11 +223,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			{
 				Assert.That(result.CaseUrn, Is.EqualTo(testData.CaseUrn));
 				Assert.That(result.Id, Is.EqualTo(testData.Id));
-				Assert.That(result.StatusId, Is.EqualTo(testData.Status.Id));
+				Assert.That(result.StatusId, Is.EqualTo((long)testData.Status));
 				Assert.That(result.Notes, Is.EqualTo(testData.Notes));
 				Assert.That(result.DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(result.DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
-				//Assert.That(result.UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
 				Assert.That(result.ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(result.CreatedAt, Is.EqualTo(testData.CreatedAt));
 				Assert.That(result.CreatedBy, Is.EqualTo(testData.CreatedBy));

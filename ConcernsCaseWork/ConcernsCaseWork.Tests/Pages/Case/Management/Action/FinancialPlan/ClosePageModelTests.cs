@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
-using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +12,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
@@ -47,7 +44,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
-			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
@@ -187,11 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				PageContext = pageContext, TempData = tempData, Url = new UrlHelper(actionContext), MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
-		
-		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListClosureFinancialPlanStatusDto().ToList();
-		
-		private static IEnumerable<string> GetListValidStatusNames() => GetListValidStatuses().Select(dto => dto.Name);
-		
+						
 		private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")
 			=> new FinancialPlanModel(planId, 
 				caseUrn, 

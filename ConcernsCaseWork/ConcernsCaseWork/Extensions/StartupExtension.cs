@@ -191,7 +191,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
-			services.AddScoped<IFinancialPlanStatusService, FinancialPlanStatusService>();
 			services.AddScoped<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
 			services.AddScoped<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
 			services.AddScoped<INtiUnderConsiderationService, NtiUnderConsiderationService>();

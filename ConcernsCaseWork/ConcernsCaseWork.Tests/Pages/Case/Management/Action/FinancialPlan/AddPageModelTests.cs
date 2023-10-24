@@ -73,7 +73,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
 			var caseUrn = 1;
 			var dateRequested = new DateTime(2022, 03, 03);
 
@@ -114,8 +113,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			return result;
 		}
-		
-		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto().ToList();
 	}
 
 }
