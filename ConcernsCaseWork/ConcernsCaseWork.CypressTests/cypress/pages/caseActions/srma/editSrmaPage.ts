@@ -391,6 +391,6 @@ export class EditSrmaPage {
 
     private getReasonHintText(): Cypress.Chainable<Element>
     {
-        return cy.getById('submission-required-hint');
+        return cy.getByTestId('reason-hint-text');
     }
 }

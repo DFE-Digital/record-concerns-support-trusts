@@ -28,15 +28,6 @@ export class ViewSrmaPage {
         return this;
     }
 
-    public hasReasonHintText()
-    {
-        Logger.Log("Verify Text Hint ");
-        
-        cy.get('#submission-required-hint').should("exist");
-
-
-        return this;
-    }
     public addDateTrustContacted(): this
     {
         Logger.Log("Adding date trust was contacted");
