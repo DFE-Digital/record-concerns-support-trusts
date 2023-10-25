@@ -137,7 +137,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		{
 			string urkprn = "123465789";
 			var result = await _client.GetAsync($"/v2/citytechnologycolleges/ukprn/{urkprn}");
-			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+			result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 		}
 
 	}

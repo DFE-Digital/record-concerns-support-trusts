@@ -3,6 +3,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace ConcernsCaseWork.Service.Trusts
@@ -43,7 +44,6 @@ namespace ConcernsCaseWork.Service.Trusts
 			// Read response content
 			var result = await response.Content.ReadFromJsonAsync<List<CityTechnologyCollege>>();
 
-
 			List<TrustSearchDto> trustObjectList = result.Select(f => new TrustSearchDto(f.UKPRN, string.Empty, f.Name, f.CompaniesHouseNumber, _defaultGroupTypeName, new GroupContactAddressDto(f.AddressLine1, f.AddressLine2, String.Empty, f.Town, f.County, f.Postcode))).ToList();
 
 			return new TrustSearchResponseDto { NumberOfMatches = trustObjectList.Count, Trusts = trustObjectList };
@@ -62,6 +62,11 @@ namespace ConcernsCaseWork.Service.Trusts
 
 			// Check status code
 			response.EnsureSuccessStatusCode();
+
+			if (response.StatusCode == HttpStatusCode.NoContent)
+			{
+				return null;
+			}
 
 			// Read response content
 			var result = await response.Content.ReadFromJsonAsync<CityTechnologyCollege>();
