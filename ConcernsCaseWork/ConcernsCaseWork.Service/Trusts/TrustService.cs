@@ -111,11 +111,10 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			TrustDetailsDto cityTechnologyCollege = null;
 
-			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled); ;
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled);
 			if (ShouldCTCBeIncludedInTrustSearch)
 			{
 				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
-
 
 				try
 				{
@@ -127,17 +126,6 @@ namespace ConcernsCaseWork.Service.Trusts
 				}
 				catch (Exception ex)
 				{
-					if (ex is HttpRequestException)
-					{
-						// We can't determine if a 404 is an issue, because we don't know if the uk prn is a technical college
-						// Otherwise we get a large amount of errors raised in the logs
-						var httpRequestException = ex as HttpRequestException;
-						if (httpRequestException.StatusCode == HttpStatusCode.NotFound)
-						{
-							return null;
-						}
-					}
-
 					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Containing search from Trust List");
 					_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				}
