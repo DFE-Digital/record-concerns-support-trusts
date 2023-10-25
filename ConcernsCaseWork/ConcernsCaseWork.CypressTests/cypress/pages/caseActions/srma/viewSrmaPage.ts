@@ -28,7 +28,7 @@ export class ViewSrmaPage {
         return this;
     }
 
-    public verifyTextHint()
+    public hasReasonHintText()
     {
         Logger.Log("Verify Text Hint ");
         

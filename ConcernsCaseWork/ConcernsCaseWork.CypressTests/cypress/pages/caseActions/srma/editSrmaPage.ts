@@ -361,7 +361,7 @@ export class EditSrmaPage {
         return this;
     }
 
-    public verifyTextHint()
+    public hasReasonHintText()
     {
         Logger.Log("Verify Text Hint ");
         
@@ -370,7 +370,7 @@ export class EditSrmaPage {
 
         return this;
     }
-    public verifyTextHintNotDisplayed()
+    public hasNoReasonHintText()
     {
         Logger.Log("Verify Text Hint is not displayed");
         

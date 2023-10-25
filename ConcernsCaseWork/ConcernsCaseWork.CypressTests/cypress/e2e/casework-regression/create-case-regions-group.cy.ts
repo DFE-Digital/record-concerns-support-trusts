@@ -22,6 +22,8 @@ import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import { CaseBuilder } from "cypress/api/caseBuilder";
+import { CreateCaseRequest } from "cypress/api/apiDomain";
 
 
 describe("Creating a case", () => {
@@ -170,85 +172,18 @@ describe("Creating a case", () => {
 	});
 
 
-	it("Should show hint text", () => {
+	it("Should create an SRMA for a regions group case", () => {
 		Logger.Log("Create a case");
-		createCasePage
-			.createCase()
-			.withTrustName("Ashton West End Primary Academy")
-			.selectOption()
-			.confirmOption();
 
-		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
+		const caseRequest: CreateCaseRequest = CaseBuilder.buildOpenCase();
+		caseRequest.division = 2;
 
-		Logger.Log("Create a valid case division");
-		selectCaseDivisionPage
-			.withCaseDivision("RegionsGroup")
-			.continue();
-
-		createCaseSummary
-			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("Regions Group", "");
-
-		Logger.Log("Check validation error if region is not selected");
-		addRegionPage.nextStep();
-		validationComponent.hasValidationError("Select region");
-
-		cy.excuteAccessibilityTests();
-
-		Logger.Log("Select valid region");
-		addRegionPage
-			.withRegion("London")
-			.nextStep();
-
-		createCaseSummary
-			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("Regions Group", "London");
-
-		Logger.Log("Create a valid concern");
-		createConcernPage
-			.withConcernType("Governance")
-			.withConcernRating("Amber-Green")
-			.withMeansOfReferral(SourceOfConcernExternal)
-			.addConcern();
-
-		Logger.Log("Check Concern details are correctly populated");
-		createCaseSummary
-			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("Regions Group", "London")
-			.hasConcernRiskRating("Amber Green")
-			.hasConcernType("Governance");
-
-		createConcernPage.nextStep();
-
-		createCaseSummary
-			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("Regions Group", "London")
-			.hasConcernRiskRating("Amber Green")
-			.hasConcernType("Governance");
-
-		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red").nextStep();
-
-		Logger.Log(
-			"Check Trust, concern and risk to trust details are correctly populated"
-		);
-		createCaseSummary
-			.hasTrustSummaryDetails("Ashton West End Primary Academy")
-			.hasManagedBy("Regions Group", "London")
-			.hasConcernType("Governance")
-			.hasConcernRiskRating("Amber Green")
-			.hasRiskToTrust("Red");
-
-		Logger.Log("Add concern details with valid text limit");
-		addConcernDetailsPage.withIssue("This is an issue").createCase();
-
+		cy.basicCreateCase(caseRequest);
 
 		Logger.Log("Adding Notice To Improve");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("Srma");
 		AddToCasePage.getAddToCaseBtn().click();
-
-
 
 		Logger.Log("Filling out the SRMA form");
 		editSrmaPage
@@ -270,9 +205,10 @@ describe("Creating a case", () => {
 		cy.excuteAccessibilityTests();
 
 		Logger.Log("Configure reason");
-
 		viewSrmaPage.addReason();
-		editSrmaPage.verifyTextHint();
+
+		Logger.Log("Verify hint text");
+		editSrmaPage.hasReasonHintText();
 
 	});
 

@@ -564,7 +564,8 @@ describe("Testing the SRMA case action", () => {
 	function completeSrmaConfiguration() {
 		Logger.Log("Configure reason");
 		viewSrmaPage.addReason();
-
+		Logger.Log("Verify hint text");
+		editSrmaPage.hasNoReasonHintText();
 		editSrmaPage.withReason("Regions Group Intervention").save();
 
 		Logger.Log("Configure date accepted");
@@ -597,30 +598,5 @@ describe("Testing the SRMA case action", () => {
 			.save();
 	}
 
-	it("Should NOT show hint text", () => {
-		Logger.Log("Filling out the SRMA form");
-		editSrmaPage
-			.withStatus("TrustConsidering")
-			.withDayTrustContacted("22")
-			.withMonthTrustContacted("10")
-			.withYearTrustContacted("2022")
-			.withNotes("This is my notes")
-			.save();
-
-		Logger.Log("Add optional SRMA fields on the view page");
-		actionSummaryTable.getOpenAction("SRMA").then((row) => {
-			row.hasName("SRMA");
-			row.hasStatus("Trust considering");
-			row.hasCreatedDate(toDisplayDate(now));
-			row.select();
-		});
-
-		Logger.Log("Checking accessibility on View SRMA");
-		cy.excuteAccessibilityTests();
-
-		Logger.Log("Configure reason");
-
-		viewSrmaPage.addReason();
-		editSrmaPage.verifyTextHintNotDisplayed();
-	})
+	
 });
