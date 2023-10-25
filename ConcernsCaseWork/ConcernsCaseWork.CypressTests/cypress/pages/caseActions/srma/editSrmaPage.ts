@@ -361,24 +361,24 @@ export class EditSrmaPage {
         return this;
     }
 
-    public hasReasonHintText()
+    public hasReasonHintText(): this
     {
         Logger.Log("Verify Text Hint ");
         
-        cy.get('#submission-required-hint').should("exist");
-
+        this.getReasonHintText().should("exist");
 
         return this;
     }
-    public hasNoReasonHintText()
+
+    public hasNoReasonHintText(): this
     {
         Logger.Log("Verify Text Hint is not displayed");
         
-        cy.get('#submission-required-hint').should("not.exist");
-
+        this.getReasonHintText().should("not.exist");
 
         return this;
     }
+
     private getStatus(status: string) {
         return cy.getByTestId(status);
     }
@@ -387,5 +387,10 @@ export class EditSrmaPage {
         const id = reason.split(" ").join("");
 
         return cy.getByTestId(id)
+    }
+
+    private getReasonHintText(): Cypress.Chainable<Element>
+    {
+        return cy.getById('submission-required-hint');
     }
 }

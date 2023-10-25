@@ -22,6 +22,8 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { ViewDecisionPage } from "cypress/pages/caseActions/decision/viewDecisionPage";
 import { DecisionOutcomePage } from "cypress/pages/caseActions/decision/decisionOutcomePage";
 import addToCasePage from "cypress/pages/caseActions/addToCasePage";
+import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
+import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -32,6 +34,8 @@ describe("Creating a case", () => {
     const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
+    const editSrmaPage = new EditSrmaPage();
+    const viewSrmaPage = new ViewSrmaPage();
 
     describe("Case journey", () =>
     {
@@ -280,6 +284,36 @@ describe("Creating a case", () => {
                 .hasBusinessArea("SFSO")
                 .hasBusinessArea("Regions Group")
                 .hasAuthoriser("Deputy Director");
+        });
+
+        it("Should create an SRMA", () => {
+        
+            caseManagementPage.addCaseAction("Srma");
+    
+            Logger.Log("Filling out the SRMA form");
+            editSrmaPage
+                .withStatus("TrustConsidering")
+                .withDayTrustContacted("22")
+                .withMonthTrustContacted("10")
+                .withYearTrustContacted("2022")
+                .withNotes("This is my notes")
+                .save();
+    
+            Logger.Log("Add optional SRMA fields on the view page");
+            actionSummaryTable.getOpenAction("SRMA").then((row) => {
+                row.hasName("SRMA");
+                row.hasStatus("Trust considering");
+                row.select();
+            });
+    
+            Logger.Log("Checking accessibility on View SRMA");
+            cy.excuteAccessibilityTests();
+    
+            Logger.Log("Configure reason");
+            viewSrmaPage.addReason();
+    
+            Logger.Log("Verify hint text");
+            editSrmaPage.hasReasonHintText();
         });
     });
 });
