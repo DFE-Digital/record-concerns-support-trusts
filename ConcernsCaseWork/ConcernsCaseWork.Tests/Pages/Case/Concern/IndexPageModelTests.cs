@@ -42,7 +42,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			var expectedAddress = TrustFactory.BuildTrustAddressModel();
 			var expectedRatingsModel = RatingFactory.BuildListRatingModel();
-			var expectedMeansOfReferralModels = MeansOfReferralFactory.BuildListMeansOfReferralModels();
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing") { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustAddressByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedAddress);

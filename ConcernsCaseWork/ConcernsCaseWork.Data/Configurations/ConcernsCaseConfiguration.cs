@@ -27,6 +27,8 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 		builder.Property(e => e.TrustUkprn).HasMaxLength(12);
 		
 		builder.HasIndex(x => new {x.TrustUkprn, x.CreatedAt, x.CreatedBy}).IsUnique();
+		builder.HasIndex(e => e.TrustUkprn);
+		builder.HasIndex(e => e.CreatedBy);
 
 		builder.Property(x => x.TrustCompaniesHouseNumber)
 			.HasMaxLength(8);

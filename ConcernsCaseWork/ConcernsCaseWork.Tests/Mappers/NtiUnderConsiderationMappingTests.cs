@@ -1,16 +1,15 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using FluentAssertions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.Service.Nti;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -30,13 +29,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = DateTime.Now.AddDays(-5),
 				ClosedAt = null,
 				ClosedStatusId = 1,
-				ClosedStatusName = "SomeStatusName",
 				Notes = "Test notes",
-				Reasons = new NtiUnderConsiderationReasonDto[]
-				{
-					new NtiUnderConsiderationReasonDto { Id = 11, Name = "Test reason 1"  },
-					new NtiUnderConsiderationReasonDto { Id = 21, Name = "Test reason 2"  }
-				},
 				UnderConsiderationReasonsMapping = new int[] { 11, 21 },
 				UpdatedAt = DateTime.Now.AddDays(-5)
 			};
@@ -50,15 +43,15 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel, Is.Not.Null);
 			Assert.That(serviceModel.CaseUrn, Is.EqualTo(ntiDto.CaseUrn));
 			Assert.That(serviceModel.Id, Is.EqualTo(ntiDto.Id));
-			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo(ntiDto.ClosedStatusId));
-			Assert.That(serviceModel.ClosedStatusName, Is.EqualTo(ntiDto.ClosedStatusName));
+			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo((NtiUnderConsiderationClosedStatus)ntiDto.ClosedStatusId));
+			Assert.That(serviceModel.ClosedStatusName, Is.Null);
 			Assert.That(serviceModel.CreatedAt, Is.EqualTo(ntiDto.CreatedAt));
 			Assert.That(serviceModel.Notes, Is.EqualTo(ntiDto.Notes));
 			Assert.That(serviceModel.NtiReasonsForConsidering, Is.Not.Null);
 			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(ntiDto.UpdatedAt));
-			Assert.That(serviceModel.NtiReasonsForConsidering.Count, Is.EqualTo(ntiDto.Reasons.Count));
-			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id, Is.EqualTo(ntiDto.Reasons.ElementAt(0).Id));
-			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id, Is.EqualTo(ntiDto.Reasons.ElementAt(1).Id));
+			Assert.That(serviceModel.NtiReasonsForConsidering.Count, Is.EqualTo(ntiDto.UnderConsiderationReasonsMapping.Count));
+			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(0), Is.EqualTo((NtiUnderConsiderationReason)ntiDto.UnderConsiderationReasonsMapping.ElementAt(0)));
+			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(1), Is.EqualTo((NtiUnderConsiderationReason)ntiDto.UnderConsiderationReasonsMapping.ElementAt(1)));
 			serviceModel.IsEditable.Should().BeTrue();
 		}
 
@@ -67,16 +60,15 @@ namespace ConcernsCaseWork.Tests.Mappers
 			DateTime closedDate,
 			GetCasePermissionsResponse casePermissionsResponse)
 		{
-			var ntiDto = _fixture.Create<NtiDto>();
-			ntiDto.StatusId = null;
-			ntiDto.ClosedStatusId = null;
+			var ntiDto = _fixture.Create<NtiUnderConsiderationDto>();
+			ntiDto.ClosedStatusId = (int)NtiUnderConsiderationClosedStatus.NoFurtherAction;
 			ntiDto.ClosedAt = closedDate;
-			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
 
-			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
+			var serviceModel = NtiUnderConsiderationMappers.ToServiceModel(ntiDto, casePermissionsResponse);
 
 			serviceModel.IsEditable.Should().BeFalse();
 			serviceModel.ClosedAt.Should().Be(closedDate);
+			serviceModel.ClosedStatusName = "No further action being taken";
 		}
 
 		[Test]
@@ -89,12 +81,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CaseUrn = 123L,
 				CreatedAt = DateTime.Now.AddDays(-5),
 				ClosedAt = DateTime.Now,
-				ClosedStatusId = 3,
+				ClosedStatusId = NtiUnderConsiderationClosedStatus.NoFurtherAction,
 				ClosedStatusName = "SomeStatusName",
 				Notes = "Test notes",
-				NtiReasonsForConsidering = new NtiReasonForConsideringModel[] {
-					new NtiReasonForConsideringModel { Id = 11, Name = "Test reason 1"  },
-					new NtiReasonForConsideringModel { Id = 21, Name = "Test reason 2"  }
+				NtiReasonsForConsidering = new NtiUnderConsiderationReason[] {
+					NtiUnderConsiderationReason.CashFlowProblems,
+					NtiUnderConsiderationReason.CumulativeDeficitActual
 				}
 			};
 
@@ -107,34 +99,31 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.Id, Is.EqualTo(serviceModel.Id));
 			Assert.That(dbModel.CreatedAt, Is.EqualTo(serviceModel.CreatedAt));
 			Assert.That(dbModel.ClosedAt, Is.EqualTo(serviceModel.ClosedAt));
-			Assert.That(dbModel.ClosedStatusId, Is.EqualTo(serviceModel.ClosedStatusId));
-			Assert.That(dbModel.ClosedStatusName, Is.EqualTo(serviceModel.ClosedStatusName));
+			Assert.That(dbModel.ClosedStatusId, Is.EqualTo((int)serviceModel.ClosedStatusId));
 			Assert.That(dbModel.Notes, Is.EqualTo(serviceModel.Notes));
 
 			Assert.That(dbModel.UnderConsiderationReasonsMapping, Is.Not.Null);
 			Assert.That(dbModel.UnderConsiderationReasonsMapping.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
-			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(0), Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id));
-			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(1), Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id));
+			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(0), Is.EqualTo((int)serviceModel.NtiReasonsForConsidering.ElementAt(0)));
+			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(1), Is.EqualTo((int)serviceModel.NtiReasonsForConsidering.ElementAt(1)));
 
-			Assert.That(dbModel.Reasons, Is.Not.Null);
-			Assert.That(dbModel.Reasons.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
-			Assert.That(dbModel.Reasons.ElementAt(0).Id, Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id));
-			Assert.That(dbModel.Reasons.ElementAt(1).Id, Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id));
+			Assert.That(dbModel.UnderConsiderationReasonsMapping, Is.Not.Null);
+			Assert.That(dbModel.UnderConsiderationReasonsMapping.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
+			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(0), Is.EqualTo((int)serviceModel.NtiReasonsForConsidering.ElementAt(0)));
+			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(1), Is.EqualTo((int)serviceModel.NtiReasonsForConsidering.ElementAt(1)));
 		}
 
 		[Test]
 		public void WhenMapDbModelToActionSummary_ReturnsCorrectModel()
 		{
 			//arrange
-			var statuses = _fixture.Create<List<NtiUnderConsiderationStatusDto>>();
-
 			var testData = new
 			{
 				Id = _fixture.Create<int>(),
 				CaseUrn = _fixture.Create<int>(),
 				CreatedAt = _fixture.Create<DateTime>(),
 				ClosedAt = _fixture.Create<DateTime>(),
-				ClosedStatus = statuses.First()
+				ClosedStatus = NtiUnderConsiderationClosedStatus.ToBeEscalated
 			};
 
 			var serviceModel = new NtiUnderConsiderationModel
@@ -143,12 +132,11 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CaseUrn = testData.CaseUrn,
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
-				ClosedStatusId = testData.ClosedStatus.Id,
-				ClosedStatusName = testData.ClosedStatus.Name
+				ClosedStatusId = testData.ClosedStatus,
 			};
 
 			// act
-			var actionSummary = serviceModel.ToActionSummary(statuses);
+			var actionSummary = serviceModel.ToActionSummary();
 
 			// assert
 			Assert.Multiple(() =>
@@ -157,7 +145,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
 				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiunderconsideration/{testData.Id}"));
-				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Name));
+				Assert.That(actionSummary.StatusName, Is.EqualTo("To be escalated"));
 			});
 
 			actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
@@ -167,26 +155,23 @@ namespace ConcernsCaseWork.Tests.Mappers
 		[TestCaseSource(nameof(GetStatusTestCases))]
 		public void WhenMapDbModelToActionSummary_ReturnsCorrectActionStatus(
 			DateTime? closedAt,
-			List<NtiUnderConsiderationStatusDto> statuses,
+			NtiUnderConsiderationClosedStatus? closedStatus,
 			string expectedResult)
 		{
 			var model = _fixture.Create<NtiUnderConsiderationModel>();
-			model.ClosedStatusId = 1;
+			model.ClosedStatusId = closedStatus;
 			model.ClosedAt = closedAt;
 
-			var actualResult = model.ToActionSummary(statuses);
+			var actualResult = model.ToActionSummary();
 
 			actualResult.StatusName.Should().Be(expectedResult);
 		}
 
 		private static IEnumerable<TestCaseData> GetStatusTestCases()
 		{
-			yield return new TestCaseData(new DateTime(), new List<NtiUnderConsiderationStatusDto>(), "");
-			yield return new TestCaseData(new DateTime(), new List<NtiUnderConsiderationStatusDto>()
-			{
-				new NtiUnderConsiderationStatusDto() { Id = 1, Name="Test" },
-			}, "Test");
-			yield return new TestCaseData(null, new List<NtiUnderConsiderationStatusDto>(), "In progress");
+			yield return new TestCaseData(new DateTime(), null, null);
+			yield return new TestCaseData(new DateTime(), NtiUnderConsiderationClosedStatus.NoFurtherAction, "No further action being taken");
+			yield return new TestCaseData(null, null, "In progress");
 		}
 
 		private static IEnumerable<TestCaseData> GetPermissionTestCases()

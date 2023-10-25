@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -109,7 +110,7 @@ public class ClosedPageTests
 			null,
 			null,
 			String.Empty,
-			new FinancialPlanStatusModel(statusName, 1, false),
+			FinancialPlanStatus.AwaitingPlan,
 			null,
 			DateTime.Now);
 

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
-				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), true),
+				FinancialPlanStatus.Abandoned,
 				closedAt,
 				Fixture.Create<DateTime>()
 			);
@@ -36,7 +37,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
-				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), false),
+				FinancialPlanStatus.AwaitingPlan,
 				null,
 				Fixture.Create<DateTime>()
 			);

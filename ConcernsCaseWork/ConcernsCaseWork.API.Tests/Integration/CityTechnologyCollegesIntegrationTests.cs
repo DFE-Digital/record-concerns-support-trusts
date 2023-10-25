@@ -133,11 +133,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 
 		[Fact]
-		public async Task When_Get_IndividualItem_WhenNoneExist_Return_OK()
+		public async Task When_Get_IndividualItem_WhenNoneExist_Return_NoContent()
 		{
 			string urkprn = "123465789";
 			var result = await _client.GetAsync($"/v2/citytechnologycolleges/ukprn/{urkprn}");
-			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+			result.StatusCode.Should().Be(HttpStatusCode.NoContent);
 		}
 
 	}

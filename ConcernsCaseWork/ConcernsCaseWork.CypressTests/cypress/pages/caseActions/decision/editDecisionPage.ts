@@ -49,6 +49,15 @@ export class EditDecisionPage
 		return this;
 	}
 
+	public hasNoRetrospectiveRequestField(): this
+	{
+		Logger.Log("Has no retrospective approval field");
+
+		cy.getById("container-retrospective-approval").should("not.exist");
+		
+		return this;
+	}
+
 	public withSubmissionRequired(isSubmissionRequired: string): this {
 		Logger.Log(`With Submission Required ${isSubmissionRequired}`);
 
@@ -77,6 +86,15 @@ export class EditDecisionPage
 		Logger.Log(`Has Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").should("have.value", submissionLink);
+
+		return this;
+	}
+
+	public hasNoDateESFAField(): this
+	{
+		Logger.Log("Has no date ESFA field");
+
+		cy.getById("container-request-received").should("not.exist");
 
 		return this;
 	}
@@ -150,6 +168,21 @@ export class EditDecisionPage
 		return this;
 	}
 
+	public hasTypeOfDecisionOptions(types: Array<string>)
+	{
+		Logger.Log(`Has type of decision options ${types.join()}`);
+
+		cy
+			.getByTestId('container-decision-types')
+			.find('.govuk-checkboxes__label')
+			.should("have.length", types.length)
+			.each(($elem, index) => {
+				expect($elem.text().trim()).to.contain(types[index]);
+			});
+
+		return this;
+	}
+
 	public withDrawdownFacilityAgreed(type: string, value: string): this {
 		Logger.Log(`With ${type} drawdown facility agreed ${value}`);
 
@@ -205,6 +238,14 @@ export class EditDecisionPage
 		Logger.Log(`Has total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+
+		return this;
+	}
+
+	public hasNoTotalAmountRequestedField(): this
+	{
+		Logger.Log("Has no total amount requested field");
+		cy.getByTestId("container-total-amount-requested").should("not.exist");
 
 		return this;
 	}

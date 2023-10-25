@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var ntiUnderConsideration = BuildNTIUnderConsiderationModel();
 			
 			ntiUnderConsideration.ClosedAt = Fixture.Create<DateTime>();
-			ntiUnderConsideration.ClosedStatusId = Fixture.Create<int>();
+			ntiUnderConsideration.ClosedStatusId = Fixture.Create<NtiUnderConsiderationClosedStatus>();
 			ntiUnderConsideration.ClosedStatusName = Fixture.Create<string>();
 
 			return ntiUnderConsideration;

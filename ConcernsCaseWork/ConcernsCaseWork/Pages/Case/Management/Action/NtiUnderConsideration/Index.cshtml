@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action/ntiunderconsideration/{ntiUnderConsiderationId:long}/{handler?}"
+@using ConcernsCaseWork.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using ConcernsCaseWork.Helpers;
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
@@ -99,7 +100,7 @@
                                 foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
                                 {
                                     <div class="govuk-!-padding-bottom-2">
-                                        <span>@reason.Name</span>
+                                        <span>@reason.Description()</span>
                                     </div>
                                 }
 

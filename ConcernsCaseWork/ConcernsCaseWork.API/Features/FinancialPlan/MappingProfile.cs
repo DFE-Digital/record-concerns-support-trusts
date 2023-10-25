@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		public MappingProfile()
 		{
 			CreateMap<FinancialPlanCase, FinancialPlanResponse>();
-			CreateMap<FinancialPlanStatus, FinancialPlanStatusResponse>();
+			CreateMap<Data.Models.FinancialPlanStatus, FinancialPlanStatusResponse>();
 		}
 	}
 }

@@ -15,12 +15,12 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 	{
 		private readonly IMediator _mediator;
 		private readonly IUseCase<int, List<FinancialPlanResponse>> _getFinancialPlansByCaseUseCase;
-		private readonly IUseCase<object, List<FinancialPlanStatus>> _getAllStatuses;
+		private readonly IUseCase<object, List<Data.Models.FinancialPlanStatus>> _getAllStatuses;
 
 		public FinancialPlanController(
 			IMediator mediator,
 			IUseCase<int, List<FinancialPlanResponse>> getFinancialPlansByCase,
-			IUseCase<object, List<FinancialPlanStatus>> getAllStatuses)
+			IUseCase<object, List<Data.Models.FinancialPlanStatus>> getAllStatuses)
 		{
 			_mediator = mediator;
 			_getFinancialPlansByCaseUseCase = getFinancialPlansByCase;
@@ -68,10 +68,10 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		[HttpGet]
 		[Route("all-statuses")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
+		public async Task<ActionResult<ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
 		{
 			var statuses = _getAllStatuses.Execute(null);
-			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+			var response = new ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>(statuses);
 
 			return Ok(response);
 		}
@@ -79,10 +79,10 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		[HttpGet]
 		[Route("closure-statuses")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetClosureStatuses(CancellationToken cancellationToken = default)
+		public async Task<ActionResult<ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>>> GetClosureStatuses(CancellationToken cancellationToken = default)
 		{
 			var statuses = _getAllStatuses.Execute(null).Where(s => s.IsClosedStatus).ToList();
-			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+			var response = new ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>(statuses);
 
 			return Ok(response);
 		}
@@ -90,10 +90,10 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 		[HttpGet]
 		[Route("open-statuses")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>>> GetOpenStatuses(CancellationToken cancellationToken = default)
+		public async Task<ActionResult<ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>>> GetOpenStatuses(CancellationToken cancellationToken = default)
 		{
 			var statuses = _getAllStatuses.Execute(null).Where(s => !s.IsClosedStatus).ToList();
-			var response = new ApiSingleResponseV2<List<FinancialPlanStatus>>(statuses);
+			var response = new ApiSingleResponseV2<List<Data.Models.FinancialPlanStatus>>(statuses);
 
 			return Ok(response);
 		}

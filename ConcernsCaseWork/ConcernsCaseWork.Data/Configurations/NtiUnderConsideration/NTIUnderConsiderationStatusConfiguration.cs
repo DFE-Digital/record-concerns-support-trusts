@@ -17,8 +17,21 @@ public class NTIUnderConsiderationStatusConfiguration : IEntityTypeConfiguration
 		builder.HasData(
 			new NTIUnderConsiderationStatus[]
 			{
-				new NTIUnderConsiderationStatus{ Id = 1, Name = "No further action being taken", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIUnderConsiderationStatus{ Id = 2, Name = "To be escalated", Description="Warning letter or NTI can be set up using \"Add to case\".", CreatedAt = createdAt, UpdatedAt = createdAt }
+				new NTIUnderConsiderationStatus
+				{ 
+					Id = (int)API.Contracts.NtiUnderConsideration.NtiUnderConsiderationClosedStatus.NoFurtherAction, 
+					Name = "No further action being taken", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIUnderConsiderationStatus
+				{ 
+					Id = (int)API.Contracts.NtiUnderConsideration.NtiUnderConsiderationClosedStatus.ToBeEscalated, 
+					Name = "To be escalated", 
+					Description = "Warning letter or NTI can be set up using \"Add to case\".", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				}
 			});
 	}
 }

@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			};
 		}
 
-		public static FinancialPlanStatusResponse CreateStatusResponse(FinancialPlanStatus model)
+		public static FinancialPlanStatusResponse CreateStatusResponse(Data.Models.FinancialPlanStatus model)
 		{
 			if (model == null)
 				return null;

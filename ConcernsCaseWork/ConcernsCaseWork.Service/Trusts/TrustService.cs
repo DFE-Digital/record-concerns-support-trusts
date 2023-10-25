@@ -6,6 +6,7 @@ using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
+using System.Net;
 using System.Web;
 
 namespace ConcernsCaseWork.Service.Trusts
@@ -73,8 +74,8 @@ namespace ConcernsCaseWork.Service.Trusts
 				var v3Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsV3TrustSearchEnabled);
 				var endpointVersion = v3Enabled ? EndpointV3 : EndpointsVersion;
 
-
 				TrustDetailsDto cityTechnologyCollege = await CheckForCTCByUKPRN(ukPrn);
+
 				if (cityTechnologyCollege != null)
 				{
 					return cityTechnologyCollege;
@@ -110,11 +111,10 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			TrustDetailsDto cityTechnologyCollege = null;
 
-			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled); ;
+			bool ShouldCTCBeIncludedInTrustSearch = await _featureManager.IsEnabledAsync(FeatureFlags.IsCTCInTrustSearchEnabled);
 			if (ShouldCTCBeIncludedInTrustSearch)
 			{
 				_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
-
 
 				try
 				{
@@ -126,7 +126,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				}
 				catch (Exception ex)
 				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Contining search from Trust List");
+					_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Containing search from Trust List");
 					_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				}
 			}

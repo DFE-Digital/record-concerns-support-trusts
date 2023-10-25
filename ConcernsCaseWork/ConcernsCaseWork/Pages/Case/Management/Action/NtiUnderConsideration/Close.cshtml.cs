@@ -1,9 +1,11 @@
-﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
-using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,10 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -23,7 +21,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class ClosePageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 		private static int _max;
 
@@ -42,11 +39,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService,
 			ILogger<ClosePageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiStatusesCachedService = ntiStatusesCachedService;
 			_logger = logger;
 			_max = NtiConstants.MaxNotesLength;
 		}
@@ -87,7 +82,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				}
 				var freshNti = await _ntiModelService.GetNtiUnderConsideration(NtiId);
 				freshNti.Notes =Notes.Text.StringContents;
-				freshNti.ClosedStatusId = NTIClosedStatus.SelectedId;
+				freshNti.ClosedStatusId = (NtiUnderConsiderationClosedStatus?) NTIClosedStatus.SelectedId;
 				freshNti.ClosedAt = DateTime.Now; 
 				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
 				return Redirect($"/case/{CaseUrn}/management");
@@ -125,10 +120,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			var enumValues = new List<NtiClosedStatus>()
+			var enumValues = new List<NtiUnderConsiderationClosedStatus>()
 			{
-				Enums.NtiClosedStatus.ToBeEscalated,
-				Enums.NtiClosedStatus.NoFurtherAction
+				NtiUnderConsiderationClosedStatus.ToBeEscalated,
+				NtiUnderConsiderationClosedStatus.NoFurtherAction
 			};
 
 			var radioItems = enumValues.Select(v =>
@@ -136,7 +131,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
 			}).ToArray();
 
-			return new(ElementRootId: "nti-status", Name: nameof(NtiClosedStatus), "What is the status of the NTI?")
+			return new(ElementRootId: "nti-status", Name: nameof(NTIClosedStatus), "What is the status of the NTI?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,

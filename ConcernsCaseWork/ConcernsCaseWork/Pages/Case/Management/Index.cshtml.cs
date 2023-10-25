@@ -5,9 +5,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -19,7 +17,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -33,7 +30,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
-		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly IActionsModelService _actionsModelService;
 		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
@@ -51,7 +47,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public TrustOverviewModel TrustOverviewModel { get; set; }
 
-		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsEditableCase { get; private set; }
 
 		[TempData]
@@ -64,7 +59,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
-			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
 			ICaseSummaryService caseSummaryService,
@@ -78,7 +72,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_recordModelService = Guard.Against.Null(recordModelService);
 			_ratingModelService = Guard.Against.Null(ratingModelService);
-			_ntiStatusesCachedService = Guard.Against.Null(ntiUCStatusesCachedService);
 			_logger = Guard.Against.Null(logger);
 			_actionsModelService = Guard.Against.Null(actionsModelService);
 			_caseSummaryService = Guard.Against.Null(caseSummaryService);
@@ -173,7 +166,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				TrustDetailsModel = trustDetailsTask.Result
 			};
 			
-			NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			await UpdateCacheService(CaseModel);
 		}
 

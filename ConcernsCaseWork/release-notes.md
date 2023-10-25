@@ -1,10 +1,22 @@
+## 30.0.0
+
+## 29.0.0
+* Content changes to TFF, so the acronym appears first
+* New page for recording the manager of a case
+* Territory page has been brought forward to after the managed by page
+* Content improvements in the case creation journey
+* Fixed the swagger API docs
+* Added pagination to the team casework page
+* Fixed issue where text areas jump when typing a large amount of text. Text areas can be manually expanded by the user as needed
+* Department For Education styling has been applied
+* Concern type nesting has been removed and names have changed
+
 ## 28.0.0
 * Add Emergency funding option to Framework Categories for Repayable and Non Repayable Decision Types
 * Soft Delete SRMA via Api
 * Soft Delete Financial Plan via Api
 * Soft Delete Case via Api
 * Soft Delete Nti Under Consideration via Api
-
 
 ## 27.1.0
 * Change the RMF guidance link

@@ -30,6 +30,14 @@ class AddToCasePage {
         return this;
     }
 
+    public cancel(): this
+    {
+        Logger.Log("Cancelling case action creation");
+        cy.getById("cancel-link").click();
+
+        return this;
+    }
+
     public hasValidationError(value: string) {
         cy.getById("errorSummary").should("contain.text", value);
 
