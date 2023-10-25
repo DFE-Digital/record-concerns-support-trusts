@@ -63,6 +63,9 @@ namespace ConcernsCaseWork.Service.Trusts
 			// Check status code
 			response.EnsureSuccessStatusCode();
 
+			// If null is returned it means there was no match
+			// This happens because we don't know if a UK PRN is a CTC or not
+			// This is expected because we are using this API as a blind check if the UK PRN is a CTC
 			if (response.StatusCode == HttpStatusCode.NoContent)
 			{
 				return null;
