@@ -165,7 +165,7 @@ describe("Testing the SRMA case action", () => {
 			.hasDateOpened(toDisplayDate(now))
 			.hasStatus("Trust considering")
 			.hasDateTrustContacted("22 October 2022")
-			.hasReason("Regions Group (RG) Intervention")
+			.hasReason("Regions Group (RG) action")
 			.hasDateAccepted("22 May 2020")
 			.hasDateOfVisit("22 July 2021 - 15 August 2021")
 			.hasDateReportSentToTrust("05 December 2021")
@@ -432,7 +432,7 @@ describe("Testing the SRMA case action", () => {
 				.hasDateClosed(toDisplayDate(now))
 				.hasStatus("SRMA complete")
 				.hasDateTrustContacted("22 October 2022")
-				.hasReason("Regions Group (RG) Intervention")
+				.hasReason("Regions Group (RG) action")
 				.hasDateAccepted("22 May 2020")
 				.hasDateOfVisit("22 July 2021 - 15 August 2021")
 				.hasDateReportSentToTrust("05 December 2021")
@@ -479,7 +479,7 @@ describe("Testing the SRMA case action", () => {
 				.hasDateClosed(toDisplayDate(now))
 				.hasStatus("SRMA cancelled")
 				.hasDateTrustContacted("22 October 2022")
-				.hasReason("Regions Group (RG) Intervention")
+				.hasReason("Regions Group (RG) action")
 				.hasDateAccepted("")
 				.hasDateOfVisit("")
 				.hasDateReportSentToTrust("")
@@ -523,7 +523,7 @@ describe("Testing the SRMA case action", () => {
 				.hasDateClosed(toDisplayDate(now))
 				.hasStatus("SRMA declined")
 				.hasDateTrustContacted("22 October 2022")
-				.hasReason("Regions Group (RG) Intervention")
+				.hasReason("Regions Group (RG) action")
 				.hasDateAccepted("")
 				.hasDateOfVisit("")
 				.hasDateReportSentToTrust("")
@@ -564,7 +564,8 @@ describe("Testing the SRMA case action", () => {
 	function completeSrmaConfiguration() {
 		Logger.Log("Configure reason");
 		viewSrmaPage.addReason();
-
+		Logger.Log("Verify hint text");
+		editSrmaPage.hasNoReasonHintText();
 		editSrmaPage.withReason("Regions Group Intervention").save();
 
 		Logger.Log("Configure date accepted");
@@ -596,4 +597,6 @@ describe("Testing the SRMA case action", () => {
 			.withYearReportSentToTrust("2021")
 			.save();
 	}
+
+	
 });

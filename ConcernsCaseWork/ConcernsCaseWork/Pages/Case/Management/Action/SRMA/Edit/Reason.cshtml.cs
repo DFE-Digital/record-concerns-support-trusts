@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Srma;
+﻿using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
@@ -21,17 +22,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 	public class EditSRMAReasonOfferedPageModel : AbstractPageModel
 	{
 		private readonly ISRMAService _srmaService;
+		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditSRMAReasonOfferedPageModel> _logger;
 
 		[BindProperty(SupportsGet = true, Name = "caseUrn")] public int CaseId { get; set; }
 		[BindProperty(SupportsGet = true, Name = "srmaId")] public int SrmaId { get; set; }
 
 		[BindProperty]
+		public Division? Division { get; set; }
+
+		[BindProperty]
 		public RadioButtonsUiComponent SRMAReasonOffered { get; set; }
 
-		public EditSRMAReasonOfferedPageModel(ISRMAService srmaService, ILogger<EditSRMAReasonOfferedPageModel> logger)
+		public EditSRMAReasonOfferedPageModel(
+			ISRMAService srmaService, 
+			ICaseModelService caseModelService, 
+			ILogger<EditSRMAReasonOfferedPageModel> logger)
 		{
-			this._srmaService = srmaService;
+			_srmaService = srmaService;
+			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 
@@ -47,6 +56,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				{
 					return Redirect($"/case/{CaseId}/management/action/srma/{SrmaId}/closed");
 				}
+
+				var caseModel = await _caseModelService.GetCaseByUrn(CaseId);
+
+				Division = caseModel.Division;
 
 				LoadPageComponents(model);
 			}

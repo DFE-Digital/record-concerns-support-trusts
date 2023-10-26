@@ -37,15 +37,14 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		/// <returns>A city technology college containing the ID, Name, UKPRN, Companies House Number and Address</returns>
 		[HttpGet("ukprn/{ukprn}", Name = nameof(GetByUKPRN))]
 		[ProducesResponseType((int)HttpStatusCode.OK)]
-		[ProducesResponseType((int)HttpStatusCode.NotFound)]
+		[ProducesResponseType((int)HttpStatusCode.NoContent)]
 		public async Task<IActionResult> GetByUKPRN([FromRoute]GetByUKPRN.Query query)
 		{
 			var model = await _mediator.Send(query);
-			if (model == null)
-			{
-				return NotFound();
-			}
 
+			// Our caller does not know if the UKPRN exists
+			// We need to return a 204 instead of 404 in the case of null and let the client decide
+			// Otherwise our logs will get a large amount of errors raised
 			return Ok(model);
 		}
 
