@@ -120,6 +120,12 @@ describe("Creating a case", () => {
 		Logger.Log("Checking accessibility on risk to trust");
 		cy.excuteAccessibilityTests();
 
+		createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasConcernType("Deficit")
+			.hasConcernRiskRating("Red Amber");
+
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
