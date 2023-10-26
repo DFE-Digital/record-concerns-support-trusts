@@ -1,3 +1,6 @@
+## 29.0.1
+* fixed caching issue with conversion from non concerns to concerns, incorrect trust data was displayed in the summary
+
 ## 29.0.0
 * Content changes to TFF, so the acronym appears first
 * New page for recording the manager of a case

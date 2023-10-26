@@ -120,6 +120,12 @@ describe("Creating a case", () => {
 		Logger.Log("Checking accessibility on risk to trust");
 		cy.excuteAccessibilityTests();
 
+		createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasConcernType("Deficit")
+			.hasConcernRiskRating("Red Amber");
+
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
 
@@ -182,6 +188,7 @@ describe("Creating a case", () => {
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
 			.hasConcerns("Deficit", ["Red", "Amber"])
+			.hasNumberOfConcerns(1)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
@@ -366,6 +373,7 @@ describe("Creating a case", () => {
 		caseManagementPage
 			.hasConcerns("Suspected fraud", ["Red Plus"])
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
-			.hasConcerns("Irregularity", ["Red", "Amber"]);
+			.hasConcerns("Irregularity", ["Red", "Amber"])
+			.hasNumberOfConcerns(3);
 	});
 });

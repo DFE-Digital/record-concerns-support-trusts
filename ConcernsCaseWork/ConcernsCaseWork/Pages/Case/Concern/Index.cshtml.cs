@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -56,6 +55,9 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int? CaseUrn { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "source-page")]
+		public string? SourcePage { get; set; }
+
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
 			IRatingModelService ratingModelService,
@@ -79,6 +81,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 			try
 			{
+				await LoadExistingCaseIntoCache();
+
 				await LoadPage();
 			}
 			catch (Exception ex)
@@ -88,7 +92,31 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			}
 			return Page();
 		}
-		
+
+		private async Task LoadExistingCaseIntoCache()
+		{
+			var caseModel = await GetCaseModel();
+
+			// If we came from the add another concern page we don't want to clear the cache
+			if (caseModel == null || SourcePage == "add-another-concern")
+			{
+				return;
+			}
+
+			// We had an issue where the cache was already populated with data
+			// In non concerns we start on this page
+			// We need to make sure if we already have an existing case, we clear the cache first
+			// Then set the existing case values and save them before loading the page
+			// Otherwise it will display the values from the previously cached case
+			var username = GetUserName();
+			var userState = new UserState(username);
+			userState.TrustUkPrn = caseModel.TrustUkPrn;
+			userState.CreateCaseModel = new CreateCaseModel();
+			userState.CreateCaseModel.Division = caseModel.Division;
+			userState.CreateCaseModel.Territory = caseModel.Territory;
+			await _cachedService.StoreData(username, userState);
+		}
+
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
@@ -101,12 +129,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					return Page();
 				}
 
-				CaseModel caseModel = null;
-
-				if (CaseUrn.HasValue)
-				{
-					caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
-				}
+				CaseModel caseModel = await GetCaseModel();
 				
 				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
@@ -242,6 +265,20 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private async Task<CaseModel> GetCaseModel()
+		{
+			CaseModel result = null;
+
+			if (!CaseUrn.HasValue)
+			{
+				return result;
+			}
+
+			result = await _caseModelService.GetCaseByUrn((long)CaseUrn);
+
+			return result;
 		}
 		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);

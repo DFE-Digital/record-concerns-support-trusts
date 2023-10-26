@@ -513,6 +513,13 @@ class CaseManagementPage {
 		return this;
 	}
 
+	public hasNumberOfConcerns(count: number): this {
+		Logger.Log(`Has number of concerns ${count}`);
+		cy.getByTestId("concerns-details-table").find('tr').should("have.length", count);
+
+		return this;
+	}
+
 	public hasManagedBy(division: string, territory: string): this {
 		Logger.Log(`Has managed by ${division} ${territory}`);
 
