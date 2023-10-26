@@ -240,6 +240,7 @@ describe("Creating a non concerns case", () => {
 				.hasRiskToTrust("Red Plus")
 				.hasConcerns("Financial compliance", ["Amber", "Green"])
 				.hasConcerns("Deficit", ["Red", "Amber"])
+				.hasNumberOfConcerns(2)
 				.hasManagedBy("SFSO", "North and UTC - North East")
 				.hasIssue("This is an issue")
 				.hasCurrentStatus("This is the current status")
@@ -340,15 +341,14 @@ describe("Creating a non concerns case", () => {
 
 					Logger.Log("It should create just one concern against the correct trust");
 					caseManagementPage
-						.hasTrust("Ashton West End Primary Academy")
+						.hasTrust(trustName)
 						.hasRiskToTrust("Red Plus")
 						.hasConcerns("Deficit", ["Red", "Amber"])
+						.hasNumberOfConcerns(1);
 				});
 			});
 		});
 	});
-
-
 
 	function closeCase(caseId: string) {
 		Logger.Log("Closing case");

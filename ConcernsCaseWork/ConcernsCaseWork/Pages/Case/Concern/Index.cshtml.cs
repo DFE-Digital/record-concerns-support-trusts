@@ -108,12 +108,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			// We need to make sure if we already have an existing case, we clear the cache first
 			// Then set the existing case values and save them before loading the page
 			// Otherwise it will display the values from the previously cached case
-			var userState = await GetUserState();
+			var username = GetUserName();
+			var userState = new UserState(username);
 			userState.TrustUkPrn = caseModel.TrustUkPrn;
 			userState.CreateCaseModel = new CreateCaseModel();
 			userState.CreateCaseModel.Division = caseModel.Division;
 			userState.CreateCaseModel.Territory = caseModel.Territory;
-			await _cachedService.StoreData(GetUserName(), userState);
+			await _cachedService.StoreData(username, userState);
 		}
 
 		public async Task<IActionResult> OnPostAsync()

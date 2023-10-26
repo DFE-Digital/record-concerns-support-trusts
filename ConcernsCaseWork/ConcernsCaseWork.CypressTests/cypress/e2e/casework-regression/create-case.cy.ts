@@ -188,6 +188,7 @@ describe("Creating a case", () => {
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
 			.hasConcerns("Deficit", ["Red", "Amber"])
+			.hasNumberOfConcerns(1)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
@@ -372,6 +373,7 @@ describe("Creating a case", () => {
 		caseManagementPage
 			.hasConcerns("Suspected fraud", ["Red Plus"])
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
-			.hasConcerns("Irregularity", ["Red", "Amber"]);
+			.hasConcerns("Irregularity", ["Red", "Amber"])
+			.hasNumberOfConcerns(3);
 	});
 });
