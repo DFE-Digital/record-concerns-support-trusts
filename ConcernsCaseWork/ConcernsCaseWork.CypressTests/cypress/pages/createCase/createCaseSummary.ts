@@ -68,6 +68,18 @@ export class CreateCaseSummary
 
         return this;
     }
+
+    public hasHintText(hintText: string): this
+    {
+        Logger.Log(`Has Hint Text By ${hintText} `);
+
+        cy.getByTestId(`hint-text`).should(
+			"contain.text",
+			hintText
+		);
+
+        return this;
+    }
 }
 
 const createCaseSummary = new CreateCaseSummary();
