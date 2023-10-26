@@ -93,17 +93,19 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildMeansOfReferral(string name, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildMeansOfReferral(Division? division, string name, int? selectedId = null)
 		{
+			var regionsGroup = Division.RegionsGroup;
+
 			var meansOfReferralValues = new[]
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = "For example, management letter, external review of governance, ESFA activity or other departmental activity."
+					HintText = division == regionsGroup ? "Regions Group activity including SCCU, or other departmental activity" : "For example, management letter, external review of governance, ESFA activity or other departmental activity."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
+					HintText = division == regionsGroup ? "Whistleblowing, self-reported by trust, SFSO, Ofsted or other government bodies" : "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
 				}
 			};
 

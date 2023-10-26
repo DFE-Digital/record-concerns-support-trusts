@@ -51,7 +51,8 @@ describe("Creating a case", () => {
                 .selectOption()
                 .confirmOption();
     
-            createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy");
     
             Logger.Log("Create a valid case division");
             selectCaseDivisionPage
@@ -76,7 +77,13 @@ describe("Creating a case", () => {
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London");
-    
+
+
+            Logger.Log("Check has Regions Group specific means of referral hint text")
+            createCaseSummary
+                .hasHintText("Regions Group activity including SCCU, or other departmental activity")
+                .hasHintText("Whistleblowing, self-reported by trust, SFSO, Ofsted or other government bodies");
+
             Logger.Log("Create a valid concern");
             createConcernPage
                 .withConcernType("Governance")
@@ -184,6 +191,7 @@ describe("Creating a case", () => {
         
                 viewClosedCasePage.hasManagedBy("Regions Group", "South West");
             }));
+
         });
     });
 

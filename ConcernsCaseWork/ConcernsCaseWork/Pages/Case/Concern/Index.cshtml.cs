@@ -221,7 +221,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
 			ConcernRiskRating.SortOrder = 2;
 
-			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
+			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(CreateCaseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
 			MeansOfReferral.SortOrder = 3;
 
 			AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()

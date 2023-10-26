@@ -98,6 +98,11 @@ describe("Creating a case", () => {
 		Logger.Log("Checking accessibility on concern");
 		cy.excuteAccessibilityTests();
 
+		Logger.Log("Check has SFSO specific means of referral hint text")
+		createCaseSummary
+			.hasHintText("For example, management letter, external review of governance, ESFA activity or other departmental activity.")
+			.hasHintText("For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies.");
+
 		Logger.Log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Deficit")
