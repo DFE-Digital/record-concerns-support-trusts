@@ -118,12 +118,17 @@ public class EditSRMAReasonOfferedPageModelTests
 		});
 	}
 
-	private static EditSRMAReasonOfferedPageModel SetupEditSRMAReasonOfferedPageModel(
+	private EditSRMAReasonOfferedPageModel SetupEditSRMAReasonOfferedPageModel(
 		ISRMAService mockSrmaModelService, ILogger<EditSRMAReasonOfferedPageModel> mockLogger, bool isAuthenticated = false)
 	{
 		(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-		return new EditSRMAReasonOfferedPageModel(mockSrmaModelService, mockLogger)
+		var caseModel = _fixture.Create<CaseModel>();
+
+		var caseModelService = new Mock<ICaseModelService>();
+		caseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
+
+		return new EditSRMAReasonOfferedPageModel(mockSrmaModelService, caseModelService.Object, mockLogger)
 		{
 			PageContext = pageContext,
 			TempData = tempData,
