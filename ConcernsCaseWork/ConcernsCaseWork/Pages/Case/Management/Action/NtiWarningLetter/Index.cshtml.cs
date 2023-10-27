@@ -1,20 +1,19 @@
 ﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using System.Linq;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
-using ConcernsCaseWork.Service.NtiWarningLetter;
-using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
-using Microsoft.CodeAnalysis.Operations;
-using ConcernsCaseWork.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -22,13 +21,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiWarningLetterModel NtiWarningLetterModel { get; set; }
-		public ICollection<NtiWarningLetterReasonDto> NtiWarningLetterReasons { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> NtiWarningLetterConditions { get; private set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
@@ -39,12 +36,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public int NtiWarningLetterId { get; set; }
 
 		public IndexPageModel(
-			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<IndexPageModel> logger)
 		{
-			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
 			_logger = logger;
@@ -71,12 +66,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			if (wl != null)
 			{
-				if (wl.Reasons?.Any() == true)
-				{
-					NtiWarningLetterReasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();
-					wl.Reasons = NtiWarningLetterReasons.Where(r => wl.Reasons.Any(wlr => wlr.Id == r.Id))?.Select(r => NtiWarningLetterMappers.ToServiceModel(r)).ToArray();
-				}
-
 				if (wl.Conditions?.Any() == true)
 				{
 					NtiWarningLetterConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();

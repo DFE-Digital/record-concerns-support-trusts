@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Mappers
 				ClosedStatusId = (int?)ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
-				WarningLetterReasonsMapping = ntiModel.Reasons?.Select(r => r.Id).ToArray(),
+				WarningLetterReasonsMapping = ntiModel.Reasons?.Select(r => (int)r).ToArray(),
 				StatusId = (int?)ntiModel.Status,
 				DateLetterSent = ntiModel.SentDate,
 				UpdatedAt = ntiModel.UpdatedAt,
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Mappers
 				Notes = ntiDto.Notes,
 				SentDate = ntiDto.DateLetterSent,
 				Status = (NtiWarningLetterStatus?)ntiDto.StatusId,
-				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => new NtiWarningLetterReasonModel { Id = r }).ToArray(),
+				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => (NtiWarningLetterReason)r).ToArray(),
 				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel { Id = c }).ToArray(),
 				ClosedStatusId = (NtiWarningLetterStatus?)ntiDto.ClosedStatusId,
 				ClosedAt = ntiDto.ClosedAt
@@ -70,15 +70,6 @@ namespace ConcernsCaseWork.Mappers
 					Name = ntiConditionDto.Type.Name,
 					DisplayOrder = ntiConditionDto.Type.DisplayOrder
 				}
-			};
-		}
-
-		public static NtiWarningLetterReasonModel ToServiceModel(NtiWarningLetterReasonDto ntiWarningLetterReasonDto)
-		{
-			return new NtiWarningLetterReasonModel
-			{
-				Id = ntiWarningLetterReasonDto.Id,
-				Name = ntiWarningLetterReasonDto.Name
 			};
 		}
 

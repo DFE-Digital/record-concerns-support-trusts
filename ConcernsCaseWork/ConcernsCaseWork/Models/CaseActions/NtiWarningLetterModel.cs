@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 	public class NtiWarningLetterModel : CaseActionModel
 	{
 		public NtiWarningLetterStatus? Status { get; set; }
-		public ICollection<NtiWarningLetterReasonModel> Reasons { get; set; }
+		public ICollection<NtiWarningLetterReason> Reasons { get; set; }
 		public ICollection<NtiWarningLetterConditionModel> Conditions { get; set; }
 		public string Notes { get; set; }
 		public DateTime? SentDate { get; set; }

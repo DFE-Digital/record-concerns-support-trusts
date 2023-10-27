@@ -1,9 +1,15 @@
 ﻿
 using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,14 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Models.Validatable;
-using Microsoft.Graph.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -26,7 +24,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
@@ -63,12 +60,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public string CancelLinkUrl { get; set; }
 
 		public AddPageModel(
-			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<AddPageModel> logger)
 		{
-			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
 			_logger = logger;
@@ -104,7 +99,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					return Redirect($"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId}");
 				}
 
-				await LoadComponents(WarningLetter);
+				LoadComponents(WarningLetter);
 
 				TempData.Keep(nameof(ContinuationId));
 			}
@@ -125,7 +120,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			{
 				if (!ModelState.IsValid)
 				{
-					await ResetOnValidationError();
+					ResetOnValidationError();
 					return Page();
 				}
 
@@ -153,7 +148,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 							 : @$"/case/{CaseUrn}/management/action";
 		}
 
-		private async Task LoadComponents(NtiWarningLetterModel warningLetterModel)
+		private void LoadComponents(NtiWarningLetterModel warningLetterModel)
 		{
 			SetupPage();
 
@@ -165,17 +160,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				SentDate.Date = new OptionalDateModel(warningLetterModel.SentDate.Value);
 			}
 
-			Reasons = await GetReasons();
+			Reasons = GetReasons();
 		}
 
-		private async Task ResetOnValidationError()
+		private void ResetOnValidationError()
 		{
 			SetupPage();
 
 			NtiWarningLetterStatus = BuildStatusComponent(NtiWarningLetterStatus.SelectedId);
 			SentDate = BuildDateSentComponent(SentDate.Date);
 			Notes = BuildNotesComponent(Notes.Text.StringContents);
-			Reasons = await GetReasons();
+			Reasons = GetReasons();
 		}
 
 		private async Task<RedirectResult> HandleContinue()
@@ -299,14 +294,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		};
 
-		private async Task<IEnumerable<RadioItem>> GetReasons()
+		private IEnumerable<RadioItem> GetReasons()
 		{
-			var reasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();
+			var reasons = Enum.GetValues(typeof(NtiWarningLetterReason)).Cast<NtiWarningLetterReason>();
 			return reasons.Select(r => new RadioItem
 			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name,
-				IsChecked = WarningLetter?.Reasons?.Any(wl_r => wl_r.Id == r.Id) ?? false
+				Id = ((int)r).ToString(),
+				Text = r.Description(),
+				IsChecked = WarningLetter?.Reasons?.Any(wl_r => wl_r == r) ?? false
 			});
 		}
 
@@ -337,7 +332,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			var nti = new NtiWarningLetterModel()
 			{
 				CaseUrn = CaseUrn,
-				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
+				Reasons = reasons.Select(r => (NtiWarningLetterReason)int.Parse(r)).ToArray(),
 				Status = (NtiWarningLetterStatus?)NtiWarningLetterStatus.SelectedId,
 				Conditions = new List<NtiWarningLetterConditionModel>(),
 				Notes = Notes.Text.StringContents,

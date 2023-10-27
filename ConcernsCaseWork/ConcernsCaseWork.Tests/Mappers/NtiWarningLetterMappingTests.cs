@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = DateTime.Now.AddDays(-5),
 				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
-				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
+				Reasons = new[] { NtiWarningLetterReason.CashFlowProblems },
 				SentDate = DateTime.Now.AddDays(-1),
 				Status = 1,
 				UpdatedAt = DateTime.Now.AddDays(-1),
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				DateLetterSent = testData.SentDate,
 				StatusId = 1,
 				UpdatedAt = testData.UpdatedAt,
-				WarningLetterReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray(),
+				WarningLetterReasonsMapping = new[] { 1 },
 				ClosedStatusId = testData.ClosedStatusId
 			};
 
@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Id, Is.EqualTo(testData.Id));
 			Assert.That(serviceModel.Reasons, Is.Not.Null);
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
-			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
+			Assert.That(serviceModel.Reasons.ElementAt(0), Is.EqualTo(testData.Reasons.ElementAt(0)));
 			Assert.That(serviceModel.Status, Is.EqualTo((NtiWarningLetterStatus?)testData.Status));
 			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo((NtiWarningLetterStatus?)testData.ClosedStatusId));
 			serviceModel.IsEditable.Should().BeTrue();
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = DateTime.Now.AddDays(-5),
 				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
-				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
+				Reasons = new[] { NtiWarningLetterReason.CashFlowProblems },
 				SentDate = DateTime.Now.AddDays(-1),
 				Status = NtiWarningLetterStatus.SentToTrust,
 				UpdatedAt = DateTime.Now.AddDays(-1)
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
-				Reasons = new NtiWarningLetterReasonModel[] { new NtiWarningLetterReasonModel { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
+				Reasons = new NtiWarningLetterReason[] { NtiWarningLetterReason.CashFlowProblems },
 				Status = NtiWarningLetterStatus.SentToTrust,
 				SentDate = testData.SentDate,
 				UpdatedAt = testData.UpdatedAt
@@ -126,27 +126,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			Assert.That(dbModel.StatusId, Is.Not.Null);
 			Assert.That(dbModel.StatusId, Is.EqualTo((int?)testData.Status));
-		}
-
-		[Test]
-		public void NtiWarningLetterReason_Dto_To_ServiceModel()
-		{
-			// arrange
-			var dto = new NtiWarningLetterReasonDto
-			{
-				Id = 1,
-				Name = "Name Name",
-				CreatedAt = new DateTime(2022, 02, 05),
-				UpdatedAt = new DateTime(2022, 02, 05)
-			};
-
-			// act
-			var model = NtiWarningLetterMappers.ToServiceModel(dto);
-
-			// assert
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model.Id, Is.EqualTo(dto.Id));
-			Assert.That(model.Name, Is.EqualTo(dto.Name));
 		}
 
 		[Test]
