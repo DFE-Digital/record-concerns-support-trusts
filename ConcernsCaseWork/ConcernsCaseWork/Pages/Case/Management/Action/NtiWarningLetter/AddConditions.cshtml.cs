@@ -1,13 +1,13 @@
-﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +19,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddConditionsPageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
-		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
-		private readonly ILogger _logger;
+		private readonly ILogger<AddConditionsPageModel> _logger;
 
 		[TempData]
 		public string ContinuationId { get; set; }
@@ -31,20 +29,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		[TempData]
 		public bool IsReturningFromConditions { get; set; }
 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public long CaseUrn { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "warningLetterId")]
 		public long? WarningLetterId { get; set; }
 
 		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> AllConditions { get; private set; }
 
-		public AddConditionsPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
-			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
+		public AddConditionsPageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
-			ILogger<NtiWarningLetterConditionModel> logger)
+			ILogger<AddConditionsPageModel> logger)
 		{
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
-			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
 			_logger = logger;
@@ -52,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-WL::AddConditionsPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			try
 			{
@@ -60,9 +58,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				{
 					throw new InvalidOperationException("Continuation Id not found");
 				}
-
-				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
 
 				var model = await GetUpToDateModel();
 				SelectedConditions = model.Conditions;
@@ -75,20 +70,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::AddConditionsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
-
 				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
@@ -109,8 +102,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::AddConditionsPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
@@ -125,45 +118,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			return await _ntiWarningLetterModelService.GetWarningLetter(ContinuationId);
 		}
-
-		private void ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				CaseUrn = caseUrn;
-			}
-			else
-			{
-				throw new InvalidOperationException("CaseUrn not found in the route");
-			}
-		}
-
-		private void ExtractWarningLetterIdFromRoute()
-		{
-			WarningLetterId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetStatuses()
-		{
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Select(r => new RadioItem
-			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
-			});
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetReasons()
-		{
-			var reasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();
-			return reasons.Select(r => new RadioItem
-			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
-			});
-		}
-
-
-
 	}
 }

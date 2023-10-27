@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				var ntiWarningLetter = await _ntiWarningLetterModelService.GetNtiWarningLetterId(WarningLetterId);
 				ntiWarningLetter.Notes = Notes.Text.StringContents;
-				ntiWarningLetter.ClosedStatusId = NtiWarningLetterStatus.SelectedId;
+				ntiWarningLetter.ClosedStatusId = (NtiWarningLetterStatus?)NtiWarningLetterStatus.SelectedId;
 				ntiWarningLetter.ClosedAt = DateTime.Now;
 
 				await _ntiWarningLetterModelService.PatchNtiWarningLetter(ntiWarningLetter);

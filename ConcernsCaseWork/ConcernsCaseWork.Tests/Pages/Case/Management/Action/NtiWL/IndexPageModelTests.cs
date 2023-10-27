@@ -19,19 +19,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 	public class IndexPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var pageModel = SetupIndexPageModel();
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
-		}
-
-		[Test]
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
@@ -44,47 +31,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var pageModel = SetupIndexPageModel(mockModelService: mockNtiWarningLetterModelService, mockLogger: mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("ntiWarningLetterId", 1);
+			pageModel.CaseId = 1;
+			pageModel.NtiWarningLetterId = 1;
 
 			// act
 			await pageModel.OnGetAsync();
 
 			// assert
 			Assert.IsNotNull(pageModel.NtiWarningLetterModel);
-
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-Warning letter::IndexPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-		}
-
-		[Test]
-		public async Task WhenOnGetAsync_MissingNTIUnderConsideration_ThrowsException_ReturnPage()
-		{
-			// arrange
-			var pageModel = SetupIndexPageModel();
-
-			var routeData = pageModel.RouteData.Values;
-
-			routeData.Add("urn", 1);
-			routeData.Add("ntiUnderConsiderationId", 1);
-
-			// act
-			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiWarningLetterModelService> mockModelService = null,
-			Mock<INtiWarningLetterStatusesCachedService> statusesCachedService = null,
-			Mock<INtiWarningLetterReasonsCachedService> mockReasonsCachedService = null,
 			Mock<INtiWarningLetterConditionsCachedService> mockConditionsCachedService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
 			bool isAuthenticated = false)
@@ -92,12 +50,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			mockModelService ??= new Mock<INtiWarningLetterModelService>();
-			statusesCachedService ??= new Mock<INtiWarningLetterStatusesCachedService>();
-			mockReasonsCachedService ??= new Mock<INtiWarningLetterReasonsCachedService>();
 			mockConditionsCachedService ??= new Mock<INtiWarningLetterConditionsCachedService>();
 			mockLogger ??= new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(statusesCachedService.Object, mockReasonsCachedService.Object, mockModelService.Object, mockConditionsCachedService.Object,
+			return new IndexPageModel(mockModelService.Object, mockConditionsCachedService.Object,
 				mockLogger.Object)
 			{
 				PageContext = pageContext,

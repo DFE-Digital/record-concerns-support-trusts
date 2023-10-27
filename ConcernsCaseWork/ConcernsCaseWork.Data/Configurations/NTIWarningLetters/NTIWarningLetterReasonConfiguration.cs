@@ -17,14 +17,62 @@ public class NTIWarningLetterReasonConfiguration : IEntityTypeConfiguration<NTIW
 		builder.HasData(
 			new NTIWarningLetterReason[]
 			{
-				new NTIWarningLetterReason{ Id = 1, Name = "Cash flow problems", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 2, Name = "Cumulative deficit (actual)", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 3, Name = "Cumulative deficit (projected)", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 4, Name = "Governance concerns", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 5, Name = "Non-compliance with Academies Financial/Trust Handbook", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 6, Name = "Non-compliance with financial returns", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 7, Name = "Risk of insolvency", CreatedAt = createdAt, UpdatedAt = createdAt },
-				new NTIWarningLetterReason{ Id = 8, Name = "Safeguarding", CreatedAt = createdAt, UpdatedAt = createdAt }
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.CashFlowProblems, 
+					Name = "Cash flow problems", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.CumulativeDeficitActual, 
+					Name = "Cumulative deficit (actual)", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.CumulativeDeficitProjected, 
+					Name = "Cumulative deficit (projected)", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.GovernanceConcerns, 
+					Name = "Governance concerns", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.NonComplianceWithAcademiesFinancialTrustHandbook, 
+					Name = "Non-compliance with Academies Financial/Trust Handbook", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.NonComplianceWithFinancialReturns, 
+					Name = "Non-compliance with financial returns", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.RiskOfInsolvency, 
+					Name = "Risk of insolvency", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				},
+				new NTIWarningLetterReason
+				{ 
+					Id = (int)API.Contracts.NtiWarningLetter.NtiWarningLetterReason.Safeguarding, 
+					Name = "Safeguarding", 
+					CreatedAt = createdAt, 
+					UpdatedAt = createdAt 
+				}
 			});
 	}
 }
