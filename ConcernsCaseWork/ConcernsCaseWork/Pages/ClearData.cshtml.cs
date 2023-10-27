@@ -23,7 +23,6 @@ namespace ConcernsCaseWork.Pages
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonCachedService; 
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly ITeamsCachedService _teamsCachedService;
 		private readonly ILogger<ClearDataPageModel> _logger;
 		private readonly IUserStateCachedService _userStateCachedService;
@@ -35,7 +34,6 @@ namespace ConcernsCaseWork.Pages
 			IRatingCachedService ratingCachedService,
 			ITrustCachedService trustCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonCachedService,
-			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			ITeamsCachedService teamsCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
@@ -45,7 +43,6 @@ namespace ConcernsCaseWork.Pages
 			_trustCachedService = Guard.Against.Null(trustCachedService);
 			_typeCachedService = Guard.Against.Null(typeCachedService);
 			_ntiWarningLetterReasonCachedService = Guard.Against.Null(ntiWarningLetterReasonCachedService);
-			_ntiWarningLetterStatusesCachedService = Guard.Against.Null(ntiWarningLetterStatusesCachedService);
 			_teamsCachedService = Guard.Against.Null(teamsCachedService);
 			_logger = Guard.Against.Null(logger);
 		}
@@ -62,7 +59,6 @@ namespace ConcernsCaseWork.Pages
 			await _ratingCachedService.ClearData();
 			await _trustCachedService.ClearData();
 			await _ntiWarningLetterReasonCachedService.ClearData();
-			await _ntiWarningLetterStatusesCachedService.ClearData();
 			await _teamsCachedService.ClearData(User.Identity?.Name);
 
 			return RedirectToPage("home");

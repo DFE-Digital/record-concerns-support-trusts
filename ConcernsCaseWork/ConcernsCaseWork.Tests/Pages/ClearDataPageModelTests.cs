@@ -32,7 +32,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
@@ -43,7 +42,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object,
-				mockNTIWarningLetterStatusesCachedService.Object,
 				mockTeamsCachedService.Object,
 				mockLogger.Object,
 				true);
@@ -76,7 +74,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
@@ -87,7 +84,6 @@ namespace ConcernsCaseWork.Tests.Pages
                 mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object,
-				mockNTIWarningLetterStatusesCachedService.Object,
 				mockTeamsCachedService.Object,
 				mockLogger.Object);
 
@@ -116,7 +112,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			IUserStateCachedService mockUserStateCachedService,
 			ITrustCachedService mockTrustCachedService,
 			INtiWarningLetterReasonsCachedService mockNTIWarningLetterReasonCachedService,
-			INtiWarningLetterStatusesCachedService mockNTIWarningLetterStatusesCachedService,
 			ITeamsCachedService mockTeamsCachedService,
 			ILogger<ClearDataPageModel> mockLogger,
 			bool isAuthenticated = false)
@@ -130,7 +125,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockRatingCachedService,
 				mockTrustCachedService,
 				mockNTIWarningLetterReasonCachedService,
-				mockNTIWarningLetterStatusesCachedService,
 				mockTeamsCachedService,
 				mockLogger)
 			{

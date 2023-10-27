@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
@@ -32,15 +33,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				SentDate = DateTime.Now.AddDays(-1),
-				Status = new KeyValuePair<int, string>(1, "Status 1"),
+				Status = 1,
 				UpdatedAt = DateTime.Now.AddDays(-1),
-				ClosedStatus = new KeyValuePair<int, string>(3, "Status 3"),
+				ClosedStatusId = 3
 			};
-
-			var statuses = new List<NtiWarningLetterStatusDto>();
-			statuses.Add(new NtiWarningLetterStatusDto { Id = 1, Name = "Status 1" });
-			statuses.Add(new NtiWarningLetterStatusDto { Id = 2, Name = "Status 2" });
-			statuses.Add(new NtiWarningLetterStatusDto { Id = 3, Name = "Status 3" });
 
 			var ntiDto = new NtiWarningLetterDto
 			{
@@ -50,16 +46,16 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = null,
 				Notes = testData.Notes,
 				DateLetterSent = testData.SentDate,
-				StatusId = testData.Status.Key,
+				StatusId = 1,
 				UpdatedAt = testData.UpdatedAt,
 				WarningLetterReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray(),
-				ClosedStatusId = testData.ClosedStatus.Key
+				ClosedStatusId = testData.ClosedStatusId
 			};
 
 			var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
 
 			// act
-			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, statuses, permissionsResponse);
+			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, permissionsResponse);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -68,10 +64,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Reasons, Is.Not.Null);
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
 			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
-			Assert.That(serviceModel.Status.Id, Is.EqualTo(testData.Status.Key));
-			Assert.That(serviceModel.Status.Name, Is.EqualTo(testData.Status.Value));
-			Assert.That(serviceModel.ClosedStatus.Id, Is.EqualTo(testData.ClosedStatus.Key));
-			Assert.That(serviceModel.ClosedStatus.Name, Is.EqualTo(testData.ClosedStatus.Value));
+			Assert.That(serviceModel.Status, Is.EqualTo((NtiWarningLetterStatus?)testData.Status));
+			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo((NtiWarningLetterStatus?)testData.ClosedStatusId));
 			serviceModel.IsEditable.Should().BeTrue();
 		}
 

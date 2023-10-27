@@ -12,33 +12,28 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 	public class NtiWarningLetterModelService : INtiWarningLetterModelService
 	{
 		private readonly INtiWarningLetterCachedService _ntiWarningLetterCachedService;
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly ICasePermissionsService _casePermissionsService;
 
 		public NtiWarningLetterModelService(
 			INtiWarningLetterCachedService ntiWarningLetterCachedService, 
-			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusService,
 			ICasePermissionsService casePermissionsService)
 		{
 			_ntiWarningLetterCachedService = ntiWarningLetterCachedService;
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusService;
 			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<NtiWarningLetterModel> CreateNtiWarningLetter(NtiWarningLetterModel ntiWarningLetterModel)
 		{
 			var created = await _ntiWarningLetterCachedService.CreateNtiWarningLetterAsync(NtiWarningLetterMappers.ToDBModel(ntiWarningLetterModel));
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			return NtiWarningLetterMappers.ToServiceModel(created, statuses);
+			return NtiWarningLetterMappers.ToServiceModel(created);
 		}
 
 		public async Task<IEnumerable<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn)
 		{
 			var dtos = await _ntiWarningLetterCachedService.GetNtiWarningLettersForCaseAsync(caseUrn);
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto, statuses)).ToArray();
+			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto)).ToArray();
 		}
 
 		public async Task<NtiWarningLetterModel> GetWarningLetter(string continuationId)
@@ -49,18 +44,16 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			}
 
 			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetter(continuationId);
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			return NtiWarningLetterMappers.ToServiceModel(dto, statuses);
+			return NtiWarningLetterMappers.ToServiceModel(dto);
 		}
 
 		public async Task<NtiWarningLetterModel> GetNtiWarningLetterViewModel(long caseId, long warningLetterId)
 		{
 			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetterAsync(warningLetterId);
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
 
-			return NtiWarningLetterMappers.ToServiceModel(dto, statuses, permissionsResponse);
+			return NtiWarningLetterMappers.ToServiceModel(dto, permissionsResponse);
 		}
 
 		public async Task StoreWarningLetter(NtiWarningLetterModel ntiWarningLetter, string continuationId)
@@ -76,9 +69,8 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 		public async Task<NtiWarningLetterModel> GetNtiWarningLetterId(long wlId)
 		{
 			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetterAsync(wlId);
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			return NtiWarningLetterMappers.ToServiceModel(dto, statuses);
+			return NtiWarningLetterMappers.ToServiceModel(dto);
 		}
 
 		public async Task<NtiWarningLetterModel> PatchNtiWarningLetter(NtiWarningLetterModel patchWarningLetter)
@@ -86,9 +78,8 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			patchWarningLetter.UpdatedAt = DateTime.Now;
 			var dto = NtiWarningLetterMappers.ToDBModel(patchWarningLetter);
 			var patchedDto = await _ntiWarningLetterCachedService.PatchNtiWarningLetterAsync(dto);
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			return NtiWarningLetterMappers.ToServiceModel(patchedDto, statuses);
+			return NtiWarningLetterMappers.ToServiceModel(patchedDto);
 		}
 	}
 }

@@ -26,7 +26,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
@@ -63,13 +62,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public string CancelLinkUrl { get; set; }
 
-		public AddPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
+		public AddPageModel(
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<AddPageModel> logger)
 		{
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
@@ -159,7 +157,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			SetupPage();
 
-			NtiWarningLetterStatus.SelectedId = warningLetterModel.Status?.Id;
+			NtiWarningLetterStatus.SelectedId = (int?)warningLetterModel.Status;
 			Notes.Text.StringContents = warningLetterModel.Notes;
 
 			if (warningLetterModel.SentDate.HasValue)
@@ -340,7 +338,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			{
 				CaseUrn = CaseUrn,
 				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
-				Status = NtiWarningLetterStatus.SelectedId.HasValue ? new NtiWarningLetterStatusModel { Id = NtiWarningLetterStatus.SelectedId.Value } : null,
+				Status = (NtiWarningLetterStatus?)NtiWarningLetterStatus.SelectedId,
 				Conditions = new List<NtiWarningLetterConditionModel>(),
 				Notes = Notes.Text.StringContents,
 				SentDate = SentDate.Date.ToDateTime(),

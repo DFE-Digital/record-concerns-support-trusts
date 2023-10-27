@@ -83,7 +83,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiWarningLetterModelService> mockModelService = null,
-			Mock<INtiWarningLetterStatusesCachedService> statusesCachedService = null,
 			Mock<INtiWarningLetterReasonsCachedService> mockReasonsCachedService = null,
 			Mock<INtiWarningLetterConditionsCachedService> mockConditionsCachedService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
@@ -92,12 +91,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			mockModelService ??= new Mock<INtiWarningLetterModelService>();
-			statusesCachedService ??= new Mock<INtiWarningLetterStatusesCachedService>();
 			mockReasonsCachedService ??= new Mock<INtiWarningLetterReasonsCachedService>();
 			mockConditionsCachedService ??= new Mock<INtiWarningLetterConditionsCachedService>();
 			mockLogger ??= new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(statusesCachedService.Object, mockReasonsCachedService.Object, mockModelService.Object, mockConditionsCachedService.Object,
+			return new IndexPageModel(mockReasonsCachedService.Object, mockModelService.Object, mockConditionsCachedService.Object,
 				mockLogger.Object)
 			{
 				PageContext = pageContext,

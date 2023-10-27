@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.Contracts.Permissions;
+﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -18,18 +18,18 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				ClosedAt = ntiModel.ClosedAt,
-				ClosedStatusId = ntiModel.ClosedStatusId,
+				ClosedStatusId = (int?)ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
 				WarningLetterReasonsMapping = ntiModel.Reasons?.Select(r => r.Id).ToArray(),
-				StatusId = ntiModel.Status?.Id,
+				StatusId = (int?)ntiModel.Status,
 				DateLetterSent = ntiModel.SentDate,
 				UpdatedAt = ntiModel.UpdatedAt,
 				WarningLetterConditionsMapping = ntiModel.Conditions?.Select(c => c.Id).ToArray()
 			};
 		}
 
-		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto, ICollection<NtiWarningLetterStatusDto> statuses)
+		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto)
 		{
 			return new NtiWarningLetterModel
 			{
@@ -39,21 +39,19 @@ namespace ConcernsCaseWork.Mappers
 				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
 				SentDate = ntiDto.DateLetterSent,
-				Status = ntiDto.StatusId == null ? null : ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId)),
+				Status = (NtiWarningLetterStatus?)ntiDto.StatusId,
 				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => new NtiWarningLetterReasonModel { Id = r }).ToArray(),
 				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel { Id = c }).ToArray(),
-				ClosedStatusId = ntiDto.ClosedStatusId,
-				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId)) : null,
+				ClosedStatusId = (NtiWarningLetterStatus?)ntiDto.ClosedStatusId,
 				ClosedAt = ntiDto.ClosedAt
 			};
 		}
 
 		public static NtiWarningLetterModel ToServiceModel(
 			NtiWarningLetterDto ntiDto, 
-			ICollection<NtiWarningLetterStatusDto> statuses, 
 			GetCasePermissionsResponse permissionsResponse)
 		{
-			var result = ToServiceModel(ntiDto, statuses);
+			var result = ToServiceModel(ntiDto);
 			result.IsEditable = permissionsResponse.HasEditPermissions() && !result.ClosedAt.HasValue;
 
 			return result;
@@ -96,11 +94,11 @@ namespace ConcernsCaseWork.Mappers
 
 		public static ActionSummaryModel ToActionSummary(this NtiWarningLetterModel model)
 		{
-			var status = (model.Status != null) ? model.Status.Name : "In progress";
+			var status = (model.Status != null) ? model.Status.Description() : "In progress";
 
 			if (model.ClosedAt.HasValue)
 			{
-				status =  model.ClosedStatus?.PastTenseName ?? "";
+				status =  model.ClosedStatusId?.Description();
 			}
 
 			var result = new ActionSummaryModel()

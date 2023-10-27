@@ -3,11 +3,11 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddConditionsPageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
@@ -37,13 +36,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> AllConditions { get; private set; }
 
-		public AddConditionsPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
+		public AddConditionsPageModel(
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<NtiWarningLetterConditionModel> logger)
 		{
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
@@ -141,16 +139,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private void ExtractWarningLetterIdFromRoute()
 		{
 			WarningLetterId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetStatuses()
-		{
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Select(r => new RadioItem
-			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
-			});
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetReasons()
