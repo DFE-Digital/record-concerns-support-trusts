@@ -99,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				SentDate = DateTime.Now.AddDays(-1),
-				Status = new KeyValuePair<int, string>(1, "Status 1"),
+				Status = NtiWarningLetterStatus.SentToTrust,
 				UpdatedAt = DateTime.Now.AddDays(-1)
 			};
 
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
 				Reasons = new NtiWarningLetterReasonModel[] { new NtiWarningLetterReasonModel { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
-				Status = new NtiWarningLetterStatusModel { Id = testData.Status.Key, Name = testData.Status.Value },
+				Status = NtiWarningLetterStatus.SentToTrust,
 				SentDate = testData.SentDate,
 				UpdatedAt = testData.UpdatedAt
 			};
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.Id, Is.EqualTo(testData.Id));
 
 			Assert.That(dbModel.StatusId, Is.Not.Null);
-			Assert.That(dbModel.StatusId, Is.EqualTo(testData.Status.Key));
+			Assert.That(dbModel.StatusId, Is.EqualTo((int?)testData.Status));
 		}
 
 		[Test]
@@ -133,27 +133,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			// arrange
 			var dto = new NtiWarningLetterReasonDto
-			{
-				Id = 1,
-				Name = "Name Name",
-				CreatedAt = new DateTime(2022, 02, 05),
-				UpdatedAt = new DateTime(2022, 02, 05)
-			};
-
-			// act
-			var model = NtiWarningLetterMappers.ToServiceModel(dto);
-
-			// assert
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model.Id, Is.EqualTo(dto.Id));
-			Assert.That(model.Name, Is.EqualTo(dto.Name));
-		}
-
-		[Test]
-		public void NtiWarningLetterStatus_Dto_To_ServiceModel()
-		{
-			// arrange
-			var dto = new NtiWarningLetterStatusDto
 			{
 				Id = 1,
 				Name = "Name Name",
@@ -180,7 +159,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CaseUrn = _fixture.Create<int>(),
 				CreatedAt = _fixture.Create<DateTime>(),
 				ClosedAt = _fixture.Create<DateTime>(),
-				Status = _fixture.Create<NtiWarningLetterStatusDto>()
+				Status = NtiWarningLetterStatus.SentToTrust
 			};
 
 			var serviceModel = new NtiWarningLetterModel
@@ -189,7 +168,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CaseUrn = testData.CaseUrn,
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
-				ClosedStatus = new NtiWarningLetterStatusModel { Id = testData.Status.Id, PastTenseName = testData.Status.Name },
+				ClosedStatusId = NtiWarningLetterStatus.CancelWarningLetter
 			};
 
 			// act
@@ -202,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
 				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiwarningletter/{testData.Id}"));
-				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.Status.Name));
+				Assert.That(actionSummary.StatusName, Is.EqualTo("Cancelled"));
 			});
 
 			actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
@@ -216,16 +195,16 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// Closed status is optional, so the database and api will not stop someone from closing a case without a status
 			// The client should catch this, but just in case there is a regression, we should handle it
 			var model = _fixture.Create<NtiWarningLetterModel>();
-			model.ClosedStatus = null;
+			model.ClosedStatusId = null;
 
 			var actionSummary = model.ToActionSummary();
 
-			actionSummary.StatusName.Should().Be("");
+			actionSummary.StatusName.Should().BeNull();
 		}
 
 		[TestCaseSource(nameof(GetStatusTestCases))]
 		public void WhenMapDbModelToActionSummary_WhenActionIsOpen_ReturnsCorrectStatus(
-			NtiWarningLetterStatusModel? status, 
+			NtiWarningLetterStatus? status, 
 			string expectedResult)
 		{
 			var model = _fixture.Create<NtiWarningLetterModel>();
@@ -240,7 +219,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		private static IEnumerable<TestCaseData> GetStatusTestCases()
 		{
 			yield return new TestCaseData(null, "In progress");
-			yield return new TestCaseData(new NtiWarningLetterStatusModel() { Name = "Test"}, "Test");
+			yield return new TestCaseData(NtiWarningLetterStatus.PreparingWarningLetter, "Preparing warning letter");
 		}
 
 		private static IEnumerable<TestCaseData> GetPermissionTestCases()

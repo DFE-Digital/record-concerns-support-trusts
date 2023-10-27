@@ -73,16 +73,6 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiWarningLetterStatusModel ToServiceModel(NtiWarningLetterStatusDto ntiStatusDto)
-		{
-			return new NtiWarningLetterStatusModel
-			{
-				Id = ntiStatusDto.Id,
-				Name = ntiStatusDto.Name,
-				PastTenseName = ntiStatusDto.PastTenseName
-			};
-		}
-
 		public static NtiWarningLetterReasonModel ToServiceModel(NtiWarningLetterReasonDto ntiWarningLetterReasonDto)
 		{
 			return new NtiWarningLetterReasonModel
@@ -98,7 +88,7 @@ namespace ConcernsCaseWork.Mappers
 
 			if (model.ClosedAt.HasValue)
 			{
-				status =  model.ClosedStatusId?.Description();
+				status = GetClosedStatusName(model);
 			}
 
 			var result = new ActionSummaryModel()
@@ -113,6 +103,16 @@ namespace ConcernsCaseWork.Mappers
 			};
 
 			return result;
+		}
+
+		private static string GetClosedStatusName(NtiWarningLetterModel model)
+		{
+			if (model.ClosedStatusId == NtiWarningLetterStatus.CancelWarningLetter)
+			{
+				return "Cancelled";
+			}
+
+			return model.ClosedStatusId?.Description();
 		}
 	}
 }

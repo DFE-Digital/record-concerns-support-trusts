@@ -84,7 +84,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
-                                RenderValue(Model.NtiWarningLetterModel.Status?.Name);
+                                RenderValue(Model.NtiWarningLetterModel.Status?.Description());
                             }
                         </td>
                     }
@@ -93,7 +93,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
-                                RenderValue(Model.NtiWarningLetterModel.ClosedStatus?.Name);
+                                RenderValue(Model.NtiWarningLetterModel.ClosedStatusId?.Description());
                             }
                         </td>
                     }
