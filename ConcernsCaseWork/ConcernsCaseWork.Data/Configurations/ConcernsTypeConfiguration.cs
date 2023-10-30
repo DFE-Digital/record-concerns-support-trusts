@@ -81,7 +81,7 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			new ConcernsType
 			{
 				Id = (int)API.Contracts.Concerns.ConcernType.Safeguarding,
-				Name = "Safeguarding",
+				Name = "Safeguarding non-compliance",
 				Description = null,
 				CreatedAt = new DateTime(2023, 1, 24),
 				UpdatedAt = new DateTime(2023, 1, 24)
