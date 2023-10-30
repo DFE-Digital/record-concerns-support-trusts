@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CaseUrn = 123,
 				CreatedAt = DateTime.Now.AddDays(-5),
 				Notes = "Test notes",
-				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
+				Reasons = new[] { NtiReason.Safeguarding },
 				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1),
@@ -46,9 +46,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = null,
 				Notes = testData.Notes,
 				DateStarted = testData.DateStarted,
-				StatusId = testData.Status.Key,
+				StatusId = (int)NtiStatus.Lifted,
 				UpdatedAt = testData.UpdatedAt,
-				ReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray(),
+				ReasonsMapping = testData.Reasons.Select(r => (int)r).ToArray(),
 				SumissionDecisionId = testData.SumissionDecisionId,
 				DateNTIClosed = testData.DateNTIClosed,
 				DateNTILifted = testData.DateNTILifted
@@ -65,8 +65,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Id, Is.EqualTo(testData.Id));
 			Assert.That(serviceModel.Reasons, Is.Not.Null);
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
-			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
-			Assert.That(serviceModel.Status, Is.Not.Null);
+			Assert.That(serviceModel.Reasons.ElementAt(0), Is.EqualTo(testData.Reasons.ElementAt(0)));
+			Assert.That(serviceModel.Status, Is.EqualTo(NtiStatus.Lifted));
 			Assert.That(serviceModel.SubmissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
 			Assert.That(serviceModel.DateNTILifted, Is.EqualTo(testData.DateNTILifted));
 			Assert.That(serviceModel.DateNTIClosed, Is.EqualTo(testData.DateNTIClosed));
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
-				Reasons = new NtiReasonModel[] { new NtiReasonModel { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
+				Reasons = new[] { NtiReason.CashFlowProblems },
 				Status = NtiStatus.PreparingNTI,
 				DateStarted = testData.DateStarted,
 				UpdatedAt = testData.UpdatedAt,
@@ -142,25 +142,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.SubmissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
 			Assert.That(serviceModel.DateNTILifted, Is.EqualTo(testData.DateNTILifted));
 			Assert.That(serviceModel.DateNTIClosed, Is.EqualTo(testData.DateNTIClosed));
-		}
-
-		[Test]
-		public void NtiReason_Dto_To_ServiceModel()
-		{
-			// arrange
-			var dto = new NtiReasonDto
-			{
-				Id = 1,
-				Name = "Name Name"
-			};
-
-			// act
-			var model = NtiMappers.ToServiceModel(dto);
-
-			// assert
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model.Id, Is.EqualTo(dto.Id));
-			Assert.That(model.Name, Is.EqualTo(dto.Name));
 		}
 		
 		[Test]

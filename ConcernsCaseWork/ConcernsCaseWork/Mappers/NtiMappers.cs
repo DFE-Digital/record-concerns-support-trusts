@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Mappers
 				ClosedStatusId = (int?)ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
-				ReasonsMapping = ntiModel.Reasons?.Select(r => r.Id).ToArray(),
+				ReasonsMapping = ntiModel.Reasons?.Select(r => (int)r).ToArray(),
 				StatusId = (int?)ntiModel.Status,
 				DateStarted = ntiModel.DateStarted,
 				UpdatedAt = ntiModel.UpdatedAt,
@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Mappers
 				Notes = ntiDto.Notes,
 				DateStarted = ntiDto.DateStarted,
 				Status = (NtiStatus?)ntiDto.StatusId,
-				Reasons = ntiDto.ReasonsMapping?.Select(r => new NtiReasonModel { Id = r }).ToArray(),
+				Reasons = ntiDto.ReasonsMapping?.Select(r => (NtiReason)r).ToArray(),
 				Conditions = ntiDto.ConditionsMapping?.Select(c => new NtiConditionModel { Id = c }).ToArray(),
 				ClosedStatusId = (NtiStatus?)ntiDto.ClosedStatusId,
 				ClosedAt = ntiDto.ClosedAt,
@@ -74,15 +74,6 @@ namespace ConcernsCaseWork.Mappers
 					Name = ntiConditionDto.Type.Name,
 					DisplayOrder = ntiConditionDto.Type.DisplayOrder
 				}
-			};
-		}
-
-		public static NtiReasonModel ToServiceModel(NtiReasonDto ntiReasonDto)
-		{
-			return new NtiReasonModel
-			{
-				Id = ntiReasonDto.Id,
-				Name = ntiReasonDto.Name
 			};
 		}
 

@@ -31,10 +31,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = 1;
 			pageModel.NtiId = 123;
@@ -56,10 +55,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var ntiId = 123;
 			var caseUrn = 1;
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 			var nti = NTIFactory.BuildClosedNTIModel();
 
 			mockNtiModelService.Setup(s => s.GetNtiByIdAsync(ntiId)).ReturnsAsync(nti);
@@ -89,10 +87,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			// arrange
 			var caseUrn = 111;
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = caseUrn;
 
@@ -123,10 +120,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			// arrange
 			var caseUrn = 111;
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = caseUrn;
 
@@ -157,12 +153,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var caseUrn = 111;
 			var ntiId = 123;
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			mockNtiModelService.Setup(ms => ms.GetNtiByIdAsync(ntiId)).Returns(Task.FromResult(new NtiModel { Id = ntiId }));
 			
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			pageModel.CaseUrn = caseUrn;
 			pageModel.NtiId = ntiId;
@@ -190,13 +185,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		private static AddPageModel SetupAddPageModel(Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new AddPageModel(mockNtiReasonsCachedService.Object,
+			return new AddPageModel(
 				mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,

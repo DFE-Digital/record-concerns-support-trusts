@@ -22,13 +22,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiModel NtiModel { get; set; }
 
-		public ICollection<NtiReasonDto> NtiReasons { get; private set; }
 		public ICollection<NtiConditionDto> NtiConditions { get; private set; }
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
@@ -40,12 +38,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
 			INtiConditionsCachedService ntiConditionsCachedService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_ntiConditionsCachedService = ntiConditionsCachedService;
 			_logger = logger;
 		}
@@ -71,12 +67,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			if (nti != null)
 			{
-				if (nti.Reasons?.Any() == true)
-				{
-					NtiReasons = await _ntiReasonsCachedService.GetAllReasonsAsync();
-					nti.Reasons = NtiReasons.Where(r => nti.Reasons.Any(ntir => ntir.Id == r.Id))?.Select(r => NtiMappers.ToServiceModel(r)).ToArray();
-				}
-
 				if (nti.Conditions?.Any() == true)
 				{
 					NtiConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();

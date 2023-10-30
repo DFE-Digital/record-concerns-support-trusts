@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -20,7 +22,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddConditionsPageModel : AbstractPageModel
 	{
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
 		private readonly ILogger<AddConditionsPageModel> _logger;
@@ -41,12 +42,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public ICollection<NtiConditionDto> AllConditions { get; private set; }
 
 		public AddConditionsPageModel(
-			INtiReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiModelService ntiModelService,
 			INtiConditionsCachedService ntiConditionsCachedService,
 			ILogger<AddConditionsPageModel> logger)
 		{
-			_ntiReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiModelService = ntiModelService;
 			_ntiConditionsCachedService = ntiConditionsCachedService;
 			_logger = logger;
@@ -54,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI::AddConditionsPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			if (string.IsNullOrEmpty(ContinuationId))
 			{
@@ -120,16 +119,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		private async Task<NtiModel> GetUpToDateModel()
 		{
 			return await _ntiModelService.GetNtiAsync(ContinuationId);
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetReasons()
-		{
-			var reasons = await _ntiReasonsCachedService.GetAllReasonsAsync();
-			return reasons.Select(r => new RadioItem
-			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
-			});
 		}
 	}
 }

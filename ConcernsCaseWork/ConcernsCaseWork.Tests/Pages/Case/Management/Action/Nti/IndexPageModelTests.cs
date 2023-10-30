@@ -23,14 +23,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiConditionsService = new Mock<INtiConditionsCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiViewModelAsync(1, It.IsAny<long>())).ReturnsAsync(ntiModel);
 
-			var pageModel = SetupIndexPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiConditionsService, mockLogger);
+			var pageModel = SetupIndexPageModel(mockNtiModelService, mockNtiConditionsService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 
@@ -46,14 +45,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiModelService> mockModelService,
-			Mock<INtiReasonsCachedService> mockReasonsCachedService,
 			Mock<INtiConditionsCachedService> mockConditionsCachedService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockModelService.Object, mockReasonsCachedService.Object, mockConditionsCachedService.Object, mockLogger.Object)
+			return new IndexPageModel(mockModelService.Object, mockConditionsCachedService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

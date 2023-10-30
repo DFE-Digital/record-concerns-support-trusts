@@ -27,18 +27,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var ntiId = 835;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
-				new NtiReasonDto { Id = 1, Name = "Reason 1" }
-			});
 			
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
 				.ReturnsAsync(ntiModel);
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
@@ -52,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.CaseUrn, Is.EqualTo(caseUrn));
 			Assert.That(pageModel.Statuses.First().Text, Is.EqualTo("Preparing NTI"));
-			Assert.That(pageModel.Reasons.First().Text, Is.EqualTo("Reason 1"));
+			Assert.That(pageModel.Reasons.First().Text, Is.EqualTo("Cash flow problems"));
 			Assert.That(pageModel.CancelLinkUrl, Is.Not.Null);
 		}
 
@@ -64,18 +59,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var ntiId = 835;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
-				new NtiReasonDto { Id = 1, Name = "Reason 1" }
-			});
 			
 			var ntiModel = NTIFactory.BuildClosedNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
 				.ReturnsAsync(ntiModel);
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
@@ -93,14 +83,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		private static AddPageModel SetupAddPageModel(Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new AddPageModel(
-				mockNtiReasonsCachedService.Object,
 				mockNtiModelService.Object, 
 				mockLogger.Object)
 			{

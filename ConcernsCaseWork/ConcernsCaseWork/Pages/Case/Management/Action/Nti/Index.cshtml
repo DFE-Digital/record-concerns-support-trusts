@@ -175,7 +175,7 @@
                                 foreach (var reason in Model.NtiModel.Reasons)
                                 {
                                     <div class="govuk-!-padding-bottom-2">
-                                        <span>@reason.Name</span>
+                                        <span>@reason.Description()</span>
                                     </div>
                                 }
                             }

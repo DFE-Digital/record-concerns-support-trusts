@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 	public class NtiModel : CaseActionModel
 	{
 		public NtiStatus? Status { get; set; }
-		public ICollection<NtiReasonModel> Reasons { get; set; }
+		public ICollection<NtiReason> Reasons { get; set; }
 		public ICollection<NtiConditionModel> Conditions { get; set; }
 		public string Notes { get; set; }
 		public DateTime? DateStarted { get; set; }
