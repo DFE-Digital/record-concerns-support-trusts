@@ -28,9 +28,13 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 		[Description("Financial compliance")]
 		Compliance = 23,
 
+		[Description("Safeguarding non-compliance")]
 		Safeguarding = 24,
 
 		[Description("Governance")]
-		Governance = 25
+		Governance = 25,
+
+		[Description("Non-compliance")]
+		NonCompliance = 26
 	}
 }

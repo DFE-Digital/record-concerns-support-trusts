@@ -93,6 +93,14 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 				Description = null,
 				CreatedAt = new DateTime(2023, 10, 9),
 				UpdatedAt = new DateTime(2023, 10, 9)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.NonCompliance,
+				Name = "Non-compliance",
+				Description = null,
+				CreatedAt = new DateTime(2023, 10, 30),
+				UpdatedAt = new DateTime(2023, 10, 30)
 			}
 		);
 	}
