@@ -236,7 +236,8 @@ namespace ConcernsCaseWork.Models
 			var radioItems = new List<SimpleRadioItem>()
 			{
 				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
-				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() },
+				new SimpleRadioItem(ConcernType.NonCompliance.Description(), (int)ConcernType.NonCompliance) { TestId = ConcernType.NonCompliance.Description() },
+				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() }
 			};
 
 			return new(ElementRootId: "concern-type", name, "Select concern type")
