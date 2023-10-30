@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
@@ -69,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 				ntiModel.Notes = Notes.Text.StringContents;
 				ntiModel.DateNTIClosed = !DateNTIClosed.Date?.IsEmpty() ?? false ? DateNTIClosed.Date?.ToDateTime() : null;
-				ntiModel.ClosedStatusId = (int)NTIStatus.Closed;
+				ntiModel.ClosedStatusId = NtiStatus.Closed;
 				ntiModel.ClosedAt = DateTime.Now;
 
 				await _ntiModelService.PatchNtiAsync(ntiModel);

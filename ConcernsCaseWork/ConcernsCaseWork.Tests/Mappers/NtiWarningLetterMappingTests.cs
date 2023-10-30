@@ -78,9 +78,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			ntiDto.StatusId = null;
 			ntiDto.ClosedStatusId = null;
 			ntiDto.ClosedAt = closedDate;
-			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
 
-			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, casePermissionsResponse);
 
 			serviceModel.IsEditable.Should().BeFalse();
 			serviceModel.ClosedAt.Should().Be(closedDate);
