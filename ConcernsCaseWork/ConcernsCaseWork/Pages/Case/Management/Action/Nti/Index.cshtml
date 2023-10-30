@@ -96,7 +96,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell" data-testid="status-text">
                             @{
-                                RenderValue(Model.NtiModel.ClosedStatusId.Description());
+                                RenderValue(Model.NtiModel.ClosedStatusId?.Description());
                             }
                         </td>
                     }
