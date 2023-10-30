@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
@@ -13,7 +13,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
@@ -113,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 					&& nti.DateNTIClosed.Value.Month == closedDate.Month
 					&& nti.DateNTIClosed.Value.Day == closedDate.Day
 					&& string.Equals(nti.Notes, closureNotes, StringComparison.Ordinal)
-					&& nti.ClosedStatusId == (int)NTIStatus.Closed
+					&& nti.ClosedStatusId == NtiStatus.Closed
 				)),
 				Times.Once());
 		}
@@ -131,22 +130,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-		}
-
-		private string GenereateString(int length)
-		{
-			var chars = Enumerable.Range(65, 50).Select(i => (char)i).ToArray();
-			var stringChars = new char[length];
-			var random = new Random();
-
-			for (int i = 0; i < stringChars.Length; i++)
-			{
-				stringChars[i] = chars[random.Next(chars.Length)];
-			}
-
-			var finalString = new String(stringChars);
-
-			return finalString;
 		}
 	}
 

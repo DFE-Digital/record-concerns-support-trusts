@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management/action/nti/{ntiId:long}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Nti.IndexPageModel
+@using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 @using ConcernsCaseWork.Enums;
 
 @using ConcernsCaseWork.Extensions
@@ -86,7 +87,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell" data-testid="status-text">
                             @{
-                                RenderValue(Model.NtiModel.Status?.Name);
+                                RenderValue(Model.NtiModel.Status?.Description());
                             }
                         </td>
                     }
@@ -95,7 +96,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell" data-testid="status-text">
                             @{
-                                RenderValue(Model.NtiModel.ClosedStatus?.Name);
+                                RenderValue(Model.NtiModel.ClosedStatusId?.Description());
                             }
                         </td>
                     }
@@ -115,9 +116,9 @@
                 @* Date Closed *@
                 @if (isClosed)
                 {
-                    switch (Model.NtiModel.ClosedStatus.Id)
+                    switch (Model.NtiModel.ClosedStatusId)
                     {
-                        case (int)NTIStatus.Cancelled:
+                        case NtiStatus.Cancelled:
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Date NTI cancelled</th>
                                 <td class="govuk-table__cell" data-testid="date-nti-cancelled">
@@ -128,7 +129,7 @@
                             </tr>
                             break;
 
-                        case (int)NTIStatus.Lifted:
+                        case NtiStatus.Lifted:
                             <tr class="govuk-table__row">
 
                                 <th scope="row" class="govuk-table-case-details__header">Date NTI Lifted</th>
@@ -148,7 +149,7 @@
                                 </td>
                             </tr>
                             break;
-                        case (int)NTIStatus.Closed:
+                        case NtiStatus.Closed:
                             <tr class="govuk-table__row">
 
                                 <th scope="row" class="govuk-table-case-details__header">Date NTI Closed</th>
@@ -160,7 +161,7 @@
                             </tr>
                             break;
                         default:
-                            throw new Exception($"{nameof(IndexPageModel)}::Uknown status found - {Model.NtiModel.ClosedStatus.Name}");
+                            throw new Exception($"{nameof(IndexPageModel)}::Uknown status found - {Model.NtiModel.ClosedStatusId}");
                     }
                 }
 
@@ -174,7 +175,7 @@
                                 foreach (var reason in Model.NtiModel.Reasons)
                                 {
                                     <div class="govuk-!-padding-bottom-2">
-                                        <span>@reason.Name</span>
+                                        <span>@reason.Description()</span>
                                     </div>
                                 }
                             }

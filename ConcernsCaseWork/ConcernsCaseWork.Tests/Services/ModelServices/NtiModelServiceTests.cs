@@ -130,10 +130,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 
 		private NtiModelService CreateNtiModelService(INtiCachedService ntiService)
 		{
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
 			var permissionsService = new Mock<ICasePermissionsService>();
 
-			var result = new NtiModelService(ntiService, mockStatusCachedService.Object, permissionsService.Object);
+			var result = new NtiModelService(ntiService, permissionsService.Object);
 
 			return result;
 		}

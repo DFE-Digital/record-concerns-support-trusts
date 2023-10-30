@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.API.Contracts.Permissions;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Nti;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -18,11 +18,11 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				ClosedAt = ntiModel.ClosedAt,
-				ClosedStatusId = ntiModel.ClosedStatusId,
+				ClosedStatusId = (int?)ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
-				ReasonsMapping = ntiModel.Reasons?.Select(r => r.Id).ToArray(),
-				StatusId = ntiModel.Status?.Id,
+				ReasonsMapping = ntiModel.Reasons?.Select(r => (int)r).ToArray(),
+				StatusId = (int?)ntiModel.Status,
 				DateStarted = ntiModel.DateStarted,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ConditionsMapping = ntiModel.Conditions?.Select(c => c.Id).ToArray(),
@@ -32,15 +32,15 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiModel ToServiceModel(NtiDto ntiDto, ICollection<NtiStatusDto> statuses, GetCasePermissionsResponse permissionResponse)
+		public static NtiModel ToServiceModel(NtiDto ntiDto, GetCasePermissionsResponse permissionResponse)
 		{
-			var result = ToServiceModel(ntiDto, statuses);
+			var result = ToServiceModel(ntiDto);
 			result.IsEditable = permissionResponse.HasEditPermissions() && !ntiDto.ClosedAt.HasValue;
 
 			return result;
 		}
 
-		public static NtiModel ToServiceModel(NtiDto ntiDto, ICollection<NtiStatusDto> statuses)
+		public static NtiModel ToServiceModel(NtiDto ntiDto)
 		{
 			return new NtiModel
 			{
@@ -50,11 +50,10 @@ namespace ConcernsCaseWork.Mappers
 				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
 				DateStarted = ntiDto.DateStarted,
-				Status = ntiDto.StatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId.Value)) : null,
-				Reasons = ntiDto.ReasonsMapping?.Select(r => new NtiReasonModel { Id = r }).ToArray(),
+				Status = (NtiStatus?)ntiDto.StatusId,
+				Reasons = ntiDto.ReasonsMapping?.Select(r => (NtiReason)r).ToArray(),
 				Conditions = ntiDto.ConditionsMapping?.Select(c => new NtiConditionModel { Id = c }).ToArray(),
-				ClosedStatusId = ntiDto.ClosedStatusId,
-				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId.Value)) : null,
+				ClosedStatusId = (NtiStatus?)ntiDto.ClosedStatusId,
 				ClosedAt = ntiDto.ClosedAt,
 				SubmissionDecisionId = ntiDto.SumissionDecisionId,
 				DateNTILifted = ntiDto.DateNTILifted,
@@ -78,31 +77,13 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiStatusModel ToServiceModel(NtiStatusDto ntiStatusDto)
-		{
-			return new NtiStatusModel
-			{
-				Id = ntiStatusDto.Id,
-				Name = ntiStatusDto.Name
-			};
-		}
-
-		public static NtiReasonModel ToServiceModel(NtiReasonDto ntiReasonDto)
-		{
-			return new NtiReasonModel
-			{
-				Id = ntiReasonDto.Id,
-				Name = ntiReasonDto.Name
-			};
-		}
-
 		public static ActionSummaryModel ToActionSummary(this NtiModel model)
 		{
-			var status = (model.Status != null) ? model.Status.Name : "In progress";
+			var status = (model.Status != null) ? model.Status.Description() : "In progress";
 
 			if (model.ClosedAt.HasValue)
 			{
-				status = model.ClosedStatus.Name;
+				status = model.ClosedStatusId?.Description();
 			}
 
 			var result = new ActionSummaryModel()
