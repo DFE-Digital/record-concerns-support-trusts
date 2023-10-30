@@ -144,14 +144,14 @@ describe("Creating a case", () => {
             caseManagementPage.addAnotherConcern();
     
             createConcernPage
-                .withConcernType("Safeguarding")
+                .withConcernType("Safeguarding non-compliance")
                 .withConcernRating("Red-Amber")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
     
             caseManagementPage
                 .hasConcerns("Governance", ["Amber", "Green"])
-                .hasConcerns("Safeguarding", ["Red", "Amber"]);
+                .hasConcerns("Safeguarding non-compliance", ["Red", "Amber"]);
 
             Logger.Log("Check the available case actions");
             caseManagementPage.getAddToCaseBtn().click();
