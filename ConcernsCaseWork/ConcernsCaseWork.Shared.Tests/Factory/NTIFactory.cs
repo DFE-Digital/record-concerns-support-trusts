@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var closedStatusId = Fixture.Create<int>();
 
 			ntiModel.ClosedAt = Fixture.Create<DateTime>();
-			ntiModel.ClosedStatusId = closedStatusId;
-			ntiModel.ClosedStatus = new NtiStatusModel()
-			{
-				Id = closedStatusId,
-				Name = Fixture.Create<string>()
-			};
+			ntiModel.ClosedStatusId = (NtiStatus?)closedStatusId;
 
 			return ntiModel;
 		}

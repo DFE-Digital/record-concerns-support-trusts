@@ -1,6 +1,12 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,11 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.Nti;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -20,7 +21,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<AddPageModel> _logger;
@@ -54,12 +54,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public string CancelLinkUrl { get; set; }
 
-		public AddPageModel(INtiStatusesCachedService ntiWarningLetterStatusesCachedService,
+		public AddPageModel(
 			INtiReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiModelService ntiWarningLetterModelService,
 			ILogger<AddPageModel> logger)
 		{
-			_ntiStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiModelService = ntiWarningLetterModelService;
 			_logger = logger;
@@ -137,7 +136,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task SetupPage()
 		{
-			Statuses = await GetStatuses();
+			Statuses = GetStatuses();
 			Reasons = await GetReasons();
 
 			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
@@ -258,14 +257,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetStatuses()
+		private IEnumerable<RadioItem> GetStatuses()
 		{
-			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Where(s => !s.IsClosingState).Select(s => new RadioItem
+			var statuses = new List<NtiStatus>
 			{
-				Id = Convert.ToString(s.Id),
-				Text = s.Name,
-				IsChecked = Nti?.Status?.Id == s.Id
+				NtiStatus.PreparingNTI,
+				NtiStatus.IssuedNTI,
+				NtiStatus.ProgressOnTrack,
+				NtiStatus.EvidenceOfNTINonCompliance,
+				NtiStatus.SeriousNTIBreaches,
+				NtiStatus.SubmissionToLiftNTIInProgress,
+				NtiStatus.SubmissionToCloseNTIInProgress
+			};
+
+			return statuses.Select(s => new RadioItem
+			{
+				Id = ((int)s).ToString(),
+				Text = s.Description(),
+				IsChecked = Nti?.Status == s
 			});
 		}
 
@@ -305,11 +314,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			var reasons = Request.Form["reason"];
 			var status = Request.Form["status"];
 
+			int? statusValue = int.TryParse(status.FirstOrDefault(), out int result) ? result : null;
+
 			var nti = new NtiModel()
 			{
 				CaseUrn = CaseUrn,
 				Reasons = reasons.Select(r => new NtiReasonModel { Id = int.Parse(r) }).ToArray(),
-				Status = int.TryParse(status, out int statusId) ? new NtiStatusModel { Id = statusId } : null,
+				Status = (NtiStatus?)statusValue,
 				Conditions = Array.Empty<NtiConditionModel>(),
 				Notes = Notes.Text.StringContents,
 				DateStarted = DateIssued.Date.ToDateTime(),

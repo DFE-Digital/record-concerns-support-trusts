@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
@@ -19,7 +20,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddConditionsPageModel : AbstractPageModel
 	{
-		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
@@ -31,19 +31,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		[TempData]
 		public bool IsReturningFromConditions { get; set; }
 
-		public long CaseUrn { get; private set; }
+		[BindProperty(SupportsGet = true, Name = "urn")]
+		public long CaseUrn { get; set; }
+
+		[BindProperty(SupportsGet = true, Name = "ntiId")]
 		public long? NtiId { get; set; }
 
 		public ICollection<NtiConditionModel> SelectedConditions { get; private set; }
 		public ICollection<NtiConditionDto> AllConditions { get; private set; }
 
-		public AddConditionsPageModel(INtiStatusesCachedService ntiWarningLetterStatusesCachedService,
+		public AddConditionsPageModel(
 			INtiReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiModelService ntiModelService,
 			INtiConditionsCachedService ntiConditionsCachedService,
 			ILogger<AddConditionsPageModel> logger)
 		{
-			_ntiStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiModelService = ntiModelService;
 			_ntiConditionsCachedService = ntiConditionsCachedService;
@@ -61,9 +63,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			
 			try
 			{
-				ExtractCaseUrnFromRoute();
-				ExtractIdFromRoute();
-
 				var model = await GetUpToDateModel();
 				
 				SelectedConditions = model.Conditions;
@@ -72,24 +71,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
-				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI::AddConditionsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
 			try
 			{
-				ExtractCaseUrnFromRoute();
-				ExtractIdFromRoute();
-
 				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
@@ -110,8 +105,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI::AddConditionsPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
@@ -125,33 +120,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		private async Task<NtiModel> GetUpToDateModel()
 		{
 			return await _ntiModelService.GetNtiAsync(ContinuationId);
-		}
-
-		private void ExtractCaseUrnFromRoute()
-		{
-			if (TryGetRouteValueInt64("urn", out var caseUrn))
-			{
-				CaseUrn = caseUrn;
-			}
-			else
-			{
-				throw new InvalidOperationException("CaseUrn not found in the route");
-			}
-		}
-
-		private void ExtractIdFromRoute()
-		{
-			NtiId = TryGetRouteValueInt64("ntiId", out var ntiId) ? (long?)ntiId : null;
-		}
-
-		private async Task<IEnumerable<RadioItem>> GetStatuses()
-		{
-			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Select(r => new RadioItem
-			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
-			});
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetReasons()

@@ -189,7 +189,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddScoped<INtiService, NtiService>();
-			services.AddScoped<INtiStatusesService, NtiStatusesService>();
 			services.AddScoped<INtiReasonsService, NtiReasonsService>();
 			services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
@@ -209,7 +208,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-			services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
 			services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
 			services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
