@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
+﻿using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,23 +27,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var ntiId = 835;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			mockNtiStatusesService.Setup(svc => svc.GetAllStatusesAsync()).ReturnsAsync(new NtiStatusDto[] {
-				new NtiStatusDto { Id = 1, Name = "Status 1" }
-			});
-
-			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
-				new NtiReasonDto { Id = 1, Name = "Reason 1" }
-			});
 			
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
 				.ReturnsAsync(ntiModel);
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
@@ -58,8 +46,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.CaseUrn, Is.EqualTo(caseUrn));
-			Assert.That(pageModel.Statuses.Single().Text, Is.EqualTo("Status 1"));
-			Assert.That(pageModel.Reasons.Single().Text, Is.EqualTo("Reason 1"));
+			Assert.That(pageModel.Statuses.First().Text, Is.EqualTo("Preparing NTI"));
+			Assert.That(pageModel.Reasons.First().Text, Is.EqualTo("Cash flow problems"));
 			Assert.That(pageModel.CancelLinkUrl, Is.Not.Null);
 		}
 
@@ -71,23 +59,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var ntiId = 835;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
-			mockNtiStatusesService.Setup(svc => svc.GetAllStatusesAsync()).ReturnsAsync(new NtiStatusDto[] {
-				new NtiStatusDto { Id = 1, Name = "Status 1" }
-			});
-
-			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
-				new NtiReasonDto { Id = 1, Name = "Reason 1" }
-			});
 			
 			var ntiModel = NTIFactory.BuildClosedNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
 				.ReturnsAsync(ntiModel);
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
@@ -105,15 +83,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		private static AddPageModel SetupAddPageModel(Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
-			Mock<INtiStatusesCachedService> mockNtiStatusesCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new AddPageModel(mockNtiStatusesCachedService.Object, mockNtiReasonsCachedService.Object,
-				mockNtiModelService.Object, mockLogger.Object)
+			return new AddPageModel(
+				mockNtiModelService.Object, 
+				mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
