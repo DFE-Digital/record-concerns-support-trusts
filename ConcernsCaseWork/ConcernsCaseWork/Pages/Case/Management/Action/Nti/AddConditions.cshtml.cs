@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	public class AddConditionsPageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
-		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
+		private readonly INtiConditionsService _ntiConditionsService;
 		private readonly ILogger<AddConditionsPageModel> _logger;
 
 		[TempData]
@@ -43,11 +43,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public AddConditionsPageModel(
 			INtiModelService ntiModelService,
-			INtiConditionsCachedService ntiConditionsCachedService,
+			INtiConditionsService ntiConditionsService,
 			ILogger<AddConditionsPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiConditionsCachedService = ntiConditionsCachedService;
+			_ntiConditionsService = ntiConditionsService;
 			_logger = logger;
 		}
 
@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				
 				SelectedConditions = model.Conditions;
 
-				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();
+				AllConditions = await _ntiConditionsService.GetAllConditionsAsync();
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		{
 			try
 			{
-				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();
+				AllConditions = await _ntiConditionsService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
 				model.Conditions = conditions.Select(s => NtiMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();

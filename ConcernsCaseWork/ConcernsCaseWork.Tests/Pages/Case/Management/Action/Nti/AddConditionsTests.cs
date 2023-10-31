@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
@@ -44,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var caseUrn = 191L;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var continuationId = Guid.NewGuid().ToString();
@@ -76,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var caseUrn = 191L;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
@@ -101,7 +102,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
@@ -111,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		private static AddConditionsPageModel SetupAddConditionsPageModel(Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiConditionsCachedService> mockConditionsCachedService,
+			Mock<INtiConditionsService> mockConditionsCachedService,
 			Mock<ILogger<AddConditionsPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{

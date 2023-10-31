@@ -4,7 +4,6 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +21,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
-		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
+		private readonly INtiConditionsService _ntiConditionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiModel NtiModel { get; set; }
@@ -38,11 +37,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiModelService ntiModelService,
-			INtiConditionsCachedService ntiConditionsCachedService,
+			INtiConditionsService ntiConditionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiConditionsCachedService = ntiConditionsCachedService;
+			_ntiConditionsService = ntiConditionsService;
 			_logger = logger;
 		}
 
@@ -69,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			{
 				if (nti.Conditions?.Any() == true)
 				{
-					NtiConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();
+					NtiConditions = await _ntiConditionsService.GetAllConditionsAsync();
 					nti.Conditions = NtiConditions.Where(c => nti.Conditions.Any(ntic => ntic.Id == c.Id))?.Select(c => NtiMappers.ToServiceModel(c)).ToArray();
 				}
 			}

@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	public class AddConditionsPageModel : AbstractPageModel
 	{
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
-		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
+		private readonly INtiWarningLetterConditionsService _ntiWarningLetterConditionsService;
 		private readonly ILogger<AddConditionsPageModel> _logger;
 
 		[TempData]
@@ -40,11 +39,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public AddConditionsPageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
-			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
+			INtiWarningLetterConditionsService ntiWarningLetterConditionsService,
 			ILogger<AddConditionsPageModel> logger)
 		{
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
+			_ntiWarningLetterConditionsService = ntiWarningLetterConditionsService;
 			_logger = logger;
 		}
 
@@ -62,7 +61,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				var model = await GetUpToDateModel();
 				SelectedConditions = model.Conditions;
 
-				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+				AllConditions = await _ntiWarningLetterConditionsService.GetAllConditionsAsync();
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
@@ -82,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			try
 			{
-				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+				AllConditions = await _ntiWarningLetterConditionsService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
 				model.Conditions = conditions.Select(s => NtiWarningLetterMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();

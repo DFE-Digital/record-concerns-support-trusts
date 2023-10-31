@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -43,17 +44,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiWarningLetterModelService> mockModelService = null,
-			Mock<INtiWarningLetterConditionsCachedService> mockConditionsCachedService = null,
+			Mock<INtiWarningLetterConditionsService> mockConditionsService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			mockModelService ??= new Mock<INtiWarningLetterModelService>();
-			mockConditionsCachedService ??= new Mock<INtiWarningLetterConditionsCachedService>();
+			mockConditionsService ??= new Mock<INtiWarningLetterConditionsService>();
 			mockLogger ??= new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(mockModelService.Object, mockConditionsCachedService.Object,
+			return new IndexPageModel(mockModelService.Object, mockConditionsService.Object,
 				mockLogger.Object)
 			{
 				PageContext = pageContext,

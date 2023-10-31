@@ -205,9 +205,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
-			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-			services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 

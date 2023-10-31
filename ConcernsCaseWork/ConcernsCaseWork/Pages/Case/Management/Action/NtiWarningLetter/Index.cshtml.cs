@@ -4,7 +4,6 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +21,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
-		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
+		private readonly INtiWarningLetterConditionsService _ntiWarningLetterConditionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiWarningLetterModel NtiWarningLetterModel { get; set; }
@@ -37,11 +36,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public IndexPageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
-			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
+			INtiWarningLetterConditionsService ntiWarningLetterConditionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
+			_ntiWarningLetterConditionsService = ntiWarningLetterConditionsService;
 			_logger = logger;
 		}
 
@@ -68,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			{
 				if (wl.Conditions?.Any() == true)
 				{
-					NtiWarningLetterConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+					NtiWarningLetterConditions = await _ntiWarningLetterConditionsService.GetAllConditionsAsync();
 					wl.Conditions = NtiWarningLetterConditions.Where(c => wl.Conditions.Any(wlc => c.Id == wlc.Id)).Select(c => NtiWarningLetterMappers.ToServiceModel(c)).ToArray();
 				}
 			}

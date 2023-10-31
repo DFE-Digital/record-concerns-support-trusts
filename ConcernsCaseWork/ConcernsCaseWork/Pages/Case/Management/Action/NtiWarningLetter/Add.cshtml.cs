@@ -9,6 +9,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
-		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
+		private readonly INtiWarningLetterConditionsService _ntiWarningLetterConditionsService;
 		private readonly ILogger<AddPageModel> _logger;
 
 		public string ActionForAddConditionsButton = "add-conditions";
@@ -61,11 +62,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public AddPageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
-			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
+			INtiWarningLetterConditionsService ntiWarningLetterConditionsService,
 			ILogger<AddPageModel> logger)
 		{
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
+			_ntiWarningLetterConditionsService = ntiWarningLetterConditionsService;
 			_logger = logger;
 		}
 
@@ -245,7 +246,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<NtiWarningLetterModel> SetDefaults(NtiWarningLetterModel ntiWarningLetterModel)
 		{
-			var conditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+			var conditions = await _ntiWarningLetterConditionsService.GetAllConditionsAsync();
 			var financialReturnsCondition = NtiWarningLetterMappers.ToServiceModel(conditions.Single(c => c.Id == (int)NtiWarningLetterCondition.FinancialReturns));
 			ntiWarningLetterModel.Conditions.Add(financialReturnsCondition);
 
