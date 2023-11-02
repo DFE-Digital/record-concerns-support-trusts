@@ -8,9 +8,17 @@ import { CaseBuilder } from "cypress/api/caseBuilder";
 import { CreateCaseRequest, PutTeamRequest, GetTeamByOwnerResponse } from "cypress/api/apiDomain";
 import paginationComponent from "cypress/pages/paginationComponent";
 import caseMangementPage from "cypress/pages/caseMangementPage";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Team casework tests", () =>
 {
+    let now;
+
+    beforeEach(() =>
+    {
+        now = new Date();
+    });
+
 	 describe("When we create a case for a team member", () => {
 
 		let caseId: string;
@@ -49,8 +57,13 @@ describe("Team casework tests", () =>
 				.getRowByCaseId(caseId)
 				.then(row =>
 				{
-					row.hasCaseId(caseId);
-					row.hasOwner(name);
+					row.hasCaseId(caseId)
+                        .hasConcern("Financial compliance")
+                        .hasRiskToTrust("Amber")
+                        .hasRiskToTrust("Green")
+                        .hasManagedBy("SFSO", "Midlands and West - West Midlands")
+                        .hasLastUpdatedDate(toDisplayDate(now))
+                        .hasOwner(name);
 				});
 
 			Logger.Log("Checking accessibility on team casework");
