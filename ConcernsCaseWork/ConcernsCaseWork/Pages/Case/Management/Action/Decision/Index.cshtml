@@ -10,9 +10,9 @@
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+    </div>
 }
 
 <div class="govuk-width-container">
@@ -51,8 +51,10 @@
         }
 
         <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                Decision
+            </caption>
             <tbody class="govuk-table__body">
-
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-open-label">Date decision opened</th>
                     <td class="govuk-table__cell" data-testid="decision-open-text">
@@ -195,8 +197,10 @@
             </h1>
 
             <table class="govuk-table" data-testid="decision-outcome-table">
+                <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                    Decision outcome
+                </caption>
                 <tbody class="govuk-table__body">
-
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="business-areas-consulted-label">Business areas consulted</th>
                         <td class="govuk-table__cell" data-testid="business-areas-consulted-text">
@@ -326,18 +330,18 @@
             @value
         }
     }
-	
-	private void RenderTextAreaValue<T>(T value)
-	{
-		if (IsEmpty(value))
-		{
-			RenderEmptyLabel();
-		}
-		else
-		{
-			<span class="dfe-text-area-display">@value</span>
-		}
-	}
+
+    private void RenderTextAreaValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            <span class="dfe-text-area-display">@value</span>
+        }
+    }
 
     private void RenderLink(string value, string fieldName, string url)
     {
