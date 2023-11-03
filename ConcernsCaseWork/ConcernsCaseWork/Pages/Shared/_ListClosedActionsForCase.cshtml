@@ -2,12 +2,16 @@
 @model IList<ConcernsCaseWork.Models.CaseActions.ActionSummaryModel>
 
 <table id="close-case-actions" class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+        Closed actions and decisions
+    </caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row tr__large">
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_30" scope="col">
                 Closed actions and decisions
             </th>
 	        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_30" scope="col">
+                <span class="govuk-visually-hidden">Status</span>
 	        </th>
 	        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
 		        Date opened
