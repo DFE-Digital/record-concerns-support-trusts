@@ -88,11 +88,11 @@
 
             <ul class="moj-sub-navigation__list">
                 <li class="moj-sub-navigation__item">
-                    <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
+                    <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
                 </li>
 
                 <li class="moj-sub-navigation__item">
-                    <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
+                    <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
                 </li>
             </ul>
         </nav>
@@ -488,7 +488,6 @@
                     if (tabToShow) {
                         tabToShow.addEventListener("click", function() {
                             tableToShow.removeAttribute("hidden");
-                            tabToShow.setAttribute("aria-expanded","true");
                             tabToShow.setAttribute("aria-current","page");
                             tableToHide.hidden = true;
                             tabToHide.removeAttribute("aria-current");
