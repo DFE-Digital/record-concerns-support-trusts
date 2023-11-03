@@ -64,7 +64,6 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 			// These will be fixed one by one
 			rules: {
 				region: { enabled: false },
-				"duplicate-id-aria": { enabled: false }, // smoke
 				"color-contrast": { enabled: false }, // decisions
 			},
 		},
