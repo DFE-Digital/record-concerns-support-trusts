@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -30,6 +32,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 
+		[BindProperty(Name = "urn", SupportsGet = true)]
+		public int CaseId { get; set; }
+
+		[BindProperty(Name = "recordId", SupportsGet = true)]
+		public int RecordId { get; set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
+
 		public EditRatingPageModel(ICaseModelService caseModelService, 
 			IRatingModelService ratingModelService, 
 			IRecordModelService recordModelService,
@@ -47,50 +58,43 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		
 		public async Task<ActionResult> OnGet()
 		{
-			long caseUrn = 0;
-			long recordId = 0;
+			_logger.LogMethodEntered();
 			
 			try
 			{
-				_logger.LogInformation("Case::EditRiskRatingPageModel::OnGet");
-				(caseUrn, recordId) = GetRouteData();
+				await LoadPage(Request.Headers["Referer"].ToString());
+
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditRiskRatingPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 			}
-			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordId);
+
+			return Page();
 		}
 		
 		public async Task<ActionResult> OnPostEditRiskRating(string url)
 		{
-			long caseUrn = 0;
-			long recordId = 0;
+			_logger.LogMethodEntered();
 
 			try
 			{
-				_logger.LogInformation("Case::EditRiskRatingPageModel::OnPostEditRiskRating");
-				
-				(caseUrn, recordId) = GetRouteData();
-				
-				var riskRating = Request.Form["rating"].ToString();
+				if (!ModelState.IsValid)
+				{
+					await LoadPage(url);
+					return Page();
+				}
 
-				if (string.IsNullOrEmpty(riskRating)) 
-					throw new Exception("Missing form values");
-
-				var splitRagRating = riskRating.Split(":");
-				var ratingId = splitRagRating[0];
+				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
 				// Create patch record model
 				var patchRecordModel = new PatchRecordModel
 				{
 					UpdatedAt = DateTimeOffset.Now,
-					Id = recordId,
-					CaseUrn = caseUrn,
-					RatingId = long.Parse(ratingId),
+					Id = RecordId,
+					CaseUrn = CaseId,
+					RatingId = (long)ragRatingId,
 					CreatedBy = User.Identity.Name
 				};
 
@@ -100,50 +104,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditRiskRatingPageModel::OnPostEditRiskRating::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnPostPage;
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
-			return await LoadPage(url, caseUrn, recordId);
+			return Page();
 		}
 		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordId)
+		private async Task LoadPage(string url)
 		{
-			try
-			{
-				if (caseUrn == 0 || recordId == 0)
-					throw new Exception("Case urn cannot be 0");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				var recordModel = await _recordModelService.GetRecordModelById(caseUrn, recordId);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
-				CaseModel.PreviousUrl = url;
+			CaseModel = await _caseModelService.GetCaseByUrn(CaseId);
+			var recordModel = await _recordModelService.GetRecordModelById(CaseId, RecordId);
+			RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
+			TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
+			CaseModel.PreviousUrl = url;
 
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditRiskRatingPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			ConcernRiskRating = CaseComponentBuilder.BuildRiskToTrust(nameof(ConcernRiskRating), (int?)recordModel.RatingId);
 		} 
-
-		private (long caseUrn, long recordId) GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
-			
-			var recordIdValue = RouteData.Values["recordId"];
-			if (recordIdValue == null || !long.TryParse(recordIdValue.ToString(), out long recordId) || recordId == 0)
-				throw new Exception("RecordId is null or invalid to parse");
-
-			return (caseUrn, recordId);
-		}
 	}
 }
