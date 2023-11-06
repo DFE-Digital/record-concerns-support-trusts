@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using AutoFixture;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -14,11 +15,13 @@ namespace ConcernsCaseWork.Service.Tests.Ratings
 	[Parallelizable(ParallelScope.All)]
 	public class RatingServiceTests
 	{
+		private static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenGetRatings_ReturnsTypes()
 		{
 			// arrange
-			var expectedRatings = new ApiListWrapper<RatingDto>(RatingFactory.BuildListRatingDto(), null);
+			var expectedRatings = _fixture.Create<ApiListWrapper<RatingDto>>();
 
 			var concernsApiEndpoint = "https://localhost";
 

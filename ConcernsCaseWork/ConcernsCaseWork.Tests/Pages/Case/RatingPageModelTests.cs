@@ -4,7 +4,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Tests.Helpers;
@@ -33,21 +32,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
 			mockUserStateService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockUserStateService.Object, 
-				mockRatingModelService.Object,
+				mockUserStateService.Object,
 				mockLogger.Object, true);
 			
 			// act
@@ -57,20 +52,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
-			Assert.That(pageModel.RatingsModel, Is.Not.Null);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 			
 			var trustDetailsPageModel = pageModel.TrustDetailsModel;
 			var createRecordsPageModel = pageModel.CreateRecordsModel;
-			var ratingsPageModel = pageModel.RatingsModel;
 			
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsPageModel);
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsPageModel);
-			Assert.IsAssignableFrom<List<RatingModel>>(ratingsPageModel);
 			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 		}
 		
 		[Test]
@@ -80,21 +71,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
 			var userState = new UserState("testing") { CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
 			mockUserStateService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockUserStateService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 			
 			// act
@@ -104,12 +91,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.IsNull(pageModel.TrustDetailsModel);
 			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNull(pageModel.RatingsModel);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
 			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 		}		
 		
 		[Test]
@@ -119,13 +104,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 			
 			// act
@@ -139,7 +122,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 		}		
 		
 		[Test]
@@ -149,14 +131,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing"));
 			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockCachedService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 			
 			// act
@@ -176,14 +156,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockUserStateCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 			
 			// act
@@ -203,7 +181,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -212,13 +189,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.RiskToTrust.SelectedId = 1;
-
-			mockRatingModelService.Setup(x => x.GetRatingModelById(1)).ReturnsAsync(new RatingModel() { Id = 1 });
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -239,7 +213,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -248,7 +221,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
 				mockUserStateCachedService.Object, 
-				mockRatingModelService.Object,
 				mockLogger.Object, true);
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
@@ -264,7 +236,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		private static RatingPageModel SetupRatingPageModel(
 			ITrustModelService mockTrustModelService, 
 			IUserStateCachedService mockUserStateCachedService,
-			IRatingModelService mockRatingModelService,
 			ILogger<RatingPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -272,7 +243,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService,
+			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService,
 				mockLogger, mockClaimsPrincipalHelper.Object,MockTelemetry.CreateMockTelemetryClient())
 			{
 				PageContext = pageContext,

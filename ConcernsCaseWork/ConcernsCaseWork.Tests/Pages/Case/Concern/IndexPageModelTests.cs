@@ -7,7 +7,6 @@ using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -36,19 +35,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var expectedAddress = TrustFactory.BuildTrustAddressModel();
-			var expectedRatingsModel = RatingFactory.BuildListRatingModel();
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing") { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustAddressByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedAddress);
-			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -68,7 +64,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
@@ -77,7 +72,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -98,7 +93,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
@@ -110,7 +104,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -136,16 +130,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>()))
 				.ReturnsAsync((UserState)null);
-			mockRatingModelService.Setup(m => m.GetRatingModelById(1)).ReturnsAsync(() => new RatingModel() { Name = "Test" });
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			pageModel.ConcernType = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.ConcernType.SelectedId = (int)ConcernType.ForceMajeure;
@@ -176,17 +168,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-			mockRatingModelService.Setup(m => m.GetRatingModelById(1)).ReturnsAsync(() => new RatingModel() { Name = "Test" });
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			pageModel.ConcernType = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.ConcernType.SelectedId = (int)ConcernType.ForceMajeure;
@@ -218,7 +208,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
@@ -228,7 +217,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
@@ -250,7 +239,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
@@ -258,7 +246,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockRatingModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
+				mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
@@ -273,7 +261,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 		private static IndexPageModel SetupIndexPageModel(
 			ITrustModelService mockTrustModelService,
 			IUserStateCachedService cachedService,
-			IRatingModelService mockRatingModelService,
 			ILogger<IndexPageModel> mockLogger,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			bool isAuthenticated = false)
@@ -282,8 +269,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			Mock<ICaseModelService> mockCaseModelService = new Mock<ICaseModelService>();
 
-			return new IndexPageModel(mockTrustModelService, cachedService,
-				mockRatingModelService, claimsPrincipalHelper,
+			return new IndexPageModel(
+				mockTrustModelService, 
+				cachedService,
+				claimsPrincipalHelper,
 				mockLogger,
 				MockTelemetry.CreateMockTelemetryClient(),
 				mockCaseModelService.Object)

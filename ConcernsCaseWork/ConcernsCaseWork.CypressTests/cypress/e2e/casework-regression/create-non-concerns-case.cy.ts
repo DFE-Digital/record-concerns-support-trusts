@@ -200,7 +200,7 @@ describe("Creating a non concerns case", () => {
 				.nextStep()
 				.hasValidationError("Select risk to trust rating");
 	
-			createConcernPage.withConcernRating("Red-Plus").nextStep();
+			createConcernPage.withConcernRating("Red Plus").nextStep();
 	
 			Logger.Log("Checking accessibility on create case concern page");
 			cy.excuteAccessibilityTests();
@@ -327,7 +327,7 @@ describe("Creating a non concerns case", () => {
 						.hasConcernType("Deficit")
 						.hasConcernRiskRating("Red Amber");
 
-					createConcernPage.withConcernRating("Red-Plus").nextStep();
+					createConcernPage.withConcernRating("Red Plus").nextStep();
 
 					createCaseSummary
 						.hasTrustSummaryDetails(trustName)

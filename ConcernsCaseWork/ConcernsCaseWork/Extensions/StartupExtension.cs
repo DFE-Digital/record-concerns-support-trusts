@@ -38,7 +38,6 @@ using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.PageHistory;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
@@ -149,7 +148,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
 			services.AddScoped<ITypeModelService, TypeModelService>();
-			services.AddScoped<IRatingModelService, RatingModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddScoped<ISRMAService, SRMAService>();

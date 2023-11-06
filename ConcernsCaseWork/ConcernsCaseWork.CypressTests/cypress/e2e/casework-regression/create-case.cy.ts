@@ -132,7 +132,7 @@ describe("Creating a case", () => {
 			.hasConcernRiskRating("Red Amber");
 
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern and risk to trust details are correctly populated"
@@ -340,7 +340,7 @@ describe("Creating a case", () => {
 		Logger.Log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Suspected fraud")
-			.withConcernRating("Red-Plus")
+			.withConcernRating("Red Plus")
 			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern();
 
@@ -354,7 +354,7 @@ describe("Creating a case", () => {
 			.nextStep();
 
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();

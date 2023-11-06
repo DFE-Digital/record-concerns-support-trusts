@@ -53,8 +53,6 @@ namespace ConcernsCaseWork.Models
 
 		public long RatingId { get; set; }
 
-		public RatingModel RatingModel { get; set; }
-
 		public long StatusId { get; set; }
 
 		public string StatusName { get; set; } = string.Empty;

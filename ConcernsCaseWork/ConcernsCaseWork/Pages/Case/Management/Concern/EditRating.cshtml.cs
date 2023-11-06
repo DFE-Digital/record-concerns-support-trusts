@@ -3,7 +3,6 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Concern
@@ -22,13 +20,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
-		private readonly IRatingModelService _ratingModelService; 
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<EditRatingPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 
@@ -42,7 +38,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public RadioButtonsUiComponent ConcernRiskRating { get; set; }
 
 		public EditRatingPageModel(ICaseModelService caseModelService, 
-			IRatingModelService ratingModelService, 
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService, 
 			ITypeModelService typeModelService,
@@ -50,7 +45,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
-			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_logger = logger;
@@ -115,7 +109,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		{
 			CaseModel = await _caseModelService.GetCaseByUrn(CaseId);
 			var recordModel = await _recordModelService.GetRecordModelById(CaseId, RecordId);
-			RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
 			CaseModel.PreviousUrl = url;

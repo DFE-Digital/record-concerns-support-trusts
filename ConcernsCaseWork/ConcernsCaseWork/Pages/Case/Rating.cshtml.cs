@@ -3,12 +3,10 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.CreateCase;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +22,6 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class RatingPageModel : CreateCaseBasePageModel
 	{
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<RatingPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
@@ -33,7 +30,6 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
@@ -43,12 +39,10 @@ namespace ConcernsCaseWork.Pages.Case
 
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
-			IRatingModelService ratingModelService,
 			ILogger<RatingPageModel> logger, 
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			TelemetryClient telemetryClient) : base(userStateCache, claimsPrincipalHelper)
 		{
-			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_userStateCache = userStateCache;
 			_logger = logger;
@@ -146,7 +140,6 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatingsModel();
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",

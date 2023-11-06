@@ -4,7 +4,6 @@ using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,19 +17,16 @@ namespace ConcernsCaseWork.Services.Records
 	{
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordService _recordCachedService;
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<RecordModelService> _logger;
 		
 		public RecordModelService(IRecordService recordCachedService, 
 			IStatusCachedService statusCachedService,
-			IRatingModelService ratingModelService,
 			ITypeModelService typeModelService,
 			ILogger<RecordModelService> logger)
 		{
 			_recordCachedService = recordCachedService;
 			_statusCachedService = statusCachedService;
-			_ratingModelService = ratingModelService;
 			_typeModelService = typeModelService;
 			_logger = logger;
 		}
@@ -41,18 +37,16 @@ namespace ConcernsCaseWork.Services.Records
 
 			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseUrn);
 			var typesDtoTask = _typeModelService.GetTypes();
-			var ratingsDtoTask = _ratingModelService.GetRatings();
 			var statusesDtoTask = _statusCachedService.GetStatuses();
 			
-			Task.WaitAll(recordsDtoTask, typesDtoTask, ratingsDtoTask, statusesDtoTask);
+			Task.WaitAll(recordsDtoTask, typesDtoTask, statusesDtoTask);
 				
 			var recordsDto = recordsDtoTask.Result;
 			var typesDto = typesDtoTask.Result;
-			var ratingsDto = ratingsDtoTask.Result;
 			var statusesDto = statusesDtoTask.Result;
 				
 			// Map the records dto to model
-			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
+			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, statusesDto);
 
 			return Task.FromResult(recordsModel);
 		}
@@ -98,10 +92,9 @@ namespace ConcernsCaseWork.Services.Records
 
 			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseUrn);
 			var typesDto = await _typeModelService.GetTypes();
-			var ratingsDto = await _ratingModelService.GetRatings();
 			
 			// Map the records dto to model
-			var createRecordsModel = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+			var createRecordsModel = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto);
 
 			return createRecordsModel;
 		}

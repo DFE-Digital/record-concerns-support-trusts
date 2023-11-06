@@ -37,7 +37,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var typeModel = TypeFactory.BuildTypeModel();
 			var createRecordsModel = RecordFactory.BuildListCreateRecordModel();
 

@@ -80,7 +80,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<TypeModel>(),
 				Fixture.Create<long>(),
-				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
 				statusId,
 				Fixture.Create<StatusModel>(),

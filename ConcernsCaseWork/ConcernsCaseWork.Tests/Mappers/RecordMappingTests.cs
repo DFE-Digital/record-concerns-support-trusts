@@ -99,10 +99,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);
@@ -112,7 +111,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			{
 				var recordDto = recordsDto.ElementAt(index);
 				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
 				Assert.That(createRecordsDto.ElementAt(index).Type, Is.EqualTo(typeModel.Type));
 				Assert.That(createRecordsDto.ElementAt(index).CaseUrn, Is.EqualTo(recordDto.CaseUrn));
@@ -129,10 +127,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = new List<RecordDto>();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);

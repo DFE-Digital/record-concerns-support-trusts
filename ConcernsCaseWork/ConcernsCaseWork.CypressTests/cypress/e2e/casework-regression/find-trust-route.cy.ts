@@ -130,7 +130,7 @@ describe("User interactions via Find Trust route", () => {
 			createConcernPage.nextStep();
 
 			Logger.Log("Populate risk to trust");
-			addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+			addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 			Logger.Log(
 				"Check Trust, concern and risk to trust details are correctly populated"
