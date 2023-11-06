@@ -7,7 +7,6 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
@@ -202,7 +201,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
 			services.AddScoped<ITypeCachedService, TypeCachedService>();
 			services.AddScoped<IStatusCachedService, StatusCachedService>();
-			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();

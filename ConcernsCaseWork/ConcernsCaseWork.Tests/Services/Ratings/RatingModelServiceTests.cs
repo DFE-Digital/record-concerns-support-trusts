@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
@@ -18,16 +18,16 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 		public async Task WhenGetRatingsModel_Returns_RatingsModel()
 		{
 			// arrange
-			var mockRatingCacheService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockLogger = new Mock<ILogger<RatingModelService>>();
 			
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 
-			mockRatingCacheService.Setup(r => r.GetRatings())
+			mockRatingService.Setup(r => r.GetRatings())
 				.ReturnsAsync(ratingsDto);
 			
 			// act
-			var recordModelService = new RatingModelService(mockRatingCacheService.Object, mockLogger.Object);
+			var recordModelService = new RatingModelService(mockRatingService.Object, mockLogger.Object);
 			var ratingsModel = await recordModelService.GetRatingsModel();
 
 			// assert
@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 		public async Task WhenGetSelectedRatingsModelByUrn_Returns_RatingsModel()
 		{
 			// arrange
-			var mockRatingCacheService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockLogger = new Mock<ILogger<RatingModelService>>();
 			
 			var ratingsDto = RatingFactory.BuildListRatingDto();
@@ -64,11 +64,11 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			// First element is filtered out
 			var ratingDto = ratingsDto.ElementAt(2);
 
-			mockRatingCacheService.Setup(r => r.GetRatings())
+			mockRatingService.Setup(r => r.GetRatings())
 				.ReturnsAsync(ratingsDto);
 			
 			// act
-			var recordModelService = new RatingModelService(mockRatingCacheService.Object, mockLogger.Object);
+			var recordModelService = new RatingModelService(mockRatingService.Object, mockLogger.Object);
 			var ratingsModel = await recordModelService.GetSelectedRatingsModelById(ratingDto.Id);
 
 			// assert
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 		public async Task WhenGetRatingModelByUrn_Returns_RatingModel()
 		{
 			// arrange
-			var mockRatingCacheService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockLogger = new Mock<ILogger<RatingModelService>>();
 			
 			var ratingsDto = RatingFactory.BuildListRatingDto();
@@ -105,11 +105,11 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			// First element is filtered out
 			var ratingDto = ratingsDto.ElementAt(2);
 
-			mockRatingCacheService.Setup(r => r.GetRatings())
+			mockRatingService.Setup(r => r.GetRatings())
 				.ReturnsAsync(ratingsDto);
 			
 			// act
-			var recordModelService = new RatingModelService(mockRatingCacheService.Object, mockLogger.Object);
+			var recordModelService = new RatingModelService(mockRatingService.Object, mockLogger.Object);
 			var ratingModel = await recordModelService.GetRatingModelById(ratingDto.Id);
 
 			// assert

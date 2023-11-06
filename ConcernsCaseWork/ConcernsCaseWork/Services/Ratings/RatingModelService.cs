@@ -1,8 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Redis.Ratings;
-using Microsoft.Extensions.Logging;
 using ConcernsCaseWork.Service.Ratings;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,12 @@ namespace ConcernsCaseWork.Services.Ratings
 {
 	public sealed class RatingModelService : IRatingModelService
 	{
-		private readonly IRatingCachedService _ratingCachedService;
+		private readonly IRatingService _ratingService;
 		private readonly ILogger<RatingModelService> _logger;
 
-		public RatingModelService(IRatingCachedService ratingCachedService, ILogger<RatingModelService> logger)
+		public RatingModelService(IRatingService ratingService, ILogger<RatingModelService> logger)
 		{
-			_ratingCachedService = ratingCachedService;
+			_ratingService = ratingService;
 			_logger = logger;
 		}
 
@@ -25,7 +24,7 @@ namespace ConcernsCaseWork.Services.Ratings
 		{
 			_logger.LogInformation("RatingModelService::GetRatings");
 			
-			var ratingsDto = await _ratingCachedService.GetRatings();
+			var ratingsDto = await _ratingService.GetRatings();
 
 			return ratingsDto;
 		}

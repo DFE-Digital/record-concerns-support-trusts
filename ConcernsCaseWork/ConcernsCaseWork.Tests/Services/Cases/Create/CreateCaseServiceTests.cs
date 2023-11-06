@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
@@ -31,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -40,7 +39,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
-			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -89,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingCachedService.Object,
+				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
@@ -112,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -122,7 +120,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
-			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
 			
 			var mockTrust = new Mock<TrustDetailsDto>();
 			mockTrust.Setup(x => x.GiasData.UkPrn).Returns(trustUkPrn);
@@ -133,7 +130,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingCachedService.Object,
+				mockRatingService.Object,
 				mockSrmaService.Object);
 
 			// act
@@ -163,7 +160,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -172,7 +169,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
-			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -223,7 +219,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingCachedService.Object,
+				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
@@ -249,7 +245,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -258,7 +254,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
-			mockRatingCachedService.Setup(r => r.GetDefaultRating()).ReturnsAsync(ratingDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -307,7 +302,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingCachedService.Object,
+				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
