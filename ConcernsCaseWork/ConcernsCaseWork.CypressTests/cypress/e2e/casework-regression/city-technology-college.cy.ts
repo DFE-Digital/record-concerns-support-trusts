@@ -1,8 +1,6 @@
 import { Logger } from "cypress/common/logger";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 
-import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
-import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";

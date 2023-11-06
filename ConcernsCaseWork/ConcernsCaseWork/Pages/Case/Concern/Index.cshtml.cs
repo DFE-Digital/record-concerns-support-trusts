@@ -97,8 +97,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		{
 			var caseModel = await GetCaseModel();
 
-			// If we came from the add another concern page we don't want to clear the cache
-			if (caseModel == null || SourcePage == "add-another-concern")
+			// We are on the case creation journey, so no existing data on the server
+			if (caseModel == null)
 			{
 				return;
 			}
@@ -176,6 +176,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);
+				userState.CreateCaseModel.CreateRecordsModel.Clear();
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
@@ -190,10 +191,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 				if (caseModel != null && !caseModel.IsConcernsCase())
 				{
-					return RedirectToPage("/case/concern/add",new {urn = CaseUrn});
+					return RedirectToPage("/case/rating",new {urn = CaseUrn});
 				}
 
-				return RedirectToPage("add");
+				return RedirectToPage("/case/rating");
 			}
 			catch (Exception ex)
 			{

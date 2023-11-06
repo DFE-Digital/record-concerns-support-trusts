@@ -128,9 +128,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber");
-
-		createConcernPage.nextStep();
+			.hasConcernRiskRating(["Red", "Amber"]);
 
 		Logger.Log(
 			"Check Trust, concern and risk to trust details are correctly populated"
@@ -139,7 +137,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber")
+			.hasConcernRiskRating(["Red", "Amber"])
 
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
@@ -151,7 +149,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber")
+			.hasConcernRiskRating(["Red", "Amber"])
 			.hasRiskToTrust("Red Plus");
 
 		Logger.Log("Add concern details with valid text limit");

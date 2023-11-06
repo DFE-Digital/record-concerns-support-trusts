@@ -125,8 +125,8 @@
                                 <th scope="row" class="govuk-table-case-details__header">Concerns</th>
                                 <td class="govuk-table__cell" data-testid="concern_Field">
 
-                                    <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
-                                        Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
+                                    <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn">
+                                        Add Concern
                                     </a>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__header__right"></td>
@@ -228,7 +228,7 @@
                                     <div class="govuk-o-grid__item--one-half">
                                         @if (Model.IsEditableCase)
                                         {
-                                            <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add concern</a>
+                                            <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add another concern</a>
                                         }
                                     </div>
 

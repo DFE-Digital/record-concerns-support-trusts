@@ -179,21 +179,11 @@ describe("Creating a non concerns case", () => {
 				.hasValidationError("Select concern risk rating")
 				.hasValidationError("Select means of referral");
 	
-			Logger.Log("Create an invalid sub concern");
 			createConcernPage
 				.withConcernType("Deficit")
 				.withConcernRating("Red-Amber")
 				.withMeansOfReferral(SourceOfConcernExternal)
 				.addConcern();
-	
-			Logger.Log("Adding another concern during case creation");
-			createConcernPage
-				.addAnotherConcern()
-				.withConcernType("Financial compliance")
-				.withConcernRating("Amber-Green")
-				.withMeansOfReferral(SourceOfConcernInternal)
-				.addConcern()
-				.nextStep();
 	
 			Logger.Log("Check unpopulated risk to trust throws validation error");
 			addConcernDetailsPage
@@ -238,9 +228,8 @@ describe("Creating a non concerns case", () => {
 			caseManagementPage
 				.hasTrust("Ashton West End Primary Academy")
 				.hasRiskToTrust("Red Plus")
-				.hasConcerns("Financial compliance", ["Amber", "Green"])
 				.hasConcerns("Deficit", ["Red", "Amber"])
-				.hasNumberOfConcerns(2)
+				.hasNumberOfConcerns(1)
 				.hasManagedBy("SFSO", "North and UTC - North East")
 				.hasIssue("This is an issue")
 				.hasCurrentStatus("This is the current status")
@@ -253,7 +242,6 @@ describe("Creating a non concerns case", () => {
 			caseManagementPage.getCaseIDText().then((caseId) => {
 				concernsApi.get(parseInt(caseId)).then((response) => {
 					var ids = response.map((r) => r.meansOfReferralId);
-					expect(ids).to.contain(1);
 					expect(ids).to.contain(2);
 				});
 			});
@@ -313,27 +301,36 @@ describe("Creating a non concerns case", () => {
 						.withMeansOfReferral(SourceOfConcernExternal)
 						.addConcern();
 
+					Logger.Log("Go back and edit the concern");
+					cy.go('back');
+
+					createConcernPage
+						.withConcernType("Irregularity")
+						.withConcernRating("Red")
+						.withMeansOfReferral(SourceOfConcernExternal)
+						.addConcern();
+						
 					createCaseSummary
 						.hasTrustSummaryDetails(trustName)
 						.hasManagedBy("SFSO", "North and UTC - North East")
-						.hasConcernType("Deficit")
-						.hasConcernRiskRating("Red Amber");
+						.hasConcernType("Irregularity")
+						.hasConcernRiskRating(["Red"]);
 
 					createConcernPage.nextStep();
 
 					createCaseSummary
 						.hasTrustSummaryDetails(trustName)
 						.hasManagedBy("SFSO", "North and UTC - North East")
-						.hasConcernType("Deficit")
-						.hasConcernRiskRating("Red Amber");
+						.hasConcernType("Irregularity")
+						.hasConcernRiskRating(["Red"]);
 
 					createConcernPage.withConcernRating("Red-Plus").nextStep();
 
 					createCaseSummary
 						.hasTrustSummaryDetails(trustName)
 						.hasManagedBy("SFSO", "North and UTC - North East")
-						.hasConcernType("Deficit")
-						.hasConcernRiskRating("Red Amber")
+						.hasConcernType("Irregularity")
+						.hasConcernRiskRating(["Red"])
 						.hasRiskToTrust("Red Plus");
 
 					addConcernDetailsPage
@@ -343,7 +340,7 @@ describe("Creating a non concerns case", () => {
 					caseManagementPage
 						.hasTrust(trustName)
 						.hasRiskToTrust("Red Plus")
-						.hasConcerns("Deficit", ["Red", "Amber"])
+						.hasConcerns("Irregularity", ["Red"])
 						.hasNumberOfConcerns(1);
 				});
 			});

@@ -95,15 +95,13 @@ describe("Creating a case", () => {
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
-                .hasConcernRiskRating("Amber Green")
+                .hasConcernRiskRating(["Amber", "Green"])
                 .hasConcernType("Governance");
-    
-            createConcernPage.nextStep();
-    
+        
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
-                .hasConcernRiskRating("Amber Green")
+                .hasConcernRiskRating(["Amber", "Green"])
                 .hasConcernType("Governance");
     
             Logger.Log("Populate risk to trust");
@@ -116,7 +114,7 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernType("Governance")
-                .hasConcernRiskRating("Amber Green")
+                .hasConcernRiskRating(["Amber", "Green"])
                 .hasRiskToTrust("Red");
     
             Logger.Log("Add concern details with valid text limit");

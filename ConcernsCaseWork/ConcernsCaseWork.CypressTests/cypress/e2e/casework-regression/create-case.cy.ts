@@ -115,9 +115,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber");
-
-		createConcernPage.nextStep();
+			.hasConcernRiskRating(["Red","Amber"]);
 
 		Logger.Log("Check unpopulated risk to trust throws validation error");
 		addDetailsPage.nextStep().hasValidationError("Select risk to trust rating");
@@ -129,7 +127,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber");
+			.hasConcernRiskRating(["Red", "Amber"]);
 
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
@@ -141,7 +139,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber")
+			.hasConcernRiskRating(["Red", "Amber"])
 			.hasRiskToTrust("Red Plus");
 
 		Logger.Log(
@@ -151,7 +149,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Deficit")
-			.hasConcernRiskRating("Red Amber")
+			.hasConcernRiskRating(["Red", "Amber"])
 			.hasRiskToTrust("Red Plus");
 
 		addConcernDetailsPage.createCase().hasValidationError("Issue is required");
@@ -255,10 +253,8 @@ describe("Creating a case", () => {
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
-			.hasConcernRiskRating("Amber Green")
+			.hasConcernRiskRating(["Amber", "Green"])
 			.hasConcernType("Force majeure");
-
-		createConcernPage.nextStep();
 
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red").nextStep();
@@ -270,7 +266,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Force majeure")
-			.hasConcernRiskRating("Amber Green")
+			.hasConcernRiskRating(["Amber", "Green"])
 			.hasRiskToTrust("Red");
 
 		Logger.Log(
@@ -280,7 +276,7 @@ describe("Creating a case", () => {
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasConcernType("Force majeure")
-			.hasConcernRiskRating("Amber Green")
+			.hasConcernRiskRating(["Amber", "Green"])
 			.hasRiskToTrust("Red")
 
 		Logger.Log("Add concern details with valid text limit");
@@ -344,14 +340,21 @@ describe("Creating a case", () => {
 			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern();
 
-		Logger.Log("Adding another concern during case creation");
+		Logger.Log("Edit the concern by pressing back");
+		createCaseSummary
+			.hasConcernType("Suspected fraud")
+			.hasConcernRiskRating(["Red Plus"]);
+
+		cy.go('back');
 		createConcernPage
-			.addAnotherConcern()
 			.withConcernType("Financial compliance")
 			.withConcernRating("Amber-Green")
 			.withMeansOfReferral(SourceOfConcernExternal)
-			.addConcern()
-			.nextStep();
+			.addConcern();
+
+		createCaseSummary
+			.hasConcernType("Financial compliance")
+			.hasConcernRiskRating(["Amber", "Green"]);
 
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
@@ -376,9 +379,8 @@ describe("Creating a case", () => {
 			.addConcern();
 
 		caseManagementPage
-			.hasConcerns("Suspected fraud", ["Red Plus"])
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
 			.hasConcerns("Irregularity", ["Red", "Amber"])
-			.hasNumberOfConcerns(3);
+			.hasNumberOfConcerns(2);
 	});
 });

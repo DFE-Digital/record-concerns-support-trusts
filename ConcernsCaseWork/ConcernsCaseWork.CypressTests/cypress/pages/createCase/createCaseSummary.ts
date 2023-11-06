@@ -24,11 +24,9 @@ export class CreateCaseSummary
         return this;
     }
 
-    public hasConcernRiskRating(value: string): this
+    public hasConcernRiskRating(riskValues: string[]): this
     {
-        Logger.Log(`Has concern risk ${value}`);
-
-        const riskValues = value.split(" ");
+        Logger.Log(`Has concern risk ${riskValues}`);
 
         cy.getByTestId("concern-risk-rating")
             .children()

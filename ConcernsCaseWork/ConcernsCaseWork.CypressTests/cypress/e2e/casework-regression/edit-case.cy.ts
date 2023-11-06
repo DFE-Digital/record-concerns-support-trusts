@@ -66,13 +66,8 @@ describe("Editing a case", () => {
 			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
-		Logger.Log("Check Concern details are correctly populated");
-		createConcernPage.nextStep();
-
 		Logger.Log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
-
-		
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage
