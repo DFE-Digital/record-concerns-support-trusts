@@ -187,29 +187,29 @@ namespace ConcernsCaseWork.Models
 			}
 		};
 
-		public static List<RatingModel> GetRatings()
+		public static List<RatingLabelModel> GetRatings()
 		{
-			var result = new List<RatingModel>()
+			var result = new List<RatingLabelModel>()
 			{
-				new RatingModel()
+				new RatingLabelModel()
 				{
 					Id = (int)ConcernRating.AmberGreen,
 					Label = $"<span class=\"govuk-tag ragtag ragtag__amber\">Amber</span><span class=\"govuk-tag ragtag ragtag__green\">Green</span>",
 					Names = new List<string>() { "Amber", "Green" }
 				},
-				new RatingModel()
+				new RatingLabelModel()
 				{
 					Id = (int)ConcernRating.RedAmber,
 					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span><span class=\"govuk-tag ragtag ragtag__amber\">Amber</span>",
 					Names = new List<string>() { "Red", "Amber" }
 				},
-				new RatingModel()
+				new RatingLabelModel()
 				{
 					Id = (int)ConcernRating.Red,
 					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span>",
 					Names = new List<string>() { "Red" }
 				},
-				new RatingModel()
+				new RatingLabelModel()
 				{
 					Id = (int)ConcernRating.RedPlus,
 					Label = $"<span class=\"govuk-tag ragtag ragtag__redplus\">Red Plus</span>",

@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.Models
 	/// <summary>
 	/// Used to model the rating labels
 	/// </summary>
-	public sealed class RatingModel
+	public sealed class RatingLabelModel
 	{
 		public long Id { get; set; }
 		
