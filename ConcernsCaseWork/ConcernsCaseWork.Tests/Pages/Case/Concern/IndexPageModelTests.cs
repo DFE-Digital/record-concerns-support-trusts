@@ -206,7 +206,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as RedirectToPageResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.PageName, Is.EqualTo("add"));
+			Assert.That(page.PageName, Is.EqualTo("/case/rating"));
 
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Once);

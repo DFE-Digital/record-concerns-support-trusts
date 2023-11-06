@@ -301,6 +301,12 @@ describe("Creating a non concerns case", () => {
 						.withMeansOfReferral(SourceOfConcernExternal)
 						.addConcern();
 
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East")
+						.hasConcernType("Deficit")
+						.hasConcernRiskRating(["Red", "Amber"]);
+
 					Logger.Log("Go back and edit the concern");
 					cy.go('back');
 
