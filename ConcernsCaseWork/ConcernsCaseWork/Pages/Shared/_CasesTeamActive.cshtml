@@ -79,12 +79,7 @@
                             </ul>
                             <div class="concerns-secondary-text-colour">Risk to trust</div>
                             <div class="govuk-label-wrapper" data-testid="risk-to-trust-list">
-                                @for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
-                                {
-                                    <span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
-                                        @activeCase.Rating.RagRating.Item2.ElementAt(index)
-                                    </span>
-                                }
+                                <partial name="_RatingLabel" model="@activeCase.Rating.Id" />
                             </div>
                         </td>
                     }

@@ -87,9 +87,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 				// Update cache model
 				userState.CreateCaseModel.RatingId = (long)ragRatingId;
-				userState.CreateCaseModel.RagRatingName = ragRatingName;
-				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",

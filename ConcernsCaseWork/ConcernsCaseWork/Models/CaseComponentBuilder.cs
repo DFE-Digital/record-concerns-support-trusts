@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Service.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -188,6 +187,39 @@ namespace ConcernsCaseWork.Models
 			}
 		};
 
+		public static List<RatingModel> GetRatings()
+		{
+			var result = new List<RatingModel>()
+			{
+				new RatingModel()
+				{
+					Id = (int)ConcernRating.AmberGreen,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__amber\">Amber</span><span class=\"govuk-tag ragtag ragtag__green\">Green</span>",
+					Names = new List<string>() { "Amber", "Green" }
+				},
+				new RatingModel()
+				{
+					Id = (int)ConcernRating.RedAmber,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span><span class=\"govuk-tag ragtag ragtag__amber\">Amber</span>",
+					Names = new List<string>() { "Red", "Amber" }
+				},
+				new RatingModel()
+				{
+					Id = (int)ConcernRating.Red,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span>",
+					Names = new List<string>() { "Red" }
+				},
+				new RatingModel()
+				{
+					Id = (int)ConcernRating.RedPlus,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__redplus\">Red Plus</span>",
+					Names = new List<string>() { "Red Plus" }
+				}
+			};
+
+			return result;
+		}
+
 		private static RadioButtonsUiComponent BuildConcernTypeSfso(string name, int? selectedId = null)
 		{
 			var radioItems = new List<SimpleRadioItem>()
@@ -241,39 +273,6 @@ namespace ConcernsCaseWork.Models
 
 				return new SimpleRadioItem(label, (int)r.Id) { IsHtmlLabel = true, TestId = string.Join("-", r.Names), };
 			});
-
-			return result;
-		}
-
-		private static List<RatingModel> GetRatings()
-		{
-			var result = new List<RatingModel>()
-			{
-				new RatingModel()
-				{
-					Id = (int)ConcernRating.AmberGreen,
-					Label = $"<span class=\"govuk-tag ragtag ragtag__amber\">Amber</span><span class=\"govuk-tag ragtag ragtag__green\">Green</span>",
-					Names = new List<string>() { "Amber", "Green" }
-				},
-				new RatingModel()
-				{
-					Id = (int)ConcernRating.RedAmber,
-					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span><span class=\"govuk-tag ragtag ragtag__amber\">Amber</span>",
-					Names = new List<string>() { "Red", "Amber" }
-				},
-				new RatingModel()
-				{
-					Id = (int)ConcernRating.Red,
-					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span>",
-					Names = new List<string>() { "Red" }
-				},
-				new RatingModel()
-				{
-					Id = (int)ConcernRating.RedPlus,
-					Label = $"<span class=\"govuk-tag ragtag ragtag__redplus\">Red Plus</span>",
-					Names = new List<string>() { "Red Plus" }
-				}
-			};
 
 			return result;
 		}

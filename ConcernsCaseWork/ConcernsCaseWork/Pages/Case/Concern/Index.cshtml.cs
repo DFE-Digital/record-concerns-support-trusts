@@ -4,7 +4,6 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
@@ -157,9 +156,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					userState.CreateCaseModel.UpdatedAt = currentDate;
 					userState.CreateCaseModel.CreatedBy = GetUserName();
 					userState.CreateCaseModel.DeEscalation = currentDate;
-					userState.CreateCaseModel.RagRatingName = ragRatingName;
-					userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-					userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 					userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
 					userState.CreateCaseModel.TrustUkPrn = userState.TrustUkPrn;
 				}
@@ -170,9 +166,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					Type = typeId.Description(),
 					SubType = null,
 					RatingId = (long)ragRatingId,
-					RatingName = ragRatingName,
-					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);

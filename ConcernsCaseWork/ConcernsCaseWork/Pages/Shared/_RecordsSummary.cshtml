@@ -14,12 +14,7 @@
                             @concern.TypeDisplay
                         </span>
                         <div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third" data-testid="concern-risk-rating">
-                            @for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
-                            {
-                                <span class="govuk-tag ragtag @concern.RagRatingCss.ElementAt(index)">
-                                    @concern.RagRating.Item2.ElementAt(index)
-                                </span>
-                            }
+                            <partial name="_RatingLabel" model="@concern.RatingId" />
                         </div>
                     </div>
                 }

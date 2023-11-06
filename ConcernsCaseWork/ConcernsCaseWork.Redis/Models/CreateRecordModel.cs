@@ -24,12 +24,6 @@ namespace ConcernsCaseWork.Redis.Models
 		}
 
 		public long RatingId { get; set; }
-
-		public string RatingName { get; set; }
-
-		public Tuple<int, IList<string>> RagRating { get; set; }
-
-		public IList<string> RagRatingCss { get; set; }
 		
 		public long MeansOfReferralId { get; set; }
 	}

@@ -137,12 +137,7 @@
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
                                 <td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
-                                    @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
-                                    {
-                                        <span class="govuk-tag ragtag @Model.CaseModel?.RatingModel?.RagRatingCss?.ElementAt(index)">
-                                            @Model.CaseModel?.RatingModel?.RagRating?.Item2?.ElementAt(index)
-                                        </span>
-                                    }
+                                    <partial name="_RatingLabel" model="@Model.CaseModel?.RatingId" />
                                 </td>
                                 <td class="govuk-table__cell govuk-table__header__right">
                                     @if (Model.IsEditableCase)
@@ -193,12 +188,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-                                                                    {
-                                                                        <span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-                                                                            @concern.RatingModel.RagRating.Item2.ElementAt(index)
-                                                                        </span>
-                                                                    }
+                                                                    <partial name="_RatingLabel" model="@concern.RatingId" />
                                                                 }
                                                             }
                                                         </div>

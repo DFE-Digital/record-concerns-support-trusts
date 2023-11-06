@@ -83,10 +83,7 @@ namespace ConcernsCaseWork.Mappers
 					TypeId = recordDto.TypeId,
 					Type = typeModel.Type,
 					SubType = typeModel.SubType,
-					RatingId = recordDto.RatingId,
-					RatingName = ratingModel.Name,
-					RagRating = ratingModel.RagRating,
-					RagRatingCss = ratingModel.RagRatingCss
+					RatingId = recordDto.RatingId
 				};
 
 				return createRecordModel;
