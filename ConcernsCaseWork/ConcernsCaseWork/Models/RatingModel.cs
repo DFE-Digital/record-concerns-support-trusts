@@ -17,5 +17,9 @@ namespace ConcernsCaseWork.Models
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+
+		public string Label { get; set; }
+
+		public List<string> Names { get; set; }
 	}
 }

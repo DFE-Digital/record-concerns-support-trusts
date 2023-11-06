@@ -158,7 +158,7 @@ namespace ConcernsCaseWork.Pages.Case
 					EventUserName = userState.UserName
 				});
 
-				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RatingsModel, RiskToTrust?.SelectedId);
+				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RiskToTrust?.SelectedId);
 
 				return Page();
 			}
