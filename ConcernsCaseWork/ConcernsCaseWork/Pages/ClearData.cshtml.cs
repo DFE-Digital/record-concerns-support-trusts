@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
@@ -16,7 +15,6 @@ namespace ConcernsCaseWork.Pages
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClearDataPageModel : PageModel
 	{
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ITeamsCachedService _teamsCachedService;
@@ -26,13 +24,11 @@ namespace ConcernsCaseWork.Pages
 		public ClearDataPageModel(
 			IUserStateCachedService userStateCachedService, 
 			ITypeCachedService typeCachedService, 
-			IStatusCachedService statusCachedService, 
 			ITrustCachedService trustCachedService,
 			ITeamsCachedService teamsCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
 			_userStateCachedService = Guard.Against.Null(userStateCachedService);
-			_statusCachedService = Guard.Against.Null(statusCachedService);
 			_trustCachedService = Guard.Against.Null(trustCachedService);
 			_typeCachedService = Guard.Against.Null(typeCachedService);
 			_teamsCachedService = Guard.Against.Null(teamsCachedService);
@@ -47,7 +43,6 @@ namespace ConcernsCaseWork.Pages
 			
 			await _userStateCachedService.ClearData(User.Identity?.Name);
 			await _typeCachedService.ClearData();
-			await _statusCachedService.ClearData();
 			await _trustCachedService.ClearData();
 			await _teamsCachedService.ClearData(User.Identity?.Name);
 

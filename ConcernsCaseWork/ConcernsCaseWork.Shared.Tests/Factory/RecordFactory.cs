@@ -82,7 +82,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<long>(),
 				statusId,
-				Fixture.Create<StatusModel>(),
 				Fixture.Create<MeansOfReferralModel>()
 			);
 		}

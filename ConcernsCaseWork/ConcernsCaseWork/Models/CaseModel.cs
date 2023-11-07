@@ -55,8 +55,6 @@ namespace ConcernsCaseWork.Models
 
 		public long StatusId { get; set; }
 
-		public string StatusName { get; set; } = string.Empty;
-
 		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();
 
 		public string PreviousUrl { get; set; }
@@ -79,6 +77,12 @@ namespace ConcernsCaseWork.Models
 		{
 			return RecordsModel.Any();
 		}
+
+		public bool IsOpen()
+		{
+			return StatusId == (int)CaseStatus.Live;
+		}
+
 		public bool IsClosed()
 		{
 			return StatusId == (int)CaseStatus.Close;

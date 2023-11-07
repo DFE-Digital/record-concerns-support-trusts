@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Models
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+
+namespace ConcernsCaseWork.Models
 {
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
@@ -18,8 +20,6 @@
 		public long RatingId { get; }
 		
 		public long StatusId { get; set; }
-		
-		public StatusModel StatusModel { get; }
 
 		public RecordModel()
 		{ 
@@ -32,9 +32,13 @@
 			long ratingId, 
 			long id, 
 			long statusId, 
-			StatusModel statusModel, 
 			MeansOfReferralModel meansOfReferralModel = null) => 
-				(CaseUrn, TypeId, TypeModel, RatingId, Id, StatusId, StatusModel, MeansOfReferralModel) = 
-				(caseUrn, typeId, typeModel, ratingId, id, statusId, statusModel, meansOfReferralModel);
+				(CaseUrn, TypeId, TypeModel, RatingId, Id, StatusId, MeansOfReferralModel) = 
+				(caseUrn, typeId, typeModel, ratingId, id, statusId, meansOfReferralModel);
+
+		public bool IsClosed()
+		{
+			return StatusId == (long) ConcernStatus.Close;
+		}
 	}
 }

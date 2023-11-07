@@ -1,9 +1,8 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,18 +14,15 @@ namespace ConcernsCaseWork.Services.Records
 {
 	public sealed class RecordModelService : IRecordModelService
 	{
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordService _recordCachedService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<RecordModelService> _logger;
 		
 		public RecordModelService(IRecordService recordCachedService, 
-			IStatusCachedService statusCachedService,
 			ITypeModelService typeModelService,
 			ILogger<RecordModelService> logger)
 		{
 			_recordCachedService = recordCachedService;
-			_statusCachedService = statusCachedService;
 			_typeModelService = typeModelService;
 			_logger = logger;
 		}
@@ -37,16 +33,14 @@ namespace ConcernsCaseWork.Services.Records
 
 			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseUrn);
 			var typesDtoTask = _typeModelService.GetTypes();
-			var statusesDtoTask = _statusCachedService.GetStatuses();
 			
-			Task.WaitAll(recordsDtoTask, typesDtoTask, statusesDtoTask);
+			Task.WaitAll(recordsDtoTask, typesDtoTask);
 				
 			var recordsDto = recordsDtoTask.Result;
 			var typesDto = typesDtoTask.Result;
-			var statusesDto = statusesDtoTask.Result;
 				
 			// Map the records dto to model
-			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, statusesDto);
+			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto);
 
 			return Task.FromResult(recordsModel);
 		}
@@ -69,12 +63,10 @@ namespace ConcernsCaseWork.Services.Records
 			{
 				// Fetch Records & statuses
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CaseUrn);
-				var statusesDto = await _statusCachedService.GetStatuses();
 
 				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(patchRecordModel.Id) == 0);
-				var statusDto = statusesDto.FirstOrDefault(s => s.Id.CompareTo(patchRecordModel.StatusId) == 0);
 
-				recordDto = RecordMapping.MapClosure(patchRecordModel, recordDto, statusDto);
+				recordDto = RecordMapping.MapClosure(patchRecordModel, recordDto);
 
 				await _recordCachedService.PatchRecordById(recordDto);
 			}
@@ -103,9 +95,7 @@ namespace ConcernsCaseWork.Services.Records
 		{
 			_logger.LogInformation("RecordModelService::PostRecordByCaseUrn");
 			
-			// Fetch Status
-			var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-			
+			// Fetch Status			
 			var currentDate = DateTimeOffset.Now;
 			var createRecordDto = new CreateRecordDto(
 				currentDate, 
@@ -116,8 +106,8 @@ namespace ConcernsCaseWork.Services.Records
 				createRecordModel.TypeDisplay, 
 				createRecordModel.CaseUrn, 
 				createRecordModel.TypeId,
-				createRecordModel.RatingId, 
-				statusDto.Id,
+				createRecordModel.RatingId,
+				(int)ConcernStatus.Live,
 				createRecordModel.MeansOfReferralId);
 			
 			var recordDto = await _recordCachedService.PostRecordByCaseUrn(createRecordDto);
