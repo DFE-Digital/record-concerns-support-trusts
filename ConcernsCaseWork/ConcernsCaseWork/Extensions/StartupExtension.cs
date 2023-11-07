@@ -9,7 +9,6 @@ using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
-using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Service.AzureAd.IoC;
@@ -25,7 +24,6 @@ using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Service.Trusts;
-using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -38,7 +36,6 @@ using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -144,7 +141,6 @@ namespace ConcernsCaseWork.Extensions
 			// Web application services
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
-			services.AddScoped<ITypeModelService, TypeModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddScoped<ISRMAService, SRMAService>();
@@ -173,7 +169,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
-			services.AddScoped<ITypeService, TypeService>();
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
@@ -192,7 +187,6 @@ namespace ConcernsCaseWork.Extensions
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
 			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
-			services.AddScoped<ITypeCachedService, TypeCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();

@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Extensions;
 
 namespace ConcernsCaseWork.Models
 {
@@ -15,8 +16,6 @@ namespace ConcernsCaseWork.Models
 		
 		public MeansOfReferralModel MeansOfReferralModel { get; }
 		
-		public TypeModel TypeModel { get; }
-
 		public long RatingId { get; }
 		
 		public long StatusId { get; set; }
@@ -28,17 +27,21 @@ namespace ConcernsCaseWork.Models
 		public RecordModel(
 			long caseUrn, 
 			long typeId, 
-			TypeModel typeModel, 
 			long ratingId, 
 			long id, 
 			long statusId, 
 			MeansOfReferralModel meansOfReferralModel = null) => 
-				(CaseUrn, TypeId, TypeModel, RatingId, Id, StatusId, MeansOfReferralModel) = 
-				(caseUrn, typeId, typeModel, ratingId, id, statusId, meansOfReferralModel);
+				(CaseUrn, TypeId, RatingId, Id, StatusId, MeansOfReferralModel) = 
+				(caseUrn, typeId, ratingId, id, statusId, meansOfReferralModel);
 
 		public bool IsClosed()
 		{
 			return StatusId == (long) ConcernStatus.Close;
+		}
+
+		public string GetConcernTypeName()
+		{
+			return ((ConcernType?)TypeId)?.Description();
 		}
 	}
 }

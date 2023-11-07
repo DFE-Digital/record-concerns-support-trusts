@@ -64,7 +64,7 @@
                                 @foreach (var recordModel in Model.CaseModel.RecordsModel)
                                 {
                                     <p class="govuk-body caseDetail_type">
-                                        @recordModel.TypeModel.TypeDisplay
+                                        @recordModel.GetConcernTypeName()
                                     </p>
                                 }
                             </dd>

@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Services.Records;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -20,18 +19,13 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var typesDto = TypeFactory.BuildListTypeDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
-			mockTypeModelService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object, 
 				mockLogger.Object);
 			
 			// act
@@ -48,19 +42,14 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var recordDto = recordsDto.First();
-			var typesDto = TypeFactory.BuildListTypeDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
-			mockTypeModelService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object, 
 				mockLogger.Object);
 			
 			// act
@@ -73,14 +62,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.That(recordModel.RatingId, Is.EqualTo(recordDto.RatingId));
 			Assert.That(recordModel.StatusId, Is.EqualTo(recordDto.StatusId));
 			Assert.That(recordModel.TypeId, Is.EqualTo(recordDto.TypeId));
-
-			var firstTypeModel = typesDto.First();
-
-			Assert.NotNull(firstTypeModel);
-			Assert.NotNull(recordModel.TypeModel);
-			Assert.That(recordModel.TypeModel.Type, Is.EqualTo(firstTypeModel.Name));
-			Assert.That(recordModel.TypeModel.SubType, Is.EqualTo(firstTypeModel.Description));
-			Assert.That(recordModel.StatusId, Is.EqualTo(recordDto.StatusId));
 		}
 
 		[Test]
@@ -89,20 +70,15 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var recordDto = recordsDto.First();
-			var typesDto = TypeFactory.BuildListTypeDto();
 			var uknownRecordId = 0;
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
-			mockTypeModelService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
 
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object,
 				mockLogger.Object);
 
 			// act
@@ -115,14 +91,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.That(recordModel.RatingId, Is.EqualTo(recordDto.RatingId));
 			Assert.That(recordModel.StatusId, Is.EqualTo(recordDto.StatusId));
 			Assert.That(recordModel.TypeId, Is.EqualTo(recordDto.TypeId));
-
-			var firstTypeModel = typesDto.First();
-
-			Assert.NotNull(firstTypeModel);
-			Assert.NotNull(recordModel.TypeModel);
-			Assert.That(recordModel.TypeModel.Type, Is.EqualTo(firstTypeModel.Name));
-			Assert.That(recordModel.TypeModel.SubType, Is.EqualTo(firstTypeModel.Description));
-			Assert.That(recordModel.StatusId, Is.EqualTo(recordDto.StatusId));
 		}
 
 		[Test]
@@ -131,13 +99,11 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(Array.Empty<RecordDto>());
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object, 
 				mockLogger.Object);
 			
 			// act
@@ -150,18 +116,13 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var typesDto = TypeFactory.BuildListTypeDto();
 			
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
-			mockTypeModelService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object, 
 				mockLogger.Object);
 			
 			// act
@@ -182,7 +143,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			}
 			
 			mockRecordCacheService.Verify(r => r.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
-			mockTypeModelService.Verify(t => t.GetTypes(), Times.Once);
 		}
 		
 		[Test]
@@ -191,7 +151,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordDto = RecordFactory.BuildRecordDto();
 			var createRecordModel = RecordFactory.BuildCreateRecordModel();
@@ -200,7 +159,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 				.ReturnsAsync(recordDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object, 
 				mockLogger.Object);
 			
 			// act
@@ -222,12 +180,10 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var recordsDto = RecordFactory.BuildListRecordDto();
 
 			// act
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object,
 				mockLogger.Object);
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
@@ -245,11 +201,9 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			// act
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
-				mockTypeModelService.Object,
 				mockLogger.Object);
 
 			Assert.ThrowsAsync<ArgumentNullException>(() => recordModelService.PatchRecordStatus(RecordFactory.BuildPatchRecordModel()));

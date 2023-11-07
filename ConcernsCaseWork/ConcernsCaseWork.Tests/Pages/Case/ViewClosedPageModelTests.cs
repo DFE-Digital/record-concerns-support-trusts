@@ -173,15 +173,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(recordsModel.ElementAt(index).RatingId));
 				Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(recordsModel.ElementAt(index).StatusId));
 				Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(recordsModel.ElementAt(index).TypeId));
-
-				var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
-				var actualRecordTypeModel = recordsModel.ElementAt(index).TypeModel;
-				Assert.NotNull(expectedRecordTypeModel);
-				Assert.NotNull(actualRecordTypeModel);
-				Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
-				Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
-				Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
-				Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
 			}
 			
 			Assert.That(pageModel.CaseActions, Is.EquivalentTo(closedActions.ToList()));

@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Types;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,8 +37,7 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.Id, (int)ConcernStatus.Close);
 		}
 
-		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
-			IList<TypeDto> typesDto)
+		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto)
 		{
 			var recordsModel = new List<RecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return recordsModel;
@@ -49,7 +47,6 @@ namespace ConcernsCaseWork.Mappers
 				var recordModel = new RecordModel(
 					recordDto.CaseUrn,
 					recordDto.TypeId,
-					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId),
 					recordDto.RatingId,
 					recordDto.Id,
 					recordDto.StatusId);
@@ -60,22 +57,17 @@ namespace ConcernsCaseWork.Mappers
 			return recordsModel;
 		}
 		
-		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto, 
-			IList<TypeDto> typesDto)
+		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto)
 		{
 			var createRecordsModel = new List<CreateRecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return createRecordsModel;
 		
 			createRecordsModel.AddRange(recordsDto.Select(recordDto =>
-			{
-				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				
+			{				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = recordDto.CaseUrn,
 					TypeId = recordDto.TypeId,
-					Type = typeModel.Type,
-					SubType = typeModel.SubType,
 					RatingId = recordDto.RatingId
 				};
 
