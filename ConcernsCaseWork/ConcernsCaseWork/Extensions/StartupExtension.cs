@@ -173,7 +173,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// api services
 			services.AddScoped<ICaseService, CaseService>();
-			services.AddScoped<IRatingService, RatingService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();

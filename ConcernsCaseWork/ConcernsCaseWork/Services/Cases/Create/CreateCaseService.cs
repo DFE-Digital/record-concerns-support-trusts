@@ -23,7 +23,6 @@ public class CreateCaseService : ICreateCaseService
 		ILogger<CreateCaseService> logger,
 		IStatusCachedService statusCachedService,
 		ICaseService caseService,
-		IRatingService ratingService,
 		ISRMAService srmaService)
 	{
 		_srmaService = Guard.Against.Null(srmaService);

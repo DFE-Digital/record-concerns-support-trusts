@@ -30,7 +30,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -87,7 +86,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
@@ -110,7 +108,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -130,7 +127,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingService.Object,
 				mockSrmaService.Object);
 
 			// act
@@ -160,7 +156,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -219,7 +214,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
@@ -245,7 +239,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockRatingService = new Mock<IRatingService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -302,7 +295,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockStatusCachedService.Object,
 				mockCaseService.Object,
-				mockRatingService.Object,
 				mockSrmaService.Object
 			);
 
