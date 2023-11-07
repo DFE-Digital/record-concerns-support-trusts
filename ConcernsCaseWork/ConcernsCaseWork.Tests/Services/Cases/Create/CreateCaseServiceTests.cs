@@ -1,11 +1,9 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Ratings;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -30,14 +28,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
-			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
-
-			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -78,13 +72,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CaseHistory = null,
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
-						StatusId = statusDto.Id,
+						StatusId = 1,
 						RatingId = ratingDto.Id,
 					});
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockSrmaService.Object
 			);
@@ -108,16 +101,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockTrustService = new Mock<ITrustService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
-			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
 
-			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
-			
 			var mockTrust = new Mock<TrustDetailsDto>();
 			mockTrust.Setup(x => x.GiasData.UkPrn).Returns(trustUkPrn);
 			mockTrust.Setup(x => x.GiasData.CompaniesHouseNumber).Returns(companiesHouseNumber);
@@ -125,7 +114,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockSrmaService.Object);
 
@@ -156,14 +144,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
-			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
-
-			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -204,7 +188,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CaseHistory = null,
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
-						StatusId = statusDto.Id,
+						StatusId = 1,
 						RatingId = ratingDto.Id
 					});
 
@@ -212,7 +196,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockSrmaService.Object
 			);
@@ -239,14 +222,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
-			var statusDto = new StatusDto("some status", DateTimeOffset.Now, DateTimeOffset.Now, 2);
-
-			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString())).ReturnsAsync(statusDto);
 
 			var userName = _fixture.Create<string>();
 			var trustUkPrn = _fixture.Create<string>();
@@ -287,13 +266,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						CaseHistory = null,
 						DirectionOfTravel = null,
 						Urn = expectedNewCaseUrn,
-						StatusId = statusDto.Id,
+						StatusId = 1,
 						RatingId = ratingDto.Id
 					});
 
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
-				mockStatusCachedService.Object,
 				mockCaseService.Object,
 				mockSrmaService.Object
 			);

@@ -1,11 +1,9 @@
 using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Ratings;
-using ConcernsCaseWork.Service.Status;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -15,18 +13,15 @@ namespace ConcernsCaseWork.Services.Cases.Create;
 public class CreateCaseService : ICreateCaseService
 {
 	private readonly ILogger<CreateCaseService> _logger;
-	private readonly IStatusCachedService _statusCachedService;
 	private readonly ICaseService _caseService;
 	private readonly ISRMAService _srmaService;
 
 	public CreateCaseService(
 		ILogger<CreateCaseService> logger,
-		IStatusCachedService statusCachedService,
 		ICaseService caseService,
 		ISRMAService srmaService)
 	{
 		_srmaService = Guard.Against.Null(srmaService);
-		_statusCachedService = Guard.Against.Null(statusCachedService);
 		_caseService = Guard.Against.Null(caseService);
 		_logger = Guard.Against.Null(logger);
 	}
@@ -41,8 +36,6 @@ public class CreateCaseService : ICreateCaseService
 		
 		try
 		{
-			var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-
 			var createdAndUpdatedDate = DateTime.Now;
 
 			var dto = new CreateCaseDto(
@@ -61,7 +54,7 @@ public class CreateCaseService : ICreateCaseService
 				null,
 				null,
 				null,
-				statusDto.Id,
+				(int)CaseStatus.Live,
 				(int)ConcernRating.NotApplicable,
 				null,
 				trustCompaniesHouseNumber,

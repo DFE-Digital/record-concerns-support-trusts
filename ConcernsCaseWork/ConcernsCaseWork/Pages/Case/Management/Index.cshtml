@@ -3,7 +3,6 @@
 @using ConcernsCaseWork.API.Contracts.Case;
 @using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
-@using ConcernsCaseWork.Service.Status;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @using ConcernsCaseWork.Helpers;
@@ -180,7 +179,7 @@
                                                     <td>
                                                         <div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
                                                             @{
-                                                                if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                                if (concern.IsClosed())
                                                                 {
                                                                     <span class="govuk-tag ragtag ragtag__grey">
                                                                         Closed
@@ -195,7 +194,7 @@
                                                     </td>
                                                     <td class="govuk-table__header__right">
                                                         @{
-                                                            if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                            if (concern.IsClosed())
                                                             {
                                                                 <br />
                                                             }

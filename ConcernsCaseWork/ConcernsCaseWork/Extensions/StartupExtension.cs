@@ -7,7 +7,6 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
@@ -22,9 +21,7 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Service.Permissions;
-using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Service.Trusts;
@@ -174,7 +171,6 @@ namespace ConcernsCaseWork.Extensions
 			// api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRecordService, RecordService>();
-			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
 			services.AddScoped<ITypeService, TypeService>();
@@ -197,7 +193,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICacheProvider, CacheProvider>();
 			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
 			services.AddScoped<ITypeCachedService, TypeCachedService>();
-			services.AddScoped<IStatusCachedService, StatusCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();

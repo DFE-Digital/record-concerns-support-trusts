@@ -1,7 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.Status;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -22,7 +21,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		private readonly IRecordModelService _recordModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -33,14 +31,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService, 
 			ITypeModelService typeModelService,
-			IStatusCachedService statusCachedService,
 			ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
-			_statusCachedService = statusCachedService;
 			_logger = logger;
 		}
 		
@@ -74,7 +70,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				_logger.LogInformation("Case::Concern::ClosurePageModel::CloseConcern");
 
 				(caseUrn, recordId) = GetRouteData();
-				var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 				
 				var currentDate = DateTimeOffset.Now;
 				var patchRecordModel = new PatchRecordModel()
@@ -84,7 +79,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = currentDate,
 					ClosedAt = currentDate,
-					StatusId = closedStatus.Id
+					StatusId = (int)ConcernStatus.Close
 				};
 
 				await _recordModelService.PatchRecordStatus(patchRecordModel);
