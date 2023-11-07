@@ -142,7 +142,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasConcernRiskRating("Red Amber")
 
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"

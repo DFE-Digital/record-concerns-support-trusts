@@ -112,7 +112,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+					RatingId = caseSummary.Rating.Id,
 					StatusName = caseSummary.StatusName,
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
 					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),

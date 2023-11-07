@@ -80,7 +80,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<TypeModel>(),
 				Fixture.Create<long>(),
-				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
 				statusId,
 				Fixture.Create<StatusModel>(),
@@ -112,12 +111,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			{
 				CaseUrn = Fixture.Create<long>(),
 				Type = Fixture.Create<string>(),
-				RagRating = Fixture.Create<Tuple<int, IList<string>>>(),
-				RatingName = Fixture.Create<string>(),
 				RatingId = Fixture.Create<long>(),
 				SubType = Fixture.Create<string>(),
 				TypeId = Fixture.Create<long>(),
-				RagRatingCss = Fixture.Create<IList<string>>(),
 				MeansOfReferralId = Fixture.Create<long>()
 			};
 		}

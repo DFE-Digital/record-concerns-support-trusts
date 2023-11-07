@@ -72,12 +72,7 @@
 
 					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-							<partial name="_Rating" model="@Model.RatingsModel"/>
-						</fieldset>
-					</div>
+                    <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
@@ -87,13 +82,6 @@
 						<partial name="_Cancel"/>
 					</div>
 				</form>
-
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {	
-						let validator = formValidator($("#risk-rating-form")[0]);
-						addRatingValidator(validator);
-					});
-				</script>
 			}
 		</div>
 	</div>

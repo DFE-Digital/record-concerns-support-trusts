@@ -1,17 +1,15 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Status;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Concern
@@ -22,19 +20,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
-		private readonly IRatingModelService _ratingModelService; 
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 
 		public ClosurePageModel(ICaseModelService caseModelService, 
-			IRatingModelService ratingModelService, 
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService, 
 			ITypeModelService typeModelService,
@@ -43,7 +38,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
-			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_statusCachedService = statusCachedService;
@@ -136,7 +130,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 				var recordModel = await _recordModelService.GetRecordModelById(caseUrn, recordId);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
 				CaseModel.PreviousUrl = url;

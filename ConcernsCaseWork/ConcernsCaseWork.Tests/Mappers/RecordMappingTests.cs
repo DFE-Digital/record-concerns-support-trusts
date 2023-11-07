@@ -99,10 +99,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);
@@ -112,17 +111,13 @@ namespace ConcernsCaseWork.Tests.Mappers
 			{
 				var recordDto = recordsDto.ElementAt(index);
 				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
 				Assert.That(createRecordsDto.ElementAt(index).Type, Is.EqualTo(typeModel.Type));
 				Assert.That(createRecordsDto.ElementAt(index).CaseUrn, Is.EqualTo(recordDto.CaseUrn));
-				Assert.That(createRecordsDto.ElementAt(index).RagRating, Is.EqualTo(ratingModel.RagRating));
-				Assert.That(createRecordsDto.ElementAt(index).RatingName, Is.EqualTo(ratingModel.Name));
 				Assert.That(createRecordsDto.ElementAt(index).RatingId, Is.EqualTo(recordDto.RatingId));
 				Assert.That(createRecordsDto.ElementAt(index).SubType, Is.EqualTo(typeModel.SubType));
 				Assert.That(createRecordsDto.ElementAt(index).TypeId, Is.EqualTo(recordDto.TypeId));
 				Assert.That(createRecordsDto.ElementAt(index).TypeDisplay, Is.EqualTo(typeModel.TypeDisplay));
-				Assert.That(createRecordsDto.ElementAt(index).RagRatingCss, Is.EqualTo(ratingModel.RagRatingCss));
 			}
 		}
 		
@@ -132,10 +127,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = new List<RecordDto>();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);

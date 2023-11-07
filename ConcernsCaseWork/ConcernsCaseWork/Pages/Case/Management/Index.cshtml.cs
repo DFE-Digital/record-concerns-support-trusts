@@ -9,7 +9,6 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +28,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IRecordModelService _recordModelService;
-		private readonly IRatingModelService _ratingModelService;
 		private readonly IActionsModelService _actionsModelService;
 		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
@@ -58,7 +56,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IndexPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
-			IRatingModelService ratingModelService,
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
 			ICaseSummaryService caseSummaryService,
@@ -71,7 +68,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_recordModelService = Guard.Against.Null(recordModelService);
-			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_logger = Guard.Against.Null(logger);
 			_actionsModelService = Guard.Against.Null(actionsModelService);
 			_caseSummaryService = Guard.Against.Null(caseSummaryService);
@@ -145,8 +141,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			// Check if case is editable
 			IsEditableCase = await IsCaseEditable(CaseUrn);
 
-			// Map Case Rating
-			CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
 			// Get Case concerns
 			var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseUrn);
 

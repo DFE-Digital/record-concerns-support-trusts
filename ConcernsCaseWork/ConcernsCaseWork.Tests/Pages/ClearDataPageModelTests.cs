@@ -1,6 +1,4 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
@@ -27,7 +25,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			const string ExpectedUserIdentity = "Tester";
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
@@ -36,7 +33,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var pageModel = SetupClearDataModel(
 				mockStatusCachedService.Object,
-				mockRatingCachedService.Object,
 				mockTypeCachedService.Object,
 				mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
@@ -55,7 +51,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(redirectResult.PageName, Is.EqualTo("home"));
 			
 			mockStatusCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockRatingCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Once);
@@ -67,7 +62,6 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
@@ -76,7 +70,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object,
-				mockRatingCachedService.Object,
 				mockTypeCachedService.Object,
                 mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
@@ -94,7 +87,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(redirectResult.PageName, Is.EqualTo("home"));
 			
 			mockStatusCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockRatingCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Never);
@@ -103,7 +95,6 @@ namespace ConcernsCaseWork.Tests.Pages
 		
 		private static ClearDataPageModel SetupClearDataModel(
 			IStatusCachedService mockStatusCachedService, 
-			IRatingCachedService mockRatingCachedService, 
 			ITypeCachedService mockTypeCachedService, 
 			IUserStateCachedService mockUserStateCachedService,
 			ITrustCachedService mockTrustCachedService,
@@ -117,7 +108,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				mockUserStateCachedService,
 				mockTypeCachedService,
 				mockStatusCachedService,
-				mockRatingCachedService,
 				mockTrustCachedService,
 				mockTeamsCachedService,
 				mockLogger)

@@ -17,8 +17,6 @@
 
 		public long RatingId { get; }
 		
-		public RatingModel RatingModel { get; }
-		
 		public long StatusId { get; set; }
 		
 		public StatusModel StatusModel { get; }
@@ -32,12 +30,11 @@
 			long typeId, 
 			TypeModel typeModel, 
 			long ratingId, 
-			RatingModel ratingModel, 
 			long id, 
 			long statusId, 
 			StatusModel statusModel, 
 			MeansOfReferralModel meansOfReferralModel = null) => 
-				(CaseUrn, TypeId, TypeModel, RatingId, RatingModel, Id, StatusId, StatusModel, MeansOfReferralModel) = 
-				(caseUrn, typeId, typeModel, ratingId, ratingModel, id, statusId, statusModel, meansOfReferralModel);
+				(CaseUrn, TypeId, TypeModel, RatingId, Id, StatusId, StatusModel, MeansOfReferralModel) = 
+				(caseUrn, typeId, typeModel, ratingId, id, statusId, statusModel, meansOfReferralModel);
 	}
 }

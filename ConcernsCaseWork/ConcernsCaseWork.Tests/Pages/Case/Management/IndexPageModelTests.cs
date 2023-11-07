@@ -11,7 +11,6 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -36,7 +35,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<ICaseModelService> _mockCaseModelService = null;
 		private Mock<ITrustModelService> _mockTrustModelService = null;
 		private Mock<IRecordModelService> _mockRecordModelService = null;
-		private Mock<IRatingModelService> _mockRatingModelService = null;
 		private Mock<ILogger<IndexPageModel>> _mockLogger = null;
 		private Mock<IActionsModelService> _actionsModelService = null;
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
@@ -63,9 +61,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 
-			_mockRatingModelService = new Mock<IRatingModelService>();
-			_mockLogger = new Mock<ILogger<IndexPageModel>>();
-
 			_actionsModelService = new Mock<IActionsModelService>();
 			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
 				.ReturnsAsync(new ActionSummaryBreakdownModel());
@@ -84,6 +79,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			_mockCloseCaseValidationService = new Mock<ICloseCaseValidatorService>();
 			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<CloseCaseErrorModel>());
+
+			_mockLogger = new Mock<ILogger<IndexPageModel>>();
 		}
 
 		[Test]
@@ -225,7 +222,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			return new IndexPageModel(_mockCaseModelService.Object,
 				_mockTrustModelService.Object,
 				_mockRecordModelService.Object,
-				_mockRatingModelService.Object,
 				_mockLogger.Object,
 				_actionsModelService.Object,
 				_caseSummaryService.Object,

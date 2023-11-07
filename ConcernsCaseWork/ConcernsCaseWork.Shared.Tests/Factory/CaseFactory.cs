@@ -268,21 +268,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				StatusName = Fixture.Create<string>()
 			};
 		}
-
-		public static IList<TrustCasesModel> BuildListTrustCasesModel()
-		{
-			return new List<TrustCasesModel>
-			{
-				new TrustCasesModel(
-					Fixture.Create<long>(),
-					Fixture.Create<IList<RecordModel>>(),
-					Fixture.Create<RatingModel>(),
-					Fixture.Create<DateTimeOffset>(),
-					Fixture.Create<DateTimeOffset>(),
-					Fixture.Create<StatusEnum>()
-					)
-			};
-		}
 		
 		public static CaseTrustSearch BuildCaseTrustSearch(string trustUkPrn = "")
 		{

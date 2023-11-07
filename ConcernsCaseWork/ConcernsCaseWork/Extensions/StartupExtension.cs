@@ -7,7 +7,6 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
@@ -39,7 +38,6 @@ using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.PageHistory;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
@@ -150,7 +148,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
 			services.AddScoped<ITypeModelService, TypeModelService>();
-			services.AddScoped<IRatingModelService, RatingModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddScoped<ISRMAService, SRMAService>();
@@ -176,7 +173,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// api services
 			services.AddScoped<ICaseService, CaseService>();
-			services.AddScoped<IRatingService, RatingService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
@@ -202,7 +198,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
 			services.AddScoped<ITypeCachedService, TypeCachedService>();
 			services.AddScoped<IStatusCachedService, StatusCachedService>();
-			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();

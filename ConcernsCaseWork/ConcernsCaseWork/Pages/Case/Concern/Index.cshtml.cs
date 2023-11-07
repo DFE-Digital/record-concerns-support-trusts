@@ -4,14 +4,12 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +27,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _cachedService;
@@ -60,13 +57,11 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
-			IRatingModelService ratingModelService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
 			TelemetryClient telemetryClient, 
 			ICaseModelService caseModelService)
 		{
-			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_cachedService = Guard.Against.Null(cachedService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
@@ -157,9 +152,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					userState.CreateCaseModel.UpdatedAt = currentDate;
 					userState.CreateCaseModel.CreatedBy = GetUserName();
 					userState.CreateCaseModel.DeEscalation = currentDate;
-					userState.CreateCaseModel.RagRatingName = ragRatingName;
-					userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-					userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 					userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
 					userState.CreateCaseModel.TrustUkPrn = userState.TrustUkPrn;
 				}
@@ -170,9 +162,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					Type = typeId.Description(),
 					SubType = null,
 					RatingId = (long)ragRatingId,
-					RatingName = ragRatingName,
-					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);
@@ -236,12 +225,11 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = new List<CreateRecordModel>();
-			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
 			ConcernType = CaseComponentBuilder.BuildConcernType(CreateCaseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 			ConcernType.SortOrder = 1;
 
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 			ConcernRiskRating.SortOrder = 2;
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(CreateCaseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);

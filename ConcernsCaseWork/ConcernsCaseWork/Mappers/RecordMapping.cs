@@ -41,7 +41,6 @@ namespace ConcernsCaseWork.Mappers
 
 		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
 			IList<TypeDto> typesDto, 
-			IList<RatingDto> ratingsDto,
 			IList<StatusDto> statusesDto)
 		{
 			var recordsModel = new List<RecordModel>();
@@ -54,7 +53,6 @@ namespace ConcernsCaseWork.Mappers
 					recordDto.TypeId,
 					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId),
 					recordDto.RatingId,
-					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId),
 					recordDto.Id,
 					recordDto.StatusId,
 					StatusMapping.MapDtoToModel(statusesDto, recordDto.StatusId));
@@ -66,8 +64,7 @@ namespace ConcernsCaseWork.Mappers
 		}
 		
 		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto, 
-			IList<TypeDto> typesDto, 
-			IList<RatingDto> ratingsDto)
+			IList<TypeDto> typesDto)
 		{
 			var createRecordsModel = new List<CreateRecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return createRecordsModel;
@@ -75,7 +72,6 @@ namespace ConcernsCaseWork.Mappers
 			createRecordsModel.AddRange(recordsDto.Select(recordDto =>
 			{
 				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
 				var createRecordModel = new CreateRecordModel
 				{
@@ -83,10 +79,7 @@ namespace ConcernsCaseWork.Mappers
 					TypeId = recordDto.TypeId,
 					Type = typeModel.Type,
 					SubType = typeModel.SubType,
-					RatingId = recordDto.RatingId,
-					RatingName = ratingModel.Name,
-					RagRating = ratingModel.RagRating,
-					RagRatingCss = ratingModel.RagRatingCss
+					RatingId = recordDto.RatingId
 				};
 
 				return createRecordModel;

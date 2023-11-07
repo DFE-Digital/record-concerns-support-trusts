@@ -125,7 +125,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
 			Assert.That(actualCaseModel.StatusId, Is.EqualTo(1));
 			Assert.That(actualCaseModel.RatingId, Is.EqualTo(caseDto.RatingId));
-			Assert.IsNull(actualCaseModel.RatingModel);
 		}
 		
 		[Test]

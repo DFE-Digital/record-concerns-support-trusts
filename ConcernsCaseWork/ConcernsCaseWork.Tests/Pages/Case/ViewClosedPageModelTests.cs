@@ -178,15 +178,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(recordsModel.ElementAt(index).RatingId));
 				Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(recordsModel.ElementAt(index).StatusId));
 				Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(recordsModel.ElementAt(index).TypeId));
-				var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
-				var actualRecordRatingModel = recordsModel.ElementAt(index).RatingModel;
-				Assert.NotNull(expectedRecordRatingModel);
-				Assert.NotNull(actualRecordRatingModel);
-				Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
-				Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-				Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
-				Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
-				Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 
 				var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
 				var actualRecordTypeModel = recordsModel.ElementAt(index).TypeModel;
