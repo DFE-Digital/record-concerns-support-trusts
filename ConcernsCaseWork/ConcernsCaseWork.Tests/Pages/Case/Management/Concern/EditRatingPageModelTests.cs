@@ -51,7 +51,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				.ReturnsAsync(typeModel);
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRecordModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockLogger.Object);
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1); 
@@ -68,7 +67,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.TypeModel, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 
 				c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
