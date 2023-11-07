@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			
 			try
 			{
-				await LoadPage(Request.Headers["Referer"].ToString());
+				await LoadPage();
 
 			}
 			catch (Exception ex)
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			return Page();
 		}
 		
-		public async Task<ActionResult> OnPostEditRiskRating(string url)
+		public async Task<ActionResult> OnPostEditRiskRating()
 		{
 			_logger.LogMethodEntered();
 
@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			{
 				if (!ModelState.IsValid)
 				{
-					await LoadPage(url);
+					await LoadPage();
 					return Page();
 				}
 
@@ -93,8 +93,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				};
 
 				await _caseModelService.PatchRecordRating(patchRecordModel);
-					
-				return Redirect(url);
+
+				return Redirect($"/case/{CaseId}/management");
 			}
 			catch (Exception ex)
 			{
@@ -104,14 +104,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 			return Page();
 		}
-		
-		private async Task LoadPage(string url)
+
+		private async Task LoadPage()
 		{
 			CaseModel = await _caseModelService.GetCaseByUrn(CaseId);
 			var recordModel = await _recordModelService.GetRecordModelById(CaseId, RecordId);
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
-			CaseModel.PreviousUrl = url;
 
 			ConcernRiskRating = CaseComponentBuilder.BuildRiskToTrust(nameof(ConcernRiskRating), (int?)recordModel.RatingId);
 		} 
