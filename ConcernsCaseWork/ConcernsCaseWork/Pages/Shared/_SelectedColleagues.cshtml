@@ -1,0 +1,51 @@
+﻿@using System.Text.Json;
+@using ConcernsCaseWork.Extensions;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@model IList<string>
+
+@{
+    var nonce = Context.GetNonce();
+
+    if (Model.Count > 0)
+    {
+        <h1 class="govuk-heading-m">Selected case owners</h1>
+        <table class="govuk-table govuk-!-margin-top-6">
+            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                Active cases
+            </caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row tr__large">
+                    <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                        Name
+                    </th>
+                    <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                        Email
+                    </th>
+                    <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_4" scope="col">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+                @{
+                    foreach (var colleague in Model)
+                    {
+                        <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-name">
+                            <td class="govuk-table__cell" data-testid="user-name">
+                                @colleague.FromEmailToFullName()
+                            </td>
+                            <td class="govuk-table__cell" data-testid="user-email">
+                                @colleague
+                            </td>
+                            <td class="govuk-table__cell" data-testid="user-remove">
+                                <a href="#" class="user-remove" data-value="@colleague">Remove</a>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    }
+}

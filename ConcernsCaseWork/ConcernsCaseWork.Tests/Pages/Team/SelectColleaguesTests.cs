@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -121,11 +122,11 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}
 
-		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, bool isAuthenticated, string userName = "Tester")
+		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager, bool isAuthenticated, string userName = "Tester")
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
 
-			return new SelectColleaguesPageModel(rbacManager, logger, teamsService)
+			return new SelectColleaguesPageModel(rbacManager, logger, teamsService, featureManager)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -142,6 +143,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				MockLogger = new Mock<ILogger<SelectColleaguesPageModel>>();
 				MockTeamsService = new Mock<ITeamsModelService>();
 				MockRbacManager = new Mock<IRbacManager>();
+				MockFeautureManager = new Mock<IFeatureManager>();
 			}
 
 			public string CurrentUserName { get; private set; }
@@ -149,11 +151,13 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			public Mock<ITeamsModelService> MockTeamsService { get; }
 			public Mock<IRbacManager> MockRbacManager { get; }
 
+			public Mock<IFeatureManager> MockFeautureManager { get; }
+
 			internal SelectColleaguesPageModel BuildSut(bool authenticatedPage = true)
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(authenticatedPage, CurrentUserName);
 
-				return new SelectColleaguesPageModel(MockRbacManager.Object, MockLogger.Object, MockTeamsService.Object)
+				return new SelectColleaguesPageModel(MockRbacManager.Object, MockLogger.Object, MockTeamsService.Object, MockFeautureManager.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
