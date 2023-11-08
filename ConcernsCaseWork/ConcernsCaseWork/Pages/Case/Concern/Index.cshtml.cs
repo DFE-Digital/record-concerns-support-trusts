@@ -159,8 +159,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var createRecordModel = new CreateRecordModel
 				{
 					TypeId = (long)typeId,
-					Type = typeId.Description(),
-					SubType = null,
 					RatingId = (long)ragRatingId,
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};

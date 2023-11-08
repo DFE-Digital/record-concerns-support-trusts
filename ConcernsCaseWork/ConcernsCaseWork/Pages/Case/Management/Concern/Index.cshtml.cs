@@ -86,8 +86,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				{
 					CaseUrn = CaseUrn,
 					TypeId = (long)ConcernType.SelectedId,
-					Type = "",
-					SubType = "",
 					RatingId = ConcernRiskRating.SelectedId.Value,
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};

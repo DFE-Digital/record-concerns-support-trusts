@@ -4,7 +4,6 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,23 +19,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly ITrustModelService _trustModelService;
-		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public TypeModel TypeModel { get; private set; }
+
+		public string ConcernTypeName { get; set; }
 
 		public ClosurePageModel(ICaseModelService caseModelService, 
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService, 
-			ITypeModelService typeModelService,
 			ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
 			_trustModelService = trustModelService;
-			_typeModelService = typeModelService;
 			_logger = logger;
 		}
 		
@@ -126,7 +123,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 				var recordModel = await _recordModelService.GetRecordModelById(caseUrn, recordId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
+				ConcernTypeName = recordModel.GetConcernTypeName();
 				CaseModel.PreviousUrl = url;
 
 				return Page();
