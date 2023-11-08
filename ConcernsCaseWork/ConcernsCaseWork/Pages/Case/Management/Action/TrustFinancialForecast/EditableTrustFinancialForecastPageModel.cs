@@ -1,8 +1,8 @@
 using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Utils.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 

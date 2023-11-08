@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Models
 {

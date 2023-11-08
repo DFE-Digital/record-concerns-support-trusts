@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Mappers
 {

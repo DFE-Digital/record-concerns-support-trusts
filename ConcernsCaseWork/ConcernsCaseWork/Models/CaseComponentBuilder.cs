@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Models
 {

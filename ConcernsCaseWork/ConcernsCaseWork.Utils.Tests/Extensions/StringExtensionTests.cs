@@ -1,8 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
-using FluentAssertions;
-using NUnit.Framework;
+﻿using ConcernsCaseWork.Utils.Extensions;
 
-namespace ConcernsCaseWork.Tests.Extensions
+namespace ConcernsCaseWork.Utils.Tests.Extensions
 {
 	[Parallelizable(ParallelScope.All)]
 	public class StringExtensionTests
