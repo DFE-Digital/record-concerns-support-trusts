@@ -5,7 +5,7 @@ import homePage from "cypress/pages/homePage";
 import teamCaseworkPage from "cypress/pages/teamCaseworkPage";
 import caseApi from "cypress/api/caseApi";
 import { CaseBuilder } from "cypress/api/caseBuilder";
-import { CreateCaseRequest, PutTeamRequest, GetTeamByOwnerResponse } from "cypress/api/apiDomain";
+import { CreateCaseRequest, PutTeamRequest } from "cypress/api/apiDomain";
 import paginationComponent from "cypress/pages/paginationComponent";
 import caseMangementPage from "cypress/pages/caseMangementPage";
 import { toDisplayDate } from "cypress/support/formatDate";
@@ -32,7 +32,10 @@ describe("Team casework tests", () =>
 				username: "Reassign.Test@education.gov.uk"
 			});
 
-			cy.basicCreateCase()
+            const caseRequest = CaseBuilder.buildOpenCase();
+            caseRequest.trustUkprn = "10060447";
+
+			cy.basicCreateCase(caseRequest)
 			.then((response) =>
 			{
 				caseId = response.urn + "";
@@ -62,6 +65,7 @@ describe("Team casework tests", () =>
                         .hasRiskToTrust("Amber")
                         .hasRiskToTrust("Green")
                         .hasManagedBy("SFSO", "Midlands and West - West Midlands")
+                        .hasTrust("Westfield Academy")
                         .hasLastUpdatedDate(toDisplayDate(now))
                         .hasOwner(name);
 				});
