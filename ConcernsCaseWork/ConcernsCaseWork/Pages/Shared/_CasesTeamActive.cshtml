@@ -13,6 +13,9 @@
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
                 Contents
             </th>
+            <th>
+                Trust
+            </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
                 Managed by
             </th>
@@ -83,6 +86,9 @@
                             </div>
                         </td>
                     }
+                    <td class="govuk-table__cell" data-testid="trust-name">
+                        @activeCase.TrustName
+                    </td>
                     <td class="govuk-table__cell" data-testid="managed-by">
                         @activeCase.Division?.Description()
                         <br />
