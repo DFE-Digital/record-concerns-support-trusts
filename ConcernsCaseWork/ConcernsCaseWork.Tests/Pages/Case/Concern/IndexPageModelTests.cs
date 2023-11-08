@@ -8,7 +8,6 @@ using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using ConcernsCaseWork.Tests.Helpers;
@@ -34,7 +33,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 

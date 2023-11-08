@@ -6,7 +6,6 @@ using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -32,12 +31,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var typeModel = TypeFactory.BuildTypeModel();
 			var createRecordsModel = RecordFactory.BuildListCreateRecordModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
@@ -77,7 +74,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));

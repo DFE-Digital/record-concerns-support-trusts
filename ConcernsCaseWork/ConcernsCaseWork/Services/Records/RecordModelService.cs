@@ -3,7 +3,6 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,15 +14,12 @@ namespace ConcernsCaseWork.Services.Records
 	public sealed class RecordModelService : IRecordModelService
 	{
 		private readonly IRecordService _recordCachedService;
-		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<RecordModelService> _logger;
 		
 		public RecordModelService(IRecordService recordCachedService, 
-			ITypeModelService typeModelService,
 			ILogger<RecordModelService> logger)
 		{
 			_recordCachedService = recordCachedService;
-			_typeModelService = typeModelService;
 			_logger = logger;
 		}
 
@@ -32,15 +28,13 @@ namespace ConcernsCaseWork.Services.Records
 			_logger.LogInformation("RecordModelService::GetRecordsModelByCaseUrn");
 
 			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseUrn);
-			var typesDtoTask = _typeModelService.GetTypes();
 			
-			Task.WaitAll(recordsDtoTask, typesDtoTask);
+			Task.WaitAll(recordsDtoTask);
 				
 			var recordsDto = recordsDtoTask.Result;
-			var typesDto = typesDtoTask.Result;
 				
 			// Map the records dto to model
-			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto);
+			var recordsModel = RecordMapping.MapDtoToModel(recordsDto);
 
 			return Task.FromResult(recordsModel);
 		}
@@ -83,10 +77,9 @@ namespace ConcernsCaseWork.Services.Records
 			_logger.LogInformation("RecordModelService::GetCreateRecordsModelByCaseUrn");
 
 			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseUrn);
-			var typesDto = await _typeModelService.GetTypes();
 			
 			// Map the records dto to model
-			var createRecordsModel = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto);
+			var createRecordsModel = RecordMapping.MapDtoToCreateRecordModel(recordsDto);
 
 			return createRecordsModel;
 		}
@@ -101,9 +94,9 @@ namespace ConcernsCaseWork.Services.Records
 				currentDate, 
 				currentDate, 
 				currentDate, 
-				createRecordModel.Type, 
-				createRecordModel.SubType, 
-				createRecordModel.TypeDisplay, 
+				null, 
+				null, 
+				null, 
 				createRecordModel.CaseUrn, 
 				createRecordModel.TypeId,
 				createRecordModel.RatingId,
