@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.Utils\ConcernsCaseWork.Utils.csproj" />
     </ItemGroup>
 
 </Project>

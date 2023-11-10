@@ -1,6 +1,6 @@
 using System;
 
-namespace ConcernsCaseWork.Extensions
+namespace ConcernsCaseWork.Utils.Extensions
 {
 	public static class DateTimeExtensions
 	{

@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Utils.Extensions;
 using System;
 using System.Linq;
 

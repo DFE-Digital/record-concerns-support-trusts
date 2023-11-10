@@ -2,7 +2,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Actions;
@@ -12,6 +11,7 @@ using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using ConcernsCaseWork.Tests.Helpers;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;

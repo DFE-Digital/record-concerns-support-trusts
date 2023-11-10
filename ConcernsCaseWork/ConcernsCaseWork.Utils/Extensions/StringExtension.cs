@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace ConcernsCaseWork.Extensions
+namespace ConcernsCaseWork.Utils.Extensions
 {
 	public static class StringExtension
 	{
@@ -54,30 +54,28 @@ namespace ConcernsCaseWork.Extensions
 				// Get type urn from type
 				typeId = splitType[0];
 				typeName = splitType[1];
-				
+
 				return (typeId, typeName, subTypeName);
 			}
 
 			typeName = splitType[0];
-			
+
 			if (splitSubType.Length > 1)
 			{
 				typeId = splitSubType[0];
 				subTypeName = splitSubType[1];
 			}
 			else
-			{
 				subTypeName = splitSubType[0];
-			}
-			
+
 			return (typeId, typeName, subTypeName);
 		}
-		
+
 		public static T ToEnum<T>(this string value)
 		{
-			return (T) Enum.Parse(typeof(T), value, true);
+			return (T)Enum.Parse(typeof(T), value, true);
 		}
-		
+
 		public static string GetValueOrNullIfWhitespace(this string value) => string.IsNullOrWhiteSpace(value) ? null : value;
 
 		public static string FromEmailToFullName(this string email)

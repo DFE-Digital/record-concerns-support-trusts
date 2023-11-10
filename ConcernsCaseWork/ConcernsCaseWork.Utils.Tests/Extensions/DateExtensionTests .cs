@@ -1,8 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
-using NUnit.Framework;
-using System;
+﻿using ConcernsCaseWork.Utils.Extensions;
 
-namespace ConcernsCaseWork.Tests.Extensions
+namespace ConcernsCaseWork.Utils.Tests.Extensions
 {
 	[Parallelizable(ParallelScope.All)]
 	public class DateExtensionTests

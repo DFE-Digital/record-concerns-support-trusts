@@ -1,13 +1,12 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
-using System;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Utils.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.FinancialPlan;
-using ConcernsCaseWork.Extensions;
 
 namespace ConcernsCaseWork.Mappers
 {
