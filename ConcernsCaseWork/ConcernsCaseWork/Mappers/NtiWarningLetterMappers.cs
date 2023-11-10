@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Utils.Extensions;
 using System;
 using System.Linq;
 

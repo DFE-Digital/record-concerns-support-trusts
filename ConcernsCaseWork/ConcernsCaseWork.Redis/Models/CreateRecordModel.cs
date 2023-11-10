@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Redis.Extensions;
+using ConcernsCaseWork.Utils.Extensions;
 using System;
 
 namespace ConcernsCaseWork.Redis.Models

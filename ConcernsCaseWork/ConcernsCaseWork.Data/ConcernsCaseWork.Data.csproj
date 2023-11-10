@@ -24,6 +24,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.Utils\ConcernsCaseWork.Utils.csproj" />
     </ItemGroup>
 
 </Project>

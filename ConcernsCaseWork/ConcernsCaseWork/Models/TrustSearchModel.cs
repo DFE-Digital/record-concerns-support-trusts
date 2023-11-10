@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
-using System.Collections.Generic;
+﻿using ConcernsCaseWork.Utils.Extensions;
 using System.Text;
 
 namespace ConcernsCaseWork.Models
