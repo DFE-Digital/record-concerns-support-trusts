@@ -25,14 +25,12 @@ class TeamCaseworkPage {
     public selectTeamMember(name: string): this {
         Logger.Log(`Selecting team member ${name}`);
         
-        
         cy.get('#select-colleagues-input').type(name);
 
-          
-          //cy.get('ul > li').eq(0).click();
+        cy.get("#select-colleagues-input__option--0").click();
 
-          cy.get("#select-colleagues-input__option--0").click();
-
+        cy.getById("selected-colleagues")
+            .find(`[data-testid='row-${name}']`);
        
         cy.get('[data-testid="save"]').click();
 

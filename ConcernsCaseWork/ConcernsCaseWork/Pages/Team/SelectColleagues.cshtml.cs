@@ -168,6 +168,7 @@ namespace ConcernsCaseWork.Pages.Team
 
 		private List<string> RetrieveColleagueList()
 		{
+			var t = TempData["selectedColleagues"];
 			var colleagues = (string[])TempData["selectedColleagues"] ?? Array.Empty<string>();
 
 			return colleagues.ToList();

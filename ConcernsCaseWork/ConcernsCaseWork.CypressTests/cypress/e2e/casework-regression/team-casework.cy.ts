@@ -31,7 +31,7 @@ describe("Team casework tests", () =>
 			});
 		});
 
-		it.only("Should appear in the team casework section", () =>
+        it.only("Should be able to add team member", () =>
 		{
 			cy.visit("/TeamCasework");
 			homePage.selectColleagues();
@@ -40,8 +40,8 @@ describe("Team casework tests", () =>
 			const name = email.split("@")[0];
 
 			teamCaseworkPage
-				.removeAllTeamMembers()
-				.selectTeamMember(email);
+				// .removeAllTeamMembers()
+				.selectTeamMember('Svc-rdscc-e2etest');
 				
 
 			// Logger.Log("Ensure that the case for the user is displayed");
@@ -66,6 +66,41 @@ describe("Team casework tests", () =>
 			// Logger.Log("Checking accessibility on team casework with no cases");
 			// cy.excuteAccessibilityTests();	
 		});
+		// it.only("Should appear in the team casework section", () =>
+		// {
+		// 	cy.visit("/TeamCasework");
+		// 	homePage.selectColleagues();
+
+		// 	// const email = Cypress.env(EnvUsername);
+		// 	// const name = email.split("@")[0];
+
+		// 	teamCaseworkPage
+		// 		.removeAllTeamMembers()
+		// 	// 	.selectTeamMember(email);
+				
+
+		// 	// Logger.Log("Ensure that the case for the user is displayed");
+		// 	// caseworkTable
+		// 	// 	.getRowByCaseId(caseId)
+		// 	// 	.then(row =>
+		// 	// 	{
+		// 	// 		row.hasCaseId(caseId);
+		// 	// 		row.hasOwner(name);
+		// 	// 	});
+
+		// 	// Logger.Log("Checking accessibility on team casework");
+		// 	// cy.excuteAccessibilityTests();	
+
+		// 	// homePage.selectColleagues();
+		// 	// teamCaseworkPage
+		// 	// 	//.removeAllTeamMembers()
+		// 	// 	.save();
+
+		// 	// teamCaseworkPage.hasNoCases();
+
+		// 	// Logger.Log("Checking accessibility on team casework with no cases");
+		// 	// cy.excuteAccessibilityTests();	
+		// });
 	});
 
 	describe("When we have many open cases", () =>

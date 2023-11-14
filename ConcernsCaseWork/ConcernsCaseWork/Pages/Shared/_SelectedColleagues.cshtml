@@ -9,7 +9,7 @@
     if (Model.Count > 0)
     {
         <h1 class="govuk-heading-m">Selected case owners</h1>
-        <table class="govuk-table govuk-!-margin-top-6">
+        <table id="selected-colleagues" class="govuk-table govuk-!-margin-top-6">
             <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
                 Active cases
             </caption>
@@ -31,15 +31,17 @@
                 @{
                     foreach (var colleague in Model)
                     {
-                        <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-name">
-                            <td class="govuk-table__cell" data-testid="user-name">
-                                @colleague.FromEmailToFullName()
+                        var name = @colleague.FromEmailToFullName();
+
+                        <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-@name">
+                            <td class="govuk-table__cell" data-testid="user-name-@name">
+                                @name
                             </td>
-                            <td class="govuk-table__cell" data-testid="user-email">
+                            <td class="govuk-table__cell" data-testid="user-email-@name">
                                 @colleague
                             </td>
-                            <td class="govuk-table__cell" data-testid="user-remove">
-                                <a href="#" class="user-remove" data-value="@colleague">Remove</a>
+                            <td class="govuk-table__cell" data-testid="user-remove-@name">
+                                <a href="#" class="user-remove" >Remove</a>
                             </td>
                         </tr>
                     }
