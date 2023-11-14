@@ -70,6 +70,34 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+-- =============================================
+-- Author:		Elijah Aremu
+-- Create date: 14/11/2023
+-- Description:	Defaults the direction of travel to unchanged if null
+-- =============================================
+CREATE FUNCTION [dartmigration].[GetDirectionOfTravel]
+(
+	@DirectionOfTravel NVARCHAR(200)
+)
+RETURNS NVARCHAR(200)
+AS
+BEGIN
+
+	DECLARE @DOF NVARCHAR(200) = 
+		(CASE 
+			WHEN @DirectionOfTravel IS NULL THEN 'Unchanged'
+			ELSE TRIM(@DirectionOfTravel)
+		END)
+
+	RETURN @DOF;
+
+END
+GO
+/****** Object:  UserDefinedFunction [dartmigration].[GetTrustUkPrn]    Script Date: 02/02/2023 16:04:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
 
 
@@ -699,7 +727,7 @@ SELECT
     Concern_Details_Current_Status AS CurrentStatus,
 	Next_Steps AS NextSteps,
 	dartmigration.GetConcernCaseStatusId([Status]) AS StatusId,
-	TRIM(Direction_of_Travel) AS DirectionOfTravel,
+	dartmigration.GetDirectionOfTravel(Direction_of_Travel) AS DirectionOfTravel,
 	cast(Case_create_date as datetime2)  AS CreatedAt,
     cast(ISNULL(Date_Last_Updated,ISNULL(Date_Closed, Case_create_date)) as datetime2) AS UpdatedAt,
 	cast(dartmigration.GetConcernsCaseClosedDate(Date_Closed, dartmigration.GetConcernCaseStatusId([Status])) as datetime2) AS ClosedAt,
