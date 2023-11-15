@@ -1,5 +1,5 @@
 ﻿# Stage 1
-ARG ASPNET_IMAGE_TAG=6.0.9-bullseye-slim
+ARG ASPNET_IMAGE_TAG=8.0.0-bookworm-slim
 ARG NODEJS_IMAGE_TAG=16-bullseye
 ARG COMMIT_SHA=not-set
 
