@@ -1,3 +1,5 @@
+## 32.0.0
+
 ## 31.0.0
 
 * Change Add concern to Add another concern in the case creation wizard
