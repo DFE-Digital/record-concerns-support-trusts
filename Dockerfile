@@ -17,7 +17,7 @@ RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 
 RUN dotnet new tool-manifest
-RUN dotnet tool install dotnet-ef --version 7.0.13
+RUN dotnet tool install dotnet-ef
 
 RUN mkdir -p /app/SQL
 RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
