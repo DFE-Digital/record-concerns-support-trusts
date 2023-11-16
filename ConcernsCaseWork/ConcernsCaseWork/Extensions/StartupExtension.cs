@@ -7,10 +7,8 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Decision;
@@ -189,16 +187,11 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
-
-			// AD Integration
-			services.AddScoped<IRbacManager, RbacManager>();
 			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			services.AddHttpContextAccessor();
-			services.AddScoped<IRbacManager, RbacManager>();
 			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
