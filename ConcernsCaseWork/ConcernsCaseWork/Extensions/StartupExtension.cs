@@ -11,7 +11,6 @@ using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Service.AzureAd.IoC;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Decision;
@@ -195,9 +194,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// AD Integration
 			services.AddScoped<IRbacManager, RbacManager>();
-			
-			// Azure Ad Service (for retrieving users)
-			services.AddAzureAdService();
 			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 

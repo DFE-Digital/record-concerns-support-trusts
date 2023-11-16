@@ -1,4 +1,11 @@
+## 32.0.0
+
 ## 31.0.0
+
+* Change Add concern to Add another concern in the case creation wizard
+* Add trust nane column to the other cases table
+* Increase the default size of text areas
+* Reduced the number of calls to redis
 
 ## 30.0.0
 
