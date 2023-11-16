@@ -83,13 +83,13 @@ RETURNS NVARCHAR(200)
 AS
 BEGIN
 
-	DECLARE @DOF NVARCHAR(200) = 
+	DECLARE @DOT NVARCHAR(200) = 
 		(CASE 
 			WHEN @DirectionOfTravel IS NULL THEN 'Unchanged'
 			ELSE TRIM(@DirectionOfTravel)
 		END)
 
-	RETURN @DOF;
+	RETURN @DOT;
 
 END
 GO
@@ -737,7 +737,7 @@ SELECT
 	dartmigration.GetMeansOfReferralId(Means_of_Referral) AS MeansOfReferralId,
 	dartmigration.GetTrustUkPrn(Case_Id, Company_Number, Parent_company_number) AS UkPrn,
 	dartmigration.GetCaseHistory(Case_History, URN, Academy_Name, Enquiry_Number) AS CaseHistory,
-	dartmigration.GetTerritory(Case_Id, RSC) as Territory,
+	NULL AS Territory,--dartmigration.GetTerritory(Case_Id, RSC) as Territory,
 	COALESCE(Company_Number, Parent_company_number) AS CompaniesHouseNumber,
 	dartmigration.GetRegion(RSC) as RegionId
 FROM    dartmigration.vwConcernCaseRaw
