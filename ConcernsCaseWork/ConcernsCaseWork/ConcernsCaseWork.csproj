@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
 		<UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>31.0.0</Version>
+		<Version>32.0.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="custom">
@@ -54,7 +54,6 @@
 		<ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
-		<ProjectReference Include="..\ConcernsCaseWork.Service.AzureAd\ConcernsCaseWork.Service.AzureAd.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
