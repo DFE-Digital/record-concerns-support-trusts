@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -15,19 +14,16 @@ namespace ConcernsCaseWork.Pages
 	public class ClearDataPageModel : PageModel
 	{
 		private readonly ITrustCachedService _trustCachedService;
-		private readonly ITeamsCachedService _teamsCachedService;
 		private readonly ILogger<ClearDataPageModel> _logger;
 		private readonly IUserStateCachedService _userStateCachedService;
 		
 		public ClearDataPageModel(
 			IUserStateCachedService userStateCachedService, 
 			ITrustCachedService trustCachedService,
-			ITeamsCachedService teamsCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
 			_userStateCachedService = Guard.Against.Null(userStateCachedService);
 			_trustCachedService = Guard.Against.Null(trustCachedService);
-			_teamsCachedService = Guard.Against.Null(teamsCachedService);
 			_logger = Guard.Against.Null(logger);
 		}
 		
@@ -39,7 +35,6 @@ namespace ConcernsCaseWork.Pages
 			
 			await _userStateCachedService.ClearData(User.Identity?.Name);
 			await _trustCachedService.ClearData();
-			await _teamsCachedService.ClearData(User.Identity?.Name);
 
 			return RedirectToPage("home");
 		}

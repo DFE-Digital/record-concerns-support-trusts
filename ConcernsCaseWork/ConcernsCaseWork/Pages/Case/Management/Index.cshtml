@@ -18,7 +18,7 @@
     var locationChangeLink = "";
     var locationAria = "";
 
-    if (Model.CaseModel.Division == Division.RegionsGroup)
+    if (Model.CaseModel?.Division == Division.RegionsGroup)
     {
         locationChangeLink = $"{Request.Path}/edit-region";
         locationAria = "Change region";

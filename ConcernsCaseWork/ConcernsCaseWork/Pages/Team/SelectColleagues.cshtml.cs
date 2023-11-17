@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.Pages.Team
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class SelectColleaguesPageModel : AbstractPageModel
 	{
-		private readonly IRbacManager _rbacManager;
 		private readonly ILogger<SelectColleaguesPageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
 
@@ -25,9 +24,8 @@ namespace ConcernsCaseWork.Pages.Team
 		public IList<string> SelectedColleagues { get; set; }
 		public string[] Users { get; set; }
 
-		public SelectColleaguesPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
+		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
 		{
-			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
 		}
@@ -76,12 +74,10 @@ namespace ConcernsCaseWork.Pages.Team
 				try
 				{
 					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
+					var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
 
 					await Task.WhenAll(teamMembers, users);
 
-					// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
-					// Get users from somewhere, possibly the rbacManager
 					SelectedColleagues = teamMembers.Result.TeamMembers;
 					Users = users.Result.ToArray();
 				}

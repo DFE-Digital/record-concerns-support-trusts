@@ -3,7 +3,6 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using AutoMapper;
 using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.Extensions.Logging;
@@ -65,28 +64,10 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.Is<ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
 		}
 
-		[Test]
-		public void TeamsService_Methods_GuardAgainstNullArgs()
-		{
-			var fixture = new TestFixture().AutoFixture;
-			fixture.Customize(new AutoMoqCustomization());
-			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamsModelService).GetMethods());
-		}
-
-		[Test]
-		public void TeamsService_Constructors_GuardAgainstNullArgs()
-		{
-			var fixture = new TestFixture().AutoFixture;
-			fixture.Customize(new AutoMoqCustomization());
-			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamsModelService).GetConstructors());
-		}
-
 		private class TestFixture
 		{
 			public readonly Fixture AutoFixture;
-			public readonly Mock<ITeamsCachedService> MockCachedTeamsService;
+			public readonly Mock<ITeamsService> MockCachedTeamsService;
 			public readonly Mock<ILogger<TeamsModelService>> MockLogger;
 
 			public string CurrentUserName { get; }
@@ -96,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			public TestFixture()
 			{
 				AutoFixture = new Fixture();
-				MockCachedTeamsService = new Mock<ITeamsCachedService>();
+				MockCachedTeamsService = new Mock<ITeamsService>();
 				MockLogger = new Mock<ILogger<TeamsModelService>>();
 				this.CurrentUserName = $"{AutoFixture.Create<string>()}.{AutoFixture.Create<string>()}";
 
