@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -24,13 +23,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			const string ExpectedUserIdentity = "Tester";
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(
 				mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockTeamsCachedService.Object,
 				mockLogger.Object,
 				true);
 
@@ -46,7 +43,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockTeamsCachedService.Verify(c => c.ClearData(ExpectedUserIdentity), Times.Once);
 		}
 		
 		[Test]
@@ -55,14 +51,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(
                 mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockTeamsCachedService.Object,
 				mockLogger.Object);
 
 			// act
@@ -77,13 +71,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockTeamsCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 		}
 		
 		private static ClearDataPageModel SetupClearDataModel(
 			IUserStateCachedService mockUserStateCachedService,
 			ITrustCachedService mockTrustCachedService,
-			ITeamsCachedService mockTeamsCachedService,
 			ILogger<ClearDataPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
@@ -92,7 +84,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			return new ClearDataPageModel(
 				mockUserStateCachedService,
 				mockTrustCachedService,
-				mockTeamsCachedService,
 				mockLogger)
 			{
 				PageContext = pageContext,

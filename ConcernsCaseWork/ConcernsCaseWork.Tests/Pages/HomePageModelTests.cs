@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
 
 			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
-			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
+			mockTeamService.Setup(x => x.CheckMemberExists(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
 
 			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName, 1)).Throws(new Exception("Bad request"));
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName, 1)).ReturnsAsync(caseGroup);
 			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
-			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
+			mockTeamService.Setup(x => x.CheckMemberExists(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
 		
 			var sut = SetupHomePageModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockLogger.VerifyLogInformationWasCalled("HomePageModel");
 			mockLogger.VerifyLogErrorWasNotCalled();
 		
-			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
+			mockTeamService.Verify(x => x.CheckMemberExists(It.IsAny<string>()), Times.Once);
 		}
 
 		[Test]
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(caseGroup);
 
 			var mockTeamService = new Mock<ITeamsModelService>();
-			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
+			mockTeamService.Setup(x => x.CheckMemberExists(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
 			// act
@@ -145,7 +145,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 
-			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
+			mockTeamService.Verify(x => x.CheckMemberExists(It.IsAny<string>()), Times.Once);
 		}
 
 		[Test]
@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// assert
 			testBuilder.MockUserStateCache.Verify(x => x.GetData(testBuilder.CaseworkerId), Times.Once);
-			testBuilder.MockTeamService.Verify(x => x.GetCaseworkTeam(testBuilder.CaseworkerId), Times.Once);
+			testBuilder.MockTeamService.Verify(x => x.CheckMemberExists(testBuilder.CaseworkerId), Times.Once);
 			testBuilder.MockTeamService.Verify(x => x.UpdateCaseworkTeam(It.Is<ConcernsTeamCaseworkModel>(m => m.OwnerId == testBuilder.CaseworkerId && m.TeamMembers.Length == 0)), Times.Once);
 			testBuilder.MockUserStateCache.Verify(x => x.StoreData(testBuilder.CaseworkerId, It.Is<UserState>(s => s.UserName == testBuilder.CaseworkerId)), Times.Once);
 		}
@@ -183,8 +183,8 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// assert
 			testBuilder.MockUserStateCache.Verify(x => x.GetData(testBuilder.CaseworkerId), Times.Once);
-			testBuilder.MockTeamService.Verify(x => x.GetCaseworkTeam(testBuilder.CaseworkerId), Times.Once);
-			testBuilder.MockTeamService.Verify(x => x.UpdateCaseworkTeam(It.Is<ConcernsTeamCaseworkModel>(m => m.OwnerId == testBuilder.CaseworkerId && m.TeamMembers.Length == 0)), Times.Never);
+			testBuilder.MockTeamService.Verify(x => x.CheckMemberExists(testBuilder.CaseworkerId), Times.Once);
+			testBuilder.MockTeamService.Verify(x => x.UpdateCaseworkTeam(It.Is<ConcernsTeamCaseworkModel>(m => m.OwnerId == testBuilder.CaseworkerId && m.TeamMembers.Length == 0)), Times.Once);
 			testBuilder.MockUserStateCache.Verify(x => x.StoreData(testBuilder.CaseworkerId, It.Is<UserState>(s => s.UserName == testBuilder.CaseworkerId)), Times.Never);
 		}
 		
@@ -235,8 +235,8 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			public TestBuilder WithNoTeamCaseworkModel()
 			{
-				this.MockTeamService.Setup(x => x.GetCaseworkTeam(CaseworkerId))
-					.ReturnsAsync(new ConcernsTeamCaseworkModel(CaseworkerId, Array.Empty<string>()));
+				this.MockTeamService.Setup(x => x.CheckMemberExists(CaseworkerId))
+					.ReturnsAsync(() => null);
 
 				return this;
 			}

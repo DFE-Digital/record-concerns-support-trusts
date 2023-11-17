@@ -28,9 +28,13 @@ describe("Team casework tests", () =>
 			// Ensure that the automation user has been registered in the system
 			cy.login();
 
+            cy.visit("/");
+
 			cy.login({
 				username: "Reassign.Test@education.gov.uk"
 			});
+
+            cy.visit("/");
 
             const caseRequest = CaseBuilder.buildOpenCase();
             caseRequest.trustUkprn = "10060447";
