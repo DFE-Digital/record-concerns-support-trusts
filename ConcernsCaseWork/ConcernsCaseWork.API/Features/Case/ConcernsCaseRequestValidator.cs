@@ -7,6 +7,8 @@ namespace ConcernsCaseWork.API.Features.Case
 	{
 		public ConcernsCaseRequestValidator()
 		{
+			RuleFor(x => x.CreatedBy).NotEmpty();
+
 			RuleFor(x => x.RatingId).GreaterThanOrEqualTo(1)
 				.WithMessage("'RatingId' must be a value within range");
 

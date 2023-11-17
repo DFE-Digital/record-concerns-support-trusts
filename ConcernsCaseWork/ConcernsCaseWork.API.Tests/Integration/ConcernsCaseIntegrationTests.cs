@@ -210,6 +210,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		string error = await createResponse.Content.ReadAsStringAsync();
 
+		error.Should().Contain("'Created By' must not be empty");
 		error.Should().Contain("'Division' must not be empty");
 		error.Should().Contain("'TrustUkprn' must not be empty");
 		error.Should().Contain("'RatingId' must be a value within range");
@@ -455,6 +456,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		string error = await response.Content.ReadAsStringAsync();
 
+		error.Should().Contain("'Created By' must not be empty");
 		error.Should().Contain("'Division' must not be empty");
 		error.Should().Contain("'TrustUkprn' must not be empty");
 		error.Should().Contain("'RatingId' must be a value within range");
