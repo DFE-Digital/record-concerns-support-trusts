@@ -86,7 +86,7 @@ describe("Creating a case", () => {
 
             Logger.Log("Create a valid concern");
             createConcernPage
-                .withConcernType("Governance")
+                .withConcernType("Governance capability")
                 .withConcernRating("Amber-Green")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
@@ -96,7 +96,7 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
-                .hasConcernType("Governance");
+                .hasConcernType("Governance capability");
     
             createConcernPage.nextStep();
     
@@ -104,7 +104,7 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
-                .hasConcernType("Governance");
+                .hasConcernType("Governance capability");
     
             Logger.Log("Populate risk to trust");
             addDetailsPage.withRiskToTrust("Red").nextStep();
@@ -115,7 +115,7 @@ describe("Creating a case", () => {
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
-                .hasConcernType("Governance")
+                .hasConcernType("Governance capability")
                 .hasConcernRiskRating("Amber Green")
                 .hasRiskToTrust("Red");
     
@@ -126,7 +126,7 @@ describe("Creating a case", () => {
             caseManagementPage
                 .hasTrust("Ashton West End Primary Academy")
                 .hasRiskToTrust("Red")
-                .hasConcerns("Governance", ["Amber", "Green"])
+                .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasManagedBy("Regions Group", "London")
                 .hasIssue("This is an issue");
     
@@ -150,7 +150,7 @@ describe("Creating a case", () => {
                 .addConcern();
     
             caseManagementPage
-                .hasConcerns("Governance", ["Amber", "Green"])
+                .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasConcerns("Safeguarding non-compliance", ["Red", "Amber"]);
 
             Logger.Log("Check the available case actions");
