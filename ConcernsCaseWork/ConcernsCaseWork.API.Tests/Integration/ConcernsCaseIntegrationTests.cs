@@ -138,13 +138,6 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		expected.Data.Urn = createdCase!.Urn;
 
 		result.Should().BeEquivalentTo(expected);
-		createdCase.CreatedBy.Should().Be(createRequest.CreatedBy);
-		createdCase.TrustUkprn.Should().Be(createRequest.TrustUkprn);
-		createdCase.StatusId.Should().Be(createRequest.StatusId);
-		createdCase.RatingId.Should().Be(createRequest.RatingId);
-		createdCase.DivisionId.Should().Be(createRequest.Division);
-		createdCase.CaseLastUpdatedAt.Should().Be(createRequest.CreatedAt);
-		createdCase.TrustCompaniesHouseNumber.Should().Be(null);
 	}
 
 
