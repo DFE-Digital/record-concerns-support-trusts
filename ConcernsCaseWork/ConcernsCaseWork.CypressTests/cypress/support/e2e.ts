@@ -28,7 +28,7 @@ declare global {
             loginWithCredentials(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
             basicCreateCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
-            createNonConcernsCase(): Chainable<CreateCaseResponse>;
+            createNonConcernsCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
             closeConcern(): Chainable<Element>;
             closeCase(): Chainable<Element>;
         }
