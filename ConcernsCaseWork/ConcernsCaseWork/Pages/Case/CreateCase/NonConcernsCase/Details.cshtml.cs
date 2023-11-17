@@ -116,14 +116,8 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			result.TrustUkPrn = trust.GiasData.UkPrn;
 			result.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
 
-			result.StatusId = (long)CaseStatus.Live;
 			result.RatingId = (long)ConcernRating.NotApplicable;
 			result.CreatedBy = userState.UserName;
-
-			var currentDate = DateTimeOffset.Now;
-			result.CreatedAt = currentDate;
-			result.UpdatedAt = currentDate;
-			result.ReviewAt = currentDate;
 
 			return result;
 		}

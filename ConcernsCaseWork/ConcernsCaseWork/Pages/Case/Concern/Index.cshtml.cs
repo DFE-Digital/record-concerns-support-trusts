@@ -7,7 +7,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Utils.Extensions;
@@ -17,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -140,21 +138,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 				// Redis state
 				var userState = await GetUserState();
-
-
-				// Create a case model
-				if (!userState.CreateCaseModel.CreateRecordsModel.Any())
-				{
-					var currentDate = DateTimeOffset.Now;
-
-					userState.CreateCaseModel.CreatedAt = currentDate;
-					userState.CreateCaseModel.ReviewAt = currentDate;
-					userState.CreateCaseModel.UpdatedAt = currentDate;
-					userState.CreateCaseModel.CreatedBy = GetUserName();
-					userState.CreateCaseModel.DeEscalation = currentDate;
-					userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
-					userState.CreateCaseModel.TrustUkPrn = userState.TrustUkPrn;
-				}
 
 				var createRecordModel = new CreateRecordModel
 				{
