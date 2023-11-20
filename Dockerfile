@@ -21,7 +21,7 @@ RUN dotnet tool install dotnet-ef
 
 RUN mkdir -p /app/SQL
 RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
-RUN touch /app/SQL/DbMigrationScript.sql
+RUN touch /app/SQL/DbMigrationScript.sql /app/SQL/DbMigrationScriptOutput.txt
 
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
 
@@ -57,4 +57,6 @@ RUN chmod +x ./set-appsettings-release-tag.sh
 RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
 RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
 
-EXPOSE 80/tcp
+RUN chown app:app ./SQL/ -R
+USER app
+EXPOSE 8080/tcp
