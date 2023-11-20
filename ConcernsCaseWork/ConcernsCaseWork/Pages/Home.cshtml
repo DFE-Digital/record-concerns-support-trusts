@@ -1,11 +1,16 @@
 ﻿@page
 @using ConcernsCaseWork.API.Contracts.Configuration;
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.HomePageModel
 @addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
 @{
     ViewData["Title"] = "Create or view a case";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        YourCasesTabActive = true
+    };
 }
 
 <div class="govuk-extra-width-container">

@@ -1,9 +1,14 @@
 ﻿@page "/TeamCasework"
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.TeamCaseworkPageModel
 
 @{
     ViewData["Title"] = "Home";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        OtherCasesTabActive = true
+    };
 }
 
 <div class="govuk-extra-width-container">

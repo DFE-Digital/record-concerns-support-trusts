@@ -1,9 +1,14 @@
 ﻿@page "/case/closed"
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.ClosedPageModel
 
 @{
     ViewData["Title"] = "Your closed cases";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        YourCasesTabActive = true
+    };
 }
 
 <div class="govuk-extra-width-container">

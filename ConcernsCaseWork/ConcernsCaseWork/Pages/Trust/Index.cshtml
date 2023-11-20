@@ -1,4 +1,5 @@
 ﻿@page "/trust/{handler?}"
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Trust.IndexPageModel
@@ -7,6 +8,10 @@
     ViewData["Title"] = "Find a trust";
 	Model.FindTrustModel.Nonce = HttpContext.GetNonce();
     var validationErrors = TempData["Error.Message"] as IEnumerable<string>;
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        FindTrustTabActive = true
+    };
 }
 
 <div class="govuk-width-container">
