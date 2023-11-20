@@ -5,7 +5,7 @@
 @addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Create or view a case";
 }
 
 <div class="govuk-extra-width-container">
@@ -19,7 +19,6 @@
         <div class="govuk-!-margin-top-0">
             <div class="govuk-tabs">
                 <nav class="moj-sub-navigation" aria-label="Sub navigation">
-
                     <ul class="moj-sub-navigation__list">
                         <li class="moj-sub-navigation__item">
                             <a data-testid="create-or-view-case-tab" class="moj-sub-navigation__link" aria-current="page" href="/"><span aria-hidden="false"></span>Create or view a case</a>
@@ -31,18 +30,23 @@
                     </ul>
                 </nav>
 
-                <div class="govuk-tabs__panel" id="your-casework">
-                    <div class="govuk-button-group">
-                        <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
-                            Create a case
-                        </a>
-                    </div>
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    <h1 class="govuk-fieldset__heading">
+                        Create or view a case
+                    </h1>
+                </legend>
 
-                    <!-- Active casework -->
-                    <partial name="_CasesActive" model="Model.ActiveCases" />
-
-                    <partial name="_Pagination" model="Model.Pagination" />
+                <div class="govuk-button-group">
+                    <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
+                        Create a case
+                    </a>
                 </div>
+
+                <!-- Active casework -->
+                <partial name="_CasesActive" model="Model.ActiveCases" />
+
+                <partial name="_Pagination" model="Model.Pagination" />
+
             </div>
         </div>
     }

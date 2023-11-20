@@ -30,11 +30,16 @@
                 </ul>
             </nav>
 
-            <h1 class="govuk-heading-m">Your closed cases</h1>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Closed cases
+                </h1>
+            </legend>
+
             <!-- Your closed cases -->
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-                    Your closed cases
+                <caption class="govuk-table__caption govuk-table__caption--s govuk-!-margin-bottom-3">
+                    Closed cases owned by you
                 </caption>
 
                 <thead class="govuk-table__head">
@@ -128,7 +133,6 @@
             </table>
 
             <partial name="_Pagination" model="Model.Pagination" />
-
         }
     </div>
 </div>

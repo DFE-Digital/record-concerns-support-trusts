@@ -28,6 +28,10 @@ describe("Creating a case", () => {
 	});
 
 	it("Should validate adding a case", () => {
+
+		Logger.Log("Checking accessibility on home page");
+        cy.excuteAccessibilityTests();	
+
 		Logger.Log("Create a case");
 		createCasePage
 			.createCase()

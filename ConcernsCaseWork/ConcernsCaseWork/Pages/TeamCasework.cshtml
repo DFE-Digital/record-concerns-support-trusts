@@ -15,20 +15,23 @@
     else
     {
         <div class="govuk-!-margin-top-0">
-            <div class="govuk-tabs govuk-!-margin-top-6">
 
-	            <div class="govuk-tabs__panel" id="team-casework">
-                    <div class="govuk-button-group flexalign__right">
-                        <a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button" data-testid="select-colleagues">
-                            Select case owners
-                        </a>
-                    </div>
-                    <!-- Team casework -->
-                    <partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
-                    <partial name="_Pagination" model="Model.Pagination" />
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Cases owned by others
+                </h1>
+            </legend>
 
-                </div>
+
+            <div class="govuk-button-group">
+                <a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button" data-testid="select-colleagues">
+                    Select case owners
+                </a>
             </div>
+            <!-- Team casework -->
+            <partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
+            <partial name="_Pagination" model="Model.Pagination" />
+
         </div>
     }
 </div>
