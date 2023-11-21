@@ -10,19 +10,9 @@ import { Logger } from "cypress/common/logger";
 //         return this;
 //     }
 
-//     public deselectAllTeamMembers(): this {
-//         Logger.Log("Deselecting all team members");
-
-//         cy.get('input[type="checkbox"]').each(($checkbox) => {
-//             if ($checkbox.is(':checked')) {
-//               cy.wrap($checkbox).uncheck();
-//             }
-//           });
-
-//         return this;
-//     }
+ 
 class TeamCaseworkPage {
-    public selectTeamMember(name: string): this {
+    public selectTeamMember(name: string): this { 
         Logger.Log(`Selecting team member ${name}`);
         
         cy.get('#select-colleagues-input').type(name);
@@ -37,19 +27,23 @@ class TeamCaseworkPage {
         return this;
     }
 
-    public removeAllTeamMembers(): this {
-        Logger.Log("Removing all previous team members");
+    public deselectAllTeamMembers(): this {
+        Logger.Log("Deselecting all team members");
+
+        cy.getById('#select-colleagues').click();
+        
+            
+         
+
+        return this;
+    }
     
-        // Get the parent element and then find its children with the class 'user-remove'
-        cy.get('.govuk-table tbody tr.user-colleagues-row')
-            .find('.user-remove')
-            .then(($removeLinks) => {
-                if ($removeLinks.length > 0) {
-                    cy.get('.user-remove').each(($removeLink) => {
-                        cy.wrap($removeLink).click();
-                    });
-                }
-            });
+    public applyingChanges(): this {
+        Logger.Log("Checking if no cases are visible");
+    
+        cy.get('[data-testid="select-colleagues"]').click();
+    
+        cy.get('[data-testid="save"]').click();
     
         return this;
     }
@@ -65,12 +59,50 @@ class TeamCaseworkPage {
         return this;
     }
 
-    public save(): this {
-        Logger.Log("Saving changes");
-        cy.getByTestId('save').click();
+    // it("Should appear in the team casework section", () =>
+    // {
+    //     cy.visit("/TeamCasework");
+    //     homePage.selectColleagues();
+    //     const email = Cypress.env(EnvUsername);
+    //     const name = email.split("@")[0];
+    //     teamCaseworkPage
+    //         .deselectAllTeamMembers()
+    //         .selectTeamMember(email)
+    //         .save();
+    //     Logger.Log("Ensure that the case for the user is displayed");
+    //     caseworkTable
+    //         .getRowByCaseId(caseId)
+    //         .then(row =>
+    //         {
+    //             row.hasCaseId(caseId)
+    //                 .hasConcern("Financial compliance")
+    //                 .hasRiskToTrust("Amber")
+    //                 .hasRiskToTrust("Green")
+    //                 .hasManagedBy("SFSO", "Midlands and West - West Midlands")
+    //                 .hasTrust("Westfield Academy")
+    //                 .hasLastUpdatedDate(toDisplayDate(now))
+    //                 .hasOwner(name);
+    //         });
+    //     Logger.Log("Checking accessibility on team casework");
+    //     cy.excuteAccessibilityTests();
+    //     homePage.selectColleagues();
+    //     teamCaseworkPage
+    //         .deselectAllTeamMembers()
+    //         .save();
+    //     teamCaseworkPage.hasNoCases();
+    //     Logger.Log("Checking accessibility on team casework with no cases");
+    //     cy.excuteAccessibilityTests();
+    // });
 
-        return this;
-    }
+
+
+
+
+
+
+
+
+  
 }
 
 const teamCaseworkPage = new TeamCaseworkPage();
