@@ -15,6 +15,12 @@ public class ExceptionHandlerMiddleware
 
 	public async Task InvokeAsync(HttpContext httpContext, ILogger<ExceptionHandlerMiddleware> logger)
 	{
+		if (!IsApiRequest(httpContext.Request.Path)) 
+		{
+			await _next(httpContext);
+			return;
+		}
+
 		var originalBodyStream = httpContext.Response.Body;
 		using var memoryStream = new MemoryStream();
 
