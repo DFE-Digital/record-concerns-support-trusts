@@ -10,7 +10,6 @@ import AddToCasePage from "../../pages/caseActions/addToCasePage";
 import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import HomePage from "../../pages/homePage";
 import ClosedCasePage from "../../pages/closedCasePage";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import { toDisplayDate } from "cypress/support/formatDate";
@@ -23,6 +22,9 @@ import {
 	SourceOfConcernInternal,
 } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
+import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
+import homePage from "../../pages/homePage";
+import headerComponent from "cypress/pages/header";
 
 describe("Creating a non concerns case", () => {
 	let email: string;
@@ -37,13 +39,13 @@ describe("Creating a non concerns case", () => {
 	const createConcernPage = new CreateConcernPage();
 
 	const trustName = "Ashton West End Primary Academy";
+	const alternativeTrustName = "Denton West End Primary School";
 	const territory = "North and UTC - North East";
 
 	let now: Date;
 
 	beforeEach(() => {
 		cy.login();
-		cy.visit(Cypress.env("url") + "/case/create");
 		email = Cypress.env(EnvUsername);
 		name = email.split("@")[0];
 		now = new Date();
@@ -51,7 +53,7 @@ describe("Creating a non concerns case", () => {
 
 	it("Should validate adding a case", () => {
 		Logger.Log("Create a case");
-		createCasePage.withTrustName(trustName).selectOption().confirmOption();
+		createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
 		Logger.Log("You must select a division error");
         selectCaseDivisionPage
@@ -144,113 +146,206 @@ describe("Creating a non concerns case", () => {
 		});
 	});
 
-	it("Converting non conern to concern case", () => {
-		Logger.Log("Create a case");
-		createCasePage.withTrustName(trustName).selectOption().confirmOption();
+	describe("Converting non conern to concern case", () =>
+	{
+		it("Should make the case a concerns case", () => {
+			Logger.Log("Create a case");
+			createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
+	
+			Logger.Log("Create a valid case division");
+			selectCaseDivisionPage
+				.withCaseDivision("SFSO")
+				.continue();
+	
+			Logger.Log("Populate territory");
+			addTerritoryPage.withTerritory(territory).nextStep();
+	
+			Logger.Log("Create a valid Non-concern case type");
+			selectCaseTypePage.withCaseType("NonConcerns").continue();
+	
+			Logger.Log("Add non concerns case");
+			addConcernDetailsPage.createCase();
+	
+			Logger.Log("Add another concern after case creation");
+			caseManagementPage.addAnotherConcernForNonConcern();
+	
+			Logger.Log("Checking accessibility on adding concern page");
+			cy.excuteAccessibilityTests();
+	
+			Logger.Log("Attempt to create an invalid concern");
+			createConcernPage
+				.addConcern()
+				.hasValidationError("Select concern type")
+				.hasValidationError("Select concern risk rating")
+				.hasValidationError("Select means of referral");
+	
+			Logger.Log("Create an invalid sub concern");
+			createConcernPage
+				.withConcernType("Deficit")
+				.withConcernRating("Red-Amber")
+				.withMeansOfReferral(SourceOfConcernExternal)
+				.addConcern();
+	
+			Logger.Log("Adding another concern during case creation");
+			createConcernPage
+				.addAnotherConcern()
+				.withConcernType("Financial compliance")
+				.withConcernRating("Amber-Green")
+				.withMeansOfReferral(SourceOfConcernInternal)
+				.addConcern()
+				.nextStep();
+	
+			Logger.Log("Check unpopulated risk to trust throws validation error");
+			addConcernDetailsPage
+				.nextStep()
+				.hasValidationError("Select risk to trust rating");
+	
+			createConcernPage.withConcernRating("Red Plus").nextStep();
+	
+			Logger.Log("Checking accessibility on create case concern page");
+			cy.excuteAccessibilityTests();
+	
+			Logger.Log("Validate unpopulated concern details");
+			addConcernDetailsPage
+				.withIssueExceedingLimit()
+				.withCurrentStatusExceedingLimit()
+				.withCaseAimExceedingLimit()
+				.withDeEscalationPointExceedingLimit()
+				.withNextStepsExceedingLimit()
+				.withCaseHistoryExceedingLimit()
+				.createCase()
+				.hasValidationError("Issue must be 2000 characters or less")
+				.hasValidationError("Current status must be 4000 characters or less")
+				.hasValidationError("Next steps must be 4000 characters or less")
+				.hasValidationError("De-escalation point must be 1000 characters or less")
+				.hasValidationError("Case aim must be 1000 characters or less")
+				.hasValidationError("Case notes must be 4300 characters or less");
+	
+			Logger.Log("Checking accessibility on concerns case confirmation");
+			cy.excuteAccessibilityTests();
+	
+			Logger.Log("Add concern details with valid text limit");
+			addConcernDetailsPage
+				.withIssue("This is an issue")
+				.withCurrentStatus("This is the current status")
+				.withCaseAim("This is the case aim")
+				.withDeEscalationPoint("This is the de-escalation point")
+				.withNextSteps("This is the next steps")
+				.withCaseHistory("This is the case history")
+				.createCase();
+	
+			Logger.Log("Verify case details");
+			caseManagementPage
+				.hasTrust("Ashton West End Primary Academy")
+				.hasRiskToTrust("Red Plus")
+				.hasConcerns("Financial compliance", ["Amber", "Green"])
+				.hasConcerns("Deficit", ["Red", "Amber"])
+				.hasNumberOfConcerns(2)
+				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasIssue("This is an issue")
+				.hasCurrentStatus("This is the current status")
+				.hasCaseAim("This is the case aim")
+				.hasDeEscalationPoint("This is the de-escalation point")
+				.hasNextSteps("This is the next steps")
+				.hasCaseHistory("This is the case history");
+	
+			Logger.Log("Verify the means of referral is set");
+			caseManagementPage.getCaseIDText().then((caseId) => {
+				concernsApi.get(parseInt(caseId)).then((response) => {
+					var ids = response.map((r) => r.meansOfReferralId);
+					expect(ids).to.contain(1);
+					expect(ids).to.contain(2);
+				});
+			});
+		});
 
-        Logger.Log("Create a valid case division");
-        selectCaseDivisionPage
-            .withCaseDivision("SFSO")
-            .continue();
+		describe("When we cancel case creation of a different case in the middle", () =>
+		{
+			it("Should create the concern against the correct case and trust", () =>
+			{
+				Logger.Log("Create a case");
+				createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
+		
+				selectCaseDivisionPage
+					.withCaseDivision("SFSO")
+					.continue();
+		
+				addTerritoryPage.withTerritory(territory).nextStep();
+				selectCaseTypePage.withCaseType("NonConcerns").continue();
+				addConcernDetailsPage.createCase();
 
-		Logger.Log("Populate territory");
-		addTerritoryPage.withTerritory(territory).nextStep();
+				caseManagementPage.getCaseIDText()
+				.then((caseId: string) =>
+				{
+					headerComponent.goToHome();
 
-		Logger.Log("Create a valid Non-concern case type");
-		selectCaseTypePage.withCaseType("NonConcerns").continue();
+					Logger.Log("Create a case for an alternative trust");
+					createCasePage.createCase().withTrustName(alternativeTrustName).selectOption().confirmOption();
+					
+					Logger.Log("Create a concerns case for our original trust ensuring the data is correct");
+					cy.visit(`/case/${caseId}/management`);
+					caseManagementPage.addAnotherConcernForNonConcern();
 
-		Logger.Log("Add non concerns case");
-		addConcernDetailsPage.createCase();
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East");
 
-		Logger.Log("Add another concern after case creation");
-		caseManagementPage.addAnotherConcernForNonConcern();
+					createConcernPage
+						.withConcernType("Viability")
+						.withConcernRating("Amber-Green")
+						.withMeansOfReferral(SourceOfConcernExternal)
+						.addConcern();
 
-		Logger.Log("Checking accessibility on adding concern page");
-		cy.excuteAccessibilityTests();
+					Logger.Log("Exit early again and create another concern");
 
-		Logger.Log("Attempt to create an invalid concern");
-		createConcernPage
-			.addConcern()
-			.hasValidationError("Select concern type")
-			.hasValidationError("Select concern risk rating")
-			.hasValidationError("Select means of referral");
+					cy.visit(`/case/${caseId}/management`);
+					caseManagementPage.addAnotherConcernForNonConcern();
 
-		Logger.Log("Create an invalid sub concern");
-		createConcernPage
-			.withConcernType("Deficit")
-			.withConcernRating("Red-Amber")
-			.withMeansOfReferral(SourceOfConcernExternal)
-			.addConcern();
+					Logger.Log("It should show us the trust for the case we are on");
 
-		Logger.Log("Adding another concern during case creation");
-		createConcernPage
-			.addAnotherConcern()
-			.withConcernType("Financial compliance")
-			.withConcernRating("Amber-Green")
-			.withMeansOfReferral(SourceOfConcernInternal)
-			.addConcern()
-			.nextStep();
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East");
 
-		Logger.Log("Check unpopulated risk to trust throws validation error");
-		addConcernDetailsPage
-			.nextStep()
-			.hasValidationError("Select risk to trust rating");
+					createConcernPage
+						.withConcernType("Deficit")
+						.withConcernRating("Red-Amber")
+						.withMeansOfReferral(SourceOfConcernExternal)
+						.addConcern();
 
-		createConcernPage.withConcernRating("Red-Plus");
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East")
+						.hasConcernType("Deficit")
+						.hasConcernRiskRating("Red Amber");
 
-		addConcernDetailsPage.nextStep();
-		Logger.Log("Checking accessibility on create case concern page");
-		cy.excuteAccessibilityTests();
+					createConcernPage.nextStep();
 
-		Logger.Log("Validate unpopulated concern details");
-		addConcernDetailsPage
-			.withIssueExceedingLimit()
-			.withCurrentStatusExceedingLimit()
-			.withCaseAimExceedingLimit()
-			.withDeEscalationPointExceedingLimit()
-			.withNextStepsExceedingLimit()
-			.withCaseHistoryExceedingLimit()
-			.createCase()
-			.hasValidationError("Issue must be 2000 characters or less")
-			.hasValidationError("Current status must be 4000 characters or less")
-			.hasValidationError("Next steps must be 4000 characters or less")
-			.hasValidationError("De-escalation point must be 1000 characters or less")
-			.hasValidationError("Case aim must be 1000 characters or less")
-			.hasValidationError("Case notes must be 4300 characters or less");
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East")
+						.hasConcernType("Deficit")
+						.hasConcernRiskRating("Red Amber");
 
-		Logger.Log("Checking accessibility on concerns case confirmation");
-		cy.excuteAccessibilityTests();
+					createConcernPage.withConcernRating("Red Plus").nextStep();
 
-		Logger.Log("Add concern details with valid text limit");
-		addConcernDetailsPage
-			.withIssue("This is an issue")
-			.withCurrentStatus("This is the current status")
-			.withCaseAim("This is the case aim")
-			.withDeEscalationPoint("This is the de-escalation point")
-			.withNextSteps("This is the next steps")
-			.withCaseHistory("This is the case history")
-			.createCase();
+					createCaseSummary
+						.hasTrustSummaryDetails(trustName)
+						.hasManagedBy("SFSO", "North and UTC - North East")
+						.hasConcernType("Deficit")
+						.hasConcernRiskRating("Red Amber")
+						.hasRiskToTrust("Red Plus");
 
-		Logger.Log("Verify case details");
-		caseManagementPage
-			.hasTrust("Ashton West End Primary Academy")
-			.hasRiskToTrust("Red Plus")
-			.hasConcerns("Financial compliance", ["Amber", "Green"])
-			.hasConcerns("Deficit", ["Red", "Amber"])
-			.hasManagedBy("SFSO", "North and UTC - North East")
-			.hasIssue("This is an issue")
-			.hasCurrentStatus("This is the current status")
-			.hasCaseAim("This is the case aim")
-			.hasDeEscalationPoint("This is the de-escalation point")
-			.hasNextSteps("This is the next steps")
-			.hasCaseHistory("This is the case history");
+					addConcernDetailsPage
+						.withIssue("This is an issue").createCase();
 
-		Logger.Log("Verify the means of referral is set");
-		caseManagementPage.getCaseIDText().then((caseId) => {
-			concernsApi.get(parseInt(caseId)).then((response) => {
-				var ids = response.map((r) => r.meansOfReferralId);
-				expect(ids).to.contain(1);
-				expect(ids).to.contain(2);
+					Logger.Log("It should create just one concern against the correct trust");
+					caseManagementPage
+						.hasTrust(trustName)
+						.hasRiskToTrust("Red Plus")
+						.hasConcerns("Deficit", ["Red", "Amber"])
+						.hasNumberOfConcerns(1);
+				});
 			});
 		});
 	});
@@ -263,7 +358,7 @@ describe("Creating a non concerns case", () => {
 		CaseManagementPage.getCloseCaseBtn().click();
 
 		Logger.Log("Viewing case is closed");
-		HomePage.getClosedCasesBtn().click();
+		homePage.getClosedCasesBtn().click();
 		ClosedCasePage.getClosedCase(caseId);
 	}
 

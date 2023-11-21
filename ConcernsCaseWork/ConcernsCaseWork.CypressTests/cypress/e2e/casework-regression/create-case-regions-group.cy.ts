@@ -22,6 +22,8 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { ViewDecisionPage } from "cypress/pages/caseActions/decision/viewDecisionPage";
 import { DecisionOutcomePage } from "cypress/pages/caseActions/decision/decisionOutcomePage";
 import addToCasePage from "cypress/pages/caseActions/addToCasePage";
+import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
+import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -32,6 +34,8 @@ describe("Creating a case", () => {
     const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
+    const editSrmaPage = new EditSrmaPage();
+    const viewSrmaPage = new ViewSrmaPage();
 
     describe("Case journey", () =>
     {
@@ -82,7 +86,7 @@ describe("Creating a case", () => {
 
             Logger.Log("Create a valid concern");
             createConcernPage
-                .withConcernType("Governance")
+                .withConcernType("Governance capability")
                 .withConcernRating("Amber-Green")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
@@ -92,7 +96,7 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
-                .hasConcernType("Governance");
+                .hasConcernType("Governance capability");
     
             createConcernPage.nextStep();
     
@@ -100,7 +104,7 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
-                .hasConcernType("Governance");
+                .hasConcernType("Governance capability");
     
             Logger.Log("Populate risk to trust");
             addDetailsPage.withRiskToTrust("Red").nextStep();
@@ -111,7 +115,7 @@ describe("Creating a case", () => {
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
-                .hasConcernType("Governance")
+                .hasConcernType("Governance capability")
                 .hasConcernRiskRating("Amber Green")
                 .hasRiskToTrust("Red");
     
@@ -122,7 +126,7 @@ describe("Creating a case", () => {
             caseManagementPage
                 .hasTrust("Ashton West End Primary Academy")
                 .hasRiskToTrust("Red")
-                .hasConcerns("Governance", ["Amber", "Green"])
+                .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasManagedBy("Regions Group", "London")
                 .hasIssue("This is an issue");
     
@@ -140,14 +144,14 @@ describe("Creating a case", () => {
             caseManagementPage.addAnotherConcern();
     
             createConcernPage
-                .withConcernType("Safeguarding")
+                .withConcernType("Safeguarding non-compliance")
                 .withConcernRating("Red-Amber")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
     
             caseManagementPage
-                .hasConcerns("Governance", ["Amber", "Green"])
-                .hasConcerns("Safeguarding", ["Red", "Amber"]);
+                .hasConcerns("Governance capability", ["Amber", "Green"])
+                .hasConcerns("Safeguarding non-compliance", ["Red", "Amber"]);
 
             Logger.Log("Check the available case actions");
             caseManagementPage.getAddToCaseBtn().click();
@@ -288,6 +292,36 @@ describe("Creating a case", () => {
                 .hasBusinessArea("SFSO")
                 .hasBusinessArea("Regions Group")
                 .hasAuthoriser("Deputy Director");
+        });
+
+        it("Should create an SRMA", () => {
+        
+            caseManagementPage.addCaseAction("Srma");
+    
+            Logger.Log("Filling out the SRMA form");
+            editSrmaPage
+                .withStatus("TrustConsidering")
+                .withDayTrustContacted("22")
+                .withMonthTrustContacted("10")
+                .withYearTrustContacted("2022")
+                .withNotes("This is my notes")
+                .save();
+    
+            Logger.Log("Add optional SRMA fields on the view page");
+            actionSummaryTable.getOpenAction("SRMA").then((row) => {
+                row.hasName("SRMA");
+                row.hasStatus("Trust considering");
+                row.select();
+            });
+    
+            Logger.Log("Checking accessibility on View SRMA");
+            cy.excuteAccessibilityTests();
+    
+            Logger.Log("Configure reason");
+            viewSrmaPage.addReason();
+    
+            Logger.Log("Verify hint text");
+            editSrmaPage.hasReasonHintText();
         });
     });
 });

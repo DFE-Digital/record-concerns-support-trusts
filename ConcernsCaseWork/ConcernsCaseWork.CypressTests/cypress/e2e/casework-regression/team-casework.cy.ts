@@ -5,9 +5,10 @@ import homePage from "cypress/pages/homePage";
 import teamCaseworkPage from "cypress/pages/teamCaseworkPage";
 import caseApi from "cypress/api/caseApi";
 import { CaseBuilder } from "cypress/api/caseBuilder";
-import { CreateCaseRequest, PutTeamRequest, GetTeamByOwnerResponse } from "cypress/api/apiDomain";
+import { CreateCaseRequest, PutTeamRequest } from "cypress/api/apiDomain";
 import paginationComponent from "cypress/pages/paginationComponent";
 import caseMangementPage from "cypress/pages/caseMangementPage";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Team casework tests", () => {
   describe("When we create a case for a team member", () => {

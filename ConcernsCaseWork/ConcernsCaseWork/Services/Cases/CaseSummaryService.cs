@@ -1,5 +1,3 @@
-using Azure.Core;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -7,6 +5,7 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Utils.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,7 +111,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+					RatingId = caseSummary.Rating.Id,
 					StatusName = caseSummary.StatusName,
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
 					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),

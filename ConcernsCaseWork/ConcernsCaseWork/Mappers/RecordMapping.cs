@@ -1,9 +1,7 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
-using ConcernsCaseWork.Service.Types;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +25,7 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.StatusId);
 		}
 		
-		public static RecordDto MapClosure(PatchRecordModel patchRecordModel, RecordDto recordDto, StatusDto statusDto)
+		public static RecordDto MapClosure(PatchRecordModel patchRecordModel, RecordDto recordDto)
 		{
 			return new RecordDto(recordDto.CreatedAt,
 				patchRecordModel.UpdatedAt,
@@ -36,13 +34,10 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.Name, recordDto.Description, 
 				recordDto.Reason, recordDto.CaseUrn, 
 				recordDto.TypeId, recordDto.RatingId,
-				recordDto.Id, statusDto.Id);
+				recordDto.Id, (int)ConcernStatus.Close);
 		}
 
-		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
-			IList<TypeDto> typesDto, 
-			IList<RatingDto> ratingsDto,
-			IList<StatusDto> statusesDto)
+		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto)
 		{
 			var recordsModel = new List<RecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return recordsModel;
@@ -52,12 +47,9 @@ namespace ConcernsCaseWork.Mappers
 				var recordModel = new RecordModel(
 					recordDto.CaseUrn,
 					recordDto.TypeId,
-					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId),
 					recordDto.RatingId,
-					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId),
 					recordDto.Id,
-					recordDto.StatusId,
-					StatusMapping.MapDtoToModel(statusesDto, recordDto.StatusId));
+					recordDto.StatusId);
 
 				return recordModel;
 			}));
@@ -65,28 +57,18 @@ namespace ConcernsCaseWork.Mappers
 			return recordsModel;
 		}
 		
-		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto, 
-			IList<TypeDto> typesDto, 
-			IList<RatingDto> ratingsDto)
+		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto)
 		{
 			var createRecordsModel = new List<CreateRecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return createRecordsModel;
 		
 			createRecordsModel.AddRange(recordsDto.Select(recordDto =>
-			{
-				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
-				
+			{				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = recordDto.CaseUrn,
 					TypeId = recordDto.TypeId,
-					Type = typeModel.Type,
-					SubType = typeModel.SubType,
-					RatingId = recordDto.RatingId,
-					RatingName = ratingModel.Name,
-					RagRating = ratingModel.RagRating,
-					RagRatingCss = ratingModel.RagRatingCss
+					RatingId = recordDto.RatingId
 				};
 
 				return createRecordModel;

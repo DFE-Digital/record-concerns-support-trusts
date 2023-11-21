@@ -1,9 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
@@ -23,25 +21,20 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			var recordDto = RecordFactory.BuildRecordDto();
-			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
 
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
 			mockCaseService.Setup(cs => cs.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(caseDto);
 			mockRecordService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>())).ReturnsAsync(recordDto);
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -57,20 +50,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
-			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
-
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -83,7 +70,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
@@ -97,7 +83,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -125,7 +110,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
 			Assert.That(actualCaseModel.StatusId, Is.EqualTo(1));
 			Assert.That(actualCaseModel.RatingId, Is.EqualTo(caseDto.RatingId));
-			Assert.IsNull(actualCaseModel.RatingModel);
 		}
 		
 		[Test]
@@ -133,7 +117,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -145,7 +128,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -157,7 +139,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -168,7 +149,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -183,14 +163,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -206,7 +184,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -217,7 +194,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 					var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -232,14 +208,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -254,21 +228,17 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
-			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
-			mockStatusCachedService.Setup(t => t.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusDto);
 			mockCaseService.Setup(cs => cs.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseDto);
 			mockCaseService.Setup(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()));
 			
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -276,7 +246,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			// assert
 			mockCaseService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
-			mockStatusCachedService.Verify(t => t.GetStatusByName(It.IsAny<string>()), Times.Once);
 			mockCaseService.Verify(cs => cs.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 		}
 		
@@ -285,14 +254,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -308,7 +275,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -319,7 +285,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -334,14 +299,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -356,7 +319,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -367,7 +329,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -382,14 +343,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -404,7 +363,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -415,7 +373,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -430,14 +387,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -452,7 +407,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -463,7 +417,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -478,14 +431,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -500,7 +451,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -511,7 +461,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -526,14 +475,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -548,7 +495,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -559,7 +505,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -574,14 +519,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
 			// act
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -598,7 +541,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var dateTimeStart = DateTimeOffset.Now;
 			
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -608,7 +550,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -627,7 +568,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
@@ -638,7 +578,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -655,7 +594,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var dateTimeStart = DateTimeOffset.Now;
 			
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 
@@ -665,7 +603,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 			
@@ -684,7 +621,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
@@ -695,7 +631,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 
@@ -710,13 +645,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		{
 			// arrange
 			var mockRecordService = new Mock<IRecordService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseService = new Mock<ICaseService>();
 			
 			var caseModelService = new CaseModelService(
 				 mockRecordService.Object,
-				 mockStatusCachedService.Object,
 				 mockCaseService.Object,
 				 mockLogger.Object);
 

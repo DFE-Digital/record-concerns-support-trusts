@@ -1,4 +1,24 @@
+## 32.0.0
+
+## 31.0.0
+
+* Change Add concern to Add another concern in the case creation wizard
+* Add trust nane column to the other cases table
+* Increase the default size of text areas
+* Reduced the number of calls to redis
+
 ## 30.0.0
+
+* Ensure no tables have empty headers and all have a caption
+* Content improvements for regions group journey
+* Optimisic searching for a city technical college returns a 204 instead of 404
+* Added indexes to trust UK PRN and created by on the case table
+* Added selectable actions to regions group journey
+* Changed column layout of case tables
+* Reduced the number of calls to redis
+
+## 29.0.1
+* fixed caching issue with conversion from non concerns to concerns, incorrect trust data was displayed in the summary
 
 ## 29.0.0
 * Content changes to TFF, so the acronym appears first

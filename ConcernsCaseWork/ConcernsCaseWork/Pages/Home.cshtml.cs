@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
@@ -54,9 +55,7 @@ namespace ConcernsCaseWork.Pages
 
 			try
 			{
-				var team = await _teamsService.GetCaseworkTeam(GetUserName());
-
-				await RecordUserSignIn(team);
+				await RecordUserSignIn();
 
 				var activeCaseGroup = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName(), PageNumber);
 				ActiveCases = activeCaseGroup.Cases;
@@ -71,17 +70,19 @@ namespace ConcernsCaseWork.Pages
 			return Page();
 		}
 
-		/// <summary>
-		/// This is a bit of a hack until integration with Azure AD has been completed and we are connected to the Azure GraphAPI which will then
-		/// give us users directly from Azure AD. For now we will create empty teams, and use these team owners as the list of users in the system.
-		/// Azure AD won't let us intercept the token being created and returns us to this page, so we will store that we have recorded a user having
-		/// signed in, in Redis for 9 hours (slightly more than a standard shift) to avoid unnecessary calls to the academies API.
-		/// </summary>
-		/// <exception cref="System.NotImplementedException"></exception>
-		private async Task RecordUserSignIn(Models.Teams.ConcernsTeamCaseworkModel team)
+		private async Task RecordUserSignIn()
 		{
+			var member = await _teamsService.CheckMemberExists(GetUserName());
+
+			if (member == null)
+			{
+				// Add the user if they don't already exist
+				var model = new ConcernsTeamCaseworkModel(GetUserName(), Array.Empty<string>());
+				await _teamsService.UpdateCaseworkTeam(model);
+			}
+
 			var userState = await _userStateCache.GetData(GetUserName());
-			
+
 			if (userState is not null && !String.IsNullOrWhiteSpace(userState.UserName))
 			{
 				AppInsightsHelper.LogEvent(_telemetry, new AppInsightsModel()
@@ -92,12 +93,6 @@ namespace ConcernsCaseWork.Pages
 					EventUserName = userState.UserName
 				});
 				return;
-			}
-
-			if (team.TeamMembers.Length == 0)
-			{
-				// This is a hack, but storing back an empty team will give us a 'user' for later (until GraphApi).
-				await _teamsService.UpdateCaseworkTeam(team);
 			}
 
 			// record in redis that we have recorded a user state

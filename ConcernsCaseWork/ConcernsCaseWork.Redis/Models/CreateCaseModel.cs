@@ -40,12 +40,6 @@ namespace ConcernsCaseWork.Redis.Models
 		
 		public long RatingId { get; set; }
 		
-		public string RagRatingName { get; set; }
-		
-		public Tuple<int, IList<string>> RagRating { get; set; }
-
-		public IList<string> RagRatingCss { get; set; }
-		
 		public Territory? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();

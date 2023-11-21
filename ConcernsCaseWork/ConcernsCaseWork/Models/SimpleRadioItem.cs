@@ -1,5 +1,3 @@
-using Microsoft.Data.SqlClient.DataClassification;
-using Microsoft.Graph.Models;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models;

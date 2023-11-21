@@ -3,7 +3,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +19,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly IRecordModelService _recordModelService;
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<IndexPageModel> _logger;
@@ -45,11 +43,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public IndexPageModel(ICaseModelService caseModelService,
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService,
-			IRatingModelService ratingModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_recordModelService = recordModelService;
-			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
 			_logger = logger;
@@ -90,8 +86,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				{
 					CaseUrn = CaseUrn,
 					TypeId = (long)ConcernType.SelectedId,
-					Type = "",
-					SubType = "",
 					RatingId = ConcernRiskRating.SelectedId.Value,
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
@@ -117,10 +111,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				
 			CreateRecordsModel = await _recordModelService.GetCreateRecordsModelByCaseUrn(CaseUrn);
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(caseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 			ConcernType = CaseComponentBuilder.BuildConcernType(caseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 
 			CaseModel = caseModel;

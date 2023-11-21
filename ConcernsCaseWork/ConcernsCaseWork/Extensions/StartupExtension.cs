@@ -7,14 +7,8 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Status;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
-using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Service.AzureAd.IoC;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Decision;
@@ -23,13 +17,10 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Service.Permissions;
-using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Service.Trusts;
-using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -39,11 +30,9 @@ using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.PageHistory;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
@@ -149,8 +138,6 @@ namespace ConcernsCaseWork.Extensions
 			// Web application services
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
-			services.AddScoped<ITypeModelService, TypeModelService>();
-			services.AddScoped<IRatingModelService, RatingModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddScoped<ISRMAService, SRMAService>();
@@ -176,23 +163,16 @@ namespace ConcernsCaseWork.Extensions
 
 			// api services
 			services.AddScoped<ICaseService, CaseService>();
-			services.AddScoped<IRatingService, RatingService>();
 			services.AddScoped<IRecordService, RecordService>();
-			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
-			services.AddScoped<ITypeService, TypeService>();
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
 			services.AddScoped<INtiUnderConsiderationService, NtiUnderConsiderationService>();
-			services.AddScoped<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
-			services.AddScoped<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
 			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddScoped<INtiService, NtiService>();
-			services.AddScoped<INtiStatusesService, NtiStatusesService>();
-			services.AddScoped<INtiReasonsService, NtiReasonsService>();
 			services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
@@ -204,31 +184,14 @@ namespace ConcernsCaseWork.Extensions
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
 			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
-			services.AddScoped<ITypeCachedService, TypeCachedService>();
-			services.AddScoped<IStatusCachedService, StatusCachedService>();
-			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
-			services.AddScoped<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
-			services.AddScoped<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
-			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-			services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
-			services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
-			services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
-			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
-
-			// AD Integration
-			services.AddScoped<IRbacManager, RbacManager>();
-			
-			// Azure Ad Service (for retrieving users)
-			services.AddAzureAdService();
 			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			services.AddHttpContextAccessor();
-			services.AddScoped<IRbacManager, RbacManager>();
 			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}

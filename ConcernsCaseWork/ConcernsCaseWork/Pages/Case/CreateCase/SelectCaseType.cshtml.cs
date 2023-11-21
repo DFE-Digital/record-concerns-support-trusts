@@ -1,11 +1,11 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

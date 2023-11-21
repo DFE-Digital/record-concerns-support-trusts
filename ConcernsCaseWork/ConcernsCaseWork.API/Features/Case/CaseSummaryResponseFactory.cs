@@ -2,6 +2,7 @@ using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.API.Extensions;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.API.Features.Case;
 
@@ -58,7 +59,7 @@ public static class CaseSummaryResponseFactory
 
 	private static string getArea(CaseSummaryVm caseSummary)
 	{
-		return caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.GetDescription() : caseSummary.Territory?.GetDescription();
+		return caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.Description() : caseSummary.Territory?.Description();
 	}
 
 	private static CaseSummaryResponse.Concern Create(CaseSummaryVm.Concern concern)

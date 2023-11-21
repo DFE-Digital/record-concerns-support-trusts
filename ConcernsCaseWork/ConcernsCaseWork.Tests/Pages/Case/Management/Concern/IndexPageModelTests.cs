@@ -4,10 +4,8 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Concern;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -33,14 +31,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
-			var typeModel = TypeFactory.BuildTypeModel();
 			var createRecordsModel = RecordFactory.BuildListCreateRecordModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
@@ -49,11 +43,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				.ReturnsAsync(createRecordsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockRatingModelService.Setup(r => r.GetRatingsModel())
-				.ReturnsAsync(ratingsModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
+				mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -73,7 +65,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 		}
 		
 		[Test]
@@ -83,14 +74,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
+				mockRecordModelService.Object, mockLogger.Object);
 
 			pageModel.ConcernType = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.ConcernType.SelectedId = (int)ConcernType.ForceMajeure;
@@ -122,13 +111,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			ICaseModelService mockCaseModelService, 
 			ITrustModelService mockTrustModelService,
 			IRecordModelService mockRecordModelService,
-			IRatingModelService mockRatingModelService,
 			ILogger<IndexPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockRecordModelService, mockTrustModelService, mockRatingModelService, mockLogger)
+			return new IndexPageModel(mockCaseModelService, mockRecordModelService, mockTrustModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

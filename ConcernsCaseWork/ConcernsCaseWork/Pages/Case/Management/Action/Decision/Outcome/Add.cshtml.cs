@@ -1,9 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -19,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Utils.Extensions;
+
 #nullable disable
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome

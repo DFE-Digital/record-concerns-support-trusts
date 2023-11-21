@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.FinancialPlan;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {

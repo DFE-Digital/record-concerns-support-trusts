@@ -15,6 +15,7 @@ import {
 	SourceOfConcernInternal,
 } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
+import { CaseBuilder } from "cypress/api/caseBuilder";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -125,8 +126,14 @@ describe("Creating a case", () => {
 		Logger.Log("Checking accessibility on risk to trust");
 		cy.excuteAccessibilityTests();
 
+		createCaseSummary
+			.hasTrustSummaryDetails("Ashton West End Primary Academy")
+			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasConcernType("Deficit")
+			.hasConcernRiskRating("Red Amber");
+
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		Logger.Log(
 			"Check Trust, concern and risk to trust details are correctly populated"
@@ -187,6 +194,7 @@ describe("Creating a case", () => {
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
 			.hasConcerns("Deficit", ["Red", "Amber"])
+			.hasNumberOfConcerns(1)
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
@@ -333,7 +341,7 @@ describe("Creating a case", () => {
 		Logger.Log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Suspected fraud")
-			.withConcernRating("Red-Plus")
+			.withConcernRating("Red Plus")
 			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern();
 
@@ -347,7 +355,7 @@ describe("Creating a case", () => {
 			.nextStep();
 
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		Logger.Log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();
@@ -371,6 +379,32 @@ describe("Creating a case", () => {
 		caseManagementPage
 			.hasConcerns("Suspected fraud", ["Red Plus"])
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
-			.hasConcerns("Irregularity", ["Red", "Amber"]);
+			.hasConcerns("Irregularity", ["Red", "Amber"])
+			.hasNumberOfConcerns(3);
+	});
+
+	describe("When we create a case with the minimum data", () =>
+	{
+		let expectedCaseId: number;
+
+		beforeEach(() =>
+		{
+			const request = CaseBuilder.buildOpenCaseMinimumCriteria();
+
+			cy.createNonConcernsCase(request)
+			.then(response =>
+			{
+				expectedCaseId = response.urn;
+			})
+		});
+
+		it("Should render on case management", () =>
+		{
+			caseManagementPage.getCaseIDText()
+			.then(actualCaseId =>
+			{
+				expect(expectedCaseId.toString()).to.equal(actualCaseId);
+			});
+		});
 	});
 });

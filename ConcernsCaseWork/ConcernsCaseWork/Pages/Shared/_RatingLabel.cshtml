@@ -1,0 +1,16 @@
+﻿@model long?
+@using ConcernsCaseWork.Models;
+@{
+    var ratings = CaseComponentBuilder.GetRatings();
+
+    var selectedRating = ratings.FirstOrDefault(r => r.Id == Model);
+}
+
+@if (selectedRating != null)
+{
+    @Html.Raw(@selectedRating.Label)
+}
+else
+{
+    <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+}

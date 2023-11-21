@@ -46,7 +46,7 @@
 							Concern
 						</dt>
 						<dd class="govuk-summary-list__value">
-							@Model.TypeModel.TypeDisplay
+							@Model.ConcernTypeName
 						</dd>
 						<dd class="govuk-summary-list__actions"></dd>
 					</div>
@@ -59,25 +59,13 @@
                     </a>
                 </h2>
 
-				<div class="govuk-hint" id="case-issue-hint">
-					Use the
-                    <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
-						Risk Management Framework (opens in new tab)
-					</a> to assess the type of concern
-				</div>
-
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
 				<form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
 					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-							<partial name="_Rating" model="@Model.RatingsModel"/>
-						</fieldset>
-					</div>
+                    <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
 
 					<!--Button group-->
 					<div class="govuk-button-group">
@@ -87,13 +75,6 @@
 						<partial name="_Cancel"/>
 					</div>
 				</form>
-
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {	
-						let validator = formValidator($("#risk-rating-form")[0]);
-						addRatingValidator(validator);
-					});
-				</script>
 			}
 		</div>
 	</div>

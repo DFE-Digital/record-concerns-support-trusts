@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.API.Contracts.Srma
 		OfferLinked = 1,
 		[Description("Schools Financial Support and Oversight (SFSO) action")]
 		SchoolsFinancialSupportAndOversight = 2,
-		[Description("Regions Group (RG) Intervention")]
+		[Description("Regions Group (RG) action")]
 		RegionsGroupIntervention = 3
 	}
 }

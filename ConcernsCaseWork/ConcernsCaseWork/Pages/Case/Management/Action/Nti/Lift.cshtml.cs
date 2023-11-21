@@ -1,4 +1,4 @@
-using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				ntiModel.Notes = Notes.Text.StringContents;
 				ntiModel.SubmissionDecisionId = DecisionID.Text.StringContents;
 				ntiModel.DateNTILifted = !DateNTILifted.Date?.IsEmpty() ?? false ? DateNTILifted.Date?.ToDateTime() : null;
-				ntiModel.ClosedStatusId = (int)NTIStatus.Lifted;
+				ntiModel.ClosedStatusId = NtiStatus.Lifted;
 				ntiModel.ClosedAt = DateTime.Now;
 
 				await _ntiModelService.PatchNtiAsync(ntiModel);

@@ -1,9 +1,9 @@
 ﻿# Stage 1
-ARG ASPNET_IMAGE_TAG=6.0.9-bullseye-slim
+ARG ASPNET_IMAGE_TAG=8.0.0-bookworm-slim
 ARG NODEJS_IMAGE_TAG=16-bullseye
 ARG COMMIT_SHA=not-set
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS publish
 
 ARG COMMIT_SHA
 
@@ -21,7 +21,7 @@ RUN dotnet tool install dotnet-ef
 
 RUN mkdir -p /app/SQL
 RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
-RUN touch /app/SQL/DbMigrationScript.sql
+RUN touch /app/SQL/DbMigrationScript.sql /app/SQL/DbMigrationScriptOutput.txt
 
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
 
@@ -42,10 +42,13 @@ ARG COMMIT_SHA
 
 RUN apt-get update
 RUN apt-get install unixodbc curl gnupg jq -y
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/debian/11/prod.list | tee /etc/apt/sources.list.d/msprod.list
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
+RUN curl https://packages.microsoft.com/config/debian/12/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
+
 RUN apt-get update
-RUN ACCEPT_EULA=Y apt-get install msodbcsql18 mssql-tools18 -y
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
 
 COPY --from=build /app /app
 WORKDIR /app
@@ -54,4 +57,6 @@ RUN chmod +x ./set-appsettings-release-tag.sh
 RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
 RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
 
-EXPOSE 80/tcp
+RUN chown app:app ./SQL/ -R
+USER app
+EXPOSE 8080/tcp

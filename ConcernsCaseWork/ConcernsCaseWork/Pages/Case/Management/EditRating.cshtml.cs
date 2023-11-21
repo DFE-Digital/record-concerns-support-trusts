@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,7 +15,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	public class EditRatingPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<EditRatingPageModel> _logger;
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
@@ -25,12 +23,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
 
-		public EditRatingPageModel(ICaseModelService caseModelService, 
-			IRatingModelService ratingModelService, 
+		public EditRatingPageModel(
+			ICaseModelService caseModelService, 
 			ILogger<EditRatingPageModel> logger)
 		{
 			_caseModelService = caseModelService;
-			_ratingModelService = ratingModelService;
 			_logger = logger;
 		}
 		
@@ -42,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				var caseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
 
-				await LoadPage(caseModel);
+				LoadPage(caseModel);
 			}
 			catch (Exception ex)
 			{
@@ -61,7 +58,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				if (!ModelState.IsValid)
 				{
-					await LoadPage();
+					LoadPage();
 					return Page();
 				}
 
@@ -85,17 +82,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		private async Task LoadPage(CaseModel model)
+		private void LoadPage(CaseModel model)
 		{
-			await LoadPage();
+			LoadPage();
 			RiskToTrust.SelectedId = (int)model.RatingId;
 		}
 		
-		private async Task LoadPage()
+		private void LoadPage()
 		{
-			var ratingsModel = await _ratingModelService.GetRatingsModel();
-
-			RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), ratingsModel, RiskToTrust?.SelectedId);
+			RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RiskToTrust?.SelectedId);
 			RiskToTrust.Heading = "";
 		}
 	}

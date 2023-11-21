@@ -65,14 +65,6 @@ window.formValidator = function(form) {
 	return new MOJFrontend.FormValidator(form);
 }
 
-window.addRatingValidator = function (validator) {
-	validator.addValidator('rating', [{
-		method: function(field) {
-			return field.value.trim().length > 0;
-		},
-		message: 'Select risk rating'
-	}]);
-}
 window.addDirectionOfTravelValidator = function(validator) {
 	validator.addValidator('direction-of-travel', [{
 		method: function(field) {

@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Utils.Extensions;
 using System.Text;
 
 namespace ConcernsCaseWork.Shared.Tests.Shared

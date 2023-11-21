@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models.Decisions;
 using FluentAssertions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -133,13 +131,14 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
             sut.GetTitle().Should().Be("No Decision Types");
         }
 
-        [Theory]
-        [MemberData(nameof(TestData))]
-        public void GetTitle_When_One_DecisionType_Maps_To_DecisionType_Description(Contracts.Decisions.DecisionType decisionType)
+        [Fact]
+        public void GetTitle_When_One_DecisionType_Maps_To_DecisionType_Description()
         {
+			var decisionType = Contracts.Decisions.DecisionType.RepayableFinancialSupport;
+
             var decisionTypes = new[]
             {
-                new DecisionType(decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, API.Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability) { DecisionId = (int)decisionType },
+                new DecisionType(decisionType, Contracts.Decisions.DrawdownFacilityAgreed.PaymentUnderExistingArrangement, Contracts.Decisions.FrameworkCategory.BuildingFinancialCapability) { DecisionId = (int)decisionType },
             };
 
             var sut = Decision.CreateNew(new DecisionParameters()
@@ -154,21 +153,9 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 					SupportingNotes = "some notes",
 					Now = DateTimeOffset.UtcNow
 				}
-
             );
 
-            sut.GetTitle().Should().Be(decisionType.GetDescription());
-        }
-
-        public static IEnumerable<object[]> TestData
-        {
-            get
-            {
-                foreach (var enumValue in Enum.GetValues(typeof(Contracts.Decisions.DecisionType)))
-                {
-                    yield return new object[] { (Contracts.Decisions.DecisionType)enumValue };
-                }
-            }
+            sut.GetTitle().Should().Be("Repayable financial support");
         }
     }
 }

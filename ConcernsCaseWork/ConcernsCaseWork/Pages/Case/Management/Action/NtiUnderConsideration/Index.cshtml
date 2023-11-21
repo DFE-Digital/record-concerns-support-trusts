@@ -1,5 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action/ntiunderconsideration/{ntiUnderConsiderationId:long}/{handler?}"
-@using ConcernsCaseWork.Extensions;
+@using ConcernsCaseWork.Utils.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using ConcernsCaseWork.Helpers;
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
@@ -42,13 +42,9 @@
         </div>
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                NTI: Under consideration
+            </caption>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@

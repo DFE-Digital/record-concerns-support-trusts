@@ -13,6 +13,12 @@ variable "key_vault_access_ipv4" {
   type        = list(string)
 }
 
+variable "container_port" {
+  description = "Container port"
+  type        = number
+  default     = 8080
+}
+
 variable "tfvars_filename" {
   description = "tfvars filename. This file is uploaded and stored encrupted within Key Vault, to ensure that the latest tfvars are stored in a shared place."
   type        = string
