@@ -293,6 +293,7 @@ GO
 --13	Irregularity	Related party transactions - in year
 -- Update 16th December 2022 - remove default value, return null if no mapping can be found
 -- Update 20th December 2022 - change values to match new values
+-- Update 21 November 2023 - change values to match Regions Group Mapping
 -- =============================================
 CREATE FUNCTION [dartmigration].[GetConcernTypeId]
 (
