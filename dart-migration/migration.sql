@@ -306,8 +306,8 @@ BEGIN
 	IF @DaRTConcernTypeName = 'Financial - Deficit'							RETURN 3; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Financial' AND [Description] = 'Deficit'
 	ELSE IF @DaRTConcernTypeName = 'Financial - Projected Deficit'			RETURN 4; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Financial' AND [Description] = 'Projected deficit'
 	ELSE IF @DaRTConcernTypeName = 'Financial - Viability'					RETURN 20; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Financial' AND [Description] = 'Viability'
-	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Compliance'	RETURN 23; -- SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Governance and compliance' AND [Description] = 'Compliance'
-	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Governance'	RETURN 8; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Governance and compliance' AND [Description] = 'Governance'
+	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Compliance'	RETURN 26; -- SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Governance and compliance' AND [Description] = 'Compliance'
+	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Governance'	RETURN 25; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Governance and compliance' AND [Description] = 'Governance'
 	ELSE IF @DaRTConcernTypeName = 'Irregularity - Irregularity'			RETURN 21; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Irregularity' AND [Description] = 'Irregularity'
 	ELSE IF @DaRTConcernTypeName = 'Irregularity - Suspected Fraud'			RETURN 22; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Irregularity' AND [Description] = 'Suspected fraud'
 	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Safeguarding' RETURN 24;
