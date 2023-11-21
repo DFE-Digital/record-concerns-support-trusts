@@ -74,9 +74,13 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 	Logger.Log("Command finished");
 });
 
-Cypress.Commands.add("createNonConcernsCase", () =>
+Cypress.Commands.add("createNonConcernsCase", (request?: CreateCaseRequest) =>
 {
-	caseApi.post(CaseBuilder.buildOpenCase()).then((caseResponse) => {
+	if (request == null) {
+		request = CaseBuilder.buildOpenCase();
+	}
+
+	caseApi.post(request).then((caseResponse) => {
 		const caseId = caseResponse.urn;
 
 		cy.visit(`/case/${caseId}/management`);

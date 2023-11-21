@@ -108,25 +108,6 @@ namespace ConcernsCaseWork.Pages.Case
 			return Page();
 		}
 		
-		public async Task<ActionResult> OnGetCancel()
-		{
-			try
-			{
-				var userState = await GetUserState();
-				userState.CreateCaseModel = new CreateCaseModel();
-				await _userStateCache.StoreData(GetUserName(), userState);
-				
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
-			}
-
-			return Page();
-		}
-		
 		private async Task<ActionResult> LoadPage()
 		{
 			try

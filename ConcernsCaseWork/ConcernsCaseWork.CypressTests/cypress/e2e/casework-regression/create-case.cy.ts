@@ -15,6 +15,7 @@ import {
 	SourceOfConcernInternal,
 } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
+import { CaseBuilder } from "cypress/api/caseBuilder";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -384,5 +385,30 @@ describe("Creating a case", () => {
 			.hasConcerns("Financial compliance", ["Amber", "Green"])
 			.hasConcerns("Irregularity", ["Red", "Amber"])
 			.hasNumberOfConcerns(3);
+	});
+
+	describe("When we create a case with the minimum data", () =>
+	{
+		let expectedCaseId: number;
+
+		beforeEach(() =>
+		{
+			const request = CaseBuilder.buildOpenCaseMinimumCriteria();
+
+			cy.createNonConcernsCase(request)
+			.then(response =>
+			{
+				expectedCaseId = response.urn;
+			})
+		});
+
+		it("Should render on case management", () =>
+		{
+			caseManagementPage.getCaseIDText()
+			.then(actualCaseId =>
+			{
+				expect(expectedCaseId.toString()).to.equal(actualCaseId);
+			});
+		});
 	});
 });

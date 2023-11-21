@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Models
 
 		public string ReasonAtReview { get; set; }
 
-		public DateTimeOffset DeEscalation { get; set; }
+		public DateTimeOffset? DeEscalation { get; set; }
 
 		public string Issue { get; set; } = string.Empty;
 
