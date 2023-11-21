@@ -1,11 +1,32 @@
 ﻿@page
 @using ConcernsCaseWork.API.Contracts.Configuration;
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.HomePageModel
 @addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Create or view a case";
+    ViewBag.LayoutModel = new LayoutModel()
+            {
+                YourCasesTabActive = true
+            };
+}
+
+@section BeforeMain {
+    <nav class="moj-primary-navigation" aria-label="Sub navigation">
+        <div class="govuk-extra-width-container">
+            <ul class="moj-primary-navigation__list">
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" aria-current="page" href="/"><span aria-hidden="false"></span>Create or view a case</a>
+                </li>
+
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" href="/case/closed"><span aria-hidden="true"></span>Closed cases</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 }
 
 <div class="govuk-extra-width-container">
@@ -16,41 +37,23 @@
     }
     else
     {
-        <div class="govuk-!-margin-top-0">
-            <div class="govuk-tabs govuk-!-margin-top-6">
-                <nav class="moj-sub-navigation" aria-label="Sub navigation">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                Create or view a case
+            </h1>
+        </legend>
 
-                    <ul class="moj-sub-navigation__list">
-                        <li class="moj-sub-navigation__item">
-                            <a id="your-cases-tab" data-testid="your-cases-tab" class="moj-sub-navigation__link" aria-current="page" href="/Home"><span aria-hidden="false"></span>Your cases</a>
-                        </li>
-
-                        <li class="moj-sub-navigation__item">
-                            <a id="team-casework-tab" data-testid="team-casework-tab" class="moj-sub-navigation__link" href="/TeamCasework"><span aria-hidden="true"></span>Other cases</a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <div class="govuk-tabs__panel" id="your-casework">
-                    <div class="govuk-button-group concerns-align-buttons-right-in-govuk-button-group">
-                        <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
-                            Create a case
-                        </a>
-                        <a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
-                            Find a trust
-                        </a>
-                        <a class="govuk-button govuk-button--secondary" asp-page="/case/closed" role="button">
-                            Your closed cases
-                        </a>
-                    </div>
-
-                    <!-- Active casework -->
-                    <partial name="_CasesActive" model="Model.ActiveCases" />
-
-                    <partial name="_Pagination" model="Model.Pagination" />
-                </div>
-            </div>
+        <div class="govuk-button-group">
+            <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
+                Create a case
+            </a>
         </div>
+
+        <!-- Active casework -->
+        <partial name="_CasesActive" model="Model.ActiveCases" />
+
+        <partial name="_Pagination" model="Model.Pagination" />
+
     }
 </div>
 

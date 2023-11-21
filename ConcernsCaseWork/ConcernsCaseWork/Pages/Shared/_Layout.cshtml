@@ -1,4 +1,5 @@
 ﻿@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Hosting
@@ -11,6 +12,23 @@
 @{
     var nonce = Context.GetNonce();
     bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
+
+    var classCurrentPage = "dfe-header__navigation-item--current";
+
+    var path = Context.Request.Path;
+
+    var yourCasesTabCurrent = "";
+    var otherCasesTabCurrent = "";
+    var findTrustTabCurrent = "";
+
+    var model = ViewBag.LayoutModel as LayoutModel;
+
+    if (model != null)
+    {
+        yourCasesTabCurrent = model.YourCasesTabActive == true ? classCurrentPage : "";
+        otherCasesTabCurrent = model.OtherCasesTabActive == true ? classCurrentPage : "";
+        findTrustTabCurrent = model.FindTrustTabActive == true ? classCurrentPage : "";
+    }
 }
 <head>
     @if (_env.IsProduction() && hasConsented)
@@ -83,6 +101,45 @@
             }
             
         </div>
+        <nav class="dfe-header__navigation" id="header-navigation" role="navigation" aria-label="Primary navigation" aria-labelledby="label-navigation">
+            <div class="dfe-width-container">
+                <p class="dfe-header__navigation-title">
+                    <span id="label-navigation">Menu</span>
+                    <button class="dfe-header__navigation-close" id="close-menu">
+                        <svg class="dfe-icon dfe-icon__close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
+                            <path d="M13.41 12l5.3-5.29a1 1 0 1 0-1.42-1.42L12 10.59l-5.29-5.3a1 1 0 0 0-1.42 1.42l5.3 5.29-5.3 5.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l5.29-5.3 5.29 5.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
+                        </svg>
+                        <span class="govuk-visually-hidden">Close menu</span>
+                    </button>
+                </p>
+                <ul class="dfe-header__navigation-list">
+                    <li class="dfe-header__navigation-item @yourCasesTabCurrent">
+                        <a class="dfe-header__navigation-link" href="/" data-testid="your-cases-tab">
+                            Your cases
+                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
+                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="dfe-header__navigation-item @otherCasesTabCurrent">
+                        <a class="dfe-header__navigation-link" href="/TeamCasework" data-testid="team-casework-tab">
+                            Other cases
+                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
+                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="dfe-header__navigation-item @findTrustTabCurrent">
+                        <a class="dfe-header__navigation-link" href="/trust">
+                            Find a trust
+                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
+                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
     <div class="govuk-extra-width-container">
         <div class="govuk-phase-banner">
@@ -100,7 +157,7 @@
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("BeforeMain", required: false)
 
-    <main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+    <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
         @RenderBody()
     </main>
 

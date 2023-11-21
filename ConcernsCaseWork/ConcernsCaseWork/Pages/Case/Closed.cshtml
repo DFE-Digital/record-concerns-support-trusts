@@ -1,16 +1,32 @@
 ﻿@page "/case/closed"
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.ClosedPageModel
 
 @{
     ViewData["Title"] = "Your closed cases";
+    ViewBag.LayoutModel = new LayoutModel()
+            {
+                YourCasesTabActive = true
+            };
 }
 
 @section BeforeMain {
-    <div class="govuk-extra-width-container">
-        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-    </div>
+    <nav class="moj-primary-navigation" aria-label="Sub navigation">
+        <div class="govuk-extra-width-container">
+            <ul class="moj-primary-navigation__list">
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" href="/"><span aria-hidden="true"></span>Create or view a case</a>
+                </li>
+
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" href="/case/closed" aria-current="page"><span aria-hidden="false"></span>Closed cases</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 }
+
 
 <div class="govuk-extra-width-container">
     <partial name="_BannerError" />
@@ -23,11 +39,16 @@
         }
         else
         {
-            <h1 class="govuk-heading-m">Your closed cases</h1>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Closed cases
+                </h1>
+            </legend>
+
             <!-- Your closed cases -->
             <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-                    Your closed cases
+                <caption class="govuk-table__caption govuk-table__caption--s dfe-u-font-weight-normal govuk-!-margin-bottom-3">
+                    Closed cases owned by you
                 </caption>
 
                 <thead class="govuk-table__head">
@@ -121,7 +142,6 @@
             </table>
 
             <partial name="_Pagination" model="Model.Pagination" />
-
         }
     </div>
 </div>
