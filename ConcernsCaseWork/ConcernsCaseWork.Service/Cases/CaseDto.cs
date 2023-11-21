@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CrmEnquiry { get; init; }
 		public string TrustUkPrn { get; init; }
 		public string ReasonAtReview { get; init; }
-		public DateTimeOffset DeEscalation { get; init; }
+		public DateTimeOffset? DeEscalation { get; init; }
 		public string Issue { get; init; }
 		public string CurrentStatus { get; init; }
 		public string CaseAim { get; init; }

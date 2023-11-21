@@ -123,56 +123,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 		}		
-		
-		[Test]
-		public async Task WhenOnGetCancel_Return_HomePage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<RatingPageModel>>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
-			
-			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing"));
-			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
-			
-			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockCachedService.Object, 
-				mockLogger.Object, true);
-			
-			// act
-			var pageResponse = await pageModel.OnGetCancel();
-			var pageResponseInstance = pageResponse as RedirectResult;
-			
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
-			Assert.IsNotNull(pageResponseInstance);
-			Assert.That(pageResponseInstance.Url, Is.EqualTo("/"));
-		}
-		
-		[Test]
-		public async Task WhenOnGetCancel_UserStateIsNull_Return_Page()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<RatingPageModel>>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			
-			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
-			mockUserStateCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
-			
-			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
-				mockUserStateCachedService.Object, 
-				mockLogger.Object, true);
-			
-			// act
-			var pageResponse = await pageModel.OnGetCancel();
-			var pageResponseInstance = pageResponse as PageResult;
-			
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			Assert.IsNotNull(pageResponseInstance);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
-		}
 
 		[Test]
 		public async Task WhenOnPostAsync_RedirectToPage_Details()

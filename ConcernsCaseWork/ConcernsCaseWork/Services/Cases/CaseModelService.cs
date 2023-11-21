@@ -267,6 +267,12 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				// Create a case
 				createCaseModel.StatusId = (int)CaseStatus.Live;
+
+				var currentDate = DateTimeOffset.Now;
+				createCaseModel.CreatedAt = currentDate;
+				createCaseModel.UpdatedAt = currentDate;
+				createCaseModel.ReviewAt = currentDate;
+
 				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
 				await PostConcerns(createCaseModel, newCase.Urn);
