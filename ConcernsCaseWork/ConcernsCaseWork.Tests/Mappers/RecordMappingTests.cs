@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using System;
@@ -44,17 +44,16 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
 			var record = RecordFactory.BuildRecordDto();
-			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
 			// act
-			var recordDto = RecordMapping.MapClosure(patchRecordModel, record, statusDto);
+			var recordDto = RecordMapping.MapClosure(patchRecordModel, record);
 
 			// assert
 			Assert.That(recordDto, Is.Not.Null);
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.StatusId, Is.EqualTo(record.StatusId));
+			Assert.That(recordDto.StatusId, Is.EqualTo((int)ConcernStatus.Close));
 			Assert.That(recordDto.Id, Is.EqualTo(record.Id));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
@@ -72,17 +71,16 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
 			patchRecordModel.ClosedAt = DateTimeOffset.Now;
 			var record = RecordFactory.BuildRecordDto();
-			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
 			// act
-			var recordDto = RecordMapping.MapClosure(patchRecordModel, record, statusDto);
+			var recordDto = RecordMapping.MapClosure(patchRecordModel, record);
 
 			// assert
 			Assert.That(recordDto, Is.Not.Null);
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.StatusId, Is.EqualTo(statusDto.Id));
+			Assert.That(recordDto.StatusId, Is.EqualTo(3));
 			Assert.That(recordDto.Id, Is.EqualTo(record.Id));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(patchRecordModel.ClosedAt));
@@ -98,11 +96,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			// arrange
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);
@@ -111,18 +107,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			for (var index = 0; index < createRecordsDto.Count; ++index)
 			{
 				var recordDto = recordsDto.ElementAt(index);
-				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
-				Assert.That(createRecordsDto.ElementAt(index).Type, Is.EqualTo(typeModel.Type));
 				Assert.That(createRecordsDto.ElementAt(index).CaseUrn, Is.EqualTo(recordDto.CaseUrn));
-				Assert.That(createRecordsDto.ElementAt(index).RagRating, Is.EqualTo(ratingModel.RagRating));
-				Assert.That(createRecordsDto.ElementAt(index).RatingName, Is.EqualTo(ratingModel.Name));
 				Assert.That(createRecordsDto.ElementAt(index).RatingId, Is.EqualTo(recordDto.RatingId));
-				Assert.That(createRecordsDto.ElementAt(index).SubType, Is.EqualTo(typeModel.SubType));
 				Assert.That(createRecordsDto.ElementAt(index).TypeId, Is.EqualTo(recordDto.TypeId));
-				Assert.That(createRecordsDto.ElementAt(index).TypeDisplay, Is.EqualTo(typeModel.TypeDisplay));
-				Assert.That(createRecordsDto.ElementAt(index).RagRatingCss, Is.EqualTo(ratingModel.RagRatingCss));
 			}
 		}
 		
@@ -131,11 +119,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			// arrange
 			var recordsDto = new List<RecordDto>();
-			var typesDto = TypeFactory.BuildListTypeDto();
-			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null);
 
 			// assert
 			Assert.NotNull(createRecordsDto);

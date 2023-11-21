@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     command: /bin/bash -c "./docker-entrypoint.sh dotnet ConcernsCaseWork.dll"
     ports:
-      - 80:80/tcp
+      - 80:8080/tcp
     depends_on:
       - db
       - sqlcmd

@@ -1,15 +1,13 @@
 ﻿using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.CreateCase;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +22,6 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class RatingPageModel : CreateCaseBasePageModel
 	{
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<RatingPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
@@ -33,7 +30,6 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
 
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
@@ -43,12 +39,10 @@ namespace ConcernsCaseWork.Pages.Case
 
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
-			IRatingModelService ratingModelService,
 			ILogger<RatingPageModel> logger, 
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			TelemetryClient telemetryClient) : base(userStateCache, claimsPrincipalHelper)
 		{
-			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_userStateCache = userStateCache;
 			_logger = logger;
@@ -87,9 +81,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 				// Update cache model
 				userState.CreateCaseModel.RatingId = (long)ragRatingId;
-				userState.CreateCaseModel.RagRatingName = ragRatingName;
-				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
@@ -117,25 +108,6 @@ namespace ConcernsCaseWork.Pages.Case
 			return Page();
 		}
 		
-		public async Task<ActionResult> OnGetCancel()
-		{
-			try
-			{
-				var userState = await GetUserState();
-				userState.CreateCaseModel = new CreateCaseModel();
-				await _userStateCache.StoreData(GetUserName(), userState);
-				
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-				SetErrorMessage(ErrorOnGetPage);
-			}
-
-			return Page();
-		}
-		
 		private async Task<ActionResult> LoadPage()
 		{
 			try
@@ -149,7 +121,6 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatingsModel();
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
@@ -158,7 +129,7 @@ namespace ConcernsCaseWork.Pages.Case
 					EventUserName = userState.UserName
 				});
 
-				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RatingsModel, RiskToTrust?.SelectedId);
+				RiskToTrust = CaseComponentBuilder.BuildRiskToTrust(nameof(RiskToTrust), RiskToTrust?.SelectedId);
 
 				return Page();
 			}

@@ -81,18 +81,26 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 			new ConcernsType
 			{
 				Id = (int)API.Contracts.Concerns.ConcernType.Safeguarding,
-				Name = "Safeguarding",
+				Name = "Safeguarding non-compliance",
 				Description = null,
 				CreatedAt = new DateTime(2023, 1, 24),
 				UpdatedAt = new DateTime(2023, 1, 24)
 			},
 			new ConcernsType 
 			{
-				Id = (int)API.Contracts.Concerns.ConcernType.Governance,
-				Name = "Governance",
+				Id = (int)API.Contracts.Concerns.ConcernType.GovernanceCapability,
+				Name = "Governance capability",
 				Description = null,
 				CreatedAt = new DateTime(2023, 10, 9),
 				UpdatedAt = new DateTime(2023, 10, 9)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.NonCompliance,
+				Name = "Non-compliance",
+				Description = null,
+				CreatedAt = new DateTime(2023, 10, 30),
+				UpdatedAt = new DateTime(2023, 10, 30)
 			}
 		);
 	}

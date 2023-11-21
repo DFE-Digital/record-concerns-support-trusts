@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
     </PropertyGroup>
@@ -24,6 +24,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.Utils\ConcernsCaseWork.Utils.csproj" />
     </ItemGroup>
 
 </Project>

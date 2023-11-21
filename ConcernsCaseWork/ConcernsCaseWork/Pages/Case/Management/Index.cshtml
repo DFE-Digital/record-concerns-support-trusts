@@ -1,9 +1,8 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
 @using ConcernsCaseWork.API.Contracts.Case;
-@using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
-@using ConcernsCaseWork.Service.Status;
+@using ConcernsCaseWork.Utils.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @using ConcernsCaseWork.Helpers;
@@ -19,7 +18,7 @@
     var locationChangeLink = "";
     var locationAria = "";
 
-    if (Model.CaseModel.Division == Division.RegionsGroup)
+    if (Model.CaseModel?.Division == Division.RegionsGroup)
     {
         locationChangeLink = $"{Request.Path}/edit-region";
         locationAria = "Change region";
@@ -88,11 +87,11 @@
 
             <ul class="moj-sub-navigation__list">
                 <li class="moj-sub-navigation__item">
-                    <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-expanded="true" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
+                    <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
                 </li>
 
                 <li class="moj-sub-navigation__item">
-                    <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" aria-expanded="false" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
+                    <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
                 </li>
             </ul>
         </nav>
@@ -137,12 +136,7 @@
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
                                 <td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
-                                    @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
-                                    {
-                                        <span class="govuk-tag ragtag @Model.CaseModel?.RatingModel?.RagRatingCss?.ElementAt(index)">
-                                            @Model.CaseModel?.RatingModel?.RagRating?.Item2?.ElementAt(index)
-                                        </span>
-                                    }
+                                    <partial name="_RatingLabel" model="@Model.CaseModel?.RatingId" />
                                 </td>
                                 <td class="govuk-table__cell govuk-table__header__right">
                                     @if (Model.IsEditableCase)
@@ -174,18 +168,18 @@
                                 </th>
                                 <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
 
-                                    <table class="govuk-table">
+                                    <table class="govuk-table" data-testid="concerns-details-table">
                                         <tbody class="govuk-table__body">
                                             @foreach (var concern in Model.CaseModel.RecordsModel)
                                             {
                                                 <tr class="govuk-table__row">
                                                     <td>
-                                                        @concern.TypeModel.TypeDisplay
+                                                        @concern.GetConcernTypeName()
                                                     </td>
                                                     <td>
                                                         <div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
                                                             @{
-                                                                if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                                if (concern.IsClosed())
                                                                 {
                                                                     <span class="govuk-tag ragtag ragtag__grey">
                                                                         Closed
@@ -193,19 +187,14 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-                                                                    {
-                                                                        <span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-                                                                            @concern.RatingModel.RagRating.Item2.ElementAt(index)
-                                                                        </span>
-                                                                    }
+                                                                    <partial name="_RatingLabel" model="@concern.RatingId" />
                                                                 }
                                                             }
                                                         </div>
                                                     </td>
                                                     <td class="govuk-table__header__right">
                                                         @{
-                                                            if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                            if (concern.IsClosed())
                                                             {
                                                                 <br />
                                                             }
@@ -214,7 +203,7 @@
                                                                 <div class="govuk-!-padding-bottom-1">
                                                                     @if (Model.IsEditableCase)
                                                                     {
-                                                                        <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating" data-testid="edit-concern">Change</a>
+                                                                        <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.GetConcernTypeName() rating" data-testid="edit-concern">Change</a>
                                                                     }
                                                                 </div>
                                                             }
@@ -417,12 +406,16 @@
                 }
 
                 <table id="open-case-actions" class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                        Active actions and decisions
+                    </caption>
                     <thead class="govuk-table__head" id="container-CaseActions">
                         <tr class="govuk-table__row tr__large">
                             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
                                 <span>Active actions and decisions</span>
                             </th>
                             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
+                                <span class="govuk-visually-hidden">Status</span>
                             </th>
                             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
                                 Date opened
@@ -484,7 +477,6 @@
                     if (tabToShow) {
                         tabToShow.addEventListener("click", function() {
                             tableToShow.removeAttribute("hidden");
-                            tabToShow.setAttribute("aria-expanded","true");
                             tabToShow.setAttribute("aria-current","page");
                             tableToHide.hidden = true;
                             tabToHide.removeAttribute("aria-current");

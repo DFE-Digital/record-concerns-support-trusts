@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -5,7 +5,7 @@ using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Utils.Extensions;
 using FluentAssertions;
 using MoreLinq;
 using System.Collections.Generic;

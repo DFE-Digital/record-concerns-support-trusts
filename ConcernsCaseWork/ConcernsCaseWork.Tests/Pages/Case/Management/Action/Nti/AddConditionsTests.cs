@@ -25,12 +25,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
-			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
+			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
 			pageModel.ContinuationId = Guid.NewGuid().ToString();
 
 			// act
@@ -47,20 +45,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var caseUrn = 191L;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var continuationId = Guid.NewGuid().ToString();
-
-			mockNtiStatusesService.Setup(svc => svc.GetAllStatusesAsync()).ReturnsAsync(new NtiStatusDto[] {
-				new NtiStatusDto { Id = 1, Name = "Status 1" }
-			});
-
-			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
-				new NtiReasonDto { Id = 1, Name = "Reason 1" }
-			});
 
 			mockNtiModelService.Setup(svc => svc.GetNtiAsync(continuationId)).ReturnsAsync(new NtiModel
 			{
@@ -68,25 +56,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				CaseUrn = caseUrn
 			});
 
-			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
+			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
 			pageModel.ContinuationId = continuationId;
+			pageModel.CaseUrn = caseUrn;
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
 
 			// act
 			await pageModel.OnGetAsync();
 
 			// assert
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI::AddConditionsPageModel::OnGetAsync")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.CaseUrn, Is.EqualTo(caseUrn));
 		}
@@ -98,12 +77,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var caseUrn = 191L;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
-			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
+			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -125,21 +102,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
-			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
-			var mockConditionsService = new Mock<INtiConditionsCachedService>();
+			var mockConditionsService = new Mock<INtiConditionsService>();
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
-			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
+			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockConditionsService, mockLogger);
 
 			// act, assert
 			Assert.ThrowsAsync<InvalidOperationException>(async () => await pageModel.OnGetAsync());
 		}
 
 		private static AddConditionsPageModel SetupAddConditionsPageModel(Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
-			Mock<INtiStatusesCachedService> mockNtiStatusesCachedService,
-			Mock<INtiConditionsCachedService> mockConditionsCachedService,
+			Mock<INtiConditionsService> mockConditionsCachedService,
 			Mock<ILogger<AddConditionsPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
@@ -147,8 +120,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			tempData["ContinuationId"] = Guid.NewGuid().ToString();
 
-			return new AddConditionsPageModel(mockNtiStatusesCachedService.Object, mockNtiReasonsCachedService.Object,
-				mockNtiModelService.Object, mockConditionsCachedService.Object, mockLogger.Object)
+			return new AddConditionsPageModel(
+				mockNtiModelService.Object,
+				mockConditionsCachedService.Object,
+				mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

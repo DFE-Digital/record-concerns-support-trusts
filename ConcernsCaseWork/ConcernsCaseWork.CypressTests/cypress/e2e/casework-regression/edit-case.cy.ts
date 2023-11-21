@@ -70,7 +70,7 @@ describe("Editing a case", () => {
 		createConcernPage.nextStep();
 
 		Logger.Log("Populate risk to trust");
-		addDetailsPage.withRiskToTrust("Red-Plus").nextStep();
+		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		
 
@@ -95,7 +95,7 @@ describe("Editing a case", () => {
 		Logger.Log("Edit risk to trust");
 		caseManagementPage.editRiskToTrust();
 
-		editRiskToTrust.hasRiskToTrust("Red-Plus");
+		editRiskToTrust.hasRiskToTrust("Red Plus");
 
 		Logger.Log("Checking accessibility on edit risk to trust");
 		cy.excuteAccessibilityTests();

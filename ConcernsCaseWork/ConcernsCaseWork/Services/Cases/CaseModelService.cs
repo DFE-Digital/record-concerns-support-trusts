@@ -1,34 +1,29 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.API.Contracts.Case;
 
 namespace ConcernsCaseWork.Services.Cases
 {
 	// They are very similarly named and it is not obvious which of the two to use.
 	public sealed class CaseModelService : ICaseModelService
 	{
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordService _recordService;
 		private readonly ICaseService _caseService;
 		private readonly ILogger<CaseModelService> _logger;
 
 		public CaseModelService(
 			IRecordService recordService, 
-			IStatusCachedService statusCachedService,
 			ICaseService caseService,
 			ILogger<CaseModelService> logger)
 		{
-			_statusCachedService = statusCachedService;
 			_recordService = recordService;
 			_caseService = caseService;
 			_logger = logger;
@@ -55,10 +50,9 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
 				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
-				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
+				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto);
 				
 				await _caseService.PatchCaseByUrn(caseDto);
 			}
@@ -271,11 +265,14 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// Fetch Status
-				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-
 				// Create a case
-				createCaseModel.StatusId = statusDto.Id;
+				createCaseModel.StatusId = (int)CaseStatus.Live;
+
+				var currentDate = DateTimeOffset.Now;
+				createCaseModel.CreatedAt = currentDate;
+				createCaseModel.UpdatedAt = currentDate;
+				createCaseModel.ReviewAt = currentDate;
+
 				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
 				await PostConcerns(createCaseModel, newCase.Urn);
@@ -289,7 +286,6 @@ namespace ConcernsCaseWork.Services.Cases
 				throw;
 			}
 		}
-		
 		
 		public async Task<long> PatchCase(int caseUrn,CreateCaseModel createCaseModel)
 		{
@@ -357,9 +353,9 @@ namespace ConcernsCaseWork.Services.Cases
 					currentDate,
 					currentDate,
 					currentDate,
-					recordModel.Type,
-					recordModel.SubType,
-					recordModel.TypeDisplay,
+					null,
+					null,
+					null,
 					newCaseId,
 					recordModel.TypeId,
 					recordModel.RatingId,

@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Utils.Extensions;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers

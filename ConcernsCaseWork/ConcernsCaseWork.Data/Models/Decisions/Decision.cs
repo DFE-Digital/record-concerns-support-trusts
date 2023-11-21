@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.Data.Enums;
-using ConcernsCaseWork.Data.Models.Decisions.Outcome;
+﻿using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using System.ComponentModel.DataAnnotations;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Data.Models.Decisions
 {
@@ -104,7 +104,7 @@ namespace ConcernsCaseWork.Data.Models.Decisions
 					return "Multiple Decision Types";
 
 				default:
-					return DecisionTypes.First().DecisionTypeId.GetDescription();
+					return DecisionTypes.First().DecisionTypeId.Description();
 			}
 		}
 

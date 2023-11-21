@@ -2,7 +2,6 @@
 using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,26 +18,20 @@ namespace ConcernsCaseWork.Pages.Team
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class SelectColleaguesPageModel : AbstractPageModel
 	{
-		private readonly IRbacManager _rbacManager;
 		private readonly ILogger<SelectColleaguesPageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
 		private readonly IFeatureManager _featureManager;
+
+		public bool IsSelectTeamCaseWorkRedesignEnabled { get; set; }
 
 		[BindProperty]
 		public IList<string> SelectedColleagues { get; set; }
 		public string[] Users { get; set; }
 
-		public bool IsSelectTeamCaseWorkRedesignEnabled { get; set; }
-
-		public SelectColleaguesPageModel(IRbacManager rbacManager,
-			ILogger<SelectColleaguesPageModel> logger, 
-			ITeamsModelService teamsService,
-			IFeatureManager featureManager
-			)
+		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager)
 		{
-			_rbacManager = Guard.Against.Null(rbacManager);
-			_logger = Guard.Against.Null(logger);
-			_teamsService = Guard.Against.Null(teamsService);
+			_logger = logger;
+			_teamsService = teamsService;
 			_featureManager = featureManager;
 		}
 
@@ -95,12 +88,10 @@ namespace ConcernsCaseWork.Pages.Team
 				try
 				{
 					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
+					var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
 
 					await Task.WhenAll(teamMembers, users);
 
-					// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
-					// Get users from somewhere, possibly the rbacManager
 					SelectedColleagues = teamMembers.Result.TeamMembers;
 					Users = users.Result.ToArray();
 				}
@@ -130,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Team
 			try
 			{
 				var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-				var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
+				var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
 
 				await Task.WhenAll(teamMembers, users);
 

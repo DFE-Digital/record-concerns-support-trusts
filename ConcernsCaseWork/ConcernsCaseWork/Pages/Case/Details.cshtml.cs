@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -176,6 +177,10 @@ namespace ConcernsCaseWork.Pages.Case
 
 			model.TrustUkPrn = trust.GiasData.UkPrn;
 			model.TrustCompaniesHouseNumber = trust.GiasData.CompaniesHouseNumber;
+
+			userState.CreateCaseModel.CreatedBy = GetUserName();
+			userState.CreateCaseModel.DeEscalation = DateTimeOffset.Now;
+			userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
 
 			var caseUrn = await _caseModelService.PostCase(model);
 			LogToAppInsights("CREATE CASE", $"Case created {caseUrn}", JsonSerializer.Serialize(model), userState.UserName);

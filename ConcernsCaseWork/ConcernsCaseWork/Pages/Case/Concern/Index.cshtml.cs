@@ -1,26 +1,21 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -30,7 +25,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _cachedService;
@@ -56,15 +50,16 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int? CaseUrn { get; set; }
 
+		[BindProperty(SupportsGet = true, Name = "source-page")]
+		public string? SourcePage { get; set; }
+
 		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
-			IRatingModelService ratingModelService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger,
 			TelemetryClient telemetryClient, 
 			ICaseModelService caseModelService)
 		{
-			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_cachedService = Guard.Against.Null(cachedService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
@@ -79,6 +74,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 			try
 			{
+				await LoadExistingCaseIntoCache();
+
 				await LoadPage();
 			}
 			catch (Exception ex)
@@ -88,7 +85,31 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			}
 			return Page();
 		}
-		
+
+		private async Task LoadExistingCaseIntoCache()
+		{
+			var caseModel = await GetCaseModel();
+
+			// If we came from the add another concern page we don't want to clear the cache
+			if (caseModel == null || SourcePage == "add-another-concern")
+			{
+				return;
+			}
+
+			// We had an issue where the cache was already populated with data
+			// In non concerns we start on this page
+			// We need to make sure if we already have an existing case, we clear the cache first
+			// Then set the existing case values and save them before loading the page
+			// Otherwise it will display the values from the previously cached case
+			var username = GetUserName();
+			var userState = new UserState(username);
+			userState.TrustUkPrn = caseModel.TrustUkPrn;
+			userState.CreateCaseModel = new CreateCaseModel();
+			userState.CreateCaseModel.Division = caseModel.Division;
+			userState.CreateCaseModel.Territory = caseModel.Territory;
+			await _cachedService.StoreData(username, userState);
+		}
+
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
@@ -101,12 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					return Page();
 				}
 
-				CaseModel caseModel = null;
-
-				if (CaseUrn.HasValue)
-				{
-					caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
-				}
+				CaseModel caseModel = await GetCaseModel();
 				
 				var ragRatingId = (ConcernRating)ConcernRiskRating.SelectedId.Value;
 
@@ -123,33 +139,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				// Redis state
 				var userState = await GetUserState();
 
-
-				// Create a case model
-				if (!userState.CreateCaseModel.CreateRecordsModel.Any())
-				{
-					var currentDate = DateTimeOffset.Now;
-
-					userState.CreateCaseModel.CreatedAt = currentDate;
-					userState.CreateCaseModel.ReviewAt = currentDate;
-					userState.CreateCaseModel.UpdatedAt = currentDate;
-					userState.CreateCaseModel.CreatedBy = GetUserName();
-					userState.CreateCaseModel.DeEscalation = currentDate;
-					userState.CreateCaseModel.RagRatingName = ragRatingName;
-					userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-					userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
-					userState.CreateCaseModel.DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString();
-					userState.CreateCaseModel.TrustUkPrn = userState.TrustUkPrn;
-				}
-
 				var createRecordModel = new CreateRecordModel
 				{
 					TypeId = (long)typeId,
-					Type = typeId.Description(),
-					SubType = null,
 					RatingId = (long)ragRatingId,
-					RatingName = ragRatingName,
-					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					MeansOfReferralId = MeansOfReferral.SelectedId.Value
 				};
 				string json = JsonSerializer.Serialize(createRecordModel);
@@ -213,12 +206,11 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateCaseModel = userState.CreateCaseModel;
 			CreateRecordsModel = new List<CreateRecordModel>();
-			var ratingsModel = await _ratingModelService.GetRatingsModel();
 
 			ConcernType = CaseComponentBuilder.BuildConcernType(CreateCaseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 			ConcernType.SortOrder = 1;
 
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ratingsModel, ConcernRiskRating?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 			ConcernRiskRating.SortOrder = 2;
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(CreateCaseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
@@ -242,6 +234,20 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private async Task<CaseModel> GetCaseModel()
+		{
+			CaseModel result = null;
+
+			if (!CaseUrn.HasValue)
+			{
+				return result;
+			}
+
+			result = await _caseModelService.GetCaseByUrn((long)CaseUrn);
+
+			return result;
 		}
 		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);

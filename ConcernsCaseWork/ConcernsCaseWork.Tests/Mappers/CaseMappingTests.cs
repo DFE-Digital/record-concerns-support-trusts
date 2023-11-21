@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using NUnit.Framework;
@@ -54,14 +53,13 @@ namespace ConcernsCaseWork.Tests.Mappers
 			caseDto.Division = division;
 
 			// act
-			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
+			var caseModel = CaseMapping.Map(caseDto);
 
 			// assert
 			Assert.That(caseModel, Is.Not.Null);
 			Assert.That(caseModel.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(caseDto.Issue));
 			Assert.That(caseModel.StatusId, Is.EqualTo(caseDto.StatusId));
-			Assert.That(caseModel.StatusName, Is.EqualTo(StatusEnum.Close.ToString()));
 			Assert.That(caseModel.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -90,7 +88,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var caseDto = CaseFactory.BuildCaseDto();
 			caseDto.Urn = 1234567;
 
-			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
+			var caseModel = CaseMapping.Map(caseDto);
 
 			caseModel.IsArchived.Should().BeTrue();
 		}
@@ -101,16 +99,15 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
 			var caseDto = CaseFactory.BuildCaseDto();
-			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			// act
-			var expectedCaseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
+			var expectedCaseDto = CaseMapping.MapClosure(patchCaseModel, caseDto);
 
 			// assert
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.StatusId, Is.EqualTo(statusDto.Id));
+			Assert.That(expectedCaseDto.StatusId, Is.EqualTo((int)CaseStatus.Close));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.Not.EqualTo(default(DateTimeOffset)));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -137,16 +134,15 @@ namespace ConcernsCaseWork.Tests.Mappers
 			patchCaseModel.ClosedAt = currentDate;
 			patchCaseModel.ReviewAt = currentDate;
 			var caseDto = CaseFactory.BuildCaseDto();
-			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			// act
-			var expectedCaseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
+			var expectedCaseDto = CaseMapping.MapClosure(patchCaseModel, caseDto);
 
 			// assert
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.StatusId, Is.EqualTo(statusDto.Id));
+			Assert.That(expectedCaseDto.StatusId, Is.EqualTo((int)CaseStatus.Close));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(patchCaseModel.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));

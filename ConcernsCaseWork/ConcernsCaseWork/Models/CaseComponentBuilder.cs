@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Models
 {
@@ -45,19 +45,9 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildRiskToTrust(string name, IList<RatingModel> ratingsModel, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildRiskToTrust(string name, int? selectedId = null)
 		{
-			var radioItems = ratingsModel.Select(r =>
-			{
-				var label = "";
-
-				for (var ragIdx = 0; ragIdx < r.RagRating.Item2.Count; ragIdx++)
-				{
-					label += $"<span class=\"govuk-tag ragtag {r.RagRatingCss.ElementAt(ragIdx)}\">{r.RagRating.Item2.ElementAt(ragIdx)}</span>";
-				}
-
-				return new SimpleRadioItem(label, (int)r.Id) { IsHtmlLabel = true, TestId = r.Name, };
-			});
+			var radioItems = BuildRatingRadioItems();
 
 			return new(ElementRootId: "rag-rating", name, "What is the overall risk to the trust?")
 			{
@@ -69,19 +59,9 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernRiskRating(string name, IList<RatingModel> ratingsModel, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildConcernRiskRating(string name, int? selectedId = null)
 		{
-			var radioItems = ratingsModel.Select(r =>
-			{
-				var label = "";
-
-				for (var ragIdx = 0; ragIdx < r.RagRating.Item2.Count; ragIdx++)
-				{
-					label += $"<span class=\"govuk-tag ragtag {r.RagRatingCss.ElementAt(ragIdx)}\">{r.RagRating.Item2.ElementAt(ragIdx)}</span>";
-				}
-
-				return new SimpleRadioItem(label, (int)r.Id) { IsHtmlLabel = true, TestId = r.Name, };
-			});
+			var radioItems = BuildRatingRadioItems();
 
 			return new(ElementRootId: "rag-rating", name, "Select concern risk rating")
 			{
@@ -207,6 +187,39 @@ namespace ConcernsCaseWork.Models
 			}
 		};
 
+		public static List<RatingLabelModel> GetRatings()
+		{
+			var result = new List<RatingLabelModel>()
+			{
+				new RatingLabelModel()
+				{
+					Id = (int)ConcernRating.AmberGreen,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__amber\">Amber</span><span class=\"govuk-tag ragtag ragtag__green\">Green</span>",
+					Names = new List<string>() { "Amber", "Green" }
+				},
+				new RatingLabelModel()
+				{
+					Id = (int)ConcernRating.RedAmber,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span><span class=\"govuk-tag ragtag ragtag__amber\">Amber</span>",
+					Names = new List<string>() { "Red", "Amber" }
+				},
+				new RatingLabelModel()
+				{
+					Id = (int)ConcernRating.Red,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__red\">Red</span>",
+					Names = new List<string>() { "Red" }
+				},
+				new RatingLabelModel()
+				{
+					Id = (int)ConcernRating.RedPlus,
+					Label = $"<span class=\"govuk-tag ragtag ragtag__redplus\">Red Plus</span>",
+					Names = new List<string>() { "Red Plus" }
+				}
+			};
+
+			return result;
+		}
+
 		private static RadioButtonsUiComponent BuildConcernTypeSfso(string name, int? selectedId = null)
 		{
 			var radioItems = new List<SimpleRadioItem>()
@@ -235,8 +248,9 @@ namespace ConcernsCaseWork.Models
 		{
 			var radioItems = new List<SimpleRadioItem>()
 			{
-				new SimpleRadioItem(ConcernType.Governance.Description(), (int)ConcernType.Governance) { TestId = ConcernType.Governance.Description() },
-				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() },
+				new SimpleRadioItem(ConcernType.GovernanceCapability.Description(), (int)ConcernType.GovernanceCapability) { TestId = ConcernType.GovernanceCapability.Description() },
+				new SimpleRadioItem(ConcernType.NonCompliance.Description(), (int)ConcernType.NonCompliance) { TestId = ConcernType.NonCompliance.Description() },
+				new SimpleRadioItem(ConcernType.Safeguarding.Description(), (int)ConcernType.Safeguarding) { TestId = ConcernType.Safeguarding.Description() }
 			};
 
 			return new(ElementRootId: "concern-type", name, "Select concern type")
@@ -247,6 +261,20 @@ namespace ConcernsCaseWork.Models
 				DisplayName = "concern type",
 				HintFromPartialView = "_ConcernTypeHint"
 			};
+		}
+
+		private static IEnumerable<SimpleRadioItem> BuildRatingRadioItems()
+		{
+			var ratings = GetRatings();
+
+			var result = ratings.Select(r =>
+			{
+				var label = r.Label;
+
+				return new SimpleRadioItem(label, (int)r.Id) { IsHtmlLabel = true, TestId = string.Join("-", r.Names), };
+			});
+
+			return result;
 		}
 	}
 }

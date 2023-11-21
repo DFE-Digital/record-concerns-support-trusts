@@ -4,6 +4,7 @@
 @using ConcernsCaseWork.Extensions
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using ConcernsCaseWork.Helpers;
+@using ConcernsCaseWork.Utils.Extensions;
 
 @{
     ViewData["Title"] = "NTI Warning Letter";
@@ -44,13 +45,9 @@
 
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                NTI: Warning letter
+            </caption>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
@@ -84,7 +81,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
-                                RenderValue(Model.NtiWarningLetterModel.Status?.Name);
+                                RenderValue(Model.NtiWarningLetterModel.Status?.Description());
                             }
                         </td>
                     }
@@ -93,7 +90,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell" data-testid="nti-status">
                             @{
-                                RenderValue(Model.NtiWarningLetterModel.ClosedStatus?.Name);
+                                RenderValue(Model.NtiWarningLetterModel.ClosedStatusId?.Description());
                             }
                         </td>
                     }
@@ -125,7 +122,7 @@
                                 foreach (var reason in Model.NtiWarningLetterModel.Reasons)
                                 {
                                     <div class="govuk-!-padding-bottom-2">
-                                        <span>@reason.Name</span>
+                                        <span>@reason.Description()</span>
                                     </div>
                                 }
                             }

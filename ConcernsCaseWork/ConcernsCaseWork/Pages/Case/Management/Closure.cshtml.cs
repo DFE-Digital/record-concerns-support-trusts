@@ -1,12 +1,10 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.ApplicationInsights;
@@ -86,7 +84,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					Urn = CaseId,
 					ClosedAt = DateTimeOffset.Now,
 					UpdatedAt = DateTimeOffset.Now,
-					StatusName = StatusEnum.Close.ToString(),
 					ReasonAtReview = RationaleForClosure.Text.StringContents
 				};
 

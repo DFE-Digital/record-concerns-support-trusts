@@ -1,10 +1,8 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Status;
-using MoreLinq;
+using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -36,7 +34,7 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.Region);
 		}
 
-		public static CaseModel Map(CaseDto caseDto, string status = null)
+		public static CaseModel Map(CaseDto caseDto)
 		{
 			return new CaseModel
 			{
@@ -60,7 +58,6 @@ namespace ConcernsCaseWork.Mappers
 				Territory = caseDto.Territory,
 				Urn = caseDto.Urn,
 				StatusId = caseDto.StatusId,
-				StatusName = status,
 				RatingId = caseDto.RatingId,
 				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
 				Division = caseDto.Division,
@@ -69,14 +66,14 @@ namespace ConcernsCaseWork.Mappers
 		};
 		}
 
-		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)
+		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto)
 			=> caseDto with
 			{
 				UpdatedAt = patchCaseModel.UpdatedAt, 
 				ReviewAt = patchCaseModel.ReviewAt ?? caseDto.ReviewAt,
 					ClosedAt = patchCaseModel.ClosedAt ?? caseDto.ClosedAt,
 					ReasonAtReview = patchCaseModel.ReasonAtReview,
-					StatusId = statusDto.Id
+					StatusId = (int)CaseStatus.Close
 			};
 
 		public static CaseDto MapDirectionOfTravel(PatchCaseModel patchCaseModel, CaseDto caseDto)

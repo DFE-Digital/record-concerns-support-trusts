@@ -1,14 +1,14 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 				var ntiModel = await _ntiModelService.GetNtiByIdAsync(NtiId);
 				ntiModel.Notes = Notes.Text.StringContents;
-				ntiModel.ClosedStatusId = (int)NTIStatus.Cancelled;
+				ntiModel.ClosedStatusId = NtiStatus.Cancelled;
 				ntiModel.ClosedAt = DateTime.Now;
 
 				await _ntiModelService.PatchNtiAsync(ntiModel);

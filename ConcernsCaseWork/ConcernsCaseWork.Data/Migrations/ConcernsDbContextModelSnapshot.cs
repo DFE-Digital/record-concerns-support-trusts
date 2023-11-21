@@ -701,15 +701,22 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 24,
                             CreatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Safeguarding",
+                            Name = "Safeguarding non-compliance",
                             UpdatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 25,
                             CreatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Governance",
+                            Name = "Governance capability",
                             UpdatedAt = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedAt = new DateTime(2023, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Non-compliance",
+                            UpdatedAt = new DateTime(2023, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

@@ -2,10 +2,12 @@
 using AutoMapper;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.Teams;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Service.Teams;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
@@ -14,11 +16,11 @@ namespace ConcernsCaseWork.Services.Teams
 	{
 		private readonly ILogger<TeamsModelService> _logger;
 		private readonly IMapper _mapper;
-		private readonly ITeamsCachedService _teamsServiceClient;
+		private readonly ITeamsService _teamsServiceClient;
 
 		public TeamsModelService(ILogger<TeamsModelService> logger,
 			IMapper mapper,
-			ITeamsCachedService teamsServiceClient)
+			ITeamsService teamsServiceClient)
 		{
 			_logger = Guard.Against.Null(logger, nameof(logger));
 			_teamsServiceClient = Guard.Against.Null(teamsServiceClient, nameof(teamsServiceClient));
@@ -32,13 +34,28 @@ namespace ConcernsCaseWork.Services.Teams
 
 			async Task<ConcernsTeamCaseworkModel> DoWork()
 			{
-				// get the team. If null returned then no team exists so create a new empty one
-				var result = (await _teamsServiceClient.GetTeam(ownerId))
-					?? new ConcernsCaseworkTeamDto(ownerId, Array.Empty<string>());
+				var response = await _teamsServiceClient.GetTeam(ownerId);
 
-				return _mapper.Map<ConcernsTeamCaseworkModel>(result);
+				if (response == null)
+				{
+					return new ConcernsTeamCaseworkModel(ownerId, Array.Empty<string>());
+				}
+
+				return new ConcernsTeamCaseworkModel(response.OwnerId, response.TeamMembers);
 			}
 			return DoWork();
+		}
+
+		public async Task<ConcernsTeamCaseworkModel> CheckMemberExists(string ownerId)
+		{
+			var response = await _teamsServiceClient.GetTeam(ownerId);
+
+			if (response == null)
+			{
+				return null;
+			}
+
+			return new ConcernsTeamCaseworkModel(response.OwnerId, response.TeamMembers);
 		}
 
 		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel teamCaseworkModel)
@@ -57,6 +74,14 @@ namespace ConcernsCaseWork.Services.Teams
 		{
 			_logger.LogMethodEntered();
 			return _teamsServiceClient.GetOwnersOfOpenCases();
+		}
+
+		public async Task<IList<string>> GetTeamOwners(params string[] excludes)
+		{
+			// TODO: Integrate the known users from the DB with Azure graph to build up a set of users where we can identify those who aren't in the graph and may have left.
+			_logger.LogMethodEntered();
+			var users = await _teamsServiceClient.GetTeamOwners();
+			return users.Except(excludes).ToArray();
 		}
 	}
 }

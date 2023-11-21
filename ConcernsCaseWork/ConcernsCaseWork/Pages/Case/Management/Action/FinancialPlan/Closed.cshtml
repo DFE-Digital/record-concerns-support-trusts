@@ -2,8 +2,8 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosedPageModel
 
 @using ConcernsCaseWork.Helpers;
-@using ConcernsCaseWork.Extensions;
 @using ConcernsCaseWork.Enums;
+@using ConcernsCaseWork.Utils.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -39,13 +39,9 @@
         </div>
 
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                Financial plan
+            </caption>
             <tbody class="govuk-table__body">
 
                 @* Date opened *@

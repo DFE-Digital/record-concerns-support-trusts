@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Records;
@@ -77,13 +78,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new RecordModel(
 				Fixture.Create<long>(), 
+				(int)Fixture.Create<ConcernType>(),
 				Fixture.Create<long>(),
-				Fixture.Create<TypeModel>(),
-				Fixture.Create<long>(),
-				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
 				statusId,
-				Fixture.Create<StatusModel>(),
 				Fixture.Create<MeansOfReferralModel>()
 			);
 		}
@@ -111,13 +109,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateRecordModel
 			{
 				CaseUrn = Fixture.Create<long>(),
-				Type = Fixture.Create<string>(),
-				RagRating = Fixture.Create<Tuple<int, IList<string>>>(),
-				RatingName = Fixture.Create<string>(),
 				RatingId = Fixture.Create<long>(),
-				SubType = Fixture.Create<string>(),
 				TypeId = Fixture.Create<long>(),
-				RagRatingCss = Fixture.Create<IList<string>>(),
 				MeansOfReferralId = Fixture.Create<long>()
 			};
 		}

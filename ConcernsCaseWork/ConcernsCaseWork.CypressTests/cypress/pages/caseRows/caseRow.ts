@@ -22,6 +22,14 @@ export class CaseRow {
         return this;
     }
 
+    public hasLastUpdatedDate(value: string): this {
+        Logger.Log(`Has last updated date ${value}`);
+
+        this.containsText("updated-at", value);
+
+        return this;
+    }
+
     public hasClosedDate(value: string): this {
         Logger.Log(`Has closed date ${value}`);
 

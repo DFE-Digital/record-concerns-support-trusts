@@ -122,11 +122,11 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}
 
-		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager, bool isAuthenticated, string userName = "Tester")
+		private static SelectColleaguesPageModel BuildPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager, bool isAuthenticated, string userName = "Tester")
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
 
-			return new SelectColleaguesPageModel(rbacManager, logger, teamsService, featureManager)
+			return new SelectColleaguesPageModel(logger, teamsService, featureManager)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -142,22 +142,20 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				CurrentUserName = "John.Smith";
 				MockLogger = new Mock<ILogger<SelectColleaguesPageModel>>();
 				MockTeamsService = new Mock<ITeamsModelService>();
-				MockRbacManager = new Mock<IRbacManager>();
-				MockFeautureManager = new Mock<IFeatureManager>();
+				MockFeatureManager = new Mock<IFeatureManager>();
 			}
 
 			public string CurrentUserName { get; private set; }
 			public Mock<ILogger<SelectColleaguesPageModel>> MockLogger { get; }
 			public Mock<ITeamsModelService> MockTeamsService { get; }
-			public Mock<IRbacManager> MockRbacManager { get; }
 
-			public Mock<IFeatureManager> MockFeautureManager { get; }
+			public Mock<IFeatureManager> MockFeatureManager { get; }
 
 			internal SelectColleaguesPageModel BuildSut(bool authenticatedPage = true)
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(authenticatedPage, CurrentUserName);
 
-				return new SelectColleaguesPageModel(MockRbacManager.Object, MockLogger.Object, MockTeamsService.Object, MockFeautureManager.Object)
+				return new SelectColleaguesPageModel(MockLogger.Object, MockTeamsService.Object, MockFeatureManager.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
@@ -173,20 +171,20 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			internal TestFixture WithUsersAvailableForSelection(params string[] users)
 			{
-				this.MockRbacManager.Setup(r => r.GetSystemUsers(It.IsAny<string[]>())).ReturnsAsync(users);
+				this.MockTeamsService.Setup(r => r.GetTeamOwners(It.IsAny<string[]>())).ReturnsAsync(users);
 				return this;
 			}
 
 
 			internal TestFixture WithNoUsersAvailableForSelection()
 			{
-				this.MockRbacManager.Setup(r => r.GetSystemUsers(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
+				this.MockTeamsService.Setup(r => r.GetTeamOwners(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
 				return this;
 			}
 
 			internal TestFixture WitNohUsersAvailableForSelection()
 			{
-				this.MockRbacManager.Setup(r => r.GetSystemUsers(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
+				this.MockTeamsService.Setup(r => r.GetTeamOwners(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
 				return this;
 			}
 

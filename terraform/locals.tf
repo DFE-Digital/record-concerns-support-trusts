@@ -11,6 +11,7 @@ locals {
   container_health_probe_path                  = var.container_health_probe_path
   container_cpu                                = var.container_cpu
   container_memory                             = var.container_memory
+  container_port                               = var.container_port
   container_min_replicas                       = var.container_min_replicas
   container_max_replicas                       = var.container_max_replicas
   enable_redis_cache                           = var.enable_redis_cache

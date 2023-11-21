@@ -7,122 +7,121 @@
 }
 
 @section BeforeMain {
-	<div class="govuk-extra-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <div class="govuk-extra-width-container">
+        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+    </div>
 }
 
 <div class="govuk-extra-width-container">
-	<partial name="_BannerError"/>
-	
-	<div class="govuk-!-margin-top-0">
+    <partial name="_BannerError" />
 
-		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-		{
-			<partial name="_Error"/>
-		}
-		else
-		{
+    <div class="govuk-!-margin-top-0">
+
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
             <h1 class="govuk-heading-m">Your closed cases</h1>
-			<!-- Your closed cases -->
-			<table class="govuk-table">
-				<caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-					Your closed cases
-				</caption>
+            <!-- Your closed cases -->
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+                    Your closed cases
+                </caption>
 
-				<thead class="govuk-table__head">
-					<tr class="govuk-table__row tr__large">
-						<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-							Case ID
-						</th>
-						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-							Date created
-						</th>
-						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-							Date closed
-						</th>
-						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
-							Trust
-						</th>
-						<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
-							Contents
-						</th>
-					</tr>
-				</thead>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row tr__large">
+                        <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                            Case ID
+                        </th>
+                        <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+                            Contents
+                        </th>
+                        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
+                            Trust
+                        </th>
+                        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+                            Date created
+                        </th>
+                        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+                            Date closed
+                        </th>
+                    </tr>
+                </thead>
 
-				<tbody class="govuk-table__body">
-				@if (Model.ClosedCases.Count == 0)
-				{
-					<tr class="govuk-table__row tr__large">
-						<td class="govuk-table__cell__cases govuk-oneline-row">
-							<span>There are no cases available.</span>
-						</td>
-					</tr>
-				}
-				else
-				{
-					foreach (var closedCase in Model.ClosedCases)
-					{
-						<tr class="govuk-table__row tr__large" data-testid="row-@closedCase.CaseUrn">
-							<td class="govuk-table__cell" data-testid="case-id">
-								<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
-							</td>
-							<td class="govuk-table__cell" data-testid="created-at">
-								@closedCase.CreatedAt
-							</td>
-							<td class="govuk-table__cell" data-testid="closed-at">
-								@closedCase.ClosedAt
-							</td>
-							<td class="govuk-table__cell" data-testid="trust-name">
-								@closedCase.TrustName
-							</td>
-						
-						@if (!closedCase.ClosedConcerns.Any() && !closedCase.ClosedActionsAndDecisions.Any())
-						{
-							<td class="govuk-table__cell">
-								<span>There are no active concerns, actions or decisions.</span>
-							</td>
-						}
+                <tbody class="govuk-table__body">
+                    @if (Model.ClosedCases.Count == 0)
+                    {
+                        <tr class="govuk-table__row tr__large">
+                            <td class="govuk-table__cell__cases govuk-oneline-row">
+                                <span>There are no cases available.</span>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var closedCase in Model.ClosedCases)
+                        {
+                            <tr class="govuk-table__row tr__large" data-testid="row-@closedCase.CaseUrn">
+                                <td class="govuk-table__cell" data-testid="case-id">
+                                    <a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
+                                </td>
+                                @if (!closedCase.ClosedConcerns.Any() && !closedCase.ClosedActionsAndDecisions.Any())
+                                {
+                                    <td class="govuk-table__cell">
+                                        <span>There are no active concerns, actions or decisions.</span>
+                                    </td>
+                                }
 
-						@if (!closedCase.ClosedConcerns.Any() && closedCase.ClosedActionsAndDecisions.Any())
-						{
-							<td class="govuk-table__cell">
-								<div class="concerns-secondary-text-colour">Actions and decisions</div>
-								<ul class="govuk-list govuk-list--bullet">
-									@foreach (var action in closedCase.ClosedActionsAndDecisions)
-									{
-										<li>
-											@action
-										</li>
-									}
-								</ul>
-								@if (closedCase.IsMoreActionsAndDecisions)
-								{
-									<span>and more</span>
-								}
-							</td>
-						}
-											
-						@if (closedCase.ClosedConcerns.Any())
-						{
-							<td class="govuk-table__cell">
-								<div class="concerns-secondary-text-colour">Concerns</div>
-								<ul class="govuk-list govuk-list--bullet">
-									@foreach (var concern in closedCase.ClosedConcerns)
-									{
-										<li data-testid="concern">@concern</li>
-									}
-								</ul>
-							</td>
-						}
-						</tr>
-					}
-				}
-				</tbody>
-			</table>
+                                @if (!closedCase.ClosedConcerns.Any() && closedCase.ClosedActionsAndDecisions.Any())
+                                {
+                                    <td class="govuk-table__cell">
+                                        <div class="concerns-secondary-text-colour">Actions and decisions</div>
+                                        <ul class="govuk-list govuk-list--bullet">
+                                            @foreach (var action in closedCase.ClosedActionsAndDecisions)
+                                            {
+                                                <li>
+                                                    @action
+                                                </li>
+                                            }
+                                        </ul>
+                                        @if (closedCase.IsMoreActionsAndDecisions)
+                                        {
+                                            <span>and more</span>
+                                        }
+                                    </td>
+                                }
+
+                                @if (closedCase.ClosedConcerns.Any())
+                                {
+                                    <td class="govuk-table__cell">
+                                        <div class="concerns-secondary-text-colour">Concerns</div>
+                                        <ul class="govuk-list govuk-list--bullet">
+                                            @foreach (var concern in closedCase.ClosedConcerns)
+                                            {
+                                                <li data-testid="concern">@concern</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                }
+                                <td class="govuk-table__cell" data-testid="trust-name">
+                                    @closedCase.TrustName
+                                </td>
+                                <td class="govuk-table__cell" data-testid="created-at">
+                                    @closedCase.CreatedAt
+                                </td>
+                                <td class="govuk-table__cell" data-testid="closed-at">
+                                    @closedCase.ClosedAt
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
 
             <partial name="_Pagination" model="Model.Pagination" />
 
-		}
-	</div>
+        }
+    </div>
 </div>

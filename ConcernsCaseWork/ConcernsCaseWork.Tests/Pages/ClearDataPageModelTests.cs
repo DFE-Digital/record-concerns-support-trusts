@@ -1,10 +1,5 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Status;
-using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
-using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -26,25 +21,13 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			const string ExpectedUserIdentity = "Tester";
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
-			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
-			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(
-				mockStatusCachedService.Object,
-				mockRatingCachedService.Object,
-				mockTypeCachedService.Object,
 				mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockNTIWarningLetterReasonCachedService.Object,
-				mockNTIWarningLetterStatusesCachedService.Object,
-				mockTeamsCachedService.Object,
 				mockLogger.Object,
 				true);
 
@@ -58,37 +41,22 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(redirectResult.PageName, Is.Not.Null);
 			Assert.That(redirectResult.PageName, Is.EqualTo("home"));
 			
-			mockStatusCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockRatingCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockTypeCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockTeamsCachedService.Verify(c => c.ClearData(ExpectedUserIdentity), Times.Once);
 		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsHomePage_NotAuthenticated()
 		{
 			// arrange
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
-			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
-			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
-			var mockTeamsCachedService = new Mock<ITeamsCachedService>();
 
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
-			var pageModel = SetupClearDataModel(mockStatusCachedService.Object,
-				mockRatingCachedService.Object,
-				mockTypeCachedService.Object,
+			var pageModel = SetupClearDataModel(
                 mockUserStateCachedService.Object,
 				mockTrustCachedService.Object,
-				mockNTIWarningLetterReasonCachedService.Object,
-				mockNTIWarningLetterStatusesCachedService.Object,
-				mockTeamsCachedService.Object,
 				mockLogger.Object);
 
 			// act
@@ -101,23 +69,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(redirectResult.PageName, Is.Not.Null);
 			Assert.That(redirectResult.PageName, Is.EqualTo("home"));
 			
-			mockStatusCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockRatingCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockTypeCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockTeamsCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 		}
 		
 		private static ClearDataPageModel SetupClearDataModel(
-			IStatusCachedService mockStatusCachedService, 
-			IRatingCachedService mockRatingCachedService, 
-			ITypeCachedService mockTypeCachedService, 
 			IUserStateCachedService mockUserStateCachedService,
 			ITrustCachedService mockTrustCachedService,
-			INtiWarningLetterReasonsCachedService mockNTIWarningLetterReasonCachedService,
-			INtiWarningLetterStatusesCachedService mockNTIWarningLetterStatusesCachedService,
-			ITeamsCachedService mockTeamsCachedService,
 			ILogger<ClearDataPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
@@ -125,13 +83,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			return new ClearDataPageModel(
 				mockUserStateCachedService,
-				mockTypeCachedService,
-				mockStatusCachedService,
-				mockRatingCachedService,
 				mockTrustCachedService,
-				mockNTIWarningLetterReasonCachedService,
-				mockNTIWarningLetterStatusesCachedService,
-				mockTeamsCachedService,
 				mockLogger)
 			{
 				PageContext = pageContext,
