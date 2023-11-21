@@ -8,9 +8,25 @@
 @{
     ViewData["Title"] = "Create or view a case";
     ViewBag.LayoutModel = new LayoutModel()
-    {
-        YourCasesTabActive = true
-    };
+            {
+                YourCasesTabActive = true
+            };
+}
+
+@section BeforeMain {
+    <nav class="moj-primary-navigation" aria-label="Sub navigation">
+        <div class="govuk-extra-width-container">
+            <ul class="moj-primary-navigation__list">
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" aria-current="page" href="/"><span aria-hidden="false"></span>Create or view a case</a>
+                </li>
+
+                <li class="moj-primary-navigation__item">
+                    <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" href="/case/closed"><span aria-hidden="true"></span>Closed cases</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 }
 
 <div class="govuk-extra-width-container">
@@ -21,39 +37,23 @@
     }
     else
     {
-        <div class="govuk-!-margin-top-0">
-            <div class="govuk-tabs">
-                <nav class="moj-primary-navigation" aria-label="Sub navigation">
-                    <ul class="moj-primary-navigation__list">
-                        <li class="moj-primary-navigation__item">
-                            <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" aria-current="page" href="/"><span aria-hidden="false"></span>Create or view a case</a>
-                        </li>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                Create or view a case
+            </h1>
+        </legend>
 
-                        <li class="moj-primary-navigation__item">
-                            <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" href="/case/closed"><span aria-hidden="true"></span>Closed cases</a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    <h1 class="govuk-fieldset__heading">
-                        Create or view a case
-                    </h1>
-                </legend>
-
-                <div class="govuk-button-group">
-                    <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
-                        Create a case
-                    </a>
-                </div>
-
-                <!-- Active casework -->
-                <partial name="_CasesActive" model="Model.ActiveCases" />
-
-                <partial name="_Pagination" model="Model.Pagination" />
-
-            </div>
+        <div class="govuk-button-group">
+            <a class="govuk-button" asp-page="/case/createCase/selectTrust" role="button" data-testid="create-case-button">
+                Create a case
+            </a>
         </div>
+
+        <!-- Active casework -->
+        <partial name="_CasesActive" model="Model.ActiveCases" />
+
+        <partial name="_Pagination" model="Model.Pagination" />
+
     }
 </div>
 
