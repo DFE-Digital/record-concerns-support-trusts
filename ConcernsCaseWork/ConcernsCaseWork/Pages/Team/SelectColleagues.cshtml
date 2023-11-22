@@ -105,6 +105,9 @@
         let placeholderText = 'Enter a name or email address...';
         let multiplePlaceholderText = 'Enter another name or email address...';
 
+        let allUsers = [];
+        let selectableUsers = [];
+
         onPageMoved();
 
         function onPageMoved() {
@@ -115,22 +118,30 @@
 
                 let colleagueList = getColleagueList();
 
-                colleagueList = colleagueList.filter( c => c.toUpperCase() != colleague.toUpperCase());
+                colleagueList = colleagueList.filter( c => c.toUpperCase() !== colleague.toUpperCase());
 
                 refreshColleagues(colleagueList);
             });
         }
 
         $.get('?handler=TeamList')
-        .done((result) =>
+        .done((users) =>
         {
+            allUsers = [...users];
+            selectableUsers = [...users];
+
             accessibleAutocomplete({
                 element: autocompleteContainer,
                 id: "select-colleagues-input",
                 name: "select-colleagues",
                 defaultValue: "",
                 placeholder: placeholderText,
-                source: result,
+                source: function(query, populateResults)
+                {
+                    const searchResults = selectableUsers.filter( u => u.toUpperCase().includes(query.toUpperCase()));
+
+                    return populateResults(searchResults);
+                },
                 confirmOnBlur: false,
                 autoselect: true,
                 showNoOptonsFound: true,
@@ -177,6 +188,10 @@
                 type: 'GET',
                 success: function (response) {
                     $("#selected-colleagues-container").html(response);
+
+                    const listToCheck = colleagueList.map( c => c.toUpperCase());
+                    selectableUsers = allUsers.filter( u => !listToCheck.includes(u.toUpperCase()));
+
                     updateInputField();
                     onPageMoved();
                 },
