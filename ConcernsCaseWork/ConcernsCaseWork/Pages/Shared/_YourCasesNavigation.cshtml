@@ -1,0 +1,24 @@
+﻿@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.Enums
+@model PageNames
+
+@{
+    var createCaseAriaCurrent = Model == PageNames.Home ? "aria-current=page" : "";
+    var createCaseAriaHidden = Model == PageNames.Home ? "false" : "true";
+    var closedCasesAriaCurrent = Model == PageNames.ClosedCases ? "aria-current=page" : "";
+    var closedCasesAriaHidden = Model == PageNames.ClosedCases ? "false" : "true";
+}
+
+<nav class="moj-primary-navigation" aria-label="Sub navigation">
+    <div class="govuk-extra-width-container">
+        <ul class="moj-primary-navigation__list">
+            <li class="moj-primary-navigation__item govuk-!-margin-bottom-0">
+                <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" @createCaseAriaCurrent href="/"><span aria-hidden="@createCaseAriaHidden"></span>Create or view a case</a>
+            </li>
+
+            <li class="moj-primary-navigation__item govuk-!-margin-bottom-0">
+                <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" @closedCasesAriaCurrent href="/case/closed"><span aria-hidden="@closedCasesAriaHidden"></span>Closed cases</a>
+            </li>
+        </ul>
+    </div>
+</nav>
