@@ -1,12 +1,12 @@
 ﻿@using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.Enums
-@model PageNames
+@model PageName
 
 @{
-    var createCaseAriaCurrent = Model == PageNames.Home ? "aria-current=page" : "";
-    var createCaseAriaHidden = Model == PageNames.Home ? "false" : "true";
-    var closedCasesAriaCurrent = Model == PageNames.ClosedCases ? "aria-current=page" : "";
-    var closedCasesAriaHidden = Model == PageNames.ClosedCases ? "false" : "true";
+    var createCaseAriaCurrent = Model == PageName.Home ? "aria-current=page" : "";
+    var createCaseAriaHidden = Model == PageName.Home ? "false" : "true";
+    var closedCasesAriaCurrent = Model == PageName.ClosedCases ? "aria-current=page" : "";
+    var closedCasesAriaHidden = Model == PageName.ClosedCases ? "false" : "true";
 }
 
 <nav class="moj-primary-navigation" aria-label="Sub navigation">

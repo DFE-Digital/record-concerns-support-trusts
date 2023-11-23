@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Enums
 {
-	public enum PageNames
+	public enum PageName
 	{
 		Home = 1,
 		ClosedCases = 2
