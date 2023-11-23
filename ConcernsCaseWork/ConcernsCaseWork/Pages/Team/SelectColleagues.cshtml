@@ -1,6 +1,8 @@
 ﻿@page "/team/selectColleagues"
+@using ConcernsCaseWork.API.Contracts.Configuration
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 @model ConcernsCaseWork.Pages.Team.SelectColleaguesPageModel
 
 @{
@@ -10,58 +12,49 @@
     var errorBannerClass = string.Empty;
 
     var inputErrorClass = string.Empty;
-
-    TempData["selectedColleagues"] = (string[])Model.SelectedColleagues;
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">			
-			
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
-                <partial name="_Error"/>
+                <partial name="_Error" />
             }
             else
             {
                 <form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
                     <div class="govuk-form-group">
 
-                            @{
-                                if (Model.IsSelectTeamCaseWorkRedesignEnabled)
-                                {
-                                    <h1 class="govuk-heading-l">Select Case owners</h1>
-                                    <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
+                        @{
+                            <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
+                                <h1 class="govuk-heading-l">Select Case owners</h1>
+                                <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
 
-                                    <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
-                                       
-                                        @* <partial name="Components/_ValidationErrorDetail" model="@errors" /> *@
+                                <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
+                                    <label for="case-owner-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                                    <div id="autocomplete-container" class="@inputErrorClass"></div>
+                                </div>
 
-                                        <label for="case-owner-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
-                                        <div id="autocomplete-container" class="@inputErrorClass"></div>
-
-                                        <input type="hidden" id="selected-colleagues" name="SelectedColleagues" value="@Model.SelectedColleagues" />
-                                    </div>
-
-                                    <div id="selected-colleagues-container">
-                                        <partial name="_SelectedColleagues" model="Model.SelectedColleagues" />
-                                    </div>
-                                }
-                                else
-                                {
+                                <div id="selected-colleagues-container">
+                                    <partial name="_SelectedColleagues" model="Model.SelectedColleagues" />
+                                </div>
+                            </feature>
+                            <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
                                 <h1 class="govuk-heading-l">Select Colleagues to Show in Team Casework</h1>
 
-                                    <fieldset class="govuk-fieldset" aria-describedby="user-hint">
-                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                            <h1 class="govuk-fieldset__heading">
-                                                Colleagues
-                                            </h1>
-                                        </legend>
-                                        <div id="user-hint" class="govuk-hint">
-                                            Select which colleagues you wish to see casework for.
-                                        </div>
+                                <fieldset class="govuk-fieldset" aria-describedby="user-hint">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                        <h1 class="govuk-fieldset__heading">
+                                            Colleagues
+                                        </h1>
+                                    </legend>
+                                    <div id="user-hint" class="govuk-hint">
+                                        Select which colleagues you wish to see casework for.
+                                    </div>
 
                                     <h1 class="govuk-heading-l">
                                         Change case owner
@@ -87,9 +80,9 @@
                                             idUser++;
                                         }
                                     </div>
-                                    </fieldset>
-                                }
-                            }
+                                </fieldset>
+                            </feature>
+                        }
                     </div>
 
                     <!--Button group-->
@@ -99,19 +92,21 @@
                         </button>
                         <partial name="_Cancel" />
                     </div>
-                </form>            
-            }			
-		</div>
-	</div>
+                </form>
+            }
+        </div>
+    </div>
 </div>
 
 <script type="application/javascript" nonce="@nonce">
     $(document).ready(function () {
         let autocompleteContainer = document.getElementById('autocomplete-container');
-        let results = null;
 
         let placeholderText = 'Enter a name or email address...';
         let multiplePlaceholderText = 'Enter another name or email address...';
+
+        let allUsers = [];
+        let selectableUsers = [];
 
         onPageMoved();
 
@@ -119,33 +114,59 @@
             $('.user-remove').click(function (e){
                 e.preventDefault();
 
-                let colleague = $(this).attr('data-value');
+                const colleague = $(this).attr('data-value');
 
-                editColleagues('RemoveColleague', colleague);
+                let colleagueList = getColleagueList();
+
+                colleagueList = colleagueList.filter( c => c.toUpperCase() !== colleague.toUpperCase());
+
+                refreshColleagues(colleagueList);
             });
         }
 
         $.get('?handler=TeamList')
-        .done((result) =>
+        .done((users) =>
         {
+            allUsers = [...users];
+            selectableUsers = [...users];
+
             accessibleAutocomplete({
                 element: autocompleteContainer,
                 id: "select-colleagues-input",
                 name: "select-colleagues",
                 defaultValue: "",
                 placeholder: placeholderText,
-                source: result,
+                source: function(query, populateResults)
+                {
+                    const searchResults = selectableUsers.filter( u => u.toUpperCase().includes(query.toUpperCase()));
+
+                    return populateResults(searchResults);
+                },
                 confirmOnBlur: false,
                 autoselect: true,
                 showNoOptonsFound: true,
                 onConfirm: (selected) => {
-                    editColleagues('SelectColleague', selected)
+                    const colleagueList = getColleagueList();
 
-                    results = result;
+                    colleagueList.push(selected);
+
+                    refreshColleagues(colleagueList);
                 }
             });
-
         });
+
+        function getColleagueList() {
+            const currentColleagues = $('input[name="SelectedColleagues"]');
+
+            const colleagueList = [];
+
+            currentColleagues.each(function(index, element) {
+                colleagueList.push($(element).val())
+                var value = $(element).val();
+            });
+
+            return colleagueList;
+        }
 
         function updateInputField() {
 
@@ -158,16 +179,26 @@
             colleaguesInput.attr("placeholder", numOfColleagues > 0 ? multiplePlaceholderText : placeholderText);
         }
 
-        function editColleagues(handler, colleague) {
+        function refreshColleagues(colleagueList) {
 
-            const url = '/team/selectcolleagues?handler=' + handler + '&colleague=' + colleague;
+            const url = '/team/selectcolleagues?handler=BuildColleagueTable&data=' + colleagueList.join(',');
 
-            $.get(url)
-                .done(function (response) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
                     $("#selected-colleagues-container").html(response);
+
+                    const listToCheck = colleagueList.map( c => c.toUpperCase());
+                    selectableUsers = allUsers.filter( u => !listToCheck.includes(u.toUpperCase()));
+
                     updateInputField();
                     onPageMoved();
-                }); 
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
         }
     });
 </script>

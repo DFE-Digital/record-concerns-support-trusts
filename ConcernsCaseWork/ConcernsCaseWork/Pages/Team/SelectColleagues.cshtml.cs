@@ -1,6 +1,4 @@
-﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Configuration;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +20,9 @@ namespace ConcernsCaseWork.Pages.Team
 		private readonly ITeamsModelService _teamsService;
 		private readonly IFeatureManager _featureManager;
 
-		public bool IsSelectTeamCaseWorkRedesignEnabled { get; set; }
-
 		[BindProperty]
-		public IList<string> SelectedColleagues { get; set; }
-		public string[] Users { get; set; }
+		public IList<string> SelectedColleagues { get; set; } = new List<string>();
+		public string[] Users { get; set; } = Array.Empty<string>();
 
 		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager)
 		{
@@ -45,9 +41,11 @@ namespace ConcernsCaseWork.Pages.Team
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				throw;
 			}
+
 			return Page();
 		}
 
@@ -57,61 +55,32 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				_logger.LogMethodEntered();
 
-				var isSelectTeamCaseWorkRedesignEnabled = await _featureManager.IsEnabledAsync(nameof(FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled));
-
-				if (isSelectTeamCaseWorkRedesignEnabled)
-				{
-					SelectedColleagues = RetrieveColleagueList();
-				}
-
-				Guard.Against.Null(SelectedColleagues);
 				await _teamsService.UpdateCaseworkTeam(new Models.Teams.ConcernsTeamCaseworkModel(_CurrentUserName, SelectedColleagues.ToArray()));
-				TempData["selectedColleagues"] = null;
 				return Redirect("/TeamCasework");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 
-				await LoadPage();
-				return Page();
+				throw;
 			}
 		}
 
 		private async Task LoadPage()
 		{
-			IsSelectTeamCaseWorkRedesignEnabled = await _featureManager.IsEnabledAsync(nameof(FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled));
-
-			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
+			if (string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
-				try
-				{
-					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-					var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
-
-					await Task.WhenAll(teamMembers, users);
-
-					SelectedColleagues = teamMembers.Result.TeamMembers;
-					Users = users.Result.ToArray();
-				}
-				catch (AggregateException aggregateException)
-				{
-					foreach (var ex in aggregateException.InnerExceptions)
-					{
-						_logger.LogErrorMsg(ex);
-					}
-				}
-				catch (Exception ex)
-				{
-					_logger.LogErrorMsg(ex);
-				}
+				return;
 			}
-			else
-			{
-				SelectedColleagues = new List<string>();
-				Users = Array.Empty<string>();
-			}
+
+			var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
+			var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
+
+			await Task.WhenAll(teamMembers, users);
+
+			SelectedColleagues = teamMembers.Result.TeamMembers;
+			Users = users.Result.ToArray();
 		}
 
 		public async Task<ActionResult> OnGetTeamList()
@@ -120,15 +89,9 @@ namespace ConcernsCaseWork.Pages.Team
 
 			try
 			{
-				var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-				var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
+				var users = await _teamsService.GetTeamOwners(excludes: _CurrentUserName);
 
-				await Task.WhenAll(teamMembers, users);
-
-				// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
-				// Get users from somewhere, possibly the rbacManager
-				//SelectedColleagues = teamMembers.Result.TeamMembers;
-				Users = users.Result.ToArray();
+				Users = users.ToArray();
 
 				return new JsonResult(Users);
 			}
@@ -139,40 +102,18 @@ namespace ConcernsCaseWork.Pages.Team
 			}
 		}
 
-		public async Task<IActionResult> OnGetSelectColleague(string colleague)
+		public IActionResult OnGetBuildColleagueTable(string data)
 		{
-			var colleagues = RetrieveColleagueList();
+			var colleagueList = new List<string>();
 
-			colleagues.Add(colleague);
+			if (!string.IsNullOrEmpty(data))
+			{
+				colleagueList = data.Split(",").ToList();
+			}
 
-			return UpdateColleagueList(colleagues.ToArray());
+			return Partial("_SelectedColleagues", colleagueList);
 		}
 
-		public async Task<IActionResult> OnGetRemoveColleague(string colleague)
-		{
-			var colleagues = RetrieveColleagueList();
-
-			colleagues.Remove(colleague);
-
-			return UpdateColleagueList(colleagues.ToArray());
-		}
-
-		private List<string> RetrieveColleagueList()
-		{
-			var t = TempData["selectedColleagues"];
-			var colleagues = (string[])TempData["selectedColleagues"] ?? Array.Empty<string>();
-
-			return colleagues.ToList();
-		}
-
-		private ActionResult UpdateColleagueList(string[] colleagues)
-		{
-			TempData["selectedColleagues"] = colleagues;
-			SelectedColleagues = colleagues;
-
-			return Partial("_SelectedColleagues", colleagues);
-		}
-
-		private string _CurrentUserName { get => this.User.Identity.Name; }
+		private string _CurrentUserName { get => User.Identity.Name; }
 	}
 }
