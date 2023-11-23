@@ -1,5 +1,6 @@
 ﻿@page
 @using ConcernsCaseWork.API.Contracts.Configuration;
+@using ConcernsCaseWork.Enums
 @using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.HomePageModel
@@ -13,20 +14,9 @@
             };
 }
 
-@section BeforeMain {
-    <nav class="moj-primary-navigation" aria-label="Sub navigation">
-        <div class="govuk-extra-width-container">
-            <ul class="moj-primary-navigation__list">
-                <li class="moj-primary-navigation__item">
-                    <a data-testid="create-or-view-case-tab" class="moj-primary-navigation__link" aria-current="page" href="/"><span aria-hidden="false"></span>Create or view a case</a>
-                </li>
-
-                <li class="moj-primary-navigation__item">
-                    <a data-testid="closed-cases-tab" class="moj-primary-navigation__link" href="/case/closed"><span aria-hidden="true"></span>Closed cases</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+@section BeforeMain 
+{
+    <partial name="_YourCasesNavigation" model="PageName.Home" />
 }
 
 <div class="govuk-extra-width-container">
