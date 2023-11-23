@@ -82,19 +82,16 @@ namespace ConcernsCaseWork.Service.Trusts
 				}
 
 				var isV4Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
-				var endpointVersion = isV4Enabled ? EndpointV4 : EndpointV3;
-
-				var endpoint = $"/{endpointVersion}/trust/{ukPrn}";
 
 				TrustDetailsDto result = null;
 
 				if (isV4Enabled)
 				{
-					result = await GetTrustByUkPrnV4(endpoint);
+					result = await GetTrustByUkPrnV4(ukPrn);
 				}
 				else
 				{
-					result = await GetTrustByUkPrnV3(endpoint);
+					result = await GetTrustByUkPrnV3(ukPrn);
 				}
 
 				return result;
@@ -123,9 +120,9 @@ namespace ConcernsCaseWork.Service.Trusts
 			return result;
 		}
 
-		private async Task<TrustDetailsDto> GetTrustByUkPrnV3(string endpoint)
+		private async Task<TrustDetailsDto> GetTrustByUkPrnV3(string ukPrn)
 		{
-			var response = await PerformGet<ApiWrapper<TrustDetailsV3Dto>>(endpoint);
+			var response = await PerformGet<ApiWrapper<TrustDetailsV3Dto>>($"/{EndpointV3}/trust/{ukPrn}");
 
 			var result = new TrustDetailsDto()
 			{
@@ -139,18 +136,26 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<TrustDetailsDto> GetTrustByUkPrnV4(string ukPrn)
 		{
-			var trustDetailsResponse = await PerformGet<ApiWrapper<TrustDetailsV4Dto>>($"/{EndpointV4}/trust/{ukPrn}");
+			var trustDetailsResponse = await PerformGet<TrustDetailsV4Dto>($"/{EndpointV4}/trust/{ukPrn}");
 
 			var result = new TrustDetailsDto()
 			{
 				IfdData = new(),
 				GiasData = new()
 				{
-					GroupName = trustDetailsResponse.Data.Name,
-					UkPrn = trustDetailsResponse.Data.Ukprn,
-					CompaniesHouseNumber = trustDetailsResponse.Data.CompaniesHouseNumber,
-					GroupContactAddress = trustDetailsResponse.Data.Address,
-					GroupType = trustDetailsResponse.Data.Type?.Name
+					GroupName = trustDetailsResponse.Name,
+					UkPrn = trustDetailsResponse.Ukprn,
+					CompaniesHouseNumber = trustDetailsResponse.CompaniesHouseNumber,
+					GroupContactAddress = new GroupContactAddressDto()
+					{
+						Street = trustDetailsResponse.Address?.Street,
+						Locality = trustDetailsResponse.Address?.AdditionalLine,
+						Town = trustDetailsResponse.Address?.Town,
+						County = trustDetailsResponse.Address?.County,
+						Postcode = trustDetailsResponse.Address?.Postcode,
+					},
+					GroupType = trustDetailsResponse.Type?.Name,
+					GroupId = trustDetailsResponse.ReferenceNumber
 				},
 			};
 
@@ -161,7 +166,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<List<EstablishmentDto>> GetEstablishments(string ukPrn)
 		{
-			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/v4/establishments/trust/{ukPrn}");
+			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/v4/establishments/trust?trustUkprn={ukPrn}");
 
 			var result = establishmentResponse.Select(e =>
 			{
@@ -176,7 +181,8 @@ namespace ConcernsCaseWork.Service.Trusts
 					EstablishmentType = e.EstablishmentType,
 					Census = e.Census,
 					SchoolWebsite = e.SchoolWebsite,
-					SchoolCapacity = e.SchoolCapacity
+					SchoolCapacity = e.SchoolCapacity,
+					LocalAuthorityName = e.LocalAuthorityName,
 				};
 			}).ToList();
 

@@ -8,7 +8,7 @@
 
 		public string CompaniesHouseNumber { get; set; }
 
-		public GroupContactAddressDto Address { get; set; }
+		public GroupContactAddressV4Dto Address { get; set; }
 
 		public GroupType Type { get; set; }
 
