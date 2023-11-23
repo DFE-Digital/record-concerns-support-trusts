@@ -1,10 +1,12 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
+using System.Net;
 using System.Web;
 
 namespace ConcernsCaseWork.Service.Trusts
@@ -17,6 +19,7 @@ namespace ConcernsCaseWork.Service.Trusts
 		private readonly ICityTechnologyCollegeService _cityTechnologyCollegeService;
 
 		private const string EndpointV3 = "v3";
+		private const string EndpointV4 = "v4";
 
 		public TrustService(
 			IHttpClientFactory clientFactory,
@@ -24,16 +27,19 @@ namespace ConcernsCaseWork.Service.Trusts
 			ICorrelationContext correlationContext,
 			IClientUserInfoService userInfoService,
 			IFakeTrustService fakeTrustService,
-			ICityTechnologyCollegeService cityTechnologyCollegeService) : base(clientFactory, logger, correlationContext, userInfoService)
+			ICityTechnologyCollegeService cityTechnologyCollegeService,
+			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 			_fakeTrustService = fakeTrustService;
 			_cityTechnologyCollegeService = cityTechnologyCollegeService;
+			_featureManager = featureManager;
 		}
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
 			var queryParams = HttpUtility.ParseQueryString(string.Empty);
+
 			if (!string.IsNullOrEmpty(trustSearch.GroupName))
 			{
 				queryParams.Add("groupName", trustSearch.GroupName);
@@ -46,6 +52,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			{
 				queryParams.Add("companiesHouseNumber", trustSearch.CompaniesHouseNumber);
 			}
+
 			queryParams.Add("page", trustSearch.Page.ToString());
 			queryParams.Add("count", maxRecordsPerPage.ToString());
 			queryParams.Add("includeEstablishments", false.ToString());
@@ -74,30 +81,106 @@ namespace ConcernsCaseWork.Service.Trusts
 					return cityTechnologyCollege;
 				}
 
-				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointV3}/trust/{ukPrn}");
+				var isV4Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
+				var endpointVersion = isV4Enabled ? EndpointV4 : EndpointV3;
 
-				// Create http client
-				var client = CreateHttpClient();
+				var endpoint = $"/{endpointVersion}/trust/{ukPrn}";
 
-				// Execute request
-				var response = await client.SendAsync(request);
+				TrustDetailsDto result = null;
 
-				// Check status code
-				response.EnsureSuccessStatusCode();
+				if (isV4Enabled)
+				{
+					result = await GetTrustByUkPrnV4(endpoint);
+				}
+				else
+				{
+					result = await GetTrustByUkPrnV3(endpoint);
+				}
 
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				var apiWrapperTrustDetails = ProcessSearchByUkPrnResponse(content);
-
-				return apiWrapperTrustDetails;
+				return result;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
+		}
+
+		private async Task<TResponse> PerformGet<TResponse>(string endpoint)
+		{
+			var client = CreateHttpClient();
+
+			using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+			var response = await client.SendAsync(request);
+
+			response.EnsureSuccessStatusCode();
+
+			var content = await response.Content.ReadAsStringAsync();
+
+			var result = JsonConvert.DeserializeObject<TResponse>(content);
+
+			return result;
+		}
+
+		private async Task<TrustDetailsDto> GetTrustByUkPrnV3(string endpoint)
+		{
+			var response = await PerformGet<ApiWrapper<TrustDetailsV3Dto>>(endpoint);
+
+			var result = new TrustDetailsDto()
+			{
+				IfdData = response.Data.TrustData,
+				Establishments = response.Data.Establishments,
+				GiasData = response.Data.GiasData
+			};
+
+			return result;
+		}
+
+		private async Task<TrustDetailsDto> GetTrustByUkPrnV4(string ukPrn)
+		{
+			var trustDetailsResponse = await PerformGet<ApiWrapper<TrustDetailsV4Dto>>($"/{EndpointV4}/trust/{ukPrn}");
+
+			var result = new TrustDetailsDto()
+			{
+				IfdData = new(),
+				GiasData = new()
+				{
+					GroupName = trustDetailsResponse.Data.Name,
+					UkPrn = trustDetailsResponse.Data.Ukprn,
+					CompaniesHouseNumber = trustDetailsResponse.Data.CompaniesHouseNumber,
+					GroupContactAddress = trustDetailsResponse.Data.Address,
+					GroupType = trustDetailsResponse.Data.Type?.Name
+				},
+			};
+
+			result.Establishments = await GetEstablishments(ukPrn);
+
+			return result;
+		}
+
+		private async Task<List<EstablishmentDto>> GetEstablishments(string ukPrn)
+		{
+			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/v4/establishments/trust/{ukPrn}");
+
+			var result = establishmentResponse.Select(e =>
+			{
+				return new EstablishmentDto()
+				{
+					Urn = e.Urn,
+					EstablishmentNumber = e.EstablishmentNumber,
+					EstablishmentName = e.EstablishmentName,
+					HeadteacherTitle = e.HeadteacherTitle,
+					HeadteacherFirstName = e.HeadteacherFirstName,
+					HeadteacherLastName = e.HeadteacherLastName,
+					EstablishmentType = e.EstablishmentType,
+					Census = e.Census,
+					SchoolWebsite = e.SchoolWebsite,
+					SchoolCapacity = e.SchoolCapacity
+				};
+			}).ToList();
+
+			return result;
 		}
 
 		private async Task<TrustDetailsDto> CheckForCTCByUKPRN(string ukPrn)
@@ -121,19 +204,6 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 
 			return cityTechnologyCollege;
-		}
-
-		private static TrustDetailsDto ProcessSearchByUkPrnResponse(string content)
-		{
-			var v3Response = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsV3Dto>>(content);
-			var v2Response = new TrustDetailsDto()
-			{
-				IfdData = v3Response.Data.TrustData,
-				Establishments = v3Response.Data.Establishments,
-				GiasData = v3Response.Data.GiasData
-			};
-
-			return v2Response;
 		}
 
 		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
@@ -160,9 +230,22 @@ namespace ConcernsCaseWork.Service.Trusts
 					maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
 				}
 
+				var isV4Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
+				var endpointVersion = isV4Enabled ? EndpointV4 : EndpointV3;
+
 				// Create a request
-				var endpoint = $"/{EndpointV3}/trusts?{BuildRequestUri(trustSearch, maxResultsFromApi)}";
-				var response = await GetByPagination<TrustSearchDto>(endpoint);
+				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxResultsFromApi)}";
+
+				ApiListWrapper<TrustSearchDto> response = null;
+
+				if (isV4Enabled)
+				{
+					response = await SearchV4(endpoint);
+				}
+				else
+				{
+					response = await GetByPagination<TrustSearchDto>(endpoint);
+				}
 
 				//Combine the results of Trusts and CTC Searches
 				List<TrustSearchDto> combinedMatches = new List<TrustSearchDto>();
@@ -183,6 +266,30 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				throw;
 			}
+		}
+
+		private async Task<ApiListWrapper<TrustSearchDto>> SearchV4(string endpoint)
+		{
+			var response = await GetByPagination<TrustSearchV4Dto>(endpoint);
+
+			var result = new ApiListWrapper<TrustSearchDto>()
+			{
+				Data = response.Data.Select(t =>
+				{
+					return new TrustSearchDto()
+					{
+						Urn = t.Urn,
+						UkPrn = t.UkPrn,
+						GroupName = t.GroupName,
+						CompaniesHouseNumber = t.CompaniesHouseNumber,
+						GroupContactAddress = t.GroupContactAddress,
+						TrustType = t.TrustType
+					};
+				}).ToList(),
+				Paging = response.Paging
+			};
+
+			return result;
 		}
 
 		private async Task<TrustSearchResponseDto> SearchCtcs(string groupName)
