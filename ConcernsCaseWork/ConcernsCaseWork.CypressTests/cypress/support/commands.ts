@@ -50,7 +50,6 @@ Cypress.Commands.add("loginWithCredentials", () => {
 	cy.visit("/");
 });
 
-//This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
 Cypress.Commands.add("excuteAccessibilityTests", () => {
 	Logger.Log("Executing the command");
 	const continueOnFail = false;
