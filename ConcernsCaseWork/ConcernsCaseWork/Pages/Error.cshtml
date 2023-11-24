@@ -1,18 +1,64 @@
-﻿@page
-@model ConcernsCaseWork.Pages.ErrorPageModel
+﻿@page "/Error"
+@using NetEscapades.AspNetCore.SecurityHeaders
 @{
-    ViewData["Title"] = "Error";
+    var nonce = HttpContext.GetNonce();
+
+    @* supports details either as a string or a collection of strings *@
+    var errorDetails = GetErrorDetails();
 }
 
 <div class="govuk-width-container">
-	<h1 class="text-danger">Sorry, there is a problem with the service</h1>
-	<p class="govuk-body">Try again later.</p>
-	<p class="govuk-body text-danger">An error occurred while processing your request.</p>
-
-	@if (Model.ShowRequestId)
-	{
-		<p>
-			<strong>Request ID:</strong> <code>@Model.RequestId</code>
-		</p>
-	}
+    <div class="govuk-grid-row">
+        <div id="moj-banner-error" class="govuk-!-display-none">
+            <div class="moj-banner__message">
+                <span class="moj-banner__assistive">Warning</span>
+                <h1>
+                    Sorry, there is a problem with the service
+                </h1>
+            </div>
+        </div>
+        <div class="govuk-heading-l moj-banner__message">
+            <p style="white-space: pre-line" class="govuk-body">@TempData["Error.Message"]</p>
+            @if (errorDetails?.Count() > 0)
+            {
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">Error details</h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        @foreach (var detail in errorDetails)
+                        {
+                            <li>
+                                <span class="govuk-error-message">@detail</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+<script type="application/javascript" nonce="@nonce">
+    $(function () {
+        showGlobalError();
+    });
+</script>
+
+@functions
+{
+    private IEnumerable<string> GetErrorDetails()
+    {
+        var tempData = TempData["Error.Details"];
+        if (tempData is IEnumerable<string>)
+        {
+            return tempData as IEnumerable<string>;
+        }
+        else if (tempData is string)
+        {
+            return new string[] { tempData as string };
+        }
+        else
+        {
+            return Enumerable.Empty<string>();
+        }
+    }
+}
