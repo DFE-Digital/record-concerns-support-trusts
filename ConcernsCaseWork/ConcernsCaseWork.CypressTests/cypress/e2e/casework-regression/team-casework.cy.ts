@@ -64,11 +64,10 @@ describe("Team casework tests", () => {
                 .selectTeamMember(name);
 
             Logger.Log("Ensure that the case for the user is displayed");
-			caseworkTable
-				.getRowByCaseId(caseId)
-				.then(row =>
-				{
-					row
+            caseworkTable
+                .getRowByCaseId(caseId)
+                .then(row => {
+                    row
                         .hasCaseId(caseId)
                         .hasConcern("Financial compliance")
                         .hasRiskToTrust("Amber")
@@ -77,139 +76,163 @@ describe("Team casework tests", () => {
                         .hasTrust("Westfield Academy")
                         .hasLastUpdatedDate(toDisplayDate(now))
                         .hasOwner(name);
-				});
+                });
 
 
             Logger.Log("Checking accessibility on team casework");
             cy.excuteAccessibilityTests();
 
             Logger.Log("Ensuring no cases are displayed when there are no selected colleagues");
-            teamCaseworkPage.removeAddedColleagues();
+
+            // Remove colleagues
+            cy.wrap(null).then(() => {
+                teamCaseworkPage.removeAddedColleagues();
+            });
+
+            // Ensure colleagues are removed before saving changes
             teamCaseworkPage.savingChanges();
+
+            // Assert that there are no cases after saving changes
             teamCaseworkPage.hasNoCases();
+
+            Logger.Log("Checking search functionality on team casework");
+
+            cy.visit("/");
+            homePage.viewOtherCases();
+            homePage.selectColleagues();
+            teamCaseworkPage.selectTeamMember(name);
+            homePage.selectColleagues();
+            teamCaseworkPage.selectTeamMemberForSearchFieldTest(name);
+            // Verify that the "No results found" message appears
+            teamCaseworkPage.hasNoResultsFound;
+            // Remove the selected team member
+            teamCaseworkPage.removeSearchColleaguesTest();
+            teamCaseworkPage.teamMemberIsNotDisplayed(name);
+
         });
-    });
 
-    describe("When we have many open cases", () => {
-        const otherTeamMemberOne: string = "Automation.TeamMember1@noemail.com";
-        const otherTeamMemberTwo: string = "Automation.TeamMember2@noemail.com";
 
-        beforeEach(() => {
-            cy.login();
+        describe("When we have many open cases", () => {
+            const otherTeamMemberOne: string = "Automation.TeamMember1@noemail.com";
+            const otherTeamMemberTwo: string = "Automation.TeamMember2@noemail.com";
 
-            const ownerid = Cypress.env(EnvUsername);
+            beforeEach(() => {
+                cy.login();
 
-            //Check we have a team
-            caseApi.getTeamByTeam(ownerid)
-                .then((response) => {
-                    const s = response.data;
-                    if (s.teamMembers.length === 0) {
-                        let req: PutTeamRequest =
-                        {
-                            OwnerID: ownerid,
-                            TeamMembers: [otherTeamMemberOne, otherTeamMemberTwo]
-                        };
-                        caseApi.put(ownerid, req)
-                            .then(() => { });
-                    } else {
-                        if (!s.teamMembers.includes(otherTeamMemberOne)) {
+                const ownerid = Cypress.env(EnvUsername);
+
+                //Check we have a team
+                caseApi.getTeamByTeam(ownerid)
+                    .then((response) => {
+                        const s = response.data;
+                        if (s.teamMembers.length === 0) {
                             let req: PutTeamRequest =
                             {
                                 OwnerID: ownerid,
-                                TeamMembers: [otherTeamMemberOne]
+                                TeamMembers: [otherTeamMemberOne, otherTeamMemberTwo]
                             };
                             caseApi.put(ownerid, req)
                                 .then(() => { });
+                        } else {
+                            if (!s.teamMembers.includes(otherTeamMemberOne)) {
+                                let req: PutTeamRequest =
+                                {
+                                    OwnerID: ownerid,
+                                    TeamMembers: [otherTeamMemberOne]
+                                };
+                                caseApi.put(ownerid, req)
+                                    .then(() => { });
+                            }
                         }
-                    }
-                });
+                    });
 
-            // Ensure we have enough cases for the owner
-            caseApi.getOpenCasesForTeamByOwner(Cypress.env(EnvUsername))
-                .then((response) => {
-                    const currentCases = response.paging.recordCount;
-                    const casesToCreate = 15 - currentCases;
+                // Ensure we have enough cases for the owner
+                caseApi.getOpenCasesForTeamByOwner(Cypress.env(EnvUsername))
+                    .then((response) => {
+                        const currentCases = response.paging.recordCount;
+                        const casesToCreate = 15 - currentCases;
 
-                    if (casesToCreate > 0) {
-                        const cases = CaseBuilder.bulkCreateOpenCasesWithOwner(casesToCreate, otherTeamMemberOne);
+                        if (casesToCreate > 0) {
+                            const cases = CaseBuilder.bulkCreateOpenCasesWithOwner(casesToCreate, otherTeamMemberOne);
 
-                        cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
-                            caseApi.post(request)
-                                .then(() => { });
-                        });
+                            cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
+                                caseApi.post(request)
+                                    .then(() => { });
+                            });
 
-                        // Wait 1ms per case created
-                        // Each case is created one 1ms apart so that we don't break the table constraint
-                        // Max will be 15ms
-                        cy.wait(casesToCreate);
+                            // Wait 1ms per case created
+                            // Each case is created one 1ms apart so that we don't break the table constraint
+                            // Max will be 15ms
+                            cy.wait(casesToCreate);
 
-                        cy.reload();
-                    }
-                });
+                            cy.reload();
+                        }
+                    });
+            });
+
+            it("Should display them in separate pages with 5 items per page and we should be able to move between them", () => {
+                cy.visit("/TeamCasework");
+                let pageOneCases: Array<string> = [];
+                let pageTwoCases: Array<string> = [];
+
+                caseworkTable
+                    .getOpenCaseIds()
+                    .then((caseIds: Array<string>) => {
+                        pageOneCases = caseIds;
+
+                        Logger.Log("Ensure we have 5 cases on page one");
+                        expect(pageOneCases.length).to.eq(5);
+
+                        Logger.Log("Moving to the second page using the direct link");
+                        paginationComponent.goToPage("2");
+                        return caseworkTable.getOpenCaseIds();
+                    })
+                    .then((caseIds: Array<string>) => {
+                        pageTwoCases = caseIds;
+
+                        Logger.Log("Ensure we have 5 cases on page 2");
+                        expect(pageTwoCases.length).to.equal(5);
+
+                        Logger.Log("Ensure that the cases on page one and two are different");
+                        hasNoSimilarElements(pageOneCases, pageTwoCases);
+
+                        Logger.Log("Move to the previous page, which is page 1");
+                        paginationComponent.previous();
+                        return caseworkTable.getOpenCaseIds();
+                    })
+                    .then((caseIds: Array<string>) => {
+                        Logger.Log("On moving to page one, we should get the exact same cases");
+                        expect(caseIds).to.deep.equal(pageOneCases);
+
+                        Logger.Log("Move to the next page, which is page 2");
+                        paginationComponent.next();
+                        return caseworkTable.getOpenCaseIds();
+                    })
+                    .then((caseIds: Array<string>) => {
+                        Logger.Log("On moving to page two, we should get the exact same cases");
+                        expect(caseIds).to.deep.equal(pageTwoCases);
+
+                        // We had relative instead of absolute path links so it didn't work when pagination was added
+                        Logger.Log("Ensure the case loads when clicking the link");
+                        const caseIdToView = caseIds[0];
+                        caseworkTable.getRowByCaseId(caseIdToView)
+                            .then((row) => {
+                                row.select();
+                                caseMangementPage.getCaseIDText();
+                            })
+                            .then(managementCaseId => {
+                                expect(caseIdToView).to.equal(managementCaseId);
+                            });
+                    });
+            });
         });
 
-        it("Should display them in separate pages with 5 items per page and we should be able to move between them", () => {
-            cy.visit("/TeamCasework");
-            let pageOneCases: Array<string> = [];
-            let pageTwoCases: Array<string> = [];
+        function hasNoSimilarElements(first: Array<string>, second: Array<string>) {
+            var firstSet = new Set(first);
 
-            caseworkTable
-                .getOpenCaseIds()
-                .then((caseIds: Array<string>) => {
-                    pageOneCases = caseIds;
+            const match = second.some(e => firstSet.has(e));
 
-                    Logger.Log("Ensure we have 5 cases on page one");
-                    expect(pageOneCases.length).to.eq(5);
-
-                    Logger.Log("Moving to the second page using the direct link");
-                    paginationComponent.goToPage("2");
-                    return caseworkTable.getOpenCaseIds();
-                })
-                .then((caseIds: Array<string>) => {
-                    pageTwoCases = caseIds;
-
-                    Logger.Log("Ensure we have 5 cases on page 2");
-                    expect(pageTwoCases.length).to.equal(5);
-
-                    Logger.Log("Ensure that the cases on page one and two are different");
-                    hasNoSimilarElements(pageOneCases, pageTwoCases);
-
-                    Logger.Log("Move to the previous page, which is page 1");
-                    paginationComponent.previous();
-                    return caseworkTable.getOpenCaseIds();
-                })
-                .then((caseIds: Array<string>) => {
-                    Logger.Log("On moving to page one, we should get the exact same cases");
-                    expect(caseIds).to.deep.equal(pageOneCases);
-
-                    Logger.Log("Move to the next page, which is page 2");
-                    paginationComponent.next();
-                    return caseworkTable.getOpenCaseIds();
-                })
-                .then((caseIds: Array<string>) => {
-                    Logger.Log("On moving to page two, we should get the exact same cases");
-                    expect(caseIds).to.deep.equal(pageTwoCases);
-
-                    // We had relative instead of absolute path links so it didn't work when pagination was added
-                    Logger.Log("Ensure the case loads when clicking the link");
-                    const caseIdToView = caseIds[0];
-                    caseworkTable.getRowByCaseId(caseIdToView)
-                        .then((row) => {
-                            row.select();
-                            caseMangementPage.getCaseIDText();
-                        })
-                        .then(managementCaseId => {
-                            expect(caseIdToView).to.equal(managementCaseId);
-                        });
-                });
-        });
+            expect(match).to.be.false;
+        }
     });
-
-    function hasNoSimilarElements(first: Array<string>, second: Array<string>) {
-        var firstSet = new Set(first);
-
-        const match = second.some(e => firstSet.has(e));
-
-        expect(match).to.be.false;
-    }
 });
