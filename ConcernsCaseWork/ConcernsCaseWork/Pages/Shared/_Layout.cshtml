@@ -101,17 +101,23 @@
                 </a>
             </div>
 
-            @if (Context.User.Identity.IsAuthenticated)
-            {
-                <div class="dfe-header__content" id="content-header">
+            <div class="dfe-header__content" id="content-header">
+                <div class="dfe-header__menu">
+                    <button class="dfe-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</button>
+                </div>
+
+                @if (Context.User.Identity.IsAuthenticated)
+                {
+
                     <ul class="dfe-header__action-links">
                         <p class="govuk-body">
                             <a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
                         </p>
                     </ul>
-                </div>
-            }
-            
+                }
+
+            </div>
+
         </div>
         <nav class="dfe-header__navigation" id="header-navigation" role="navigation" aria-label="Primary navigation" aria-labelledby="label-navigation">
             <div class="dfe-width-container">
@@ -215,6 +221,7 @@
         </div>
     </footer>
     <script src="~/dist/main.js" nonce="@nonce"></script>
+    <script src="~/dist/dfefrontend/dfefrontend.js" nonce="@nonce"></script>
     <script src="~/dist/autocomplete/accessible-autocomplete.min.js" nonce="@nonce"></script>
 </body>
 </html>
