@@ -6,7 +6,7 @@ class TeamCaseworkPage {
         cy.get('#select-colleagues-input').type(name);
         cy.get("#select-colleagues-input__option--0").click();
         cy.getById("selected-colleagues")
-            .find(`[data-testid='row-${name}']`);
+            .find(`[data-testid='row-${name.toLowerCase()}']`);
         cy.get('[data-testid="save"]').click();
 
         return this;

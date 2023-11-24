@@ -39,7 +39,7 @@
                     {
                         var name = @colleague.FromEmailToFullName();
 
-                        <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-@name">
+                        <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-@name.ToLower()">
                             <td class="govuk-table__cell" data-testid="user-name-@name">
                                 @name
                             </td>
