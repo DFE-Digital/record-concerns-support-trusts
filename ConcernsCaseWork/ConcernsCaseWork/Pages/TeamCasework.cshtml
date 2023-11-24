@@ -1,9 +1,14 @@
 ﻿@page "/TeamCasework"
+@using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.TeamCaseworkPageModel
 
 @{
     ViewData["Title"] = "Home";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        OtherCasesTabActive = true
+    };
 }
 
 <div class="govuk-extra-width-container">
@@ -15,32 +20,23 @@
     else
     {
         <div class="govuk-!-margin-top-0">
-            <div class="govuk-tabs govuk-!-margin-top-6">
-                <nav class="moj-sub-navigation" aria-label="Sub navigation">
 
-                    <ul class="moj-sub-navigation__list">
-                        <li class="moj-sub-navigation__item">
-                            <a id="your-cases-tab" data-testid="your-cases-tab" class="moj-sub-navigation__link" href="/Home"><span aria-hidden="true"></span>Your cases</a>
-                        </li>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    Cases owned by others
+                </h1>
+            </legend>
 
-                        <li class="moj-sub-navigation__item">
-                            <a id="team-casework-tab" data-testid="team-casework-tab" class="moj-sub-navigation__link" aria-current="page" href="/TeamCasework"><span aria-hidden="false"></span>Other cases</a>
-                        </li>
-                    </ul>
-                </nav>
 
-	            <div class="govuk-tabs__panel" id="team-casework">
-                    <div class="govuk-button-group flexalign__right">
-                        <a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button" data-testid="select-colleagues">
-                            Select case owners
-                        </a>
-                    </div>
-                    <!-- Team casework -->
-                    <partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
-                    <partial name="_Pagination" model="Model.Pagination" />
-
-                </div>
+            <div class="govuk-button-group">
+                <a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button" data-testid="select-colleagues">
+                    Select case owners
+                </a>
             </div>
+            <!-- Team casework -->
+            <partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
+            <partial name="_Pagination" model="Model.Pagination" />
+
         </div>
     }
 </div>
