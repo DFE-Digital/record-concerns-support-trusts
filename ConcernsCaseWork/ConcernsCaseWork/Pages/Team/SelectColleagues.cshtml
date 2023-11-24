@@ -128,7 +128,7 @@
         .done((users) =>
         {
             allUsers = [...users];
-            selectableUsers = [...users];
+            selectableUsers = getSelectableUsers(allUsers, getColleagueList());
 
             accessibleAutocomplete({
                 element: autocompleteContainer,
@@ -179,6 +179,14 @@
             colleaguesInput.attr("placeholder", numOfColleagues > 0 ? multiplePlaceholderText : placeholderText);
         }
 
+        function getSelectableUsers(users, colleagueList)
+        {
+            const listToCheck = colleagueList.map( c => c.toUpperCase());
+            const result = users.filter( u => !listToCheck.includes(u.toUpperCase()));
+
+            return result;
+        }
+
         function refreshColleagues(colleagueList) {
 
             const url = '/team/selectcolleagues?handler=BuildColleagueTable&data=' + colleagueList.join(',');
@@ -189,8 +197,7 @@
                 success: function (response) {
                     $("#selected-colleagues-container").html(response);
 
-                    const listToCheck = colleagueList.map( c => c.toUpperCase());
-                    selectableUsers = allUsers.filter( u => !listToCheck.includes(u.toUpperCase()));
+                    selectableUsers = getSelectableUsers(allUsers, colleagueList);
 
                     updateInputField();
                     onPageMoved();
