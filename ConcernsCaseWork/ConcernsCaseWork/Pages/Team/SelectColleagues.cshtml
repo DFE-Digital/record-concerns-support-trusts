@@ -27,24 +27,25 @@
             else
             {
                 <form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
-                    <div class="govuk-form-group">
 
-                        @{
-                            <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
-                                <h1 class="govuk-heading-l">Select Case owners</h1>
-                                <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
+                    @{
+                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
+                            <h1 class="govuk-heading-l">Select case owners</h1>
+                            <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
 
-                                <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
-                                    <label for="select-colleagues-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
-                                    <div id="autocomplete-container" class="@inputErrorClass"></div>
-                                </div>
+                            <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
+                                <label for="select-colleagues-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                                <div id="autocomplete-container" class="@inputErrorClass"></div>
+                            </div>
 
-                                <div id="selected-colleagues-container">
-                                    <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
-                                </div>
-                            </feature>
-                            <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
-                                <h1 class="govuk-heading-l">Select Colleagues to Show in Team Casework</h1>
+                            <div id="selected-colleagues-container">
+                                <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
+                            </div>
+                        </feature>
+                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
+                            <div class="govuk-form-group">
+
+                                <h1 class="govuk-heading-l">Select colleagues to show in team casework</h1>
 
                                 <fieldset class="govuk-fieldset" aria-describedby="user-hint">
                                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -55,11 +56,6 @@
                                     <div id="user-hint" class="govuk-hint">
                                         Select which colleagues you wish to see casework for.
                                     </div>
-
-                                    <h1 class="govuk-heading-l">
-                                        Change case owner
-                                    </h1>
-                                    <div class="govuk-hint">Find and select the email address of the person you want to assign the case to</div>
 
                                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                                         @{
@@ -81,9 +77,10 @@
                                         }
                                     </div>
                                 </fieldset>
-                            </feature>
-                        }
-                    </div>
+                            </div>
+
+                        </feature>
+                    }
 
                     <!--Button group-->
                     <div class="govuk-button-group">
