@@ -6,8 +6,8 @@ class TeamCaseworkPage {
     public selectTeamMember(name: string): this {
         Logger.Log(`Selecting team member ${name}`);
         this.enterTeamMember(name);
-        cy.get("#select-colleagues-input__option--0").click();
-        cy.getById("selected-colleagues").find(`[data-testid='row-${name.toLowerCase()}']`);
+        cy.getById("select-colleagues-input__option--0").click();
+        cy.getByTestId(`row-${name.toLowerCase()}`);
 
         return this;
     }
@@ -24,13 +24,13 @@ class TeamCaseworkPage {
 
     public save(): this {
         Logger.Log("Saving changes");
-        cy.get('[data-testid="save"]').click();
+        cy.getByTestId("save").click();
 
         return this;
     }
 
     public enterTeamMember(name: string): this {
-        cy.get('#select-colleagues-input').type(name);
+        cy.getById("select-colleagues-input").type(name);
 
         return this;
     }
@@ -57,7 +57,7 @@ class TeamCaseworkPage {
 
     public hasNoTeamMember(name: string): this {  
         Logger.Log("Team member is not displayed");
-        cy.get('#selected-colleagues-container').contains(name).should('not.exist');
+        cy.getById("selected-colleagues-container").contains(name).should('not.exist');
 
         return this;
     }
