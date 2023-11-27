@@ -16,6 +16,8 @@ describe("Team casework tests", () => {
         let email: string;
         let name: string;
         let now: Date;
+        let alternativeEmail: string;
+        let alternativeName: string;
 
         beforeEach(() => {
             // Ensure that the automation user has been registered in the system
@@ -23,8 +25,10 @@ describe("Team casework tests", () => {
 
             cy.visit("/");
 
+            alternativeEmail = "Reassign.Test@education.gov.uk";
+
             cy.login({
-                username: "Reassign.Test@education.gov.uk"
+                username: alternativeEmail
             });
 
             cy.visit("/");
@@ -33,17 +37,18 @@ describe("Team casework tests", () => {
 
             email = Cypress.env(EnvUsername);
             name = email.split("@")[0];
+            alternativeName = alternativeEmail.split("@")[0].split(".")[0];
 
             const caseRequest = CaseBuilder.buildOpenCase();
             caseRequest.trustUkprn = "10060447";
 
             let req: PutTeamRequest =
             {
-                OwnerID: email,
+                OwnerID: alternativeEmail,
                 TeamMembers: []
             };
             caseApi
-                .put(email, req)
+                .put(alternativeEmail, req)
                 .then(() => {
                     return cy.basicCreateCase(caseRequest)
                 })
@@ -61,7 +66,9 @@ describe("Team casework tests", () => {
             cy.excuteAccessibilityTests();
 
             teamCaseworkPage
-                .selectTeamMember(name);
+                .selectTeamMember(name)
+                .hasTeamMember(email, name)
+                .save();
 
             Logger.Log("Ensure that the case for the user is displayed");
             caseworkTable
@@ -78,37 +85,44 @@ describe("Team casework tests", () => {
                         .hasOwner(name);
                 });
 
-
             Logger.Log("Checking accessibility on team casework");
             cy.excuteAccessibilityTests();
 
             Logger.Log("Ensuring no cases are displayed when there are no selected colleagues");
-
-            // Remove colleagues
-            cy.wrap(null).then(() => {
-                teamCaseworkPage.removeAddedColleagues();
-            });
-
-            // Ensure colleagues are removed before saving changes
-            teamCaseworkPage.savingChanges();
-
-            // Assert that there are no cases after saving changes
-            teamCaseworkPage.hasNoCases();
-
-            Logger.Log("Checking search functionality on team casework");
-
-            cy.visit("/");
-            homePage.viewOtherCases();
             homePage.selectColleagues();
-            teamCaseworkPage.selectTeamMember(name);
-            homePage.selectColleagues();
-            teamCaseworkPage.selectTeamMemberForSearchFieldTest(name);
-            // Verify that the "No results found" message appears
-            teamCaseworkPage.hasNoResultsFound;
-            // Remove the selected team member
-            teamCaseworkPage.removeSearchColleaguesTest();
-            teamCaseworkPage.teamMemberIsNotDisplayed(name);
 
+            teamCaseworkPage
+                .removeAddedColleagues()
+                .hasNoTeamMember(name)
+                .save()
+                .hasNoCases();
+
+            Logger.Log("Ensure we cannot enter a duplicated team member, when they have already been selected");
+            homePage.selectColleagues();
+
+            teamCaseworkPage
+                .selectTeamMember(name);
+            
+            teamCaseworkPage
+                .enterTeamMember(name)
+                .hasNoResultsFound()
+                .save();
+
+            Logger.Log("Ensure that when we go back to the home page and back to select colleagues we cannot select previously selected members");
+            homePage.selectColleagues();
+
+            teamCaseworkPage.enterTeamMember(name).hasNoResultsFound();
+
+            Logger.Log("Ensure that when the team member is removed, they can be selected again");
+            teamCaseworkPage
+                .removeAddedColleagues()
+                .hasNoTeamMember(name);
+
+            teamCaseworkPage
+                .selectTeamMember(name);
+
+            Logger.Log("Ensure that the logged in user cannot be selected");
+            teamCaseworkPage.enterTeamMember(alternativeName).hasNoResultsFound();
         });
 
 

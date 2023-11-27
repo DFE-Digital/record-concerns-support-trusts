@@ -40,13 +40,13 @@
                         var name = @colleague.FromEmailToFullName();
 
                         <tr class="govuk-table__row tr__large user-colleagues-row" data-testid="row-@name.ToLower()">
-                            <td class="govuk-table__cell" data-testid="user-name-@name">
+                            <td class="govuk-table__cell" data-testid="user-name-@name.ToLower()">
                                 @name
                             </td>
-                            <td class="govuk-table__cell" data-testid="user-email-@name">
+                            <td class="govuk-table__cell" data-testid="user-email-@name.ToLower()">
                                 @colleague
                             </td>
-                            <td class="govuk-table__cell" data-testid="user-remove-@name">
+                            <td class="govuk-table__cell" data-testid="user-remove-@name.ToLower()">
                                 <a href="#" class="user-remove" data-value="@colleague">Remove</a>
                             </td>
                         </tr>

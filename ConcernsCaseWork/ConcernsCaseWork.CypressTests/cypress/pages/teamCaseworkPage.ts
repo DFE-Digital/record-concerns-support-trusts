@@ -1,52 +1,47 @@
 import { Logger } from "cypress/common/logger";
+import { toTitleCase } from "cypress/support/stringUtils";
 
 class TeamCaseworkPage {
-    then(arg0: () => void) {
-        throw new Error("Method not implemented.");
-    }
+
     public selectTeamMember(name: string): this {
         Logger.Log(`Selecting team member ${name}`);
-        cy.get('#select-colleagues-input').type(name);
+        this.enterTeamMember(name);
         cy.get("#select-colleagues-input__option--0").click();
-        cy.getById("selected-colleagues")
-            .find(`[data-testid='row-${name.toLowerCase()}']`);
-        cy.get('[data-testid="save"]').click();
+        cy.getById("selected-colleagues").find(`[data-testid='row-${name.toLowerCase()}']`);
 
         return this;
     }
 
-    public selectTeamMemberForSearchFieldTest(name: string): this {
-        Logger.Log(`Selecting team member ${name}`);
-        cy.get('#select-colleagues-input').type(name);
-        cy.get("#select-colleagues-input__option--0").click();
-        cy.getById("selected-colleagues")
-            .find(`[data-testid='row-${name.toLowerCase()}']`);
-    
+    public hasTeamMember(email, name: string): this {
+
+        const nameSelector = name.toLowerCase();
+
+        cy.getByTestId(`user-name-${nameSelector}`).should("contain.text", toTitleCase(name));
+        cy.getByTestId(`user-email-${nameSelector}`).contains(email, { matchCase: false });
 
         return this;
     }
 
-    public savingChanges(): this {
+    public save(): this {
         Logger.Log("Saving changes");
         cy.get('[data-testid="save"]').click();
 
         return this;
     }
 
+    public enterTeamMember(name: string): this {
+        cy.get('#select-colleagues-input').type(name);
+
+        return this;
+    }
+
     public removeAddedColleagues(): this {
         Logger.Log("Removing added colleagues");
-        cy.get('[data-testid="select-colleagues"]').click();
-        cy.get('.user-remove').first().click();
+        cy.get('.user-remove').each(e => cy.wrap(e).click());
         return this;
     }
 
-    removeSearchColleaguesTest(): this { 
-        Logger.Log("Removing added colleagues");
-        cy.get('.user-remove').first().click();
-        return this;
-    }
-
-    hasNoResultsFound(): this {
+    public hasNoResultsFound(): this {
         Logger.Log("Has no results found");
         cy.get(".autocomplete__option").should("contain.text", "No results found");
 
@@ -60,7 +55,7 @@ class TeamCaseworkPage {
         return this;
     }
 
-    public teamMemberIsNotDisplayed(name: string): this {  
+    public hasNoTeamMember(name: string): this {  
         Logger.Log("Team member is not displayed");
         cy.get('#selected-colleagues-container').contains(name).should('not.exist');
 
