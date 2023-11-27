@@ -19,7 +19,7 @@ SELECT
 	cc.Issue AS Issue,
 	STRING_AGG(ct.Name + COALESCE(' ' + ct.Description, '') + ': ' + concerns_risk.Name, ', ') AS ConcernRisks,
 	COALESCE(nti_status.Name, nti_wl_status.Name) AS NtiStatus,
-	COALESCE(nti.DateStarted, nti_uc.CreatedAt, nti_wl.DateLetterSent) AS DateIssued
+	COALESCE(nti.DateStarted, nti_wl.DateLetterSent) AS DateIssued
 FROM
 	concerns.ConcernsCase cc WITH(NOLOCK)
 LEFT OUTER JOIN
@@ -53,11 +53,6 @@ LEFT OUTER JOIN
 ON 
 	nti.StatusId = nti_status.Id
 LEFT OUTER JOIN 
-	concerns.NTIUnderConsiderationCase nti_uc WITH(NOLOCK) 
-ON 
-	cc.Id = nti_uc.CaseUrn
-	AND nti_uc.ClosedAt IS NULL
-LEFT OUTER JOIN 
 	concerns.NTIWarningLetterCase nti_wl WITH(NOLOCK) 
 ON 
 	cc.Id = nti_wl.CaseUrn
@@ -78,5 +73,4 @@ GROUP BY
 	nti_status.Name,
 	nti_wl_status.Name,
 	nti.DateStarted,
-	nti_uc.CreatedAt,
 	nti_wl.DateLetterSent
