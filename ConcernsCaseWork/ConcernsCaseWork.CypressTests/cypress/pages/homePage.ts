@@ -44,6 +44,13 @@ class HomePage {
         return this;
     }
 
+    public viewOtherCases(): this
+    {
+        this.getTeamCaseworkBtn().click();
+
+        return this;
+    }
+
     public selectColleagues(): this
     {
         Logger.Log("Selecting colleagues");

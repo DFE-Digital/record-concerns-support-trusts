@@ -3,5 +3,6 @@
 	public static class FeatureFlags
 	{
 		public const string IsRegionsGroupEnabled = "IsRegionsGroupEnabled";
+		public const string IsSelectTeamCaseWorkRedesignEnabled = "IsSelectTeamCaseWorkRedesignEnabled";
 	}
 }

@@ -1,13 +1,12 @@
-﻿using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Models.Teams;
+﻿using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages.Team;
-using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -100,27 +99,6 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			)));
 		}
 
-		[Test]
-		public async Task WhenOnPostSelectColleagues_WithException_ErrorOnPage()
-		{
-			// arrange
-			var testFixture = new TestFixture()
-				.WithNoCurrentUser();
-			// act
-			var sut = testFixture.BuildSut(authenticatedPage: false);
-			var pageResponse = await sut.OnPostSelectColleagues();
-
-			// assert
-			var page = pageResponse as PageResult;
-			Assert.That(page, Is.Not.Null);
-			Assert.IsEmpty(sut.SelectedColleagues);
-			Assert.IsEmpty(sut.Users);
-			Assert.IsNotEmpty(sut.TempData);
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
-
-			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
-		}
-
 		private static SelectColleaguesPageModel BuildPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, bool isAuthenticated, string userName = "Tester")
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
@@ -141,11 +119,14 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				CurrentUserName = "John.Smith";
 				MockLogger = new Mock<ILogger<SelectColleaguesPageModel>>();
 				MockTeamsService = new Mock<ITeamsModelService>();
+				MockFeatureManager = new Mock<IFeatureManager>();
 			}
 
 			public string CurrentUserName { get; private set; }
 			public Mock<ILogger<SelectColleaguesPageModel>> MockLogger { get; }
 			public Mock<ITeamsModelService> MockTeamsService { get; }
+
+			public Mock<IFeatureManager> MockFeatureManager { get; }
 
 			internal SelectColleaguesPageModel BuildSut(bool authenticatedPage = true)
 			{
