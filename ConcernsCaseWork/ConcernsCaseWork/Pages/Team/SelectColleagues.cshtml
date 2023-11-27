@@ -40,7 +40,7 @@
                                 </div>
 
                                 <div id="selected-colleagues-container">
-                                    <partial name="_SelectedColleagues" model="Model.SelectedColleagues" />
+                                    <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
                                 </div>
                             </feature>
                             <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
@@ -189,7 +189,7 @@
 
         function refreshColleagues(colleagueList) {
 
-            const url = '/team/selectcolleagues?handler=BuildColleagueTable&data=' + colleagueList.join(',');
+            const url = '/team/selectcolleagues?handler=ColleaguesTable&data=' + colleagueList.join(',');
 
             $.ajax({
                 url: url,

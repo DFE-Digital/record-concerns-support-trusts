@@ -99,11 +99,11 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			)));
 		}
 
-		private static SelectColleaguesPageModel BuildPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager, bool isAuthenticated, string userName = "Tester")
+		private static SelectColleaguesPageModel BuildPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, bool isAuthenticated, string userName = "Tester")
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
 
-			return new SelectColleaguesPageModel(logger, teamsService, featureManager)
+			return new SelectColleaguesPageModel(logger, teamsService)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(authenticatedPage, CurrentUserName);
 
-				return new SelectColleaguesPageModel(MockLogger.Object, MockTeamsService.Object, MockFeatureManager.Object)
+				return new SelectColleaguesPageModel(MockLogger.Object, MockTeamsService.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,

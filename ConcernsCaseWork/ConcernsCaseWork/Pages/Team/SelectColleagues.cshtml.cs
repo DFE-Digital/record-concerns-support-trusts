@@ -18,17 +18,15 @@ namespace ConcernsCaseWork.Pages.Team
 	{
 		private readonly ILogger<SelectColleaguesPageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-		private readonly IFeatureManager _featureManager;
 
 		[BindProperty]
 		public IList<string> SelectedColleagues { get; set; } = new List<string>();
 		public string[] Users { get; set; } = Array.Empty<string>();
 
-		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IFeatureManager featureManager)
+		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
 		{
 			_logger = logger;
 			_teamsService = teamsService;
-			_featureManager = featureManager;
 		}
 
 		public async Task<ActionResult> OnGetAsync()
@@ -102,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Team
 			}
 		}
 
-		public IActionResult OnGetBuildColleagueTable(string data)
+		public IActionResult OnGetColleaguesTable(string data)
 		{
 			var colleagueList = new List<string>();
 
@@ -111,7 +109,7 @@ namespace ConcernsCaseWork.Pages.Team
 				colleagueList = data.Split(",").ToList();
 			}
 
-			return Partial("_SelectedColleagues", colleagueList);
+			return Partial("_ColleaguesTable", colleagueList);
 		}
 
 		private string _CurrentUserName { get => User.Identity.Name; }
