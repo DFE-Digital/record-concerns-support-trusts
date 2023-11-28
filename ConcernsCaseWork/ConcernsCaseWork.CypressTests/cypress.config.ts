@@ -18,6 +18,7 @@ export default defineConfig({
       json: true,
     },
   },
+	userAgent: 'ConcernsCaseWork/1.0 Cypress',
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
