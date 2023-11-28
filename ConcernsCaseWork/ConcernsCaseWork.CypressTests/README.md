@@ -1,5 +1,49 @@
 ## Cypress Testing
 
+### The principles this suite is built on
+
+These tests are designed to be
+
+- fast (no implict waits at all!!)
+- reliable
+- descriptive
+- easy to maintain
+
+It uses the page object model with a fluent api interface to write descriptive tests and breaks down into small reusable steps
+
+These tests behave like a user, all the steps are defined from the users perspective, "save" instead of "clickSaveButton"
+
+- "has" to verify a value
+- "with" to set a value
+
+#### Avoiding waits
+
+```javascript
+Logger.Log("Ensure that when the team member is removed, they can be selected again");
+teamCaseworkPage
+    .removeAddedColleagues()
+    .hasNoTeamMember(name);
+
+teamCaseworkPage
+    .selectTeamMember(name);
+
+```
+
+This test removes a college then makes sure they are selectable again
+
+The code in the site uses javascript to do this, which is notoriously difficult to deal with because cypress doesn't know when it starts or finishes executing.
+
+Cypress will execute instructions immediately, so this happens:
+
+- remove colleage
+- add colleage (before it finishes removing)
+
+Always ask yourself, how does a user know if the previous command finished?
+
+In our example a user knows if the user is deleted if a table that is tracking the currently added users does not have that user anymore
+
+Therefore that is what our test does, it waits until the command completes by looking at the screen and observing the change.
+
 ### Test Setup
 
 The Cypress tests are designed to run against the front-end of the application. To set up the tests, you need to provide a configuration file named `cypress.env.json` with the following information:

@@ -61,7 +61,7 @@ dotnet user-secrets list
 Set a secret:
 dotnet user-secrets set "trams:api_endpoint" "secret_here"
 dotnet user-secrets set "trams:api_key" "secret_here"
-dotnet user-secrets set "app:username" "secret_here" --> Store a list comma separated users e.g.  dotnet user-secrets set "app:username" "Concerns.casework,e2e.cypress.test,ben.memmott,richard.machen,elijah.aremu,paul.simmons,james.cheetham,christian.gleadall,philip.pybus,emma.wadsworth,israt.choudhury,chanel.diep,magdalena.bober,case.worker1,case.worker2,emma.whitcroft,chris.dexter,samantha.harbison,mara.ashraf,jane.dickinson,fahad.darwish,mike.stock,michael3.marshall,rebecca.green,nicky.shue,mark.holt,ben.hodgkins,maureen.sammon,shad-carine.ohayon,judy.cheung,lee3.turner,kirsty.boxall,deaglan.lloyd,sham.choudhury,ayesha.rahman,mohammed.hoque,alastair.dawson,sue.randall,linsey.chambers,ralph.day,john.russell,joe.peffers,jenny.cheetham,julia.paton,laura.bridge,forrest.mcdonald,alison.oliver,josephine.holloway,reshma.chetty,teresa.phillipson,molly.quinn"
+dotnet user-secrets set "app:username" "secret_here"
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
 
@@ -69,7 +69,13 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;
 dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
 dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
 dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
-
+dotnet user-secrets set "AzureAd:ClientSecret" "secret_here"
+dotnet user-secrets set "AzureAd:ClientId" "secret_here"
+dotnet user-secrets set "AzureAd:TenantId" "secret_here"
+dotnet user-secrets set "CypressTestSecret" "secret that matches the key in the cypress test suite"
+dotnet user-secrets set "AzureAdGroups:CaseWorkerGroupId" "secret_here"
+dotnet user-secrets set "AzureAdGroups:TeamleaderGroupId" "secret_here"
+dotnet user-secrets set "AzureAdGroups:AdminGroupId" "secret_here"
 
 Remove a secret:
 dotnet user-secrets remove "app:username"
@@ -79,12 +85,6 @@ dotnet user-secrets clear
 ```
 [Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
 
-### Build Node Dependencies
-***
-```
-npm run build
-```
-
 ### Concerns CaseWork SQL Server Database
 ***
 The API uses Entity Framework to manage the database.
@@ -93,30 +93,6 @@ To create the database, or to apply the latest migrations:
 In a console window: 
 1. Navigate to ```ConcernsCaseWork.Data``` project root
 1. Run migrations ```dotnet ef database update --connection "enter connection string to database here" ```
-
-
-### TRAMS Docker SQLServer
-***
-```
-Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
-download the docker image from Container registry.
-1. Docker installed on local machine
-2. Authentication with ghcr.io
-	2.1. Create a PAT (personal access token) https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
-	2.2. $ export CR_PAT=YOUR_TOKEN
-		 $ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
-	2.3. After Login successfully with Docker account
-		 > Check TRAMM API https://github.com/DFE-Digital/trams-data-api -> or run the next command
-		 > docker run -d -p 1433:1433 ghcr.io/dfe-digital/trams-development-database:latest
-3. Open docker container, should see a image running on port 1443, click on it, will open a log window, on the middle right top there is a button "inspect"
-	click on it and will display the MSSQL_USER and MSSQL_SA_PASSWORD
-4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
-5. e.g. SQLServer Management Studio
-	> Server name: localhost or 127.0.0.1
-	> Select SQLServer Authentication
-		> Login: Get from Docker inspect
-		> Password: Get from Docker inspect 
-```
 
 ## Concerns Casework Docker images
 There are 4 docker images configured in amsd-casework:
@@ -165,32 +141,4 @@ to run the razor web app frontend and moj components.
 JQuery dependency was manually added don't remove from dist folder or if you find an automated way 
 of bringing the library over to the project update this document.
 
-```
-
-## Logging Configuration
-***
-```
-Project configuration based on other internal streams for consistency.
-```
-[GitHub Repository](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
-
-## Academies API
-***
-```
-Academies API is designed to replace dynamics365 were most of the legacy systems are feeding data from.
-
-For integration with TRAMS API a member of the team will make available an API key (per environment).
-Include header 'ApiKey' with the service key provided by TRAMS team.
-```
-[GitHub Repository](https://github.com/DFE-Digital/trams-data-api)
-
-### Redis
-***
-```
-Redis resource is created via terraform and bind to the app.
-Eviction policy is set by default to volatile-lru
-
-Volatile-lru:
-evict keys by trying to remove the least recently used (LRU) keys first, 
-but only among keys that have an expire set, in order to make space for the new data added
 ```
