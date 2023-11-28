@@ -1,41 +1,68 @@
 import { Logger } from "cypress/common/logger";
+import { toTitleCase } from "cypress/support/stringUtils";
 
 class TeamCaseworkPage {
+
     public selectTeamMember(name: string): this {
         Logger.Log(`Selecting team member ${name}`);
-        cy.get(`input[type="checkbox"]`).filter((index, el: any) =>
-        {
-            return el.value.trim().toLowerCase() === name.toLowerCase();
-        }).first().check();
-        return this;
-    }
-
-    public deselectAllTeamMembers(): this {
-        Logger.Log("Deselecting all team members");
-
-        cy.get('input[type="checkbox"]').each(($checkbox) => {
-            if ($checkbox.is(':checked')) {
-              cy.wrap($checkbox).uncheck();
-            }
-          });
+        this.enterTeamMember(name);
+        cy.getById("select-colleagues-input__option--0").click();
+        cy.getByTestId(`row-${name.toLowerCase()}`);
 
         return this;
     }
 
-    public hasNoCases(): this {
-        Logger.Log("Has no team cases");
+    public hasTeamMember(email, name: string): this {
 
-        cy.getByTestId("no-cases").should("contain.text", "There are no cases available.");
+        const nameSelector = name.toLowerCase();
+
+        cy.getByTestId(`user-name-${nameSelector}`).should("contain.text", toTitleCase(name));
+        cy.getByTestId(`user-email-${nameSelector}`).contains(email, { matchCase: false });
 
         return this;
     }
 
     public save(): this {
         Logger.Log("Saving changes");
-        cy.getByTestId('save').click();
+        cy.getByTestId("save").click();
 
         return this;
     }
+
+    public enterTeamMember(name: string): this {
+        cy.getById("select-colleagues-input").type(name);
+
+        return this;
+    }
+
+    public removeAddedColleagues(): this {
+        Logger.Log("Removing added colleagues");
+        cy.get('.user-remove').each(e => cy.wrap(e).click());
+        return this;
+    }
+
+    public hasNoResultsFound(): this {
+        Logger.Log("Has no results found");
+        cy.get(".autocomplete__option").should("contain.text", "No results found");
+
+        return this;
+    }
+
+    public hasNoCases(): this {
+        Logger.Log("Has no team cases");
+        cy.getByTestId("no-cases").should("contain.text", "There are no cases available.");
+
+        return this;
+    }
+
+    public hasNoTeamMember(name: string): this {  
+        Logger.Log("Team member is not displayed");
+        cy.getById("selected-colleagues-container").contains(name).should('not.exist');
+
+        return this;
+    }
+
+
 }
 
 const teamCaseworkPage = new TeamCaseworkPage();

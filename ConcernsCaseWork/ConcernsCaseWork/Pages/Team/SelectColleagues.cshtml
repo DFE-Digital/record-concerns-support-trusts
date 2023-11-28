@@ -1,67 +1,208 @@
 ﻿@page "/team/selectColleagues"
+@using ConcernsCaseWork.API.Contracts.Configuration
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 @model ConcernsCaseWork.Pages.Team.SelectColleaguesPageModel
 
 @{
-	ViewData["Title"] = "Select colleagues";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Select colleagues";
+    var nonce = HttpContext.GetNonce();
+
+    var errorBannerClass = string.Empty;
+
+    var inputErrorClass = string.Empty;
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">			
-            <h1 class="govuk-heading-l">Select Colleagues to Show in Team Casework</h1>
-			
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
-            	<partial name="_Error"/>
+                <partial name="_Error" />
             }
-			else
-			{
-				<form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset" aria-describedby="user-hint">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-								<h1 class="govuk-fieldset__heading">
-									Colleagues
-								</h1>
-							</legend>
-							<div id="user-hint" class="govuk-hint">
-								Select which colleagues you wish to see casework for.
-							</div>
+            else
+            {
+                <form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
 
-							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
-								@{ var idUser = 0; }
-								@foreach (var user in Model.Users)
-								{
-									<div class="govuk-checkboxes__item">
-										@{
-											var idStr = idUser == 0 ? "user" : "user-" + idUser;
-											var checkedUser = Model.SelectedColleagues.Contains(user);
-										}
-										<input class="govuk-checkboxes__input" id="@idStr" name="SelectedColleagues" type="checkbox" value="@user" checked="@checkedUser">
-										<label class="govuk-label govuk-checkboxes__label" for="@idStr">
-											@user
-										</label>
-									</div>
-									idUser++;
-								}
-							</div>
-						</fieldset>
-					</div>
+                    @{
+                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
+                            <h1 class="govuk-heading-l">Select case owners</h1>
+                            <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
 
-					<!--Button group-->
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="save">
-							Apply
-						</button>
-						<partial name="_Cancel"/>
-					</div>
-				</form>
-			}			
-		</div>
-	</div>
+                            <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
+                                <label for="select-colleagues-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                                <div id="autocomplete-container" class="@inputErrorClass"></div>
+                            </div>
+
+                            <div id="selected-colleagues-container">
+                                <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
+                            </div>
+                        </feature>
+                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
+                            <div class="govuk-form-group">
+
+                                <h1 class="govuk-heading-l">Select colleagues to show in team casework</h1>
+
+                                <fieldset class="govuk-fieldset" aria-describedby="user-hint">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                        <h1 class="govuk-fieldset__heading">
+                                            Colleagues
+                                        </h1>
+                                    </legend>
+                                    <div id="user-hint" class="govuk-hint">
+                                        Select which colleagues you wish to see casework for.
+                                    </div>
+
+                                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                        @{
+                                            var idUser = 0;
+                                        }
+                                        @foreach (var user in Model.Users)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+                                                @{
+                                                    var idStr = idUser == 0 ? "user" : "user-" + idUser;
+                                                    var checkedUser = Model.SelectedColleagues.Contains(user);
+                                                }
+                                                <input class="govuk-checkboxes__input" id="@idStr" name="SelectedColleagues" type="checkbox" value="@user" checked="@checkedUser">
+                                                <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                                    @user
+                                                </label>
+                                            </div>
+                                            idUser++;
+                                        }
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </feature>
+                    }
+
+                    <!--Button group-->
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="save">
+                            Apply
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
 </div>
+
+<script type="application/javascript" nonce="@nonce">
+    $(document).ready(function () {
+        let autocompleteContainer = document.getElementById('autocomplete-container');
+
+        let placeholderText = 'Enter a name or email address...';
+        let multiplePlaceholderText = 'Enter another name or email address...';
+
+        let allUsers = [];
+        let selectableUsers = [];
+
+        onPageMoved();
+
+        function onPageMoved() {
+            $('.user-remove').click(function (e){
+                e.preventDefault();
+
+                const colleague = $(this).attr('data-value');
+
+                let colleagueList = getColleagueList();
+
+                colleagueList = colleagueList.filter( c => c.toUpperCase() !== colleague.toUpperCase());
+
+                refreshColleagues(colleagueList);
+            });
+        }
+
+        $.get('?handler=TeamList')
+        .done((users) =>
+        {
+            allUsers = [...users];
+            selectableUsers = getSelectableUsers(allUsers, getColleagueList());
+
+            accessibleAutocomplete({
+                element: autocompleteContainer,
+                id: "select-colleagues-input",
+                name: "select-colleagues",
+                defaultValue: "",
+                placeholder: placeholderText,
+                source: function(query, populateResults)
+                {
+                    const searchResults = selectableUsers.filter( u => u.toUpperCase().includes(query.toUpperCase()));
+
+                    return populateResults(searchResults);
+                },
+                confirmOnBlur: false,
+                autoselect: true,
+                showNoOptonsFound: true,
+                onConfirm: (selected) => {
+                    const colleagueList = getColleagueList();
+
+                    colleagueList.push(selected);
+
+                    refreshColleagues(colleagueList);
+                }
+            });
+        });
+
+        function getColleagueList() {
+            const currentColleagues = $('input[name="SelectedColleagues"]');
+
+            const colleagueList = [];
+
+            currentColleagues.each(function(index, element) {
+                colleagueList.push($(element).val())
+                var value = $(element).val();
+            });
+
+            return colleagueList;
+        }
+
+        function updateInputField() {
+
+            let numOfColleagues = $('.user-colleagues-row').length;
+
+            let colleaguesInput = $('#select-colleagues-input');
+
+            colleaguesInput.val('');
+
+            colleaguesInput.attr("placeholder", numOfColleagues > 0 ? multiplePlaceholderText : placeholderText);
+        }
+
+        function getSelectableUsers(users, colleagueList)
+        {
+            const listToCheck = colleagueList.map( c => c.toUpperCase());
+            const result = users.filter( u => !listToCheck.includes(u.toUpperCase()));
+
+            return result;
+        }
+
+        function refreshColleagues(colleagueList) {
+
+            const url = '/team/selectcolleagues?handler=ColleaguesTable&data=' + colleagueList.join(',');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    $("#selected-colleagues-container").html(response);
+
+                    selectableUsers = getSelectableUsers(allUsers, colleagueList);
+
+                    updateInputField();
+                    onPageMoved();
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+    });
+</script>

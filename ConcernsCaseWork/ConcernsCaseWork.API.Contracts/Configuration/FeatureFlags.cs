@@ -4,5 +4,6 @@
 	{
 		public const string IsRegionsGroupEnabled = "IsRegionsGroupEnabled";
 		public const string IsTrustSearchV4Enabled = "IsTrustSearchV4Enabled";
+		public const string IsSelectTeamCaseWorkRedesignEnabled = "IsSelectTeamCaseWorkRedesignEnabled";
 	}
 }

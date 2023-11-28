@@ -1,11 +1,10 @@
-﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +20,13 @@ namespace ConcernsCaseWork.Pages.Team
 		private readonly ITeamsModelService _teamsService;
 
 		[BindProperty]
-		public IList<string> SelectedColleagues { get; set; }
-		public string[] Users { get; set; }
+		public IList<string> SelectedColleagues { get; set; } = new List<string>();
+		public string[] Users { get; set; } = Array.Empty<string>();
 
 		public SelectColleaguesPageModel(ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
 		{
-			_logger = Guard.Against.Null(logger);
-			_teamsService = Guard.Against.Null(teamsService);
+			_logger = logger;
+			_teamsService = teamsService;
 		}
 
 		public async Task<ActionResult> OnGetAsync()
@@ -40,9 +39,11 @@ namespace ConcernsCaseWork.Pages.Team
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnGetPage);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				throw;
 			}
+
 			return Page();
 		}
 
@@ -52,54 +53,65 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				_logger.LogMethodEntered();
 
-				Guard.Against.Null(SelectedColleagues);
-
 				await _teamsService.UpdateCaseworkTeam(new Models.Teams.ConcernsTeamCaseworkModel(_CurrentUserName, SelectedColleagues.ToArray()));
 				return Redirect("/TeamCasework");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 
-				await LoadPage();
-				return Page();
+				throw;
 			}
 		}
 
 		private async Task LoadPage()
 		{
-			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
+			if (string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
-				try
-				{
-					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
-					var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
-
-					await Task.WhenAll(teamMembers, users);
-
-					SelectedColleagues = teamMembers.Result.TeamMembers;
-					Users = users.Result.ToArray();
-				}
-				catch (AggregateException aggregateException)
-				{
-					foreach (var ex in aggregateException.InnerExceptions)
-					{
-						_logger.LogErrorMsg(ex);
-					}
-				}
-				catch (Exception ex)
-				{
-					_logger.LogErrorMsg(ex);
-				}
+				return;
 			}
-			else
+
+			var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
+			var users = _teamsService.GetTeamOwners(excludes: _CurrentUserName);
+
+			await Task.WhenAll(teamMembers, users);
+
+			SelectedColleagues = teamMembers.Result.TeamMembers;
+			Users = users.Result.ToArray();
+		}
+
+		public async Task<ActionResult> OnGetTeamList()
+		{
+			_logger.LogMethodEntered();
+
+			try
 			{
-				SelectedColleagues = new List<string>();
-				Users = Array.Empty<string>();
+				var users = await _teamsService.GetTeamOwners(excludes: _CurrentUserName);
+
+				Users = users.ToArray();
+
+				return new JsonResult(Users);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				return new JsonResult(new string[] { });
 			}
 		}
 
-		private string _CurrentUserName { get => this.User.Identity.Name; }
+		public IActionResult OnGetColleaguesTable(string data)
+		{
+			var colleagueList = new List<string>();
+
+			if (!string.IsNullOrEmpty(data))
+			{
+				colleagueList = data.Split(",").ToList();
+			}
+
+			return Partial("_ColleaguesTable", colleagueList);
+		}
+
+		private string _CurrentUserName { get => User.Identity.Name; }
 	}
 }
