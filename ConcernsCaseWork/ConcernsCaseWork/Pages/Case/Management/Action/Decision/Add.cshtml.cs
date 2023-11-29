@@ -364,7 +364,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var id = $"draw-down-facility-agreed-{model.Id}";
 
-			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].DrawdownFacilityAgreed", "Has drawdown facility been agreed?");
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].DrawdownFacilityAgreed", "");
 
 			var values = new List<DrawdownFacilityAgreed>() 
 			{ 
@@ -390,7 +390,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var id = $"framwork-category-{model.Id}";
 
-			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "What is the framework category?");
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "");
 
 			var values = new List<FrameworkCategory>()
 			{
