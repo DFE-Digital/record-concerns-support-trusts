@@ -103,10 +103,20 @@
                                     @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
                                     {
                                         <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                <h2 class="govuk-heading-s">
+                                                    Has drawdown facility been agreed?
+                                                </h2>
+                                            </legend>
                                             <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
 
                                             @if (decisionTypeQuestion.FrameworkCategory != null)
                                             {
+                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                    <h2 class="govuk-heading-s">
+                                                        What is the framework category?
+                                                    </h2>
+                                                </legend>
                                                 <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
                                             }
                                         </div>
