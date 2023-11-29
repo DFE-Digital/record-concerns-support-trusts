@@ -58,7 +58,7 @@ DELETE nti_uc_reason
 FROM 
 	concerns.NTIUnderConsiderationReasonMapping nti_uc_reason 
 WHERE 
-	nti_uc_reason.NTIUnderConsiderationId IN (SELECT Id FROM #ntis_to_delete)
+	nti_uc_reason.NTIUnderConsiderationId IN (SELECT Id FROM #nti_ucs_to_delete)
 
 DELETE nti_uc
 FROM
@@ -141,6 +141,12 @@ FROM
 	concerns.DecisionOutcome do
 WHERE 
 	do.DecisionId IN (SELECT DecisionId FROM #decisions_to_delete)
+
+DELETE dt
+FROM
+	concerns.ConcernsDecisionType dt
+WHERE
+	dt.DecisionId IN (SELECT DecisionId FROM #decisions_to_delete)
 
 DELETE d
 FROM 
