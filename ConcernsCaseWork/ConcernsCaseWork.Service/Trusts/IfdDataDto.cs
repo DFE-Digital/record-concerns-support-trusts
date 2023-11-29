@@ -17,6 +17,6 @@ namespace ConcernsCaseWork.Service.Trusts
 		public IfdDataDto(string trustType, string trustContactPhoneNumber, GroupContactAddressDto groupContactAddress) => 
 			(TrustType, TrustContactPhoneNumber, GroupContactAddress) = (trustType, trustContactPhoneNumber, groupContactAddress);
 		
-		protected IfdDataDto() { }
+		public IfdDataDto() { }
 	}
 }

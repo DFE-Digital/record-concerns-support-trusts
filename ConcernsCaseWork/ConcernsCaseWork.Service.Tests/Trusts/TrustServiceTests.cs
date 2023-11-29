@@ -6,6 +6,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.FeatureManagement;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework.Internal;
@@ -60,7 +61,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			// act
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), expectedTrusts.Count);
@@ -105,7 +107,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				fakeTrustService.Object,
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
 
@@ -166,7 +169,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				ctcService.Object);
+				ctcService.Object,
+				CreateFeatureManager());
 
 			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
 
@@ -204,7 +208,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
@@ -226,7 +231,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
@@ -275,7 +281,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
@@ -320,7 +327,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				fakeTrustService.Object,
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			var result = await trustService.GetTrustByUkPrn("123");
 
@@ -371,7 +379,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
@@ -413,7 +422,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(), 
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				CreateCityTechnologyCollegeService());
+				CreateCityTechnologyCollegeService(),
+				CreateFeatureManager());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
@@ -443,7 +453,8 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<ICorrelationContext>(),
 				Mock.Of<IClientUserInfoService>(),
 				CreateFakeTrustService(),
-				fakeTrustService.Object);
+				fakeTrustService.Object,
+				CreateFeatureManager());
 
 			var result = await trustService.GetTrustByUkPrn("987");
 			
@@ -465,6 +476,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			fakeTrustService.Setup(m => m.GetCollegeByUkPrn(It.IsAny<string>())).Returns(() => null);
 			fakeTrustService.Setup(m => m.GetCollegeByPagination(It.IsAny<string>())).Returns(() => null);
 			return fakeTrustService.Object;
+		}
+
+		private static IFeatureManager CreateFeatureManager()
+		{
+			var result = new Mock<IFeatureManager>();
+
+			return result.Object;
 		}
 	}
 }
