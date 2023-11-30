@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class ViewSrmaPage {
     public addStatus(): this
     {
-        Logger.Log("Adding status");
+        Logger.log("Adding status");
 
         this.getAddStatus().click();
 
@@ -12,7 +12,7 @@ export class ViewSrmaPage {
 
     public canAddStatus()
     {
-        Logger.Log("Can add status");
+        Logger.log("Can add status");
 
         this.getAddStatus();
 
@@ -21,7 +21,7 @@ export class ViewSrmaPage {
 
     public cannotAddStatus()
     {
-        Logger.Log("Cannot add status");
+        Logger.log("Cannot add status");
 
         this.getAddStatus().should("not.exist");
 
@@ -30,7 +30,7 @@ export class ViewSrmaPage {
 
     public addDateTrustContacted(): this
     {
-        Logger.Log("Adding date trust was contacted");
+        Logger.log("Adding date trust was contacted");
 
         this.getAddDateTrustContacted().click();
 
@@ -39,7 +39,7 @@ export class ViewSrmaPage {
 
     public canAddDateTrustContacted(): this
     {
-        Logger.Log("Can add the date trust was contacted");
+        Logger.log("Can add the date trust was contacted");
 
         this.getAddDateTrustContacted();
 
@@ -48,7 +48,7 @@ export class ViewSrmaPage {
 
     public cannotAddDateTrustContacted(): this
     {
-        Logger.Log("Cannot add the date trust was contacted");
+        Logger.log("Cannot add the date trust was contacted");
 
         this.getAddDateTrustContacted().should("not.exist");
 
@@ -56,7 +56,7 @@ export class ViewSrmaPage {
     }
 
     public addReason(): this {
-        Logger.Log("Adding reason");
+        Logger.log("Adding reason");
 
         this.getAddReason().click();
 
@@ -64,7 +64,7 @@ export class ViewSrmaPage {
     }
 
     public canAddReason(): this {
-        Logger.Log("Can add a reason");
+        Logger.log("Can add a reason");
 
         this.getAddReason();
 
@@ -72,7 +72,7 @@ export class ViewSrmaPage {
     }
 
     public cannotAddReason(): this {
-        Logger.Log("Cannot add a reason");
+        Logger.log("Cannot add a reason");
 
         this.getAddReason().should("not.exist");
 
@@ -80,7 +80,7 @@ export class ViewSrmaPage {
     }
 
     public addDateAccepted(): this {
-        Logger.Log("Adding date accepted");
+        Logger.log("Adding date accepted");
 
         this.getAddDateAccepted().click();
 
@@ -88,7 +88,7 @@ export class ViewSrmaPage {
     }
 
     public canAddDateAccepted(): this {
-        Logger.Log("Can add date accepted");
+        Logger.log("Can add date accepted");
 
         this.getAddDateAccepted();
 
@@ -96,7 +96,7 @@ export class ViewSrmaPage {
     }
 
     public cannotAddDateAccepted(): this {
-        Logger.Log("Cannot add date accepted");
+        Logger.log("Cannot add date accepted");
 
         this.getAddDateAccepted().should("not.exist");
 
@@ -104,7 +104,7 @@ export class ViewSrmaPage {
     }
 
     public addDateOfVisit(): this {
-        Logger.Log("Adding date accepted");
+        Logger.log("Adding date accepted");
 
         this.getAddDateOfVisit().click();
 
@@ -112,7 +112,7 @@ export class ViewSrmaPage {
     }
 
     public canAddDateOfVisit(): this {
-        Logger.Log("Can add date accepted");
+        Logger.log("Can add date accepted");
 
         this.getAddDateOfVisit();
 
@@ -120,7 +120,7 @@ export class ViewSrmaPage {
     }
 
     public cannotAddDateOfVisit(): this {
-        Logger.Log("Cannot add date accepted");
+        Logger.log("Cannot add date accepted");
 
         this.getAddDateOfVisit().should("not.exist");
 
@@ -128,7 +128,7 @@ export class ViewSrmaPage {
     }
 
     public addDateReportSentToTrust(): this {
-        Logger.Log("Adding date report sent to trust");
+        Logger.log("Adding date report sent to trust");
 
         this.getAddDateReportSendToTrust().click();
 
@@ -136,7 +136,7 @@ export class ViewSrmaPage {
     }
 
     public canAddDateReportSentToTrust(): this {
-        Logger.Log("Can add date report sent to trust");
+        Logger.log("Can add date report sent to trust");
 
         this.getAddDateReportSendToTrust();
 
@@ -144,7 +144,7 @@ export class ViewSrmaPage {
     }
 
     public cannotAddDateReportSentToTrust(): this {
-        Logger.Log("Cannot add date report sent to trust");
+        Logger.log("Cannot add date report sent to trust");
 
         this.getAddDateReportSendToTrust().should("not.exist");
 
@@ -153,7 +153,7 @@ export class ViewSrmaPage {
 
     public addNotes(): this
     {
-        Logger.Log("Adding notes");
+        Logger.log("Adding notes");
 
         this.getAddNotes().click();
 
@@ -162,7 +162,7 @@ export class ViewSrmaPage {
 
     public canAddNotes(): this
     {
-        Logger.Log("Can add notes");
+        Logger.log("Can add notes");
 
         this.getAddNotes();
 
@@ -171,7 +171,7 @@ export class ViewSrmaPage {
 
     public cannotAddNotes(): this
     {
-        Logger.Log("Cannot add notes");
+        Logger.log("Cannot add notes");
 
         this.getAddNotes().should("not.exist");
 
@@ -179,7 +179,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateOpened(value: string) : this {
-        Logger.Log(`Has date opened ${value}`);
+        Logger.log(`Has date opened ${value}`);
 
         cy.getByTestId("date-opened-text").should("contain.text", value);
 
@@ -187,7 +187,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateClosed(value: string) : this {
-        Logger.Log(`Has date closed ${value}`);
+        Logger.log(`Has date closed ${value}`);
 
         cy.getByTestId("date-closed-text").should("contain.text", value);
 
@@ -195,7 +195,7 @@ export class ViewSrmaPage {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`status`).should("contain.text", value);
 
@@ -203,7 +203,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateTrustContacted(value: string): this {
-        Logger.Log(`Has date trust contacted ${value}`);
+        Logger.log(`Has date trust contacted ${value}`);
 
         cy.getByTestId(`date-trust-contacted`).should("contain.text", value);
 
@@ -211,7 +211,7 @@ export class ViewSrmaPage {
     }
 
     public hasReason(value: string): this {
-        Logger.Log(`Has reason ${value}`);
+        Logger.log(`Has reason ${value}`);
 
         cy.getByTestId(`reason`).should("contain.text", value);
 
@@ -219,7 +219,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateAccepted(value: string): this {
-        Logger.Log(`Has date accepted ${value}`);
+        Logger.log(`Has date accepted ${value}`);
 
         cy.getByTestId(`date-accepted`).should("contain.text", value);
 
@@ -227,7 +227,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateOfVisit(value: string): this {
-        Logger.Log(`Has date of visit ${value}`);
+        Logger.log(`Has date of visit ${value}`);
 
         cy.getByTestId('date-of-visit')
                 .invoke('text')
@@ -241,7 +241,7 @@ export class ViewSrmaPage {
     }
 
     public hasDateReportSentToTrust(value: string): this {
-        Logger.Log(`Has date report sent to trust ${value}`);
+        Logger.log(`Has date report sent to trust ${value}`);
 
         cy.getByTestId(`date-report-sent-to-trust`).should("contain.text", value);
 
@@ -249,7 +249,7 @@ export class ViewSrmaPage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getByTestId(`notes`).should("contain.text", value);
 
@@ -257,7 +257,7 @@ export class ViewSrmaPage {
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -266,7 +266,7 @@ export class ViewSrmaPage {
 
     public resolve(): this
     {
-        Logger.Log("Resolving the SRMA");
+        Logger.log("Resolving the SRMA");
 
         cy.getByTestId("complete-srma-button").click();
 
@@ -274,7 +274,7 @@ export class ViewSrmaPage {
     }
 
     public cancel(): this {
-        Logger.Log("Cancelling SRMA");
+        Logger.log("Cancelling SRMA");
 
         this.getCancel().click();
 
@@ -283,7 +283,7 @@ export class ViewSrmaPage {
 
     public canCancel()
     {
-        Logger.Log("Can cancel SRMA");
+        Logger.log("Can cancel SRMA");
 
         this.getCancel();
 
@@ -292,7 +292,7 @@ export class ViewSrmaPage {
 
     public cannotCancel()
     {
-        Logger.Log("Cannot cancel SRMA");
+        Logger.log("Cannot cancel SRMA");
 
         this.getCancel().should("not.exist");
 
@@ -301,7 +301,7 @@ export class ViewSrmaPage {
 
     public decline()
     {
-        Logger.Log("Declining SRMA");
+        Logger.log("Declining SRMA");
 
         this.getDecline().click();
 
@@ -310,7 +310,7 @@ export class ViewSrmaPage {
 
     public canDecline()
     {
-        Logger.Log("Can decline SRMA");
+        Logger.log("Can decline SRMA");
 
         this.getDecline();
 
@@ -319,7 +319,7 @@ export class ViewSrmaPage {
 
     public cannotDecline()
     {
-        Logger.Log("Cannot decline SRMA");
+        Logger.log("Cannot decline SRMA");
 
         this.getDecline().should("not.exist");
 
@@ -327,7 +327,7 @@ export class ViewSrmaPage {
     }
 
     public save(): this {
-        Logger.Log("Saving SRMA");
+        Logger.log("Saving SRMA");
 
         cy.getById("add-srma-button").click();
 

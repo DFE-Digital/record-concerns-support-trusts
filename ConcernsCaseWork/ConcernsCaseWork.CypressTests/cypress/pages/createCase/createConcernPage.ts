@@ -2,7 +2,7 @@ import { Logger } from "../../common/logger";
 
 export default class CreateConcernPage {
 	public withConcernType(value: string): this {
-		Logger.Log(`With concernType ${value}`);
+		Logger.log(`With concernType ${value}`);
 
 		cy.getByTestId(value).click();
 
@@ -10,7 +10,7 @@ export default class CreateConcernPage {
 	}
 
 	public withConcernRating(value: string): this {
-		Logger.Log(`With concern Rating ${value}`);
+		Logger.log(`With concern Rating ${value}`);
 
 		cy.getByTestId(value).click();
 
@@ -18,7 +18,7 @@ export default class CreateConcernPage {
 	}
 
 	public withMeansOfReferral(value: string): this {
-		Logger.Log(`With Means of referral ${value}`);
+		Logger.log(`With Means of referral ${value}`);
 
 		cy.getByTestId(value).click();
 
@@ -34,14 +34,14 @@ export default class CreateConcernPage {
 	}
 
 	public addConcern(): this {
-		Logger.Log("Click add concern button");
+		Logger.log("Click add concern button");
 		cy.getByTestId("add-concern-button").click();
 
 		return this;
 	}
 
 	public addAnotherConcern(): this {
-		Logger.Log("Adding another concern");
+		Logger.log("Adding another concern");
 
 		cy.getByTestId("add-concern-button").click();
 
@@ -49,14 +49,14 @@ export default class CreateConcernPage {
 	}
 
 	public nextStep(): this {
-		Logger.Log("Click next step button");
+		Logger.log("Click next step button");
 		cy.getByTestId("next-step-button").click();
 
 		return this;
 	}
 
 	public cancel(): this {
-		Logger.Log("Click cancel button");
+		Logger.log("Click cancel button");
 		cy.getByTestId("cancel-button").click();
 
 		return this;

@@ -3,7 +3,7 @@ import { ActionRow } from "./actionRow";
 
 class CaseActionTable {
     public getRowByAction(action: string): Cypress.Chainable<ActionRow> {
-        Logger.Log(`Getting the case action row for ${action}`);
+        Logger.log(`Getting the case action row for ${action}`);
 
         return cy.getByTestId(`row-${action}`)
         .then((el) =>

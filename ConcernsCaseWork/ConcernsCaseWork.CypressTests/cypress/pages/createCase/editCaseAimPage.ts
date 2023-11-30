@@ -16,7 +16,7 @@ export default class EditCaseAimPage {
 
     public hasCaseAim(value: string): this
     {
-        Logger.Log(`Has Case Aim ${value}`);
+        Logger.log(`Has Case Aim ${value}`);
 
         cy.getByTestId(`case-aim`).should(
 			"contain.text",
@@ -28,7 +28,7 @@ export default class EditCaseAimPage {
 
     public withCaseAim(value: string): this
     {
-        Logger.Log(`With Case aim ${value}`);
+        Logger.log(`With Case aim ${value}`);
 
         cy.getByTestId(`case-aim`).clear({ force: true }).type(value);
 
@@ -44,7 +44,7 @@ export default class EditCaseAimPage {
 
     public apply(): this
     {
-        Logger.Log("Apply Case aim");
+        Logger.log("Apply Case aim");
         cy.getByTestId("apply").click();
 
         return this;

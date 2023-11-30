@@ -50,7 +50,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow a user to edit a case that they did not create", () => {
 
-        Logger.Log("Check that we can edit if we did create the case");
+        Logger.log("Check that we can edit if we did create the case");
         caseMangementPage
             .showAllConcernDetails()
             .canEditConcern()
@@ -66,7 +66,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEditCaseHistory()
             .canAddCaseAction();
 
-        Logger.Log("Check that we cannot edit if we did not create the case");
+        Logger.log("Check that we cannot edit if we did not create the case");
         updateCaseOwner(caseId);
 
         caseMangementPage
@@ -87,7 +87,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit an srma that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an SRMA that they did create");
+        Logger.log("Check that the user can edit an SRMA that they did create");
         caseMangementPage
             .addCaseAction("Srma");
 
@@ -112,7 +112,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canCancel()
             .canDecline();
 
-        Logger.Log("Check that the user cannot edit an SRMA that they did not create");
+        Logger.log("Check that the user cannot edit an SRMA that they did not create");
         updateCaseOwner(caseId);
 
         viewSrmaPage
@@ -129,7 +129,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit a financial plan that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an SRMA that they did create");
+        Logger.log("Check that the user can edit an SRMA that they did create");
         caseMangementPage
             .addCaseAction("FinancialPlan");
 
@@ -142,7 +142,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEdit()
             .canClose();
 
-        Logger.Log("Check that the user cannot edit a financial plan that they did not create");
+        Logger.log("Check that the user cannot edit a financial plan that they did not create");
         updateCaseOwner(caseId);
 
         viewFinancialPlanPage
@@ -152,7 +152,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit an nti that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an nti that they did create");
+        Logger.log("Check that the user can edit an nti that they did create");
         caseMangementPage
             .addCaseAction("Nti");
 
@@ -167,7 +167,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canClose()
             .canLift();
 
-        Logger.Log("Check that the user cannot edit an nti that they did not create");
+        Logger.log("Check that the user cannot edit an nti that they did not create");
         updateCaseOwner(caseId);
 
         viewNtiPage
@@ -179,7 +179,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit an nti warning letter that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an nti warning letter that they did create");
+        Logger.log("Check that the user can edit an nti warning letter that they did create");
         caseMangementPage
             .addCaseAction("NtiWarningLetter");
 
@@ -192,7 +192,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEdit()
             .canClose();
 
-        Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+        Logger.log("Check that the user cannot edit an nti warning letter that they did not create");
         updateCaseOwner(caseId);
 
         viewNtiWarningLetterPage
@@ -202,7 +202,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit an nti under consideration that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an nti under consideration that they did create");
+        Logger.log("Check that the user can edit an nti under consideration that they did create");
         caseMangementPage
             .addCaseAction("NtiUnderConsideration");
 
@@ -215,7 +215,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEdit()
             .canClose();
 
-        Logger.Log("Check that the user cannot edit an nti under consideration that they did not create");
+        Logger.log("Check that the user cannot edit an nti under consideration that they did not create");
         updateCaseOwner(caseId);
         
         viewNtiUnderConsiderationPage
@@ -225,7 +225,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit a decision that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an nti decision that they did create");
+        Logger.log("Check that the user can edit an nti decision that they did create");
         caseMangementPage
             .addCaseAction("Decision");
 
@@ -247,7 +247,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEditDecisionOutcome()
             .canCloseDecision();
 
-        Logger.Log("Check that the user cannot edit a decision that they did not create");
+        Logger.log("Check that the user cannot edit a decision that they did not create");
         updateCaseOwner(caseId);
 
         viewDecisionPage
@@ -257,7 +257,7 @@ describe("Testing permissions on cases and case actions", () => {
     });
 
     it("Should not allow the user to edit a trust financial forecast that they did not create", () => {
-        Logger.Log("Check that the user can edit a trust financial forecast that they did create");
+        Logger.log("Check that the user can edit a trust financial forecast that they did create");
         caseMangementPage
             .addCaseAction("TrustFinancialForecast");
 
@@ -274,7 +274,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEdit()
             .canClose();
 
-        Logger.Log("Check that the user cannot edit a trust financial forecast that they did not create");
+        Logger.log("Check that the user cannot edit a trust financial forecast that they did not create");
         updateCaseOwner(caseId);
 
         viewTffPage

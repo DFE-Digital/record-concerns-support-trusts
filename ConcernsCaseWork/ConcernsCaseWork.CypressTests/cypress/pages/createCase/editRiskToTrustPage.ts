@@ -6,7 +6,7 @@ export default class EditRiskToTrustPage {
 
     public hasRiskToTrust(value: string): this
     {
-        Logger.Log(`Has risk to trust ${value}`);
+        Logger.log(`Has risk to trust ${value}`);
 
         cy.getByTestId(value).should("be.checked");
 
@@ -15,7 +15,7 @@ export default class EditRiskToTrustPage {
 
     public withRiskToTrust(value: string): this
     {
-        Logger.Log(`With risk to trust ${value}`);
+        Logger.log(`With risk to trust ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -24,7 +24,7 @@ export default class EditRiskToTrustPage {
 
     public apply(): this
     {
-        Logger.Log("Apply risk to trust");
+        Logger.log("Apply risk to trust");
         cy.getByTestId("apply").click();
 
         return this;

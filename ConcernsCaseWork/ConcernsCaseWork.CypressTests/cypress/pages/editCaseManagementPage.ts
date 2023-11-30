@@ -4,7 +4,7 @@ class EditCaseManagementPage
 {
     public withCaseOwner(value: string): this
     {
-        Logger.Log(`With case owner ${value}`);
+        Logger.log(`With case owner ${value}`);
 
         cy.getById("case-owner-input").clear().type(value);
 
@@ -12,7 +12,7 @@ class EditCaseManagementPage
     }
 
     public hasNoCaseOwnerResults(): this {
-        Logger.Log("Has case owner option");
+        Logger.log("Has case owner option");
         cy.get(".autocomplete__option").should("contain.text", "No results found");
 
         return this;
@@ -20,7 +20,7 @@ class EditCaseManagementPage
 
     public selectCaseOwnerOption(): this
     {
-        Logger.Log("Selecting first case owner option");
+        Logger.log("Selecting first case owner option");
         cy.get(".autocomplete__option").first().click();
 
         return this;
@@ -28,7 +28,7 @@ class EditCaseManagementPage
     
     public clearCaseOwner(): this
     {
-        Logger.Log(`Clearing the case owner`);
+        Logger.log(`Clearing the case owner`);
 
         cy.getById("case-owner-input").clear();
 
@@ -37,7 +37,7 @@ class EditCaseManagementPage
 
     public withIssue(value: string): this
     {
-        Logger.Log(`With issue ${value}`);
+        Logger.log(`With issue ${value}`);
         cy.getById("issue").clear().type(value);
 
         return this;
@@ -45,7 +45,7 @@ class EditCaseManagementPage
 
     public withCaseHistory(value: string): this
     {
-        Logger.Log(`With case history ${value}`);
+        Logger.log(`With case history ${value}`);
 
         cy.getById("case-history").clear().type(value);
 
@@ -54,7 +54,7 @@ class EditCaseManagementPage
 
     public withCaseHistoryExceedingLimit(): this
     {
-        Logger.Log(`With case history exceeding limit`);
+        Logger.log(`With case history exceeding limit`);
 
         cy.getById('case-history').clear().invoke("val", "x 1".repeat(2001));
 
@@ -62,7 +62,7 @@ class EditCaseManagementPage
     }
 
     public hasCaseOwner(value: string): this {
-        Logger.Log(`Has case owner ${value}`);
+        Logger.log(`Has case owner ${value}`);
 
         // Can be improved later
         // Currently its driven by the casing of the email when the user logs in
@@ -78,14 +78,14 @@ class EditCaseManagementPage
     }
 
     public hasCaseHistory(value: string): this {
-        Logger.Log(`Has case history ${value}`);
+        Logger.log(`Has case history ${value}`);
         cy.getById("case-history").should("has.value", value);
 
         return this;
     }
 
     public hasNoConcernType(value: string): this {
-        Logger.Log(`Has no concern type for ${value}`);
+        Logger.log(`Has no concern type for ${value}`);
 
         cy
         .getByTestId("concern-type-container")
@@ -95,14 +95,14 @@ class EditCaseManagementPage
     }
     
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);
 
         return this;
     }
 
     public save(): this {
-        Logger.Log("Saving case updates");
+        Logger.log("Saving case updates");
         cy.getByTestId("save-case").click();
 
         return this;

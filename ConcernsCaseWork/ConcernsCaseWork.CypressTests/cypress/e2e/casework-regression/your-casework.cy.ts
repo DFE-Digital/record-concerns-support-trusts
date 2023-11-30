@@ -94,10 +94,10 @@ describe("Your casework tests", () =>
                 {
                     pageOneCases = caseIds;
 
-                    Logger.Log("Ensure we have 5 cases on page one")
+                    Logger.log("Ensure we have 5 cases on page one")
                     expect(pageOneCases.length).to.eq(5);
 
-                    Logger.Log("Moving to the second page using the direct link");
+                    Logger.log("Moving to the second page using the direct link");
                     paginationComponent.goToPage("2");
                     return caseworkTable.getOpenCaseIds()
                 })
@@ -105,32 +105,32 @@ describe("Your casework tests", () =>
                 {
                     pageTwoCases = caseIds;
 
-                    Logger.Log("Ensure we have 5 cases on page 2");
+                    Logger.log("Ensure we have 5 cases on page 2");
                     expect(pageTwoCases.length).to.equal(5);
                     
-                    Logger.Log("Ensure that the cases on page one and two are different");
+                    Logger.log("Ensure that the cases on page one and two are different");
                     hasNoSimilarElements(pageOneCases, pageTwoCases);
 
-                    Logger.Log("Move to the previous page, which is page 1")
+                    Logger.log("Move to the previous page, which is page 1")
                     paginationComponent.previous();
                     return caseworkTable.getOpenCaseIds()
                 })
                 .then((caseIds: Array<string>) =>
                 {
-                    Logger.Log("On moving to page one, we should get the exact same cases");
+                    Logger.log("On moving to page one, we should get the exact same cases");
                     expect(caseIds).to.deep.equal(pageOneCases);
 
-                    Logger.Log("Move to the next page, which is page 2");
+                    Logger.log("Move to the next page, which is page 2");
                     paginationComponent.next();
                     return caseworkTable.getOpenCaseIds();
                 })
                 .then((caseIds: Array<string>) =>
                 {
-                    Logger.Log("On moving to page two, we should get the exact same cases");
+                    Logger.log("On moving to page two, we should get the exact same cases");
                     expect(caseIds).to.deep.equal(pageTwoCases);
 
                     // We had relative instead of absolute path links so it didn't work when pagination was added
-                    Logger.Log("Ensure the case loads when clicking the link");
+                    Logger.log("Ensure the case loads when clicking the link");
                     const caseIdToView = caseIds[0];
                     caseworkTable.getRowByCaseId(caseIdToView)
                     .then((row) =>

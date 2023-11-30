@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class CloseDecisionPage
 {
     public withFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
-		Logger.Log(`With Supporting Notes ${finaliseSupportingNotes}`);
+		Logger.log(`With Supporting Notes ${finaliseSupportingNotes}`);
 
 		cy.getById("SupportingNotes").clear().type(finaliseSupportingNotes);
 
@@ -11,7 +11,7 @@ export class CloseDecisionPage
 	}
 
 	public hasFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
-		Logger.Log(`With Supporting Notes ${finaliseSupportingNotes}`);
+		Logger.log(`With Supporting Notes ${finaliseSupportingNotes}`);
 
 		cy.getById("SupportingNotes").should("have.value", finaliseSupportingNotes);
 
@@ -19,7 +19,7 @@ export class CloseDecisionPage
 	}
 
 	public closeDecision(): this {
-		Logger.Log("Confirm closing the decision");
+		Logger.log("Confirm closing the decision");
 
 		cy.get('#add-decision-button').click();
 
@@ -27,7 +27,7 @@ export class CloseDecisionPage
 	}
 
 	public withSupportingNotesExceedingLimit(): this {
-		Logger.Log("With supporting notes exceeding the limit");
+		Logger.log("With supporting notes exceeding the limit");
 
 		cy.getById("SupportingNotes").clear().invoke("val", "x".repeat(2001));
 
@@ -35,7 +35,7 @@ export class CloseDecisionPage
 	}
 
 	public hasValidationError(message: string): this {
-		Logger.Log(`Has Validation error ${message}`);
+		Logger.log(`Has Validation error ${message}`);
 
 		cy.get("#errorSummary").should(
 			"contain.text",

@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class ViewDecisionPage
 {
 	public hasDateOpened(value: string): this {
-		Logger.Log(`Has date opened ${value}`);
+		Logger.log(`Has date opened ${value}`);
 
 		cy.getByTestId("decision-open-text").should("contain.text", value);
 
@@ -11,7 +11,7 @@ export class ViewDecisionPage
 	}
 
 	public hasDateClosed(value: string): this {
-		Logger.Log(`Has date closed ${value}`);
+		Logger.log(`Has date closed ${value}`);
 
 		cy.getByTestId("decision-closed-text").should("contain.text", value);
 
@@ -46,7 +46,7 @@ export class ViewDecisionPage
 	}
 
 	public hasNoRetrospectiveRequestField(): this {
-		Logger.Log("Has no retrospective request");
+		Logger.log("Has no retrospective request");
 		cy.getByTestId("row-retrospective-request").should("not.exist");
 
 		return this;
@@ -86,7 +86,7 @@ export class ViewDecisionPage
 	}
 
 	public hasNoDateESFAReceivedRequestField(): this {
-		Logger.Log("Has no date ESFA received");
+		Logger.log("Has no date ESFA received");
 		cy.getByTestId("row-esfa-date-requested").should("not.exist");
 
 		return this;
@@ -104,7 +104,7 @@ export class ViewDecisionPage
 	}
 
 	public hasNoTotalAmountRequestedField(): this {
-		Logger.Log("Has no total amount requested");
+		Logger.log("Has no total amount requested");
 		cy.getByTestId("row-total-amount-requested").should("not.exist");
 
 		return this;
@@ -145,7 +145,7 @@ export class ViewDecisionPage
 
 	public hasBusinessArea(businessArea: string): this
 	{
-		Logger.Log(`Has business area ${businessArea}`);
+		Logger.log(`Has business area ${businessArea}`);
 
 		cy.getByTestId("business-areas-consulted-text").should("contain.text", businessArea);
 
@@ -154,7 +154,7 @@ export class ViewDecisionPage
 
 	public hasDecisionOutcomeStatus(status: string): this
 	{
-		Logger.Log(`Has decision status ${status}`);
+		Logger.log(`Has decision status ${status}`);
 
 		cy.getByTestId("decision-status-text").should("contain.text", status);
 
@@ -163,7 +163,7 @@ export class ViewDecisionPage
 
 	public hasMadeDate(madeDate: string): this
 	{
-		Logger.Log(`Has made date ${madeDate}`);
+		Logger.log(`Has made date ${madeDate}`);
 
 		cy.getByTestId("decision-made-date-text").should("contain.text", madeDate);
 
@@ -172,7 +172,7 @@ export class ViewDecisionPage
 
 	public hasEffectiveFromDate(effectiveDate: string): this
 	{
-		Logger.Log(`Has effective from date ${effectiveDate}`);
+		Logger.log(`Has effective from date ${effectiveDate}`);
 
 		cy.getByTestId("decision-date-effective-text").should("contain.text", effectiveDate);
 
@@ -181,7 +181,7 @@ export class ViewDecisionPage
 
 	public hasTotalAmountApproved(total: string): this
 	{
-		Logger.Log(`Has total amount approved ${total}`);
+		Logger.log(`Has total amount approved ${total}`);
 
 		cy.getByTestId("total-amount-approved-text").should("contain.text", total);
 
@@ -189,7 +189,7 @@ export class ViewDecisionPage
 	}
 
 	public hasNoTotalAmountApprovedField(): this {
-		Logger.Log("Has no total amount approved");
+		Logger.log("Has no total amount approved");
 		cy.getByTestId("row-total-amount-approved").should("not.exist");
 
 		return this;
@@ -197,7 +197,7 @@ export class ViewDecisionPage
 
 	public hasAuthoriser(authoriser: string): this
 	{
-		Logger.Log(`Has authoriser ${authoriser}`);
+		Logger.log(`Has authoriser ${authoriser}`);
 
 		cy.getByTestId("authoriser-text").should("contain.text", authoriser);
 
@@ -206,7 +206,7 @@ export class ViewDecisionPage
 
 	public hasNoDecisionOutcome(): this
 	{
-		Logger.Log(`Has no decision outcome displayed`);
+		Logger.log(`Has no decision outcome displayed`);
 
 		cy.getByTestId("decision-outcome-heading").should("not.exist");
 		cy.getByTestId("decision-outcome-table").should("not.exist");
@@ -216,7 +216,7 @@ export class ViewDecisionPage
 
 	public cannotCreateAnotherDecisionOutcome(): this
 	{
-		Logger.Log("Checking we cannot create another decision outcome if one exists");
+		Logger.log("Checking we cannot create another decision outcome if one exists");
 
 		cy.getByTestId("continue-record-decision-button").should("not.exist");
 
@@ -224,7 +224,7 @@ export class ViewDecisionPage
 	}
 
 	public editDecision(): this {
-		Logger.Log("Editing decision");
+		Logger.log("Editing decision");
 
 		this.getEditDecision().children('a').click();
 
@@ -233,7 +233,7 @@ export class ViewDecisionPage
 
 	public canEditDecision(): this
 	{
-		Logger.Log("Can edit decision");
+		Logger.log("Can edit decision");
 
 		this.getEditDecision();
 
@@ -242,7 +242,7 @@ export class ViewDecisionPage
 
 	public cannotEditDecision(): this
 	{
-		Logger.Log("Cannot edit decision");
+		Logger.log("Cannot edit decision");
 
 		this.getEditDecision().should("not.exist");
 
@@ -251,7 +251,7 @@ export class ViewDecisionPage
 
 	public editDecisionOutcome(): this
 	{
-		Logger.Log(`Edit decision outcome`);
+		Logger.log(`Edit decision outcome`);
 
 		this.getEditDecisionOutcome()
 			.children("a")
@@ -263,7 +263,7 @@ export class ViewDecisionPage
 
 	public canEditDecisionOutcome(): this
 	{
-		Logger.Log("Cannot edit a decision outcome");
+		Logger.log("Cannot edit a decision outcome");
 
 		this.getEditDecisionOutcome();
 
@@ -272,7 +272,7 @@ export class ViewDecisionPage
 
 	public cannotEditDecisionOutcome(): this
 	{
-		Logger.Log("Cannot edit a decision outcome");
+		Logger.log("Cannot edit a decision outcome");
 
 		this.getEditDecisionOutcome().should("not.exist");
 
@@ -280,7 +280,7 @@ export class ViewDecisionPage
 	}
 
 	public createDecisionOutcome(): this {
-		Logger.Log("Creating decision outcome");
+		Logger.log("Creating decision outcome");
 
 		cy.getByTestId('continue-record-decision-button').click();
 
@@ -288,7 +288,7 @@ export class ViewDecisionPage
 	}
 
 	public closeDecision(): this {
-		Logger.Log("Closing decision");
+		Logger.log("Closing decision");
 		this.getCloseDecision().click();
 
 		return this;
@@ -296,7 +296,7 @@ export class ViewDecisionPage
 
 	public canCloseDecision()
 	{
-		Logger.Log("Can close a decision");
+		Logger.log("Can close a decision");
 
 		this.getCloseDecision();
 
@@ -305,7 +305,7 @@ export class ViewDecisionPage
 
 	public cannotCloseDecision(): this
 	{
-		Logger.Log("Cannot close decision");
+		Logger.log("Cannot close decision");
 
 		this.getCloseDecision().should("not.exist");
 

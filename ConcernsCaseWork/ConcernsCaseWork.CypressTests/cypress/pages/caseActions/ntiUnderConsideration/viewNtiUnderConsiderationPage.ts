@@ -4,7 +4,7 @@ export class ViewNtiUnderConsiderationPage
 {
     public hasDateOpened(value: string): this {
 
-        Logger.Log(`Has date opened ${value}`);
+        Logger.log(`Has date opened ${value}`);
 
         cy.getByTestId("date-opened-text").should("contain.text", value); 
 
@@ -13,7 +13,7 @@ export class ViewNtiUnderConsiderationPage
 
     public hasDateClosed(value: string): this {
 
-        Logger.Log(`Has date closed ${value}`);
+        Logger.log(`Has date closed ${value}`);
 
         cy.getByTestId("date-closed-text").should("contain.text", value); 
 
@@ -21,7 +21,7 @@ export class ViewNtiUnderConsiderationPage
     }
 
     public hasReason(value: string): this {
-        Logger.Log(`Has reason ${value}`);
+        Logger.log(`Has reason ${value}`);
 
         cy.getByTestId(`nti-reasons`).should("contain.text", value);
 
@@ -29,7 +29,7 @@ export class ViewNtiUnderConsiderationPage
     }
 
     public hasReasonCount(value: number): this {
-        Logger.Log(`Has reason count ${value}`);
+        Logger.log(`Has reason count ${value}`);
 
         cy.getByTestId(`nti-reasons`).children().should("have.length", value);
 
@@ -37,7 +37,7 @@ export class ViewNtiUnderConsiderationPage
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`nti-status`).should("contain.text", value);
 
@@ -45,7 +45,7 @@ export class ViewNtiUnderConsiderationPage
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getByTestId(`nti-notes`).should("contain.text", value);
 
@@ -54,7 +54,7 @@ export class ViewNtiUnderConsiderationPage
 
     public edit(): this
     {
-        Logger.Log("Editing NTI under consideration");
+        Logger.log("Editing NTI under consideration");
 
         this.getEdit().click();
 
@@ -63,7 +63,7 @@ export class ViewNtiUnderConsiderationPage
 
     public canEdit(): this
     {
-        Logger.Log("Can edit");
+        Logger.log("Can edit");
 
         this.getEdit();
 
@@ -72,7 +72,7 @@ export class ViewNtiUnderConsiderationPage
 
     public cannotEdit(): this
     {
-        Logger.Log("Cannot edit");
+        Logger.log("Cannot edit");
 
         this.getEdit().should("not.exist");
 
@@ -81,7 +81,7 @@ export class ViewNtiUnderConsiderationPage
 
     public close(): this
     {
-        Logger.Log("Closing NTI under consideration");
+        Logger.log("Closing NTI under consideration");
 
         this.getClose().click();
 
@@ -90,7 +90,7 @@ export class ViewNtiUnderConsiderationPage
 
     public canClose(): this
     {
-        Logger.Log("Can close");
+        Logger.log("Can close");
 
         this.getClose();
 
@@ -99,7 +99,7 @@ export class ViewNtiUnderConsiderationPage
 
     public cannotClose(): this
     {
-        Logger.Log("Cannot close");
+        Logger.log("Cannot close");
 
         this.getClose().should("not.exist");
 

@@ -26,7 +26,7 @@ describe("Testing the NTI warning letter action", () =>
 
     it("Should be able to add and edit an NTI warning letter", () =>
     {
-        Logger.Log("Checking validation");
+        Logger.log("Checking validation");
         editNtiWarningLetterPage
             .withNotesExceedingLimit()
             .withDaySent("22")
@@ -41,7 +41,7 @@ describe("Testing the NTI warning letter action", () =>
             .save()
             .hasValidationError(DateInvalidError.replace("{0}", "Date warning letter sent"));
 
-        Logger.Log("Checking accessibility on Add NTI warning letter");
+        Logger.log("Checking accessibility on Add NTI warning letter");
         cy.excuteAccessibilityTests();
 
         createConfiguredNtiWarningLetter();
@@ -68,7 +68,7 @@ describe("Testing the NTI warning letter action", () =>
             .hasCondition("Financial returns")
             .hasNotes("This is my notes");
 
-        Logger.Log("Editing the NTI warning letter");
+        Logger.log("Editing the NTI warning letter");
         viewNtiWarningLetterPage.edit();
 
         editNtiWarningLetterPage
@@ -80,7 +80,7 @@ describe("Testing the NTI warning letter action", () =>
             .hasReason("Risk of insolvency")
             .hasNotes("This is my notes");
 
-        Logger.Log("Checking accessibility on Edit NTI warning letter");
+        Logger.log("Checking accessibility on Edit NTI warning letter");
         cy.excuteAccessibilityTests();
 
         editNtiWarningLetterPage
@@ -107,7 +107,7 @@ describe("Testing the NTI warning letter action", () =>
 
         editNtiWarningLetterPage.save();
 
-        Logger.Log("Validate the NTI warning letter on the view page");
+        Logger.log("Validate the NTI warning letter on the view page");
 		actionSummaryTable
 			.getOpenAction("NTI Warning Letter")
 			.then(row =>
@@ -126,7 +126,7 @@ describe("Testing the NTI warning letter action", () =>
             .hasCondition("Scheme of delegation")
             .hasNotes("My edited notes");
 
-        Logger.Log("Checking accessibility on View NTI warning letter");
+        Logger.log("Checking accessibility on View NTI warning letter");
         cy.excuteAccessibilityTests();
     });
 
@@ -135,7 +135,7 @@ describe("Testing the NTI warning letter action", () =>
         editNtiWarningLetterPage
             .save();
 
-        Logger.Log("Validate the NTI warning letter on the view page");
+        Logger.log("Validate the NTI warning letter on the view page");
 		actionSummaryTable
 			.getOpenAction("NTI Warning Letter")
 			.then(row =>
@@ -168,7 +168,7 @@ describe("Testing the NTI warning letter action", () =>
     {
         createConfiguredNtiWarningLetter();
 
-        Logger.Log("Closing the NTI warning letter");
+        Logger.log("Closing the NTI warning letter");
 		actionSummaryTable
 			.getOpenAction("NTI Warning Letter")
 			.then(row =>
@@ -181,14 +181,14 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage
             .hasNotes("This is my notes");
 
-        Logger.Log("Validating the close page");
+        Logger.log("Validating the close page");
         closeNtiWarningLetterPage
             .withNotesExceedingLimit()
             .close()
             .hasValidationError("Please select a reason for closing the warning letter")
             .hasValidationError(NotesError);
 
-        Logger.Log("Checking accessibility on Close NTI warning letter");
+        Logger.log("Checking accessibility on Close NTI warning letter");
         cy.excuteAccessibilityTests();
 
         closeNtiWarningLetterPage
@@ -197,7 +197,7 @@ describe("Testing the NTI warning letter action", () =>
         
         closeNtiWarningLetterPage.close();
 
-        Logger.Log("Validate the Closed NTI warning letter on the view page");
+        Logger.log("Validate the Closed NTI warning letter on the view page");
 		actionSummaryTable
 			.getClosedAction("NTI Warning Letter")
 			.then(row =>
@@ -225,13 +225,13 @@ describe("Testing the NTI warning letter action", () =>
             .cannotEdit()
             .cannotClose();
 
-        Logger.Log("Checking accessibility on View Closed NTI warning letter");
+        Logger.log("Checking accessibility on View Closed NTI warning letter");
         cy.excuteAccessibilityTests();
     });
 
     function createConfiguredNtiWarningLetter()
     {
-        Logger.Log("Filling out the form");
+        Logger.log("Filling out the form");
         editNtiWarningLetterPage
             .withStatus("SentToTrust")
             .withDaySent("22")
@@ -250,7 +250,7 @@ describe("Testing the NTI warning letter action", () =>
 
         editNtiWarningLetterPage.saveConditions();
 
-        Logger.Log("Checking accessibility on NTI warning letter conditions");
+        Logger.log("Checking accessibility on NTI warning letter conditions");
         cy.excuteAccessibilityTests();
 
         editNtiWarningLetterPage.save();
@@ -258,7 +258,7 @@ describe("Testing the NTI warning letter action", () =>
 
     function addNtiWarningLetterToCase()
     {
-        Logger.Log("Adding Notice To Improve");
+        Logger.log("Adding Notice To Improve");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('NtiWarningLetter');
         AddToCasePage.getAddToCaseBtn().click();

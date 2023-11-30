@@ -16,7 +16,7 @@ export default class EditIssuePage {
 
     public hasIssue(value: string): this
     {
-        Logger.Log(`Has Issue ${value}`);
+        Logger.log(`Has Issue ${value}`);
 
         cy.getByTestId(`issue`).should(
 			"contain.text",
@@ -35,7 +35,7 @@ export default class EditIssuePage {
 
     public withIssue(value: string): this
     {
-        Logger.Log(`With issue ${value}`);
+        Logger.log(`With issue ${value}`);
 
         cy.getByTestId(`issue`).clear().type(value);
 
@@ -50,7 +50,7 @@ export default class EditIssuePage {
     }
 
     public hasCharacterCountMessage(value: string): this {
-        Logger.Log(`Has character count message ${value}`);
+        Logger.log(`Has character count message ${value}`);
         cy.contains(value);
 
         return this;
@@ -58,7 +58,7 @@ export default class EditIssuePage {
 
     public apply(): this
     {
-        Logger.Log("Apply Issue");
+        Logger.log("Apply Issue");
         cy.getByTestId("apply").click();
 
         return this;

@@ -5,7 +5,7 @@ class EditRegionPage {
 
     public hasRegion(value: string): this
     {
-        Logger.Log(`Has region ${value}`);
+        Logger.log(`Has region ${value}`);
 
         cy.getByTestId(value).should("be.checked")
 
@@ -14,7 +14,7 @@ class EditRegionPage {
 
     public withRegion(value: string): this
     {
-        Logger.Log(`With Region ${value}`);
+        Logger.log(`With Region ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -23,7 +23,7 @@ class EditRegionPage {
 
     public apply(): this
     {
-        Logger.Log("Apply changes");
+        Logger.log("Apply changes");
         cy.getByTestId("save-case").click();
 
         return this;

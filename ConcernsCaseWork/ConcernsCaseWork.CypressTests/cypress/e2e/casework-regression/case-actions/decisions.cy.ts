@@ -34,7 +34,7 @@ describe("User can add decisions to an existing case", () => {
 		const repayableFinancialSupportOption = "RepayableFinancialSupport";
 		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
 
-		Logger.Log("Validating Decision");
+		Logger.log("Validating Decision");
 		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
@@ -55,13 +55,13 @@ describe("User can add decisions to an existing case", () => {
 			)
 			.hasValidationError(NotesError);
 
-		Logger.Log("Ensure the decision type sub questions do not display if not selected");
+		Logger.log("Ensure the decision type sub questions do not display if not selected");
 		editDecisionPage
 			.hasNoEnabledOrSelectedSubQuestions("RepayableFinancialSupport")
 			.hasNoEnabledOrSelectedSubQuestions("NonRepayableFinancialSupport")
 			.hasNoEnabledOrSelectedSubQuestions("ShortTermCashAdvance");
 
-		Logger.Log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
+		Logger.log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
 		editDecisionPage
 			.withTypeOfDecision(repayableFinancialSupportOption)
 			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
@@ -70,10 +70,10 @@ describe("User can add decisions to an existing case", () => {
 			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
 		
 
-		Logger.Log("Checking accessibility on Create Decision");
+		Logger.log("Checking accessibility on Create Decision");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Creating Decision");
+		Logger.log("Creating Decision");
 		editDecisionPage
 			.withHasCrmCase("yes")
 			.withCrmEnquiry("444")
@@ -94,7 +94,7 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
 
-		Logger.Log("Selecting Decision from open actions");
+		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
 			.then(row =>
@@ -105,7 +105,7 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Viewing Decision");
+		Logger.log("Viewing Decision");
 		viewDecisionPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("444")
@@ -124,9 +124,9 @@ describe("User can add decisions to an existing case", () => {
 			.cannotCloseDecision()
 			.editDecision();
 
-		Logger.Log("Editing Decision");
+		Logger.log("Editing Decision");
 
-		Logger.Log("Check existing values are set");
+		Logger.log("Check existing values are set");
 		editDecisionPage
 			.hasCrmEnquiry("444")
 			.hasCrmCase("yes")
@@ -146,7 +146,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
 			.hasSupportingNotes("These are some supporting notes!")
 
-		Logger.Log("Set new values");
+		Logger.log("Set new values");
 		editDecisionPage
 			.withHasCrmCase("no")
 			.withCrmEnquiry("777")
@@ -163,13 +163,13 @@ describe("User can add decisions to an existing case", () => {
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes");
 
-		Logger.Log("Checking accessibility on Edit Decision");
+		Logger.log("Checking accessibility on Edit Decision");
 		cy.excuteAccessibilityTests();
 
 		editDecisionPage
 			.save();
 
-		Logger.Log("Check the decision sub questions have been updated");
+		Logger.log("Check the decision sub questions have been updated");
 		viewDecisionPage.editDecision();
 
 		// The sub questions only appear on edit, so we need to make sure they got updated
@@ -180,7 +180,7 @@ describe("User can add decisions to an existing case", () => {
 
 		editDecisionPage.cancel();
 
-		Logger.Log("Viewing Edited Decision");
+		Logger.log("Viewing Edited Decision");
 		viewDecisionPage
 			.hasCrmEnquiry("777")
 			.hasCrmCase("No")
@@ -199,7 +199,7 @@ describe("User can add decisions to an existing case", () => {
 
 	it("Closing decision", function () {
 
-		Logger.Log("Adding note on the decision that will be closing ");
+		Logger.log("Adding note on the decision that will be closing ");
 		editDecisionPage
 			.withHasCrmCase("yes")
 			.withCrmEnquiry("444")
@@ -215,11 +215,11 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotes("This is a test")
 			.save();
 
-		Logger.Log(
+		Logger.log(
 			"Selecting the Decision from open cases and validating it before closing it"
 		);
 
-		Logger.Log("Selecting Decision from open actions");
+		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
 			.then(row =>
@@ -244,7 +244,7 @@ describe("User can add decisions to an existing case", () => {
 			.withBusinessArea("FinancialProviderMarketOversight")
 			.saveDecisionOutcome();
 
-		Logger.Log("Selecting Decision from open actions");
+		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
 			.then(row =>
@@ -252,30 +252,30 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Selecting decision outcome, saving and closing decision");
+		Logger.log("Selecting decision outcome, saving and closing decision");
 		viewDecisionPage.closeDecision();
 
 		closeDecisionPage.hasFinaliseSupportingNotes("This is a test");
 
-		Logger.Log("Validating notes can not exceed limits");
+		Logger.log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
 			.closeDecision()
 			.hasValidationError("Supporting notes must be 2000 characters or less");
 
-		Logger.Log("Checking accessibility on Closed Decision");
+		Logger.log("Checking accessibility on Closed Decision");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Add close decision finalise supporting notes");
+		Logger.log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
 			.closeDecision();
 
-		Logger.Log(
+		Logger.log(
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
 		);
 
-		Logger.Log("Selecting Decision from closed actions");
+		Logger.log("Selecting Decision from closed actions");
 		actionSummaryTable
 			.getClosedAction("Decision: Multiple Decision Types")
 			.then(row =>
@@ -313,15 +313,15 @@ describe("User can add decisions to an existing case", () => {
 			.cannotEditDecision()
 			.cannotEditDecisionOutcome();
 
-		Logger.Log("Checking accessibility on View Closed Decision");
+		Logger.log("Checking accessibility on View Closed Decision");
 		cy.excuteAccessibilityTests();
 	});
 
 	it("When Decision is empty", function () {
-		Logger.Log("Creating Empty Decision");
+		Logger.log("Creating Empty Decision");
 		editDecisionPage.save();
 
-		Logger.Log("Selecting Decision from open actions");
+		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
 			.then(row =>
@@ -332,7 +332,7 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Create Decision Outcome with only status");
+		Logger.log("Create Decision Outcome with only status");
 		viewDecisionPage
 			.createDecisionOutcome();
 
@@ -347,7 +347,7 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Viewing Empty Decision");
+		Logger.log("Viewing Empty Decision");
 		viewDecisionPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("Empty")
@@ -368,7 +368,7 @@ describe("User can add decisions to an existing case", () => {
 	});
 
 	it("Create, edit and view a decision outcome, checking validation", () => {
-		Logger.Log("Creating Empty Decision");
+		Logger.log("Creating Empty Decision");
 		editDecisionPage
 			.save();
 
@@ -379,12 +379,12 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Creating a decision outcome");
+		Logger.log("Creating a decision outcome");
 		viewDecisionPage
 			.hasNoDecisionOutcome()
 			.createDecisionOutcome();
 
-		Logger.Log("Checking validation ");
+		Logger.log("Checking validation ");
 		decisionOutcomePage
 			.withDateDecisionMadeDay("24")
 			.withDateDecisionMadeMonth("13")
@@ -400,7 +400,7 @@ describe("User can add decisions to an existing case", () => {
 			DateInvalidError.replace("{0}", "Date decision takes effect")
 		]);
 
-		Logger.Log("Checking accessibility on Add Decision Outcome");
+		Logger.log("Checking accessibility on Add Decision Outcome");
 		cy.excuteAccessibilityTests();
 
 		decisionOutcomePage
@@ -418,7 +418,7 @@ describe("User can add decisions to an existing case", () => {
 			DateIncompleteError.replace("{0}", "Date decision takes effect")
 		]);
 
-		Logger.Log("Create Decision Outcome");
+		Logger.log("Create Decision Outcome");
 		decisionOutcomePage
 			.withDecisionOutcomeStatus("ApprovedWithConditions")
 			.withTotalAmountApproved("50,000")
@@ -441,7 +441,7 @@ describe("User can add decisions to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("View decision outcome")
+		Logger.log("View decision outcome")
 
 		viewDecisionPage
 			.hasDecisionOutcomeStatus("Approved with conditions")
@@ -454,11 +454,11 @@ describe("User can add decisions to an existing case", () => {
 			.hasAuthoriser("Deputy Director")
 			.cannotCreateAnotherDecisionOutcome();
 		
-		Logger.Log("Edit decision outcome")
+		Logger.log("Edit decision outcome")
 		viewDecisionPage
 			.editDecisionOutcome();
 
-		Logger.Log("Verify Existing Values");
+		Logger.log("Verify Existing Values");
 		decisionOutcomePage
 			.hasDecisionOutcomeStatus("ApprovedWithConditions")
 			.hasTotalAmountApproved("50,000")
@@ -473,10 +473,10 @@ describe("User can add decisions to an existing case", () => {
 			.hasBusinessArea("Capital")
 			.hasBusinessArea("FinancialProviderMarketOversight");
 
-		Logger.Log("Checking accessibility on Edit Decision Outcome");
+		Logger.log("Checking accessibility on Edit Decision Outcome");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Edit Decision Outcome");
+		Logger.log("Edit Decision Outcome");
 		decisionOutcomePage
 			.withDecisionOutcomeStatus("Approved")
 			.withTotalAmountApproved("1,000,000")
@@ -492,7 +492,7 @@ describe("User can add decisions to an existing case", () => {
 			.withBusinessArea("RegionsGroup")
 			.saveDecisionOutcome();
 
-		Logger.Log("View Updated Decision Outcome");
+		Logger.log("View Updated Decision Outcome");
 		viewDecisionPage
 			.hasDecisionOutcomeStatus("Approved")
 			.hasTotalAmountApproved("1,000,000")

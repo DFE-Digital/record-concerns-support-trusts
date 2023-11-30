@@ -19,7 +19,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasNoTotalAmountApprovedField(): this {
-		Logger.Log("Has no total amount field");
+		Logger.log("Has no total amount field");
 
 		cy.getByTestId("container-total-amount-approved").should("not.exist");
 
@@ -113,7 +113,7 @@ export class DecisionOutcomePage {
 	}
 
 	public hasBusinessAreaOptions(areas: Array<string>): this {
-		Logger.Log(`Has business area options ${areas.join()}`);
+		Logger.log(`Has business area options ${areas.join()}`);
 
 		cy
 			.getByTestId('container-business-areas')
@@ -128,7 +128,7 @@ export class DecisionOutcomePage {
 
 	public deselectAllBusinessAreas(): this
 	{
-		Logger.Log("Deselecting all business areas");
+		Logger.log("Deselecting all business areas");
 		cy.get(".govuk-checkboxes__input").uncheck();
 
 		return this;

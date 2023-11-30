@@ -16,7 +16,7 @@ export default class EditDeEscalationPointPage {
 
     public hasDeescalationPoint(value: string): this
     {
-        Logger.Log(`Has Deescalation point ${value}`);
+        Logger.log(`Has Deescalation point ${value}`);
 
         cy.getByTestId(`de-escalation-point`).should(
 			"contain.text",
@@ -28,7 +28,7 @@ export default class EditDeEscalationPointPage {
 
     public withDeescalationPoint(value: string): this
     {
-        Logger.Log(`With Deescalation point ${value}`);
+        Logger.log(`With Deescalation point ${value}`);
 
         cy.getByTestId(`de-escalation-point`).clear().type(value);
 
@@ -44,7 +44,7 @@ export default class EditDeEscalationPointPage {
 
     public apply(): this
     {
-        Logger.Log("Apply De escalation point");
+        Logger.log("Apply De escalation point");
         cy.getByTestId("apply").click();
 
         return this;

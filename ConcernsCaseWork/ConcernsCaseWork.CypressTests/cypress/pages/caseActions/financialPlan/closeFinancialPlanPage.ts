@@ -4,7 +4,7 @@ export class CloseFinancialPlanPage
 {
     public withReasonForClosure(reason: string): this
     {
-        Logger.Log(`With reason for closure ${reason}`);
+        Logger.log(`With reason for closure ${reason}`);
 
         cy.getByTestId(reason).click();
 
@@ -13,7 +13,7 @@ export class CloseFinancialPlanPage
 
     public withPlanReceivedDay(day: string): this
     {
-        Logger.Log(`With plan received day ${day}`);
+        Logger.log(`With plan received day ${day}`);
 
         cy.getByTestId("dtr-day-date-viable-plan-received").clear().type(day);
 
@@ -22,7 +22,7 @@ export class CloseFinancialPlanPage
 
     public withPlanReceivedMonth(month: string): this
     {
-        Logger.Log(`With plan received month ${month}`);
+        Logger.log(`With plan received month ${month}`);
 
         cy.getByTestId("dtr-month-date-viable-plan-received").clear().type(month);
 
@@ -31,7 +31,7 @@ export class CloseFinancialPlanPage
 
     public withPlanReceivedYear(year: string): this
     {
-        Logger.Log(`With plan received year ${year}`);
+        Logger.log(`With plan received year ${year}`);
 
         cy.getByTestId("dtr-year-date-viable-plan-received").clear().type(year);
 
@@ -40,7 +40,7 @@ export class CloseFinancialPlanPage
 
     public withNotes(notes: string): this
     {
-        Logger.Log(`With notes ${notes}`);
+        Logger.log(`With notes ${notes}`);
 
         cy.getById("financial-plan-notes").clear().type(notes);
 
@@ -48,7 +48,7 @@ export class CloseFinancialPlanPage
     }
 
     public withNotesExceedingLimit(): this {
-		Logger.Log("With notes exceeding the limit");
+		Logger.log("With notes exceeding the limit");
 
 		cy.getById("financial-plan-notes").clear().invoke("val", "x".repeat(2001));
 
@@ -57,7 +57,7 @@ export class CloseFinancialPlanPage
 
     public clearPlanReceivedDate(): this
     {
-        Logger.Log("Clearing plan received date");
+        Logger.log("Clearing plan received date");
 
         cy.getByTestId("dtr-day-date-viable-plan-received").clear();
         cy.getByTestId("dtr-month-date-viable-plan-received").clear();
@@ -68,7 +68,7 @@ export class CloseFinancialPlanPage
 
     public close()
     {
-        Logger.Log("Confirming the closure of the financial plan");
+        Logger.log("Confirming the closure of the financial plan");
 
         cy.getById("close-financial-plan-button").click();
 
@@ -76,7 +76,7 @@ export class CloseFinancialPlanPage
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);
 
         return this;

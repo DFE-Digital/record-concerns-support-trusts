@@ -16,7 +16,7 @@ export default class EditNextStepsPage {
 
     public hasNextSteps(value: string): this
     {
-        Logger.Log(`Has Deescalation point ${value}`);
+        Logger.log(`Has Deescalation point ${value}`);
 
         cy.getByTestId(`next-steps`).should(
 			"contain.text",
@@ -28,7 +28,7 @@ export default class EditNextStepsPage {
 
     public withNextSteps(value: string): this
     {
-        Logger.Log(`With Deescalation point ${value}`);
+        Logger.log(`With Deescalation point ${value}`);
 
         cy.getByTestId(`next-steps`).clear({ force: true }).type(value);
 
@@ -44,7 +44,7 @@ export default class EditNextStepsPage {
 
     public apply(): this
     {
-        Logger.Log("Apply Next Steps");
+        Logger.log("Apply Next Steps");
         cy.getByTestId("apply").click();
 
         return this;

@@ -1,6 +1,6 @@
 export class Logger
 {
-    public static Log(message: string)
+    public static log(message: string)
     {
         cy.task("log", message);
     }

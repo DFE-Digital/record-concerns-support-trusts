@@ -17,7 +17,7 @@ export default class AddConcernDetailsPage {
 
     public hasTrustSummaryDetails(value: string): this
     {
-        Logger.Log(`Has Trust summary details ${value}`);
+        Logger.log(`Has Trust summary details ${value}`);
 
         cy.getByTestId("trust-summary").should(
 			"contain.text",
@@ -27,7 +27,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withIssueExceedingLimit(): this {
-        Logger.Log(`With exceeding issue limit`);
+        Logger.log(`With exceeding issue limit`);
 
         this.withExceedingTextLimit("issue", 2001);
 
@@ -35,7 +35,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCurrentStatusExceedingLimit(): this {
-        Logger.Log(`With exceeding current status limit`);
+        Logger.log(`With exceeding current status limit`);
 
         this.withExceedingTextLimit("current-status", 4001);
 
@@ -43,7 +43,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCaseAimExceedingLimit(): this {
-        Logger.Log(`With exceeding case aim limit`);
+        Logger.log(`With exceeding case aim limit`);
 
         this.withExceedingTextLimit("case-aim", 1001);
 
@@ -51,7 +51,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withDeEscalationPointExceedingLimit(): this {
-        Logger.Log(`With exceeding deescalation point limit`);
+        Logger.log(`With exceeding deescalation point limit`);
 
         this.withExceedingTextLimit("de-escalation-point", 1001);
 
@@ -59,7 +59,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withNextStepsExceedingLimit(): this {
-        Logger.Log(`With exceeding next steps limit`);
+        Logger.log(`With exceeding next steps limit`);
 
         this.withExceedingTextLimit("next-steps", 4001);
 
@@ -67,7 +67,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCaseHistoryExceedingLimit(): this {
-        Logger.Log(`With exceeding case history limit`);
+        Logger.log(`With exceeding case history limit`);
 
         this.withExceedingTextLimit("case-history", 4300);
 
@@ -82,7 +82,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withIssue(value: string): this {
-        Logger.Log(`With issue ${value}`);
+        Logger.log(`With issue ${value}`);
 
         cy.getByTestId(`issue`).clear({force: true}).type(value);
 
@@ -90,7 +90,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCurrentStatus(value: string): this {
-        Logger.Log(`With current status ${value}`);
+        Logger.log(`With current status ${value}`);
 
         cy.getByTestId(`current-status`).clear({force: true}).type(value);
 
@@ -98,7 +98,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCaseAim(value: string): this {
-        Logger.Log(`With case aim ${value}`);
+        Logger.log(`With case aim ${value}`);
 
         cy.getByTestId(`case-aim`).clear({force: true}).type(value);
 
@@ -106,7 +106,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withDeEscalationPoint(value: string): this {
-        Logger.Log(`With deEscalation point ${value}`);
+        Logger.log(`With deEscalation point ${value}`);
 
         cy.getByTestId(`de-escalation-point`).clear({force: true}).type(value);
 
@@ -114,7 +114,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withNextSteps(value: string): this {
-        Logger.Log(`With next steps ${value}`);
+        Logger.log(`With next steps ${value}`);
 
         cy.getByTestId(`next-steps`).clear({force: true}).type(value);
 
@@ -122,7 +122,7 @@ export default class AddConcernDetailsPage {
     }
 
     public withCaseHistory(value: string): this {
-        Logger.Log(`With case history ${value}`);
+        Logger.log(`With case history ${value}`);
         cy.getByTestId(`case-history`).click({ force: true }).clear().type(value);
 
         return this;
@@ -134,7 +134,7 @@ export default class AddConcernDetailsPage {
 
     public createCase(): this
     {
-        Logger.Log("Creating case");
+        Logger.log("Creating case");
         cy.getByTestId("create-case-button").click();
 
         return this;
@@ -142,7 +142,7 @@ export default class AddConcernDetailsPage {
 
     public nextStep(): this
     {
-        Logger.Log("Click next step button");
+        Logger.log("Click next step button");
         cy.getByTestId("next-step-button").click();
 
         return this;

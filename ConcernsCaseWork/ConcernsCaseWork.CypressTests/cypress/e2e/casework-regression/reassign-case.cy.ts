@@ -24,7 +24,7 @@ describe("Testing reassigning cases", () => {
 	});
 
 	it("Should be able to edit an existing case owner", () => {
-		Logger.Log("editing the existing case owner");
+		Logger.log("editing the existing case owner");
 
 		// switch the case owner
 		updateCaseOwner(caseId);
@@ -37,7 +37,7 @@ describe("Testing reassigning cases", () => {
 			.selectCaseOwnerOption()
 			.hasCaseOwner(email);
 
-		Logger.Log("Checking accessibility on edit case owner");
+		Logger.log("Checking accessibility on edit case owner");
 		cy.excuteAccessibilityTests();
 
 		editCaseMangementPage.save();
@@ -46,20 +46,20 @@ describe("Testing reassigning cases", () => {
 
 		caseMangementPage.editCaseOwner();
 
-		Logger.Log("We get no results found if there are no matching results");
+		Logger.log("We get no results found if there are no matching results");
 		editCaseMangementPage.withCaseOwner("fghhj").hasNoCaseOwnerResults();
 
-		Logger.Log("We cannot set a blank case owner");
+		Logger.log("We cannot set a blank case owner");
 		editCaseMangementPage
 			.clearCaseOwner()
 			.save()
 			.hasValidationError("A case owner must be selected")
 			.hasCaseOwner(email);
 
-		Logger.Log("Checking accessibility on edit case owner");
+		Logger.log("Checking accessibility on edit case owner");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log(
+		Logger.log(
 			"We do not get a notification if we do not change the case owner"
 		);
 		editCaseMangementPage.save();

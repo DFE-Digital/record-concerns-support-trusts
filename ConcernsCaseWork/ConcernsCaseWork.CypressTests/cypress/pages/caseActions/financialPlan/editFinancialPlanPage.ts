@@ -4,7 +4,7 @@ export class EditFinancialPlanPage
 {
     public hasHeadingText(heading: string): this
     {
-        Logger.Log(`Has heading ${heading}`);
+        Logger.log(`Has heading ${heading}`);
 
         cy.get('h1[class="govuk-heading-l"]').should("contain.text", heading);
 
@@ -13,7 +13,7 @@ export class EditFinancialPlanPage
 
     public withPlanRequestedDay(day: string): this
     {
-        Logger.Log(`With plan requested day ${day}`);
+        Logger.log(`With plan requested day ${day}`);
 
         cy.getById("dtr-day-date-plan-requested").clear().type(day);
 
@@ -22,7 +22,7 @@ export class EditFinancialPlanPage
 
     public withPlanRequestedMonth(month: string): this
     {
-        Logger.Log(`With plan requested month ${month}`);
+        Logger.log(`With plan requested month ${month}`);
 
         cy.getById("dtr-month-date-plan-requested").clear().type(month);
 
@@ -31,7 +31,7 @@ export class EditFinancialPlanPage
 
     public withPlanRequestedYear(year: string): this
     {
-        Logger.Log(`With plan requested year ${year}`);
+        Logger.log(`With plan requested year ${year}`);
 
         cy.getById("dtr-year-date-plan-requested").clear().type(year);
 
@@ -40,7 +40,7 @@ export class EditFinancialPlanPage
 
     public clearPlanRequestedDate(): this
     {
-        Logger.Log("Clearing plan requested date");
+        Logger.log("Clearing plan requested date");
 
         cy.getById("dtr-day-date-plan-requested").clear();
         cy.getById("dtr-month-date-plan-requested").clear();
@@ -53,7 +53,7 @@ export class EditFinancialPlanPage
 
     public withNotes(notes: string): this
     {
-        Logger.Log(`With notes ${notes}`);
+        Logger.log(`With notes ${notes}`);
 
         cy.getById("financial-plan-notes").clear().type(notes);
 
@@ -70,7 +70,7 @@ export class EditFinancialPlanPage
 
     public save(): this
     {
-        Logger.Log("Save financial plan");
+        Logger.log("Save financial plan");
 
         cy.getById("add-financial-plan-button").click();
 
@@ -79,7 +79,7 @@ export class EditFinancialPlanPage
 
     public hasValidationError(error: string): this
     {
-        Logger.Log(`Has validation error ${error}`);
+        Logger.log(`Has validation error ${error}`);
 
         cy.getById("errorSummary").should(
 			"contain.text",
@@ -91,7 +91,7 @@ export class EditFinancialPlanPage
 
     public hasStatus(status: string): this
     {
-        Logger.Log(`With entered status ${status}`);
+        Logger.log(`With entered status ${status}`);
 
         var selector = `status-${status.split(" ").join("")}`;
 
@@ -102,7 +102,7 @@ export class EditFinancialPlanPage
 
     public hasPlanRequestedDay(day: string): this
     {
-        Logger.Log(`Has entered plan requested day ${day}`);
+        Logger.log(`Has entered plan requested day ${day}`);
 
         cy.getById("dtr-day-date-plan-requested").should("have.value", day);
 
@@ -111,7 +111,7 @@ export class EditFinancialPlanPage
 
     public hasPlanRequestedMonth(month: string): this
     {
-        Logger.Log(`Has entered plan requested month ${month}`);
+        Logger.log(`Has entered plan requested month ${month}`);
 
         cy.getById("dtr-month-date-plan-requested").should("have.value", month);
 
@@ -120,7 +120,7 @@ export class EditFinancialPlanPage
 
     public hasPlanRequestedYear(year: string): this
     {
-        Logger.Log(`Has entered plan requested year ${year}`);
+        Logger.log(`Has entered plan requested year ${year}`);
 
         cy.getById("dtr-year-date-plan-requested").should("have.value", year);
 
@@ -129,7 +129,7 @@ export class EditFinancialPlanPage
 
     public hasPlanReceivedDay(day: string): this
     {
-        Logger.Log(`Has entered plan received day ${day}`);
+        Logger.log(`Has entered plan received day ${day}`);
 
         cy.getById("dtr-day-viable-plan").should("have.value", day);
 
@@ -138,7 +138,7 @@ export class EditFinancialPlanPage
 
     public hasPlanReceivedMonth(month: string): this
     {
-        Logger.Log(`Has entered plan received month ${month}`);
+        Logger.log(`Has entered plan received month ${month}`);
 
         cy.getById("dtr-month-viable-plan").should("have.value", month);
 
@@ -147,7 +147,7 @@ export class EditFinancialPlanPage
 
     public hasPlanReceivedYear(year: string): this
     {
-        Logger.Log(`Has entered plan received year ${year}`);
+        Logger.log(`Has entered plan received year ${year}`);
 
         cy.getById("dtr-year-viable-plan").should("have.value", year);
 
@@ -156,7 +156,7 @@ export class EditFinancialPlanPage
 
     public hasNotes(notes: string): this
     {
-        Logger.Log(`With entered notes ${notes}`);
+        Logger.log(`With entered notes ${notes}`);
 
         cy.getById("financial-plan-notes").should("contain.text", notes);
 

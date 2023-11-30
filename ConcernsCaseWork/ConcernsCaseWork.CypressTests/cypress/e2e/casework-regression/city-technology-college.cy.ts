@@ -49,7 +49,7 @@ describe("Creating a case for a city technology college", () =>
             postcode: "AB1 2CD"
         };
 
-        Logger.Log("Creating CTC via Api");
+        Logger.log("Creating CTC via Api");
         ctcApi.get(ctcRequest.ukprn)
             .then(response => {
 
@@ -61,33 +61,33 @@ describe("Creating a case for a city technology college", () =>
 	});
 
     it("Should create a case with only required fields", () => {
-        Logger.Log("Create a case");
+        Logger.log("Create a case");
         createCasePage
             .createCase()
             .withTrustName(ctcRequest.name)
             .selectOption()
             .confirmOption();
 
-        Logger.Log("Create a valid case division");
+        Logger.log("Create a valid case division");
         selectCaseDivisionPage
             .withCaseDivision("SFSO")
             .continue();
 
-        Logger.Log("Populate territory");
+        Logger.log("Populate territory");
         addTerritoryPage
             .withTerritory(territory)
             .nextStep();
 
-        Logger.Log("Create a valid Non-concern case type");
+        Logger.log("Create a valid Non-concern case type");
         selectCaseTypePage
             .withCaseType("NonConcerns")
             .continue();
 
-        Logger.Log("Add non concerns case");
+        Logger.log("Add non concerns case");
         addConcernDetailsPage
             .createCase();
 
-        Logger.Log("Verify case details");
+        Logger.log("Verify case details");
         caseManagementPage
             .hasTrustContain(ctcRequest.name)
             .hasManagedBy("SFSO", territory)

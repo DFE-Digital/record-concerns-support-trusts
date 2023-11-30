@@ -3,7 +3,7 @@ import { ActionSummaryRow } from "./actionSummaryRow";
 
 export class ActionSummaryTable {
     public getOpenAction(value: string): Cypress.Chainable<ActionSummaryRow> {
-        Logger.Log(`Getting open action summary row ${value}`);
+        Logger.log(`Getting open action summary row ${value}`);
 
         return cy.getById("open-case-actions")
             .find(`[data-testid='row-${value}']`)
@@ -14,7 +14,7 @@ export class ActionSummaryTable {
     }
 
     public getClosedAction(value: string): Cypress.Chainable<ActionSummaryRow> {
-        Logger.Log(`Getting closed action summary row ${value}`);
+        Logger.log(`Getting closed action summary row ${value}`);
 
         return cy.getById("close-case-actions")
             .find(`[data-testid='row-${value}']`)

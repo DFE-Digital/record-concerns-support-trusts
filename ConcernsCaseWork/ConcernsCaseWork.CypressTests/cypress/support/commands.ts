@@ -51,12 +51,12 @@ Cypress.Commands.add("loginWithCredentials", () => {
 });
 
 Cypress.Commands.add("excuteAccessibilityTests", () => {
-	Logger.Log("Executing the command");
+	Logger.log("Executing the command");
 	const continueOnFail = false;
-	Logger.Log("Inject Axe");
+	Logger.log("Inject Axe");
 	cy.injectAxe();
 
-	Logger.Log("Checking accessibility");
+	Logger.log("Checking accessibility");
 	cy.checkA11y(
 		undefined,
 		{
@@ -70,7 +70,7 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 		continueOnFail
 	);
 
-	Logger.Log("Command finished");
+	Logger.log("Command finished");
 });
 
 Cypress.Commands.add("createNonConcernsCase", (request?: CreateCaseRequest) =>
@@ -108,7 +108,7 @@ Cypress.Commands.add("basicCreateCase", (request?: CreateCaseRequest) => {
 
 Cypress.Commands.add("closeConcern", () =>
 {
-	Logger.Log("Closing concern");
+	Logger.log("Closing concern");
 	caseMangementPage.editConcern();
 	editConcernPage.closeConcern().confirmCloseConcern();
 });

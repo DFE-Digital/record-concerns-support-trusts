@@ -5,7 +5,7 @@ export default class AddTerritoryPage {
 
     public hasTerritory(value: string): this
     {
-        Logger.Log(`Has territory ${value}`);
+        Logger.log(`Has territory ${value}`);
 
         cy.getByTestId(value).should("be.checked")
 
@@ -14,7 +14,7 @@ export default class AddTerritoryPage {
 
     public withTerritory(value: string): this
     {
-        Logger.Log(`With Territory ${value}`);
+        Logger.log(`With Territory ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -34,7 +34,7 @@ export default class AddTerritoryPage {
 
     public nextStep(): this
     {
-        Logger.Log("Click next step button");
+        Logger.log("Click next step button");
         cy.getByTestId("next-step-button").click();
 
         return this;
@@ -42,7 +42,7 @@ export default class AddTerritoryPage {
 
     public apply(): this
     {
-        Logger.Log("Click apply button");
+        Logger.log("Click apply button");
         cy.getByTestId("apply_territory_btn").click();
 
         return this;

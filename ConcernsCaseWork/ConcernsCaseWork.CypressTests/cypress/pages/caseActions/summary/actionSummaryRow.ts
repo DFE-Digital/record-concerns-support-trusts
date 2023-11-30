@@ -7,7 +7,7 @@ export class ActionSummaryRow {
     }
 
     public hasName(value: string): this {
-        Logger.Log(`Has name ${value}`);
+        Logger.log(`Has name ${value}`);
 
         cy.wrap(this.element)
         .within(() => 
@@ -19,7 +19,7 @@ export class ActionSummaryRow {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.wrap(this.element)
         .within(() => {
@@ -30,7 +30,7 @@ export class ActionSummaryRow {
     }
 
     public hasCreatedDate(value: string): this {
-        Logger.Log(`Has created date ${value}`);
+        Logger.log(`Has created date ${value}`);
 
         cy.wrap(this.element)
         .within(() => {
@@ -41,7 +41,7 @@ export class ActionSummaryRow {
     }
 
     public hasClosedDate(value: string): this {
-        Logger.Log(`Has closed date ${value}`);
+        Logger.log(`Has closed date ${value}`);
 
         cy.wrap(this.element)
         .within(() => {
@@ -52,7 +52,7 @@ export class ActionSummaryRow {
     }
 
     public select(): this {
-        Logger.Log(`Selecting action`);
+        Logger.log(`Selecting action`);
 
         cy.wrap(this.element)
         .within(() =>

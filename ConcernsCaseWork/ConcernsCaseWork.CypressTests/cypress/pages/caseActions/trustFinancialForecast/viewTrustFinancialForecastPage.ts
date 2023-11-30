@@ -4,7 +4,7 @@ import { Logger } from "../../../common/logger";
 export class ViewTrustFinancialForecastPage
 {
     public hasDateOpened(value: string) {
-        Logger.Log(`Has date opened ${value}`);
+        Logger.log(`Has date opened ${value}`);
 
         cy.getByTestId("trust-financial-forecast-date-opened").should("contain.text", value);
 
@@ -12,7 +12,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasForecastingTool(forecastingTool: string): this {
-        Logger.Log(`Has forecasting tool ${forecastingTool}`);
+        Logger.log(`Has forecasting tool ${forecastingTool}`);
 
         cy.getByTestId(`trust-financial-forecast-when-run`).should("contain.text", forecastingTool);
 
@@ -20,7 +20,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasInitialReviewDate(reviewDate: string): this {
-        Logger.Log(`Has initial review date ${reviewDate}`);
+        Logger.log(`Has initial review date ${reviewDate}`);
 
         cy.getByTestId(`trust-financial-forecast-when-reviewed`).should("contain.text", reviewDate);
 
@@ -28,7 +28,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasTrustRespondedDate(respondedDate: string): this {
-        Logger.Log(`Has trust responded date ${respondedDate}`);
+        Logger.log(`Has trust responded date ${respondedDate}`);
 
         cy.getByTestId(`trust-financial-forecast-when-responded`).should("contain.text", respondedDate);
 
@@ -36,7 +36,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasTrustResponse(trustResponse: string): this {
-        Logger.Log(`Has trust response ${trustResponse}`);
+        Logger.log(`Has trust response ${trustResponse}`);
 
         cy.getByTestId(`trust-financial-forecast-was-satisfactory`).should("contain.text", trustResponse);
 
@@ -44,7 +44,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasSRMABeenOffered(response: string): this {
-        Logger.Log(`Has SRMA been offered ${response}`);
+        Logger.log(`Has SRMA been offered ${response}`);
 
         cy.getByTestId(`trust-financial-forecast-srma-offered`).should("contain.text", response);
 
@@ -52,7 +52,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasNotes(notes: string): this {
-        Logger.Log(`Has notes ${notes}`);
+        Logger.log(`Has notes ${notes}`);
 
         cy.getByTestId(`trust-financial-forecast-notes`).should("contain.text", notes);
 
@@ -60,7 +60,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public hasDateClosed(value: string) {
-        Logger.Log(`Has date closed ${value}`);
+        Logger.log(`Has date closed ${value}`);
 
         cy.getByTestId("trust-financial-forecast-date-closed").should("contain.text", value);
 
@@ -68,7 +68,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public canEdit(): this {
-        Logger.Log("Can edit");
+        Logger.log("Can edit");
         
         this.getEdit();
 
@@ -76,7 +76,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public cannotEdit(): this {
-        Logger.Log("Cannot edit");
+        Logger.log("Cannot edit");
 
         this.getEdit().should("not.exist");
 
@@ -84,7 +84,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public canClose(): this {
-        Logger.Log("Can close");
+        Logger.log("Can close");
 
         this.getClose();
 
@@ -92,7 +92,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public cannotClose(): this {
-        Logger.Log("Cannot close");
+        Logger.log("Cannot close");
 
         this.getClose().should("not.exist");
 
@@ -100,7 +100,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public edit(): this {
-        Logger.Log("Editing trust financial forecast");
+        Logger.log("Editing trust financial forecast");
 
         this.getEdit().click();
 
@@ -108,7 +108,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public close(): this {
-        Logger.Log("Closing Trust financial forecast");
+        Logger.log("Closing Trust financial forecast");
 
         this.getClose().click();
 

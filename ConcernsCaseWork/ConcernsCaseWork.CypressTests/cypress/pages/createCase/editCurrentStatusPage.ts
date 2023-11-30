@@ -16,7 +16,7 @@ export default class EditCurrentStatusPage {
 
     public hasCurrentStatus(value: string): this
     {
-        Logger.Log(`Has Current status ${value}`);
+        Logger.log(`Has Current status ${value}`);
 
         cy.getByTestId(`current-status`).should(
 			"contain.text",
@@ -28,7 +28,7 @@ export default class EditCurrentStatusPage {
 
     public withCurrentStatus(value: string): this
     {
-        Logger.Log(`With Current status ${value}`);
+        Logger.log(`With Current status ${value}`);
 
         cy.getByTestId(`current-status`).clear({ force: true }).type(value);
 
@@ -44,7 +44,7 @@ export default class EditCurrentStatusPage {
 
     public apply(): this
     {
-        Logger.Log("Apply Current Status");
+        Logger.log("Apply Current Status");
         cy.getByTestId("apply").click();
 
         return this;
