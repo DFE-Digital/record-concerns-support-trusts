@@ -2,7 +2,7 @@ import { Logger } from "../../../common/logger";
 
 export class EditNtiWarningLetterPage {
     public withStatus(value: string): this {
-        Logger.Log(`With status ${value}`);
+        Logger.log(`With status ${value}`);
 
         cy.getByTestId(`${value}`).check();
 
@@ -10,7 +10,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withDaySent(value: string): this {
-        Logger.Log(`With day sent ${value}`);
+        Logger.log(`With day sent ${value}`);
 
         cy.getById(`dtr-day-date-sent`).clear().type(value);
 
@@ -18,7 +18,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withMonthSent(value: string): this {
-        Logger.Log(`With month sent ${value}`);
+        Logger.log(`With month sent ${value}`);
 
         cy.getById(`dtr-month-date-sent`).clear().type(value);
 
@@ -26,7 +26,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withYearSent(value: string): this {
-        Logger.Log(`With year sent ${value}`);
+        Logger.log(`With year sent ${value}`);
 
         cy.getById(`dtr-year-date-sent`).clear().type(value);
 
@@ -34,7 +34,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withReason(value: string): this {
-        Logger.Log(`With reason ${value}`);
+        Logger.log(`With reason ${value}`);
 
         cy.getByTestId(`reason-${value}`).check();
 
@@ -42,7 +42,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withNotes(value: string): this {
-        Logger.Log(`With notes ${value}`);
+        Logger.log(`With notes ${value}`);
 
         cy.getById(`nti-notes`).clear().type(value);
 
@@ -50,7 +50,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -58,7 +58,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public withCondition(value: string): this {
-        Logger.Log(`With condition ${value}`);
+        Logger.log(`With condition ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -66,7 +66,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`${value}`).should("be.checked");
 
@@ -74,7 +74,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasDaySent(value: string): this {
-        Logger.Log(`Has day sent ${value}`);
+        Logger.log(`Has day sent ${value}`);
 
         cy.getById(`dtr-day-date-sent`).should("contain.value", value);
 
@@ -82,7 +82,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasMonthSent(value: string): this {
-        Logger.Log(`Has month sent ${value}`);
+        Logger.log(`Has month sent ${value}`);
 
         cy.getById(`dtr-month-date-sent`).should("contain.value", value);
 
@@ -90,7 +90,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasYearSent(value: string): this {
-        Logger.Log(`Has year sent ${value}`);
+        Logger.log(`Has year sent ${value}`);
 
         cy.getById(`dtr-year-date-sent`).should("contain.value", value);
 
@@ -98,7 +98,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasReason(value: string): this {
-        Logger.Log(`Has reason ${value}`);
+        Logger.log(`Has reason ${value}`);
 
         cy.getByTestId(`reason-${value}`).should("be.checked");
 
@@ -106,7 +106,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getById(`nti-notes`).should("contain.value", value);
 
@@ -114,7 +114,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasCondition(value: string): this {
-        Logger.Log(`Has condition ${value}`);
+        Logger.log(`Has condition ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -123,7 +123,7 @@ export class EditNtiWarningLetterPage {
 
     public clearReasons(): this
     {
-        Logger.Log("Clearing the reason fields");
+        Logger.log("Clearing the reason fields");
 
         cy.get("[name='reason'").each(element =>
         {
@@ -135,7 +135,7 @@ export class EditNtiWarningLetterPage {
 
     public clearConditions(): this
     {
-        Logger.Log("Clearing the conditions");
+        Logger.log("Clearing the conditions");
 
         cy.get("[name='condition'").each(element =>
             {
@@ -147,7 +147,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -155,7 +155,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public editConditions(): this {
-        Logger.Log(`Editing conditions`);
+        Logger.log(`Editing conditions`);
 
         cy.getByTestId("edit-conditions-button").click();
 
@@ -163,7 +163,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public save(): this {
-        Logger.Log("Saving the NTI warning letter");
+        Logger.log("Saving the NTI warning letter");
 
         cy.getById("add-nti-wl-button").click();
 
@@ -171,7 +171,7 @@ export class EditNtiWarningLetterPage {
     }
 
     public saveConditions(): this {
-        Logger.Log("Saving the conditions");
+        Logger.log("Saving the conditions");
 
         cy.getById("add-nti-conditions-wl-button").click();
 

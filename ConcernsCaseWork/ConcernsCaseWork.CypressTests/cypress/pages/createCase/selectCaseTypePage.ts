@@ -3,7 +3,7 @@ import { Logger } from "../../common/logger";
 class SelectCaseTypePage {
 
     public withCaseType(value: string): this {
-        Logger.Log(`With NonConcernType ${value}`);
+        Logger.log(`With NonConcernType ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -12,7 +12,7 @@ class SelectCaseTypePage {
 
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should(
             "contain.text",
@@ -22,7 +22,7 @@ class SelectCaseTypePage {
     }
 
     public continue(): this {
-        Logger.Log("Click continue button");
+        Logger.log("Click continue button");
         cy.getById("continue").click();
 
         return this;

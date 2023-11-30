@@ -44,7 +44,7 @@ describe("Creating a case", () => {
         });
 
         it("Should create a case with region group", () => {
-            Logger.Log("Create a case");
+            Logger.log("Create a case");
             createCasePage
                 .createCase()
                 .withTrustName("Ashton West End Primary Academy")
@@ -54,7 +54,7 @@ describe("Creating a case", () => {
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy");
     
-            Logger.Log("Create a valid case division");
+            Logger.log("Create a valid case division");
             selectCaseDivisionPage
                 .withCaseDivision("RegionsGroup")
                 .continue();
@@ -63,13 +63,13 @@ describe("Creating a case", () => {
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "");
     
-            Logger.Log("Check validation error if region is not selected");
+            Logger.log("Check validation error if region is not selected");
             addRegionPage.nextStep();
             validationComponent.hasValidationError("Select region");
     
             cy.excuteAccessibilityTests();
     
-            Logger.Log("Select valid region");
+            Logger.log("Select valid region");
             addRegionPage
                 .withRegion("London")
                 .nextStep();
@@ -79,19 +79,19 @@ describe("Creating a case", () => {
                 .hasManagedBy("Regions Group", "London");
 
 
-            Logger.Log("Check has Regions Group specific means of referral hint text")
+            Logger.log("Check has Regions Group specific means of referral hint text")
             createCaseSummary
                 .hasHintText("Regions Group activity including SCCU, or other departmental activity")
                 .hasHintText("Whistleblowing, self-reported by trust, SFSO, Ofsted or other government bodies");
 
-            Logger.Log("Create a valid concern");
+            Logger.log("Create a valid concern");
             createConcernPage
                 .withConcernType("Governance capability")
                 .withConcernRating("Amber-Green")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
     
-            Logger.Log("Check Concern details are correctly populated");
+            Logger.log("Check Concern details are correctly populated");
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
@@ -106,10 +106,10 @@ describe("Creating a case", () => {
                 .hasConcernRiskRating("Amber Green")
                 .hasConcernType("Governance capability");
     
-            Logger.Log("Populate risk to trust");
+            Logger.log("Populate risk to trust");
             addDetailsPage.withRiskToTrust("Red").nextStep();
     
-            Logger.Log(
+            Logger.log(
                 "Check Trust, concern and risk to trust details are correctly populated"
             );
             createCaseSummary
@@ -119,10 +119,10 @@ describe("Creating a case", () => {
                 .hasConcernRiskRating("Amber Green")
                 .hasRiskToTrust("Red");
     
-            Logger.Log("Add concern details with valid text limit");
+            Logger.log("Add concern details with valid text limit");
             addConcernDetailsPage.withIssue("This is an issue").createCase();
     
-            Logger.Log("Verify case details");
+            Logger.log("Verify case details");
             caseManagementPage
                 .hasTrust("Ashton West End Primary Academy")
                 .hasRiskToTrust("Red")
@@ -130,7 +130,7 @@ describe("Creating a case", () => {
                 .hasManagedBy("Regions Group", "London")
                 .hasIssue("This is an issue");
     
-            Logger.Log("Editing the existing region");
+            Logger.log("Editing the existing region");
             caseManagementPage.editManagedBy();
     
             editRegionPage
@@ -140,7 +140,7 @@ describe("Creating a case", () => {
     
             caseManagementPage.hasManagedBy("Regions Group", "South West");
     
-            Logger.Log("Add another concern after case creation");
+            Logger.log("Add another concern after case creation");
             caseManagementPage.addAnotherConcern();
     
             createConcernPage
@@ -153,7 +153,7 @@ describe("Creating a case", () => {
                 .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasConcerns("Safeguarding non-compliance", ["Red", "Amber"]);
 
-            Logger.Log("Check the available case actions");
+            Logger.log("Check the available case actions");
             caseManagementPage.getAddToCaseBtn().click();
             addToCasePage.hasActions([
                 "Decision",
@@ -164,7 +164,7 @@ describe("Creating a case", () => {
             ])
             .cancel();
     
-            Logger.Log("Close down the concerns");
+            Logger.log("Close down the concerns");
             caseManagementPage
                 .getEditConcern().first().click();
             
@@ -181,10 +181,10 @@ describe("Creating a case", () => {
                 caseManagementPage.getCloseCaseBtn().click();
                 caseManagementPage.withRationaleForClosure("Closing").getCloseCaseBtn().click();
         
-                Logger.Log("Viewing case is closed");
+                Logger.log("Viewing case is closed");
                 homePage.getClosedCasesBtn().click();
         
-                Logger.Log("Checking accessibility on closed case");
+                Logger.log("Checking accessibility on closed case");
                 cy.excuteAccessibilityTests();
         
                 closedCasePage.getClosedCase(caseId).click();
@@ -207,7 +207,7 @@ describe("Creating a case", () => {
         {
             caseManagementPage.addCaseAction("Decision");
 
-            Logger.Log("Retrospective approval, ESFA dates and total amount requested should not be visible");
+            Logger.log("Retrospective approval, ESFA dates and total amount requested should not be visible");
             editDecisionPage
                 .hasNoRetrospectiveRequestField()
                 .hasNoDateESFAField()
@@ -219,7 +219,7 @@ describe("Creating a case", () => {
                 "Freedom of Information exemptions (FOI)"
             ]);
 
-            Logger.Log("Creating a decision");
+            Logger.log("Creating a decision");
             editDecisionPage
 			.withHasCrmCase("yes")
 			.withCrmEnquiry("444")
@@ -230,7 +230,7 @@ describe("Creating a case", () => {
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
 
-            Logger.Log("Checking the decision values that have been set");
+            Logger.log("Checking the decision values that have been set");
             actionSummaryTable
                 .getOpenAction("Decision: Multiple Decision Types")
                 .then(row =>
@@ -240,7 +240,7 @@ describe("Creating a case", () => {
 
             viewDecisionPage.createDecisionOutcome();
 
-            Logger.Log("Decision outcome for RG does not have total amount approved");
+            Logger.log("Decision outcome for RG does not have total amount approved");
             decisionOutcomePage.hasNoTotalAmountApprovedField();
 
             decisionOutcomePage.hasBusinessAreaOptions([
@@ -248,7 +248,7 @@ describe("Creating a case", () => {
                 "RG (Regions Group)"
             ]);
 
-            Logger.Log("Fill out the remaining fields");
+            Logger.log("Fill out the remaining fields");
             decisionOutcomePage
                 .withDecisionOutcomeStatus("ApprovedWithConditions")
                 .withDateDecisionMadeDay("24")
@@ -262,7 +262,7 @@ describe("Creating a case", () => {
                 .withBusinessArea("RegionsGroup")
                 .saveDecisionOutcome();
 
-            Logger.Log("Viewing the decision changes");
+            Logger.log("Viewing the decision changes");
 
             actionSummaryTable
                 .getOpenAction("Decision: Multiple Decision Types")
@@ -271,7 +271,7 @@ describe("Creating a case", () => {
                     row.select();
                 });
 
-            Logger.Log("Ensure that fields that do not apply are not shown");
+            Logger.log("Ensure that fields that do not apply are not shown");
             viewDecisionPage
                 .hasNoRetrospectiveRequestField()
                 .hasNoDateESFAReceivedRequestField()
@@ -298,7 +298,7 @@ describe("Creating a case", () => {
         
             caseManagementPage.addCaseAction("Srma");
     
-            Logger.Log("Filling out the SRMA form");
+            Logger.log("Filling out the SRMA form");
             editSrmaPage
                 .withStatus("TrustConsidering")
                 .withDayTrustContacted("22")
@@ -307,20 +307,20 @@ describe("Creating a case", () => {
                 .withNotes("This is my notes")
                 .save();
     
-            Logger.Log("Add optional SRMA fields on the view page");
+            Logger.log("Add optional SRMA fields on the view page");
             actionSummaryTable.getOpenAction("SRMA").then((row) => {
                 row.hasName("SRMA");
                 row.hasStatus("Trust considering");
                 row.select();
             });
     
-            Logger.Log("Checking accessibility on View SRMA");
+            Logger.log("Checking accessibility on View SRMA");
             cy.excuteAccessibilityTests();
     
-            Logger.Log("Configure reason");
+            Logger.log("Configure reason");
             viewSrmaPage.addReason();
     
-            Logger.Log("Verify hint text");
+            Logger.log("Verify hint text");
             editSrmaPage.hasReasonHintText();
         });
     });

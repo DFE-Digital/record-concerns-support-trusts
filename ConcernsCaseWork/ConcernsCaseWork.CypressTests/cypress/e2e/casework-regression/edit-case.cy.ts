@@ -39,42 +39,42 @@ describe("Editing a case", () => {
 	});
 
 	it("Should be able to edit a case", () => {
-		Logger.Log("Create a case");
+		Logger.log("Create a case");
 		createCasePage
 			.createCase()
 			.withTrustName("Ashton West End Primary Academy")
 			.selectOption()
 			.confirmOption();
 
-        Logger.Log("Create a valid case division");
+        Logger.log("Create a valid case division");
         selectCaseDivisionPage
             .withCaseDivision("SFSO")
             .continue();
 
-		Logger.Log("Populate territory");
+		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-        Logger.Log("Create a valid concerns case type");
+        Logger.log("Create a valid concerns case type");
         selectCaseTypePage
             .withCaseType("Concerns")
             .continue();
 
-		Logger.Log("Create a valid concern");
+		Logger.log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red")
 			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
-		Logger.Log("Check Concern details are correctly populated");
+		Logger.log("Check Concern details are correctly populated");
 		createConcernPage.nextStep();
 
-		Logger.Log("Populate risk to trust");
+		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
 		
 
-		Logger.Log("Add concern details with valid text limit");
+		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage
 			.withIssue("This is an issue")
 			.withCurrentStatus("This is the current status")
@@ -84,7 +84,7 @@ describe("Editing a case", () => {
 			.withCaseHistory("This is the case history")
 			.createCase();
 
-		Logger.Log("Verify case details");
+		Logger.log("Verify case details");
 		caseManagementPage
 			.hasRiskToTrust("Red Plus")
 			.hasDirectionOfTravel("Deteriorating")
@@ -92,47 +92,47 @@ describe("Editing a case", () => {
 			.hasManagedBy("SFSO", "North and UTC - North East")
 			.hasIssue("This is an issue");
 
-		Logger.Log("Edit risk to trust");
+		Logger.log("Edit risk to trust");
 		caseManagementPage.editRiskToTrust();
 
 		editRiskToTrust.hasRiskToTrust("Red Plus");
 
-		Logger.Log("Checking accessibility on edit risk to trust");
+		Logger.log("Checking accessibility on edit risk to trust");
 		cy.excuteAccessibilityTests();
 
 		editRiskToTrust.withRiskToTrust("Red").apply();
 
-		Logger.Log("Edit direction of travel");
+		Logger.log("Edit direction of travel");
 		caseManagementPage.editDirectionOfTravel();
 
 		editDirectionOfTravel.hasDirectionOfTravel("Deteriorating");
 
-		Logger.Log("Checking accessibility on direction of travel");
+		Logger.log("Checking accessibility on direction of travel");
 		cy.excuteAccessibilityTests();
 
 		editDirectionOfTravel.withDirectionOfTravel("Improving").apply();
 
-		Logger.Log("Edit a concern");
+		Logger.log("Edit a concern");
 		caseManagementPage.editConcern();
 
 		addDetailsPage.hasRating("Red");
 
-		Logger.Log("Checking accessibility on edit concern");
+		Logger.log("Checking accessibility on edit concern");
 		cy.excuteAccessibilityTests();
 
 		addDetailsPage.withRiskToTrust("Amber-Green").apply();
 
-		Logger.Log("Edit a territory");
+		Logger.log("Edit a territory");
 		caseManagementPage.editManagedBy();
 
 		addTerritoryPage.hasTerritory("North and UTC - North East");
 
-		Logger.Log("Checking accessibility on edit territory");
+		Logger.log("Checking accessibility on edit territory");
 		cy.excuteAccessibilityTests();
 
 		addTerritoryPage.withTerritory("North and UTC - North West").apply();
 
-		Logger.Log("Edit Issue");
+		Logger.log("Edit Issue");
 		caseManagementPage.showAllConcernDetails().editIssue();
 
 		editIssuePage.hasIssue("This is an issue");
@@ -149,12 +149,12 @@ describe("Editing a case", () => {
 			.withIssue("Testing \n the character count \n with \n\n\n new lines")
 			.hasCharacterCountMessage("You have 1,945 characters remaining");
 
-		Logger.Log("Checking accessibility on edit issue");
+		Logger.log("Checking accessibility on edit issue");
 		cy.excuteAccessibilityTests();
 
 		editIssuePage.withIssue("New Issue").apply();
 
-		Logger.Log("Edit Current Status");
+		Logger.log("Edit Current Status");
 		caseManagementPage.editCurrentStatus();
 
 		editCurrentStatusPage
@@ -163,12 +163,12 @@ describe("Editing a case", () => {
 			.apply()
 			.hasValidationError("Current status must be 4000 characters or less");
 
-		Logger.Log("Checking accessibility on edit current status");
+		Logger.log("Checking accessibility on edit current status");
 		cy.excuteAccessibilityTests();
 
 		editCurrentStatusPage.withCurrentStatus("New Status").apply();
 
-		Logger.Log("Edit Case Aim");
+		Logger.log("Edit Case Aim");
 		caseManagementPage.editCaseAim();
 
 		editCaseAimPage
@@ -177,12 +177,12 @@ describe("Editing a case", () => {
 			.apply()
 			.hasValidationError("Case aim must be 1000 characters or less");
 
-		Logger.Log("Checking accessibility on edit case aim");
+		Logger.log("Checking accessibility on edit case aim");
 		cy.excuteAccessibilityTests();
 
 		editCaseAimPage.withCaseAim("New Case aim").apply();
 
-		Logger.Log("Edit Deescalation point");
+		Logger.log("Edit Deescalation point");
 		caseManagementPage.editDeEscalationPoint();
 
 		editDeEscalationPage
@@ -193,14 +193,14 @@ describe("Editing a case", () => {
 				"De-escalation point must be 1000 characters or less"
 			);
 
-		Logger.Log("Checking accessibility on edit de-escalation point");
+		Logger.log("Checking accessibility on edit de-escalation point");
 		cy.excuteAccessibilityTests();
 
 		editDeEscalationPage
 			.withDeescalationPoint("New de-descalation point")
 			.apply();
 
-		Logger.Log("Edit next steps");
+		Logger.log("Edit next steps");
 		caseManagementPage.editNextSteps();
 
 		editNextStepsPage
@@ -209,12 +209,12 @@ describe("Editing a case", () => {
 			.apply()
 			.hasValidationError("Next steps must be 4000 characters or less");
 
-		Logger.Log("Checking accessibility on edit next steps");
+		Logger.log("Checking accessibility on edit next steps");
 		cy.excuteAccessibilityTests();
 
 		editNextStepsPage.withNextSteps("New next step").apply();
 
-		Logger.Log("Edit Case history");
+		Logger.log("Edit Case history");
 		caseManagementPage.editCaseHistory();
 
 		editCaseHistoryPage
@@ -223,12 +223,12 @@ describe("Editing a case", () => {
 			.apply()
 			.hasValidationError("Case notes must be 4300 characters or less");
 
-		Logger.Log("Checking accessibility on edit case history");
+		Logger.log("Checking accessibility on edit case history");
 		cy.excuteAccessibilityTests();
 
 		editCaseHistoryPage.withCaseHistory("New case history").apply();
 
-		Logger.Log("Verify detailes have been changed");
+		Logger.log("Verify detailes have been changed");
 		caseManagementPage
 			.hasRiskToTrust("Red")
 			.hasDirectionOfTravel("Improving")
@@ -260,7 +260,7 @@ describe("Editing a case", () => {
 		AddToCasePage.getAddToCaseBtn().click();
 		AddToCasePage.hasValidationError("Select an action or decision");
 
-		Logger.Log("Checking accessibility on when a not selecting a case action");
+		Logger.log("Checking accessibility on when a not selecting a case action");
 		cy.excuteAccessibilityTests();
 	});
 });

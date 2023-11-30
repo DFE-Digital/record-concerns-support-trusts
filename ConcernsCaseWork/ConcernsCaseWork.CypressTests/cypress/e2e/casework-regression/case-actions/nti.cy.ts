@@ -32,7 +32,7 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should be able to add a new NTI", () => {
-		Logger.Log("Form validation");
+		Logger.log("Form validation");
 		editNtiPage
 			.withDayIssued("22")
 			.save()
@@ -48,12 +48,12 @@ describe("Testing case action NTI", () => {
 			.hasValidationError(NotesError)
 			.hasValidationError(DateInvalidError.replace("{0}", "Date NTI issued"));
 
-		Logger.Log("Checking accessibility on Add NTI");
+		Logger.log("Checking accessibility on Add NTI");
 		cy.excuteAccessibilityTests();
 
 		configureNtiWithConditions();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.hasName("NTI");
 			row.hasStatus("Progress on track");
@@ -78,21 +78,21 @@ describe("Testing case action NTI", () => {
 			.hasConditions("Qualified Floating Charge (QFC)")
 			.hasNotes("Nti notes data");
 
-		Logger.Log("Checking accessibility on View NTI");
+		Logger.log("Checking accessibility on View NTI");
 		cy.excuteAccessibilityTests();
 	});
 
 	it("Should handle editing an existing NTI", () => {
 		configureNtiWithConditions();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
 
 		viewNtiPage.edit();
 
-		Logger.Log("Ensure previous values are set");
+		Logger.log("Ensure previous values are set");
 		editNtiPage
 			.hasStatus("Progress on track")
 			.hasDayIssued("22")
@@ -102,7 +102,7 @@ describe("Testing case action NTI", () => {
 			.hasReasonIssued("Risk of insolvency")
 			.hasNotes("Nti notes data");
 
-		Logger.Log("Checking accessibility on Edit NTI");
+		Logger.log("Checking accessibility on Edit NTI");
 		cy.excuteAccessibilityTests();
 
 		editNtiPage
@@ -120,7 +120,7 @@ describe("Testing case action NTI", () => {
 			)
 			.cancelConditions();
 
-		Logger.Log("Editing the NTI values");
+		Logger.log("Editing the NTI values");
 
 		editNtiPage
 			.withStatus("Issued NTI")
@@ -150,7 +150,7 @@ describe("Testing case action NTI", () => {
 
 		editNtiPage.save();
 
-		Logger.Log("Validate the changes on the view page");
+		Logger.log("Validate the changes on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
@@ -173,10 +173,10 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should handle setting only the default fields", () => {
-		Logger.Log("Saving an empty form");
+		Logger.log("Saving an empty form");
 		editNtiPage.save();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
@@ -191,10 +191,10 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should only let one nti be created per case", () => {
-		Logger.Log("Configuring nti");
+		Logger.log("Configuring nti");
 		editNtiPage.save();
 
-		Logger.Log("Try to add second nti to case should result in an error");
+		Logger.log("Try to add second nti to case should result in an error");
 		addNtiToCase();
 
 		AddToCasePage.hasValidationError(
@@ -218,7 +218,7 @@ describe("Testing case action NTI", () => {
 			.cancel()
 			.hasValidationError(NotesError);
 
-		Logger.Log("Checking accessibility on Cancel NTI");
+		Logger.log("Checking accessibility on Cancel NTI");
 		cy.excuteAccessibilityTests();
 
 		cancelNtiPage.withNotes("This is my final notes").cancel();
@@ -229,10 +229,10 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should cancel an nti with empty fields", () => {
-		Logger.Log("Saving an empty form");
+		Logger.log("Saving an empty form");
 		editNtiPage.save();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
@@ -257,7 +257,7 @@ describe("Testing case action NTI", () => {
 
 		liftNtiPage.hasNotes("Nti notes data");
 
-		Logger.Log("Validating fields");
+		Logger.log("Validating fields");
 		liftNtiPage
 			.withDayLifted("22")
 			.lift()
@@ -274,10 +274,10 @@ describe("Testing case action NTI", () => {
 			.hasValidationError(DateInvalidError.replace("{0}", "Date NTI lifted"))
 			.hasValidationError(NotesError);
 
-		Logger.Log("Checking accessibility on Lift NTI");
+		Logger.log("Checking accessibility on Lift NTI");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Filling out NTI lifted");
+		Logger.log("Filling out NTI lifted");
 		liftNtiPage
 			.withSubmissionDecisionId("123456")
 			.withDayLifted("12")
@@ -292,10 +292,10 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should lift an nti with empty fields", () => {
-		Logger.Log("Saving an empty form");
+		Logger.log("Saving an empty form");
 		editNtiPage.save();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
@@ -334,7 +334,7 @@ describe("Testing case action NTI", () => {
 			.hasValidationError(DateInvalidError.replace("{0}", "Date NTI closed"))
 			.hasValidationError(NotesError);
 
-		Logger.Log("Checking accessibility on Close NTI");
+		Logger.log("Checking accessibility on Close NTI");
 		cy.excuteAccessibilityTests();
 
 		closeNtiPage
@@ -350,10 +350,10 @@ describe("Testing case action NTI", () => {
 	});
 
 	it("Should close an nti with empty fields", () => {
-		Logger.Log("Saving an empty form");
+		Logger.log("Saving an empty form");
 		editNtiPage.save();
 
-		Logger.Log("Validate the NTI on the view page");
+		Logger.log("Validate the NTI on the view page");
 		actionSummaryTable.getOpenAction("NTI").then((row) => {
 			row.select();
 		});
@@ -368,14 +368,14 @@ describe("Testing case action NTI", () => {
 	});
 
 	function addNtiToCase() {
-		Logger.Log("Adding Notice To Improve");
+		Logger.log("Adding Notice To Improve");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("Nti");
 		AddToCasePage.getAddToCaseBtn().click();
 	}
 
 	function configureNtiWithConditions() {
-		Logger.Log("Filling out the NTI form");
+		Logger.log("Filling out the NTI form");
 		editNtiPage
 			.withStatus("Progress on track")
 			.withDayIssued("22")
@@ -385,7 +385,7 @@ describe("Testing case action NTI", () => {
 			.withReasonIssued("Risk of insolvency")
 			.withNotes("Nti notes data");
 
-		Logger.Log("Filling out the conditions");
+		Logger.log("Filling out the conditions");
 		editNtiPage
 			.editConditions()
 			.withFinancialManagementConditions("Audit and risk committee")
@@ -400,7 +400,7 @@ describe("Testing case action NTI", () => {
 				"Qualified Floating Charge (QFC)"
 			);
 
-		Logger.Log("Checking accessibility on Add NTI conditions");
+		Logger.log("Checking accessibility on Add NTI conditions");
 		cy.excuteAccessibilityTests();
 
 		editNtiPage.saveConditions();
@@ -409,7 +409,7 @@ describe("Testing case action NTI", () => {
 	}
 
 	function assertClosedNti(expectedStatus: string) {
-		Logger.Log("Viewing the closed NTI");
+		Logger.log("Viewing the closed NTI");
 		actionSummaryTable.getClosedAction("NTI").then((row) => {
 			row.hasName("NTI");
 			row.hasStatus(expectedStatus);
@@ -440,12 +440,12 @@ describe("Testing case action NTI", () => {
 			.cannotCancel()
 			.cannotLift();
 
-		Logger.Log("Checking accessibility on View Closed NTI");
+		Logger.log("Checking accessibility on View Closed NTI");
 		cy.excuteAccessibilityTests();
 	}
 
 	function assertEmptyClosedNti(expectedStatus: string) {
-		Logger.Log("Viewing the closed empty NTI");
+		Logger.log("Viewing the closed empty NTI");
 		actionSummaryTable.getClosedAction("NTI").then((row) => {
 			row.hasName("NTI");
 			row.hasStatus(expectedStatus);

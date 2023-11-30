@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class EditDecisionPage
 {
     public withCrmEnquiry(crmNumber: string): this {
-		Logger.Log(`With Crm enquiry ${crmNumber}`);
+		Logger.log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);
 
@@ -11,7 +11,7 @@ export class EditDecisionPage
 	}
 
 	public hasCrmEnquiry(crmNumber: string): this {
-		Logger.Log(`Has Crm enquiry ${crmNumber}`);
+		Logger.log(`Has Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").should("have.value", crmNumber);
 
@@ -19,14 +19,14 @@ export class EditDecisionPage
 	}
 
 	public withHasCrmCase(hasCrmCase: string): this {
-		Logger.Log(`With has crm case ${hasCrmCase}`);
+		Logger.log(`With has crm case ${hasCrmCase}`);
 		cy.getByTestId(`has-crm-case-${hasCrmCase}`).click();
 
 		return this;
 	}
 
 	public hasCrmCase(hasCrmCase: string): this {
-		Logger.Log(`Has Crm enquiry ${hasCrmCase}`);
+		Logger.log(`Has Crm enquiry ${hasCrmCase}`);
 
 		cy.getByTestId(`has-crm-case-${hasCrmCase}`).should("be.be.checked");
 
@@ -34,7 +34,7 @@ export class EditDecisionPage
 	}
 
 	public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
-		Logger.Log(`With retrospective request ${isRetrospectiveRequest}`);
+		Logger.log(`With retrospective request ${isRetrospectiveRequest}`);
 
 		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
 
@@ -42,7 +42,7 @@ export class EditDecisionPage
 	}
 
 	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
-		Logger.Log(`Has retrospective request ${isRetrospectiveRequest}`);
+		Logger.log(`Has retrospective request ${isRetrospectiveRequest}`);
 
 		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
 
@@ -51,7 +51,7 @@ export class EditDecisionPage
 
 	public hasNoRetrospectiveRequestField(): this
 	{
-		Logger.Log("Has no retrospective approval field");
+		Logger.log("Has no retrospective approval field");
 
 		cy.getById("container-retrospective-approval").should("not.exist");
 		
@@ -59,7 +59,7 @@ export class EditDecisionPage
 	}
 
 	public withSubmissionRequired(isSubmissionRequired: string): this {
-		Logger.Log(`With Submission Required ${isSubmissionRequired}`);
+		Logger.log(`With Submission Required ${isSubmissionRequired}`);
 
 		cy.getByTestId(`submission-required-${isSubmissionRequired}`).click();
 
@@ -67,7 +67,7 @@ export class EditDecisionPage
 	}
 
 	public hasSubmissionRequired(isSubmissionRequired: string): this {
-		Logger.Log(`Has Submission Required ${isSubmissionRequired}`);
+		Logger.log(`Has Submission Required ${isSubmissionRequired}`);
 
 		cy.getByTestId(`submission-required-${isSubmissionRequired}`).should("be.checked");
 
@@ -75,7 +75,7 @@ export class EditDecisionPage
 	}
 
 	public withSubmissionLink(submissionLink: string): this {
-		Logger.Log(`With Submission link ${submissionLink}`);
+		Logger.log(`With Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").clear().type(submissionLink);
 
@@ -83,7 +83,7 @@ export class EditDecisionPage
 	}
 
 	public hasSubmissionLink(submissionLink: string): this {
-		Logger.Log(`Has Submission link ${submissionLink}`);
+		Logger.log(`Has Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").should("have.value", submissionLink);
 
@@ -92,7 +92,7 @@ export class EditDecisionPage
 
 	public hasNoDateESFAField(): this
 	{
-		Logger.Log("Has no date ESFA field");
+		Logger.log("Has no date ESFA field");
 
 		cy.getById("container-request-received").should("not.exist");
 
@@ -100,7 +100,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFADay(dateESFADay: string): this {
-		Logger.Log(`With Date ESFA Day ${dateESFADay}`);
+		Logger.log(`With Date ESFA Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").clear().type(dateESFADay);
 
@@ -108,7 +108,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFADay(dateESFADay: string): this {
-		Logger.Log(`Has Date ESFA Day ${dateESFADay}`);
+		Logger.log(`Has Date ESFA Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
 
@@ -116,7 +116,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFAMonth(dateESFAMonth: string): this {
-		Logger.Log(`With Date ESFA Month ${dateESFAMonth}`);
+		Logger.log(`With Date ESFA Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").clear().type(dateESFAMonth);
 
@@ -124,7 +124,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFAMonth(dateESFAMonth: string): this {
-		Logger.Log(`Has Date ESFA Month ${dateESFAMonth}`);
+		Logger.log(`Has Date ESFA Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").should("have.value", dateESFAMonth);
 
@@ -132,7 +132,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFAYear(dateESFAYear: string): this {
-		Logger.Log(`With Date ESFA Year ${dateESFAYear}`);
+		Logger.log(`With Date ESFA Year ${dateESFAYear}`);
 
 		const element = cy.getById("dtr-year-request-received");
 		element.clear();
@@ -145,7 +145,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFAYear(dateESFAYear: string): this {
-		Logger.Log(`Has Date ESFA Year ${dateESFAYear}`);
+		Logger.log(`Has Date ESFA Year ${dateESFAYear}`);
 
 		cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
 
@@ -153,7 +153,7 @@ export class EditDecisionPage
 	}
 
 	public withTypeOfDecision(typeOfDecision: string): this {
-		Logger.Log(`With type of decision to pick ${typeOfDecision}`);
+		Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
 		cy.getById(typeOfDecision).click();
 
@@ -161,7 +161,7 @@ export class EditDecisionPage
 	}
 
 	public hasTypeOfDecision(typeOfDecision: string): this {
-		Logger.Log(`With type of decision to pick ${typeOfDecision}`);
+		Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
 		cy.getById(typeOfDecision).should("be.checked");
 
@@ -170,7 +170,7 @@ export class EditDecisionPage
 
 	public hasTypeOfDecisionOptions(types: Array<string>)
 	{
-		Logger.Log(`Has type of decision options ${types.join()}`);
+		Logger.log(`Has type of decision options ${types.join()}`);
 
 		cy
 			.getByTestId('container-decision-types')
@@ -184,7 +184,7 @@ export class EditDecisionPage
 	}
 
 	public withDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.Log(`With ${type} drawdown facility agreed ${value}`);
+		Logger.log(`With ${type} drawdown facility agreed ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).click();
 
@@ -192,7 +192,7 @@ export class EditDecisionPage
 	}
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.Log(`Has ${type} drawdown facility agreed ${value}`);
+		Logger.log(`Has ${type} drawdown facility agreed ${value}`);
 		
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
@@ -200,7 +200,7 @@ export class EditDecisionPage
 	}
 
 	public withFrameworkCategory(type: string, value): this {
-		Logger.Log(`With ${type} framework category ${value}`);
+		Logger.log(`With ${type} framework category ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).click();
 
@@ -208,7 +208,7 @@ export class EditDecisionPage
 	}
 
 	public hasFrameworkCategory(type: string, value): this {
-		Logger.Log(`Has ${type} framework category ${value}`);
+		Logger.log(`Has ${type} framework category ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
@@ -216,7 +216,7 @@ export class EditDecisionPage
 	}
 
 	public hasNoEnabledOrSelectedSubQuestions(type: string): this {
-		Logger.Log(`${type} sub questions are not enabled`);
+		Logger.log(`${type} sub questions are not enabled`);
 
 		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
 		
@@ -227,7 +227,7 @@ export class EditDecisionPage
 	}
 
 	public withTotalAmountRequested(totalAmountRequested: string): this {
-		Logger.Log(`With total Amount Requested ${totalAmountRequested}`);
+		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-amount-request").clear().type(totalAmountRequested);
 
@@ -235,7 +235,7 @@ export class EditDecisionPage
 	}
 
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
-		Logger.Log(`Has total Amount Requested ${totalAmountRequested}`);
+		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
 
@@ -244,14 +244,14 @@ export class EditDecisionPage
 
 	public hasNoTotalAmountRequestedField(): this
 	{
-		Logger.Log("Has no total amount requested field");
+		Logger.log("Has no total amount requested field");
 		cy.getByTestId("container-total-amount-requested").should("not.exist");
 
 		return this;
 	}
 
 	public withSupportingNotes(supportingNotes: string): this {
-		Logger.Log(`With Supporting Notes ${supportingNotes}`);
+		Logger.log(`With Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").clear().type(supportingNotes);
 
@@ -259,7 +259,7 @@ export class EditDecisionPage
 	}
 
 	public hasSupportingNotes(supportingNotes: string): this {
-		Logger.Log(`Has Supporting Notes ${supportingNotes}`);
+		Logger.log(`Has Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").should("have.value", supportingNotes);
 
@@ -276,7 +276,7 @@ export class EditDecisionPage
 
 	public save(): this {
 
-		Logger.Log("Saving decision");
+		Logger.log("Saving decision");
 
 		cy.getById('add-decision-button').click();
 
@@ -284,7 +284,7 @@ export class EditDecisionPage
 	}
 
 	public cancel(): this {
-		Logger.Log("Cancelling edit decision");
+		Logger.log("Cancelling edit decision");
 
 		cy.getById("cancel-link-event").click();
 

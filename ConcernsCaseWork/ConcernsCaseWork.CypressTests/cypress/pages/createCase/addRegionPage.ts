@@ -5,7 +5,7 @@ class AddRegionPage {
 
     public hasRegion(value: string): this
     {
-        Logger.Log(`Has region ${value}`);
+        Logger.log(`Has region ${value}`);
 
         cy.getByTestId(value).should("be.checked")
 
@@ -14,7 +14,7 @@ class AddRegionPage {
 
     public withRegion(value: string): this
     {
-        Logger.Log(`With Region ${value}`);
+        Logger.log(`With Region ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -23,7 +23,7 @@ class AddRegionPage {
 
     public nextStep(): this
     {
-        Logger.Log("Click next step button");
+        Logger.log("Click next step button");
         cy.getByTestId("next-step-button").click();
 
         return this;

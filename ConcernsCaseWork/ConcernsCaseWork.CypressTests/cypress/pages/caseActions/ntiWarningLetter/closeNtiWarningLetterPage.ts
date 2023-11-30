@@ -4,7 +4,7 @@ export class CloseNtiWarningLetterPage
 {
     public withReason(reason: string): this
     {
-        Logger.Log(`With reason ${reason}`);
+        Logger.log(`With reason ${reason}`);
 
         cy.getByTestId(reason).click();
 
@@ -13,7 +13,7 @@ export class CloseNtiWarningLetterPage
 
     public withNotes(notes: string)
     {
-        Logger.Log(`With notes ${notes}`);
+        Logger.log(`With notes ${notes}`);
 
         cy.getById("nti-notes").clear().type(notes);
 
@@ -21,7 +21,7 @@ export class CloseNtiWarningLetterPage
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -30,7 +30,7 @@ export class CloseNtiWarningLetterPage
 
     public hasNotes(notes: string)
     {
-        Logger.Log(`Has notes ${notes}`);
+        Logger.log(`Has notes ${notes}`);
 
         cy.getById("nti-notes").should("contain.value", notes);
 
@@ -38,7 +38,7 @@ export class CloseNtiWarningLetterPage
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -47,7 +47,7 @@ export class CloseNtiWarningLetterPage
 
     public close(): this
     {
-        Logger.Log("Confirmingh close of NTI warning letter");
+        Logger.log("Confirmingh close of NTI warning letter");
 
         cy.getById("add-nti-wl-button").click();
 

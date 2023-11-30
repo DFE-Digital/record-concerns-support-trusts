@@ -4,7 +4,7 @@ import { Logger } from "../../../common/logger";
 export class CloseTrustFinancialForecastPage
 {
     public withNotes(notes: string): this {
-        Logger.Log(`With Notes ${notes}`);
+        Logger.log(`With Notes ${notes}`);
 
         cy.getByTestId(`notes`).clear().type(notes);
 
@@ -12,7 +12,7 @@ export class CloseTrustFinancialForecastPage
     }
 
     public close(): this {
-        Logger.Log("Saving the Trust financial forecast");
+        Logger.log("Saving the Trust financial forecast");
 
         cy.getById("close-trust-financial-forecast-button").click();
 
@@ -20,7 +20,7 @@ export class CloseTrustFinancialForecastPage
     }
 
     public hasNotes(notes: string): this {
-        Logger.Log(`Has Notes ${notes}`);
+        Logger.log(`Has Notes ${notes}`);
 
         cy.getByTestId(`notes`).should("contain.text", notes);
 
@@ -28,7 +28,7 @@ export class CloseTrustFinancialForecastPage
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getByTestId('notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -36,7 +36,7 @@ export class CloseTrustFinancialForecastPage
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 

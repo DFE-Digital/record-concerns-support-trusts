@@ -30,68 +30,68 @@ describe("Creating a case", () => {
 
 	it("Should validate adding a case", () => {
 
-		Logger.Log("Checking accessibility on home page");
+		Logger.log("Checking accessibility on home page");
         cy.excuteAccessibilityTests();	
 
-		Logger.Log("Create a case");
+		Logger.log("Create a case");
 		createCasePage
 			.createCase()
 			.withTrustName("Ashton West End Primary Academy")
 			.selectOption();
 
-		Logger.Log("Checking accessibility on finding a trust");
+		Logger.log("Checking accessibility on finding a trust");
 		cy.excuteAccessibilityTests();
 
 		createCasePage.confirmOption();
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-        Logger.Log("You must select a division error");
+        Logger.log("You must select a division error");
         selectCaseDivisionPage
             .continue()
             .hasValidationError("Select case division");
 
-        Logger.Log("Checking accessibility on select case division");
+        Logger.log("Checking accessibility on select case division");
         cy.excuteAccessibilityTests();
 
-        Logger.Log("Create a valid case division");
+        Logger.log("Create a valid case division");
         selectCaseDivisionPage
             .withCaseDivision("SFSO")
             .continue();
 
-		Logger.Log("Check division details are correctly populated");
+		Logger.log("Check division details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "");
 
-		Logger.Log("Check unpopulated territory throws validation error");
+		Logger.log("Check unpopulated territory throws validation error");
 		addTerritoryPage.nextStep().hasValidationError("Select SFSO territory");
 
-		Logger.Log("Checking accessibility on territory");
+		Logger.log("Checking accessibility on territory");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Populate territory");
+		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-		Logger.Log("Check territory details are correctly populated");
+		Logger.log("Check territory details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
 
-		Logger.Log("You must select a case error");
+		Logger.log("You must select a case error");
 		selectCaseTypePage.continue().hasValidationError("Select case type");
 
-		Logger.Log("Checking accessibility on select case type");
+		Logger.log("Checking accessibility on select case type");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Create a valid concerns case type");
+		Logger.log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
 		 createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East");
 
-		Logger.Log("Attempt to create an invalid concern");
+		Logger.log("Attempt to create an invalid concern");
 		createConcernPage.addConcern();
 
 		validationComponent.hasValidationErrorsInOrder([
@@ -100,22 +100,22 @@ describe("Creating a case", () => {
 			"Select means of referral",
 		]);
 
-		Logger.Log("Checking accessibility on concern");
+		Logger.log("Checking accessibility on concern");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Check has SFSO specific means of referral hint text")
+		Logger.log("Check has SFSO specific means of referral hint text")
 		createCaseSummary
 			.hasHintText("For example, management letter, external review of governance, ESFA activity or other departmental activity.")
 			.hasHintText("For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies.");
 
-		Logger.Log("Create a valid concern");
+		Logger.log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
 			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
-		Logger.Log("Check Concern details are correctly populated");
+		Logger.log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
@@ -124,10 +124,10 @@ describe("Creating a case", () => {
 
 		createConcernPage.nextStep();
 
-		Logger.Log("Check unpopulated risk to trust throws validation error");
+		Logger.log("Check unpopulated risk to trust throws validation error");
 		addDetailsPage.nextStep().hasValidationError("Select risk to trust rating");
 
-		Logger.Log("Checking accessibility on risk to trust");
+		Logger.log("Checking accessibility on risk to trust");
 		cy.excuteAccessibilityTests();
 
 		createCaseSummary
@@ -136,10 +136,10 @@ describe("Creating a case", () => {
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
-		Logger.Log("Populate risk to trust");
+		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern and risk to trust details are correctly populated"
 		);
 		createCaseSummary
@@ -149,7 +149,7 @@ describe("Creating a case", () => {
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
@@ -161,7 +161,7 @@ describe("Creating a case", () => {
 
 		addConcernDetailsPage.createCase().hasValidationError("Issue is required");
 
-		Logger.Log("Validate unpopulated concern details");
+		Logger.log("Validate unpopulated concern details");
 		addConcernDetailsPage
 			.withIssueExceedingLimit()
 			.withCurrentStatusExceedingLimit()
@@ -180,10 +180,10 @@ describe("Creating a case", () => {
 			"Case notes must be 4300 characters or less",
 		]);
 
-		Logger.Log("Checking accessibility on concerns case confirmation");
+		Logger.log("Checking accessibility on concerns case confirmation");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Add concern details with valid text limit");
+		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage
 			.withIssue("This is an issue")
 			.withCurrentStatus("This is the current status")
@@ -193,7 +193,7 @@ describe("Creating a case", () => {
 			.withCaseHistory("This is the case history")
 			.createCase();
 
-		Logger.Log("Verify case details");
+		Logger.log("Verify case details");
 		caseManagementPage
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red Plus")
@@ -207,16 +207,16 @@ describe("Creating a case", () => {
 			.hasNextSteps("This is the next steps")
 			.hasCaseHistory("This is the case history");
 
-		Logger.Log("Checking accessibility on case management");
+		Logger.log("Checking accessibility on case management");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Verify the means of referral is set");
+		Logger.log("Verify the means of referral is set");
 		caseManagementPage.getCaseIDText().then((caseId) => {
 			concernsApi.get(parseInt(caseId)).then((response) => {
 				expect(response[0].meansOfReferralId).to.eq(2);
 			});
 		});
-		Logger.Log("Verify Trust Companise House Number is set on the API");
+		Logger.log("Verify Trust Companise House Number is set on the API");
 		caseManagementPage.getCaseIDText().then((caseId) => {
 			caseApi.get(parseInt(caseId)).then((response) => {
 				expect(response.trustCompaniesHouseNumber).to.eq("09388819");
@@ -225,7 +225,7 @@ describe("Creating a case", () => {
 	});
 
 	it("Should create a case with only required fields", () => {
-		Logger.Log("Create a case");
+		Logger.log("Create a case");
 		createCasePage
 			.createCase()
 			.withTrustName("Ashton West End Primary Academy")
@@ -234,29 +234,29 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-        Logger.Log("Create a valid case division");
+        Logger.log("Create a valid case division");
         selectCaseDivisionPage
             .withCaseDivision("SFSO")
             .continue();
 
-		Logger.Log("Populate territory");
+		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-        Logger.Log("Create a valid concerns case type");
+        Logger.log("Create a valid concerns case type");
         selectCaseTypePage
             .withCaseType("Concerns")
             .continue();
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-		Logger.Log("Create a valid concern");
+		Logger.log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Force majeure")
 			.withConcernRating("Amber-Green")
 			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
-		Logger.Log("Check Concern details are correctly populated");
+		Logger.log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East")
@@ -265,10 +265,10 @@ describe("Creating a case", () => {
 
 		createConcernPage.nextStep();
 
-		Logger.Log("Populate risk to trust");
+		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red").nextStep();
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern and risk to trust details are correctly populated"
 		);
 		createCaseSummary
@@ -278,7 +278,7 @@ describe("Creating a case", () => {
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red");
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
@@ -288,10 +288,10 @@ describe("Creating a case", () => {
 			.hasConcernRiskRating("Amber Green")
 			.hasRiskToTrust("Red")
 
-		Logger.Log("Add concern details with valid text limit");
+		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();
 
-		Logger.Log("Verify case details");
+		Logger.log("Verify case details");
 		caseManagementPage
 			.hasTrust("Ashton West End Primary Academy")
 			.hasRiskToTrust("Red")
@@ -324,32 +324,32 @@ describe("Creating a case", () => {
 	});
 
 	it("Should create additional concerns", () => {
-		Logger.Log("Create a case");
+		Logger.log("Create a case");
 		createCasePage
 			.createCase()
 			.withTrustName("Ashton West End Primary Academy")
 			.selectOption()
 			.confirmOption();
 
-		Logger.Log("Create a valid case division");
+		Logger.log("Create a valid case division");
 		selectCaseDivisionPage
 			.withCaseDivision("SFSO")
 			.continue();
 
-		Logger.Log("Populate territory");
+		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-		Logger.Log("Create a valid concerns case type");
+		Logger.log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
-		Logger.Log("Create a valid concern");
+		Logger.log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Suspected fraud")
 			.withConcernRating("Red Plus")
 			.withMeansOfReferral(SourceOfConcernInternal)
 			.addConcern();
 
-		Logger.Log("Adding another concern during case creation");
+		Logger.log("Adding another concern during case creation");
 		createConcernPage
 			.addAnotherConcern()
 			.withConcernType("Financial compliance")
@@ -358,16 +358,16 @@ describe("Creating a case", () => {
 			.addConcern()
 			.nextStep();
 
-		Logger.Log("Populate risk to trust");
+		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
-		Logger.Log("Add concern details with valid text limit");
+		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage.withIssue("This is an issue").createCase();
 
-		Logger.Log("Add another concern after case creation");
+		Logger.log("Add another concern after case creation");
 		caseManagementPage.addAnotherConcern();
 
-		Logger.Log("Attempt to create an invalid concern");
+		Logger.log("Attempt to create an invalid concern");
 		createConcernPage
 			.addConcern()
 			.hasValidationError("Select concern type")

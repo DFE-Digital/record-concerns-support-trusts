@@ -2,7 +2,7 @@ import { Logger } from "../../../common/logger";
 
 export class CloseNoticeToImprovePage {
     public withDayClosed(value: string): this {
-        Logger.Log(`With day closed ${value}`);
+        Logger.log(`With day closed ${value}`);
 
         cy.getById(`dtr-day-date-nti-closed`).clear().type(value);
 
@@ -10,7 +10,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public withMonthClosed(value: string): this {
-        Logger.Log(`With month closed ${value}`);
+        Logger.log(`With month closed ${value}`);
 
         cy.getById(`dtr-month-date-nti-closed`).clear().type(value);
 
@@ -18,7 +18,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public withYearClosed(value: string): this {
-        Logger.Log(`With year closed ${value}`);
+        Logger.log(`With year closed ${value}`);
 
         cy.getById(`dtr-year-date-nti-closed`).clear().type(value);
 
@@ -26,7 +26,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public withNotes(value: string): this {
-        Logger.Log(`With notes ${value}`);
+        Logger.log(`With notes ${value}`);
 
         cy.getById('nti-notes').clear().type(value);
 
@@ -34,7 +34,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -42,7 +42,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -50,7 +50,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public clearDateFields(): this {
-        Logger.Log(`Clearing date fields`);
+        Logger.log(`Clearing date fields`);
 
         cy.getById('dtr-day-date-nti-closed').clear();
         cy.getById('dtr-month-date-nti-closed').clear();
@@ -60,7 +60,7 @@ export class CloseNoticeToImprovePage {
     }
 
     public close(): this {
-        Logger.Log("Confirming Close of Notice To Improve");
+        Logger.log("Confirming Close of Notice To Improve");
 
         cy.getById("close-nti-button").click();
 

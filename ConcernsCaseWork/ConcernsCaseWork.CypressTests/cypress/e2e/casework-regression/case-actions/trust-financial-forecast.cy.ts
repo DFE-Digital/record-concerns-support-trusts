@@ -27,10 +27,10 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
 	it("Creation of a TFF", function () {
-		Logger.Log("Create a TFF with invalid values - Shows validation errors");
+		Logger.log("Create a TFF with invalid values - Shows validation errors");
 		validateAddEdit();
 
-		Logger.Log("Create a TFF will all values");
+		Logger.log("Create a TFF will all values");
 		editTFFPage
 			.withForecastingTool("Current year - Spring")
 			.withDayReviewHappened("26")
@@ -44,7 +44,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withNotes("Supporting notes")
 			.save();
 
-		Logger.Log("Check the action summary");
+		Logger.log("Check the action summary");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
@@ -54,7 +54,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("View the created TFF with expected values");
+		Logger.log("View the created TFF with expected values");
 		viewTFFPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasForecastingTool("Current year - Spring")
@@ -64,7 +64,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.hasSRMABeenOffered("Yes")
 			.hasNotes("Supporting notes");
 
-		Logger.Log("Checking accessibility on View TFF");
+		Logger.log("Checking accessibility on View TFF");
 		cy.excuteAccessibilityTests();
 	});
 
@@ -79,17 +79,17 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
 	it("Creating a TFF with empty values", function () {
-		Logger.Log("Create a TFF with empty values");
+		Logger.log("Create a TFF with empty values");
 		editTFFPage.save();
 
-		Logger.Log("Validate the Trust Financial Forecast on the view page");
+		Logger.log("Validate the Trust Financial Forecast on the view page");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
 				row.select();
 			});
 
-		Logger.Log("View the created TFF with expected values");
+		Logger.log("View the created TFF with expected values");
 		viewTFFPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasForecastingTool("Empty")
@@ -101,7 +101,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
 	it("Edit a TFF", function () {
-		Logger.Log("Create a TFF values");
+		Logger.log("Create a TFF values");
 		editTFFPage
 			.withForecastingTool("Current year - Spring")
 			.withDayReviewHappened("26")
@@ -115,7 +115,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withNotes("Supporting notes")
 			.save();
 
-		Logger.Log("Validate the Trust Financial Forecast on the view page");
+		Logger.log("Validate the Trust Financial Forecast on the view page");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
@@ -139,7 +139,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 		editTFFPage.clearAllDates();
 		validateAddEdit();
 
-		Logger.Log("Edit a TFF will all values");
+		Logger.log("Edit a TFF will all values");
 		editTFFPage
 			.withForecastingTool("Previous year - Spring")
 			.withDayReviewHappened("05")
@@ -153,14 +153,14 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withNotes("Edited notes")
 			.save();
 
-		Logger.Log("Validate the Trust Financial Forecast on the view page");
+		Logger.log("Validate the Trust Financial Forecast on the view page");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
 				row.select();
 			});
 
-		Logger.Log("Validate the TFF on the view page");
+		Logger.log("Validate the TFF on the view page");
 		viewTFFPage
 			.hasForecastingTool("Previous year - Spring")
 			.hasInitialReviewDate("05 July 2022")
@@ -171,7 +171,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 	});
 
 	it("Close a TFF", function () {
-		Logger.Log("Create a TFF with populated values");
+		Logger.log("Create a TFF with populated values");
 		editTFFPage
 			.withForecastingTool("Previous year - Autumn")
 			.withDayReviewHappened("14")
@@ -185,32 +185,32 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.withNotes("very important notes")
 			.save();
 
-		Logger.Log("Validate the Trust Financial Forecast on the view page");
+		Logger.log("Validate the Trust Financial Forecast on the view page");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
 				row.select();
 			});
 
-		Logger.Log("Closing the trust financial forecast");
+		Logger.log("Closing the trust financial forecast");
 		viewTFFPage.close();
 
-		Logger.Log("Check previous notes are populated");
+		Logger.log("Check previous notes are populated");
 		closeTFFPage.hasNotes("very important notes");
 
-		Logger.Log("Testing validation on close");
+		Logger.log("Testing validation on close");
 		closeTFFPage
 			.withNotesExceedingLimit()
 			.close()
 			.hasValidationError("Finalise notes must be 2000 characters or less");
 
-		Logger.Log("Checking accessibility on Close TFF");
+		Logger.log("Checking accessibility on Close TFF");
 		cy.excuteAccessibilityTests();
 
-		Logger.Log("Close with valid values");
+		Logger.log("Close with valid values");
 		closeTFFPage.withNotes("Even more important notes").close();
 
-		Logger.Log("Check the action summary for close");
+		Logger.log("Check the action summary for close");
 		actionSummaryTable
 			.getClosedAction("TFF (trust financial forecast)")
 			.then((row) => {
@@ -221,7 +221,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 				row.select();
 			});
 
-		Logger.Log("Check the close trust financial forecast");
+		Logger.log("Check the close trust financial forecast");
 		viewTFFPage
 			.hasDateOpened(toDisplayDate(now))
 			.hasDateClosed(toDisplayDate(now))
@@ -234,12 +234,12 @@ describe("User can add trust financial forecast to an existing case", () => {
 			.cannotEdit()
 			.cannotClose();
 
-		Logger.Log("Checking accessibility on View Closed TFF");
+		Logger.log("Checking accessibility on View Closed TFF");
 		cy.excuteAccessibilityTests();
 	});
 
 	function addTFFToCase() {
-		Logger.Log("Adding Trust Financial Forecasr");
+		Logger.log("Adding Trust Financial Forecasr");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("TrustFinancialForecast");
 		AddToCasePage.getAddToCaseBtn().click();
@@ -268,7 +268,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 			NotesError,
 		]);
 
-		Logger.Log("Checking accessibility on Add/Edit TFF");
+		Logger.log("Checking accessibility on Add/Edit TFF");
 		cy.excuteAccessibilityTests();
 	}
 });

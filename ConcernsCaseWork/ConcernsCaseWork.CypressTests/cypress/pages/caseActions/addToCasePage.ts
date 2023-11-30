@@ -19,7 +19,7 @@ class AddToCasePage {
 
     public hasActions(actions: Array<string>): this
     {
-        Logger.Log(`Case has available actions ${actions.join(",")}`);
+        Logger.log(`Case has available actions ${actions.join(",")}`);
 
         cy.get('.govuk-radios__label')
             .should("have.length", actions.length)
@@ -32,7 +32,7 @@ class AddToCasePage {
 
     public cancel(): this
     {
-        Logger.Log("Cancelling case action creation");
+        Logger.log("Cancelling case action creation");
         cy.getById("cancel-link").click();
 
         return this;

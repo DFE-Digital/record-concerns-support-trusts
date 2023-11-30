@@ -4,7 +4,7 @@ export class CookiesPage
 {
     public withConsent(consent: string): this
     {
-        Logger.Log(`With cookie consent value ${consent}`);
+        Logger.log(`With cookie consent value ${consent}`);
 
         cy.getByTestId(`analytics-cookies-${consent.toLowerCase()}`).check();
 
@@ -13,7 +13,7 @@ export class CookiesPage
 
     public hasConsent(consent): this
     {
-        Logger.Log(`Has cookie consent value ${consent}`);
+        Logger.log(`Has cookie consent value ${consent}`);
 
         cy.getByTestId(`analytics-cookies-${consent.toLowerCase()}`).should("be.checked");
 
@@ -22,7 +22,7 @@ export class CookiesPage
 
     public save(): this
     {
-        Logger.Log("Saving cookie consent");
+        Logger.log("Saving cookie consent");
 
         cy.getByTestId("save-cookie-preferences-button").click();
 

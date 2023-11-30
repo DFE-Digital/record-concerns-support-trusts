@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class ViewFinancialPlanPage
 {
     public hasDateOpened(value: string): this {
-        Logger.Log(`Has date opened ${value}`);
+        Logger.log(`Has date opened ${value}`);
 
         cy.getByTestId("date-opened").should("contain.text", value);
 
@@ -11,7 +11,7 @@ export class ViewFinancialPlanPage
     }
 
     public hasDateClosed(value: string): this {
-        Logger.Log(`Has date closed ${value}`);
+        Logger.log(`Has date closed ${value}`);
 
         cy.getByTestId("date-closed").should("contain.text", value);
 
@@ -20,7 +20,7 @@ export class ViewFinancialPlanPage
 
     public hasStatus(status: string): this
     {
-        Logger.Log(`Has status ${status}`);
+        Logger.log(`Has status ${status}`);
 
         cy.getByTestId("status-text").should("contain.text", status);
 
@@ -29,7 +29,7 @@ export class ViewFinancialPlanPage
 
     public hasPlanRequestedDate(date: string): this
     {
-        Logger.Log(`Has plan requested date ${date}`);
+        Logger.log(`Has plan requested date ${date}`);
 
         cy.getByTestId("date-plan-requested-text").should("contain.text", date);
 
@@ -38,7 +38,7 @@ export class ViewFinancialPlanPage
 
     public hasPlanReceivedDate(date: string): this
     {
-        Logger.Log(`Has plan received date ${date}`);
+        Logger.log(`Has plan received date ${date}`);
 
         cy.getByTestId("date-plan-received-text").should("contain.text", date);
 
@@ -47,7 +47,7 @@ export class ViewFinancialPlanPage
 
     public hasNotes(notes: string): this
     {
-        Logger.Log(`Has notes ${notes}`);
+        Logger.log(`Has notes ${notes}`);
 
         cy.getByTestId("notes-text");
 
@@ -56,7 +56,7 @@ export class ViewFinancialPlanPage
 
     public edit(): this
     {
-        Logger.Log("Edit financial plan");
+        Logger.log("Edit financial plan");
 
         this.getEdit().click();
 
@@ -65,7 +65,7 @@ export class ViewFinancialPlanPage
 
     public canEdit()
     {
-        Logger.Log("Can edit financial plan");
+        Logger.log("Can edit financial plan");
 
         this.getEdit();
 
@@ -74,7 +74,7 @@ export class ViewFinancialPlanPage
 
     public cannotEdit()
     {
-        Logger.Log("Cannot edit financial plan");
+        Logger.log("Cannot edit financial plan");
 
         this.getEdit().should("not.exist");
 
@@ -83,7 +83,7 @@ export class ViewFinancialPlanPage
 
     public close(): this
     {
-        Logger.Log("Closing financial plan");
+        Logger.log("Closing financial plan");
 
         this.getClose().click();
 
@@ -92,7 +92,7 @@ export class ViewFinancialPlanPage
 
     public canClose(): this
     {
-        Logger.Log("Can close financial plan");
+        Logger.log("Can close financial plan");
 
         this.getClose();
 
@@ -101,7 +101,7 @@ export class ViewFinancialPlanPage
 
     public cannotClose(): this
     {
-        Logger.Log("Cannot close financial plan");
+        Logger.log("Cannot close financial plan");
 
         this.getClose().should("not.exist");
 

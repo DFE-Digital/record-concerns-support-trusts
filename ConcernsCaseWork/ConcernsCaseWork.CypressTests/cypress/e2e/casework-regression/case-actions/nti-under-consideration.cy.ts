@@ -28,13 +28,13 @@ describe("Testing the NTI under consideration", () =>
     {
         it("Should create an NTI with the values specified and be able to edit the values", () =>
         {
-            Logger.Log("Validating notes field");
+            Logger.log("Validating notes field");
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
                 .hasValidationError(NotesError);
 
-            Logger.Log("Checking accessibility on Add NTI under consideration");
+            Logger.log("Checking accessibility on Add NTI under consideration");
             cy.excuteAccessibilityTests();
 
             editNtiUnderConsiderationPage
@@ -43,7 +43,7 @@ describe("Testing the NTI under consideration", () =>
                 .withNotes("These are my notes")
                 .save();
 
-            Logger.Log("Validate the NTI on the view page");
+            Logger.log("Validate the NTI on the view page");
             actionSummaryTable
 			.getOpenAction("NTI Under Consideration")
 			.then(row =>
@@ -66,13 +66,13 @@ describe("Testing the NTI under consideration", () =>
                 .hasReason("Safeguarding")
                 .hasNotes("These are my notes");
 
-            Logger.Log("Validating notes field");
+            Logger.log("Validating notes field");
             editNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .save()
                 .hasValidationError(NotesError);
 
-            Logger.Log("Checking accessibility on Edit NTI under consideration");
+            Logger.log("Checking accessibility on Edit NTI under consideration");
             cy.excuteAccessibilityTests();
 
             editNtiUnderConsiderationPage
@@ -89,7 +89,7 @@ describe("Testing the NTI under consideration", () =>
                 .hasReason("Risk of insolvency")
                 .hasNotes("Edited my notes");
 
-            Logger.Log("Checking accessibility on View NTI under consideration");
+            Logger.log("Checking accessibility on View NTI under consideration");
             cy.excuteAccessibilityTests();
         });
     });
@@ -101,7 +101,7 @@ describe("Testing the NTI under consideration", () =>
             editNtiUnderConsiderationPage
                 .save();
 
-            Logger.Log("Validate the NTI on the view page");
+            Logger.log("Validate the NTI on the view page");
             actionSummaryTable
 			.getOpenAction("NTI Under Consideration")
 			.then(row =>
@@ -138,7 +138,7 @@ describe("Testing the NTI under consideration", () =>
                 .withNotes("These are my notes")
                 .save();
 
-            Logger.Log("Close NTI on the view page");
+            Logger.log("Close NTI on the view page");
             actionSummaryTable
 			.getOpenAction("NTI Under Consideration")
 			.then(row =>
@@ -150,24 +150,24 @@ describe("Testing the NTI under consideration", () =>
 
             closeNtiUnderConsiderationPage.hasNotes("These are my notes");
 
-            Logger.Log("Validating the close page")
+            Logger.log("Validating the close page")
             closeNtiUnderConsiderationPage
                 .withNotesExceedingLimit()
                 .close()
                 .hasValidationError("Please select a reason for closing NTI under consideration")
                 .hasValidationError(NotesError);
 
-            Logger.Log("Checking accessibility on Close NTI under consideration");
+            Logger.log("Checking accessibility on Close NTI under consideration");
             cy.excuteAccessibilityTests();
 
-            Logger.Log("Filling out the close form");
+            Logger.log("Filling out the close form");
 
             closeNtiUnderConsiderationPage
                 .withStatus("NoFurtherAction")
                 .withNotes("These are my final notes")
                 .close();
 
-            Logger.Log("Review the closed NTI under consideration");
+            Logger.log("Review the closed NTI under consideration");
             actionSummaryTable
 			.getClosedAction("NTI Under Consideration")
 			.then(row =>
@@ -189,14 +189,14 @@ describe("Testing the NTI under consideration", () =>
                 .cannotEdit()
                 .cannotClose();
 
-            Logger.Log("Checking accessibility on View Closed NTI under consideration");
+            Logger.log("Checking accessibility on View Closed NTI under consideration");
             cy.excuteAccessibilityTests();
         });
     });
 
     function addNtiUnderConsiderationToCase()
     {
-        Logger.Log("Adding Notice To Improve");
+        Logger.log("Adding Notice To Improve");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('NtiUnderConsideration');
         AddToCasePage.getAddToCaseBtn().click();

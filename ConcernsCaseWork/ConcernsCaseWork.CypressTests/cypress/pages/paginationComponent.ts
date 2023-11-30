@@ -9,7 +9,7 @@ export class PaginationComponent
 
     public next(): this
     {
-        Logger.Log("Nagivating to the next page");
+        Logger.log("Nagivating to the next page");
 
         cy.getByTestId(`${this.prefix}next-page`).click();
 
@@ -18,7 +18,7 @@ export class PaginationComponent
 
     public previous(): this
     {
-        Logger.Log("Navigating to the previous page");
+        Logger.log("Navigating to the previous page");
 
         cy.getByTestId(`${this.prefix}previous-page`).click();
 
@@ -27,7 +27,7 @@ export class PaginationComponent
 
     public goToPage(pageNumber: string)
     {
-        Logger.Log(`Moving to page ${pageNumber}`);
+        Logger.log(`Moving to page ${pageNumber}`);
 
         cy.getByTestId(`${this.prefix}page-${pageNumber}`).click();
 
@@ -35,7 +35,7 @@ export class PaginationComponent
     }
 
     public isCurrentPage(pageNumber: string): this {
-        Logger.Log(`Currently selected page is page ${pageNumber}`);
+        Logger.log(`Currently selected page is page ${pageNumber}`);
 
         // Used to check that we have navigated to the next page with ajax
         cy.getByTestId(`${this.prefix}page-${pageNumber}`).parent().should("have.class", "govuk-pagination__item--current");

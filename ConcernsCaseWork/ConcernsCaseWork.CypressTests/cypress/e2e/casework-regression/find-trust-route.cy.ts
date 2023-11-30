@@ -31,11 +31,11 @@ describe("User interactions via Find Trust route", () => {
 			"Accrington St Christopher's Church Of England High School";
 
 		it("Should display details on the selected trust and create a case against the trust", () => {
-			Logger.Log("User clicks on Create Case and should see Search Trusts");
+			Logger.log("User clicks on Create Case and should see Search Trusts");
 			cy.get('[href="/trust"]').click();
 			cy.get("#search").should("be.visible");
 
-			Logger.Log(
+			Logger.log(
 				"It should display an error when the user does not enter a trust"
 			);
 			cy.get("#search").type(trustName.substring(0, 1) + "{enter}");
@@ -44,7 +44,7 @@ describe("User interactions via Find Trust route", () => {
 				"A trust must be selected"
 			);
 
-			Logger.Log("Getting too many search results should result in a warning");
+			Logger.log("Getting too many search results should result in a warning");
 			const warningMessage =
 				"There are a large number of search results. Try a more specific search term.";
 			cy.get("#search").type("sch");
@@ -53,11 +53,11 @@ describe("User interactions via Find Trust route", () => {
 				warningMessage
 			);
 
-			Logger.Log("Search for a valid trust should find multiple results");
+			Logger.log("Search for a valid trust should find multiple results");
 			cy.get("#search").clear().type("Manchester");
 			cy.get("#search__listbox").children().should("have.length.gt", 1);
 
-			Logger.Log("Selecting the trust should populate it in the search");
+			Logger.log("Selecting the trust should populate it in the search");
 			cy.get("#search").clear().type(trustName);
 			cy.get("#search__option--0").click();
 			cy.get("#search").should(
@@ -65,14 +65,14 @@ describe("User interactions via Find Trust route", () => {
 				`${trustName}, 10059220, 07728029 (Accrington)`
 			);
 
-			Logger.Log("Clicking continue should populate the trust page");
+			Logger.log("Clicking continue should populate the trust page");
 			cy.getById("continue").click();
 			cy.url().should("include", "/trust");
 
-			Logger.Log("Trust page should have title of the academy");
+			Logger.log("Trust page should have title of the academy");
 			cy.get(".govuk-heading-l").should("contain.text", trustName);
 
-			Logger.Log("Ensure that the trust information is populated");
+			Logger.log("Ensure that the trust information is populated");
 			trustOverviewPage
 				.trustTypeIsNotEmpty()
 				.trustAddressIsNotEmpty()
@@ -83,15 +83,15 @@ describe("User interactions via Find Trust route", () => {
 				.trustUKPRNIsNotEmpty()
 				.trustCompanyHouseNumberIsNotEmpty();
 
-			Logger.Log("Checking accessibility on risk to trust");
+			Logger.log("Checking accessibility on risk to trust");
 			cy.excuteAccessibilityTests();
 
-			Logger.Log("Create a case against the trust");
+			Logger.log("Create a case against the trust");
 			trustOverviewPage.createCase();
 
 			createCaseSummary.hasTrustSummaryDetails(trustName);
 
-			Logger.Log("Create a valid case division");
+			Logger.log("Create a valid case division");
 			selectCaseDivisionPage
 				.withCaseDivision("SFSO")
 				.continue();
@@ -100,7 +100,7 @@ describe("User interactions via Find Trust route", () => {
 				.hasTrustSummaryDetails(trustName)
 				.hasManagedBy("SFSO", "");
 
-			Logger.Log("Populate territory");
+			Logger.log("Populate territory");
 			addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 			createCaseSummary
@@ -113,14 +113,14 @@ describe("User interactions via Find Trust route", () => {
 				.hasTrustSummaryDetails(trustName)
 				.hasManagedBy("SFSO", "North and UTC - North East")
 
-			Logger.Log("Create a valid concern");
+			Logger.log("Create a valid concern");
 			createConcernPage
 				.withConcernType("Deficit")
 				.withConcernRating("Red-Amber")
 				.withMeansOfReferral(SourceOfConcernExternal)
 				.addConcern();
 
-			Logger.Log("Check Concern details are correctly populated");
+			Logger.log("Check Concern details are correctly populated");
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
 				.hasManagedBy("SFSO", "North and UTC - North East")
@@ -129,10 +129,10 @@ describe("User interactions via Find Trust route", () => {
 
 			createConcernPage.nextStep();
 
-			Logger.Log("Populate risk to trust");
+			Logger.log("Populate risk to trust");
 			addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
-			Logger.Log(
+			Logger.log(
 				"Check Trust, concern and risk to trust details are correctly populated"
 			);
 			createCaseSummary
@@ -142,7 +142,7 @@ describe("User interactions via Find Trust route", () => {
 				.hasConcernRiskRating("Red Amber")
 				.hasRiskToTrust("Red Plus");
 
-			Logger.Log(
+			Logger.log(
 				"Check Trust, concern, risk to trust details and territory are correctly populated"
 			);
 			createCaseSummary
@@ -152,10 +152,10 @@ describe("User interactions via Find Trust route", () => {
 				.hasConcernRiskRating("Red Amber")
 				.hasRiskToTrust("Red Plus");
 
-			Logger.Log("Add concern details with valid text limit");
+			Logger.log("Add concern details with valid text limit");
 			addConcernDetailsPage.withIssue("This is an issue").createCase();
 
-			Logger.Log("Verify case details");
+			Logger.log("Verify case details");
 			caseManagementPage
 				.hasTrust(trustName)
 				.hasRiskToTrust("Red Plus")
@@ -206,10 +206,10 @@ describe("User interactions via Find Trust route", () => {
 				.then((caseIds: Array<string>) => {
 					pageOneCases = caseIds;
 
-					Logger.Log("Ensure we have 5 cases on page one");
+					Logger.log("Ensure we have 5 cases on page one");
 					expect(pageOneCases.length).to.eq(5);
 
-					Logger.Log("Moving to the second page using the direct link");
+					Logger.log("Moving to the second page using the direct link");
 					paginationComponent.goToPage("2").isCurrentPage("2");
 
 					return caseworkTable.getOpenCaseIds();
@@ -217,30 +217,30 @@ describe("User interactions via Find Trust route", () => {
 				.then((caseIds: Array<string>) => {
 					pageTwoCases = caseIds;
 
-					Logger.Log("Ensure we have 5 cases on page 2");
+					Logger.log("Ensure we have 5 cases on page 2");
 					expect(pageTwoCases.length).to.equal(5);
 
-					Logger.Log("Ensure that the cases on page one and two are different");
+					Logger.log("Ensure that the cases on page one and two are different");
 					hasNoSimilarElements(pageOneCases, pageTwoCases);
 
-					Logger.Log("Move to the previous page, which is page 1");
+					Logger.log("Move to the previous page, which is page 1");
 					paginationComponent.previous().isCurrentPage("1");
 
 					return caseworkTable.getOpenCaseIds();
 				})
 				.then((caseIds: Array<string>) => {
-					Logger.Log(
+					Logger.log(
 						"On moving to page one, we should get the exact same cases"
 					);
 					expect(caseIds).to.deep.equal(pageOneCases);
 
-					Logger.Log("Move to the next page, which is page 2");
+					Logger.log("Move to the next page, which is page 2");
 					paginationComponent.next().isCurrentPage("2");
 
 					return caseworkTable.getOpenCaseIds();
 				})
 				.then((caseIds: Array<string>) => {
-					Logger.Log(
+					Logger.log(
 						"On moving to page two, we should get the exact same cases"
 					);
 					expect(caseIds).to.deep.equal(pageTwoCases);

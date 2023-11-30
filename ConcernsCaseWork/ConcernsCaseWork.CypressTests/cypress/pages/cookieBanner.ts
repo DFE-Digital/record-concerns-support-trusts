@@ -4,7 +4,7 @@ export class CookieBanner
 {
     public accept() : this
     {
-        Logger.Log("I accept the cookie policy");
+        Logger.log("I accept the cookie policy");
         cy.getByTestId("banner-accept-analytics-cookies-button").click();
 
         return this;
@@ -12,7 +12,7 @@ export class CookieBanner
 
     public reject(): this
     {
-        Logger.Log("I reject the cookie policy");
+        Logger.log("I reject the cookie policy");
         cy.getByTestId("banner-reject-analytics-cookies-button").click();
 
         return this;
@@ -20,7 +20,7 @@ export class CookieBanner
 
     public viewCookies(): this
     {
-        Logger.Log("I view the cookies page");
+        Logger.log("I view the cookies page");
 
         cy.getByTestId("view-cookies-link").click();
 
@@ -29,7 +29,7 @@ export class CookieBanner
 
     public notVisible(): this
     {
-        Logger.Log("The cookie banner is not visible");
+        Logger.log("The cookie banner is not visible");
         cy.getByTestId("cookies-banner").should("not.exist");
 
         return this;

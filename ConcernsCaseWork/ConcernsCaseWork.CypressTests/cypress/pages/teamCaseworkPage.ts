@@ -4,7 +4,7 @@ import { toTitleCase } from "cypress/support/stringUtils";
 class TeamCaseworkPage {
 
     public selectTeamMember(name: string): this {
-        Logger.Log(`Selecting team member ${name}`);
+        Logger.log(`Selecting team member ${name}`);
         this.enterTeamMember(name);
         cy.getById("select-colleagues-input__option--0").click();
         cy.getByTestId(`row-${name.toLowerCase()}`);
@@ -23,7 +23,7 @@ class TeamCaseworkPage {
     }
 
     public save(): this {
-        Logger.Log("Saving changes");
+        Logger.log("Saving changes");
         cy.getByTestId("save").click();
 
         return this;
@@ -36,27 +36,27 @@ class TeamCaseworkPage {
     }
 
     public removeAddedColleagues(): this {
-        Logger.Log("Removing added colleagues");
+        Logger.log("Removing added colleagues");
         cy.get('.user-remove').each(e => cy.wrap(e).click());
         return this;
     }
 
     public hasNoResultsFound(): this {
-        Logger.Log("Has no results found");
+        Logger.log("Has no results found");
         cy.get(".autocomplete__option").should("contain.text", "No results found");
 
         return this;
     }
 
     public hasNoCases(): this {
-        Logger.Log("Has no team cases");
+        Logger.log("Has no team cases");
         cy.getByTestId("no-cases").should("contain.text", "There are no cases available.");
 
         return this;
     }
 
     public hasNoTeamMember(name: string): this {  
-        Logger.Log("Team member is not displayed");
+        Logger.log("Team member is not displayed");
         cy.getById("selected-colleagues-container").contains(name).should('not.exist');
 
         return this;

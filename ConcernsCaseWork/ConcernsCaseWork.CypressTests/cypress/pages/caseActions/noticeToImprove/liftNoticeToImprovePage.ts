@@ -2,7 +2,7 @@ import { Logger } from "../../../common/logger";
 
 export class LiftNoticeToImprovePage {
     public withSubmissionDecisionId(value: string): this {
-        Logger.Log(`With submission decision id ${value}`);
+        Logger.log(`With submission decision id ${value}`);
 
         cy.getById(`submission-decision-id`).clear().type(value);
 
@@ -10,7 +10,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public withDayLifted(value: string): this {
-        Logger.Log(`With day lifted ${value}`);
+        Logger.log(`With day lifted ${value}`);
 
         cy.getById(`dtr-day-date-nti-lifted`).clear().type(value);
 
@@ -18,7 +18,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public withMonthLifted(value: string): this {
-        Logger.Log(`With month lifted ${value}`);
+        Logger.log(`With month lifted ${value}`);
 
         cy.getById(`dtr-month-date-nti-lifted`).clear().type(value);
 
@@ -26,7 +26,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public withYearLifted(value: string): this {
-        Logger.Log(`With year lifted ${value}`);
+        Logger.log(`With year lifted ${value}`);
 
         cy.getById(`dtr-year-date-nti-lifted`).clear().type(value);
 
@@ -34,7 +34,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public withNotes(value: string): this {
-        Logger.Log(`With notes ${value}`);
+        Logger.log(`With notes ${value}`);
 
         cy.getById('nti-notes').clear().type(value);
 
@@ -42,7 +42,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -50,7 +50,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getById(`nti-notes`).should("have.value", value);
 
@@ -58,7 +58,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -66,7 +66,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public clearDateFields(): this {
-        Logger.Log(`Clearing date fields`);
+        Logger.log(`Clearing date fields`);
 
         cy.getById('dtr-day-date-nti-lifted').clear();
         cy.getById('dtr-month-date-nti-lifted').clear();
@@ -76,7 +76,7 @@ export class LiftNoticeToImprovePage {
     }
 
     public lift(): this {
-        Logger.Log("Lifting Notice To Improve");
+        Logger.log("Lifting Notice To Improve");
 
         cy.getById("lift-nti-button").click();
 

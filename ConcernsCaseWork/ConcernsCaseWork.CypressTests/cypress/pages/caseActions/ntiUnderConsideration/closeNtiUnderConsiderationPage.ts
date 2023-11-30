@@ -4,7 +4,7 @@ export class CloseNtiUnderConsiderationPage
 {
     public withStatus(status: string): this
     {
-        Logger.Log(`With closure status ${status}`);
+        Logger.log(`With closure status ${status}`);
 
         cy.getByTestId(status).click();
 
@@ -12,7 +12,7 @@ export class CloseNtiUnderConsiderationPage
     }
 
     public withNotes(value: string): this {
-        Logger.Log(`With notes ${value}`);
+        Logger.log(`With notes ${value}`);
 
         cy.getById(`nti-notes`).clear().type(value);
 
@@ -20,7 +20,7 @@ export class CloseNtiUnderConsiderationPage
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -28,7 +28,7 @@ export class CloseNtiUnderConsiderationPage
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getById(`nti-notes`).should("contain.value", value);
 
@@ -36,7 +36,7 @@ export class CloseNtiUnderConsiderationPage
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -45,7 +45,7 @@ export class CloseNtiUnderConsiderationPage
 
     public close(): this
     {
-        Logger.Log("Closing the NTI under consideration");
+        Logger.log("Closing the NTI under consideration");
 
         cy.getById("add-nti-uc-button").click();
 

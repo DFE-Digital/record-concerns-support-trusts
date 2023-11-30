@@ -6,7 +6,7 @@ export default class AddDetailsPage {
 
     public hasRating(value: string): this
     {
-        Logger.Log(`Has Rating ${value}`);
+        Logger.log(`Has Rating ${value}`);
 
         cy.getByTestId(value).should("be.checked")
 
@@ -16,7 +16,7 @@ export default class AddDetailsPage {
 
     public withRiskToTrust(value: string): this
     {
-        Logger.Log(`With risk to trust ${value}`);
+        Logger.log(`With risk to trust ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -36,7 +36,7 @@ export default class AddDetailsPage {
 
     public nextStep(): this
     {
-        Logger.Log("Click next step button");
+        Logger.log("Click next step button");
         cy.getByTestId("next-step-button").click();
 
         return this;
@@ -44,7 +44,7 @@ export default class AddDetailsPage {
 
     public apply(): this
     {
-        Logger.Log("Click apply button")
+        Logger.log("Click apply button")
         cy.getByTestId("apply").click();
 
         return this;

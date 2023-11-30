@@ -4,7 +4,7 @@ export class CreateCaseSummary
 {
     public hasTrustSummaryDetails(value: string): this
     {
-        Logger.Log(`Has Trust summary details ${value}`);
+        Logger.log(`Has Trust summary details ${value}`);
 
         cy.getByTestId("trust-summary").should(
 			"contain.text",
@@ -15,7 +15,7 @@ export class CreateCaseSummary
 
     public hasConcernType(value: string): this
     {
-        Logger.Log(`Has Concern Type ${value}`);
+        Logger.log(`Has Concern Type ${value}`);
 
         cy.getByTestId("concern-type").should(
 			"contain.text",
@@ -26,7 +26,7 @@ export class CreateCaseSummary
 
     public hasConcernRiskRating(value: string): this
     {
-        Logger.Log(`Has concern risk ${value}`);
+        Logger.log(`Has concern risk ${value}`);
 
         const riskValues = value.split(" ");
 
@@ -42,7 +42,7 @@ export class CreateCaseSummary
 
     public hasRiskToTrust(value: string): this
     {
-        Logger.Log(`Has Risk to trust ${value}`);
+        Logger.log(`Has Risk to trust ${value}`);
 
         cy.getByTestId(`risk-to-trust`).should(
 			"contain.text",
@@ -54,7 +54,7 @@ export class CreateCaseSummary
 
     public hasManagedBy(division: string, territory: string): this
     {
-        Logger.Log(`Has Managed By ${division} ${territory}`);
+        Logger.log(`Has Managed By ${division} ${territory}`);
 
         cy.getByTestId(`managed-by`).should(
 			"contain.text",
@@ -71,7 +71,7 @@ export class CreateCaseSummary
 
     public hasHintText(hintText: string): this
     {
-        Logger.Log(`Has Hint Text By ${hintText} `);
+        Logger.log(`Has Hint Text By ${hintText} `);
 
         cy.getByTestId(`hint-text`).should(
 			"contain.text",

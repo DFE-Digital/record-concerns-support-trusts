@@ -4,7 +4,7 @@ export class CreateCasePage
 {
     public createCase(): this
     {
-        Logger.Log("Creating case");
+        Logger.log("Creating case");
         cy.getByTestId("create-case-button").click();
 
         return this;
@@ -12,7 +12,7 @@ export class CreateCasePage
 
     public withTrustName(value: string): this
     {
-        Logger.Log(`With trustName ${value}`);
+        Logger.log(`With trustName ${value}`);
         cy.getById(`search`).clear().type(value);
 
         return this;
@@ -20,7 +20,7 @@ export class CreateCasePage
 
     public withTerritory(value: string): this
     {
-        Logger.Log(`With Territory ${value}`);
+        Logger.log(`With Territory ${value}`);
 
         cy.getByTestId(value).click();
 
@@ -29,7 +29,7 @@ export class CreateCasePage
 
     public selectOption(): this
     {
-        Logger.Log("Click first result");
+        Logger.log("Click first result");
         cy.get("#search__option--0").click();
 
         return this;
@@ -37,7 +37,7 @@ export class CreateCasePage
 
     public confirmOption(): this
     {
-        Logger.Log("Click continue button");
+        Logger.log("Click continue button");
         cy.getById("continue").click();
 
         return this;
@@ -45,7 +45,7 @@ export class CreateCasePage
 
     public clickNextStepButton(): this
     {
-        Logger.Log("Click next step button");
+        Logger.log("Click next step button");
         cy.getByTestId("next-step-button").click();
 
         return this;

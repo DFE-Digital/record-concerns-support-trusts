@@ -8,7 +8,7 @@ export class ActionRow {
 
     public hasName(value: string): this
     {
-        Logger.Log(`Has closed case action`);
+        Logger.log(`Has closed case action`);
 
         this.containsText(value, value);
 
@@ -17,7 +17,7 @@ export class ActionRow {
     }
 
     public hasCreatedDate(value: string): this {
-        Logger.Log(`Has created date ${value}`);
+        Logger.log(`Has created date ${value}`);
 
         this.containsText("created-at", value);
 
@@ -25,7 +25,7 @@ export class ActionRow {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         this.containsText("status", value);
 
@@ -33,7 +33,7 @@ export class ActionRow {
     }
 
     public hasOpenedDate(value: string): this {
-        Logger.Log(`Has opened date ${value}`);
+        Logger.log(`Has opened date ${value}`);
         
         this.containsText("opened-date", value);
 
@@ -41,7 +41,7 @@ export class ActionRow {
     }
 
     public hasClosedDate(value: string): this {
-        Logger.Log(`Has closed date ${value}`);
+        Logger.log(`Has closed date ${value}`);
         
         this.containsText("closed-date", value);
 

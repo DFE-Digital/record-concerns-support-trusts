@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class ViewNoticeToImprovePage {
 
     public hasDateOpened(value: string) {
-        Logger.Log(`Has date opened ${value}`);
+        Logger.log(`Has date opened ${value}`);
 
         cy.getByTestId("date-opened-text").should("contain.text", value);
 
@@ -11,7 +11,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasDateCompleted(value: string) {
-        Logger.Log(`Has date completed ${value}`);
+        Logger.log(`Has date completed ${value}`);
 
         cy.getByTestId("date-completed-text").should("contain.text", value);
 
@@ -19,7 +19,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`status-text`).should("contain.text", value);
 
@@ -27,7 +27,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasDateIssued(value: string): this {
-        Logger.Log(`Has date issued ${value}`);
+        Logger.log(`Has date issued ${value}`);
 
         cy.getByTestId(`date-issued-text`).should("contain.text", value);
 
@@ -35,7 +35,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasReasonIssued(value: string): this {
-        Logger.Log(`Has reason issued ${value}`);
+        Logger.log(`Has reason issued ${value}`);
 
         cy.getByTestId(`reason-text`).should("contain.text", value);
 
@@ -43,7 +43,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasConditions(value: string): this {
-        Logger.Log(`Has conditions ${value}`);
+        Logger.log(`Has conditions ${value}`);
 
         cy.getByTestId(`condition-text`).should("contain.text", value);
 
@@ -51,7 +51,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getByTestId(`notes-text`).should("contains.text", value);
 
@@ -60,7 +60,7 @@ export class ViewNoticeToImprovePage {
 
     public hasDateClosed(value: string): this
     {
-        Logger.Log(`Has date NTI closed ${value}`);
+        Logger.log(`Has date NTI closed ${value}`);
 
         cy.getByTestId("date-nti-closed").should("contains.text", value);
 
@@ -69,7 +69,7 @@ export class ViewNoticeToImprovePage {
 
     public hasDateCancelled(value: string): this
     {
-        Logger.Log(`Has date NTI cancelled ${value}`);
+        Logger.log(`Has date NTI cancelled ${value}`);
 
         cy.getByTestId("date-nti-cancelled").should("contains.text", value);
 
@@ -78,7 +78,7 @@ export class ViewNoticeToImprovePage {
 
     public hasDateLifted(value: string): this
     {
-        Logger.Log(`Has date NTI lifted ${value}`);
+        Logger.log(`Has date NTI lifted ${value}`);
 
         cy.getByTestId("date-nti-lifted").should("contains.text", value);
 
@@ -87,7 +87,7 @@ export class ViewNoticeToImprovePage {
 
     public hasSubmissionDecisionId(value: string): this
     {
-        Logger.Log(`Has submission decision ID ${value}`);
+        Logger.log(`Has submission decision ID ${value}`);
 
         cy.getByTestId("submission-decision-id").should("contains.text", value);
 
@@ -96,7 +96,7 @@ export class ViewNoticeToImprovePage {
 
     public edit(): this
     {
-        Logger.Log("Editing Notice To Improve");
+        Logger.log("Editing Notice To Improve");
 
         this.getEdit().click();
 
@@ -105,7 +105,7 @@ export class ViewNoticeToImprovePage {
 
     public canEdit(): this
     {
-        Logger.Log("Can edit");
+        Logger.log("Can edit");
 
         this.getEdit();
 
@@ -114,7 +114,7 @@ export class ViewNoticeToImprovePage {
 
     public cannotEdit(): this
     {
-        Logger.Log("Cannot edit");
+        Logger.log("Cannot edit");
 
         this.getEdit().should("not.exist");
 
@@ -123,7 +123,7 @@ export class ViewNoticeToImprovePage {
 
     public cancel(): this
     {
-        Logger.Log("Cancelling NTI");
+        Logger.log("Cancelling NTI");
 
         this.getCancel().click();
 
@@ -132,7 +132,7 @@ export class ViewNoticeToImprovePage {
 
     public canCancel(): this
     {
-        Logger.Log("Can cancel");
+        Logger.log("Can cancel");
 
         this.getCancel();
 
@@ -141,7 +141,7 @@ export class ViewNoticeToImprovePage {
 
     public cannotCancel(): this
     {
-        Logger.Log("Cannot cancel");
+        Logger.log("Cannot cancel");
 
         this.getCancel().should("not.exist");
 
@@ -149,7 +149,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public close(): this {
-        Logger.Log("Closing Notice To Improve");
+        Logger.log("Closing Notice To Improve");
 
         this.getClose().click();
 
@@ -158,7 +158,7 @@ export class ViewNoticeToImprovePage {
 
     public canClose(): this
     {
-        Logger.Log("Cannot close");
+        Logger.log("Cannot close");
 
         this.getClose();
 
@@ -167,7 +167,7 @@ export class ViewNoticeToImprovePage {
 
     public cannotClose(): this
     {
-        Logger.Log("Cannot close");
+        Logger.log("Cannot close");
 
         this.getClose().should("not.exist");
 
@@ -175,7 +175,7 @@ export class ViewNoticeToImprovePage {
     }
 
     public lift(): this {
-        Logger.Log("Lifting Notice To Improve");
+        Logger.log("Lifting Notice To Improve");
 
         this.getLift().click();
 
@@ -184,7 +184,7 @@ export class ViewNoticeToImprovePage {
 
     public canLift(): this
     {
-        Logger.Log("Can lift");
+        Logger.log("Can lift");
 
         this.getLift();
 
@@ -193,7 +193,7 @@ export class ViewNoticeToImprovePage {
 
     public cannotLift(): this
     {
-        Logger.Log("Cannot lift");
+        Logger.log("Cannot lift");
 
         this.getLift().should("not.exist");
 

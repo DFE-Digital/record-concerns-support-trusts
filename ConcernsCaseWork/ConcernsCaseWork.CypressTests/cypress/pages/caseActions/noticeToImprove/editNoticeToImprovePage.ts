@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class EditNoticeToImprovePage {
 
     public withStatus(value: string): this {
-        Logger.Log(`With status ${value}`);
+        Logger.log(`With status ${value}`);
 
         cy.getByTestId(`status-${value}`).check();
 
@@ -11,7 +11,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withDayIssued(value: string): this {
-        Logger.Log(`With day issued ${value}`);
+        Logger.log(`With day issued ${value}`);
 
         cy.getById('dtr-day-date-issued').clear().type(value);
 
@@ -19,7 +19,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withMonthIssued(value: string): this {
-        Logger.Log(`With month issued ${value}`);
+        Logger.log(`With month issued ${value}`);
 
         cy.getById('dtr-month-date-issued').clear().type(value);
 
@@ -27,7 +27,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withYearIssued(value: string): this {
-        Logger.Log(`With year issued ${value}`);
+        Logger.log(`With year issued ${value}`);
 
         cy.getById('dtr-year-date-issued').clear().type(value);
 
@@ -35,7 +35,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withReasonIssued(value: string): this {
-        Logger.Log(`With reason issued ${value}`);
+        Logger.log(`With reason issued ${value}`);
 
         cy.getByTestId(`reason-${value}`).check();
 
@@ -43,7 +43,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withNotes(value: string): this {
-        Logger.Log(`With notes ${value}`);
+        Logger.log(`With notes ${value}`);
 
         cy.getById('nti-notes').clear().type(value);
 
@@ -51,7 +51,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -59,7 +59,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withFinancialManagementConditions(value: string): this {
-        Logger.Log(`With financial management conditions ${value}`);
+        Logger.log(`With financial management conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -67,7 +67,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withGovernanceConditions(value: string): this {
-        Logger.Log(`With governance conditions ${value}`);
+        Logger.log(`With governance conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -75,7 +75,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withComplianceConditions(value: string): this {
-        Logger.Log(`With compliance conditions ${value}`);
+        Logger.log(`With compliance conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -83,7 +83,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withSafeguardingConditions(value: string): this {
-        Logger.Log(`With safeguarding conditions ${value}`);
+        Logger.log(`With safeguarding conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -91,7 +91,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withFraudAndIrregularity(value: string): this {
-        Logger.Log(`With fraud and irregularity ${value}`);
+        Logger.log(`With fraud and irregularity ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -99,7 +99,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withStandardConditions(value: string): this {
-        Logger.Log(`With standard conditions ${value}`);
+        Logger.log(`With standard conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -107,7 +107,7 @@ export class EditNoticeToImprovePage {
     }
 
     public withAdditionalFinancialSupportConditions(value: string): this {
-        Logger.Log(`With additional Financial Support conditions ${value}`);
+        Logger.log(`With additional Financial Support conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).check();
 
@@ -115,7 +115,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`status-${value}`).should("be.checked");
 
@@ -123,7 +123,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasDayIssued(value: string): this {
-        Logger.Log(`Has day issued ${value}`);
+        Logger.log(`Has day issued ${value}`);
 
         cy.getById('dtr-day-date-issued').should("have.value", value);
 
@@ -131,7 +131,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasMonthIssued(value: string): this {
-        Logger.Log(`Has month issued ${value}`);
+        Logger.log(`Has month issued ${value}`);
 
         cy.getById('dtr-month-date-issued').should("have.value", value);
 
@@ -139,7 +139,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasYearIssued(value: string): this {
-        Logger.Log(`Has year issued ${value}`);
+        Logger.log(`Has year issued ${value}`);
 
         cy.getById('dtr-year-date-issued').should("have.value", value);
 
@@ -147,7 +147,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasReasonIssued(value: string): this {
-        Logger.Log(`Has reason issued ${value}`);
+        Logger.log(`Has reason issued ${value}`);
 
         cy.getByTestId(`reason-${value}`).should("be.checked");
 
@@ -155,7 +155,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getById('nti-notes').should("have.value", value);
 
@@ -163,7 +163,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasFinancialManagementConditions(value: string): this {
-        Logger.Log(`Has financial management conditions ${value}`);
+        Logger.log(`Has financial management conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -171,7 +171,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasGovernanceConditions(value: string): this {
-        Logger.Log(`Has governance conditions ${value}`);
+        Logger.log(`Has governance conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -179,7 +179,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasComplianceConditions(value: string): this {
-        Logger.Log(`Has compliance conditions ${value}`);
+        Logger.log(`Has compliance conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -187,7 +187,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasSafeguardingConditions(value: string): this {
-        Logger.Log(`Has safeguarding conditions ${value}`);
+        Logger.log(`Has safeguarding conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -195,7 +195,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasFraudAndIrregularity(value: string): this {
-        Logger.Log(`Has fraud and irregularity ${value}`);
+        Logger.log(`Has fraud and irregularity ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -203,7 +203,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasStandardConditions(value: string): this {
-        Logger.Log(`Has standard conditions ${value}`);
+        Logger.log(`Has standard conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -211,7 +211,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasAdditionalFinancialSupportConditions(value: string): this {
-        Logger.Log(`Has additional Financial Support conditions ${value}`);
+        Logger.log(`Has additional Financial Support conditions ${value}`);
 
         cy.getByTestId(`condition-${value}`).should("be.checked");
 
@@ -219,7 +219,7 @@ export class EditNoticeToImprovePage {
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 
@@ -228,7 +228,7 @@ export class EditNoticeToImprovePage {
     }
 
     public clearDateFields(): this {
-        Logger.Log(`Clearing date fields`);
+        Logger.log(`Clearing date fields`);
 
         cy.getById('dtr-day').clear();
         cy.getById('dtr-month').clear();
@@ -239,7 +239,7 @@ export class EditNoticeToImprovePage {
 
     public clearReasonFields(): this
     {
-        Logger.Log("Clearing the reason fields");
+        Logger.log("Clearing the reason fields");
 
         cy.get("[name='reason'").each(element =>
         {
@@ -251,7 +251,7 @@ export class EditNoticeToImprovePage {
 
     public cancelConditions()
     {
-        Logger.Log("Cancelling conditions");
+        Logger.log("Cancelling conditions");
 
         cy.getById("cancel-link-event").click();
 
@@ -260,7 +260,7 @@ export class EditNoticeToImprovePage {
 
     public clearConditions(): this
     {
-        Logger.Log("Clearing the conditions fields");
+        Logger.log("Clearing the conditions fields");
 
         cy.get("[name='condition'").each(element =>
         {
@@ -271,7 +271,7 @@ export class EditNoticeToImprovePage {
     }
 
     public save(): this {
-        Logger.Log("Saving Notice To Improve");
+        Logger.log("Saving Notice To Improve");
 
         cy.getById("add-nti-wl-button").click();
 
@@ -279,7 +279,7 @@ export class EditNoticeToImprovePage {
     }
 
     public saveConditions(): this {
-        Logger.Log("Saving conditions");
+        Logger.log("Saving conditions");
 
         cy.getById("add-nti-conditions-wl-button").click();
 
@@ -287,7 +287,7 @@ export class EditNoticeToImprovePage {
     }
 
     public editConditions() {
-        Logger.Log("Editing the conditions");
+        Logger.log("Editing the conditions");
 
         cy.getByTestId("edit-conditions-button").click();
 

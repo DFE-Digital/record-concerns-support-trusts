@@ -20,7 +20,7 @@ describe("Testing cookies on the site", () =>
             .accept()
             .notVisible();
 
-        Logger.Log("Upon accepting the banner it should stay on the same page");
+        Logger.log("Upon accepting the banner it should stay on the same page");
         cy.url().should("include", "/trust");
 
         cy.visit("/cookies");
@@ -69,7 +69,7 @@ describe("Testing cookies on the site", () =>
 
     function hasCookieValue(cookieValue: string)
     {
-        Logger.Log(`Should set the consent cookie to ${cookieValue}`);
+        Logger.log(`Should set the consent cookie to ${cookieValue}`);
 
         cy.getCookie(".ConcernsCasework.Consent")
         .then(cookie =>

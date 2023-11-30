@@ -3,7 +3,7 @@ import { Logger } from "../../../common/logger";
 export class ViewNtiWarningLetterPage {
 
     public hasOpenedDate(value: string): this {
-        Logger.Log(`Has opened date ${value}`);
+        Logger.log(`Has opened date ${value}`);
 
         cy.getByTestId("date-opened-text").should("contain.text", value);
 
@@ -11,7 +11,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasClosedDate(value: string): this {
-        Logger.Log(`Has closed date ${value}`);
+        Logger.log(`Has closed date ${value}`);
 
         cy.getByTestId("date-closed-text").should("contain.text", value);
 
@@ -19,7 +19,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasStatus(value: string): this {
-        Logger.Log(`Has status ${value}`);
+        Logger.log(`Has status ${value}`);
 
         cy.getByTestId(`nti-status`).should("contain.text", value);
 
@@ -27,7 +27,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasDateSent(value: string): this {
-        Logger.Log(`Has day sent ${value}`);
+        Logger.log(`Has day sent ${value}`);
 
         cy.getByTestId(`nti-date-sent`).should("contain.text", value);
 
@@ -35,7 +35,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasReason(value: string): this {
-        Logger.Log(`Has reason ${value}`);
+        Logger.log(`Has reason ${value}`);
 
         cy.getByTestId(`nti-reasons`).should("contain.text", value);
 
@@ -44,7 +44,7 @@ export class ViewNtiWarningLetterPage {
 
     public hasReasonCount(value: number): this
     {
-        Logger.Log(`Has reason count ${value}`);
+        Logger.log(`Has reason count ${value}`);
 
         cy.getByTestId("nti-reasons").children().should("have.length", value);
 
@@ -52,7 +52,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasNotes(value: string): this {
-        Logger.Log(`Has notes ${value}`);
+        Logger.log(`Has notes ${value}`);
 
         cy.getByTestId(`nti-notes`).should("contain.text", value);
 
@@ -60,7 +60,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public hasCondition(value: string): this {
-        Logger.Log(`Has condition ${value}`);
+        Logger.log(`Has condition ${value}`);
 
         cy.getByTestId(`nti-conditions`).should("contain.text", value);
 
@@ -69,7 +69,7 @@ export class ViewNtiWarningLetterPage {
 
     public hasConditionCount(value: number): this
     {
-        Logger.Log(`Has condition count ${value}`);
+        Logger.log(`Has condition count ${value}`);
 
         cy.getByTestId(`nti-conditions`).children().should("have.length", value);
 
@@ -78,7 +78,7 @@ export class ViewNtiWarningLetterPage {
 
     public edit(): this
     {
-        Logger.Log("Editing the NTI warning letter");
+        Logger.log("Editing the NTI warning letter");
 
         this.getEdit().click();
 
@@ -87,7 +87,7 @@ export class ViewNtiWarningLetterPage {
 
     public canEdit()
     {
-        Logger.Log("Can edit");
+        Logger.log("Can edit");
 
         this.getEdit();
 
@@ -96,7 +96,7 @@ export class ViewNtiWarningLetterPage {
 
     public cannotEdit()
     {
-        Logger.Log("Cannot edit");
+        Logger.log("Cannot edit");
 
         this.getEdit().should("not.exist");
 
@@ -104,7 +104,7 @@ export class ViewNtiWarningLetterPage {
     }
 
     public close(): this {
-        Logger.Log("Closing NTI warning letter");
+        Logger.log("Closing NTI warning letter");
 
         this.getClose().click();
 
@@ -113,7 +113,7 @@ export class ViewNtiWarningLetterPage {
 
     public canClose()
     {
-        Logger.Log("Can close");
+        Logger.log("Can close");
 
         this.getClose();
 
@@ -122,7 +122,7 @@ export class ViewNtiWarningLetterPage {
 
     public cannotClose()
     {
-        Logger.Log("Cannot close");
+        Logger.log("Cannot close");
 
         this.getClose().should("not.exist");
 

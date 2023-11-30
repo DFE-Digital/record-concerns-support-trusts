@@ -42,7 +42,7 @@ describe("Trust overview ", () =>
             it("Should display trust details on case management and the cases that belong to it", () =>
             {
                 //Only checking for the presence of the data, not the actual data becuase trust data may be sensitive/dynamic
-                Logger.Log("Checking trust details are present");
+                Logger.log("Checking trust details are present");
                 caseMangementPage
                     .viewTrustOverview();
         
@@ -56,10 +56,10 @@ describe("Trust overview ", () =>
                     .trustUKPRNIsNotEmpty()
                     .trustCompanyHouseNumberIsNotEmpty();
         
-                Logger.Log("Checking accessibility on Trust Overview");
+                Logger.log("Checking accessibility on Trust Overview");
                 cy.excuteAccessibilityTests();	
         
-                Logger.Log("Checking case details are present on the trust overview page");
+                Logger.log("Checking case details are present on the trust overview page");
                 caseworkTable
                     .getRowByCaseId(caseId)
                     .then((row) =>
@@ -73,7 +73,7 @@ describe("Trust overview ", () =>
                             .hasManagedBy("SFSO", "Midlands and West - West Midlands");
                     });
     
-                Logger.Log("Check on a closed case")
+                Logger.log("Check on a closed case")
                 caseMangementPage.viewCase();
     
                 cy.closeConcern();
@@ -82,7 +82,7 @@ describe("Trust overview ", () =>
     
                 trustOverviewPage.showClosedCases();
     
-                Logger.Log("Checking closed case details are present on the trust overview page");
+                Logger.log("Checking closed case details are present on the trust overview page");
                 caseworkTable
                 .getRowByCaseId(caseId)
                 .then((row) =>
@@ -127,7 +127,7 @@ describe("Trust overview ", () =>
                             .hasAction("Action: TFF (trust financial forecast)");
                     });
     
-                Logger.Log("Check on a closed non concerns case")
+                Logger.log("Check on a closed non concerns case")
                 caseMangementPage.viewCase();
     
                 actionSummaryTable

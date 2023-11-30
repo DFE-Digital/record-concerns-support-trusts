@@ -86,14 +86,14 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		// cy.loginWithCredentials();
 		now = new Date();
 
-		Logger.Log("Create a case");
+		Logger.log("Create a case");
 		createCasePage
 			.createCase()
 			.withTrustName(trustName)
 			.selectOption()
 			.confirmOption();
 
-		Logger.Log("Create a valid case division");
+		Logger.log("Create a valid case division");
 		selectCaseDivisionPage
 			.withCaseDivision("SFSO")
 			.continue();
@@ -102,28 +102,28 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "");
 	
-		Logger.Log("Populate territory");
+		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East");
 
-		Logger.Log("Create a valid concerns case type");
+		Logger.log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East");
 
-		Logger.Log("Create a valid concern");
+		Logger.log("Create a valid concern");
 		createConcernPage
 			.withConcernType("Deficit")
 			.withConcernRating("Red-Amber")
 			.withMeansOfReferral(SourceOfConcernExternal)
 			.addConcern();
 
-		Logger.Log("Check Concern details are correctly populated");
+		Logger.log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "North and UTC - North East")
@@ -132,7 +132,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		createConcernPage.nextStep();
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern and risk to trust details are correctly populated"
 		);
 		createCaseSummary
@@ -141,10 +141,10 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 
-		Logger.Log("Populate risk to trust");
+		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
-		Logger.Log(
+		Logger.log(
 			"Check Trust, concern, risk to trust details and territory are correctly populated"
 		);
 		createCaseSummary
@@ -154,7 +154,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
 
-		Logger.Log("Add concern details with valid text limit");
+		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage
 			.withIssue("This is an issue")
 			.withCurrentStatus("This is the current status")
@@ -173,10 +173,10 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		it("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () => {
 			addAllAllowedCaseActions();
 
-			Logger.Log("Checking accessibility on case management");
+			Logger.log("Checking accessibility on case management");
 			cy.excuteAccessibilityTests();
 
-			Logger.Log(
+			Logger.log(
 				"Validating an error is displayed for each type of case action"
 			);
 
@@ -189,7 +189,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				.hasClosedCaseValidationError("Close concerns")
 				.hasClosedCaseValidationError("Close trust financial forecast");
 
-			Logger.Log("Checking accessibility on case management error page");
+			Logger.log("Checking accessibility on case management error page");
 			cy.excuteAccessibilityTests();
 
 			resolveAllAllowedCaseActions();
@@ -199,14 +199,14 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			closeCaseCheckingValidation();
 			verifyClosedCaseDetails();
 
-			Logger.Log("Verifying the closed case action is displayed");
+			Logger.log("Verifying the closed case action is displayed");
 			viewClosedCasePage
 				.hasClosedCaseAction("SRMA")
 				.hasClosedCaseAction("Financial Plan")
 				.hasClosedCaseAction("NTI Under Consideration")
 				.hasClosedCaseAction("Decision: No Decision Types");
 
-			Logger.Log("Verifying the closed case actions details are displayed");
+			Logger.log("Verifying the closed case actions details are displayed");
 			actionTable.getRowByAction("SRMA").then((row) => {
 				row
 					.hasName("SRMA")
@@ -251,14 +251,14 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		});
 
 		it("Should raise a validation error for NTI warning letter and only close when the action resolved", () => {
-			Logger.Log("Adding NTI warning letter");
+			Logger.log("Adding NTI warning letter");
 
 			CaseManagementPage.getAddToCaseBtn().click();
 			AddToCasePage.addToCase("NtiWarningLetter");
 			AddToCasePage.getAddToCaseBtn().click();
 			editNtiWarningLetterPage.save();
 
-			Logger.Log(
+			Logger.log(
 				"Validating an error is displayed for NTI warning letter when case is closed"
 			);
 			CaseManagementPage.getCloseCaseBtn().click();
@@ -266,7 +266,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				"Close NTI: Warning letter"
 			);
 
-			Logger.Log("Completing NTI Warning Letter");
+			Logger.log("Completing NTI Warning Letter");
 			actionSummaryTable.getOpenAction("NTI Warning Letter").then((row) => {
 				row.select();
 			});
@@ -278,7 +278,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			closeCase();
 			verifyClosedCaseDetails();
 
-			Logger.Log("Verifying the closed case action is displayed");
+			Logger.log("Verifying the closed case action is displayed");
 			actionTable.getRowByAction("NTI Warning Letter").then((row) => {
 				row
 					.hasName("NTI Warning Letter")
@@ -289,13 +289,13 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		});
 
 		it("Should raise a validation error for Notice To Improve and only close when the action is resolved", () => {
-			Logger.Log("Adding Notice To Improve");
+			Logger.log("Adding Notice To Improve");
 			CaseManagementPage.getAddToCaseBtn().click();
 			AddToCasePage.addToCase("Nti");
 			AddToCasePage.getAddToCaseBtn().click();
 			editNtiPage.save();
 
-			Logger.Log(
+			Logger.log(
 				"Validating an error is displayed for Notice To Improve when case is closed"
 			);
 			CaseManagementPage.getCloseCaseBtn().click();
@@ -303,7 +303,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				"Cancel, lift or close NTI: Notice to improve"
 			);
 
-			Logger.Log("Completing Notice To Improve");
+			Logger.log("Completing Notice To Improve");
 			actionSummaryTable.getOpenAction("NTI").then((row) => {
 				row.select();
 			});
@@ -315,7 +315,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			closeCase();
 			verifyClosedCaseDetails();
 
-			Logger.Log("Verifying the closed case action is displayed");
+			Logger.log("Verifying the closed case action is displayed");
 			actionTable.getRowByAction("NTI").then((row) => {
 				row
 					.hasName("NTI")
@@ -327,15 +327,15 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 	});
 
 	function addAllAllowedCaseActions() {
-		Logger.Log("Adding all allowed case actions");
+		Logger.log("Adding all allowed case actions");
 
-		Logger.Log("Creating a financial plan");
+		Logger.log("Creating a financial plan");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("FinancialPlan");
 		AddToCasePage.getAddToCaseBtn().click();
 		editFinancialPlanPage.save();
 
-		Logger.Log("Creating a decision");
+		Logger.log("Creating a decision");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("Decision");
 		AddToCasePage.getAddToCaseBtn().click();
@@ -352,7 +352,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.withDecisionOutcomeStatus("Approved")
 			.saveDecisionOutcome();
 
-		Logger.Log("Creating an SRMA");
+		Logger.log("Creating an SRMA");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("Srma");
 		AddToCasePage.getAddToCaseBtn().click();
@@ -364,14 +364,14 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.withYearTrustContacted("2022")
 			.save();
 
-		Logger.Log("Creating NTI under consideration");
+		Logger.log("Creating NTI under consideration");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("NtiUnderConsideration");
 		AddToCasePage.getAddToCaseBtn().click();
 
 		editNtiUnderConsiderationPage.save();
 
-		Logger.Log("Creating Trust Financial Forecast(TFF)");
+		Logger.log("Creating Trust Financial Forecast(TFF)");
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("TrustFinancialForecast");
 		AddToCasePage.getAddToCaseBtn().click();
@@ -380,9 +380,9 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 	}
 
 	function resolveAllAllowedCaseActions() {
-		Logger.Log("Resolving all actions");
+		Logger.log("Resolving all actions");
 
-		Logger.Log("Completing SRMA");
+		Logger.log("Completing SRMA");
 		actionSummaryTable.getOpenAction("SRMA").then((row) => {
 			row.select();
 		});
@@ -395,7 +395,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		editSrmaPage.confirmCancelled().save();
 
-		Logger.Log("Completing Financial Plan");
+		Logger.log("Completing Financial Plan");
 		actionSummaryTable.getOpenAction("Financial Plan").then((row) => {
 			row.select();
 		});
@@ -408,7 +408,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.withReasonForClosure("Viable plan received")
 			.close();
 
-		Logger.Log("Completing NTI Under Consideration");
+		Logger.log("Completing NTI Under Consideration");
 		actionSummaryTable.getOpenAction("NTI Under Consideration").then((row) => {
 			row.select();
 		});
@@ -416,7 +416,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		viewNtiUnderConsiderationPage.close();
 		closeNtiUnderConsiderationPage.withStatus("NoFurtherAction").close();
 
-		Logger.Log("Completing decision");
+		Logger.log("Completing decision");
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
 			.then((row) => {
@@ -426,7 +426,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		viewDecisionPage.closeDecision();
 		closeDecisionPage.closeDecision();
 
-		Logger.Log("Completing Trust financial forecast");
+		Logger.log("Completing Trust financial forecast");
 		actionSummaryTable
 			.getOpenAction("TFF (trust financial forecast)")
 			.then((row) => {
@@ -438,11 +438,11 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 	}
 
 	function closeConcern() {
-		Logger.Log("Closing concern");
+		Logger.log("Closing concern");
 		CaseManagementPage.editConcern();
 		EditConcernPage.closeConcern();
 
-		Logger.Log("Checking accessibility on closing concern");
+		Logger.log("Checking accessibility on closing concern");
 		cy.excuteAccessibilityTests();
 
 		EditConcernPage.confirmCloseConcern();
@@ -450,19 +450,19 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 	function closeCaseCheckingValidation() {
 		CaseManagementPage.getCaseIDText().then((caseId) => {
-			Logger.Log("Closing case");
+			Logger.log("Closing case");
 			CaseManagementPage.getCloseCaseBtn().click();
 
-			Logger.Log("Validating that a rationale for closure must be entered");
+			Logger.log("Validating that a rationale for closure must be entered");
 			CaseManagementPage.getCloseCaseBtn().click();
 			CaseManagementPage.hasValidationError(
 				"Rationale for closure is required"
 			);
 
-			Logger.Log("Checking accessibility on Close case");
+			Logger.log("Checking accessibility on Close case");
 			cy.excuteAccessibilityTests();
 
-			Logger.Log("Validating rationale for closure is 200 characters");
+			Logger.log("Validating rationale for closure is 200 characters");
 			CaseManagementPage.withRationaleForClosureExceedingLimit();
 			CaseManagementPage.getCloseCaseBtn().click();
 			CaseManagementPage.hasValidationError(
@@ -472,27 +472,27 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			CaseManagementPage.withRationaleForClosure("Closing case");
 			CaseManagementPage.getCloseCaseBtn().click();
 
-			Logger.Log("Viewing case is closed");
+			Logger.log("Viewing case is closed");
 			HomePage.getClosedCasesBtn().click();
 			ClosedCasePage.getClosedCase(caseId);
 
-			Logger.Log("Checking accessibility on the closed case view");
+			Logger.log("Checking accessibility on the closed case view");
 			cy.excuteAccessibilityTests();
 		});
 	}
 
 	function closeCase() {
 		CaseManagementPage.getCaseIDText().then((caseId) => {
-			Logger.Log("Closing case");
+			Logger.log("Closing case");
 			CaseManagementPage.getCloseCaseBtn().click();
 
 			CaseManagementPage.withRationaleForClosure("Closing case");
 			CaseManagementPage.getCloseCaseBtn().click();
 
-			Logger.Log("Viewing case is closed");
+			Logger.log("Viewing case is closed");
 			HomePage.getClosedCasesBtn().click();
 
-			Logger.Log("Checking accessibility on closed case");
+			Logger.log("Checking accessibility on closed case");
 			cy.excuteAccessibilityTests();
 
 			ClosedCasePage.getClosedCase(caseId);
@@ -500,7 +500,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 	}
 
 	function verifyClosedCaseDetails() {
-		Logger.Log("Validate Closed Case row has correct details");
+		Logger.log("Validate Closed Case row has correct details");
 		caseworkTable.getRowByCaseId(caseId).then((row) => {
 			row
 				.hasCaseId(caseId)
@@ -509,13 +509,13 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				.hasTrust(trustName)
 				.hasConcern("Deficit");
 
-			Logger.Log("Checking accessibility on Closed Case Details");
+			Logger.log("Checking accessibility on Closed Case Details");
 			cy.excuteAccessibilityTests();
 
 			row.select();
 		});
 
-		Logger.Log("Validate Closed Case has correct details");
+		Logger.log("Validate Closed Case has correct details");
 		viewClosedCasePage
 			.hasConcerns("Deficit")
 			.hasManagedBy("SFSO", "North and UTC - North East")
@@ -527,7 +527,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 			.hasCaseHistory("This is the case history")
 			.hasRationaleForClosure("Closing case");
 
-		Logger.Log("Checking accessibility on close case details");
+		Logger.log("Checking accessibility on close case details");
 		cy.excuteAccessibilityTests();
 	}
 });

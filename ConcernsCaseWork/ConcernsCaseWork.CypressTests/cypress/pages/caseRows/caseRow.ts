@@ -7,7 +7,7 @@ export class CaseRow {
     }
 
     public hasCaseId(value: string) {
-        Logger.Log(`Has case id ${value}`);
+        Logger.log(`Has case id ${value}`);
 
         this.containsText("case-id", value);
 
@@ -15,7 +15,7 @@ export class CaseRow {
     }
 
     public hasCreatedDate(value: string): this {
-        Logger.Log(`Has created date ${value}`);
+        Logger.log(`Has created date ${value}`);
 
         this.containsText("created-at", value);
 
@@ -23,7 +23,7 @@ export class CaseRow {
     }
 
     public hasLastUpdatedDate(value: string): this {
-        Logger.Log(`Has last updated date ${value}`);
+        Logger.log(`Has last updated date ${value}`);
 
         this.containsText("updated-at", value);
 
@@ -31,7 +31,7 @@ export class CaseRow {
     }
 
     public hasClosedDate(value: string): this {
-        Logger.Log(`Has closed date ${value}`);
+        Logger.log(`Has closed date ${value}`);
 
         this.containsText("closed-at", value);
 
@@ -39,7 +39,7 @@ export class CaseRow {
     }
 
     public hasTrust(value: string): this {
-        Logger.Log(`Has trust name ${value}`);
+        Logger.log(`Has trust name ${value}`);
         
         this.containsText("trust-name", value);
 
@@ -47,7 +47,7 @@ export class CaseRow {
     }
 
     public hasConcern(value: string): this {
-        Logger.Log(`Has concern ${value}`);
+        Logger.log(`Has concern ${value}`);
 
         this.containsText("concern", value);
 
@@ -55,7 +55,7 @@ export class CaseRow {
     }
 
     public hasRiskToTrust(value: string): this {
-        Logger.Log(`Has risk to trust ${value}`);
+        Logger.log(`Has risk to trust ${value}`);
 
         this.containsText("risk-to-trust-list", value);
 
@@ -64,7 +64,7 @@ export class CaseRow {
 
     public hasManagedBy(division: string, area: string): this
     {
-        Logger.Log(`Has managed by ${division} ${area}`);
+        Logger.log(`Has managed by ${division} ${area}`);
 
         cy.getByTestId("managed-by").should("contain.text", division);
         cy.getByTestId("managed-by").should("contain.text", area);
@@ -74,7 +74,7 @@ export class CaseRow {
 
     public hasAction(value: string): this
     {
-        Logger.Log(`Has action ${value}`);
+        Logger.log(`Has action ${value}`);
 
         cy.getByTestId("actions-and-decisions").should("contain.text", value);
 
@@ -83,7 +83,7 @@ export class CaseRow {
 
     public hasOwner(value: string): this
     {
-        Logger.Log(`Has owner ${value}`);
+        Logger.log(`Has owner ${value}`);
         
         cy.wrap(this.element)
         .within(() => 
@@ -98,7 +98,7 @@ export class CaseRow {
     }
 
     public select(): this {
-        Logger.Log(`Selecting case`);
+        Logger.log(`Selecting case`);
 
         cy.wrap(this.element)
         .within(() =>

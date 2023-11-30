@@ -4,7 +4,7 @@ import { Logger } from "../../../common/logger";
 export class EditTrustFinancialForecastPage
 {
     public withForecastingTool(forecastingTool: string): this {
-        Logger.Log(`With forecasting tool ${forecastingTool}`);
+        Logger.log(`With forecasting tool ${forecastingTool}`);
 
         cy.getByTestId(`${forecastingTool}`).check();
 
@@ -12,7 +12,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasForecastingTool(forecastingTool: string): this {
-        Logger.Log(`Has forecasting tool ${forecastingTool}`);
+        Logger.log(`Has forecasting tool ${forecastingTool}`);
 
         cy.getByTestId(`${forecastingTool}`).should("be.checked");
 
@@ -32,7 +32,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withDayReviewHappened(value: string): this {
-        Logger.Log(`With day review happened ${value}`);
+        Logger.log(`With day review happened ${value}`);
 
         cy.getById(`dtr-day-sfso-initial-review-happened-at`).clear().type(value);
 
@@ -40,7 +40,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasDayReviewHappened(value: string): this {
-        Logger.Log(`Has day review happened ${value}`);
+        Logger.log(`Has day review happened ${value}`);
 
         cy.getById(`dtr-day-sfso-initial-review-happened-at`).should("have.value", value);
 
@@ -48,7 +48,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withMonthReviewHappened(value: string): this {
-        Logger.Log(`With month review happen ${value}`);
+        Logger.log(`With month review happen ${value}`);
 
         cy.getById(`dtr-month-sfso-initial-review-happened-at`).clear().type(value);
 
@@ -56,7 +56,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasMonthReviewHappened(value: string): this {
-        Logger.Log(`Has month review happen ${value}`);
+        Logger.log(`Has month review happen ${value}`);
 
         cy.getById(`dtr-month-sfso-initial-review-happened-at`).should("have.value", value);
 
@@ -64,7 +64,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withYearReviewHappened(value: string): this {
-        Logger.Log(`With year review happen ${value}`);
+        Logger.log(`With year review happen ${value}`);
 
         cy.getById(`dtr-year-sfso-initial-review-happened-at`).clear().type(value);
 
@@ -72,7 +72,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasYearReviewHappened(value: string): this {
-        Logger.Log(`With year review happen ${value}`);
+        Logger.log(`With year review happen ${value}`);
 
         cy.getById(`dtr-year-sfso-initial-review-happened-at`).should("have.value", value);
 
@@ -80,7 +80,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withDayTrustResponded(value: string): this {
-        Logger.Log(`With day review happen ${value}`);
+        Logger.log(`With day review happen ${value}`);
 
         cy.getById(`dtr-day-trust-responded-at`).clear().type(value);
 
@@ -88,7 +88,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasDayTrustResponded(value: string): this {
-        Logger.Log(`Has day review happen ${value}`);
+        Logger.log(`Has day review happen ${value}`);
 
         cy.getById(`dtr-day-trust-responded-at`).should("have.value", value);
 
@@ -96,7 +96,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withMonthTrustResponded(value: string): this {
-        Logger.Log(`With month review happen ${value}`);
+        Logger.log(`With month review happen ${value}`);
 
         cy.getById(`dtr-month-trust-responded-at`).clear().type(value);
 
@@ -104,7 +104,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasMonthTrustResponded(value: string): this {
-        Logger.Log(`Has month review happen ${value}`);
+        Logger.log(`Has month review happen ${value}`);
 
         cy.getById(`dtr-month-trust-responded-at`).should("have.value", value);
 
@@ -112,7 +112,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withYearTrustResponded(value: string): this {
-        Logger.Log(`With year review happen ${value}`);
+        Logger.log(`With year review happen ${value}`);
 
         cy.getById(`dtr-year-trust-responded-at`).clear().type(value);
 
@@ -120,7 +120,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasYearTrustResponded(value: string): this {
-        Logger.Log(`With year review happen ${value}`);
+        Logger.log(`With year review happen ${value}`);
 
         cy.getById(`dtr-year-trust-responded-at`).should("have.value", value);
 
@@ -128,7 +128,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withTrustResponseSatisfactory(trustResponseSatisfactory: string): this {
-        Logger.Log(`With trust response satisfactory ${trustResponseSatisfactory}`);
+        Logger.log(`With trust response satisfactory ${trustResponseSatisfactory}`);
 
         cy.getByTestId(`${trustResponseSatisfactory}`).check();
 
@@ -137,7 +137,7 @@ export class EditTrustFinancialForecastPage
 
     
     public hasTrustResponseSatisfactory(trustResponseSatisfactory: string): this {
-        Logger.Log(`Has trust response satisfactory ${trustResponseSatisfactory}`);
+        Logger.log(`Has trust response satisfactory ${trustResponseSatisfactory}`);
 
         cy.getByTestId(`${trustResponseSatisfactory}`).should("be.checked");
 
@@ -145,7 +145,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withSRMAOffered(srmaOffered: string): this {
-        Logger.Log(`With SRMA Offered ${srmaOffered}`);
+        Logger.log(`With SRMA Offered ${srmaOffered}`);
 
         cy.getByTestId(`${srmaOffered}`).check();
 
@@ -153,7 +153,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasSRMAOffered(srmaOffered: string): this {
-        Logger.Log(`Has SRMA Offered ${srmaOffered}`);
+        Logger.log(`Has SRMA Offered ${srmaOffered}`);
 
         cy.getByTestId(`${srmaOffered}`).should("be.checked");
 
@@ -161,7 +161,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withNotes(notes: string): this {
-        Logger.Log(`With Notes ${notes}`);
+        Logger.log(`With Notes ${notes}`);
 
         cy.getByTestId(`notes`).clear().type(notes);
 
@@ -169,7 +169,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasNotes(notes: string): this {
-        Logger.Log(`Has Notes ${notes}`);
+        Logger.log(`Has Notes ${notes}`);
 
         cy.getByTestId(`notes`).should("have.value", notes);
 
@@ -177,7 +177,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public withNotesExceedingLimit(): this {
-        Logger.Log(`With notes exceeding limit`);
+        Logger.log(`With notes exceeding limit`);
 
         cy.getByTestId('notes').clear().invoke("val", "x 1".repeat(1001));
 
@@ -185,7 +185,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public save(): this {
-        Logger.Log("Saving the Trust financial forecast");
+        Logger.log("Saving the Trust financial forecast");
 
         cy.getByTestId("save-trust-financial-forecast-button").click();
 
@@ -193,7 +193,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public close(): this {
-        Logger.Log("Close the Trust financial forecast");
+        Logger.log("Close the Trust financial forecast");
 
         cy.getById("trust-financial-forecast-close-button").click();
 
@@ -201,7 +201,7 @@ export class EditTrustFinancialForecastPage
     }
 
     public hasValidationError(value: string): this {
-        Logger.Log(`Has validation error ${value}`);
+        Logger.log(`Has validation error ${value}`);
 
         cy.getById("errorSummary").should("contain.text", value);
 

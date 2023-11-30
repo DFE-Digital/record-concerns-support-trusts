@@ -16,7 +16,7 @@ export default class EditCaseHistoryPage {
 
     public hasCaseHistory(value: string): this
     {
-        Logger.Log(`Has Case history ${value}`);
+        Logger.log(`Has Case history ${value}`);
 
         cy.getByTestId(`case-history`).should(
 			"contain.text",
@@ -28,7 +28,7 @@ export default class EditCaseHistoryPage {
 
     public withCaseHistory(value: string): this
     {
-        Logger.Log(`With Case history ${value}`);
+        Logger.log(`With Case history ${value}`);
 
         cy.getByTestId(`case-history`).clear({ force: true }).type(value);
 
@@ -44,7 +44,7 @@ export default class EditCaseHistoryPage {
 
     public apply(): this
     {
-        Logger.Log("Apply Case History");
+        Logger.log("Apply Case History");
         cy.getByTestId("save-case").click();
 
         return this;

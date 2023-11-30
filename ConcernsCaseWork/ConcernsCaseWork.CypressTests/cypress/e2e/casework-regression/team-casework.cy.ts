@@ -62,7 +62,7 @@ describe("Team casework tests", () => {
             homePage.viewOtherCases();
             homePage.selectColleagues();
 
-            Logger.Log("Checking accessibility on team casework");
+            Logger.log("Checking accessibility on team casework");
             cy.excuteAccessibilityTests();
 
             teamCaseworkPage
@@ -70,7 +70,7 @@ describe("Team casework tests", () => {
                 .hasTeamMember(email, name)
                 .save();
 
-            Logger.Log("Ensure that the case for the user is displayed");
+            Logger.log("Ensure that the case for the user is displayed");
             caseworkTable
                 .getRowByCaseId(caseId)
                 .then(row => {
@@ -85,10 +85,10 @@ describe("Team casework tests", () => {
                         .hasOwner(name);
                 });
 
-            Logger.Log("Checking accessibility on team casework");
+            Logger.log("Checking accessibility on team casework");
             cy.excuteAccessibilityTests();
 
-            Logger.Log("Ensuring no cases are displayed when there are no selected colleagues");
+            Logger.log("Ensuring no cases are displayed when there are no selected colleagues");
             homePage.selectColleagues();
 
             teamCaseworkPage
@@ -97,7 +97,7 @@ describe("Team casework tests", () => {
                 .save()
                 .hasNoCases();
 
-            Logger.Log("Ensure we cannot enter a duplicated team member, when they have already been selected");
+            Logger.log("Ensure we cannot enter a duplicated team member, when they have already been selected");
             homePage.selectColleagues();
 
             teamCaseworkPage
@@ -108,12 +108,12 @@ describe("Team casework tests", () => {
                 .hasNoResultsFound()
                 .save();
 
-            Logger.Log("Ensure that when we go back to the home page and back to select colleagues we cannot select previously selected members");
+            Logger.log("Ensure that when we go back to the home page and back to select colleagues we cannot select previously selected members");
             homePage.selectColleagues();
 
             teamCaseworkPage.enterTeamMember(name).hasNoResultsFound();
 
-            Logger.Log("Ensure that when the team member is removed, they can be selected again");
+            Logger.log("Ensure that when the team member is removed, they can be selected again");
             teamCaseworkPage
                 .removeAddedColleagues()
                 .hasNoTeamMember(name);
@@ -121,7 +121,7 @@ describe("Team casework tests", () => {
             teamCaseworkPage
                 .selectTeamMember(name);
 
-            Logger.Log("Ensure that the logged in user cannot be selected");
+            Logger.log("Ensure that the logged in user cannot be selected");
             teamCaseworkPage.enterTeamMember(alternativeName).hasNoResultsFound();
         });
 
@@ -194,40 +194,40 @@ describe("Team casework tests", () => {
                     .then((caseIds: Array<string>) => {
                         pageOneCases = caseIds;
 
-                        Logger.Log("Ensure we have 5 cases on page one");
+                        Logger.log("Ensure we have 5 cases on page one");
                         expect(pageOneCases.length).to.eq(5);
 
-                        Logger.Log("Moving to the second page using the direct link");
+                        Logger.log("Moving to the second page using the direct link");
                         paginationComponent.goToPage("2");
                         return caseworkTable.getOpenCaseIds();
                     })
                     .then((caseIds: Array<string>) => {
                         pageTwoCases = caseIds;
 
-                        Logger.Log("Ensure we have 5 cases on page 2");
+                        Logger.log("Ensure we have 5 cases on page 2");
                         expect(pageTwoCases.length).to.equal(5);
 
-                        Logger.Log("Ensure that the cases on page one and two are different");
+                        Logger.log("Ensure that the cases on page one and two are different");
                         hasNoSimilarElements(pageOneCases, pageTwoCases);
 
-                        Logger.Log("Move to the previous page, which is page 1");
+                        Logger.log("Move to the previous page, which is page 1");
                         paginationComponent.previous();
                         return caseworkTable.getOpenCaseIds();
                     })
                     .then((caseIds: Array<string>) => {
-                        Logger.Log("On moving to page one, we should get the exact same cases");
+                        Logger.log("On moving to page one, we should get the exact same cases");
                         expect(caseIds).to.deep.equal(pageOneCases);
 
-                        Logger.Log("Move to the next page, which is page 2");
+                        Logger.log("Move to the next page, which is page 2");
                         paginationComponent.next();
                         return caseworkTable.getOpenCaseIds();
                     })
                     .then((caseIds: Array<string>) => {
-                        Logger.Log("On moving to page two, we should get the exact same cases");
+                        Logger.log("On moving to page two, we should get the exact same cases");
                         expect(caseIds).to.deep.equal(pageTwoCases);
 
                         // We had relative instead of absolute path links so it didn't work when pagination was added
-                        Logger.Log("Ensure the case loads when clicking the link");
+                        Logger.log("Ensure the case loads when clicking the link");
                         const caseIdToView = caseIds[0];
                         caseworkTable.getRowByCaseId(caseIdToView)
                             .then((row) => {

@@ -18,7 +18,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         cy.login();
 
         now = new Date();
-        Logger.Log("Given a case");
+        Logger.log("Given a case");
         cy.basicCreateCase();
         addFinancialPlanToCase();
     });
@@ -27,10 +27,10 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         checkFormValidation();
 
-        Logger.Log("Checking accessibility on Add financial plan");
+        Logger.log("Checking accessibility on Add financial plan");
 		cy.excuteAccessibilityTests();
 
-        Logger.Log("Configuring a valid financial plan");
+        Logger.log("Configuring a valid financial plan");
 
         editFinancialPlanPage
             .withPlanRequestedDay("06")
@@ -39,7 +39,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withNotes("Notes!")
             .save();
 
-        Logger.Log("Selecting Financial Plan from open actions");
+        Logger.log("Selecting Financial Plan from open actions");
 		actionSummaryTable
 			.getOpenAction("Financial Plan")
 			.then(row =>
@@ -50,14 +50,14 @@ describe("User can add Financial Plan case action to an existing case", () => {
 				row.select();
 			});
 
-        Logger.Log("Checking Financial Plan values");
+        Logger.log("Checking Financial Plan values");
 
         viewFinancialPlanPage
             .hasDateOpened(toDisplayDate(now))
             .hasPlanRequestedDate("06 July 2022")
             .hasNotes("Notes!");
 
-        Logger.Log("Checking accessibility on View financial plan");
+        Logger.log("Checking accessibility on View financial plan");
         cy.excuteAccessibilityTests();
     });
 
@@ -65,7 +65,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         editFinancialPlanPage.save();
 
-        Logger.Log("Selecting Financial Plan from open actions");
+        Logger.log("Selecting Financial Plan from open actions");
 
 		actionSummaryTable
 			.getOpenAction("Financial Plan")
@@ -83,7 +83,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     it("Should edit an existing financial plan", () => 
     {
-        Logger.Log("Configuring initial financial plan");
+        Logger.log("Configuring initial financial plan");
 
         editFinancialPlanPage
             .withPlanRequestedDay("06")
@@ -92,7 +92,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withNotes("Notes!")
             .save();
 
-        Logger.Log("Selecting Financial Plan from open actions");
+        Logger.log("Selecting Financial Plan from open actions");
 
 		actionSummaryTable
 			.getOpenAction("Financial Plan")
@@ -101,7 +101,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 				row.select();
 			});
 
-        Logger.Log("Ensure values are displayed correctly");
+        Logger.log("Ensure values are displayed correctly");
 
         viewFinancialPlanPage.edit();
 
@@ -111,10 +111,10 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasPlanRequestedYear("2022")
             .hasNotes("Notes!");
 
-        Logger.Log("Checking accessibility on Edit financial plan");
+        Logger.log("Checking accessibility on Edit financial plan");
         cy.excuteAccessibilityTests();
 
-        Logger.Log("Changing the financial plan");
+        Logger.log("Changing the financial plan");
 
         editFinancialPlanPage
             .withPlanRequestedDay("01")
@@ -123,7 +123,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withNotes("Editing notes")
             .save();
 
-        Logger.Log("Selecting Financial Plan from open actions");
+        Logger.log("Selecting Financial Plan from open actions");
 
 		actionSummaryTable
 			.getOpenAction("Financial Plan")
@@ -132,7 +132,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 				row.select();
 			});
 
-        Logger.Log("Viewing edited Financial Plan values");
+        Logger.log("Viewing edited Financial Plan values");
 
         viewFinancialPlanPage
             .hasStatus("In progress")
@@ -146,7 +146,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     it("Should close a financial plan", () => 
     {
-        Logger.Log("creating a financial plan");
+        Logger.log("creating a financial plan");
         editFinancialPlanPage
             .withPlanRequestedDay("09")
             .withPlanRequestedMonth("02")
@@ -154,7 +154,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withNotes("Initial Notes!")
             .save();
 
-        Logger.Log("Selecting Financial Plan from open actions");
+        Logger.log("Selecting Financial Plan from open actions");
 		actionSummaryTable
 			.getOpenAction("Financial Plan")
 			.then(row =>
@@ -162,11 +162,11 @@ describe("User can add Financial Plan case action to an existing case", () => {
 				row.select();
 			});
 
-        Logger.Log("Closing the financial plan");
+        Logger.log("Closing the financial plan");
         viewFinancialPlanPage
             .close();
 
-        Logger.Log("Checking validation");
+        Logger.log("Checking validation");
         closeFinancialPlanPage
             .withPlanReceivedDay("32")
             .withPlanReceivedMonth("13")
@@ -177,10 +177,10 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasValidationError(NotesError)
             .hasValidationError(DateInvalidError.replace("{0}", "Date viable plan received"));
 
-        Logger.Log("Checking accessibility on Close financial plan");
+        Logger.log("Checking accessibility on Close financial plan");
         cy.excuteAccessibilityTests();
 
-        Logger.Log("Close a valid financial plan");
+        Logger.log("Close a valid financial plan");
         closeFinancialPlanPage
             .withReasonForClosure("Abandoned")
             .withPlanReceivedDay("10")
@@ -189,7 +189,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withNotes("Edited Notes!")
             .close();
 
-        Logger.Log("Selecting Financial Plan from close actions");
+        Logger.log("Selecting Financial Plan from close actions");
 		actionSummaryTable
 			.getClosedAction("Financial Plan")
 			.then(row =>
@@ -201,7 +201,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 				row.select();
 			});
 
-        Logger.Log("Ensure values are displayed correctly");
+        Logger.log("Ensure values are displayed correctly");
         viewFinancialPlanPage
             .hasDateOpened(toDisplayDate(now))
             .hasDateClosed(toDisplayDate(now))
@@ -210,29 +210,29 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .hasPlanReceivedDate("10 February 2023")
             .hasNotes("Edited Notes!");
 
-        Logger.Log("Checking accessibility on View Closed financial plan");
+        Logger.log("Checking accessibility on View Closed financial plan");
         cy.excuteAccessibilityTests();
     });
 
     it("Should only let one financial plan be created per case", () => 
     {
-        Logger.Log("Configuring first financial plan");
+        Logger.log("Configuring first financial plan");
 
         editFinancialPlanPage.save();
 
-        Logger.Log("Try to add second financial plan to case");
+        Logger.log("Try to add second financial plan to case");
         addFinancialPlanToCase();
 
         AddToCasePage
             .hasValidationError("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
 
-        Logger.Log("Checking accessibility on Creating a duplicate financial plan");
+        Logger.log("Checking accessibility on Creating a duplicate financial plan");
         cy.excuteAccessibilityTests();
     });
 
     function checkFormValidation()
     {
-        Logger.Log("Incomplete plan requested date");
+        Logger.log("Incomplete plan requested date");
 
         editFinancialPlanPage
             .withNotes("Notes for validation")
@@ -241,12 +241,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .save()
             .hasValidationError(DateIncompleteError.replace("{0}", "Date financial plan requested"));
 
-        Logger.Log("Check fields were not cleared on error");
+        Logger.log("Check fields were not cleared on error");
 
         editFinancialPlanPage
             .hasNotes("Notes for validation");
 
-        Logger.Log("Invalid plan requested date");
+        Logger.log("Invalid plan requested date");
 
         editFinancialPlanPage
             .clearPlanRequestedDate()
@@ -261,7 +261,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     function addFinancialPlanToCase()
     {
-        Logger.Log("Has option to add Financial Plan Case Action to a case");
+        Logger.log("Has option to add Financial Plan Case Action to a case");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('FinancialPlan')
         AddToCasePage.getCaseActionRadio('FinancialPlan')

@@ -3,7 +3,7 @@ import { CaseRow } from "./caseRow";
 
 class CaseworkTable {
     public getRowByCaseId(caseId: string): Cypress.Chainable<CaseRow> {
-        Logger.Log(`Getting the case row for ${caseId}`);
+        Logger.log(`Getting the case row for ${caseId}`);
 
         return cy.getByTestId(`row-${caseId}`)
         .then((el) =>
@@ -14,7 +14,7 @@ class CaseworkTable {
 
     public getOpenCaseIds(): Cypress.Chainable<Array<string>>
     {
-        Logger.Log("Getting all displayed case ids");
+        Logger.log("Getting all displayed case ids");
 
         const result: Array<string> = [];
 
