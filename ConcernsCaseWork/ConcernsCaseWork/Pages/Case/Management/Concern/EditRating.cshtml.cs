@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			ConcernTypeName = recordModel.GetConcernTypeName();
 
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), (int?)recordModel.RatingId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(CaseModel.Division, nameof(ConcernRiskRating), (int?)recordModel.RatingId);
 			ConcernRiskRating.Heading = "";
 
 		} 
