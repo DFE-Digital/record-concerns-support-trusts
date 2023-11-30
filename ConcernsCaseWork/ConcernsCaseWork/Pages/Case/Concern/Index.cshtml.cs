@@ -210,7 +210,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			ConcernType = CaseComponentBuilder.BuildConcernType(CreateCaseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 			ConcernType.SortOrder = 1;
 
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(CreateCaseModel.Division, nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 			ConcernRiskRating.SortOrder = 2;
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(CreateCaseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);

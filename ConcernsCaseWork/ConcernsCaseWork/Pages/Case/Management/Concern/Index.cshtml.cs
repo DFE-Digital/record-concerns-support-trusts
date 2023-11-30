@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
 
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(caseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
-			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
+			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(caseModel.Division, nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 			ConcernType = CaseComponentBuilder.BuildConcernType(caseModel.Division, nameof(ConcernType), ConcernType?.SelectedId);
 
 			CaseModel = caseModel;

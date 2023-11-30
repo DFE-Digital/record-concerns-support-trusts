@@ -59,9 +59,11 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernRiskRating(string name, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildConcernRiskRating(Division? division, string name, int? selectedId = null)
 		{
 			var radioItems = BuildRatingRadioItems();
+
+			var hint = division == Division.RegionsGroup ? "_RegionsGroupRiskManagementFramework" : "_SfsoRiskManagementFramework";
 
 			return new(ElementRootId: "rag-rating", name, "Select concern risk rating")
 			{
@@ -69,7 +71,7 @@ namespace ConcernsCaseWork.Models
 				SelectedId = selectedId,
 				Required = true,
 				DisplayName = "concern risk rating",
-				HintFromPartialView = "_RiskManagementFramework"
+				HintFromPartialView = hint
 			};
 		}
 
@@ -240,7 +242,7 @@ namespace ConcernsCaseWork.Models
 				SelectedId = selectedId,
 				Required = true,
 				DisplayName = "concern type",
-				HintFromPartialView = "_RiskManagementFramework"
+				HintFromPartialView = "_SfsoRiskManagementFramework"
 			};
 		}
 
