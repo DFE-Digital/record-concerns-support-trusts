@@ -40,14 +40,14 @@ namespace ConcernsCaseWork.API.Features.Decision
 
 				if (concernCase == null)
 				{
-					throw new NotFoundException($"Not Found: Concern with id {request.ConcernsCaseUrn}");
+					throw new NotFoundException($"Concerns case with id {request.ConcernsCaseUrn}");
 				}
 
 				var decision = concernCase.Decisions.FirstOrDefault(d => d.DecisionId == request.DecisionId);
 
 				if (decision == null)
 				{
-					throw new NotFoundException($"Not Found: Decision with id {request.DecisionId}, Case {request.ConcernsCaseUrn}");
+					throw new NotFoundException($"Decision with id {request.DecisionId}, Case {request.ConcernsCaseUrn}");
 				}
 
 				var result = new GetDecisionResponse()

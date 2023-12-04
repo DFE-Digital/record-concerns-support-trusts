@@ -113,6 +113,19 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_Get_CaseDoesNotExist_404()
+		{
+			var caseId = 1000000;
+			var decisionId = 100000;
+
+			//Act
+			var result = await _client.GetAsync($"/v2/concerns-cases/{caseId}/decisions/{decisionId}");
+
+			var message = await result.Content.ReadAsStringAsync();
+			message.Should().Contain($"Not Found: Concerns case with id {caseId}");
+		}
+
+		[Fact]
 		public async Task When_Post_Returns_201Response()
 		{
 			var concernsCase = await CreateConcernsCase();
