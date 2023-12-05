@@ -112,19 +112,19 @@ namespace ConcernsCaseWork.API.Features.SRMA
 
 				if (date == null)
 				{
-					return BadRequest("Offered Date Cannot Be Null");
+					return BadRequest("Offered date cannot be null");
 				}
-				else
-				{
-					var command = SRMA.UpdateOfferedDate.Command.Create(srmaId, date.Value);
-					var commandResult = await _mediator.Send(command);
-					return await GetByID(new GetByID.Query() { srmaId = commandResult });
-				}
+
+				var command = SRMA.UpdateOfferedDate.Command.Create(srmaId, date.Value);
+				var commandResult = await _mediator.Send(command);
+				return await GetByID(new GetByID.Query() { srmaId = commandResult });
+				
 			}
 			catch (FormatException ex)
 			{
 				_logger.LogError(ex, "DateTime received doesn't conform to format");
-				throw;
+
+				return BadRequest($"Offered date {offeredDate} is not in the expected format dd-MM-yyyy");
 			}
 
 		}
@@ -143,9 +143,9 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			catch (FormatException ex)
 			{
 				_logger.LogError(ex, "DateTime received doesn't conform to format");
-				throw;
-			}
 
+				return BadRequest($"Accepted date {acceptedDate} is not in the expected format dd-MM-yyyy");
+			}
 		}
 
 		[HttpPatch]
@@ -162,7 +162,8 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			catch (FormatException ex)
 			{
 				_logger.LogError(ex, "DateTime received doesn't conform to format");
-				throw;
+
+				return BadRequest($"Date report sent {dateReportSent} is not in the expected format dd-MM-yyyy");
 			}
 		}
 		[HttpPatch]
@@ -179,7 +180,8 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			catch (FormatException ex)
 			{
 				_logger.LogError(ex, "DateTime received doesn't conform to format");
-				throw;
+
+				return BadRequest($"Visit dates start: {startDate} end: {endDate} is not in the expected format dd-MM-yyyy");
 			}
 		}
 
@@ -195,7 +197,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		private DateTime? DeserialiseDateTime(string value)
 		{
 			var dateTimeFormatInfo = CultureInfo.InvariantCulture.DateTimeFormat;
-			return string.IsNullOrWhiteSpace(value) ? null : (DateTime?)DateTime.ParseExact(value, "dd-MM-yyyy", dateTimeFormatInfo, DateTimeStyles.None);
+			return string.IsNullOrWhiteSpace(value) ? null : DateTime.ParseExact(value, "dd-MM-yyyy", dateTimeFormatInfo, DateTimeStyles.None);
 		}
 	}
 }
