@@ -6,6 +6,7 @@ using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -180,6 +181,40 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		}
 
 		[Fact]
+		public async Task When_UpdateOfferedDate_NullDate_Patch_Return_BadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-offered-date?offeredDate=", null);
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("Offered date cannot be null");
+		}
+
+		[Fact]
+		public async Task When_UpdateOfferedDate_InvalidDate_Patch_Return_BadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-offered-date?offeredDate=Invalid", null);
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("Offered date Invalid is not in the expected format dd-MM-yyyy");
+		}
+
+		[Fact]
 		public async Task When_UpdateNotes_Patch_Return_OK()
 		{
 			//Arrange
@@ -223,6 +258,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
+		[Theory]
+		[InlineData(["Invalid", "10-10-2010"])]
+		[InlineData(["10-10-2010", "Invalid"])]
+		public async Task When_UpdateVisitDate_InvalidDate_Patch_Return_BadRequest(string startDate, string endDate)
+		{
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-visit-dates?startDate={startDate}&&endDate={endDate}", null);
+
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain($"Visit dates start: {startDate} end: {endDate} is not in the expected format dd-MM-yyyy");
+		}
+
 		[Fact]
 		public async Task When_UpdateDateAcceptedWithValue_Patch_Return_OK()
 		{
@@ -263,6 +314,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
 		}
 
+		[Fact]
+		public async Task When_UpdateDateAccepted_InvalidDate_Patch_Return_BadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-date-accepted?acceptedDate=Invalid", null);
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("Accepted date Invalid is not in the expected format dd-MM-yyyy");
+		}
 
 		[Fact]
 		public async Task When_UpdateDateReportSentWithValue_Patch_Return_OK()
@@ -302,6 +369,23 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			patchResponse.Data.DateReportSentToTrust.Should().BeNull();
 
 			await AssertCaseLastUpdatedDateMatchesSRMAUpdatedAt(createdConcern, patchResponse.Data);
+		}
+
+		[Fact]
+		public async Task When_UpdateDateReportSent_InvalidDate_Patch_Return_BadRequest()
+		{
+			//Arrange
+			var createdConcern = await CreateCase();
+			var createdSRMA = await CreateSRMAForCase(createdConcern.Urn);
+
+			//Act
+			var result = await _client.PatchAsync($"/v2/case-actions/srma/{createdSRMA.Id}/update-date-report-sent?dateReportSent=Invalid", null);
+
+			//Assert
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var errorContent = await result.Content.ReadAsStringAsync();
+			errorContent.Should().Contain("Date report sent Invalid is not in the expected format dd-MM-yyyy");
 		}
 
 		[Theory]
