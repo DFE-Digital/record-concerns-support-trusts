@@ -30,6 +30,12 @@ export default class EditCaseHistoryPage {
     {
         Logger.log(`With Case history ${value}`);
 
+        if (value.length == 0)
+        {
+            cy.getByTestId(`case-history`).clear({ force: true });
+            return this;
+        }
+
         cy.getByTestId(`case-history`).clear({ force: true }).type(value);
 
         return this;

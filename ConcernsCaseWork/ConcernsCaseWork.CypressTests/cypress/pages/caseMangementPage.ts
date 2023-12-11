@@ -31,7 +31,7 @@ class CaseManagementPage {
 
 	public hasCaseHistory(value: string): this {
 		Logger.log(`Has case history ${value}`);
-		cy.getByTestId("case-history").should("contain.text", value);
+		this.getCaseHistory().should("contain.text", value);
 
 		return this;
 	}
@@ -446,7 +446,6 @@ class CaseManagementPage {
 		return this;
 	}
 
-	// has methods
 	public hasTrust(value: string): this {
 		Logger.log(`Has trust ${value}`);
 
@@ -455,7 +454,6 @@ class CaseManagementPage {
 		return this;
 	}
 
-	// has methods
 	public hasTrustContain(value: string): this {
 		Logger.log(`Has trust ${value}`);
 
@@ -528,7 +526,7 @@ class CaseManagementPage {
 	public hasCurrentStatus(value: string): this {
 		Logger.log(`Has status ${value}`);
 
-		cy.getByTestId(`status`).should("contain.text", value);
+		this.getCurrentStatus().should("contain.text", value);
 
 		return this;
 	}
@@ -536,7 +534,7 @@ class CaseManagementPage {
 	public hasCaseAim(value: string): this {
 		Logger.log(`Has caseAim ${value}`);
 
-		cy.getByTestId(`case-aim`).should("contain.text", value);
+		this.getCaseAim().should("contain.text", value);
 
 		return this;
 	}
@@ -544,7 +542,7 @@ class CaseManagementPage {
 	public hasDeEscalationPoint(value: string): this {
 		Logger.log(`Has deEscalationPoint ${value}`);
 
-		cy.getByTestId(`de-escalation-point`).should("contain.text", value);
+		this.getDeEscalationPoint().should("contain.text", value);
 
 		return this;
 	}
@@ -552,37 +550,37 @@ class CaseManagementPage {
 	public hasNextSteps(value: string): this {
 		Logger.log(`Has nextSteps ${value}`);
 
-		cy.getByTestId(`next-steps`).should("contain.text", value);
+		this.getNextSteps().should("contain.text", value);
 
 		return this;
 	}
 
 	public hasEmptyCurrentStatus(): this {
-		this.hasCurrentStatus("");
+		this.getCurrentStatus().should("be.empty");
 
 		return this;
 	}
 
 	public hasEmptyCaseAim(): this {
-		this.hasCaseAim("");
+		this.getCaseAim().should("be.be.empty");
 
 		return this;
 	}
 
 	public hasEmptyDeEscalationPoint(): this {
-		this.hasDeEscalationPoint("");
+		this.getDeEscalationPoint().should("be.empty");
 
 		return this;
 	}
 
 	public hasEmptyNextSteps(): this {
-		this.hasNextSteps("");
+		this.getNextSteps().should("be.empty");
 
 		return this;
 	}
 
 	public hasEmptyCaseHistory(): this {
-		this.hasCaseHistory("");
+		this.getCaseHistory().should("be.empty");
 
 		return this;
 	}
@@ -592,6 +590,26 @@ class CaseManagementPage {
 		cy.getByTestId("case-narritive-fields-container").should("not.exist");
 
 		return this;
+	}
+
+	private getCurrentStatus() {
+		return cy.getByTestId(`status`);
+	}
+
+	private getCaseAim() {
+		return cy.getByTestId(`case-aim`);
+	}
+
+	private getDeEscalationPoint() {
+		return cy.getByTestId(`de-escalation-point`);
+	}
+
+	private getNextSteps() {
+		return cy.getByTestId(`next-steps`);
+	}
+
+	private getCaseHistory() {
+		return cy.getByTestId("case-history");
 	}
 }
 
