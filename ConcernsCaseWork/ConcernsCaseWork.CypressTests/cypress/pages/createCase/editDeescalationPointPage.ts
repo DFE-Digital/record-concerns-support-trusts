@@ -30,6 +30,12 @@ export default class EditDeEscalationPointPage {
     {
         Logger.log(`With Deescalation point ${value}`);
 
+        if (value.length == 0)
+        {
+            cy.getByTestId(`de-escalation-point`).clear({ force: true });
+            return this;
+        }
+
         cy.getByTestId(`de-escalation-point`).clear().type(value);
 
         return this;

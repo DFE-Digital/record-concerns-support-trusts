@@ -30,6 +30,12 @@ export default class EditNextStepsPage {
     {
         Logger.log(`With Deescalation point ${value}`);
 
+        if (value.length == 0)
+        {
+            cy.getByTestId(`next-steps`).clear({ force: true });
+            return this;
+        }
+
         cy.getByTestId(`next-steps`).clear({ force: true }).type(value);
 
         return this;

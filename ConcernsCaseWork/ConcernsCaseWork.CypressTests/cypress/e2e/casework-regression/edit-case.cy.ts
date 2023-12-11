@@ -228,7 +228,7 @@ describe("Editing a case", () => {
 
 		editCaseHistoryPage.withCaseHistory("New case history").apply();
 
-		Logger.log("Verify detailes have been changed");
+		Logger.log("Verify details have been changed");
 		caseManagementPage
 			.hasRiskToTrust("Red")
 			.hasDirectionOfTravel("Improving")
@@ -240,6 +240,28 @@ describe("Editing a case", () => {
 			.hasDeEscalationPoint("New de-descalation point")
 			.hasNextSteps("New next step")
 			.hasCaseHistory("New case history");
+
+		Logger.log("Ensure that we can remove all optional information");
+		caseManagementPage.editCurrentStatus();
+		editCurrentStatusPage.withCurrentStatus("").apply();
+		caseManagementPage.editCaseAim();
+		editCaseAimPage.withCaseAim("").apply();
+		caseManagementPage.editDeEscalationPoint();
+		editDeEscalationPage.withDeescalationPoint("").apply();
+		caseManagementPage.editNextSteps();
+		editNextStepsPage.withNextSteps("").apply();
+		caseManagementPage.editCaseHistory();
+		editCaseHistoryPage.withCaseHistory("").apply();
+
+		Logger.log("Verify details have been changed");
+		caseManagementPage
+			.hasIssue("New Issue")
+			.hasEmptyCurrentStatus()
+			.hasEmptyCaseAim()
+			.hasEmptyDeEscalationPoint()
+			.hasEmptyNextSteps()
+			.hasEmptyCaseHistory();
+
 	});
 
 	it("Should raise a validation error if do not select a case action", () => {

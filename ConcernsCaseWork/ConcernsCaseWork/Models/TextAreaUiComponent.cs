@@ -11,6 +11,7 @@ public record TextAreaUiComponent(string ElementRootId, string Name, string Head
 
 public class ValidateableString : IValidatableObject
 {
+	[DisplayFormat(ConvertEmptyStringToNull = false)]
 	public string StringContents { get; set; }
 	
 	public int MaxLength { get; set; }
