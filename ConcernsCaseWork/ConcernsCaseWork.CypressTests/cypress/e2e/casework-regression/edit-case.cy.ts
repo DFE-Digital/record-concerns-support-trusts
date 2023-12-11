@@ -264,7 +264,7 @@ describe("Editing a case", () => {
 
 	});
 
-	it.only("Should raise a validation error if do not select a case action", () => {
+	it("Should raise a validation error if do not select a case action", () => {
 		cy.basicCreateCase();
 
 		CaseManagementPage.getAddToCaseBtn().click();
