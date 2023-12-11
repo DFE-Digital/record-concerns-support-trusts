@@ -1,5 +1,12 @@
 ## 32.0.0
 
+* added a navigation header to make it easier to select 'Your cases', 'Closed cases', 'Other cases' and 'Find trust'
+* re-designed the select colleages page
+* updated the accessibility statement
+* added improved validation to the create and update case APIs
+* renamed concern type 'governance' to 'governance capability'
+* added the RMF link for regions group 
+
 ## 31.0.0
 
 * Change Add concern to Add another concern in the case creation wizard

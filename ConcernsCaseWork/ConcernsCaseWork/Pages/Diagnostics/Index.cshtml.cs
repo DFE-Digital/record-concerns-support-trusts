@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
-using System.Security.Claims;
 
 namespace ConcernsCaseWork.Pages.Diagnostics
 {
@@ -26,7 +25,6 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		public string ModuleVersionId { get; set; }
 		public Version AssemblyVersion { get; set; }
 		public string AssemblyFileVersion { get; set; }
-		public string AssemblyInformationalVersion { get; set; }
 		public string BuildGuid { get; set; }
 		public string BuildTime { get; set; }
 		public string BuildMode { get; set; }
@@ -41,31 +39,23 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 
 		public void OnGet()
 		{
-			this.ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
-
-			var r = Request;
-
-			switch (_env.IsDevelopment())
-			{
-
-			}
+			ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
 
 			if (_env.IsDevelopment() || _env.IsStaging())
 			{
-				this.Env = _env.IsDevelopment() ? "Development" : "Staging";
+				Env = _env.IsDevelopment() ? "Development" : "Staging";
 			}
 
 			var assembly = Assembly.GetEntryAssembly();
-			this.AssemblyVersion = assembly.GetName().Version;
-			this.AssemblyFileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-			this.AssemblyInformationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-			this.ModuleVersionId = assembly.ManifestModule.ModuleVersionId.ToString();
-			this.BuildMode = GetBuildMode();
-			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
-			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
-			this.BuildMessage = assembly.GetCustomAttribute<CustomBuildMessageAttribute>().CustomBuildMessage;
+			AssemblyVersion = assembly.GetName().Version;
+			AssemblyFileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+			ModuleVersionId = assembly.ManifestModule.ModuleVersionId.ToString();
+			BuildMode = GetBuildMode();
+			BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
+			BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
+			BuildMessage = assembly.GetCustomAttribute<CustomBuildMessageAttribute>().CustomBuildMessage;
 
-			this.Roles = _userInfoService.UserInfo.Roles;
+			Roles = _userInfoService.UserInfo.Roles;
 		}
 
 		public string[] Roles { get; set; }
