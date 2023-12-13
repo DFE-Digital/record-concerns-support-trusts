@@ -54,6 +54,7 @@ describe("Testing permissions on cases and case actions", () => {
         caseMangementPage
             .showAllConcernDetails()
             .canEditConcern()
+            .canCloseConcern()
             .canEditRiskToTrust()
             .canEditDirectionOfTravel()
             .canEditManagedBy()
@@ -72,6 +73,7 @@ describe("Testing permissions on cases and case actions", () => {
         caseMangementPage
             .showAllConcernDetails()
             .cannotEditConcern()
+            .cannotCloseConcern()
             .cannotEditRiskToTrust()
             .cannotEditDirectionOfTravel()
             .cannotEditManagedBy()

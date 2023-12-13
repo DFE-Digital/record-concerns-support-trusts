@@ -1735,6 +1735,10 @@ label.govuk-label .govuk-tag {
   color: #505a5f;
 }
 
+.govuk-divider {
+	color: #b1b4b6
+}
+
 /* ==========================================================================
    #Environment Banners
    ========================================================================== */
@@ -1813,6 +1817,7 @@ dt,
 dd,
 tr,
 caption,
-details {
+details,
+strong {
 	font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif !important;
 }

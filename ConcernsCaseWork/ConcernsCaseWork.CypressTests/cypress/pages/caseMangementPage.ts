@@ -76,6 +76,22 @@ class CaseManagementPage {
 		return this;
 	}
 
+	public closeConcern(): this {
+		this.getCloseConcern().first().click();
+
+		return this;
+	}
+
+	public canCloseConcern(): this {
+		this.getCloseConcern();
+		return this;
+	}
+
+	public cannotCloseConcern(): this {
+		this.getCloseConcern().should("not.exist");
+		return this;
+	}
+
 	public addAnotherConcern(): this {
 		Logger.log("Adding another concern");
 		cy.getByTestId("add-additional-concern").click();
@@ -374,8 +390,12 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public getEditConcern() {
+	private getEditConcern() {
 		return cy.getByTestId("edit-concern");
+	}
+
+	private getCloseConcern() {
+		return cy.getByTestId("close-concern");
 	}
 
 	private getEditRiskToTrust() {
