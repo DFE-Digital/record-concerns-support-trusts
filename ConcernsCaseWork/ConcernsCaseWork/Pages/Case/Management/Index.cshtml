@@ -200,6 +200,8 @@
                                                                 <div class="govuk-!-padding-bottom-1">
                                                                     @if (Model.IsEditableCase)
                                                                     {
+                                                                        <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating/closure" aria-label="Close @concern.GetConcernTypeName() rating" data-testid="close-concern">Close</a>
+                                                                        <span class="govuk-divider">|</span>
                                                                         <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.GetConcernTypeName() rating" data-testid="edit-concern">Change</a>
                                                                     }
                                                                 </div>

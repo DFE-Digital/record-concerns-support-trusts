@@ -56,6 +56,43 @@ class CaseManagementPage {
 		return this;
 	}
 
+	public canEditCase(): this {
+		this.getEditConcern();
+		this.getCloseConcern();
+		this.getEditRiskToTrust();
+		this.getEditDirectionOfTravel();
+		this.getManagedBy();
+		this.getEditCaseOwner();
+		this.getEditIssue();
+		this.getEditCurrentStatus();
+		this.getEditCaseAim();
+		this.getEditDeEscalationPoint();
+		this.getEditNextSteps();
+		this.getEditCaseHistory();
+		this.getAddCaseAction();
+
+		return this;
+	}
+
+	public cannotEditCase(): this {
+
+		this.getEditConcern().should("not.exist");
+		this.getCloseConcern().should("not.exist");
+		this.getEditRiskToTrust().should("not.exist");
+		this.getEditDirectionOfTravel().should("not.exist");
+		this.getManagedBy().should("not.exist");
+		this.getEditCaseOwner().should("not.exist");
+		this.getEditIssue().should("not.exist");
+		this.getEditCurrentStatus().should("not.exist");
+		this.getEditCaseAim().should("not.exist");
+		this.getEditDeEscalationPoint().should("not.exist");
+		this.getEditNextSteps().should("not.exist");
+		this.getEditCaseHistory().should("not.exist");
+		this.getAddCaseAction().should("not.exist");
+
+		return this;
+	}
+
 	public editConcern(): this {
 		Logger.log("Editing the concern");
 		this.getEditConcern().click();
@@ -63,15 +100,8 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditConcern(): this {
-		Logger.log("Can edit the concern");
-		this.getEditConcern();
-
-		return this;
-	}
-	public cannotEditConcern(): this {
-		Logger.log("Cannot edit the concern");
-		this.getEditConcern().should("not.exist");
+	public closeConcern(): this {
+		this.getCloseConcern().first().click();
 
 		return this;
 	}
@@ -95,20 +125,6 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditRiskToTrust(): this {
-		Logger.log("Can edit the risk to trust");
-		this.getEditRiskToTrust();
-
-		return this;
-	}
-
-	public cannotEditRiskToTrust(): this {
-		Logger.log("Cannot edit the risk to trust");
-		this.getEditRiskToTrust().should("not.exist");
-
-		return this;
-	}
-
 	public editDirectionOfTravel(): this {
 		Logger.log("Editing the direction of travel");
 		this.getEditDirectionOfTravel().click();
@@ -116,37 +132,9 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditDirectionOfTravel(): this {
-		Logger.log("Can edit the direction of travel");
-		this.getEditDirectionOfTravel();
-
-		return this;
-	}
-
-	public cannotEditDirectionOfTravel(): this {
-		Logger.log("Cannot edit the direction of travel");
-		this.getEditDirectionOfTravel().should("not.exist");
-
-		return this;
-	}
-
 	public editManagedBy(): this {
 		Logger.log("Editing managed by");
-		this.getEditTerritory().click();
-
-		return this;
-	}
-
-	public canEditManagedBy(): this {
-		Logger.log("Can edit managed by");
-		this.getEditTerritory();
-
-		return this;
-	}
-
-	public cannotEditManagedBy(): this {
-		Logger.log("Cannot edit managed by");
-		this.getEditTerritory().should("not.exist");
+		this.getManagedBy().click();
 
 		return this;
 	}
@@ -166,21 +154,6 @@ class CaseManagementPage {
 		Logger.log("Editing case owner");
 
 		this.getEditCaseOwner().click();
-
-		return this;
-	}
-
-	public canEditCaseOwner(): this {
-		Logger.log("Can edit case owner");
-
-		this.getEditCaseOwner();
-
-		return this;
-	}
-
-	public cannotEditCaseOwner(): this {
-		Logger.log("Cannot edit case owner");
-		this.getEditCaseOwner().should("not.exist");
 
 		return this;
 	}
@@ -211,37 +184,9 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditIssue() {
-		Logger.log("Can edit the issue");
-		this.getEditIssue();
-
-		return this;
-	}
-
-	public cannotEditIssue() {
-		Logger.log("Cannot edit the issue");
-		this.getEditIssue().should("not.exist");
-
-		return this;
-	}
-
 	public editCurrentStatus(): this {
 		Logger.log("Editing the current status");
 		this.getEditCurrentStatus().click();
-
-		return this;
-	}
-
-	public canEditCurrentStatus() {
-		Logger.log("Can edit the current status");
-		this.getEditCurrentStatus();
-
-		return this;
-	}
-
-	public cannotEditCurrentStatus() {
-		Logger.log("Cannot edit the current status");
-		this.getEditCurrentStatus().should("not.exist");
 
 		return this;
 	}
@@ -253,37 +198,9 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditCaseAim() {
-		Logger.log("Can edit the case aim");
-		this.getEditCaseAim();
-
-		return this;
-	}
-
-	public cannotEditCaseAim() {
-		Logger.log("Cannot edit the case aim");
-		this.getEditCaseAim().should("not.exist");
-
-		return this;
-	}
-
 	public editDeEscalationPoint(): this {
 		Logger.log("Editing the de-escalation point");
 		this.getEditDeEscalationPoint().click();
-
-		return this;
-	}
-
-	public canEditDeEscalationPoint() {
-		Logger.log("Can edit the de-escalation point");
-		this.getEditDeEscalationPoint();
-
-		return this;
-	}
-
-	public cannotEditDeEscalactionPoint() {
-		Logger.log("Cannot edit the de-escalation point");
-		this.getEditDeEscalationPoint().should("not.exist");
 
 		return this;
 	}
@@ -295,37 +212,9 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canEditNextSteps() {
-		Logger.log("Can edit the next steps");
-		this.getEditNextSteps();
-
-		return this;
-	}
-
-	public cannotEditNextSteps() {
-		Logger.log("Cannot edit the next steps");
-		this.getEditNextSteps().should("not.exist");
-
-		return this;
-	}
-
 	public editCaseHistory(): this {
 		Logger.log("Editing the case history");
 		this.getEditCaseHistory().click();
-
-		return this;
-	}
-
-	public canEditCaseHistory() {
-		Logger.log("Can edit the case history");
-		this.getEditCaseHistory();
-
-		return this;
-	}
-
-	public cannotEditCaseHistory() {
-		Logger.log("Cannot edit the case history");
-		this.getEditCaseHistory().should("not.exist");
 
 		return this;
 	}
@@ -360,22 +249,12 @@ class CaseManagementPage {
 		return this;
 	}
 
-	public canAddCaseAction() {
-		Logger.log("Can add case action");
-		this.getAddCaseAction();
-
-		return this;
-	}
-
-	public cannotAddCaseAction() {
-		Logger.log("Cannot add case action");
-		this.getAddCaseAction().should("not.exist");
-
-		return this;
-	}
-
-	public getEditConcern() {
+	private getEditConcern() {
 		return cy.getByTestId("edit-concern");
+	}
+
+	private getCloseConcern() {
+		return cy.getByTestId("close-concern");
 	}
 
 	private getEditRiskToTrust() {
@@ -386,7 +265,7 @@ class CaseManagementPage {
 		return cy.getByTestId("edit-direction-of-travel");
 	}
 
-	private getEditTerritory() {
+	private getManagedBy() {
 		return cy.getByTestId("edit_Button_SFSO");
 	}
 

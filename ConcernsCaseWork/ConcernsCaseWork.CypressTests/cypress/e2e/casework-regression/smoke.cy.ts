@@ -439,8 +439,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 	function closeConcern() {
 		Logger.log("Closing concern");
-		CaseManagementPage.editConcern();
-		EditConcernPage.closeConcern();
+		CaseManagementPage.closeConcern();
 
 		Logger.log("Checking accessibility on closing concern");
 		cy.excuteAccessibilityTests();

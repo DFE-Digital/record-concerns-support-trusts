@@ -165,15 +165,11 @@ describe("Creating a case", () => {
             .cancel();
     
             Logger.log("Close down the concerns");
-            caseManagementPage
-                .getEditConcern().first().click();
-            
-            editConcernPage.closeConcern().confirmCloseConcern();
+            caseManagementPage.closeConcern();
+            editConcernPage.confirmCloseConcern();
     
-            caseManagementPage
-            .getEditConcern().first().click();
-        
-            editConcernPage.closeConcern().confirmCloseConcern();
+            caseManagementPage.closeConcern();
+            editConcernPage.confirmCloseConcern();
     
             caseManagementPage.getCaseIDText()
             .then((caseId =>

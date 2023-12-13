@@ -53,36 +53,14 @@ describe("Testing permissions on cases and case actions", () => {
         Logger.log("Check that we can edit if we did create the case");
         caseMangementPage
             .showAllConcernDetails()
-            .canEditConcern()
-            .canEditRiskToTrust()
-            .canEditDirectionOfTravel()
-            .canEditManagedBy()
-            .canEditCaseOwner()
-            .canEditIssue()
-            .canEditCurrentStatus()
-            .canEditCaseAim()
-            .canEditDeEscalationPoint()
-            .canEditNextSteps()
-            .canEditCaseHistory()
-            .canAddCaseAction();
+            .canEditCase();
 
         Logger.log("Check that we cannot edit if we did not create the case");
         updateCaseOwner(caseId);
 
         caseMangementPage
             .showAllConcernDetails()
-            .cannotEditConcern()
-            .cannotEditRiskToTrust()
-            .cannotEditDirectionOfTravel()
-            .cannotEditManagedBy()
-            .cannotEditCaseOwner()
-            .cannotEditIssue()
-            .cannotEditCurrentStatus()
-            .cannotEditCaseAim()
-            .cannotEditDeEscalactionPoint()
-            .cannotEditNextSteps()
-            .cannotEditCaseHistory()
-            .cannotAddCaseAction();
+            .cannotEditCase();
     });
 
     it("Should not allow the user to edit an srma that they did not create", () =>
