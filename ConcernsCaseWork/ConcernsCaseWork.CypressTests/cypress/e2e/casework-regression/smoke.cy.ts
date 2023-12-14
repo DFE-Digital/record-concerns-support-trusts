@@ -10,7 +10,7 @@ import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/vie
 import { CloseFinancialPlanPage } from "../../pages/caseActions/financialPlan/closeFinancialPlanPage";
 import { ViewNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
 import { CloseNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/closeNtiUnderConsiderationPage";
-import EditConcernPage from "../../pages/editConcernPage";
+import closeConcernPage from "../../pages/closeConcernPage";
 import HomePage from "../../pages/homePage";
 import ClosedCasePage from "../../pages/closedCasePage";
 import { EditNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
@@ -444,7 +444,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.log("Checking accessibility on closing concern");
 		cy.excuteAccessibilityTests();
 
-		EditConcernPage.confirmCloseConcern();
+		closeConcernPage.confirmCloseConcern();
 	}
 
 	function closeCaseCheckingValidation() {

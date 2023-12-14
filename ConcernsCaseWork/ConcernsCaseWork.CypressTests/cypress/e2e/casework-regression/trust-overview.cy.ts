@@ -9,7 +9,7 @@ import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import editConcernPage from "cypress/pages/editConcernPage";
+import closeConcernPage from "cypress/pages/closeConcernPage";
 
 
 describe("Trust overview ", () =>
@@ -78,7 +78,7 @@ describe("Trust overview ", () =>
                 caseMangementPage.viewCase();
 
                 caseMangementPage.closeConcern();
-                editConcernPage.confirmCloseConcern();
+                closeConcernPage.confirmCloseConcern();
     
                 cy.closeCase();
                 cy.visit(`/trust/${trustUkprn}/overview`);

@@ -12,7 +12,7 @@ import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionP
 import addRegionPage from "cypress/pages/createCase/addRegionPage";
 import validationComponent from "cypress/pages/validationComponent";
 import editRegionPage from "cypress/pages/createCase/editRegionPage";
-import editConcernPage from "cypress/pages/editConcernPage";
+import closeConcernPage from "cypress/pages/closeConcernPage";
 import homePage from "cypress/pages/homePage";
 import closedCasePage from "cypress/pages/closedCasePage";
 import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage";
@@ -166,10 +166,10 @@ describe("Creating a case", () => {
     
             Logger.log("Close down the concerns");
             caseManagementPage.closeConcern();
-            editConcernPage.confirmCloseConcern();
+            closeConcernPage.confirmCloseConcern();
     
             caseManagementPage.closeConcern();
-            editConcernPage.confirmCloseConcern();
+            closeConcernPage.confirmCloseConcern();
     
             caseManagementPage.getCaseIDText()
             .then((caseId =>
