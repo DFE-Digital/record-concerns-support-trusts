@@ -29,7 +29,6 @@ declare global {
 			excuteAccessibilityTests(): Chainable<Element>;
             basicCreateCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
             createNonConcernsCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
-            closeConcern(): Chainable<Element>;
             closeCase(): Chainable<Element>;
         }
     }

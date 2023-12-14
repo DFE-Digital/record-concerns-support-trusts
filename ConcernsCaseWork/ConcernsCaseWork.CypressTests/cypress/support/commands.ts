@@ -106,13 +106,6 @@ Cypress.Commands.add("basicCreateCase", (request?: CreateCaseRequest) => {
 	});
 });
 
-Cypress.Commands.add("closeConcern", () =>
-{
-	Logger.log("Closing concern");
-	caseMangementPage.editConcern();
-	editConcernPage.closeConcern().confirmCloseConcern();
-});
-
 Cypress.Commands.add("closeCase", () =>
 {
 	caseMangementPage.getCloseCaseBtn().click();

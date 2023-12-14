@@ -9,6 +9,7 @@ import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import editConcernPage from "cypress/pages/editConcernPage";
 
 
 describe("Trust overview ", () =>
@@ -75,8 +76,10 @@ describe("Trust overview ", () =>
     
                 Logger.log("Check on a closed case")
                 caseMangementPage.viewCase();
+
+                caseMangementPage.closeConcern();
+                editConcernPage.confirmCloseConcern();
     
-                cy.closeConcern();
                 cy.closeCase();
                 cy.visit(`/trust/${trustUkprn}/overview`);
     
