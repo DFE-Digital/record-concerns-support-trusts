@@ -1,5 +1,9 @@
 ## 33.0.0
 
+* added close concern to the case management page
+* removed close concern from the edit concern page
+* fixed issue where text on case narratives could not be completely removed
+
 ## 32.0.0
 
 * added a navigation header to make it easier to select 'Your cases', 'Closed cases', 'Other cases' and 'Find trust'
