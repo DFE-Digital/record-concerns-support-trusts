@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.4.5"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.4.6"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -21,6 +21,7 @@ module "azure_container_apps_hosting" {
   mssql_azuread_admin_username       = local.mssql_azuread_admin_username
   mssql_azuread_admin_object_id      = local.mssql_azuread_admin_object_id
   mssql_server_public_access_enabled = local.mssql_server_public_access_enabled
+  mssql_managed_identity_assign_role = local.mssql_managed_identity_assign_role
 
   image_name = local.image_name
 
