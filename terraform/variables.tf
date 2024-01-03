@@ -52,7 +52,7 @@ variable "enable_container_registry" {
 variable "registry_admin_enabled" {
   description = "Do you want to enable access key based authentication for your Container Registry?"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "registry_use_managed_identity" {
