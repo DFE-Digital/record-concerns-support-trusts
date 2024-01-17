@@ -61,7 +61,8 @@ jobs:
       - name: Azure Container Registry login
         uses: docker/login-action@v3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          username: ${{ secrets.AZURE_ACR_SP_USERNAME }}
+          password: ${{ secrets.AZURE_ACR_SP_PASSWORD }}
           registry: ${{ secrets.AZURE_NEW_ACR_URL }}
 
       - name: Get IP Address
