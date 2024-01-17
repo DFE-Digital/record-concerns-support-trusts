@@ -58,21 +58,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Azure Container Registry login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.AZURE_ACR_SP_USERNAME }}
-          password: ${{ secrets.AZURE_ACR_SP_PASSWORD }}
-          registry: ${{ secrets.AZURE_NEW_ACR_URL }}
-
-      - name: Get IP Address
-        run: |
-          echo "IP=$(curl ifconfig.co)" >> $GITHUB_ENV
-
       - name: Run Azure Login With a Service Principal Secret
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get IP Address
+        run: |
+          echo "IP=$(curl ifconfig.co)" >> $GITHUB_ENV
 
       - name: Add network rule
         uses: azure/CLI@v1
@@ -80,6 +73,13 @@ jobs:
           azcliversion: 2.45.0
           inlineScript: |
              az acr network-rule add -n ${{ secrets.AZURE_ACR_NAME }} --ip-address "${{ env.IP }}" -g ${{ secrets.AZURE_ACR_RESOURCE_GROUP }} 
+
+      - name: Azure Container Registry login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.AZURE_ACR_SP_USERNAME }}
+          password: ${{ secrets.AZURE_ACR_SP_PASSWORD }}
+          registry: ${{ secrets.AZURE_NEW_ACR_URL }}
 
       - name: Build and push docker image
         uses: docker/build-push-action@v5
