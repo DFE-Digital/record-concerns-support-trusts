@@ -72,7 +72,7 @@ jobs:
         with:
           azcliversion: 2.45.0
           inlineScript: |
-             az acr network-rule add -n ${{ secrets.AZURE_ACR_NAME }} --ip-address "${{ env.IP }}" -g ${{ secrets.AZURE_ACR_RESOURCE_GROUP }} 
+             az acr network-rule add -n ${{ secrets.AZURE_ACR_NAME }} --ip-address "${{ env.IP }}/32" -g ${{ secrets.AZURE_ACR_RESOURCE_GROUP }}
 
       - name: Azure Container Registry login
         uses: docker/login-action@v3
