@@ -1,4 +1,5 @@
 using AutoMapper;
+using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
@@ -7,6 +8,7 @@ using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.PageHistory;
+using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -104,16 +106,6 @@ namespace ConcernsCaseWork
 				options.Cookie.IsEssential = true;
 			});
 
-			// Authentication
-
-			//services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-			//{
-			//	options.LoginPath = "/login";
-			//	options.Cookie.Name = ".ConcernsCasework.Login";
-			//	options.Cookie.HttpOnly = true;
-			//	options.Cookie.IsEssential = true;
-			//});
-
 			services.AddRouting(options =>
 			{
 				options.ConstraintMap.Add("fpEditModes", typeof(FinancialPlanEditModeConstraint));
@@ -172,6 +164,7 @@ namespace ConcernsCaseWork
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextMiddleware>();
 			app.UseMiddleware<UserContextReceiverMiddleware>();
+			app.UseMiddlewareForFeature<MaintenanceModeMiddleware>(FeatureFlags.IsMaintenanceModeEnabled);
 
 			app.UseConcernsCaseworkEndpoints();
 
