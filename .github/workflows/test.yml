@@ -65,7 +65,7 @@ jobs:
 
       - name: Get IP Address
         run: |
-          echo "IP=$(curl ifinfo.io/ip)" >> $GITHUB_ENV
+          echo "IP=$(curl https://ifinfo.io/ip)" >> $GITHUB_ENV
 
       - name: Add network rule
         uses: azure/CLI@v1
