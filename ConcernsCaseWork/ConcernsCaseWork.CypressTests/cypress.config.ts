@@ -7,6 +7,7 @@ export default defineConfig({
   watchForFileChanges: false,
   chromeWebSecurity: false,
   video: false,
+  retries: 1,
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
     reporterEnabled: 'mochawesome',
@@ -18,7 +19,7 @@ export default defineConfig({
       json: true,
     },
   },
-	userAgent: 'ConcernsCaseWork/1.0 Cypress',
+  userAgent: 'ConcernsCaseWork/1.0 Cypress',
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
@@ -30,7 +31,7 @@ export default defineConfig({
       })
 
       on('after:run', async () => {
-        if(process.env.ZAP) {
+        if (process.env.ZAP) {
           await generateZapReport()
         }
       })
