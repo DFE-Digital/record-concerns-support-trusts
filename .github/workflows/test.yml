@@ -65,7 +65,7 @@ jobs:
 
       - name: Get IP Address
         run: |
-          echo "IP=$(curl ifconfig.co)" >> $GITHUB_ENV
+          echo "IP=$(curl https://ifinfo.io/ip)" >> $GITHUB_ENV
 
       - name: Add network rule
         uses: azure/CLI@v1
@@ -99,5 +99,5 @@ jobs:
         with:
           azcliversion: 2.45.0
           inlineScript: |
-             az acr network-rule remove -n ${{ secrets.AZURE_ACR_NAME }} --ip-address "${{ env.IP }}" -g ${{ secrets.AZURE_ACR_RESOURCE_GROUP }} 
+             az acr network-rule remove -n ${{ secrets.AZURE_ACR_NAME }} --ip-address "${{ env.IP }}/32" -g ${{ secrets.AZURE_ACR_RESOURCE_GROUP }}
 
