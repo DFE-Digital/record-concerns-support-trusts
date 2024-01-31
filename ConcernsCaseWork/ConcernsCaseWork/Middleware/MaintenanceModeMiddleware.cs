@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
+namespace ConcernsCaseWork.Middleware;
+
 public class MaintenanceModeMiddleware
 {
 	private readonly RequestDelegate _next;
@@ -18,6 +20,6 @@ public class MaintenanceModeMiddleware
 			context.Response.Redirect("/Maintenance");
 		}
 
-		 await _next(context);
+		await _next(context);
 	}
 }
