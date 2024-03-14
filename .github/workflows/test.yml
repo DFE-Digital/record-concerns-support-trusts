@@ -59,7 +59,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Run Azure Login With a Service Principal Secret
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -68,7 +68,7 @@ jobs:
           echo "IP=$(curl https://ifinfo.io/ip)" >> $GITHUB_ENV
 
       - name: Add network rule
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           azcliversion: 2.45.0
           inlineScript: |
@@ -95,7 +95,7 @@ jobs:
           push: true
 
       - name: Remove network rule
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           azcliversion: 2.45.0
           inlineScript: |
