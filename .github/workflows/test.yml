@@ -68,7 +68,7 @@ jobs:
           echo "IP=$(curl https://ifinfo.io/ip)" >> $GITHUB_ENV
 
       - name: Add network rule
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           azcliversion: 2.45.0
           inlineScript: |
@@ -95,7 +95,7 @@ jobs:
           push: true
 
       - name: Remove network rule
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           azcliversion: 2.45.0
           inlineScript: |
