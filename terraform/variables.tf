@@ -288,8 +288,11 @@ variable "mssql_server_public_access_enabled" {
 
 variable "mssql_firewall_ipv4_allow_list" {
   description = "A list of IPv4 Addresses that require remote access to the MSSQL Server"
-  type        = list(string)
-  default     = []
+  type = map(object({
+    start_ip_range : string,
+    end_ip_range : optional(string, "")
+  }))
+  default = {}
 }
 
 variable "mssql_azuread_admin_username" {
