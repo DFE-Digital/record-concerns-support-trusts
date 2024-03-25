@@ -278,6 +278,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="Pages\Shared\Maintenance.cshtml" />
+	  <None Include="Pages\Maintenance.cshtml" />
 	</ItemGroup>
 </Project>
