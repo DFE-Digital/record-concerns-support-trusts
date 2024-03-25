@@ -15,7 +15,7 @@ public class MaintenanceModeMiddleware
 	// Conditionally registered if maintenace mode is enabled
 	public async Task Invoke(HttpContext context)
 	{
-		if (!context.Request.Path.StartsWithSegments("/Maintenance"))
+		if (!context.Request.Path.StartsWithSegments("/Maintenance", System.StringComparison.InvariantCultureIgnoreCase))
 		{
 			context.Response.Redirect("/Maintenance");
 		}
