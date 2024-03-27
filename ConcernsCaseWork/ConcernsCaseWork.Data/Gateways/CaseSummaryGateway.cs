@@ -41,7 +41,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectOpenCaseSummary(queryBuilder).ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -63,7 +63,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectOpenCaseSummary(queryBuilder).ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -84,7 +84,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectClosedCaseSummary(queryBuilder).ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -106,7 +106,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectClosedCaseSummary(queryBuilder).ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -128,14 +128,14 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectOpenCaseSummary(queryBuilder).ToListAsync();
 
 		return (cases, recordCount);
 	}
 
 	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(IQueryable<ConcernsCase> query)
 	{
-		return query.Select(cases => new ActiveCaseSummaryVm
+		var data = query.Select(cases => new ActiveCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
 			CreatedAt = cases.CreatedAt,
@@ -181,11 +181,15 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast))
 				.ToArray()
 		});
+
+		var result = ApplySplitQuery(data);
+
+		return result;
 	}
 
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
 	{
-		return query.Select(cases => new ClosedCaseSummaryVm
+		var data = query.Select(cases => new ClosedCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
 			ClosedAt = cases.ClosedAt.Value,
@@ -227,6 +231,27 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 							.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, action.ClosedAt.Value.DateTime, CaseSummaryConstants.TrustFinancialForecast))
 							.ToArray()
 		});
+
+		var result = ApplySplitQuery(data);
+
+		return result;
+	}
+
+	private IQueryable<T> ApplySplitQuery<T>(IQueryable<T> query) where T : class
+	{
+		// In some cases getting the data as a split query can be beneficial
+		// However as the number of records grow, having to query a large amount of records multiple times can give performance bottlenecks
+		// Therefore even though we join on many tables, doing it in one hit can be faster
+		// This is always tradeoffs
+		var featureFlag = true;
+
+		if (featureFlag)
+		{
+			return query;
+		}
+
+		// Some feature flag logic here
+		return query.AsSplitQuery();
 	}
 }
 
