@@ -258,7 +258,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		// However as the number of records grow, having to query a large amount of records multiple times can give performance bottlenecks
 		// Therefore even though we join on many tables, doing it in one hit can be faster
 		// This is always tradeoffs
-		var featureFlag = true;
+		var featureFlag = false;
 
 		if (featureFlag)
 		{
