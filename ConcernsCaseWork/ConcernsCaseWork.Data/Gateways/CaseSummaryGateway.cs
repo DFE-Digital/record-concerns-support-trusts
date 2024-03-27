@@ -135,7 +135,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(IQueryable<ConcernsCase> query)
 	{
-		var data = query.Select(cases => new ActiveCaseSummaryVm
+		var filteredQuery = ApplyCaseFilter(query);
+
+		var data = filteredQuery.Select(cases => new ActiveCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
 			CreatedAt = cases.CreatedAt,
@@ -189,7 +191,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
 	{
-		var data = query.Select(cases => new ClosedCaseSummaryVm
+		var filteredQuery = ApplyCaseFilter(query);
+
+		var data = filteredQuery.Select(cases => new ClosedCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
 			ClosedAt = cases.ClosedAt.Value,
@@ -235,6 +239,17 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		var result = ApplySplitQuery(data);
 
 		return result;
+	}
+
+	private IQueryable<ConcernsCase> ApplyCaseFilter(IQueryable<ConcernsCase> query)
+	{
+		var caseIds = query.Select(c => c.Id).ToList();
+
+		return _concernsDbContext.ConcernsCase
+			.Include(cases => cases.Rating)
+			.Include(cases => cases.Status)
+			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
+			.Where(cases => caseIds.Contains(cases.Id));
 	}
 
 	private IQueryable<T> ApplySplitQuery<T>(IQueryable<T> query) where T : class
