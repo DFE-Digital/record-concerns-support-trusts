@@ -355,3 +355,9 @@ variable "mssql_managed_identity_assign_role" {
   type        = bool
   default     = false
 }
+
+variable "enable_cdn_frontdoor_health_probe" {
+  description = "Enable CDN Front Door health probe"
+  type        = bool
+  default     = false
+}
