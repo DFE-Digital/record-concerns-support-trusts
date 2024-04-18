@@ -37,6 +37,7 @@ RUN npm run build
 
 # Stage 3 - Final
 FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
+LABEL org.opencontainers.image.source=https://github.com/DFE-Digital/record-concerns-support-trusts
 
 ARG COMMIT_SHA
 
