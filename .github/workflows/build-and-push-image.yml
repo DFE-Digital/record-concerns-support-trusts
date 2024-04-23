@@ -20,7 +20,7 @@ env:
 jobs:
   set-env:
     name: Determine environment
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.var.outputs.environment }}
       branch: ${{ steps.var.outputs.branch }}
@@ -69,7 +69,7 @@ jobs:
   create-tag:
     name: Tag and release
     needs: set-env
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -103,7 +103,7 @@ jobs:
     name: Run Cypress Tests
     if: needs.set-env.outputs.environment == 'staging' || needs.set-env.outputs.environment == 'dev'
     needs: [ deploy-image, set-env ]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     environment: ${{ needs.set-env.outputs.environment }}
     defaults:
       run:
