@@ -59,9 +59,8 @@ jobs:
       docker-build-args: |
         COMMIT_SHA="${{ needs.set-env.outputs.checked-out-sha }}"
     secrets:
-      azure-acr-client-id: ${{ secrets.AZURE_ACR_CLIENTID }}
-      azure-acr-secret: ${{ secrets.AZURE_ACR_SECRET }}
-      azure-acr-url: ${{ secrets.AZURE_ACR_URL }}
+      azure-acr-name: ${{ secrets.ACR_NAME }}
+      azure-acr-credentials: ${{ secrets.ACR_CREDENTIALS }}
       azure-aca-credentials: ${{ secrets.AZURE_ACA_CREDENTIALS }}
       azure-aca-name: ${{ secrets.AZURE_ACA_NAME }}
       azure-aca-resource-group: ${{ secrets.AZURE_ACA_RESOURCE_GROUP }}
