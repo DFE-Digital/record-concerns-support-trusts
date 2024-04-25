@@ -1,8 +1,13 @@
+## 36.0.0
+
 ## 35.0.0
+
+* moved over to the shared deployment infrastructure
+* images are now in the github container registry
 
 ## 34.0.0
 
-added maintenance page for notifying users when system updates are happening
+* added maintenance page for notifying users when system updates are happening
 
 
 ## 33.0.0
