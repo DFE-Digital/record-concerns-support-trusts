@@ -20,7 +20,8 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     defaults:
-      working-directory: ConcernsCaseWork
+      run:
+        working-directory: ConcernsCaseWork
     permissions:
       actions: read
       contents: read
