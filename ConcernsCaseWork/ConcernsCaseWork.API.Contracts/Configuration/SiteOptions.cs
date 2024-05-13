@@ -5,5 +5,6 @@
 		public const string Site = "ConcernsCasework";
 
 		public string CaseArchivePassword { get; set; }
+		public string NotificationBannerMessage { get; set; }
 	}
 }
