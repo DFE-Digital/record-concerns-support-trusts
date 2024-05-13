@@ -1,5 +1,7 @@
 ## 36.0.0
 
+* added a notification banner to inform users of system changes, only displays when they are scheduled
+
 ## 35.0.0
 
 * moved over to the shared deployment infrastructure
