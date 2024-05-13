@@ -1,11 +1,14 @@
-﻿@using ConcernsCaseWork.Constants
+﻿@using ConcernsCaseWork.API.Contracts.Configuration
+@using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Hosting
+@using Microsoft.Extensions.Options
 @using NetEscapades.AspNetCore.SecurityHeaders
 
 @inject IWebHostEnvironment _env
+@inject IOptions<SiteOptions> _siteOptions
 
 <!DOCTYPE html>
 <html class="govuk-template" lang="en">
@@ -29,6 +32,8 @@
         otherCasesTabCurrent = model.OtherCasesTabActive == true ? classCurrentPage : "";
         findTrustTabCurrent = model.FindTrustTabActive == true ? classCurrentPage : "";
     }
+
+    var notificationBannerMessage = _siteOptions.Value.NotificationBannerMessage;
 }
 <head>
     @if (_env.IsProduction() && hasConsented)
@@ -89,6 +94,23 @@
     </div>
     <partial name="_EnvironmentBanner" />
     <partial name="_CookiesBanner" />
+    @if (!string.IsNullOrWhiteSpace(notificationBannerMessage))
+    {
+        <div class="govuk-extra-width-container">
+            <div class="govuk-notification-banner govuk-!-margin-bottom-0" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Important
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p>
+                        @notificationBannerMessage
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
     <header class="dfe-header" role="banner">
         <div class="dfe-width-container dfe-header__container">
             <div class="dfe-header__logo">
