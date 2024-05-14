@@ -1,3 +1,5 @@
+## 37.0.0
+
 ## 36.0.0
 
 * added a notification banner to inform users of system changes, only displays when they are scheduled
