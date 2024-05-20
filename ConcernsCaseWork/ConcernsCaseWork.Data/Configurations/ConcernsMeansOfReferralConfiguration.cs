@@ -36,6 +36,7 @@ public class ConcernsMeansOfReferralConfiguration : IEntityTypeConfiguration<Con
 				Name = "Whistleblowing",
 				Description = "Whistleblowing",
 				CreatedAt = new DateTime(2024, 5, 20),
+				UpdatedAt = new DateTime(2024, 5, 20),
 			});
 	}
 }

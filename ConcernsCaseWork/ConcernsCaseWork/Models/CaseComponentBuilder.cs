@@ -1,10 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.Utils.Extensions;
-using FluentValidation.Validators;
 
 namespace ConcernsCaseWork.Models
 {

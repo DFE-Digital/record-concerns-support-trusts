@@ -427,17 +427,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "CIU casework, self reported, regional director (RD) or other government bodies.",
+                            Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies.",
                             Name = "External",
                             UpdatedAt = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Whistleblowing",
-                            Name = "Whistleblowing",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
