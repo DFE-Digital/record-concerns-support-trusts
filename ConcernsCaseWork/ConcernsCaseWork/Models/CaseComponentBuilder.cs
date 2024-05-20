@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.Utils.Extensions;
 
 namespace ConcernsCaseWork.Models
 {
@@ -77,17 +77,20 @@ namespace ConcernsCaseWork.Models
 
 		public static RadioButtonsUiComponent BuildMeansOfReferral(Division? division, string name, int? selectedId = null)
 		{
-			var regionsGroup = Division.RegionsGroup;
-
 			var meansOfReferralValues = new[]
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = division == regionsGroup ? "Regions Group activity including SCCU, or other departmental activity" : "For example, management letter, external review of governance, ESFA activity or other departmental activity."
+					HintText = division == Division.RegionsGroup ?
+						"Regions Group activity including SCCU, or other departmental activity" : "ESFA activity or other departmental activity such as a review of trust information."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = division == regionsGroup ? "Whistleblowing, self-reported by trust, SFSO, Ofsted or other government bodies" : "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
+					HintText = GetExternalMeansOfReferralHintText(division)
+				},
+				new {
+					enumValue = MeansOfReferral.Whistleblowing,
+					HintText = GetWhistleBlowingHintText()
 				}
 			};
 
@@ -277,6 +280,26 @@ namespace ConcernsCaseWork.Models
 			});
 
 			return result;
+		}
+
+		private static string GetExternalMeansOfReferralHintText(Division? division)
+		{
+			if (division == Division.RegionsGroup)
+			{
+				return "Self-reported by trust, SFSO, Ofsted or other government bodies";
+			}
+			return
+				"External activity, for example, findings from external advisers (School Resource Management, External Review of Governance, Education Estates etc), Regional Director (RG), Ofsted or other government bodies, or self-reported.";
+		}
+
+		private static string GetWhistleBlowingHintText()
+		{
+			return @$"The Department defines a whistleblower as someone who:
+					<br />
+					<ul class=""govuk-!-margin-top-1"">
+						<li>Has privileged knowledge of the governance or administration of the institution.</li>
+						<li>Is making the disclosure in the public interest.</li>
+					</ul>";
 		}
 	}
 }

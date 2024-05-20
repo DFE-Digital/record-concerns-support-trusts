@@ -71,7 +71,7 @@
                     @if (!string.IsNullOrEmpty(radioItem.HintText))
                     {
                         <div class="govuk-hint govuk-radios__hint" data-testid="hint-text">
-                            @radioItem.HintText
+                            @Html.Raw(@radioItem.HintText)
                         </div>
                     }
 

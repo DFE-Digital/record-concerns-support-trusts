@@ -8,6 +8,9 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 		Internal = 1,
 
 		[Description("An external source")]
-		External = 2
+		External = 2,
+
+		[Description("Whistleblowing")]
+		Whistleblowing = 3
 	}
 }

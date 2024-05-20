@@ -689,15 +689,22 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		ApiResponseV2<ConcernsMeansOfReferralResponse> content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsMeansOfReferralResponse>>();
 
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-		content.Data.Count().Should().Be(2);
+		content.Data.Count().Should().Be(3);
 
-		content.Data.First().Name.Should().Be("Internal");
-		content.Data.First().Description.Should().Be("ESFA activity, TFF or other departmental activity.");
-		content.Data.First().Id.Should().BeGreaterThan(0);
+		var internalMeansOfReferral = content.Data.ElementAt(0);
+		internalMeansOfReferral.Name.Should().Be("Internal");
+		internalMeansOfReferral.Description.Should().Be("ESFA activity, TFF or other departmental activity.");
+		internalMeansOfReferral.Id.Should().Be(1);
 
-		content.Data.Last().Name.Should().Be("External");
-		content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies.");
-		content.Data.Last().Id.Should().BeGreaterThan(0);
+		var external = content.Data.ElementAt(1);
+		external.Name.Should().Be("External");
+		external.Description.Should().Be("CIU casework, self reported, regional director (RD) or other government bodies.");
+		external.Id.Should().Be(2);
+
+		var whistleblowing = content.Data.ElementAt(2);
+		whistleblowing.Name.Should().Be("Whistleblowing");
+		whistleblowing.Description.Should().Be("Whistleblowing");
+		whistleblowing.Id.Should().Be(3);
 	}
 
 	private void AddConcernsCaseToDatabase(ConcernsCase concernsCase)
