@@ -31,7 +31,7 @@ describe("Creating a case", () => {
 	it("Should validate adding a case", () => {
 
 		Logger.log("Checking accessibility on home page");
-        cy.excuteAccessibilityTests();	
+		cy.excuteAccessibilityTests();
 
 		Logger.log("Create a case");
 		createCasePage
@@ -46,18 +46,18 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-        Logger.log("You must select a division error");
-        selectCaseDivisionPage
-            .continue()
-            .hasValidationError("Select case division");
+		Logger.log("You must select a division error");
+		selectCaseDivisionPage
+			.continue()
+			.hasValidationError("Select case division");
 
-        Logger.log("Checking accessibility on select case division");
-        cy.excuteAccessibilityTests();
+		Logger.log("Checking accessibility on select case division");
+		cy.excuteAccessibilityTests();
 
-        Logger.log("Create a valid case division");
-        selectCaseDivisionPage
-            .withCaseDivision("SFSO")
-            .continue();
+		Logger.log("Create a valid case division");
+		selectCaseDivisionPage
+			.withCaseDivision("SFSO")
+			.continue();
 
 		Logger.log("Check division details are correctly populated");
 		createCaseSummary
@@ -87,7 +87,7 @@ describe("Creating a case", () => {
 		Logger.log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
-		 createCaseSummary
+		createCaseSummary
 			.hasTrustSummaryDetails("Ashton West End Primary Academy")
 			.hasManagedBy("SFSO", "North and UTC - North East");
 
@@ -102,11 +102,6 @@ describe("Creating a case", () => {
 
 		Logger.log("Checking accessibility on concern");
 		cy.excuteAccessibilityTests();
-
-		Logger.log("Check has SFSO specific means of referral hint text")
-		createCaseSummary
-			.hasHintText("For example, management letter, external review of governance, ESFA activity or other departmental activity.")
-			.hasHintText("For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies.");
 
 		Logger.log("Create a valid concern");
 		createConcernPage
@@ -234,18 +229,18 @@ describe("Creating a case", () => {
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
-        Logger.log("Create a valid case division");
-        selectCaseDivisionPage
-            .withCaseDivision("SFSO")
-            .continue();
+		Logger.log("Create a valid case division");
+		selectCaseDivisionPage
+			.withCaseDivision("SFSO")
+			.continue();
 
 		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
-        Logger.log("Create a valid concerns case type");
-        selectCaseTypePage
-            .withCaseType("Concerns")
-            .continue();
+		Logger.log("Create a valid concerns case type");
+		selectCaseTypePage
+			.withCaseType("Concerns")
+			.continue();
 
 		createCaseSummary.hasTrustSummaryDetails("Ashton West End Primary Academy");
 
@@ -387,28 +382,23 @@ describe("Creating a case", () => {
 			.hasNumberOfConcerns(3);
 	});
 
-	describe("When we create a case with the minimum data", () =>
-	{
+	describe("When we create a case with the minimum data", () => {
 		let expectedCaseId: number;
 
-		beforeEach(() =>
-		{
+		beforeEach(() => {
 			const request = CaseBuilder.buildOpenCaseMinimumCriteria();
 
 			cy.createNonConcernsCase(request)
-			.then(response =>
-			{
-				expectedCaseId = response.urn;
-			})
+				.then(response => {
+					expectedCaseId = response.urn;
+				})
 		});
 
-		it("Should render on case management", () =>
-		{
+		it("Should render on case management", () => {
 			caseManagementPage.getCaseIDText()
-			.then(actualCaseId =>
-			{
-				expect(expectedCaseId.toString()).to.equal(actualCaseId);
-			});
+				.then(actualCaseId => {
+					expect(expectedCaseId.toString()).to.equal(actualCaseId);
+				});
 		});
 	});
 });

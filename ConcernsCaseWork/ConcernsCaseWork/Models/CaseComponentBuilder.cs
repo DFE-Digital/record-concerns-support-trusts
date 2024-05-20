@@ -81,8 +81,7 @@ namespace ConcernsCaseWork.Models
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = division == Division.RegionsGroup ?
-						"Regions Group activity including SCCU, or other departmental activity" : "ESFA activity or other departmental activity such as a review of trust information."
+					HintText = GetInternalMeansOfReferralHintText(division)
 				},
 				new {
 					enumValue = MeansOfReferral.External,
@@ -282,11 +281,20 @@ namespace ConcernsCaseWork.Models
 			return result;
 		}
 
+		private static string GetInternalMeansOfReferralHintText(Division? division)
+		{
+			if (division == Division.RegionsGroup)
+			{
+				return "Regions Group activity including Schools Complaints and Compliance Unit, or other departmental activity";
+			}
+			return "ESFA activity or other departmental activity such as a review of trust information.";
+		}
+
 		private static string GetExternalMeansOfReferralHintText(Division? division)
 		{
 			if (division == Division.RegionsGroup)
 			{
-				return "Self-reported by trust, SFSO, Ofsted or other government bodies";
+				return "Self-reported by trust, ESFA, Ofsted or other government bodies";
 			}
 			return
 				"External activity, for example, findings from external advisers (School Resource Management, External Review of Governance, Education Estates etc), Regional Director (RG), Ofsted or other government bodies, or self-reported.";
