@@ -26,9 +26,16 @@ public class ConcernsMeansOfReferralConfiguration : IEntityTypeConfiguration<Con
 			{
 				Id = 2,
 				Name = "External",
-				Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies.",
+				Description = "CIU casework, self reported, regional director (RD) or other government bodies.",
 				CreatedAt = new DateTime(2022, 7, 28),
 				UpdatedAt = new DateTime(2022, 11, 09)
+			},
+			new ConcernsMeansOfReferral()
+			{
+				Id = 3,
+				Name = "Whistleblowing",
+				Description = "Whistleblowing",
+				CreatedAt = new DateTime(2024, 5, 20),
 			});
 	}
 }

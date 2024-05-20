@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConcernsCaseWork.Utils.Extensions;
+using FluentValidation.Validators;
 
 namespace ConcernsCaseWork.Models
 {
@@ -77,17 +78,21 @@ namespace ConcernsCaseWork.Models
 
 		public static RadioButtonsUiComponent BuildMeansOfReferral(Division? division, string name, int? selectedId = null)
 		{
-			var regionsGroup = Division.RegionsGroup;
-
 			var meansOfReferralValues = new[]
 			{
 				new {
 					enumValue = MeansOfReferral.Internal,
-					HintText = division == regionsGroup ? "Regions Group activity including SCCU, or other departmental activity" : "For example, management letter, external review of governance, ESFA activity or other departmental activity."
+					HintText = division == Division.RegionsGroup ?
+						"Regions Group activity including SCCU, or other departmental activity" : "For example, management letter, external review of governance, ESFA activity or other departmental activity."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = division == regionsGroup ? "Whistleblowing, self-reported by trust, SFSO, Ofsted or other government bodies" : "For example, whistleblowing, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
+					HintText = division == Division.RegionsGroup ?
+						"Self-reported by trust, SFSO, Ofsted or other government bodies" : "For example, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
+				},
+				new {
+					enumValue = MeansOfReferral.Whistleblowing,
+					HintText = GetWhistleBlowingHintText()
 				}
 			};
 
@@ -277,6 +282,16 @@ namespace ConcernsCaseWork.Models
 			});
 
 			return result;
+		}
+
+		private static string GetWhistleBlowingHintText()
+		{
+			return @$"The Department defines a whistleblower as someone who:
+					<br />
+					<ul class=""govuk-!-margin-top-1"">
+						<li>Has privileged knowledge of the governance or administration of the institution.</li>
+						<li>Is making the disclosure in the public interest.</li>
+					</ul>";
 		}
 	}
 }
