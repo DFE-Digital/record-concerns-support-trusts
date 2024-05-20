@@ -82,12 +82,11 @@ namespace ConcernsCaseWork.Models
 				new {
 					enumValue = MeansOfReferral.Internal,
 					HintText = division == Division.RegionsGroup ?
-						"Regions Group activity including SCCU, or other departmental activity" : "For example, management letter, external review of governance, ESFA activity or other departmental activity."
+						"Regions Group activity including SCCU, or other departmental activity" : "ESFA activity or other departmental activity such as a review of trust information."
 				},
 				new {
 					enumValue = MeansOfReferral.External,
-					HintText = division == Division.RegionsGroup ?
-						"Self-reported by trust, SFSO, Ofsted or other government bodies" : "For example, self-reported, SCCU, CIU casework, regional director (RD), Ofsted or other government bodies."
+					HintText = GetExternalMeansOfReferralHintText(division)
 				},
 				new {
 					enumValue = MeansOfReferral.Whistleblowing,
@@ -281,6 +280,16 @@ namespace ConcernsCaseWork.Models
 			});
 
 			return result;
+		}
+
+		private static string GetExternalMeansOfReferralHintText(Division? division)
+		{
+			if (division == Division.RegionsGroup)
+			{
+				return "Self-reported by trust, SFSO, Ofsted or other government bodies";
+			}
+			return
+				"External activity, for example, findings from external advisers (School Resource Management, External Review of Governance, Education Estates etc), Regional Director (RG), Ofsted or other government bodies, or self-reported.";
 		}
 
 		private static string GetWhistleBlowingHintText()
