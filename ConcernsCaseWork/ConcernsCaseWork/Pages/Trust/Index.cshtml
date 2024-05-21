@@ -6,41 +6,39 @@
 
 @{
     ViewData["Title"] = "Find a trust";
-	Model.FindTrustModel.Nonce = HttpContext.GetNonce();
+    Model.FindTrustModel.Nonce = HttpContext.GetNonce();
     var validationErrors = TempData["Error.Message"] as IEnumerable<string>;
     ViewBag.LayoutModel = new LayoutModel()
-    {
-        FindTrustTabActive = true
-    };
+            {
+                FindTrustTabActive = true
+            };
 }
 
-<div class="govuk-width-container">
 
-	<partial name="_BannerError" />
+<partial name="_BannerError" />
 
-	<form method="post" id="select-trust-form" novalidate>
+<form method="post" id="select-trust-form" novalidate>
 
-        <partial name="_ValidationErrors" />
-        <div class="moj-search govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                @{
-                    await Html.RenderPartialAsync("_FindTrust", Model.FindTrustModel);
-                }
-            </div>
+    <partial name="_ValidationErrors" />
+    <div class="moj-search govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @{
+                await Html.RenderPartialAsync("_FindTrust", Model.FindTrustModel);
+            }
         </div>
+    </div>
 
-        <div class="govuk-button-group">
-            <button data-prevent-double-click="true"
-                    class="govuk-button govuk-!-margin-top-6"
-                    data-module="govuk-button"
-                    type="submit"
-                    role="button"
-                    id="continue"
-                    name="action"
-                    value="continue">
-                Continue
-            </button>
-            <a data-testid="cancel-trust-search" data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
-        </div>
-    </form>
-</div>
+    <div class="govuk-button-group">
+        <button data-prevent-double-click="true"
+                class="govuk-button govuk-!-margin-top-6"
+                data-module="govuk-button"
+                type="submit"
+                role="button"
+                id="continue"
+                name="action"
+                value="continue">
+            Continue
+        </button>
+        <a data-testid="cancel-trust-search" data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
+    </div>
+</form>

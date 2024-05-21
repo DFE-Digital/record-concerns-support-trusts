@@ -7,33 +7,31 @@
     var errorDetails = GetErrorDetails();
 }
 
-<div class="govuk-width-container">
-    <div class="govuk-grid-row">
-        <div id="moj-banner-error" class="govuk-!-display-none">
-            <div class="moj-banner__message">
-                <span class="moj-banner__assistive">Warning</span>
-                <h1>
-                    Sorry, there is a problem with the service
-                </h1>
+<div class="govuk-grid-row">
+    <div id="moj-banner-error" class="govuk-!-display-none">
+        <div class="moj-banner__message">
+            <span class="moj-banner__assistive">Warning</span>
+            <h1>
+                Sorry, there is a problem with the service
+            </h1>
+        </div>
+    </div>
+    <div class="govuk-heading-l moj-banner__message">
+        <p style="white-space: pre-line" class="govuk-body">@TempData["Error.Message"]</p>
+        @if (errorDetails?.Count() > 0)
+        {
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Error details</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    @foreach (var detail in errorDetails)
+                    {
+                        <li>
+                            <span class="govuk-error-message">@detail</span>
+                        </li>
+                    }
+                </ul>
             </div>
-        </div>
-        <div class="govuk-heading-l moj-banner__message">
-            <p style="white-space: pre-line" class="govuk-body">@TempData["Error.Message"]</p>
-            @if (errorDetails?.Count() > 0)
-            {
-                <h2 class="govuk-heading-m govuk-!-margin-top-6">Error details</h2>
-                <div class="govuk-error-summary__body">
-                    <ul class="govuk-list govuk-error-summary__list">
-                        @foreach (var detail in errorDetails)
-                        {
-                            <li>
-                                <span class="govuk-error-message">@detail</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-        </div>
+        }
     </div>
 </div>
 

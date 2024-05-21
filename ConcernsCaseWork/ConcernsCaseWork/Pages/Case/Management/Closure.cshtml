@@ -9,47 +9,45 @@
     var backLink = $"/case/{Model.CaseId}/management";
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseId</span>
-                    Close case
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseId</span>
+                Close case
+            </h1>
 
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        Cases cannot be reopened after they have been closed.
-                    </strong>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Cases cannot be reopened after they have been closed.
+                </strong>
+            </div>
+
+            <form asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
+
+                <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
+
+                <div class="govuk-button-group">
+                    <!--Close case-->
+                    <button data-prevent-double-click="true" class="govuk-button" id="close-case-button" data-module="govuk-button">
+                        Close case
+                    </button>
+                    <partial name="_Cancel" />
                 </div>
 
-                <form asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
-
-                    <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
-
-                    <div class="govuk-button-group">
-                        <!--Close case-->
-                        <button data-prevent-double-click="true" class="govuk-button" id="close-case-button" data-module="govuk-button">
-                            Close case
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-
-                </form>
-            }
-        </div>
+            </form>
+        }
     </div>
 </div>

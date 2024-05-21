@@ -1,31 +1,29 @@
 ﻿@page
 @model NotFoundPageModel
 @{
-	ViewData["Title"] = "No such page";
+    ViewData["Title"] = "No such page";
 }
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+    </div>
 }
 
-<div class="govuk-width-container">
-	<div class="govuk-grid-row">
-			<div class="govuk-grid-column-two-thirds">
-				<h1 class="govuk-heading-l">Page not found</h1>
-				<p class="govuk-body">
-					If you typed the web address, check it is correct.
-				</p>
-				<p class="govuk-body">
-					If you pasted the web address, check you copied the entire address.
-				</p>
-				<p class="govuk-body">
-					If the web address is correct or you selected a link or button,
-					<br>
-					<a class="govuk-link" href="mailto:sddservicessupport@education.gov.uk">
-						Contact Concerns support
-					</a>
-				</p>
-			</div>
-		</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Page not found</h1>
+        <p class="govuk-body">
+            If you typed the web address, check it is correct.
+        </p>
+        <p class="govuk-body">
+            If you pasted the web address, check you copied the entire address.
+        </p>
+        <p class="govuk-body">
+            If the web address is correct or you selected a link or button,
+            <br>
+            <a class="govuk-link" href="mailto:sddservicessupport@education.gov.uk">
+                Contact Concerns support
+            </a>
+        </p>
+    </div>
 </div>

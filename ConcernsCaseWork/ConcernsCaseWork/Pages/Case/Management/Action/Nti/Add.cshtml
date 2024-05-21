@@ -9,120 +9,117 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                    NTI: Notice to improve
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                NTI: Notice to improve
+            </h1>
 
-                <div class="govuk-hint" id="nti-underconsideration-hint">
-                    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
-                        SFSO Knowledge: NTI Guidance
-                    </a>
+            <div class="govuk-hint" id="nti-underconsideration-hint">
+                <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+                    SFSO Knowledge: NTI Guidance
+                </a>
+            </div>
+
+            <form method="post" id="add-nti-form" novalidate>
+                @* Status *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">Current status</h2>
+                        </legend>
+                        <div class="govuk-radios" data-module="govuk-radios">
+                            @{
+                                int statusId = 0;
+                            }
+                            @foreach (var status in Model.Statuses)
+                            {
+                                var idStr = statusId++ == 0 ? "status" : "status-" + statusId;
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="@idStr" data-testid="status-@status.Text" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
+                                    <label class="govuk-label govuk-radios__label" for="@idStr">
+                                        <span>
+                                            @status.Text
+                                        </span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
                 </div>
 
-                <form method="post" id="add-nti-form" novalidate>
-                    @* Status *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Current status</h2>
-                            </legend>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                @{
-                                    int statusId = 0;
-                                }
-                                @foreach (var status in Model.Statuses)
-                                {
-                                    var idStr = statusId++ == 0 ? "status" : "status-" + statusId;
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" data-testid="status-@status.Text" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
-                                        <label class="govuk-label govuk-radios__label" for="@idStr">
-                                            <span>
-                                                @status.Text
-                                            </span>
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
+                <partial name="Components/_DateTime" model="Model.DateIssued" />
 
-                    <partial name="Components/_DateTime" model="Model.DateIssued" />
+                @* Reason *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">
+                                What are the reasons for wanting to issue a Notice To Improve?
+                            </h2>
+                        </legend>
+                        <div id="waste-hint" class="govuk-hint">
+                            Select all reasons that apply.
+                        </div>
+                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            @{
+                                int reasonId = 0;
+                            }
+                            @foreach (var reason in Model.Reasons)
+                            {
+                                var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                        @reason.Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
 
-                    @* Reason *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">
-                                    What are the reasons for wanting to issue a Notice To Improve?
-                                </h2>
-                            </legend>
-                            <div id="waste-hint" class="govuk-hint">
-                                Select all reasons that apply.
-                            </div>
-                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                @{
-                                    int reasonId = 0;
-                                }
-                                @foreach (var reason in Model.Reasons)
-                                {
-                                    var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
-                                        <label class="govuk-label govuk-checkboxes__label" for="@idStr">
-                                            @reason.Text
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    @* Conditions *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What are the conditions of the NTI: Notice to improve?</h2>
-                            </legend>
-                            <button class="govuk-button govuk-button--secondary" data-testid="edit-conditions-button" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
-                                Edit conditions
-                            </button>
-                        </fieldset>
-                    </div>
-
-                    <partial name="Components/_TextArea" model="Model.Notes" />
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-wl-button" name="action" value="@Model.ActionForContinueButton">
-                            Save and return to case overview
+                @* Conditions *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">What are the conditions of the NTI: Notice to improve?</h2>
+                        </legend>
+                        <button class="govuk-button govuk-button--secondary" data-testid="edit-conditions-button" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
+                            Edit conditions
                         </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
+                    </fieldset>
+                </div>
 
-                <script type="application/javascript" nonce="@nonce">
-                    $(function () {
-                        var submitButton = $('#add-nti-wl-button')[0];
-                        disableOnSubmit(submitButton);
-                    });
-                </script>
-            }
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-        </div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-wl-button" name="action" value="@Model.ActionForContinueButton">
+                        Save and return to case overview
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
+                    var submitButton = $('#add-nti-wl-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
+
     </div>
 </div>
-

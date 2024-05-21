@@ -186,7 +186,9 @@
     @await RenderSectionAsync("BeforeMain", required: false)
 
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-        @RenderBody()
+        <div class="dfe-width-container">
+            @RenderBody()
+        </div>
     </main>
 
     <footer class="govuk-footer " role="contentinfo">

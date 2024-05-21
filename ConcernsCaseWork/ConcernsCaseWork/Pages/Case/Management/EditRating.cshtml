@@ -5,41 +5,39 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditRatingPageModel
 
 @{
-	ViewData["Title"] = "Change risk to trust rating";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Change risk to trust rating";
+    var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    Change risk to trust rating
-                </h1>
+            <h1 class="govuk-heading-l">
+                Change risk to trust rating
+            </h1>
 
-                <form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+            <form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
-                    <partial name="Components/_RadioList" model="Model.RiskToTrust" />
+                <partial name="Components/_RadioList" model="Model.RiskToTrust" />
 
-                    <!--Button group-->
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="apply">
-                            Apply
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
-            }
-        </div>
-	</div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="apply">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
+    </div>
 </div>

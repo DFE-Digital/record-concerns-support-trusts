@@ -9,95 +9,92 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                    NTI: Warning letter
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                NTI: Warning letter
+            </h1>
 
-                <div class="govuk-hint" id="nti-underconsideration-hint">
-                    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
-                        SFSO Knowledge: NTI Guidance
-                    </a>
+            <div class="govuk-hint" id="nti-underconsideration-hint">
+                <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+                    SFSO Knowledge: NTI Guidance
+                </a>
+            </div>
+
+            <form method="post" id="add-nti-wl-form" novalidate>
+
+                <partial name="Components/_RadioList" model="Model.NtiWarningLetterStatus" />
+
+                <partial name="Components/_DateTime" model="Model.SentDate" />
+
+                @* Reason *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">Why are you issuing a warning letter?</h2>
+                        </legend>
+                        <div id="waste-hint" class="govuk-hint">
+                            Select all reasons that apply.
+                        </div>
+                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            @{
+                                int reasonId = 0;
+                            }
+                            @foreach (var reason in Model.Reasons)
+                            {
+                                var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                        @reason.Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
                 </div>
 
-                <form method="post" id="add-nti-wl-form" novalidate>
-
-                    <partial name="Components/_RadioList" model="Model.NtiWarningLetterStatus" />
-
-                    <partial name="Components/_DateTime" model="Model.SentDate" />
-
-                    @* Reason *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Why are you issuing a warning letter?</h2>
-                            </legend>
-                            <div id="waste-hint" class="govuk-hint">
-                                Select all reasons that apply.
-                            </div>
-                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                @{
-                                    int reasonId = 0;
-                                }
-                                @foreach (var reason in Model.Reasons)
-                                {
-                                    var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
-                                        <label class="govuk-label govuk-checkboxes__label" for="@idStr">
-                                            @reason.Text
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    @* Conditions *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What are the conditions of the warning letter?</h2>
-                            </legend>
-                            <button class="govuk-button govuk-button--secondary" data-testid="edit-conditions-button" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
-                                Edit conditions
-                            </button>
-                        </fieldset>
-                    </div>
-
-                    <partial name="Components/_TextArea" model="Model.Notes" />
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" role="button" id="add-nti-wl-button" name="action" value="@Model.ActionForContinueButton">
-                            Save and return to case overview
+                @* Conditions *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">What are the conditions of the warning letter?</h2>
+                        </legend>
+                        <button class="govuk-button govuk-button--secondary" data-testid="edit-conditions-button" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
+                            Edit conditions
                         </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
+                    </fieldset>
+                </div>
 
-                <script type="application/javascript" nonce="@nonce">
-                    $(function () {
-                        var submitButton = $('#add-nti-wl-button')[0];
-                        disableOnSubmit(submitButton);
-                    });
-                </script>
-            }
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-        </div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" role="button" id="add-nti-wl-button" name="action" value="@Model.ActionForContinueButton">
+                        Save and return to case overview
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
+                    var submitButton = $('#add-nti-wl-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
+
     </div>
 </div>
-

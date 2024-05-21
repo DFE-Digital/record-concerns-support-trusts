@@ -5,45 +5,43 @@
 @model EditSRMAStatusPageModel
 
 @{
-	ViewData["Title"] = "SRMA Status";
+    ViewData["Title"] = "SRMA Status";
     ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["caseUrn"]}/management/action/srma/{@RouteData.Values["srmaId"]}";
-	var nonce = HttpContext.GetNonce();
+    var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">SRMA</span>
-                    Status
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">SRMA</span>
+                Status
+            </h1>
 
-                <form method="post" id="add-srma-form" novalidate>
+            <form method="post" id="add-srma-form" novalidate>
 
-                    <partial name="Components/_RadioList" model="Model.SRMAStatus" />
+                <partial name="Components/_RadioList" model="Model.SRMAStatus" />
 
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-                            Save and return to SRMA
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                        Save and return to SRMA
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
 
-                </form>
-            }
+            </form>
+        }
 
-        </div>
     </div>
 </div>

@@ -5,42 +5,39 @@
 @model ConcernsCaseWork.Pages.Case.SelectTerritoryPageModel
 
 @{
-	ViewData["Title"] = "Choose territory";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Choose territory";
+    var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-        <partial name="_ValidationErrors" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">Create a case</span>
-        <h1 class="govuk-heading-l">SFSO territory</h1>
+    <span class="govuk-caption-l">Create a case</span>
+    <h1 class="govuk-heading-l">SFSO territory</h1>
 
-        <dl class="govuk-summary-list">
-            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
-            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
-        </dl>
+    <dl class="govuk-summary-list">
+        <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+        <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+    </dl>
 
-		<form method="post" id="case-territory-form" novalidate>
+    <form method="post" id="case-territory-form" novalidate>
 
-            <partial name="Components/_RadioList" model="Model.Territory" />
+        <partial name="Components/_RadioList" model="Model.Territory" />
 
-			<div class="govuk-button-group">
-				<button data-prevent-double-click="true" data-testid="next-step-button" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-					Next step
-				</button>
-				<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
-					Cancel
-				</a>
-			</div>
-		</form>
-	}
-
-</div>
+        <div class="govuk-button-group">
+            <button data-prevent-double-click="true" data-testid="next-step-button" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                Next step
+            </button>
+            <a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
+                Cancel
+            </a>
+        </div>
+    </form>
+}

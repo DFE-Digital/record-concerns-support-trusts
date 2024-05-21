@@ -9,61 +9,58 @@
     ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID: @RouteData.Values["urn"]</span>
-                    Financial plan
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID: @RouteData.Values["urn"]</span>
+                Financial plan
+            </h1>
 
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        This action cannot be reopened. Check the details are correct, especially dates, before closing.
-                    </strong>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    This action cannot be reopened. Check the details are correct, especially dates, before closing.
+                </strong>
+            </div>
+
+
+            <form method="post" id="close-financial-plan-form" novalidate>
+
+                <div class="govuk-hint" id="financial-plan-hint">
+                    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
+                        SFSO Knowledge: Financial Plan
+                    </a>
                 </div>
 
+                <partial name="Components/_RadioList" model="Model.FinancialPlanClosureStatus" />
 
-                <form method="post" id="close-financial-plan-form" novalidate>
+                <partial name="Components/_DateTime" model="Model.DateViablePlanReceived" />
 
-                    <div class="govuk-hint" id="financial-plan-hint">
-                        <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
-                            SFSO Knowledge: Financial Plan
-                        </a>
-                    </div>
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-                    <partial name="Components/_RadioList" model="Model.FinancialPlanClosureStatus" />
+                <p class="govuk-body">Do you still want to close this financial plan?</p>
 
-                    <partial name="Components/_DateTime" model="Model.DateViablePlanReceived" />
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-financial-plan-button">
+                        Close financial plan
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
 
-                    <partial name="Components/_TextArea" model="Model.Notes" />
+            </form>
+        }
 
-                    <p class="govuk-body">Do you still want to close this financial plan?</p>
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-financial-plan-button">
-                            Close financial plan
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-
-                </form>
-            }
-
-        </div>
     </div>
 </div>
-

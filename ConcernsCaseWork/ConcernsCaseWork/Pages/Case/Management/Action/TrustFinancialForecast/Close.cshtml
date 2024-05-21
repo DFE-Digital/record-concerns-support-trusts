@@ -3,45 +3,43 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 
 @{
-	ViewData["Title"] = "Close TFF (trust financial forecast)";
+    ViewData["Title"] = "Close TFF (trust financial forecast)";
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
+    </div>
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError" />
+<partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-				<partial name="_ValidationErrors"/>
-				<form method="post" id="close-trust-financial-forecast-form" novalidate>
-					
-                    <h1 class="govuk-heading-l">
-                        <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                        Close TFF (trust financial forecast)
-                    </h1>
-	
-					<partial name="Shared/Components/_TextArea" model="@Model.Notes"/>
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
+            <form method="post" id="close-trust-financial-forecast-form" novalidate>
 
-					<div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-trust-financial-forecast-button" name="action">
-                            Close TFF
-                        </button>
-					</div>
-				</form>
-			}
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                    Close TFF (trust financial forecast)
+                </h1>
 
-		</div>
-	</div>
+                <partial name="Shared/Components/_TextArea" model="@Model.Notes" />
+
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-trust-financial-forecast-button" name="action">
+                        Close TFF
+                    </button>
+                </div>
+            </form>
+        }
+
+    </div>
 </div>
