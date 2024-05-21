@@ -9,147 +9,143 @@
 }
 
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-            Back to case
-        </a>
-    </div>
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Decision ID @RouteData.Values["decisionId"]</span>
-                    Record decision outcome
-                </h1>
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        You must record the decision outcome to complete this page. If you are not able to record this yet, go back to <a id="back-to-case-text-link" href="/case/@RouteData.Values["urn"]/management">case overview</a>
-                    </strong>
-                </div>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Decision ID @RouteData.Values["decisionId"]</span>
+                Record decision outcome
+            </h1>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    You must record the decision outcome to complete this page. If you are not able to record this yet, go back to <a id="back-to-case-text-link" href="/case/@RouteData.Values["urn"]/management">case overview</a>
+                </strong>
+            </div>
 
-                <form method="post" id="add-decision-outcome-form" novalidate>
+            <form method="post" id="add-decision-outcome-form" novalidate>
 
-                    <input type="hidden" name="DecisionOutcome.DecisionId" value="@RouteData.Values["decisionId"]" />
-                    @Html.HiddenFor(m => m.Division)
+                <input type="hidden" name="DecisionOutcome.DecisionId" value="@RouteData.Values["decisionId"]" />
+                @Html.HiddenFor(m => m.Division)
 
-                    @* Decision Outcome *@
-                    <partial name="Components/_RadioList" model="Model.DecisionOutcomeStatus" />
+                @* Decision Outcome *@
+                <partial name="Components/_RadioList" model="Model.DecisionOutcomeStatus" />
 
-                    @if (Model.Division != API.Contracts.Case.Division.RegionsGroup)
-                    {
-                        @* Total amount approved *@
-                        <div class="govuk-form-group" data-testid="container-total-amount-approved">
-                            <fieldset class="govuk-fieldset" aria-describedby="total-amount-approved-hint">
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                    <h2 class="govuk-heading-m">What was the total amount approved? </h2>
-                                </legend>
-                                <div id="total-amount-approved-hint" class="govuk-hint">
-                                    If no amount was requested, enter £0.
-                                </div>
-                                <div class="govuk-input__wrapper">
-                                    <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                    <input class="govuk-input govuk-input--width-6"
-                                           id="total-amount-approved"
-                                           data-testid="total-amount-approved"
-                                           name="DecisionOutcome.TotalAmount"
-                                           type="text"
-                                           value="@Model.DecisionOutcome?.TotalAmount"
-                                           aria-label="What was the total amount approved">
-                                </div>
-                            </fieldset>
-                        </div>
-                    }
-
-                    @* Date decision made *@
-                    <partial name="Components/_DateTime" model="Model.DecisionMadeDate" />
-
-                    @* Decision take effect date *@
-                    <partial name="Components/_DateTime" model="Model.DecisionEffectiveFromDate" />
-
-                    @* Authoriser *@
-                    <partial name="Components/_RadioList" model="Model.DecisionOutcomeAuthorizer" />
-
-                    @* Business area consulted *@
-                    <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-business-areas">
-                        <fieldset class="govuk-fieldset">
+                @if (Model.Division != API.Contracts.Case.Division.RegionsGroup)
+                {
+                    @* Total amount approved *@
+                    <div class="govuk-form-group" data-testid="container-total-amount-approved">
+                        <fieldset class="govuk-fieldset" aria-describedby="total-amount-approved-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">
-                                    Which business areas were consulted?
-                                </h2>
+                                <h2 class="govuk-heading-m">What was the total amount approved? </h2>
                             </legend>
-
-                            @foreach (var businessAreaCheckbox in Model.BusinessAreaCheckBoxes)
-							{
-								var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
-
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input"
-                                           id="@businessAreaCheckbox"
-                                           data-testid="@businessAreaCheckbox"
-                                           name="DecisionOutcome.BusinessAreasConsulted"
-                                           type="checkbox"
-                                           value="@businessAreaCheckbox"
-                                           checked="@isChecked">
-                                    <label class="govuk-label govuk-checkboxes__label" for="@businessAreaCheckbox">
-                                        @EnumHelper.GetEnumDescription(businessAreaCheckbox)
-                                    </label>
-                                </div>
-                            }
+                            <div id="total-amount-approved-hint" class="govuk-hint">
+                                If no amount was requested, enter £0.
+                            </div>
+                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                <input class="govuk-input govuk-input--width-6"
+                                       id="total-amount-approved"
+                                       data-testid="total-amount-approved"
+                                       name="DecisionOutcome.TotalAmount"
+                                       type="text"
+                                       value="@Model.DecisionOutcome?.TotalAmount"
+                                       aria-label="What was the total amount approved">
+                            </div>
                         </fieldset>
                     </div>
+                }
 
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true"
-                                class="govuk-button govuk-!-margin-top-6"
-                                data-module="govuk-button"
-                                role="button"
-                                id="add-decision-outcome-button"
-                                data-testid="add-decision-outcome-button"
-                                name="action">
-                            @Model.SaveAndContinueButtonText
-                        </button>
+                @* Date decision made *@
+                <partial name="Components/_DateTime" model="Model.DecisionMadeDate" />
 
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
+                @* Decision take effect date *@
+                <partial name="Components/_DateTime" model="Model.DecisionEffectiveFromDate" />
 
-                <script type="application/javascript" nonce="@nonce">
-					$(function () {
-						$totalAmountRequestedObj = $('#total-amount-approved');
+                @* Authoriser *@
+                <partial name="Components/_RadioList" model="Model.DecisionOutcomeAuthorizer" />
 
-                        if ($totalAmountRequestedObj.length)
+                @* Business area consulted *@
+                <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-business-areas">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">
+                                Which business areas were consulted?
+                            </h2>
+                        </legend>
+
+                        @foreach (var businessAreaCheckbox in Model.BusinessAreaCheckBoxes)
                         {
-                            $(document).ready(function() {
-                                formatCurrency($totalAmountRequestedObj);
-                            });
+                            var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
 
-                            $totalAmountRequestedObj.focusout(function () {
-                                formatCurrency($totalAmountRequestedObj);
-                            });
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       id="@businessAreaCheckbox"
+                                       data-testid="@businessAreaCheckbox"
+                                       name="DecisionOutcome.BusinessAreasConsulted"
+                                       type="checkbox"
+                                       value="@businessAreaCheckbox"
+                                       checked="@isChecked">
+                                <label class="govuk-label govuk-checkboxes__label" for="@businessAreaCheckbox">
+                                    @EnumHelper.GetEnumDescription(businessAreaCheckbox)
+                                </label>
+                            </div>
                         }
+                    </fieldset>
+                </div>
+
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true"
+                            class="govuk-button govuk-!-margin-top-6"
+                            data-module="govuk-button"
+                            role="button"
+                            id="add-decision-outcome-button"
+                            data-testid="add-decision-outcome-button"
+                            name="action">
+                        @Model.SaveAndContinueButtonText
+                    </button>
+
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
+                    $totalAmountRequestedObj = $('#total-amount-approved');
+
+                    if ($totalAmountRequestedObj.length)
+                    {
+                        $(document).ready(function() {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
+
+                        $totalAmountRequestedObj.focusout(function () {
+                            formatCurrency($totalAmountRequestedObj);
+                        });
+                    }
 
 
-                        var submitButton = $('#add-decision-outcome-button')[0];
-                        disableOnSubmit(submitButton);
-					});
-                </script>
-            }
+                    var submitButton = $('#add-decision-outcome-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
 
-        </div>
     </div>
 </div>

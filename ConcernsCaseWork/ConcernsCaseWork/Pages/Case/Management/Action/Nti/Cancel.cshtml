@@ -10,51 +10,48 @@
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@Model.CaseUrn}/management/action/nti/{Model.NtiId}";
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-                    Cancel NTI
-                    <span class="govuk-caption-m">The NTI is no longer needed</span>
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+                Cancel NTI
+                <span class="govuk-caption-m">The NTI is no longer needed</span>
+            </h1>
 
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        This action cannot be reopened. Check the details are correct before cancelling
-                    </strong>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    This action cannot be reopened. Check the details are correct before cancelling
+                </strong>
+            </div>
+
+            <form method="post" id="cancel-nti-form" novalidate>
+
+                <partial name="Components/_TextArea" model="Model.Notes" />
+
+                <p class="govuk-body">Do you still want to cancel this NTI: Notice to Improve?</p>
+
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="cancel-nti-button">
+                        Cancel NTI: Notice To Improve
+                    </button>
+                    <partial name="_Cancel" />
                 </div>
 
-                <form method="post" id="cancel-nti-form" novalidate>
+            </form>
+        }
 
-                    <partial name="Components/_TextArea" model="Model.Notes" />
-
-                    <p class="govuk-body">Do you still want to cancel this NTI: Notice to Improve?</p>
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="cancel-nti-button">
-                            Cancel NTI: Notice To Improve
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-
-                </form>
-            }
-
-        </div>
     </div>
 </div>
-

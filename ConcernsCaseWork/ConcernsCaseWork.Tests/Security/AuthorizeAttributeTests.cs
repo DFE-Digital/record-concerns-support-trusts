@@ -19,8 +19,6 @@ namespace ConcernsCaseWork.Tests.Security
 			{
 				typeof(HealthModel),
 				typeof(ErrorPageModel),
-				typeof(LoginPageModel),
-				typeof(LogoutPageModel),
 			};
 		}
 

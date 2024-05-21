@@ -5,54 +5,52 @@
 @model ConcernsCaseWork.Pages.Case.Management.Concern.IndexPageModel
 
 @{
-	ViewData["Title"] = "Add a concern";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Add a concern";
+    var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
-	
-    <span class="govuk-caption-l">Add to case</span>
-	<h1 class="govuk-heading-l">Concerns</h1>
+<partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-        <partial name="_ValidationErrors" />
+<span class="govuk-caption-l">Add to case</span>
+<h1 class="govuk-heading-l">Concerns</h1>
 
-		<!-- Trust summary and records -->
-		<dl class="govuk-summary-list">
-			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
-			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
-		</dl>
-				
-		<!-- FORM -->
-		<form method="post" id="case-concern-form" novalidate>
-			
-            <partial name="Components/_RadioList" model="Model.ConcernType" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-            <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
+    <!-- Trust summary and records -->
+    <dl class="govuk-summary-list">
+        <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+        <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+    </dl>
 
-            <partial name="Components/_RadioList" model="Model.MeansOfReferral" />
+    <!-- FORM -->
+    <form method="post" id="case-concern-form" novalidate>
 
-			<div class="govuk-button-group">
-                <button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
-					Add concern
-				</button>
-                <partial name="_Cancel" />
-			</div>
+        <partial name="Components/_RadioList" model="Model.ConcernType" />
 
-		</form>
-		
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
-                var submitButton = $('#add-concern-button')[0];
-                disableOnSubmit(submitButton);
-			});
-		</script>
-	}
-</div>
+        <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
+
+        <partial name="Components/_RadioList" model="Model.MeansOfReferral" />
+
+        <div class="govuk-button-group">
+            <button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
+                Add concern
+            </button>
+            <partial name="_Cancel" />
+        </div>
+
+    </form>
+
+    <script type="application/javascript" nonce="@nonce">
+        $(function () {
+            var submitButton = $('#add-concern-button')[0];
+            disableOnSubmit(submitButton);
+        });
+    </script>
+}

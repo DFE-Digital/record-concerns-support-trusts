@@ -9,49 +9,47 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-    {
-        <partial name="_Error" />
-    }
-    else
-    {
-        <partial name="_ValidationErrors" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">@heading</span>
+    <span class="govuk-caption-l">@heading</span>
 
-        <h1 class="govuk-heading-l">Risk to trust</h1>
+    <h1 class="govuk-heading-l">Risk to trust</h1>
 
-        <!-- Trust details -->
-        <dl class="govuk-summary-list">
-            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
-             <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
-            <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
-        </dl>
+    <!-- Trust details -->
+    <dl class="govuk-summary-list">
+        <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+        <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+        <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+    </dl>
 
-        <!-- FORM -->
-        <form method="post" id="case-rating-form" novalidate>
+    <!-- FORM -->
+    <form method="post" id="case-rating-form" novalidate>
 
-            <!-- Q Risk rating -->
-            <div class="govuk-form-group govuk-!-margin-top-6">
-                <fieldset class="govuk-fieldset">
+        <!-- Q Risk rating -->
+        <div class="govuk-form-group govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset">
 
-                    <partial name="Components/_RadioList" model="Model.RiskToTrust" />
+                <partial name="Components/_RadioList" model="Model.RiskToTrust" />
 
-                </fieldset>
-            </div>
+            </fieldset>
+        </div>
 
-            <div class="govuk-button-group">
-                <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testId="next-step-button">
-                    Next step
-                </button>
-                <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">
-                    Cancel
-                </a>
-            </div>
+        <div class="govuk-button-group">
+            <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testId="next-step-button">
+                Next step
+            </button>
+            <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">
+                Cancel
+            </a>
+        </div>
 
-        </form>
-    }
-</div>
+    </form>
+}

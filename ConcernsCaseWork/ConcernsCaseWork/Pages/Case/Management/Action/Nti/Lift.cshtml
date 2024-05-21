@@ -8,76 +8,74 @@
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@Model.CaseUrn}/management/action/nti/{Model.NtiId}";
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                    Lift NTI
-                    <span class="govuk-caption-m">The NTI is no longer needed</span>
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                Lift NTI
+                <span class="govuk-caption-m">The NTI is no longer needed</span>
+            </h1>
 
-                <div class="govuk-warning-text">
-                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                    <strong class="govuk-warning-text__text">
-                        <span class="govuk-warning-text__assistive">Warning</span>
-                        This action cannot be reopened. Check the details are correct before lifting
-                    </strong>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    This action cannot be reopened. Check the details are correct before lifting
+                </strong>
+            </div>
+
+            <form method="post" id="lift-nti-form" novalidate>
+
+                <partial name="Components/_TextBox" model="Model.DecisionID" />
+
+                <partial name="Components/_DateTime" model="Model.DateNTILifted" />
+
+                <div class="govuk-form-group">
+                    <h2 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l">
+                            Checklist
+                        </label>
+                    </h2>
+
+                    <ul>
+                        <li class="govuk-!-margin-top-6">
+                            <span class="govuk-caption-m">Are you satisfied that all conditions have been, or will be, met?</span>
+                        </li>
+                        <li class="govuk-!-margin-top-6">
+                            <span class="govuk-caption-m">Have they complied with the financial returns?</span>
+                        </li>
+                        <li class="govuk-!-margin-top-6">
+                            <span class="govuk-caption-m">Has the Lift letter been sent to the trust?</span>
+                        </li>
+                        <li class="govuk-!-margin-top-6">
+                            <span class="govuk-caption-m">Has the Lift letter been published to GOV.UK?</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <form method="post" id="lift-nti-form" novalidate>
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-                    <partial name="Components/_TextBox" model="Model.DecisionID" />
+                <p class="govuk-body">Do you still want to lift this NTI: Notice to Improve?</p>
 
-                    <partial name="Components/_DateTime" model="Model.DateNTILifted" />
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="lift-nti-button">
+                        Lift NTI: Notice To Improve
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
 
-                    <div class="govuk-form-group">
-                        <h2 class="govuk-label-wrapper">
-                            <label class="govuk-label govuk-label--l">
-                                Checklist
-                            </label>
-                        </h2>
-
-                        <ul>
-                            <li class="govuk-!-margin-top-6">
-                                <span class="govuk-caption-m">Are you satisfied that all conditions have been, or will be, met?</span>
-                            </li>
-                            <li class="govuk-!-margin-top-6">
-                                <span class="govuk-caption-m">Have they complied with the financial returns?</span>
-                            </li>
-                            <li class="govuk-!-margin-top-6">
-                                <span class="govuk-caption-m">Has the Lift letter been sent to the trust?</span>
-                            </li>
-                            <li class="govuk-!-margin-top-6">
-                                <span class="govuk-caption-m">Has the Lift letter been published to GOV.UK?</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <partial name="Components/_TextArea" model="Model.Notes" />
-
-                    <p class="govuk-body">Do you still want to lift this NTI: Notice to Improve?</p>
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="lift-nti-button">
-                            Lift NTI: Notice To Improve
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
-            }
-
-        </div>
     </div>
 </div>

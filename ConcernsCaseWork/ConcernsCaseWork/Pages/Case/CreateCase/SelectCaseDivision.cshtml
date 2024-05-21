@@ -3,51 +3,49 @@
 @model SelectCaseDivisionPageModel
 
 @{
-	ViewData["Title"] = "New case";
+    ViewData["Title"] = "New case";
 }
 
-<div class="govuk-width-container" id="choosecasedivision">
-	
-	<partial name="_BannerError"/>
-	
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error"/>
-	}
-	else
-	{
-		<form method="post" id="choose-case-division-form" novalidate>
-			<partial name="_ValidationErrors"/>
-			<h1 class="govuk-heading-l">Create a case</h1>
-			<dl class="govuk-summary-list">
-				<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Trust</dt>
-                    <dd class="govuk-summary-list__value" data-testid="trust-summary">
-						@Model.TrustAddress.TrustName @Model.TrustAddress.County
-						<br/>
-						@Model.TrustAddress.DisplayAddress
-					</dd>
-				</div>
-			</dl>
 
-            <partial name="Components/_RadioList" model="Model.CaseDivision" />
+<partial name="_BannerError" />
 
-			<div class="govuk-button-group">
-				<button data-prevent-double-click="true"
-				        class="govuk-button govuk-!-margin-top-6"
-				        data-module="govuk-button"
-				        role="button"
-				        id="continue"
-				        name="action"
-				        value="continue">
-					Continue
-				</button>
-                <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
-                    Cancel
-                </a>
-			</div>
-		</form>
-	}
-		</div>
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <form method="post" id="choose-case-division-form" novalidate>
+        <partial name="_ValidationErrors" />
+        <h1 class="govuk-heading-l">Create a case</h1>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Trust</dt>
+                <dd class="govuk-summary-list__value" data-testid="trust-summary">
+                    @Model.TrustAddress.TrustName @Model.TrustAddress.County
+                    <br />
+                    @Model.TrustAddress.DisplayAddress
+                </dd>
+            </div>
+        </dl>
+
+        <partial name="Components/_RadioList" model="Model.CaseDivision" />
+
+        <div class="govuk-button-group">
+            <button data-prevent-double-click="true"
+                    class="govuk-button govuk-!-margin-top-6"
+                    data-module="govuk-button"
+                    role="button"
+                    id="continue"
+                    name="action"
+                    value="continue">
+                Continue
+            </button>
+            <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
+                Cancel
+            </a>
+        </div>
+    </form>
+}
 
 

@@ -4,40 +4,38 @@
 @{
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">Diagnostics</h1>
-            <div>Product Version: @Model.AssemblyFileVersion</div>
-            @if (!String.IsNullOrWhiteSpace(Model.Env))
-            {
-                <div>Environment: @Model.Env</div>
-            }
-            <div>Release Tag: @Model.ReleaseTag</div>
+<partial name="_BannerError" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Diagnostics</h1>
+        <div>Product Version: @Model.AssemblyFileVersion</div>
+        @if (!String.IsNullOrWhiteSpace(Model.Env))
+        {
+            <div>Environment: @Model.Env</div>
+        }
+        <div>Release Tag: @Model.ReleaseTag</div>
 
-            <div>Current Culture: @CultureInfo.CurrentCulture.Name</div>
-            <div>Current UI Culture: @CultureInfo.CurrentUICulture.Name</div>
-            <div>Server UTC Time: @DateTime.UtcNow</div>
+        <div>Current Culture: @CultureInfo.CurrentCulture.Name</div>
+        <div>Current UI Culture: @CultureInfo.CurrentUICulture.Name</div>
+        <div>Server UTC Time: @DateTime.UtcNow</div>
 
-            <div>Module Version Id: @Model.ModuleVersionId</div>
-            <div>Build Mode: @Model.BuildMode</div>
-            <div>Build Time: @Model.BuildTime</div>
-            <div>Build GUID: @Model.BuildGuid</div>
-            <div>Build Message: @Model.BuildMessage</div>
-            <hr />
+        <div>Module Version Id: @Model.ModuleVersionId</div>
+        <div>Build Mode: @Model.BuildMode</div>
+        <div>Build Time: @Model.BuildTime</div>
+        <div>Build GUID: @Model.BuildGuid</div>
+        <div>Build Message: @Model.BuildMessage</div>
+        <hr />
 
-            <div>
-                <p>Your Roles</p>
-                <ul>
-                    @{
-                        foreach (var role in Model.Roles)
-                        {
-                            <li>@role</li>
-                        }
+        <div>
+            <p>Your Roles</p>
+            <ul>
+                @{
+                    foreach (var role in Model.Roles)
+                    {
+                        <li>@role</li>
                     }
-                </ul>
-            </div>
+                }
+            </ul>
         </div>
     </div>
 </div>

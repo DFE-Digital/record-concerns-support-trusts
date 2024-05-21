@@ -10,141 +10,137 @@
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+        NTI: Under consideration
+    </h1>
+
+    @if (isClosed)
     {
-        <partial name="_Error" />
+        <span class="govuk-tag ragtag ragtag__grey govuk-!-margin-bottom-3">Closed</span>
     }
-    else
-    {
 
-        <h1 class="govuk-heading-l">
-            <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+    <div class="govuk-hint" id="nti-underconsideration-hint">
+        <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+            SFSO Knowledge: NTI Guidance
+        </a>
+    </div>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
             NTI: Under consideration
-        </h1>
+        </caption>
+        <tbody class="govuk-table__body">
 
-        @if (isClosed)
-        {
-            <span class="govuk-tag ragtag ragtag__grey govuk-!-margin-bottom-3">Closed</span>
-        }
+            @* Date Opened *@
+            @{
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration opened</th>
+                    <td class="govuk-table__cell" data-testid="date-opened-text">
+                        <div class="govuk-!-padding-bottom-2">
+                            <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.CreatedAt)</span>
+                        </div>
+                    </td>
+                </tr>
+            }
 
-        <div class="govuk-hint" id="nti-underconsideration-hint">
-            <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
-                SFSO Knowledge: NTI Guidance
-            </a>
-        </div>
+            @if (isClosed)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration completed</th>
+                    <td class="govuk-table__cell" data-testid="date-closed-text">
+                        <div class="govuk-!-padding-bottom-2">
+                            <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.ClosedAt.Value)</span>
+                        </div>
+                    </td>
+                </tr>
+            }
 
-        <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-                NTI: Under consideration
-            </caption>
-            <tbody class="govuk-table__body">
-
-                @* Date Opened *@
-                @{
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration opened</th>
-                        <td class="govuk-table__cell" data-testid="date-opened-text">
-                            <div class="govuk-!-padding-bottom-2">
-                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.CreatedAt)</span>
-                            </div>
-                        </td>
-                    </tr>
-                }
-
-                @if (isClosed)
+            @* Status *@
+            @{
+                if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName))
                 {
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration completed</th>
-                        <td class="govuk-table__cell" data-testid="date-closed-text">
+                        <th scope="row" class="govuk-table-case-details__header">Status</th>
+                        <td class="govuk-table__cell" data-testid="nti-status">
                             <div class="govuk-!-padding-bottom-2">
-                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.ClosedAt.Value)</span>
+                                <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
                             </div>
                         </td>
                     </tr>
                 }
+            }
 
-                @* Status *@
-                @{
-                    if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName))
-                    {
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Status</th>
-                            <td class="govuk-table__cell" data-testid="nti-status">
+            @* Reasons *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                <td class="govuk-table__cell" data-testid="nti-reasons">
+                    @{
+                        if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
+                        {
+                            foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
+                            {
                                 <div class="govuk-!-padding-bottom-2">
-                                    <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
+                                    <span>@reason.Description()</span>
                                 </div>
-                            </td>
-                        </tr>
+                            }
+
+                        }
+                        else
+                        {
+                            RenderEmptyLabel();
+                        }
                     }
-                }
+                </td>
+            </tr>
 
-                @* Reasons *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
-                    <td class="govuk-table__cell" data-testid="nti-reasons">
-                        @{
-                            if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
-                            {
-                                foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
-                                {
-                                    <div class="govuk-!-padding-bottom-2">
-                                        <span>@reason.Description()</span>
-                                    </div>
-                                }
 
-                            }
-                            else
-                            {
-                                RenderEmptyLabel();
-                            }
+
+            @* Notes *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                <td class="govuk-table__cell" data-testid="nti-notes">
+                    @{
+
+                        if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
+                        {
+                            <span class="dfe-text-area-display">@Model.NTIUnderConsiderationModel.Notes</span>
                         }
-                    </td>
-                </tr>
-
-
-
-                @* Notes *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
-                    <td class="govuk-table__cell" data-testid="nti-notes">
-                        @{
-
-                            if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
-                            {
-                                <span class="dfe-text-area-display">@Model.NTIUnderConsiderationModel.Notes</span>
-                            }
-                            else
-                            {
-                                RenderEmptyLabel();
-                            }
+                        else
+                        {
+                            RenderEmptyLabel();
                         }
-                    </td>
-                </tr>
+                    }
+                </td>
+            </tr>
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
-        @if (Model.NTIUnderConsiderationModel.IsEditable)
-        {
-            <div class="govuk-button-group">
-                <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
-                    Edit information
-                </a>
-                <a data-prevent-double-click="true" href="@Request.Path/close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="close-nti-uc-button">
-                    Close NTI: Under consideration
-                </a>
-            </div>
-        }
+    @if (Model.NTIUnderConsiderationModel.IsEditable)
+    {
+        <div class="govuk-button-group">
+            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
+                Edit information
+            </a>
+            <a data-prevent-double-click="true" href="@Request.Path/close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="close-nti-uc-button">
+                Close NTI: Under consideration
+            </a>
+        </div>
     }
-</div>
+}
 
 @functions {
     private void RenderEmptyLabel()

@@ -6,128 +6,124 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-	ViewData["Title"] = "SRMA";
+    ViewData["Title"] = "SRMA";
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError" />
+<partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
-			SRMA (School Resource Management Adviser)
-		</h1>
-        <span class="govuk-tag ragtag ragtag__grey">Closed</span>
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
+        SRMA (School Resource Management Adviser)
+    </h1>
+    <span class="govuk-tag ragtag ragtag__grey">Closed</span>
 
-		<table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-                SRMA (School Resource Management Adviser)
-            </caption>
-            <tbody class="govuk-table__body">
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+            SRMA (School Resource Management Adviser)
+        </caption>
+        <tbody class="govuk-table__body">
 
-                @* Date Opened *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date SRMA open</th>
-                    <td class="govuk-table__cell" data-testid="date-opened-text">
-                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.CreatedAt)
-                    </td>
-                    <td class="govuk-table__cell govuk-table__header__right"></td>
-                </tr>
+            @* Date Opened *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Date SRMA open</th>
+                <td class="govuk-table__cell" data-testid="date-opened-text">
+                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.CreatedAt)
+                </td>
+                <td class="govuk-table__cell govuk-table__header__right"></td>
+            </tr>
 
-                @* Date Closed *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date SRMA closed</th>
-                    <td class="govuk-table__cell" data-testid="date-closed-text">
-                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.ClosedAt.Value)
-                    </td>
-                    <td class="govuk-table__cell govuk-table__header__right"></td>
-                </tr>
+            @* Date Closed *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Date SRMA closed</th>
+                <td class="govuk-table__cell" data-testid="date-closed-text">
+                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.ClosedAt.Value)
+                </td>
+                <td class="govuk-table__cell govuk-table__header__right"></td>
+            </tr>
 
-                @* Status *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Status</th>
-                    <td class="govuk-table__cell" data-testid="status">
-                        @EnumHelper.GetEnumDescription(Model.SRMAModel.Status)
-                    </td>
-                </tr>
+            @* Status *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Status</th>
+                <td class="govuk-table__cell" data-testid="status">
+                    @EnumHelper.GetEnumDescription(Model.SRMAModel.Status)
+                </td>
+            </tr>
 
-                @* Date offered *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
-                    <td class="govuk-table__cell" data-testid="date-trust-contacted">
-                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered)
-                    </td>
-                </tr>
+            @* Date offered *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
+                <td class="govuk-table__cell" data-testid="date-trust-contacted">
+                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered)
+                </td>
+            </tr>
 
-                @* Reason *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">
-                        Reason
-                    </th>
-                    <td class="govuk-table__cell" data-testid="reason">
-                        @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason)
-                    </td>
-                </tr>
+            @* Reason *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">
+                    Reason
+                </th>
+                <td class="govuk-table__cell" data-testid="reason">
+                    @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason)
+                </td>
+            </tr>
 
-                @* Date accepted *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">
-                        Date accepted
-                    </th>
-                    <td class="govuk-table__cell" data-testid="date-accepted">
-                        @if (Model.SRMAModel.DateAccepted.HasValue)
-                        {
-                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateAccepted.Value)
-                        }
-                    </td>
-                </tr>
+            @* Date accepted *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">
+                    Date accepted
+                </th>
+                <td class="govuk-table__cell" data-testid="date-accepted">
+                    @if (Model.SRMAModel.DateAccepted.HasValue)
+                    {
+                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateAccepted.Value)
+                    }
+                </td>
+            </tr>
 
-                @* Dates of visit *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">
-                        Dates of visit
-                    </th>
-                    <td class="govuk-table__cell" data-testid="date-of-visit">
-                        @if (Model.SRMAModel.DateVisitStart.HasValue && Model.SRMAModel.DateVisitEnd.HasValue)
-                        {
-                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd.Value)
-                        }
-                    </td>
-                </tr>
+            @* Dates of visit *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">
+                    Dates of visit
+                </th>
+                <td class="govuk-table__cell" data-testid="date-of-visit">
+                    @if (Model.SRMAModel.DateVisitStart.HasValue && Model.SRMAModel.DateVisitEnd.HasValue)
+                    {
+                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd.Value)
+                    }
+                </td>
+            </tr>
 
 
-                @* Date report sent *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">
-                        Date report sent to trust
-                    </th>
-                    <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
-                        @if (Model.SRMAModel.DateReportSentToTrust.HasValue)
-                        {
-                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateReportSentToTrust.Value)
-                        }
-                    </td>
-                </tr>
+            @* Date report sent *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">
+                    Date report sent to trust
+                </th>
+                <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
+                    @if (Model.SRMAModel.DateReportSentToTrust.HasValue)
+                    {
+                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateReportSentToTrust.Value)
+                    }
+                </td>
+            </tr>
 
-                @* Notes *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
-                    <td class="govuk-table__cell" data-testid="notes">
-                        <span class="dfe-text-area-display">@Model.SRMAModel.Notes</span>
-                    </td>
-                </tr>
-            </tbody>
-		</table>
-	}
-</div>
+            @* Notes *@
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                <td class="govuk-table__cell" data-testid="notes">
+                    <span class="dfe-text-area-display">@Model.SRMAModel.Notes</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

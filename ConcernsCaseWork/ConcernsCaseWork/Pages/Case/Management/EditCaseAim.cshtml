@@ -5,43 +5,41 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditCaseAimPageModel
 
 @{
-	ViewData["Title"] = "Edit case aim";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Edit case aim";
+    var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
-	
-	<div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+<partial name="_BannerError" />
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-            	<partial name="_Error"/>
-            }
-			else
-			{
-                <partial name="_ValidationErrors" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
 
-                <h1 class="govuk-heading-l">
-                    Edit case aim
-                </h1>
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-				<form asp-page-handler="editCaseAim" method="post" id="case-aim-form" novalidate>
+            <h1 class="govuk-heading-l">
+                Edit case aim
+            </h1>
 
-                    <partial name="Components/_TextArea" model="Model.CaseAim" />
+            <form asp-page-handler="editCaseAim" method="post" id="case-aim-form" novalidate>
 
-					<!--Button group-->
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="apply">
-							Apply
-						</button>
-						<partial name="_Cancel"/>
-					</div>
+                <partial name="Components/_TextArea" model="Model.CaseAim" />
 
-				</form>
-			}
-		</div>
-	</div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="apply">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+
+            </form>
+        }
+    </div>
 </div>

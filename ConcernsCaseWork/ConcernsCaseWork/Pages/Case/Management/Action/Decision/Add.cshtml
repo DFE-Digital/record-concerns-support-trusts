@@ -13,205 +13,201 @@
 }
 
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
-    </div>
+    <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-                    Decision
-                </h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+                Decision
+            </h1>
 
-                <form method="post" id="add-decision-form" novalidate>
+            <form method="post" id="add-decision-form" novalidate>
 
-                    <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
-                    @Html.HiddenFor(m => m.Division)
+                <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
+                @Html.HiddenFor(m => m.Division)
 
-                    <partial name="Components/_RadioList" model="Model.HasCrmCase" />
+                <partial name="Components/_RadioList" model="Model.HasCrmCase" />
 
-                    @* CRM Enquiry Number *@
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <div id="crm-enquiry-hint" class="govuk-hint">
-                                If yes, paste the CRM enquiry number below. If no, leave the field blank.
-                            </div>
+                @* CRM Enquiry Number *@
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <div id="crm-enquiry-hint" class="govuk-hint">
+                            If yes, paste the CRM enquiry number below. If no, leave the field blank.
+                        </div>
 
-                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber" aria-label="Is this decision linked to a CRM case">
-                        </fieldset>
-                    </div>
+                        <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber" aria-label="Is this decision linked to a CRM case">
+                    </fieldset>
+                </div>
 
-                    @if (isNotRegionsGroupCase)
-                    {
-                        <partial name="Components/_RadioList" model="Model.RetrospectiveApproval" />
-                    }
+                @if (isNotRegionsGroupCase)
+                {
+                    <partial name="Components/_RadioList" model="Model.RetrospectiveApproval" />
+                }
 
-                    <partial name="Components/_RadioList" model="Model.IsSubmissionRequired" />
+                <partial name="Components/_RadioList" model="Model.IsSubmissionRequired" />
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="submission-required-link">
-                            If yes, paste in a link to the submission document on Sharepoint.
-                        </label>
-                        <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
-                    </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="submission-required-link">
+                        If yes, paste in a link to the submission document on Sharepoint.
+                    </label>
+                    <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink" aria-label="If submission is required, paste in a link to the submission document on Sharepoint">
+                </div>
 
-                    @if (isNotRegionsGroupCase)
-                    {
-                        @* Date request received *@
-                        <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
-                    }
+                @if (isNotRegionsGroupCase)
+                {
+                    @* Date request received *@
+                    <partial name="Components/_DateTime" model="Model.ReceivedRequestDate" />
+                }
 
-                    @* Types *@
-                    <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-decision-types">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What type of decision is it?</h2>
-                            </legend>
+                @* Types *@
+                <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-decision-types">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">What type of decision is it?</h2>
+                        </legend>
 
-                            <div id="decision-type-hint" class="govuk-hint">
-                                Select all types that apply. Find more information on decision types at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Home.aspx" target="_blank">SFSO Knowledge (opens in a new tab)</a>.
-                            </div>
-                            <br>
+                        <div id="decision-type-hint" class="govuk-hint">
+                            Select all types that apply. Find more information on decision types at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Home.aspx" target="_blank">SFSO Knowledge (opens in a new tab)</a>.
+                        </div>
+                        <br>
 
-                            @foreach (var decisionTypeQuestion in Model.DecisionTypeQuestions)
-                            {
-                                <div class="govuk-checkboxes__item">
+                        @foreach (var decisionTypeQuestion in Model.DecisionTypeQuestions)
+                        {
+                            <div class="govuk-checkboxes__item">
 
-                                    <input type="hidden" name="DecisionTypeQuestions.Index" value="@decisionTypeQuestion.Id">
-                                    <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
-                                    <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
-                                        @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
-                                        <div id="@decisionTypeQuestion.Id-hint" class="govuk-hint">
-                                            @decisionTypeQuestion.Hint
-                                        </div>
-                                    </label>
+                                <input type="hidden" name="DecisionTypeQuestions.Index" value="@decisionTypeQuestion.Id">
+                                <input class="govuk-checkboxes__input" id="@decisionTypeQuestion.Id" name="@decisionTypeQuestion.Name" type="checkbox" value="@decisionTypeQuestion.Id" checked="@decisionTypeQuestion.IsChecked">
+                                <label class="govuk-label govuk-checkboxes__label" for="@decisionTypeQuestion.Id">
+                                    @EnumHelper.GetEnumDescription(decisionTypeQuestion.Id)
+                                    <div id="@decisionTypeQuestion.Id-hint" class="govuk-hint">
+                                        @decisionTypeQuestion.Hint
+                                    </div>
+                                </label>
 
-                                    @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
-                                    {
-                                        <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
+                                {
+                                    <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
+                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                            <h2 class="govuk-heading-s">
+                                                Has drawdown facility been agreed?
+                                            </h2>
+                                        </legend>
+                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
+
+                                        @if (decisionTypeQuestion.FrameworkCategory != null)
+                                        {
                                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                                 <h2 class="govuk-heading-s">
-                                                    Has drawdown facility been agreed?
+                                                    What is the framework category?
                                                 </h2>
                                             </legend>
-                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
+                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                        }
+                                    </div>
+                                }
 
-                                            @if (decisionTypeQuestion.FrameworkCategory != null)
-                                            {
-                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                    <h2 class="govuk-heading-s">
-                                                        What is the framework category?
-                                                    </h2>
-                                                </legend>
-                                                <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
-                                            }
-                                        </div>
-                                    }
+                            </div>
+                        }
+                    </fieldset>
+                </div>
 
-                                </div>
-                            }
+                @if (isNotRegionsGroupCase)
+                {
+                    @* Total amount requested *@
+                    <div class="govuk-form-group" data-testid="container-total-amount-requested">
+                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What was the total amount requested? </h2>
+                            </legend>
+                            <div id="total-amount-request-hint" class="govuk-hint">
+                                If no amount was requested, enter £0.
+                            </div>
+                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                <input class="govuk-input govuk-input--width-6"
+                                       id="total-amount-request"
+                                       name="Decision.TotalAmountRequested"
+                                       type="text"
+                                       value="@Model.Decision.TotalAmountRequested"
+                                       aria-label="What was the total amount requested">
+                            </div>
                         </fieldset>
                     </div>
+                }
 
-                    @if (isNotRegionsGroupCase)
-                    {
-                        @* Total amount requested *@
-                        <div class="govuk-form-group" data-testid="container-total-amount-requested">
-                            <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                    <h2 class="govuk-heading-m">What was the total amount requested? </h2>
-                                </legend>
-                                <div id="total-amount-request-hint" class="govuk-hint">
-                                    If no amount was requested, enter £0.
-                                </div>
-                                <div class="govuk-input__wrapper">
-                                    <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                    <input class="govuk-input govuk-input--width-6"
-                                           id="total-amount-request"
-                                           name="Decision.TotalAmountRequested"
-                                           type="text"
-                                           value="@Model.Decision.TotalAmountRequested"
-                                           aria-label="What was the total amount requested">
-                                </div>
-                            </fieldset>
-                        </div>
-                    }
-  
-                    @* Notes *@
-                    <partial name="Components/_TextArea" model="Model.Notes" />
+                @* Notes *@
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
-                            @Model.SaveAndContinueButtonText
-                        </button>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
+                        @Model.SaveAndContinueButtonText
+                    </button>
 
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
 
-                <script type="application/javascript" nonce="@nonce">
-                    $(function () {
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
 
-                        function onSubQuestionSelected(type) {
+                    function onSubQuestionSelected(type) {
 
-                            $(`#${type}`).on('click', function () {
-                                hideIfNotSelected(type);
-                            });
-
+                        $(`#${type}`).on('click', function () {
                             hideIfNotSelected(type);
+                        });
+
+                        hideIfNotSelected(type);
+                    }
+
+                    function hideIfNotSelected(type) {
+                        let isChecked = $(`#${type}`).is(":checked");
+                        let inputElement = $(`#${type}-subquestion-container :input`);
+                        inputElement.prop('disabled', !isChecked);
+                        inputElement.prop('aria-disabled', !isChecked);
+                        let subContainer = $(`#${type}-subquestion-container`);
+                        subContainer.removeClass(['govuk-radios__conditional--disabled']);
+
+                        if (!isChecked) {
+                            inputElement.prop('checked', false);
+                            subContainer.addClass('govuk-radios__conditional--disabled');
                         }
+                    }
 
-                        function hideIfNotSelected(type) {
-                            let isChecked = $(`#${type}`).is(":checked");
-                            let inputElement = $(`#${type}-subquestion-container :input`);
-                            inputElement.prop('disabled', !isChecked);
-                            inputElement.prop('aria-disabled', !isChecked);
-                            let subContainer = $(`#${type}-subquestion-container`);
-                            subContainer.removeClass(['govuk-radios__conditional--disabled']);
+                    onSubQuestionSelected("NonRepayableFinancialSupport");
+                    onSubQuestionSelected("RepayableFinancialSupport");
+                    onSubQuestionSelected("ShortTermCashAdvance");
 
-                            if (!isChecked) {
-                                inputElement.prop('checked', false);
-                                subContainer.addClass('govuk-radios__conditional--disabled');
-                            }
-                        }
+                    let totalAmountRequestedElement = $('#total-amount-request');
 
-                        onSubQuestionSelected("NonRepayableFinancialSupport");
-                        onSubQuestionSelected("RepayableFinancialSupport");
-                        onSubQuestionSelected("ShortTermCashAdvance");
+                    if (totalAmountRequestedElement.length)
+                    {
+                        $(document).ready(function() {
+                            formatCurrency(totalAmountRequestedElement);
+                        });
 
-                        let totalAmountRequestedElement = $('#total-amount-request');
+                        totalAmountRequestedElement.focusout(function () {
+                            formatCurrency(totalAmountRequestedElement);
+                        });
+                    }
 
-                        if (totalAmountRequestedElement.length) 
-                        {
-                            $(document).ready(function() {
-                                formatCurrency(totalAmountRequestedElement);
-                            });
+                    var submitButton = $('#add-decision-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
 
-                            totalAmountRequestedElement.focusout(function () {
-                                formatCurrency(totalAmountRequestedElement);
-                            });
-                        }
-
-                        var submitButton = $('#add-decision-button')[0];
-                        disableOnSubmit(submitButton);
-                    });
-                </script>
-            }
-
-        </div>
     </div>
 </div>

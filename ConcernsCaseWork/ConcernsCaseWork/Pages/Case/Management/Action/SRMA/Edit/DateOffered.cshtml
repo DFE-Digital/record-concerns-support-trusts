@@ -12,40 +12,38 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">SRMA</span>
-					Date trust was contacted
-				</h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">SRMA</span>
+                Date trust was contacted
+            </h1>
 
-				<form method="post" id="change-offeredDate-form" novalidate>
+            <form method="post" id="change-offeredDate-form" novalidate>
 
-                    <partial name="Components/_DateTime" model="Model.DateOffered" />
+                <partial name="Components/_DateTime" model="Model.DateOffered" />
 
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-							Save and return to SRMA
-						</button>
-						<partial name="_Cancel" />
-					</div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                        Save and return to SRMA
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
 
-				</form>
-			}
+            </form>
+        }
 
-		</div>
     </div>
 </div>

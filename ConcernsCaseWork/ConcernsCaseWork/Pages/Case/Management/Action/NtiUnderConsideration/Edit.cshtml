@@ -8,69 +8,66 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-	            <partial name="Shared/_ValidationErrors" />
-	            
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="Shared/_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                    NTI: Under consideration
-                </h1>
 
-                <form method="post" id="add-nti-uc-form" novalidate>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                NTI: Under consideration
+            </h1>
 
-                    @* Status *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What are the reasons for considering a Notice To Improve</h2>
-                            </legend>
-                            <div id="waste-hint" class="govuk-hint">
-                                Select all reasons that apply.
-                            </div>
-                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                @{
-                                    int id = 0;
-                                }
-                                @foreach (var reason in Model.NTIReasonsToConsiderForUI)
-                                {
-                                    var idStr = id++ == 0 ? "reason" : "reason-" + id;
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
-                                        <label class="govuk-label govuk-checkboxes__label" for="@idStr">
-                                            @reason.Text
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
+            <form method="post" id="add-nti-uc-form" novalidate>
 
-                    <partial name="Components/_TextArea" model="Model.Notes" />
-                    
+                @* Status *@
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">What are the reasons for considering a Notice To Improve</h2>
+                        </legend>
+                        <div id="waste-hint" class="govuk-hint">
+                            Select all reasons that apply.
+                        </div>
+                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            @{
+                                int id = 0;
+                            }
+                            @foreach (var reason in Model.NTIReasonsToConsiderForUI)
+                            {
+                                var idStr = id++ == 0 ? "reason" : "reason-" + id;
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                        @reason.Text
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
 
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-uc-button">
-                            Save and return to NTI: Under consideration
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-                </form>
-            }
 
-        </div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-uc-button">
+                        Save and return to NTI: Under consideration
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+
+            </form>
+        }
+
     </div>
 </div>
-

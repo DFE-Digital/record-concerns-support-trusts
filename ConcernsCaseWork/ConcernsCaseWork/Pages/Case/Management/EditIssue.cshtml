@@ -5,43 +5,41 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditIssuePageModel
 
 @{
-	ViewData["Title"] = "Edit issue";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Edit issue";
+    var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error"/>
-			}
-			else
-			{
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l">
-                    Edit case issue
-                </h1>
+            <h1 class="govuk-heading-l">
+                Edit case issue
+            </h1>
 
-				<form asp-page-handler="editIssue" method="post" id="issue-form" novalidate>
+            <form asp-page-handler="editIssue" method="post" id="issue-form" novalidate>
 
-                    <partial name="Components/_TextArea" model="Model.Issue" />
+                <partial name="Components/_TextArea" model="Model.Issue" />
 
-					<!--Button group-->
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="apply">
-							Apply
-						</button>
-						<partial name="_Cancel"/>
-					</div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="apply">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
 
-				</form>
-			}
-		</div>
-	</div>
+            </form>
+        }
+    </div>
 </div>

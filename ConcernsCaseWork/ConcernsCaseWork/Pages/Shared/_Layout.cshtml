@@ -183,14 +183,21 @@
     </header>
 
     @await RenderSectionAsync("Scripts", required: false)
-    @await RenderSectionAsync("BeforeMain", required: false)
+
+    @await RenderSectionAsync("SubHeading", required: false)
+
+    <div class="dfe-width-container">
+        @await RenderSectionAsync("BeforeMain", required: false)
+    </div>
 
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-        @RenderBody()
+        <div class="dfe-width-container">
+            @RenderBody()
+        </div>
     </main>
 
     <footer class="govuk-footer " role="contentinfo">
-        <div class="govuk-width-container">
+        <div class="dfe-width-container">
             <div class="govuk-footer__meta">
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
                     <h2 class="govuk-heading-m">Get support</h2>

@@ -12,64 +12,62 @@
 
     var heading = caseExists ? "Add to case" : "Create a case";
 
-	var nonce = HttpContext.GetNonce();
+    var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-        <partial name="_ValidationErrors" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">@heading</span>
-		
-        <h1 class="govuk-heading-l">Add concern</h1>
+    <span class="govuk-caption-l">@heading</span>
 
-		<!-- Trust summary and records -->
-		<dl class="govuk-summary-list">
-			<div class="govuk-summary-list__row">
-            	<dt class="govuk-summary-list__key">Trust</dt>
-            	<dd class="govuk-summary-list__value" data-testid="trust-summary">
-	                @Model.TrustAddress.TrustName @Model.TrustAddress.County
-            		<br/>
-            		@Model.TrustAddress.DisplayAddress
-            	</dd>
-            </div>
+    <h1 class="govuk-heading-l">Add concern</h1>
 
-            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
-			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
-		</dl>
-		
-		<!-- FORM -->
-		<form method="post" id="case-concern-form" novalidate>
+    <!-- Trust summary and records -->
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Trust</dt>
+            <dd class="govuk-summary-list__value" data-testid="trust-summary">
+                @Model.TrustAddress.TrustName @Model.TrustAddress.County
+                <br />
+                @Model.TrustAddress.DisplayAddress
+            </dd>
+        </div>
 
+        <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+        <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+    </dl>
 
-            <partial name="Components/_RadioList" model="Model.ConcernType" />
-            <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
-            <partial name="Components/_RadioList" model="Model.MeansOfReferral" />
+    <!-- FORM -->
+    <form method="post" id="case-concern-form" novalidate>
 
 
-			<div class="govuk-button-group">
-				<button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
-					Add concern
-				</button>
-				<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button" data-testid="cancel-button">
-					Cancel
-				</a>
-			</div>
+        <partial name="Components/_RadioList" model="Model.ConcernType" />
+        <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
+        <partial name="Components/_RadioList" model="Model.MeansOfReferral" />
 
-		</form>
-		
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
-                var submitButton = $('#add-concern-button')[0];
-                disableOnSubmit(submitButton);
-			});
-		</script>
-	}
-</div>
+
+        <div class="govuk-button-group">
+            <button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
+                Add concern
+            </button>
+            <a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button" data-testid="cancel-button">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+
+    <script type="application/javascript" nonce="@nonce">
+        $(function () {
+            var submitButton = $('#add-concern-button')[0];
+            disableOnSubmit(submitButton);
+        });
+    </script>
+}

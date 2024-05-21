@@ -13,71 +13,69 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
-    <span class="govuk-caption-l">@heading</span>
+<partial name="_BannerError" />
+<span class="govuk-caption-l">@heading</span>
 
-    <h1 class="govuk-heading-l">Concern details</h1>
+<h1 class="govuk-heading-l">Concern details</h1>
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-    {
-        <partial name="_Error" />
-    }
-    else
-    {
-        <partial name="_ValidationErrors" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-        <!-- Trust summary and records -->
-        <dl class="govuk-summary-list">
-            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
-            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
-            <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
-            <partial name="_RatingSummary" model="Model.CreateCaseModel" />
-        </dl>
+    <!-- Trust summary and records -->
+    <dl class="govuk-summary-list">
+        <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+        <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+        <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+        <partial name="_RatingSummary" model="Model.CreateCaseModel" />
+    </dl>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <!-- FORM -->
-                <form method="post" id="case-details-form" novalidate>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <!-- FORM -->
+            <form method="post" id="case-details-form" novalidate>
 
-                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Add concern details</h2>
-                    <div class="govuk-hint">
-                        <p>You can complete the other sections later, but you must give the issue in order to create the case.</p>
-                        <p>If the case has multiple concerns, give details of each one.</p>
-                        <p>The information in these fields will be used in risk review meetings with senior staff.</p>
-                        <p>Do not include personal information about anybody involved in a case.</p>
-                    </div>
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">Add concern details</h2>
+                <div class="govuk-hint">
+                    <p>You can complete the other sections later, but you must give the issue in order to create the case.</p>
+                    <p>If the case has multiple concerns, give details of each one.</p>
+                    <p>The information in these fields will be used in risk review meetings with senior staff.</p>
+                    <p>Do not include personal information about anybody involved in a case.</p>
+                </div>
 
-                    <partial name="Components/_TextArea" model="Model.Issue" />
+                <partial name="Components/_TextArea" model="Model.Issue" />
 
-                    <partial name="Components/_TextArea" model="Model.CurrentStatus" />
+                <partial name="Components/_TextArea" model="Model.CurrentStatus" />
 
-                    <partial name="Components/_TextArea" model="Model.CaseAim" />
+                <partial name="Components/_TextArea" model="Model.CaseAim" />
 
-                    <partial name="Components/_TextArea" model="Model.DeEscalationPoint" />
+                <partial name="Components/_TextArea" model="Model.DeEscalationPoint" />
 
-                    <partial name="Components/_TextArea" model="Model.NextSteps" />
+                <partial name="Components/_TextArea" model="Model.NextSteps" />
 
-                    <partial name="Components/_TextArea" model="Model.CaseHistory" />
+                <partial name="Components/_TextArea" model="Model.CaseHistory" />
 
-                    <div class="govuk-button-group">
-                        <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-                            @buttonName
-                        </button>
+                <div class="govuk-button-group">
+                    <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                        @buttonName
+                    </button>
 
-                        <a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
-                            Cancel
-                        </a>
-                    </div>
+                    <a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
+                        Cancel
+                    </a>
+                </div>
 
-                </form>
-            </div>
+            </form>
         </div>
-        <script type="application/javascript" nonce="@nonce">
-            $(function () {
-                var submitButton = $('#create-case-button')[0];
-                disableOnSubmit(submitButton);
-            });
-        </script>
-    }
-</div>
+    </div>
+    <script type="application/javascript" nonce="@nonce">
+        $(function () {
+            var submitButton = $('#create-case-button')[0];
+            disableOnSubmit(submitButton);
+        });
+    </script>
+}

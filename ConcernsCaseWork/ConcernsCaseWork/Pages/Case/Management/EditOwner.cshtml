@@ -4,62 +4,60 @@
 @using System.ComponentModel.DataAnnotations;
 @model ConcernsCaseWork.Pages.Case.Management.EditOwnerPageModel
 @{
-	var nonce = HttpContext.GetNonce();
+    var nonce = HttpContext.GetNonce();
 
-	var errors = ViewData.ModelState.ToValidationResult();
+    var errors = ViewData.ModelState.ToValidationResult();
 
-	ViewData["Title"] = "Change owner";
+    ViewData["Title"] = "Change owner";
 
-	var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
-	var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
+    var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
+    var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
 }
 
-<div class="govuk-width-container">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <form method="post" id="edit-case-owner-form" novalidate>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <form method="post" id="edit-case-owner-form" novalidate>
 
-                    <partial name="_ValidationErrors" />
+                <partial name="_ValidationErrors" />
 
-                    <h1 class="govuk-heading-l" name="caseID">
-                        <span class="govuk-caption-m">Case ID</span>
-                        @Model.Urn
+                <h1 class="govuk-heading-l" name="caseID">
+                    <span class="govuk-caption-m">Case ID</span>
+                    @Model.Urn
+                </h1>
+
+                <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
+                    <h1 class="govuk-heading-l">
+                        Change case owner
                     </h1>
+                    <div class="govuk-hint">Find and select the email address of the person you want to assign the case to</div>
 
-                    <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
-                        <h1 class="govuk-heading-l">
-                            Change case owner
-                        </h1>
-                        <div class="govuk-hint">Find and select the email address of the person you want to assign the case to</div>
+                    <partial name="Components/_ValidationErrorDetail" model="@errors" />
 
-                        <partial name="Components/_ValidationErrorDetail" model="@errors" />
+                    <label for="case-owner-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                    <div id="autocomplete-container" class="@inputErrorClass"></div>
 
-                        <label for="case-owner-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
-                        <div id="autocomplete-container" class="@inputErrorClass"></div>
+                    <div class="ccms-loader govuk-!-display-none"></div>
 
-                        <div class="ccms-loader govuk-!-display-none"></div>
+                    <input type="hidden" id="selected-owner" name="selectedOwner" required />
+                    <input type="hidden" id="current-owner" name="currentOwner" value="@Model.CurrentCaseOwner" />
+                    <input type="hidden" id="in-list" name="valueInList" value="-1" />
+                </div>
 
-                        <input type="hidden" id="selected-owner" name="selectedOwner" required />
-                        <input type="hidden" id="current-owner" name="currentOwner" value="@Model.CurrentCaseOwner" />
-                        <input type="hidden" id="in-list" name="valueInList" value="-1" />
-                    </div>
-
-                    <!--Button group-->
-                    <div class="govuk-button-group govuk-!-margin-top-3">
-                        <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
-                            Continue
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
-            }
-        </div>
+                <!--Button group-->
+                <div class="govuk-button-group govuk-!-margin-top-3">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
+                        Continue
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
     </div>
 </div>
 

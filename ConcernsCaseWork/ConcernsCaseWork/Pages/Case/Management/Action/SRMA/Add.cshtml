@@ -5,55 +5,52 @@
 
 @{
     ViewData["Title"] = "Add SRMA";
-	ViewData["CancelBackLink"] = $"/case/{@Model.CaseUrn}/management";
+    ViewData["CancelBackLink"] = $"/case/{@Model.CaseUrn}/management";
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-                <partial name="_ValidationErrors" />
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">Add to case</span>
-					SRMA (School Resource Management Adviser)
-				</h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Add to case</span>
+                SRMA (School Resource Management Adviser)
+            </h1>
 
-				<form method="post" id="add-srma-form" novalidate>
+            <form method="post" id="add-srma-form" novalidate>
 
-                    <partial name="Components/_RadioList" model="Model.SRMAStatus" />
+                <partial name="Components/_RadioList" model="Model.SRMAStatus" />
 
-                    <partial name="Components/_DateTime" model="Model.DateOffered" />
+                <partial name="Components/_DateTime" model="Model.DateOffered" />
 
-                    <partial name="Components/_TextArea" model="Model.Notes" />
+                <partial name="Components/_TextArea" model="Model.Notes" />
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" role="button" id="add-srma-button">
-							Save and return to case overview
-						</button>
-						<partial name="_Cancel" />
-					</div>
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" role="button" id="add-srma-button">
+                        Save and return to case overview
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
 
-				</form>
+            </form>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-                        var submitButton = $('#add-srma-button')[0];
-                        disableOnSubmit(submitButton);
-					});
-				</script>
-			}
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
+                    var submitButton = $('#add-srma-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
 
-		</div>
     </div>
 </div>
-

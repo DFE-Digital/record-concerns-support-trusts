@@ -5,74 +5,72 @@
 @model ConcernsCaseWork.Pages.Case.Management.Concern.EditRatingPageModel
 
 @{
-	ViewData["Title"] = "Edit concern";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Edit concern";
+    var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column">
 
-			<h1 class="govuk-heading-l">
-				<span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
-				Edit concern
-			</h1>
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
+            Edit concern
+        </h1>
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-            	<partial name="_Error"/>
-            }
-			else
-			{
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
 
-				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+            <dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-					<!-- Trust -->
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">
-							Trust
-						</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.TrustDetailsModel.GiasData.GroupName
-						</dd>
-						<dd class="govuk-summary-list__actions"></dd>
-					</div>
+                <!-- Trust -->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Trust
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.TrustDetailsModel.GiasData.GroupName
+                    </dd>
+                    <dd class="govuk-summary-list__actions"></dd>
+                </div>
 
-					<!-- Concern -->
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">
-							Concern
-						</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.ConcernTypeName
-						</dd>
-						<dd class="govuk-summary-list__actions"></dd>
-					</div>
-				</dl>
+                <!-- Concern -->
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Concern
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.ConcernTypeName
+                    </dd>
+                    <dd class="govuk-summary-list__actions"></dd>
+                </div>
+            </dl>
 
-                <h2 class="govuk-heading-m govuk-!-margin-top-6">
-                    Change concern risk rating
-                </h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">
+                Change concern risk rating
+            </h2>
 
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+            <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				<form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+            <form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
-					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+                <input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url" />
 
-                    <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
+                <partial name="Components/_RadioList" model="Model.ConcernRiskRating" />
 
-					<!--Button group-->
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="apply">
-							Apply
-						</button>
-						<partial name="_Cancel"/>
-					</div>
-				</form>
-			}
-		</div>
-	</div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="apply">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
+    </div>
 </div>

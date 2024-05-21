@@ -14,84 +14,82 @@
     var inputErrorClass = string.Empty;
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <form asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
 
-                    @{
-                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
-                            <h1 class="govuk-heading-l">Select case owners</h1>
-                            <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
+                @{
+                    <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled">
+                        <h1 class="govuk-heading-l">Select case owners</h1>
+                        <div class="govuk-hint">Find and select the case owner's name or email address to see their open cases. You can add as many case owners as you like.</div>
 
-                            <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
-                                <label for="select-colleagues-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
-                                <div id="autocomplete-container" class="@inputErrorClass"></div>
-                            </div>
+                        <div class="govuk-form-group @errorBannerClass" id="container-SelectedCaseOwner">
+                            <label for="select-colleagues-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                            <div id="autocomplete-container" class="@inputErrorClass"></div>
+                        </div>
 
-                            <div id="selected-colleagues-container">
-                                <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
-                            </div>
-                        </feature>
-                        <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
-                            <div class="govuk-form-group">
+                        <div id="selected-colleagues-container">
+                            <partial name="_ColleaguesTable" model="Model.SelectedColleagues" />
+                        </div>
+                    </feature>
+                    <feature name="@FeatureFlags.IsSelectTeamCaseWorkRedesignEnabled" negate="true">
+                        <div class="govuk-form-group">
 
-                                <h1 class="govuk-heading-l">Select colleagues to show in team casework</h1>
+                            <h1 class="govuk-heading-l">Select colleagues to show in team casework</h1>
 
-                                <fieldset class="govuk-fieldset" aria-describedby="user-hint">
-                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                        <h1 class="govuk-fieldset__heading">
-                                            Colleagues
-                                        </h1>
-                                    </legend>
-                                    <div id="user-hint" class="govuk-hint">
-                                        Select which colleagues you wish to see casework for.
-                                    </div>
+                            <fieldset class="govuk-fieldset" aria-describedby="user-hint">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                    <h1 class="govuk-fieldset__heading">
+                                        Colleagues
+                                    </h1>
+                                </legend>
+                                <div id="user-hint" class="govuk-hint">
+                                    Select which colleagues you wish to see casework for.
+                                </div>
 
-                                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-                                        @{
-                                            var idUser = 0;
-                                        }
-                                        @foreach (var user in Model.Users)
-                                        {
-                                            <div class="govuk-checkboxes__item">
-                                                @{
-                                                    var idStr = idUser == 0 ? "user" : "user-" + idUser;
-                                                    var checkedUser = Model.SelectedColleagues.Contains(user);
-                                                }
-                                                <input class="govuk-checkboxes__input" id="@idStr" name="SelectedColleagues" type="checkbox" value="@user" checked="@checkedUser">
-                                                <label class="govuk-label govuk-checkboxes__label" for="@idStr">
-                                                    @user
-                                                </label>
-                                            </div>
-                                            idUser++;
-                                        }
-                                    </div>
-                                </fieldset>
-                            </div>
+                                <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                    @{
+                                        var idUser = 0;
+                                    }
+                                    @foreach (var user in Model.Users)
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            @{
+                                                var idStr = idUser == 0 ? "user" : "user-" + idUser;
+                                                var checkedUser = Model.SelectedColleagues.Contains(user);
+                                            }
+                                            <input class="govuk-checkboxes__input" id="@idStr" name="SelectedColleagues" type="checkbox" value="@user" checked="@checkedUser">
+                                            <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                                @user
+                                            </label>
+                                        </div>
+                                        idUser++;
+                                    }
+                                </div>
+                            </fieldset>
+                        </div>
 
-                        </feature>
-                    }
+                    </feature>
+                }
 
-                    <!--Button group-->
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="save">
-                            Apply
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
-                </form>
-            }
-        </div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-testid="save">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
     </div>
 </div>
 

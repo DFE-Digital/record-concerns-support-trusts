@@ -5,42 +5,40 @@
 @model ConcernsCaseWork.Pages.Case.Management.EditTerritoryPageModel
 
 @{
-	ViewData["Title"] = "Change territory";
+    ViewData["Title"] = "Change territory";
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{Model.CaseUrn}/management";
 }
 
-<div class="govuk-width-container">
-	<partial name="_BannerError"/>
+<partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-			<h1 class="govuk-heading-l">
-				Change territory
-			</h1>
+        <h1 class="govuk-heading-l">
+            Change territory
+        </h1>
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-            	<partial name="_Error"/>
-            }
-			else
-			{
-                <partial name="_ValidationErrors" />
-				
-				<form method="post" id="case-territory-form" novalidate>
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
 
-                    <partial name="Components/_RadioList" model="Model.Territory" />
+            <form method="post" id="case-territory-form" novalidate>
 
-					<!--Button group-->
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" data-testid="apply_territory_btn" class="govuk-button" data-module="govuk-button">
-							Apply
-						</button>
-						<partial name="_Cancel"/>
-					</div>
+                <partial name="Components/_RadioList" model="Model.Territory" />
 
-				</form>
-			}
-		</div>
-	</div>
+                <!--Button group-->
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" data-testid="apply_territory_btn" class="govuk-button" data-module="govuk-button">
+                        Apply
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+
+            </form>
+        }
+    </div>
 </div>

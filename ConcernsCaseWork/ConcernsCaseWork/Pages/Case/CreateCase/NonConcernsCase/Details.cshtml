@@ -6,50 +6,48 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-    {
-        <partial name="_Error" />
-    }
-    else
-    {
-        <partial name="_ValidationErrors" />
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <partial name="_ValidationErrors" />
 
-        <span class="govuk-caption-l">Create this case</span>
-        <h1 class="govuk-heading-l">Case details</h1>
+    <span class="govuk-caption-l">Create this case</span>
+    <h1 class="govuk-heading-l">Case details</h1>
 
-        <!-- Trust summary and records -->
-        <dl class="govuk-summary-list">
-            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
-            <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
-        </dl>
+    <!-- Trust summary and records -->
+    <dl class="govuk-summary-list">
+        <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+        <partial name="_ManagedBySummary" model="Model.CreateCaseModel" />
+    </dl>
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-                <!-- FORM -->
-                <form method="post" id="case-details-form" novalidate>
+            <!-- FORM -->
+            <form method="post" id="case-details-form" novalidate>
 
-                    <div class="govuk-button-group">
-                        <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-                            Create this case
-                        </button>
+                <div class="govuk-button-group">
+                    <button id="create-case-button" data-testid="create-case-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                        Create this case
+                    </button>
 
-                        <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
-                            Cancel
-                        </a>
-                    </div>
+                    <a data-prevent-double-click="true" class="govuk-link" href="/" data-module="govuk-button" role="button">
+                        Cancel
+                    </a>
+                </div>
 
-                </form>
-            </div>
+            </form>
         </div>
-        <script type="application/javascript" nonce="@nonce">
-            $(function () {
-                var submitButton = $('#create-case-button')[0];
-                disableOnSubmit(submitButton);
-            });
-        </script>
-    }
-</div>
+    </div>
+    <script type="application/javascript" nonce="@nonce">
+        $(function () {
+            var submitButton = $('#create-case-button')[0];
+            disableOnSubmit(submitButton);
+        });
+    </script>
+}

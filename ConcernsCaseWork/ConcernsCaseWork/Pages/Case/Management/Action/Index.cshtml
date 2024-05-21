@@ -10,37 +10,35 @@
     var nonce = HttpContext.GetNonce();
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+<partial name="_BannerError" />
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-    {
-        <partial name="_Error" />
-    }
-    else
-    {
-        <h1 class="govuk-heading-l">Add to case</h1>
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    <h1 class="govuk-heading-l">Add to case</h1>
 
-        <partial name="_ValidationErrors" />
+    <partial name="_ValidationErrors" />
 
-        <!-- FORM -->
-        <form method="post" id="case-action-form" novalidate>
+    <!-- FORM -->
+    <form method="post" id="case-action-form" novalidate>
 
-            <div class="govuk-form-group govuk-!-margin-top-6">
-                <fieldset class="govuk-fieldset">
-                    <partial name="Components/_RadioList" model="Model.CaseActionEnum" />
+        <div class="govuk-form-group govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset">
+                <partial name="Components/_RadioList" model="Model.CaseActionEnum" />
 
-                </fieldset>
-            </div>
+            </fieldset>
+        </div>
 
-            <div class="govuk-button-group">
-                <button data-testid="add-action-to-case" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-                    Add to case
-                </button>
+        <div class="govuk-button-group">
+            <button data-testid="add-action-to-case" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                Add to case
+            </button>
 
-                <a id="cancel-link" class="govuk-link" href="/case/@RouteData.Values["urn"]/management">Cancel</a>
-            </div>
+            <a id="cancel-link" class="govuk-link" href="/case/@RouteData.Values["urn"]/management">Cancel</a>
+        </div>
 
-        </form>
-    }
-</div>
+    </form>
+}
