@@ -61,7 +61,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-${{ needs.set-env.outputs.environment }}
+          name: screenshots-${{ inputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
 
       - name: Generate report
@@ -74,11 +74,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reports-${{ needs.set-env.outputs.environment }}
+          name: reports-${{ inputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 
       - name: Report results
         if: always()
-        run: npm run cy:notify -- --custom-text="Environment ${{ needs.set-env.outputs.environment }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
+        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
