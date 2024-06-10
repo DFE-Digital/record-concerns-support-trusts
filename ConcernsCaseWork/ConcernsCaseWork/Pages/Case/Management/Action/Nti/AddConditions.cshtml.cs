@@ -118,7 +118,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task<NtiModel> GetUpToDateModel()
 		{
-			return await _ntiModelService.GetNtiAsync(ContinuationId);
+			return await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
 		}
 	}
 }

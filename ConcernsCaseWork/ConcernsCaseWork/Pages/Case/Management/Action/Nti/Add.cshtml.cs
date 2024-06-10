@@ -231,7 +231,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			{
 				if (ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
-					nti = await _ntiModelService.GetNtiAsync(ContinuationId);
+					nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
 					nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
 				}
 			}
@@ -329,7 +329,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task LoadWarningLetterFromCache()
 		{
-			Nti = await _ntiModelService.GetNtiAsync(ContinuationId);
+			Nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
 		}
 
 		private async Task LoadWarningLetterFromDB()
