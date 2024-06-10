@@ -94,10 +94,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/{WarningLetterId}/edit");
 				}
-				else
-				{
-					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
-				}
+
+				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
 			}
 			catch (Exception ex)
 			{

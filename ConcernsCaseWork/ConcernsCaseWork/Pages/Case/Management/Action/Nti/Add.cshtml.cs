@@ -74,14 +74,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
-					await LoadWarningLetterFromCache();
+					Nti = await LoadWarningLetterFromCache();
 				}
-				else
+				else if (NtiId != null)
 				{
-					if (NtiId != null)
-					{
-						await LoadWarningLetterFromDB();
-					}
+					Nti = await LoadWarningLetterFromDB();
+				}
+				else 
+				{
+					Nti = new NtiModel();
 				}
 
 				if (Nti is {IsClosed : true})
@@ -89,7 +90,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
-				await LoadPageComponents(Nti);
+				LoadPageComponents(Nti);
 
 				TempData.Keep(nameof(ContinuationId));
 			}
@@ -116,10 +117,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				{
 					return await HandOverToConditions();
 				}
-				else if (action.Equals(ActionForContinueButton, StringComparison.OrdinalIgnoreCase))
-				{
-					return await HandleContinue();
-				}
+
+				return await HandleContinue();
 			}
 			catch (Exception ex)
 			{
@@ -139,14 +138,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 										 : @$"/case/{CaseUrn}/management/action";
 		}
 
-		private async Task LoadPageComponents(NtiModel model)
+		private void LoadPageComponents(NtiModel model)
 		{
 			LoadPageComponents();
-
-			if (model == null)
-			{
-				return;
-			}
 
 			Notes.Text.StringContents = model.Notes;
 
@@ -199,6 +193,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 
 			TempData.Remove(nameof(ContinuationId));
+
 			return Redirect($"/case/{CaseUrn}/management");
 		}
 
@@ -213,27 +208,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			await _ntiModelService.StoreNtiAsync(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
+
 			if (NtiId == null)
 			{
 				return Redirect($"/case/{CaseUrn}/management/action/nti/conditions");
 			}
-			else
-			{
-				return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}/edit/conditions");
-			}
+
+			return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}/edit/conditions");
 		}
 
 		private async Task<NtiModel> GetUpToDateModel()
 		{
-			NtiModel nti = null;
+			NtiModel nti;
 
-			if (!string.IsNullOrWhiteSpace(ContinuationId)) // conditions have been recorded
+			if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString())) // conditions have been recorded
 			{
-				if (ContinuationId.StartsWith(CaseUrn.ToString()))
-				{
-					nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
-					nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
-				}
+				nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
+				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
 			}
 			else if (NtiId.HasValue)
 			{
@@ -287,11 +278,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private NtiModel PopulateNtiFromRequest(NtiModel ntiModel)
 		{
-			if (ntiModel == null)
-			{
-				throw new ArgumentException(nameof(ntiModel));
-			}
-
 			var newValues = PopulateNtiFromRequest();
 
 			ntiModel.CaseUrn = newValues.CaseUrn;
@@ -327,14 +313,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private async Task LoadWarningLetterFromCache()
+		private async Task<NtiModel> LoadWarningLetterFromCache()
 		{
-			Nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
+			return await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
 		}
 
-		private async Task LoadWarningLetterFromDB()
+		private async Task<NtiModel> LoadWarningLetterFromDB()
 		{
-			Nti  = await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
+			return await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
 		}
 	}
 }
