@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			{
 				if (!ModelState.IsValid)
 				{
-					await LoadPageComponents();
+					LoadPageComponents();
 					return Page();
 				}
 
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task LoadPageComponents(NtiModel model)
 		{
-			await LoadPageComponents();
+			LoadPageComponents();
 
 			if (model == null)
 			{
@@ -156,7 +156,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private async Task LoadPageComponents()
+		private void LoadPageComponents()
 		{
 			SetupPage();
 
