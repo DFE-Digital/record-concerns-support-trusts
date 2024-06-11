@@ -302,7 +302,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		};
 
-		private IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiWarningLetterReason> selectedReasons)
+		private static IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiWarningLetterReason> selectedReasons)
 		{
 			var reasons = Enum.GetValues(typeof(NtiWarningLetterReason)).Cast<NtiWarningLetterReason>();
 			return reasons.Select(r => new RadioItem

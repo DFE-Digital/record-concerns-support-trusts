@@ -288,7 +288,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			};
 		}
 
-		private IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiReason> selectedReasons)
+		private static IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiReason> selectedReasons)
 		{
 			var reasons = Enum.GetValues(typeof(NtiReason)).Cast<NtiReason>();
 			return reasons.Select(r => new RadioItem
