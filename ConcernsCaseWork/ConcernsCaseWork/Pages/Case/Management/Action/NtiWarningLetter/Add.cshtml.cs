@@ -1,4 +1,5 @@
 ﻿
+using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
@@ -49,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		[BindProperty]
 		public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
 
-		public NtiWarningLetterModel? WarningLetter { get; set; }
+		public NtiWarningLetterModel WarningLetter { get; set; }
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseUrn { get; set; }
@@ -170,6 +171,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			{
 				SentDate.Date = new OptionalDateModel(warningLetterModel.SentDate.Value);
 			}
+
+			Reasons = BuildReasonsComponent(warningLetterModel.Reasons);
 		}
 
 		private void LoadPageComponents()
@@ -177,7 +180,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			NtiWarningLetterStatus = BuildStatusComponent(NtiWarningLetterStatus.SelectedId);
 			SentDate = BuildDateSentComponent(SentDate.Date);
 			Notes = BuildNotesComponent(Notes.Text.StringContents);
-			Reasons = GetReasons();
+			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
 
 			CancelLinkUrl = WarningLetterId.HasValue ? @$"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId.Value}"
 				 : @$"/case/{CaseUrn}/management/action";
@@ -302,14 +305,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		};
 
-		private IEnumerable<RadioItem> GetReasons()
+		private IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiWarningLetterReason> selectedReasons)
 		{
 			var reasons = Enum.GetValues(typeof(NtiWarningLetterReason)).Cast<NtiWarningLetterReason>();
 			return reasons.Select(r => new RadioItem
 			{
 				Id = ((int)r).ToString(),
 				Text = r.Description(),
-				IsChecked = WarningLetter?.Reasons?.Any(wl_r => wl_r == r) ?? false
+				IsChecked = selectedReasons.Any(wl_r => wl_r == r)
 			});
 		}
 
@@ -330,12 +333,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private NtiWarningLetterModel PopulateNtiFromRequest()
 		{
-			var reasons = Request.Form["reason"];
-
 			var nti = new NtiWarningLetterModel()
 			{
 				CaseUrn = CaseUrn,
-				Reasons = reasons.Select(r => (NtiWarningLetterReason)int.Parse(r)).ToArray(),
+				Reasons = GetSelectedReasons().ToArray(),
 				Status = (NtiWarningLetterStatus?)NtiWarningLetterStatus.SelectedId,
 				Conditions = new List<NtiWarningLetterConditionModel>(),
 				Notes = Notes.Text.StringContents,
@@ -345,6 +346,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			};
 
 			return nti;
+		}
+
+		private IEnumerable<NtiWarningLetterReason> GetSelectedReasons()
+		{
+			if (!Request.HasFormContentType)
+			{
+				return new List<NtiWarningLetterReason>();
+			}
+
+			var reasons = Request.Form["reason"];
+
+			return reasons.Select(r => (NtiWarningLetterReason)int.Parse(r));
 		}
 	}
 }
