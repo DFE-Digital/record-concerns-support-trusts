@@ -33,8 +33,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public bool IsReturningFromConditions { get; set; }
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> Statuses { get; private set; }
+
 		public IEnumerable<RadioItem> Reasons { get; private set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent NtiStatus { get; set; }
 
 		[BindProperty]
 		public OptionalDateTimeUiComponent DateIssued { get; set; }
@@ -152,20 +155,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			LoadPageComponents();
 
 			Notes.Text.StringContents = model.Notes;
+			NtiStatus.SelectedId = (int?)model.Status;
 
 			if (model.DateStarted.HasValue)
 			{
 				DateIssued.Date = new OptionalDateModel(model.DateStarted.Value);
 			}
+
+			Reasons = BuildReasonsComponent(model.Reasons);
 		}
 
 		private void LoadPageComponents()
 		{
-			Statuses = GetStatuses();
-			Reasons = GetReasons();
-
 			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
-										 : @$"/case/{CaseUrn}/management/action";
+							 : @$"/case/{CaseUrn}/management/action";
+
+			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
+
+			NtiStatus = BuildStatusComponent(NtiStatus?.SelectedId);
 
 			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
 			Notes = BuildNotesComponent(Notes?.Text.StringContents);
@@ -258,35 +265,40 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private IEnumerable<RadioItem> GetStatuses()
+		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			var statuses = new List<NtiStatus>
+			var enumValues = new List<NtiStatus>()
 			{
-				NtiStatus.PreparingNTI,
-				NtiStatus.IssuedNTI,
-				NtiStatus.ProgressOnTrack,
-				NtiStatus.EvidenceOfNTINonCompliance,
-				NtiStatus.SeriousNTIBreaches,
-				NtiStatus.SubmissionToLiftNTIInProgress,
-				NtiStatus.SubmissionToCloseNTIInProgress
+				API.Contracts.NoticeToImprove.NtiStatus.PreparingNTI,
+				API.Contracts.NoticeToImprove.NtiStatus.IssuedNTI,
+				API.Contracts.NoticeToImprove.NtiStatus.ProgressOnTrack,
+				API.Contracts.NoticeToImprove.NtiStatus.EvidenceOfNTINonCompliance,
+				API.Contracts.NoticeToImprove.NtiStatus.SeriousNTIBreaches,
+				API.Contracts.NoticeToImprove.NtiStatus.SubmissionToLiftNTIInProgress,
+				API.Contracts.NoticeToImprove.NtiStatus.SubmissionToCloseNTIInProgress
 			};
 
-			return statuses.Select(s => new RadioItem
+			var radioItems = enumValues.Select(v =>
 			{
-				Id = ((int)s).ToString(),
-				Text = s.Description(),
-				IsChecked = Nti?.Status == s
-			});
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = $"status-{v.Description()}" };
+			}).ToArray();
+
+			return new(ElementRootId: "status", Name: nameof(NtiStatus), "Current status")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "Status",
+			};
 		}
 
-		private IEnumerable<RadioItem> GetReasons()
+		private IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiReason> selectedReasons)
 		{
 			var reasons = Enum.GetValues(typeof(NtiReason)).Cast<NtiReason>();
 			return reasons.Select(r => new RadioItem
 			{
 				Id = ((int)r).ToString(),
 				Text = r.Description(),
-				IsChecked = Nti?.Reasons?.Any(wl_r => wl_r == r) ?? false
+				IsChecked = selectedReasons.Any(wl_r => wl_r == r)
 			});
 		}
 
@@ -307,16 +319,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private NtiModel PopulateNtiFromRequest()
 		{
-			var reasons = Request.Form["reason"];
-			var status = Request.Form["status"];
-
-			int? statusValue = int.TryParse(status.FirstOrDefault(), out int result) ? result : null;
-
 			var nti = new NtiModel()
 			{
 				CaseUrn = CaseUrn,
-				Reasons = reasons.Select(r => (NtiReason)int.Parse(r)).ToArray(),
-				Status = (NtiStatus?)statusValue,
+				Reasons = GetSelectedReasons().ToArray(),
+				Status = (NtiStatus?)NtiStatus.SelectedId,
 				Conditions = Array.Empty<NtiConditionModel>(),
 				Notes = Notes.Text.StringContents,
 				DateStarted = DateIssued.Date.ToDateTime(),
@@ -325,6 +332,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			};
 
 			return nti;
+		}
+
+		private IEnumerable<NtiReason> GetSelectedReasons()
+		{
+			if (!Request.HasFormContentType)
+			{
+				return new List<NtiReason>();
+			}
+
+			var reasons = Request.Form["reason"];
+
+			return reasons.Select(r => (NtiReason)int.Parse(r));
 		}
 	}
 }

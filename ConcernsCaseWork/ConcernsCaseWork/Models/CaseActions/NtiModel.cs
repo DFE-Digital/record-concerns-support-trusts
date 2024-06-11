@@ -7,8 +7,8 @@ namespace ConcernsCaseWork.Models.CaseActions
 	public class NtiModel : CaseActionModel
 	{
 		public NtiStatus? Status { get; set; }
-		public ICollection<NtiReason> Reasons { get; set; }
-		public ICollection<NtiConditionModel> Conditions { get; set; }
+		public ICollection<NtiReason> Reasons { get; set; } = new List<NtiReason>();
+		public ICollection<NtiConditionModel> Conditions { get; set; } = new List<NtiConditionModel>();
 		public string Notes { get; set; }
 		public DateTime? DateStarted { get; set; }
 		public NtiStatus? ClosedStatusId { get; set; }

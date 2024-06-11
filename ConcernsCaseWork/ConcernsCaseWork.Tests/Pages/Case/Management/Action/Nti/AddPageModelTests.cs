@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
-using ConcernsCaseWork.Redis.Nti;
-using ConcernsCaseWork.Service.Nti;
+﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
@@ -46,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.CaseUrn, Is.EqualTo(caseUrn));
-			Assert.That(pageModel.Statuses.First().Text, Is.EqualTo("Preparing NTI"));
+			Assert.That(pageModel.NtiStatus.SelectedId, Is.EqualTo((int)NtiStatus.IssuedNTI));
 			Assert.That(pageModel.Reasons.First().Text, Is.EqualTo("Cash flow problems"));
 			Assert.That(pageModel.CancelLinkUrl, Is.Not.Null);
 		}
