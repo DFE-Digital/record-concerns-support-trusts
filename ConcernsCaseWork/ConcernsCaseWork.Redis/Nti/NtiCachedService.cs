@@ -14,21 +14,11 @@ namespace ConcernsCaseWork.Redis.Nti
 
 		public async Task<NtiDto> GetNtiAsync(string continuationId)
 		{
-			if (string.IsNullOrWhiteSpace(continuationId))
-			{
-				throw new ArgumentNullException(nameof(continuationId));
-			}
-
 			return await GetData<NtiDto>(continuationId);
 		}
 
 		public async Task SaveNtiAsync(NtiDto nti, string continuationId)
 		{
-			if (string.IsNullOrWhiteSpace(continuationId))
-			{
-				throw new ArgumentNullException(nameof(continuationId));
-			}
-
 			await StoreData(continuationId, nti);
 		}
 	}

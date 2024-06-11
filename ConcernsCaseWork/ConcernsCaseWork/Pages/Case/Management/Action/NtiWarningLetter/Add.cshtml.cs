@@ -1,6 +1,4 @@
-﻿
-using ConcernsCaseWork.API.Contracts.NoticeToImprove;
-using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
+﻿using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
@@ -81,7 +79,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					ContinuationId = string.Empty;
 				}
 
-				WarningLetter = await LoadNti();
+				WarningLetter = await LoadNtiWarningLetter();
 
 				if (WarningLetter is { IsClosed: true })
 				{
@@ -129,7 +127,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			return Page();
 		}
 
-		private async Task<NtiWarningLetterModel> LoadNti()
+		private async Task<NtiWarningLetterModel> LoadNtiWarningLetter()
 		{
 			if (HasCachedNti(CaseUrn, ContinuationId))
 			{
@@ -166,21 +164,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			NtiWarningLetterStatus.SelectedId = (int?)warningLetterModel.Status;
 			Notes.Text.StringContents = warningLetterModel.Notes;
+			Reasons = BuildReasonsComponent(warningLetterModel.Reasons);
 
 			if (warningLetterModel.SentDate.HasValue)
 			{
 				SentDate.Date = new OptionalDateModel(warningLetterModel.SentDate.Value);
 			}
-
-			Reasons = BuildReasonsComponent(warningLetterModel.Reasons);
 		}
 
 		private void LoadPageComponents()
 		{
 			NtiWarningLetterStatus = BuildStatusComponent(NtiWarningLetterStatus.SelectedId);
-			SentDate = BuildDateSentComponent(SentDate.Date);
 			Notes = BuildNotesComponent(Notes.Text.StringContents);
 			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
+			SentDate = BuildDateSentComponent(SentDate.Date);
 
 			CancelLinkUrl = WarningLetterId.HasValue ? @$"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId.Value}"
 				 : @$"/case/{CaseUrn}/management/action";

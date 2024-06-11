@@ -15,21 +15,11 @@ namespace ConcernsCaseWork.Redis.NtiWarningLetter
 
 		public async Task SaveNtiWarningLetter(NtiWarningLetterDto ntiWarningLetter, string continuationId)
 		{
-			if (string.IsNullOrWhiteSpace(continuationId))
-			{
-				throw new ArgumentNullException(nameof(continuationId));
-			}
-
 			await StoreData(continuationId, ntiWarningLetter);
 		}
 
 		public async Task<NtiWarningLetterDto> GetNtiWarningLetter(string continuationId)
 		{
-			if (string.IsNullOrWhiteSpace(continuationId))
-			{
-				throw new ArgumentNullException(nameof(continuationId));
-			}
-
 			return await GetData<NtiWarningLetterDto>(continuationId);
 		}
 	}

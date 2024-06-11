@@ -156,13 +156,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			Notes.Text.StringContents = model.Notes;
 			NtiStatus.SelectedId = (int?)model.Status;
+			Reasons = BuildReasonsComponent(model.Reasons);
 
 			if (model.DateStarted.HasValue)
 			{
 				DateIssued.Date = new OptionalDateModel(model.DateStarted.Value);
 			}
-
-			Reasons = BuildReasonsComponent(model.Reasons);
 		}
 
 		private void LoadPageComponents()
@@ -170,12 +169,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
 							 : @$"/case/{CaseUrn}/management/action";
 
-			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
-
-			NtiStatus = BuildStatusComponent(NtiStatus?.SelectedId);
-
-			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
 			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+			NtiStatus = BuildStatusComponent(NtiStatus?.SelectedId);
+			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
+			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
 		}
 
 		private static OptionalDateTimeUiComponent BuildDateIssuedComponent(OptionalDateModel? date = null)
@@ -245,7 +242,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			if (HasCachedNti(CaseUrn, ContinuationId)) // conditions have been recorded
 			{
 				nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
-				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
+				nti = PopulateNtiFromRequest(nti);
 			}
 			else if (NtiId.HasValue)
 			{
