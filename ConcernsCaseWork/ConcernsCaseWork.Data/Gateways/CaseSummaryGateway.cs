@@ -27,9 +27,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters )
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => parameters.teamMemberIds.Contains(cases.CreatedBy) && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -41,7 +38,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -49,9 +48,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -63,50 +59,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = queryBuilder.Select(c => c.Id).ToList();
 
-		return (cases, recordCount);
-	}
-
-	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
-	{
-		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
-			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Close")
-			.OrderByDescending(c => c.CreatedAt)
-			.AsQueryable();
-
-		var recordCount = queryBuilder.Count();
-
-		if (parameters.Page.HasValue && parameters.Count.HasValue)
-		{
-			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
-		}
-
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
-
-		return (cases, recordCount);
-	}
-
-	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
-	{
-		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
-			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Close")
-			.OrderByDescending(c => c.CreatedAt)
-			.AsQueryable();
-
-		var recordCount = queryBuilder.Count();
-
-		if (parameters.Page.HasValue && parameters.Count.HasValue)
-		{
-			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
-		}
-
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -114,9 +69,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -128,9 +80,67 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Close")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+
+		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Close")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+
+		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	private IOrderedQueryable<ConcernsCase> GetCases(List<int> caseIds)
+	{
+		return _concernsDbContext.ConcernsCase.Where(c => caseIds.Contains(c.Id)).OrderByDescending(c => c.CreatedAt);
+	}
+
+	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(List<int> caseIds)
+	{
+		var query = GetCases(caseIds);
+
+		var result = SelectOpenCaseSummary(query);
+
+		return result;
 	}
 
 	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(IQueryable<ConcernsCase> query)
@@ -183,8 +193,21 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		});
 	}
 
+	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(List<int> caseIds)
+	{
+		var query = GetCases(caseIds);
+
+		var result = SelectClosedCaseSummary(query);
+
+		return result;
+	}
+
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
 	{
+		var caseIds = query.Select(c => c.Urn).ToList();
+
+		query = query.Where(c => caseIds.Contains(c.Urn));
+
 		return query.Select(cases => new ClosedCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
