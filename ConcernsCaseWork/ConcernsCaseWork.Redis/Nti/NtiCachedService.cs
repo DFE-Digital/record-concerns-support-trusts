@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Service.Nti;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Redis.Nti

@@ -1,8 +1,5 @@
 ﻿using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Service.NtiWarningLetter;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Redis.NtiWarningLetter

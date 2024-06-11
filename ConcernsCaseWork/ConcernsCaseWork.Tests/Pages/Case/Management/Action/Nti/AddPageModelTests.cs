@@ -29,6 +29,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 			
 			var ntiModel = NTIFactory.BuildNTIModel();
+			ntiModel.Status = NtiStatus.IssuedNTI;
+
+
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
 				.ReturnsAsync(ntiModel);
 
