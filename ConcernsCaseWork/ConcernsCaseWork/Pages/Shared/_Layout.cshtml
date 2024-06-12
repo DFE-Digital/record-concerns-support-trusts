@@ -52,6 +52,19 @@
         <!-- End Google Tag Manager -->
     }
 
+    @if (hasConsented && enableAppInsightsBrowserAnalytics)
+    {
+        <!-- Application Insights -->
+        <script type="text/javascript" integrity="sha384-g/ZkzetdQypWdY0NBZT5r2L3BR9/hURD8OBcd1rEaBpgX6QC7EaTL+o+mzWrBcXW" crossorigin="anonymous" src="https://js.monitor.azure.com/scripts/b/ext/ai.clck.2.8.18.min.js"></script>
+        <script type="text/javascript" nonce="@nonce">
+            @Html.Raw(JavaScriptSnippet.ScriptBody)
+            // Load the Click analytics plugin
+            var clickPluginInstance = new Microsoft.ApplicationInsights.ClickAnalyticsPlugin();
+            window.appInsights.setAuthenticatedUserContext("@authenticatedUserId", null, true);
+        </script>
+        <!-- End Application insights -->
+    }
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c">
@@ -68,8 +81,6 @@
     <link rel="stylesheet" href="~/dist/css/site.css" />
 
     <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
-    @Html.Raw(JavaScriptSnippet.FullScript)
-
 </head>
 <body class="govuk-template__body ">
     <!-- Google Tag Manager (noscript) -->
