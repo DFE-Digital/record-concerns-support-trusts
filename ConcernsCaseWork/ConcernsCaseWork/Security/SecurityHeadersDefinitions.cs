@@ -32,7 +32,10 @@ namespace ConcernsCaseWork.Security
 					builder.AddFormAction().Self();
 					builder.AddStyleSrc().Self().UnsafeInline();
 					builder.AddBaseUri().Self();
-					builder.AddScriptSrc().Self().From("https://www.googletagmanager.com").WithNonce();
+					builder.AddScriptSrc().Self()
+						.From("https://www.googletagmanager.com")
+						.From("https://js.monitor.azure.com")
+						.WithNonce();
 
 					builder.AddFrameAncestors().None();
 				})
