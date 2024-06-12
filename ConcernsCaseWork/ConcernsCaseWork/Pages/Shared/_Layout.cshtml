@@ -1,14 +1,20 @@
-﻿@using ConcernsCaseWork.API.Contracts.Configuration
-@using ConcernsCaseWork.Constants
+﻿@using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Hosting
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Configuration
 @using NetEscapades.AspNetCore.SecurityHeaders
 
 @inject IWebHostEnvironment _env
-@inject IOptions<SiteOptions> _siteOptions
+@inject IConfiguration Configuration
+
+@{
+    var notificationBannerMessage = Configuration["NotificationBannerMessage"];
+    bool.TryParse(Configuration["ApplicationInsights:BrowserAnalyticsEnabled"], out bool enableAppInsightsBrowserAnalytics);
+    var authenticatedUserId = Context.User.Identity is not null && Context.User.Identity.IsAuthenticated ? Context.User.Identity.Name ?? "Unknown" : "Anonymous";
+}
 
 <!DOCTYPE html>
 <html class="govuk-template" lang="en">
@@ -32,8 +38,6 @@
         otherCasesTabCurrent = model.OtherCasesTabActive == true ? classCurrentPage : "";
         findTrustTabCurrent = model.FindTrustTabActive == true ? classCurrentPage : "";
     }
-
-    var notificationBannerMessage = _siteOptions.Value.NotificationBannerMessage;
 }
 <head>
     @if (_env.IsProduction() && hasConsented)
