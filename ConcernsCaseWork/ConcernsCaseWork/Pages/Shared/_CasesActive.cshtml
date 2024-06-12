@@ -49,7 +49,7 @@
 
                     @if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
                     {
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="actions-and-decisions">
                             <div class="concerns-secondary-text-colour">Actions and decisions</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var action in activeCase.ActiveActionsAndDecisions)

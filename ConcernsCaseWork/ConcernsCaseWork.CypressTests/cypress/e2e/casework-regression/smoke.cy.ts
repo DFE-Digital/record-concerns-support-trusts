@@ -101,7 +101,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "");
-	
+
 		Logger.log("Populate territory");
 		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
 
