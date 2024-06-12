@@ -168,23 +168,23 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 						select decisions,
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: Financial plan"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.FinancialPlan))
 				.ToArray(),
 			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: NTI under consideration"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiUnderConsideration))
 				.ToArray(),
 			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: NTI warning letter"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiWarningLetter))
 				.ToArray(),
 			NoticesToImprove = _concernsDbContext.NoticesToImprove
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: Notice To Improve"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Nti))
 				.ToArray(),
 			SrmaCases = _concernsDbContext.SRMACases
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: School Resource Management Adviser"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Srma))
 				.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
@@ -204,10 +204,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
 	{
-		var caseIds = query.Select(c => c.Urn).ToList();
-
-		query = query.Where(c => caseIds.Contains(c.Urn));
-
 		return query.Select(cases => new ClosedCaseSummaryVm
 		{
 			CaseUrn = cases.Urn,
@@ -227,23 +223,23 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			Decisions = from decisions in cases.Decisions select decisions,
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Financial plan"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.FinancialPlan))
 							.ToArray(),
 			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiUnderConsideration))
 							.ToArray(),
 			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiWarningLetter))
 							.ToArray(),
 			NoticesToImprove = _concernsDbContext.NoticesToImprove
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Nti))
 							.ToArray(),
 			SrmaCases = _concernsDbContext.SRMACases
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Srma))
 							.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 							.Where(x => x.CaseUrn == cases.Urn)
