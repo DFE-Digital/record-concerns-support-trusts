@@ -110,7 +110,10 @@ namespace ConcernsCaseWork
 			{
 				options.ConstraintMap.Add("fpEditModes", typeof(FinancialPlanEditModeConstraint));
 			});
-			services.AddApplicationInsightsTelemetry(Configuration["ApplicationInsights:ConnectionString"])
+			services.AddApplicationInsightsTelemetry(options =>
+			{
+				options.ConnectionString = Configuration["ApplicationInsights:ConnectionString"]
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
