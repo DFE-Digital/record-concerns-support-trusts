@@ -112,7 +112,7 @@ namespace ConcernsCaseWork
 			});
 			services.AddApplicationInsightsTelemetry(options =>
 			{
-				options.ConnectionString = Configuration["ApplicationInsights:ConnectionString"]
+				options.ConnectionString = Configuration["ApplicationInsights:ConnectionString"];
 			});
 		}
 
