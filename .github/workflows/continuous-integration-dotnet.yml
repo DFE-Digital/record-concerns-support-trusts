@@ -5,7 +5,7 @@ on:
     branches:
     - main
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork.*/**'
+    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
     - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
     - '!**/*.csproj'
   pull_request:
