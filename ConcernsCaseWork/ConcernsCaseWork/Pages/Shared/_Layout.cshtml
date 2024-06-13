@@ -1,14 +1,20 @@
-﻿@using ConcernsCaseWork.API.Contracts.Configuration
-@using ConcernsCaseWork.Constants
+﻿@using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.Models
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Hosting
 @using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Configuration
 @using NetEscapades.AspNetCore.SecurityHeaders
 
 @inject IWebHostEnvironment _env
-@inject IOptions<SiteOptions> _siteOptions
+@inject IConfiguration Configuration
+
+@{
+    var notificationBannerMessage = Configuration["NotificationBannerMessage"];
+    bool.TryParse(Configuration["ApplicationInsights:BrowserAnalyticsEnabled"], out bool enableAppInsightsBrowserAnalytics);
+    var authenticatedUserId = Context.User.Identity is not null && Context.User.Identity.IsAuthenticated ? Context.User.Identity.Name ?? "Unknown" : "Anonymous";
+}
 
 <!DOCTYPE html>
 <html class="govuk-template" lang="en">
@@ -32,8 +38,6 @@
         otherCasesTabCurrent = model.OtherCasesTabActive == true ? classCurrentPage : "";
         findTrustTabCurrent = model.FindTrustTabActive == true ? classCurrentPage : "";
     }
-
-    var notificationBannerMessage = _siteOptions.Value.NotificationBannerMessage;
 }
 <head>
     @if (_env.IsProduction() && hasConsented)
@@ -52,6 +56,19 @@
         <!-- End Google Tag Manager -->
     }
 
+    @if (hasConsented && enableAppInsightsBrowserAnalytics)
+    {
+        <!-- Application Insights -->
+        <script type="text/javascript" integrity="sha384-g/ZkzetdQypWdY0NBZT5r2L3BR9/hURD8OBcd1rEaBpgX6QC7EaTL+o+mzWrBcXW" crossorigin="anonymous" src="https://js.monitor.azure.com/scripts/b/ext/ai.clck.2.8.18.min.js"></script>
+        <script type="text/javascript" nonce="@nonce">
+            @Html.Raw(JavaScriptSnippet.ScriptBody)
+            // Load the Click analytics plugin
+            var clickPluginInstance = new Microsoft.ApplicationInsights.ClickAnalyticsPlugin();
+            window.appInsights.setAuthenticatedUserContext("@authenticatedUserId", null, true);
+        </script>
+        <!-- End Application insights -->
+    }
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0c0c">
@@ -68,8 +85,6 @@
     <link rel="stylesheet" href="~/dist/css/site.css" />
 
     <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
-    @Html.Raw(JavaScriptSnippet.FullScript)
-
 </head>
 <body class="govuk-template__body ">
     <!-- Google Tag Manager (noscript) -->
