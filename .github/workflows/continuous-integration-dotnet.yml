@@ -12,7 +12,7 @@ on:
     branches: [ main, release/** ]
     types: [ opened, synchronize, reopened ]
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork.*/**'
+    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
     - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
     - '!**/*.csproj'
 
