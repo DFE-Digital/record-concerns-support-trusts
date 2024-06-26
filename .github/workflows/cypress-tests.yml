@@ -35,7 +35,7 @@ env:
 jobs:
   cypress-tests:
     name: Run Cypress Tests
-    if: inputs.environment == 'staging' || inputs == 'dev'
+    if: inputs.environment == 'staging' || inputs.environment == 'dev'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
