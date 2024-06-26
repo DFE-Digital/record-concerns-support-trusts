@@ -16,7 +16,7 @@ public enum Territory
 	North_And_Utc__North_West,
 	[Description("North - Yorkshire and The Humber")]
 	North_And_Utc__Yorkshire_And_Humber,
-	[Description("UTC")]
+	[Description("North and UTC - UTC")]
 	North_And_Utc__Utc,
 	[Description("South - South East")]
 	South_And_South_East__South_East,
