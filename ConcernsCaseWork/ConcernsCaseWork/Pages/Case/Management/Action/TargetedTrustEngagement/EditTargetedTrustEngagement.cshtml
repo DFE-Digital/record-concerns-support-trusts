@@ -1,0 +1,206 @@
+﻿@page "/case/{urn:long}/management/action/targeted-trust-engagement/add"
+@using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
+@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.Models
+@using ConcernsCaseWork.Utils.Extensions
+@model EditTargetedTrustEngagementModel
+@{
+    ViewData[ViewDataConstants.Title] = "Add targeted trust engagement";
+
+    var radioItems =
+        TrustEngagementActivity.BudgetForecast
+            .GetSubActivities()
+            .Select(a => new SimpleRadioItem(a.Description(), (int)a));
+
+    var budgetForecastComponent = new RadioButtonsUiComponent(ElementRootId: "budget-forecast", Name: "sub-activity-id", "")
+            {
+                RadioItems = TrustEngagementActivity.BudgetForecast
+                    .GetSubActivities()
+                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
+                SelectedId = null
+            };
+
+    var executivePayEngagementComponent = new RadioButtonsUiComponent(ElementRootId: "executive-pay-engagement", Name: "sub-activity-id", "")
+            {
+                RadioItems = TrustEngagementActivity.ExecutivePayEngagement
+                    .GetSubActivities()
+                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
+                SelectedId = null
+            };
+
+    var financialReturnsAssuranceComponent = new RadioButtonsUiComponent(ElementRootId: "financial-returns-assurance", Name: "sub-activity-id", "")
+            {
+                RadioItems = TrustEngagementActivity.FinanceReturnsAssurance
+                    .GetSubActivities()
+                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
+                SelectedId = null
+            };
+
+    var reservesersightAssuranceComponent = new RadioButtonsUiComponent(ElementRootId: "reserves-oversight-assurance", Name: "sub-activity-id", "")
+            {
+                RadioItems = TrustEngagementActivity.ReservesOversightAssurance
+                    .GetSubActivities()
+                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
+                SelectedId = null
+            };
+}
+
+<partial name="_BannerError" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+        <partial name="_ValidationErrors" />
+
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+            Targeted trust engagement
+        </h1>
+
+        <div class="govuk-hint" id="financial-plan-hint">
+            <a target="_blank" href="#" class="govuk-link" rel="noreferrer noopener">
+                SFSO Knowledge: Pro-active engagement
+            </a>
+        </div>
+
+        <form method="post" novalidate>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Which activity was taken forward?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios" data-module="govuk-radios">
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="budget-forecast" name="activity-id" type="radio" value="1">
+                            <label class="govuk-label govuk-radios__label" for="budget-forecast">
+                                Budget Forecast Return/Accounts Return driven
+                            </label>
+                            <div class="govuk-hint">
+                                Engagement with any trusts identified at potential risk
+                            </div>
+                        </div>
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@budgetForecastComponent" />
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="executive-pay-engagement" name="activity-id" type="radio" value="2">
+                            <label class="govuk-label govuk-radios__label" for="executive-pay-engagement">
+                                Executive pay engagement
+                            </label>
+                            <div class="govuk-hint">
+                                (Enter test here)
+                            </div>
+                        </div>
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@executivePayEngagementComponent" />
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="financial-returns-assurance" name="activity-id" type="radio" value="3">
+                            <label class="govuk-label govuk-radios__label" for="financial-returns-assurance">
+                                Financial returns assurance
+                            </label>
+                            <div class="govuk-hint">
+                                Following up with trusts on issues flagged in their latest financial statements
+                            </div>
+                        </div>
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@financialReturnsAssuranceComponent" />
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="reserves-oversight-assurance" name="activity-id" type="radio" value="4">
+                            <label class="govuk-label govuk-radios__label" for="reserves-oversight-assurance">
+                                Reserves oversight assurance project
+                            </label>
+                            <div class="govuk-hint">
+                                Engaging with trusts
+                            </div>
+                        </div>
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@reservesersightAssuranceComponent" />
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="local-proactive-enagement" name="activity-id" type="radio" value="5">
+                            <label class="govuk-label govuk-radios__label" for="local-proactive-engagement">
+                                Local proactive engagement
+                            </label>
+                            <div class="govuk-hint">
+                                Division-led work
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="other-vulnerability" name="activity-id" type="radio" value="6">
+                            <label class="govuk-label govuk-radios__label" for="other-vulnerability">
+                                Other vulnerability
+                            </label>
+                            <div class="govuk-hint">
+                                Other national processes
+                            </div>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="no-engagement" name="activity-id" type="radio" value="7">
+                            <label class="govuk-label govuk-radios__label" for="no-engagement">
+                                No engagement activities taken forward
+                            </label>
+                            <div class="govuk-hint">
+                                No engagement activity taken forward
+                            </div>
+                        </div>
+                        <div class="govuk-radios__conditional">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste" name="sub-activity-id" type="checkbox" value="carcasses">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste">
+                                                Waste from animal carcasses
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste-2" name="sub-activity-id" type="checkbox" value="mines">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste-2">
+                                                Waste from mines or quarries
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste-3" name="sub-activity-id" type="checkbox" value="farm">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                                                Farm or agricultural waste
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button data-prevent-double-click="true"
+                        class="govuk-button"
+                        data-module="govuk-button"
+                        role="button"
+                        id="save-trust-financial-forecast-button"
+                        data-testid="save-trust-financial-forecast-button"
+                        name="action">
+                    Save and return to case overview
+                </button>
+                <a data-prevent-double-click="true" class="govuk-link" data-module="govuk-button" role="button" href="/case/@Model.CaseUrn/management">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
