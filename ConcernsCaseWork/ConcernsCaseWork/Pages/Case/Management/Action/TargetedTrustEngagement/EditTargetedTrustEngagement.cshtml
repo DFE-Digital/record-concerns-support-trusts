@@ -1,4 +1,4 @@
-﻿@page "/case/{urn:long}/management/action/targeted-trust-engagement/add"
+﻿@page "/case/{urn:long}/management/action/targeted-trust-engagement/edit"
 @using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
 @using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.Models
@@ -6,43 +6,6 @@
 @model EditTargetedTrustEngagementModel
 @{
     ViewData[ViewDataConstants.Title] = "Add targeted trust engagement";
-
-    var radioItems =
-        TrustEngagementActivity.BudgetForecast
-            .GetSubActivities()
-            .Select(a => new SimpleRadioItem(a.Description(), (int)a));
-
-    var budgetForecastComponent = new RadioButtonsUiComponent(ElementRootId: "budget-forecast", Name: "sub-activity-id", "")
-            {
-                RadioItems = TrustEngagementActivity.BudgetForecast
-                    .GetSubActivities()
-                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
-                SelectedId = null
-            };
-
-    var executivePayEngagementComponent = new RadioButtonsUiComponent(ElementRootId: "executive-pay-engagement", Name: "sub-activity-id", "")
-            {
-                RadioItems = TrustEngagementActivity.ExecutivePayEngagement
-                    .GetSubActivities()
-                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
-                SelectedId = null
-            };
-
-    var financialReturnsAssuranceComponent = new RadioButtonsUiComponent(ElementRootId: "financial-returns-assurance", Name: "sub-activity-id", "")
-            {
-                RadioItems = TrustEngagementActivity.FinanceReturnsAssurance
-                    .GetSubActivities()
-                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
-                SelectedId = null
-            };
-
-    var reservesersightAssuranceComponent = new RadioButtonsUiComponent(ElementRootId: "reserves-oversight-assurance", Name: "sub-activity-id", "")
-            {
-                RadioItems = TrustEngagementActivity.ReservesOversightAssurance
-                    .GetSubActivities()
-                    .Select(a => new SimpleRadioItem(a.Description(), (int)a)).ToArray(),
-                SelectedId = null
-            };
 }
 
 <partial name="_BannerError" />
@@ -75,17 +38,14 @@
                     </legend>
                     <div class="govuk-radios" data-module="govuk-radios">
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="budget-forecast" name="activity-id" type="radio" value="1">
-                            <label class="govuk-label govuk-radios__label" for="budget-forecast">
-                                Budget Forecast Return/Accounts Return driven
-                            </label>
-                            <div class="govuk-hint">
-                                Engagement with any trusts identified at potential risk
-                            </div>
-                        </div>
+                        <govuk-radios-item 
+                            id="budget-forecast" 
+                            name="activity-id" 
+                            value="@TrustEngagementActivity.BudgetForecast" 
+                            label="Budget Forecast Return/Accounts Return driven"
+                            hint="Engagement with any trusts identified at potential risk" />
                         <div class="govuk-radios__conditional">
-                            <partial name="Components/_RadioList" model="@budgetForecastComponent" />
+                            <partial name="Components/_RadioList" model="@Model.BudgetForecastSubActivities" />
                         </div>
 
                         <div class="govuk-radios__item">
@@ -98,7 +58,7 @@
                             </div>
                         </div>
                         <div class="govuk-radios__conditional">
-                            <partial name="Components/_RadioList" model="@executivePayEngagementComponent" />
+                            <partial name="Components/_RadioList" model="@Model.ExecutivePayEngagementSubActivities" />
                         </div>
 
                         <div class="govuk-radios__item">
@@ -111,7 +71,7 @@
                             </div>
                         </div>
                         <div class="govuk-radios__conditional">
-                            <partial name="Components/_RadioList" model="@financialReturnsAssuranceComponent" />
+                            <partial name="Components/_RadioList" model="@Model.FinancialReturnsAssuranceSubActivities" />
                         </div>
 
                         <div class="govuk-radios__item">
@@ -124,7 +84,7 @@
                             </div>
                         </div>
                         <div class="govuk-radios__conditional">
-                            <partial name="Components/_RadioList" model="@reservesersightAssuranceComponent" />
+                            <partial name="Components/_RadioList" model="@Model.ReservesOversightAssuranceSubActivities" />
                         </div>
 
                         <div class="govuk-radios__item">
