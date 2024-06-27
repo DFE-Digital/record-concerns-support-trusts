@@ -79,7 +79,7 @@ describe("Team casework tests", () => {
                         .hasConcern("Financial compliance")
                         .hasRiskToTrust("Amber")
                         .hasRiskToTrust("Green")
-                        .hasManagedBy("SFSO", "Midlands and West - West Midlands")
+                        .hasManagedBy("SFSO", "North - West Midlands")
                         .hasTrust("Westfield Academy")
                         .hasLastUpdatedDate(toDisplayDate(now))
                         .hasOwner(name);
@@ -102,7 +102,7 @@ describe("Team casework tests", () => {
 
             teamCaseworkPage
                 .selectTeamMember(name);
-            
+
             teamCaseworkPage
                 .enterTeamMember(name)
                 .hasNoResultsFound()

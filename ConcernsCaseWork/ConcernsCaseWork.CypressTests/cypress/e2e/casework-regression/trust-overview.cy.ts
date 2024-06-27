@@ -12,41 +12,35 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import closeConcernPage from "cypress/pages/closeConcernPage";
 
 
-describe("Trust overview ", () =>
-{
+describe("Trust overview ", () => {
     let now: Date;
     let caseId: string;
     let trustUkprn: string;
     const editTFFPage = new EditTrustFinancialForecastPage();
-	const viewTFFPage = new ViewTrustFinancialForecastPage();
-	const closeTFFPage = new CloseTrustFinancialForecastPage();
+    const viewTFFPage = new ViewTrustFinancialForecastPage();
+    const closeTFFPage = new CloseTrustFinancialForecastPage();
 
-    describe("When we view a trust on a case", () =>
-    {
-        beforeEach(() =>
-        {
+    describe("When we view a trust on a case", () => {
+        beforeEach(() => {
             cy.login();
             now = new Date();
         });
 
-        describe("Concerns case", () =>
-        {
-            beforeEach(() => 
-            {
+        describe("Concerns case", () => {
+            beforeEach(() => {
                 cy.basicCreateCase()
-                .then((response: CreateCaseResponse) => {
-                    caseId = response.urn + "";
-                    trustUkprn = response.trustUkprn;
-                });
+                    .then((response: CreateCaseResponse) => {
+                        caseId = response.urn + "";
+                        trustUkprn = response.trustUkprn;
+                    });
             });
-    
-            it("Should display trust details on case management and the cases that belong to it", () =>
-            {
+
+            it("Should display trust details on case management and the cases that belong to it", () => {
                 //Only checking for the presence of the data, not the actual data becuase trust data may be sensitive/dynamic
                 Logger.log("Checking trust details are present");
                 caseMangementPage
                     .viewTrustOverview();
-        
+
                 trustOverviewPage
                     .trustTypeIsNotEmpty()
                     .trustAddressIsNotEmpty()
@@ -56,104 +50,97 @@ describe("Trust overview ", () =>
                     .trustGroupIdIsNotEmpty()
                     .trustUKPRNIsNotEmpty()
                     .trustCompanyHouseNumberIsNotEmpty();
-        
+
                 Logger.log("Checking accessibility on Trust Overview");
-                cy.excuteAccessibilityTests();	
-        
+                cy.excuteAccessibilityTests();
+
                 Logger.log("Checking case details are present on the trust overview page");
                 caseworkTable
                     .getRowByCaseId(caseId)
-                    .then((row) =>
-                    {
+                    .then((row) => {
                         row
                             .hasCaseId(caseId)
                             .hasCreatedDate(toDisplayDate(now))
                             .hasConcern("Financial compliance")
                             .hasRiskToTrust("Amber")
                             .hasRiskToTrust("Green")
-                            .hasManagedBy("SFSO", "Midlands and West - West Midlands");
+                            .hasManagedBy("SFSO", "North - West Midlands");
                     });
-    
+
                 Logger.log("Check on a closed case")
                 caseMangementPage.viewCase();
 
                 caseMangementPage.closeConcern();
                 closeConcernPage.confirmCloseConcern();
-    
+
                 cy.closeCase();
                 cy.visit(`/trust/${trustUkprn}/overview`);
-    
+
                 trustOverviewPage.showClosedCases();
-    
+
                 Logger.log("Checking closed case details are present on the trust overview page");
                 caseworkTable
-                .getRowByCaseId(caseId)
-                .then((row) =>
-                {
-                    row
-                        .hasCaseId(caseId)
-                        .hasCreatedDate(toDisplayDate(now))
-                        .hasClosedDate(toDisplayDate(now))
-                        .hasConcern("Financial compliance")
-                        .hasManagedBy("SFSO", "Midlands and West - West Midlands");
-                });
+                    .getRowByCaseId(caseId)
+                    .then((row) => {
+                        row
+                            .hasCaseId(caseId)
+                            .hasCreatedDate(toDisplayDate(now))
+                            .hasClosedDate(toDisplayDate(now))
+                            .hasConcern("Financial compliance")
+                            .hasManagedBy("SFSO", "North - West Midlands");
+                    });
             });
         });
 
-        describe("Non concerns case", () =>
-        {
-            beforeEach(() => 
-            {
+        describe("Non concerns case", () => {
+            beforeEach(() => {
                 cy.createNonConcernsCase()
-                .then((response: CreateCaseResponse) => {
-                    caseId = response.urn + "";
-                    trustUkprn = response.trustUkprn;
-                });
+                    .then((response: CreateCaseResponse) => {
+                        caseId = response.urn + "";
+                        trustUkprn = response.trustUkprn;
+                    });
             });
 
-            it("Should display the content correctly for a non concerns case with case actions", () =>
-            {
+            it("Should display the content correctly for a non concerns case with case actions", () => {
                 caseMangementPage.getAddToCaseBtn().click();
                 addToCasePage.addToCase("TrustFinancialForecast");
                 addToCasePage.getAddToCaseBtn().click();
-    
+
                 editTFFPage.save();
-    
+
                 caseMangementPage
                     .viewTrustOverview();
-    
+
                 caseworkTable
                     .getRowByCaseId(caseId)
-                    .then((row) =>
-                    {
+                    .then((row) => {
                         row
                             .hasAction("Action: TFF (trust financial forecast)");
                     });
-    
+
                 Logger.log("Check on a closed non concerns case")
                 caseMangementPage.viewCase();
-    
+
                 actionSummaryTable
                     .getOpenAction("TFF (trust financial forecast)")
                     .then((row) => {
                         row.select();
                     });
-    
+
                 viewTFFPage.close();
                 closeTFFPage.close();
-    
+
                 cy.closeCase();
                 cy.visit(`/trust/${trustUkprn}/overview`);
-    
+
                 trustOverviewPage.showClosedCases();
-    
+
                 caseworkTable
-                .getRowByCaseId(caseId)
-                .then((row) =>
-                {
-                    row
-                        .hasAction("Action: TFF (trust financial forecast)");
-                });
+                    .getRowByCaseId(caseId)
+                    .then((row) => {
+                        row
+                            .hasAction("Action: TFF (trust financial forecast)");
+                    });
             });
         });
     });
