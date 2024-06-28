@@ -27,9 +27,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters )
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => parameters.teamMemberIds.Contains(cases.CreatedBy) && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -41,7 +38,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -49,9 +48,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -63,50 +59,9 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
-		return (cases, recordCount);
-	}
-
-	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
-	{
-		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
-			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Close")
-			.OrderByDescending(c => c.CreatedAt)
-			.AsQueryable();
-
-		var recordCount = queryBuilder.Count();
-
-		if (parameters.Page.HasValue && parameters.Count.HasValue)
-		{
-			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
-		}
-
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
-
-		return (cases, recordCount);
-	}
-
-	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
-	{
-		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
-			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Close")
-			.OrderByDescending(c => c.CreatedAt)
-			.AsQueryable();
-
-		var recordCount = queryBuilder.Count();
-
-		if (parameters.Page.HasValue && parameters.Count.HasValue)
-		{
-			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
-		}
-
-		var cases = await SelectClosedCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
 	}
@@ -114,9 +69,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
-			.Include(cases => cases.Rating)
-			.Include(cases => cases.Status)
-			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
@@ -128,9 +80,67 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var cases = await SelectOpenCaseSummary(queryBuilder).AsSplitQuery().ToListAsync();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
 		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.Where(cases => cases.CreatedBy == parameters.Owner && cases.Status.Name == "Close")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.Where(cases => cases.TrustUkprn == parameters.TrustUkPrn && cases.Status.Name == "Close")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	private IOrderedQueryable<ConcernsCase> GetCases(List<int> caseIds)
+	{
+		return _concernsDbContext.ConcernsCase.Where(c => caseIds.Contains(c.Id)).OrderByDescending(c => c.CreatedAt);
+	}
+
+	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(List<int> caseIds)
+	{
+		var query = GetCases(caseIds);
+
+		var result = SelectOpenCaseSummary(query);
+
+		return result;
 	}
 
 	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(IQueryable<ConcernsCase> query)
@@ -158,29 +168,38 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 						select decisions,
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: Financial plan"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.FinancialPlan))
 				.ToArray(),
 			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: NTI under consideration"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiUnderConsideration))
 				.ToArray(),
 			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: NTI warning letter"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiWarningLetter))
 				.ToArray(),
 			NoticesToImprove = _concernsDbContext.NoticesToImprove
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: Notice To Improve"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Nti))
 				.ToArray(),
 			SrmaCases = _concernsDbContext.SRMACases
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, "Action: School Resource Management Adviser"))
+				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Srma))
 				.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
 				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast))
 				.ToArray()
 		});
+	}
+
+	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(List<int> caseIds)
+	{
+		var query = GetCases(caseIds);
+
+		var result = SelectClosedCaseSummary(query);
+
+		return result;
 	}
 
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
@@ -204,23 +223,23 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			Decisions = from decisions in cases.Decisions select decisions,
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Financial plan"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.FinancialPlan))
 							.ToArray(),
 			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiUnderConsideration))
 							.ToArray(),
 			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiWarningLetter))
 							.ToArray(),
 			NoticesToImprove = _concernsDbContext.NoticesToImprove
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Nti))
 							.ToArray(),
 			SrmaCases = _concernsDbContext.SRMACases
 							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser"))
+							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Srma))
 							.ToArray(),
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 							.Where(x => x.CaseUrn == cases.Urn)
