@@ -38,7 +38,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
 		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
@@ -59,7 +59,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
 		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
@@ -80,7 +80,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
 		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
@@ -122,7 +122,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
-		var caseIds = queryBuilder.Select(c => c.Id).ToList();
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
 		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
 
