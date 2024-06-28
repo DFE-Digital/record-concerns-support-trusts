@@ -1,5 +1,8 @@
 ## 37.0.0
 
+* added whistleblowing as a new option for means of referral
+* updated the styling so that all the content is in line with the website header
+
 ## 36.0.0
 
 * added a notification banner to inform users of system changes, only displays when they are scheduled
