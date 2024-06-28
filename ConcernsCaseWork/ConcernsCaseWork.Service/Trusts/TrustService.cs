@@ -40,6 +40,8 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			var queryParams = HttpUtility.ParseQueryString(string.Empty);
 
+			queryParams.Add("status", "all");
+
 			if (!string.IsNullOrEmpty(trustSearch.GroupName))
 			{
 				queryParams.Add("groupName", trustSearch.GroupName);
@@ -166,7 +168,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<List<EstablishmentDto>> GetEstablishments(string ukPrn)
 		{
-			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/v4/establishments/trust?trustUkprn={ukPrn}");
+			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/{EndpointV4}/establishments/trust?trustUkprn={ukPrn}");
 
 			var result = establishmentResponse.Select(e =>
 			{
@@ -180,7 +182,7 @@ namespace ConcernsCaseWork.Service.Trusts
 					HeadteacherLastName = e.HeadteacherLastName,
 					EstablishmentType = e.EstablishmentType,
 					Census = e.Census,
-					SchoolWebsite = e.SchoolWebsite,
+					SchoolWebsite = e.MisEstablishments.SchoolWebsite,
 					SchoolCapacity = e.SchoolCapacity,
 					LocalAuthorityName = e.LocalAuthorityName,
 				};
