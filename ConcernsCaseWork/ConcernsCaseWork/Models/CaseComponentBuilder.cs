@@ -14,15 +14,15 @@ namespace ConcernsCaseWork.Models
 			// National operations and utc are kept for existing cases, but are not selectable for new cases
 			var enumValues = new Territory[]
 			{
-				Territory.Midlands_And_West__West_Midlands,
 				Territory.Midlands_And_West__East_Midlands,
 				Territory.North_And_Utc__North_East,
 				Territory.North_And_Utc__North_West,
+				Territory.Midlands_And_West__West_Midlands,
 				Territory.North_And_Utc__Yorkshire_And_Humber,
-				Territory.Midlands_And_West__SouthWest,
-				Territory.South_And_South_East__South_East,
+				Territory.South_And_South_East__East_Of_England,
 				Territory.South_And_South_East__London,
-				Territory.South_And_South_East__East_Of_England
+				Territory.South_And_South_East__South_East,
+				Territory.Midlands_And_West__SouthWest,
 			};
 
 			var radioItems = enumValues
