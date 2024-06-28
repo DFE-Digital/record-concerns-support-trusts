@@ -38,51 +38,38 @@
                     </legend>
                     <div class="govuk-radios" data-module="govuk-radios">
 
-                        <govuk-radios-item 
-                            id="budget-forecast" 
-                            name="activity-id" 
-                            value="@TrustEngagementActivity.BudgetForecast" 
-                            label="Budget Forecast Return/Accounts Return driven"
-                            hint="Engagement with any trusts identified at potential risk" />
+                        <govuk-radios-item id="budget-forecast"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.BudgetForecast)"
+                                           label="@TrustEngagementActivity.BudgetForecast.Description()"
+                                           hint="Engagement with any trusts identified at potential risk" />
                         <div class="govuk-radios__conditional">
                             <partial name="Components/_RadioList" model="@Model.BudgetForecastSubActivities" />
                         </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="executive-pay-engagement" name="activity-id" type="radio" value="2">
-                            <label class="govuk-label govuk-radios__label" for="executive-pay-engagement">
-                                Executive pay engagement
-                            </label>
-                            <div class="govuk-hint">
-                                (Enter test here)
-                            </div>
-                        </div>
+                        <govuk-radios-item id="executive-pay-engagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.ExecutivePayEngagement)"
+                                           label="@TrustEngagementActivity.ExecutivePayEngagement.Description()"
+                                           hint="(Enter test here)" />
                         <div class="govuk-radios__conditional">
                             <partial name="Components/_RadioList" model="@Model.ExecutivePayEngagementSubActivities" />
                         </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="financial-returns-assurance" name="activity-id" type="radio" value="3">
-                            <label class="govuk-label govuk-radios__label" for="financial-returns-assurance">
-                                Financial returns assurance
-                            </label>
-                            <div class="govuk-hint">
-                                Following up with trusts on issues flagged in their latest financial statements
-                            </div>
-                        </div>
+                        <govuk-radios-item id="financial-returns-assurance"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.FinanceReturnsAssurance)"
+                                           label="@TrustEngagementActivity.FinanceReturnsAssurance.Description()"
+                                           hint="Following up with trusts on issues flagged in their latest financial statements" />
                         <div class="govuk-radios__conditional">
                             <partial name="Components/_RadioList" model="@Model.FinancialReturnsAssuranceSubActivities" />
                         </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="reserves-oversight-assurance" name="activity-id" type="radio" value="4">
-                            <label class="govuk-label govuk-radios__label" for="reserves-oversight-assurance">
-                                Reserves oversight assurance project
-                            </label>
-                            <div class="govuk-hint">
-                                Engaging with trusts
-                            </div>
-                        </div>
+                        <govuk-radios-item id="reserves-oversight-assurance"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.ReservesOversightAssurance)"
+                                           label="@TrustEngagementActivity.ReservesOversightAssurance.Description()"
+                                           hint="Engaging with trusts" />
                         <div class="govuk-radios__conditional">
                             <partial name="Components/_RadioList" model="@Model.ReservesOversightAssuranceSubActivities" />
                         </div>
