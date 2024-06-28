@@ -74,35 +74,23 @@
                             <partial name="Components/_RadioList" model="@Model.ReservesOversightAssuranceSubActivities" />
                         </div>
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="local-proactive-enagement" name="activity-id" type="radio" value="5">
-                            <label class="govuk-label govuk-radios__label" for="local-proactive-engagement">
-                                Local proactive engagement
-                            </label>
-                            <div class="govuk-hint">
-                                Division-led work
-                            </div>
-                        </div>
+                        <govuk-radios-item id="local-proactive-enagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.LocalProactiveEngagement)"
+                                           label="@TrustEngagementActivity.LocalProactiveEngagement.Description()"
+                                           hint="Division-led work" />
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="other-vulnerability" name="activity-id" type="radio" value="6">
-                            <label class="govuk-label govuk-radios__label" for="other-vulnerability">
-                                Other vulnerability
-                            </label>
-                            <div class="govuk-hint">
-                                Other national processes
-                            </div>
-                        </div>
+                        <govuk-radios-item id="other-vulnerability"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.OtherVulnerability)"
+                                           label="@TrustEngagementActivity.OtherVulnerability.Description()"
+                                           hint="Other national processes" />
 
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="no-engagement" name="activity-id" type="radio" value="7">
-                            <label class="govuk-label govuk-radios__label" for="no-engagement">
-                                No engagement activities taken forward
-                            </label>
-                            <div class="govuk-hint">
-                                No engagement activity taken forward
-                            </div>
-                        </div>
+                        <govuk-radios-item id="no-engagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.NoEngagement)"
+                                           label="@TrustEngagementActivity.NoEngagement.Description()"
+                                           hint="No engagement activity taken forward" />
                         <div class="govuk-radios__conditional">
                             <div class="govuk-form-group">
                                 <fieldset class="govuk-fieldset">

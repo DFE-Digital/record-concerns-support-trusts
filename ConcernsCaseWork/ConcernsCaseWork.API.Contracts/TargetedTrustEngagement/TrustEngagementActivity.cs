@@ -4,12 +4,19 @@ namespace ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
 {
 	public enum TrustEngagementActivity
 	{
+		[Description("Budget Forecast Return/Accounts Return driven")]
 		BudgetForecast = 1,
+		[Description("Executive pay engagement")]
 		ExecutivePayEngagement = 2,
+		[Description("Finance returns assurance")]
 		FinanceReturnsAssurance = 3,
+		[Description("Reserves oversight assurance project")]
 		ReservesOversightAssurance = 4,
+		[Description("Local proactive engagement")]
 		LocalProactiveEngagement = 5,
+		[Description("Other vulnerability")]
 		OtherVulnerability = 6,
+		[Description("No engagement activities were taken forward")]
 		NoEngagement = 7
 	}
 
