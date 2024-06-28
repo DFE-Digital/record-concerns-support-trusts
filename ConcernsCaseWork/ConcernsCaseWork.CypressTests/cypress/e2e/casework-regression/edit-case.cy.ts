@@ -46,18 +46,18 @@ describe("Editing a case", () => {
 			.selectOption()
 			.confirmOption();
 
-        Logger.log("Create a valid case division");
-        selectCaseDivisionPage
-            .withCaseDivision("SFSO")
-            .continue();
+		Logger.log("Create a valid case division");
+		selectCaseDivisionPage
+			.withCaseDivision("SFSO")
+			.continue();
 
 		Logger.log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+		addTerritoryPage.withTerritory("North - North East").nextStep();
 
-        Logger.log("Create a valid concerns case type");
-        selectCaseTypePage
-            .withCaseType("Concerns")
-            .continue();
+		Logger.log("Create a valid concerns case type");
+		selectCaseTypePage
+			.withCaseType("Concerns")
+			.continue();
 
 		Logger.log("Create a valid concern");
 		createConcernPage
@@ -72,7 +72,7 @@ describe("Editing a case", () => {
 		Logger.log("Populate risk to trust");
 		addDetailsPage.withRiskToTrust("Red Plus").nextStep();
 
-		
+
 
 		Logger.log("Add concern details with valid text limit");
 		addConcernDetailsPage
@@ -89,7 +89,7 @@ describe("Editing a case", () => {
 			.hasRiskToTrust("Red Plus")
 			.hasDirectionOfTravel("Deteriorating")
 			.hasConcerns("Deficit", ["Red"])
-			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasManagedBy("SFSO", "North - North East")
 			.hasIssue("This is an issue");
 
 		Logger.log("Edit risk to trust");
@@ -125,12 +125,12 @@ describe("Editing a case", () => {
 		Logger.log("Edit a territory");
 		caseManagementPage.editManagedBy();
 
-		addTerritoryPage.hasTerritory("North and UTC - North East");
+		addTerritoryPage.hasTerritory("North - North East");
 
 		Logger.log("Checking accessibility on edit territory");
 		cy.excuteAccessibilityTests();
 
-		addTerritoryPage.withTerritory("North and UTC - North West").apply();
+		addTerritoryPage.withTerritory("North - North West").apply();
 
 		Logger.log("Edit Issue");
 		caseManagementPage.showAllConcernDetails().editIssue();
@@ -233,7 +233,7 @@ describe("Editing a case", () => {
 			.hasRiskToTrust("Red")
 			.hasDirectionOfTravel("Improving")
 			.hasConcerns("Deficit", ["Amber", "Green"])
-			.hasManagedBy("SFSO", "North and UTC - North West")
+			.hasManagedBy("SFSO", "North - North West")
 			.hasIssue("New Issue")
 			.hasCurrentStatus("New Status")
 			.hasCaseAim("New Case aim")
@@ -270,14 +270,14 @@ describe("Editing a case", () => {
 		CaseManagementPage.getAddToCaseBtn().click();
 
 		AddToCasePage.hasActions([
-            "Decision",
+			"Decision",
 			"Financial plan",
-            "NTI: Under consideration",
-            "NTI: Warning letter",
-            "NTI: Notice to improve",
-            "SRMA (School Resource Management Adviser)",
+			"NTI: Under consideration",
+			"NTI: Warning letter",
+			"NTI: Notice to improve",
+			"SRMA (School Resource Management Adviser)",
 			"TFF (trust financial forecast)"
-        ]);
+		]);
 
 		AddToCasePage.getAddToCaseBtn().click();
 		AddToCasePage.hasValidationError("Select an action or decision");

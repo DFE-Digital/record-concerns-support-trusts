@@ -101,20 +101,20 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
 			.hasManagedBy("SFSO", "");
-	
+
 		Logger.log("Populate territory");
-		addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+		addTerritoryPage.withTerritory("North - North East").nextStep();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO", "North and UTC - North East");
+			.hasManagedBy("SFSO", "North - North East");
 
 		Logger.log("Create a valid concerns case type");
 		selectCaseTypePage.withCaseType("Concerns").continue();
 
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO", "North and UTC - North East");
+			.hasManagedBy("SFSO", "North - North East");
 
 		Logger.log("Create a valid concern");
 		createConcernPage
@@ -126,7 +126,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.log("Check Concern details are correctly populated");
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasManagedBy("SFSO", "North - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber");
 
@@ -137,7 +137,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasManagedBy("SFSO", "North - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 
@@ -149,7 +149,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		);
 		createCaseSummary
 			.hasTrustSummaryDetails(trustName)
-			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasManagedBy("SFSO", "North - North East")
 			.hasConcernType("Deficit")
 			.hasConcernRiskRating("Red Amber")
 			.hasRiskToTrust("Red Plus");
@@ -517,7 +517,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		Logger.log("Validate Closed Case has correct details");
 		viewClosedCasePage
 			.hasConcerns("Deficit")
-			.hasManagedBy("SFSO", "North and UTC - North East")
+			.hasManagedBy("SFSO", "North - North East")
 			.hasIssue("This is an issue")
 			.hasCurrentStatus("This is the current status")
 			.hasCaseAim("This is the case aim")
