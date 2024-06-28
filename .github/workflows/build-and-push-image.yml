@@ -14,9 +14,6 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.inputs.environment }}
 
-env:
-  NODE_VERSION: 16.x
-
 jobs:
   set-env:
     name: Determine environment
