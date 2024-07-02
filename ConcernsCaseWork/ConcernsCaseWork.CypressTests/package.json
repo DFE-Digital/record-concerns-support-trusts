@@ -31,7 +31,7 @@
     "cypress-multi-reporters": "^1.5.0",
     "cypress-slack-reporter": "^1.5.3",
     "eslint": "^8.41.0",
-    "eslint-plugin-cypress": "^2.13.3",
+    "eslint-plugin-cypress": "^3.0.0",
     "luxon": "^3.3.0",
     "mocha": "^9.2.2",
     "mochawesome": "^7.0.1",
