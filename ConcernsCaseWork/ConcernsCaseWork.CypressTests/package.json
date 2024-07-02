@@ -27,18 +27,18 @@
     "axe-core": "^4.6.3",
     "cypress": "^13.0.0",
     "cypress-axe": "^1.4.0",
-    "cypress-localstorage-commands": "^1.6.1",
+    "cypress-localstorage-commands": "^2.0.0",
     "cypress-multi-reporters": "^1.5.0",
     "cypress-slack-reporter": "^1.5.3",
     "eslint": "^8.41.0",
-    "eslint-plugin-cypress": "^2.13.3",
+    "eslint-plugin-cypress": "^3.0.0",
     "luxon": "^3.3.0",
-    "mocha": "^9.2.2",
+    "mocha": "^10.0.0",
     "mochawesome": "^7.0.1",
     "mochawesome-merge": "^4.2.1",
     "mochawesome-report-generator": "^6.0.1",
     "puppeteer": "^22.0.0",
-    "typescript": "^4.8.4",
+    "typescript": "^5.0.0",
     "zaproxy": "^2.0.0-rc.2"
   }
 }
