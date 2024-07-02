@@ -94,10 +94,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/{WarningLetterId}/edit");
 				}
-				else
-				{
-					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
-				}
+
+				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
 			}
 			catch (Exception ex)
 			{
@@ -115,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()
 		{
-			return await _ntiWarningLetterModelService.GetWarningLetter(ContinuationId);
+			return await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
 		}
 	}
 }

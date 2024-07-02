@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Permissions;
 using System;
 using System.Collections.Generic;
@@ -13,37 +14,28 @@ namespace ConcernsCaseWork.Services.Nti
 	{
 		private readonly INtiCachedService _ntiCachedService;
 		private readonly ICasePermissionsService _casePermissionsService;
+		private INtiService _ntiService;
 
 		public NtiModelService(
-			INtiCachedService ntiCachedService, 
+			INtiCachedService ntiCachedService,
+			INtiService ntiService,
 			ICasePermissionsService casePermissionsService)
 		{
 			_ntiCachedService = ntiCachedService;
+			_ntiService = ntiService;
 			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<NtiModel> CreateNtiAsync(NtiModel ntiModel)
 		{
-			var created = await _ntiCachedService.CreateNtiAsync(NtiMappers.ToDBModel(ntiModel));
+			var created = await _ntiService.CreateNtiAsync(NtiMappers.ToDBModel(ntiModel));
 
 			return NtiMappers.ToServiceModel(created);
 		}
 
-		public async Task<NtiModel> GetNtiAsync(string continuationId)
-		{
-			if (string.IsNullOrWhiteSpace(continuationId))
-			{
-				throw new ArgumentNullException(nameof(continuationId));
-			}
-
-			var dto = await _ntiCachedService.GetNtiAsync(continuationId);
-
-			return NtiMappers.ToServiceModel(dto);
-		}
-
 		public async Task<NtiModel> GetNtiViewModelAsync(long caseId, long ntiId)
 		{
-			var dto = await _ntiCachedService.GetNtiAsync(ntiId);
+			var dto = await _ntiService.GetNtiAsync(ntiId);
 			var permissions = await _casePermissionsService.GetCasePermissions(caseId);
 
 			var result = NtiMappers.ToServiceModel(dto, permissions);
@@ -53,23 +45,23 @@ namespace ConcernsCaseWork.Services.Nti
 
 		public async Task<NtiModel> GetNtiByIdAsync(long ntiId)
 		{
-			var dto = await _ntiCachedService.GetNtiAsync(ntiId);
+			var dto = await _ntiService.GetNtiAsync(ntiId);
 
 			return NtiMappers.ToServiceModel(dto);
 		}
 
 		public async Task<ICollection<NtiModel>> GetNtisForCaseAsync(long caseUrn)
 		{
-			var ntiDtos = await _ntiCachedService.GetNtisForCaseAsync(caseUrn);
+			var ntiDtos = await _ntiService.GetNtisForCaseAsync(caseUrn);
 
-			return ntiDtos.Select(dto => NtiMappers.ToServiceModel(dto)).ToArray();
+			return ntiDtos.Select(NtiMappers.ToServiceModel).ToArray();
 		}
 
 		public async Task<NtiModel> PatchNtiAsync(NtiModel patchNti)
 		{
 			patchNti.UpdatedAt = DateTime.Now;
 			var dto = NtiMappers.ToDBModel(patchNti);
-			var patchedDto = await _ntiCachedService.PatchNtiAsync(dto);
+			var patchedDto = await _ntiService.PatchNtiAsync(dto);
 
 			return NtiMappers.ToServiceModel(patchedDto);
 		}
@@ -82,6 +74,18 @@ namespace ConcernsCaseWork.Services.Nti
 			}
 
 			await _ntiCachedService.SaveNtiAsync(NtiMappers.ToDBModel(ntiModel), continuationId);
+		}
+
+		public async Task<NtiModel> GetNtiFromCacheAsync(string continuationId)
+		{
+			if (string.IsNullOrWhiteSpace(continuationId))
+			{
+				throw new ArgumentNullException(nameof(continuationId));
+			}
+
+			var dto = await _ntiCachedService.GetNtiAsync(continuationId);
+
+			return NtiMappers.ToServiceModel(dto);
 		}
 	}
 }

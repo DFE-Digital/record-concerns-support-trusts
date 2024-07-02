@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 		Task<NtiWarningLetterModel> GetNtiWarningLetterViewModel(long caseId, long warningLetterId);
 		Task<NtiWarningLetterModel> PatchNtiWarningLetter(NtiWarningLetterModel patchWarningLetter);
 		Task<IEnumerable<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn);
-		Task<NtiWarningLetterModel> GetWarningLetter(string continuationId);
+		Task<NtiWarningLetterModel> GetWarningLetterFromCache(string continuationId);
 		Task StoreWarningLetter(NtiWarningLetterModel ntiWarningLetter, string continuationId);
 	}
 }

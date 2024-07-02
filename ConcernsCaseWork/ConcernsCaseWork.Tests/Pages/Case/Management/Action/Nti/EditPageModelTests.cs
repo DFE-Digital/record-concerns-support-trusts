@@ -3,7 +3,6 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
-using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
@@ -103,6 +102,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
 			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
 			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
+			pageModel.NtiStatus = _fixture.Create<RadioButtonsUiComponent>();
 
 			// act
 			await pageModel.OnPostAsync(pageModel.ActionForAddConditionsButton);
@@ -129,6 +129,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
 			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
 			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
+			pageModel.NtiStatus = _fixture.Create<RadioButtonsUiComponent>();
+
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 			new Dictionary<string, StringValues>
@@ -172,6 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			pageModel.DateIssued = _fixture.Create<OptionalDateTimeUiComponent>();
 			pageModel.DateIssued.Date = new OptionalDateModel() { Day = "9", Month = "2", Year = "2022" };
 			pageModel.Notes = _fixture.Create<TextAreaUiComponent>();
+			pageModel.NtiStatus = _fixture.Create<RadioButtonsUiComponent>();
 
 			// act
 			await pageModel.OnPostAsync(pageModel.ActionForContinueButton);

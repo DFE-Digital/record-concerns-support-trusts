@@ -1,11 +1,7 @@
-﻿using ConcernsCaseWork.API.Contracts.NoticeToImprove;
-using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
@@ -97,10 +93,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}/edit");
 				}
-				else
-				{
-					return Redirect($"/case/{CaseUrn}/management/action/nti/add");
-				}
+
+				return Redirect($"/case/{CaseUrn}/management/action/nti/add");
 			}
 			catch (Exception ex)
 			{
@@ -118,7 +112,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task<NtiModel> GetUpToDateModel()
 		{
-			return await _ntiModelService.GetNtiAsync(ContinuationId);
+			return await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
 		}
 	}
 }

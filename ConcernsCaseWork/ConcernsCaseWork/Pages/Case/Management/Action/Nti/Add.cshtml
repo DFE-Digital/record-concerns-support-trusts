@@ -34,31 +34,8 @@
             </div>
 
             <form method="post" id="add-nti-form" novalidate>
-                @* Status *@
-                <div class="govuk-form-group govuk-!-margin-top-9">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                            <h2 class="govuk-heading-m">Current status</h2>
-                        </legend>
-                        <div class="govuk-radios" data-module="govuk-radios">
-                            @{
-                                int statusId = 0;
-                            }
-                            @foreach (var status in Model.Statuses)
-                            {
-                                var idStr = statusId++ == 0 ? "status" : "status-" + statusId;
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="@idStr" data-testid="status-@status.Text" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
-                                    <label class="govuk-label govuk-radios__label" for="@idStr">
-                                        <span>
-                                            @status.Text
-                                        </span>
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                    </fieldset>
-                </div>
+                
+                <partial name="Components/_RadioList" model="Model.NtiStatus" />
 
                 <partial name="Components/_DateTime" model="Model.DateIssued" />
 

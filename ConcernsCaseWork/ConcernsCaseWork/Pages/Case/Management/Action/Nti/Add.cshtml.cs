@@ -33,8 +33,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public bool IsReturningFromConditions { get; set; }
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> Statuses { get; private set; }
+
 		public IEnumerable<RadioItem> Reasons { get; private set; }
+
+		[BindProperty]
+		public RadioButtonsUiComponent NtiStatus { get; set; }
 
 		[BindProperty]
 		public OptionalDateTimeUiComponent DateIssued { get; set; }
@@ -72,24 +75,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					ContinuationId = string.Empty;
 				}
 
-				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
-				{
-					await LoadWarningLetterFromCache();
-				}
-				else
-				{
-					if (NtiId != null)
-					{
-						await LoadWarningLetterFromDB();
-					}
-				}
+				Nti = await LoadNti();
 
-				if (Nti is {IsClosed : true})
+				if (Nti is { IsClosed: true })
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
 
-				await LoadPageComponents(Nti);
+				LoadPageComponents(Nti);
 
 				TempData.Keep(nameof(ContinuationId));
 			}
@@ -108,7 +101,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			{
 				if (!ModelState.IsValid)
 				{
-					await LoadPageComponents();
+					LoadPageComponents();
 					return Page();
 				}
 
@@ -116,10 +109,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				{
 					return await HandOverToConditions();
 				}
-				else if (action.Equals(ActionForContinueButton, StringComparison.OrdinalIgnoreCase))
-				{
-					return await HandleContinue();
-				}
+
+				return await HandleContinue();
 			}
 			catch (Exception ex)
 			{
@@ -130,25 +121,42 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return Page();
 		}
 
-		private void SetupPage()
+		private async Task<NtiModel> LoadNti()
 		{
-			Statuses = GetStatuses();
-			Reasons = GetReasons();
-
-			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
-										 : @$"/case/{CaseUrn}/management/action";
-		}
-
-		private async Task LoadPageComponents(NtiModel model)
-		{
-			await LoadPageComponents();
-
-			if (model == null)
+			if (HasCachedNti(CaseUrn, ContinuationId))
 			{
-				return;
+				return await LoadWarningLetterFromCache();
+			}
+			else if (NtiId != null)
+			{
+				return await LoadWarningLetterFromDB();
 			}
 
+			return new NtiModel();
+		}
+
+		private static bool HasCachedNti(int caseUrn, string continuationId)
+		{
+			return !string.IsNullOrWhiteSpace(continuationId) && continuationId.StartsWith(caseUrn.ToString());
+		}
+
+		private async Task<NtiModel> LoadWarningLetterFromCache()
+		{
+			return await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
+		}
+
+		private async Task<NtiModel> LoadWarningLetterFromDB()
+		{
+			return await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
+		}
+
+		private void LoadPageComponents(NtiModel model)
+		{
+			LoadPageComponents();
+
 			Notes.Text.StringContents = model.Notes;
+			NtiStatus.SelectedId = (int?)model.Status;
+			Reasons = BuildReasonsComponent(model.Reasons);
 
 			if (model.DateStarted.HasValue)
 			{
@@ -156,12 +164,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private async Task LoadPageComponents()
+		private void LoadPageComponents()
 		{
-			SetupPage();
+			CancelLinkUrl = NtiId.HasValue ? @$"/case/{CaseUrn}/management/action/nti/{NtiId.Value}"
+							 : @$"/case/{CaseUrn}/management/action";
 
-			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
 			Notes = BuildNotesComponent(Notes?.Text.StringContents);
+			NtiStatus = BuildStatusComponent(NtiStatus?.SelectedId);
+			Reasons = BuildReasonsComponent(GetSelectedReasons().ToList());
+			DateIssued = BuildDateIssuedComponent(DateIssued?.Date);
 		}
 
 		private static OptionalDateTimeUiComponent BuildDateIssuedComponent(OptionalDateModel? date = null)
@@ -199,13 +210,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 
 			TempData.Remove(nameof(ContinuationId));
+
 			return Redirect($"/case/{CaseUrn}/management");
 		}
 
 		private async Task<RedirectResult> HandOverToConditions()
 		{
 			var ntiModel = await GetUpToDateModel();
-			if (string.IsNullOrWhiteSpace(ContinuationId) || !ContinuationId.StartsWith(CaseUrn.ToString()))
+
+			if (!HasCachedNti(CaseUrn, ContinuationId))
 			{
 				ContinuationId = $"{CaseUrn}_{Guid.NewGuid()}";
 			}
@@ -213,27 +226,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			await _ntiModelService.StoreNtiAsync(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
+
 			if (NtiId == null)
 			{
 				return Redirect($"/case/{CaseUrn}/management/action/nti/conditions");
 			}
-			else
-			{
-				return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}/edit/conditions");
-			}
+
+			return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}/edit/conditions");
 		}
 
 		private async Task<NtiModel> GetUpToDateModel()
 		{
-			NtiModel nti = null;
+			NtiModel nti;
 
-			if (!string.IsNullOrWhiteSpace(ContinuationId)) // conditions have been recorded
+			if (HasCachedNti(CaseUrn, ContinuationId)) // conditions have been recorded
 			{
-				if (ContinuationId.StartsWith(CaseUrn.ToString()))
-				{
-					nti = await _ntiModelService.GetNtiAsync(ContinuationId);
-					nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
-				}
+				nti = await _ntiModelService.GetNtiFromCacheAsync(ContinuationId);
+				nti = PopulateNtiFromRequest(nti);
 			}
 			else if (NtiId.HasValue)
 			{
@@ -253,45 +262,45 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private IEnumerable<RadioItem> GetStatuses()
+		private static RadioButtonsUiComponent BuildStatusComponent(int? selectedId = null)
 		{
-			var statuses = new List<NtiStatus>
+			var enumValues = new List<NtiStatus>()
 			{
-				NtiStatus.PreparingNTI,
-				NtiStatus.IssuedNTI,
-				NtiStatus.ProgressOnTrack,
-				NtiStatus.EvidenceOfNTINonCompliance,
-				NtiStatus.SeriousNTIBreaches,
-				NtiStatus.SubmissionToLiftNTIInProgress,
-				NtiStatus.SubmissionToCloseNTIInProgress
+				API.Contracts.NoticeToImprove.NtiStatus.PreparingNTI,
+				API.Contracts.NoticeToImprove.NtiStatus.IssuedNTI,
+				API.Contracts.NoticeToImprove.NtiStatus.ProgressOnTrack,
+				API.Contracts.NoticeToImprove.NtiStatus.EvidenceOfNTINonCompliance,
+				API.Contracts.NoticeToImprove.NtiStatus.SeriousNTIBreaches,
+				API.Contracts.NoticeToImprove.NtiStatus.SubmissionToLiftNTIInProgress,
+				API.Contracts.NoticeToImprove.NtiStatus.SubmissionToCloseNTIInProgress
 			};
 
-			return statuses.Select(s => new RadioItem
+			var radioItems = enumValues.Select(v =>
 			{
-				Id = ((int)s).ToString(),
-				Text = s.Description(),
-				IsChecked = Nti?.Status == s
-			});
+				return new SimpleRadioItem(v.Description(), (int)v) { TestId = $"status-{v.Description()}" };
+			}).ToArray();
+
+			return new(ElementRootId: "status", Name: nameof(NtiStatus), "Current status")
+			{
+				RadioItems = radioItems,
+				SelectedId = selectedId,
+				DisplayName = "Status",
+			};
 		}
 
-		private IEnumerable<RadioItem> GetReasons()
+		private static IEnumerable<RadioItem> BuildReasonsComponent(ICollection<NtiReason> selectedReasons)
 		{
 			var reasons = Enum.GetValues(typeof(NtiReason)).Cast<NtiReason>();
 			return reasons.Select(r => new RadioItem
 			{
 				Id = ((int)r).ToString(),
 				Text = r.Description(),
-				IsChecked = Nti?.Reasons?.Any(wl_r => wl_r == r) ?? false
+				IsChecked = selectedReasons.Any(wl_r => wl_r == r)
 			});
 		}
 
 		private NtiModel PopulateNtiFromRequest(NtiModel ntiModel)
 		{
-			if (ntiModel == null)
-			{
-				throw new ArgumentException(nameof(ntiModel));
-			}
-
 			var newValues = PopulateNtiFromRequest();
 
 			ntiModel.CaseUrn = newValues.CaseUrn;
@@ -307,16 +316,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private NtiModel PopulateNtiFromRequest()
 		{
-			var reasons = Request.Form["reason"];
-			var status = Request.Form["status"];
-
-			int? statusValue = int.TryParse(status.FirstOrDefault(), out int result) ? result : null;
-
 			var nti = new NtiModel()
 			{
 				CaseUrn = CaseUrn,
-				Reasons = reasons.Select(r => (NtiReason)int.Parse(r)).ToArray(),
-				Status = (NtiStatus?)statusValue,
+				Reasons = GetSelectedReasons().ToArray(),
+				Status = (NtiStatus?)NtiStatus.SelectedId,
 				Conditions = Array.Empty<NtiConditionModel>(),
 				Notes = Notes.Text.StringContents,
 				DateStarted = DateIssued.Date.ToDateTime(),
@@ -327,14 +331,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return nti;
 		}
 
-		private async Task LoadWarningLetterFromCache()
+		private IEnumerable<NtiReason> GetSelectedReasons()
 		{
-			Nti = await _ntiModelService.GetNtiAsync(ContinuationId);
-		}
+			if (!Request.HasFormContentType)
+			{
+				return new List<NtiReason>();
+			}
 
-		private async Task LoadWarningLetterFromDB()
-		{
-			Nti  = await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
+			var reasons = Request.Form["reason"];
+
+			return reasons.Select(r => (NtiReason)int.Parse(r));
 		}
 	}
 }
