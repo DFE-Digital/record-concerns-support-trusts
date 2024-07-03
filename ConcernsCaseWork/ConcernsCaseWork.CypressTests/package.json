@@ -12,7 +12,7 @@
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
     "create:html:report": "marge  mochareports/report.json -f report -o mochareports",
     "generate:html:report": "npm run combine:reports && npm run create:html:report",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore"
+    "lint": "eslint ."
   },
   "keywords": [
     "e2e",
