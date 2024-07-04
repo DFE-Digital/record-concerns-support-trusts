@@ -58,8 +58,6 @@ namespace ConcernsCaseWork.Security
 					builder.AddUsb().None();
 				});
 
-			// max age = one year in seconds
-			policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365);
 			return policy;
 		}
 	}
