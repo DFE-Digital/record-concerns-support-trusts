@@ -141,14 +141,13 @@ namespace ConcernsCaseWork
 				app.UseExceptionHandler("/Error");
 			}
 
-			app.UseHsts();
-
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
+			app.UseHsts();
 
 			// Combined with razor routing 404 display custom page NotFound
 			app.UseStatusCodePagesWithReExecute("/error/{0}");
