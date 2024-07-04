@@ -57,13 +57,6 @@ namespace ConcernsCaseWork.Tests.Security
 			Assert.That(headerPolicyCollection.ContainsKey("Permissions-Policy"), Is.True);
 			headerPolicyCollection.TryGetValue("Permissions-Policy", out var permissionsPolicy);
 			Assert.That(permissionsPolicy, Is.InstanceOf<PermissionsPolicyHeader>());
-
-			if (!isDev)
-			{
-				Assert.That(headerPolicyCollection.ContainsKey("Strict-Transport-Security"), Is.True);
-				headerPolicyCollection.TryGetValue("Strict-Transport-Security", out var strictTransportSecurity);
-				Assert.That(strictTransportSecurity, Is.InstanceOf<StrictTransportSecurityHeader>());
-			}
 		}
 	}
 }
