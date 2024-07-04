@@ -39,7 +39,6 @@ namespace ConcernsCaseWork.Security
 
 					builder.AddFrameAncestors().None();
 				})
-				.RemoveServerHeader()
 				.AddPermissionsPolicy(builder =>
 				{
 					builder.AddAccelerometer().None();
