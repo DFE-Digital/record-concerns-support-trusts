@@ -139,8 +139,6 @@ namespace ConcernsCaseWork
 
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
 
-			app.UseConcernsCaseworkSwagger(provider);
-
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -157,6 +155,9 @@ namespace ConcernsCaseWork
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
 			app.UseHsts();
+
+			// Register Swagger Provider
+			app.UseConcernsCaseworkSwagger(provider);
 
 			// Combined with razor routing 404 display custom page NotFound
 			app.UseStatusCodePagesWithReExecute("/error/{0}");
