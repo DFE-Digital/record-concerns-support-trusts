@@ -128,6 +128,15 @@ namespace ConcernsCaseWork
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
 		{
+			// Ensure we do not lose X-Forwarded-* Headers when behind a Proxy
+			var forwardOptions = new ForwardedHeadersOptions {
+				ForwardedHeaders = ForwardedHeaders.All,
+				RequireHeaderSymmetry = false
+			};
+			forwardOptions.KnownNetworks.Clear();
+			forwardOptions.KnownProxies.Clear();
+			app.UseForwardedHeaders(forwardOptions);
+
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
 
 			app.UseConcernsCaseworkSwagger(provider);
@@ -141,25 +150,18 @@ namespace ConcernsCaseWork
 				app.UseExceptionHandler("/Error");
 			}
 
-			app.UseHsts();
-
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
+			app.UseHsts();
 
 			// Combined with razor routing 404 display custom page NotFound
 			app.UseStatusCodePagesWithReExecute("/error/{0}");
 
 			app.UseHttpsRedirection();
-
-			//For Azure AD redirect uri to remain https
-			var forwardOptions = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All, RequireHeaderSymmetry = false };
-			forwardOptions.KnownNetworks.Clear();
-			forwardOptions.KnownProxies.Clear();
-			app.UseForwardedHeaders(forwardOptions);
 
 			app.UseStaticFiles();
 
