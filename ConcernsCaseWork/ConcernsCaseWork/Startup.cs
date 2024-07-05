@@ -154,8 +154,8 @@ namespace ConcernsCaseWork
 			app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
-			// app.UseSecurityHeaders(
-				// SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
+			var policyCollection = SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment());
+			app.UseSecurityHeaders(policyCollection);
 			app.UseHsts();
 
 			// Combined with razor routing 404 display custom page NotFound
