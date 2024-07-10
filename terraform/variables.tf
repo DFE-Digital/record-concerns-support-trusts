@@ -279,6 +279,12 @@ variable "cdn_frontdoor_rate_limiting_threshold" {
   type        = number
 }
 
+variable "cdn_frontdoor_rate_limiting_duration_in_minutes" {
+  description = "CDN Front Door rate limiting duration in minutes"
+  type        = number
+  default     = 5
+}
+
 variable "existing_logic_app_workflow" {
   description = "Name, and Resource Group of an existing Logic App Workflow. Leave empty to create a new Resource"
   type = object({
