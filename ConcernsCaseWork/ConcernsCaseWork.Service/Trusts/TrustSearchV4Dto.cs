@@ -22,12 +22,6 @@ namespace ConcernsCaseWork.Service.Trusts
 		[JsonProperty("address")]
 		public virtual GroupContactAddressDto GroupContactAddress { get; set; }
 
-		[JsonConstructor]
-		public TrustSearchV4Dto(string ukprn, string urn, string groupName,
-			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress) =>
-			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress) =
-			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress);
-
 		public TrustSearchV4Dto() { }
 	}
 }

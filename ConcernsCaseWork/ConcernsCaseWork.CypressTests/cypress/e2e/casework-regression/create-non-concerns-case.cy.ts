@@ -122,6 +122,8 @@ describe("Creating a non concerns case", () => {
 			.hasDateTrustContacted("05 June 2022")
 			.hasNotes("This is my notes");
 
+
+
 		Logger.log("Closing SRMA");
 		viewSrmaPage.addReason();
 
@@ -146,7 +148,7 @@ describe("Creating a non concerns case", () => {
 		});
 	});
 
-	describe("Converting non conern to concern case", () => {
+	describe("Converting non concern to concern case", () => {
 		it("Should make the case a concerns case", () => {
 			Logger.log("Create a case");
 			createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
@@ -366,6 +368,7 @@ describe("Creating a non concerns case", () => {
 				.hasCreatedDate(toDisplayDate(now))
 				.hasClosedDate(toDisplayDate(now))
 				.hasTrust(trustName)
+				.hasAction("Action: School Resource Management Adviser")
 				.select();
 		});
 

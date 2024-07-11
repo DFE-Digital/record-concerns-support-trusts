@@ -7,7 +7,9 @@ export default defineConfig({
   watchForFileChanges: false,
   chromeWebSecurity: false,
   video: false,
-  retries: 1,
+  retries: {
+    runMode: 1
+  },
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
     reporterEnabled: 'mochawesome',

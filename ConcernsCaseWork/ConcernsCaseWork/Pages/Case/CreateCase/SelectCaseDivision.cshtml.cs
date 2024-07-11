@@ -23,7 +23,6 @@ public class SelectCaseDivisionPageModel : CreateCaseBasePageModel
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedUserService;
 	private readonly ILogger<SelectCaseDivisionPageModel> _logger;
-	private readonly IFeatureManager _featureManager;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
@@ -34,13 +33,11 @@ public class SelectCaseDivisionPageModel : CreateCaseBasePageModel
 	public SelectCaseDivisionPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectCaseDivisionPageModel> logger,
-		IClaimsPrincipalHelper claimsPrincipalHelper,
-		IFeatureManager featureManager) : base(cachedUserService, claimsPrincipalHelper)
+		IClaimsPrincipalHelper claimsPrincipalHelper) : base(cachedUserService, claimsPrincipalHelper)
 	{
 		_trustModelService = trustModelService;
 		_cachedUserService = cachedUserService;
 		_logger = logger;
-		_featureManager = featureManager;
 	}
 
 	public async Task<IActionResult> OnGet()
@@ -101,14 +98,12 @@ public class SelectCaseDivisionPageModel : CreateCaseBasePageModel
 		return Page();
 	}
 
-	private async Task <RadioButtonsUiComponent> BuildCaseManagerComponent(int? selectedId = null)
+	private RadioButtonsUiComponent BuildCaseManagerComponent(int? selectedId = null)
 	{
-		var isRegionsGroupEnabled = await _featureManager.IsEnabledAsync(nameof(FeatureFlags.IsRegionsGroupEnabled));
-
 		var radioItems = new List<SimpleRadioItem>()
 		{
 			new SimpleRadioItem("SFSO (Schools Financial Support and Oversight)", (int)Division.SFSO) { TestId = Division.SFSO.ToString() },
-			new SimpleRadioItem("Regions Group", (int)Division.RegionsGroup) { TestId = Division.RegionsGroup.ToString(), Disabled = !isRegionsGroupEnabled },
+			new SimpleRadioItem("Regions Group", (int)Division.RegionsGroup) { TestId = Division.RegionsGroup.ToString() },
 		};
 
 		return new(ElementRootId: "case-division", Name: nameof(CaseDivision), "Who is managing this case?")
@@ -125,6 +120,6 @@ public class SelectCaseDivisionPageModel : CreateCaseBasePageModel
 		var userState = await GetUserState();
 		TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
 
-		CaseDivision = await BuildCaseManagerComponent(CaseDivision?.SelectedId);
+		CaseDivision = BuildCaseManagerComponent(CaseDivision?.SelectedId);
 	}
 }

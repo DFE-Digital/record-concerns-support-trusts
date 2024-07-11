@@ -114,11 +114,29 @@ namespace ConcernsCaseWork
 			{
 				options.ConnectionString = Configuration["ApplicationInsights:ConnectionString"];
 			});
+
+			// Enforce HTTPS in ASP.NET Core
+			// @link https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?
+			services.AddHsts(options =>
+			{
+				options.Preload = true;
+				options.IncludeSubDomains = true;
+				options.MaxAge = TimeSpan.FromDays(365);
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
 		{
+			// Ensure we do not lose X-Forwarded-* Headers when behind a Proxy
+			var forwardOptions = new ForwardedHeadersOptions {
+				ForwardedHeaders = ForwardedHeaders.All,
+				RequireHeaderSymmetry = false
+			};
+			forwardOptions.KnownNetworks.Clear();
+			forwardOptions.KnownProxies.Clear();
+			app.UseForwardedHeaders(forwardOptions);
+
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
 
 			app.UseConcernsCaseworkSwagger(provider);
@@ -132,26 +150,18 @@ namespace ConcernsCaseWork
 				app.UseExceptionHandler("/Error");
 			}
 
-			// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-			app.UseHsts();
-
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
+			app.UseHsts();
 
 			// Combined with razor routing 404 display custom page NotFound
 			app.UseStatusCodePagesWithReExecute("/error/{0}");
 
 			app.UseHttpsRedirection();
-
-			//For Azure AD redirect uri to remain https
-			var forwardOptions = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.All, RequireHeaderSymmetry = false };
-			forwardOptions.KnownNetworks.Clear();
-			forwardOptions.KnownProxies.Clear();
-			app.UseForwardedHeaders(forwardOptions);
 
 			app.UseStaticFiles();
 

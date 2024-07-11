@@ -5,7 +5,7 @@
 		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
 		<UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>37.0.0</Version>
+		<Version>38.0.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="custom">
@@ -37,21 +37,21 @@
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 		<PackageReference Include="FluentAssertions" Version="6.12.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.22" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.11">
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		  <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
-		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.8" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.6.1" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.26.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
 		<PackageReference Include="morelinq" Version="3.4.2" />
-		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
-		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.22.0" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.22.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
 	</ItemGroup>
 
 	<ItemGroup>

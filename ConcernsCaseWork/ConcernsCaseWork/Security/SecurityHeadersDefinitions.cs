@@ -39,7 +39,6 @@ namespace ConcernsCaseWork.Security
 
 					builder.AddFrameAncestors().None();
 				})
-				.RemoveServerHeader()
 				.AddPermissionsPolicy(builder =>
 				{
 					builder.AddAccelerometer().None();
@@ -58,8 +57,6 @@ namespace ConcernsCaseWork.Security
 					builder.AddUsb().None();
 				});
 
-			// max age = one year in seconds
-			policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365);
 			return policy;
 		}
 	}
