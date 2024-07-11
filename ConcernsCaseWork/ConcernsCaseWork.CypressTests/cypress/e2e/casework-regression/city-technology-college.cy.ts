@@ -12,27 +12,25 @@ import ctcApi from "../../api/cityTechnologyCollegeApi";
 import { CreateCityTechnologyCollegeRequest } from "cypress/api/apiDomain";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 
-describe("Creating a case for a city technology college", () =>
-{
-	const createCasePage = new CreateCasePage();
+describe("Creating a case for a city technology college", () => {
+    const createCasePage = new CreateCasePage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
 
-    const territory = "North and UTC - North East";
+    const territory = "North - North East";
     let email: string;
     let name: string;
     let now: Date;
 
-    let ctcRequest : CreateCityTechnologyCollegeRequest 
+    let ctcRequest: CreateCityTechnologyCollegeRequest
 
-	beforeEach(() => {
-		cy.login();
+    beforeEach(() => {
+        cy.login();
         now = new Date();
         email = Cypress.env(EnvUsername);
         var x = email.split("@")[0];
-        if(x.includes('.'))
-        {
-            name = x.replace('.',' ');
+        if (x.includes('.')) {
+            name = x.replace('.', ' ');
         } else {
             name = x;
         }
@@ -53,12 +51,11 @@ describe("Creating a case for a city technology college", () =>
         ctcApi.get(ctcRequest.ukprn)
             .then(response => {
 
-                if(response.ukprn == null)
-                {
+                if (response.ukprn == null) {
                     ctcApi.post(ctcRequest);
                 }
             });
-	});
+    });
 
     it("Should create a case with only required fields", () => {
         Logger.log("Create a case");
