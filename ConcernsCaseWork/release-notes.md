@@ -1,5 +1,7 @@
 ## 38.0.0
 
+* updated the description of the SFSO territories and removed North and UTC - UTC and National Operations as options
+
 ## 37.0.0
 
 * added whistleblowing as a new option for means of referral
