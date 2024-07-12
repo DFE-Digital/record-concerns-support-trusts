@@ -21,14 +21,14 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Services.Cases
 {
-	public class CloseCaseValidatorServiceTests
+	public class CaseValidatorServiceTests
 	{
 		[Test]
 		public async Task When_HasNoOpenActionsOrConcerns_Returns_NoValidationMessages()
 		{
 			var validator = CreateService();
 
-			var result = await validator.Validate(1);
+			var result = await validator.ValidateClose(1);
 
 			result.Should().BeEmpty();
 		}
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var validator = CreateService(recordsModelService);
 
-			var result = await validator.Validate(1);
+			var result = await validator.ValidateClose(1);
 
 			result.Should().BeEmpty();
 		}
@@ -61,19 +61,19 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				recordsModelService,
 				caseActionValidator);
 
-			var result = await validator.Validate(1);
+			var result = await validator.ValidateClose(1);
 
-			var expected = new List<CloseCaseErrorModel>()
+			var expected = new List<CaseValidationErrorModel>()
 			{
-				new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Close concerns" },
-				new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Case Action Error" },
+				new CaseValidationErrorModel() { Type = CaseValidationError.Concern, Error = "Close concerns" },
+				new CaseValidationErrorModel() { Type = CaseValidationError.CaseAction, Error = "Case Action Error" },
 
 			};
 
 			result.Should().BeEquivalentTo(expected);
 		}
 
-		private ICloseCaseValidatorService CreateService(
+		private ICaseValidatorService CreateService(
 			Mock<IRecordModelService> recordsModelService = null, 
 			Mock<ICaseActionValidator> caseActionValidator = null)
 		{
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var trustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			trustFinancialForecastService.Setup(m => m.GetAllForCase(1)).ReturnsAsync(new List<TrustFinancialForecastResponse>());
 
-			var result = new CloseCaseValidatorService(
+			var result = new CaseValidatorService(
 				recordsModelService.Object,
 				srmaService.Object,
 				financialPlanService.Object,

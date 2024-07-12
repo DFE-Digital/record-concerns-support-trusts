@@ -14,5 +14,14 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return errorMessage;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var financialPlans = caseActions.Any(ca => ca is FinancialPlanModel);
+
+			var errorMessage = financialPlans ? "Delete financial plan" : string.Empty;
+
+			return errorMessage;
+		}
 	}
 }

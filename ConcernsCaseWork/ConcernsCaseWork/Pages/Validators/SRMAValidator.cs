@@ -14,5 +14,14 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return errorMessage;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var srma = caseActions.Any(ca => ca is SRMAModel);
+
+			var errorMessage = srma ? "Delete SRMA action" : string.Empty;
+
+			return errorMessage;
+		}
 	}
 }

@@ -16,5 +16,14 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return result;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var hasOpenActions = caseActions.Any(c => c is DecisionSummaryModel);
+
+			var result = hasOpenActions ? "Delete decisions" : string.Empty;
+
+			return result;
+		}
 	}
 }
