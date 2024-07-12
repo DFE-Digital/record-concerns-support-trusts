@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
-		private readonly ICloseCaseValidatorService _closeCaseValidatorService;
+		private readonly ICaseValidatorService _caseValidatorService;
 
 		public readonly string ConcernsErrorKey = "Concerns";
 		public readonly string CaseActionsErrorKey = "CaseActions";
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ICasePermissionsService casePermissionsService,
 			IUserStateCachedService cachedService,
 			IClaimsPrincipalHelper claimsPrincipalHelper,
-			ICloseCaseValidatorService closeCaseValidatorService
+			ICaseValidatorService caseValidatorService
 			)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_casePermissionsService = Guard.Against.Null(casePermissionsService);
 			_cachedService = Guard.Against.Null(cachedService);
 			_claimsPrincipalHelper = claimsPrincipalHelper;
-			_closeCaseValidatorService = closeCaseValidatorService;
+			_caseValidatorService = caseValidatorService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -102,13 +102,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostCloseCaseAsync()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				var errors = await _closeCaseValidatorService.Validate(CaseUrn);
+				var errors = await _caseValidatorService.ValidateClose(CaseUrn);
 
 				if (errors.Count > 0)
 				{
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 					errors.ForEach(error =>
 					{
-						var key = error.Type == CloseCaseError.Concern ? ConcernsErrorKey : CaseActionsErrorKey;
+						var key = error.Type == CaseValidationError.Concern ? ConcernsErrorKey : CaseActionsErrorKey;
 
 						ModelState.AddModelError(key, error.Error);
 					});
@@ -126,6 +126,40 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				return Redirect($"/case/{CaseUrn}/management/closure");
+			}
+			catch(Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				SetErrorMessage(ErrorOnPostPage);
+			}
+
+			return Page();
+		}
+		
+		public async Task<IActionResult> OnPostDeleteCaseAsync()
+		{
+			_logger.LogMethodEntered();
+
+			try
+			{
+				var errors = await _caseValidatorService.ValidateDelete(CaseUrn);
+
+				if (errors.Count > 0)
+				{
+					CaseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
+					await LoadPage();
+
+					errors.ForEach(error =>
+					{
+						var key = error.Type == CaseValidationError.Concern ? ConcernsErrorKey : CaseActionsErrorKey;
+
+						ModelState.AddModelError(key, error.Error);
+					});
+
+					return Page();
+				}
+
+				return Redirect($"/case/{CaseUrn}/management/delete");
 			}
 			catch(Exception ex)
 			{
@@ -176,6 +210,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
 			return permissionsResponse.HasEditPermissions();
 		}
+		
+		private async Task<bool> UserHasDeleteCasePrivileges(long caseId)
+		{
+			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
+			return permissionsResponse.HasEditPermissions();
+		}
 
 		private async Task<bool> IsCaseEditable(long caseId)
 		{
@@ -188,6 +228,19 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return false;
 		}
+		
+		private async Task<bool> IsCaseDeletable(long caseId)
+		{
+			var userHasEditCasePrivileges = await UserHasEditCasePrivileges(caseId);
+
+			if (!CaseModel.IsClosed() && userHasEditCasePrivileges)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 		
