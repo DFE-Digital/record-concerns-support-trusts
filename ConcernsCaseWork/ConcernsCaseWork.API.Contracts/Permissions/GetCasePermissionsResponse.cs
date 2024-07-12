@@ -19,5 +19,10 @@ namespace ConcernsCaseWork.API.Contracts.Permissions
 		{
 			return Permissions.Contains(CasePermission.Edit);
 		}
+		
+		public bool HasDeletePermissions()
+		{
+			return Permissions.Contains(CasePermission.EditAndDelete);
+		}
 	}
 }
