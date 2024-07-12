@@ -1,0 +1,53 @@
+﻿@page "/case/{urn:long}/management/delete"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model ConcernsCaseWork.Pages.Case.Management.DeletePageModel
+
+@{
+    ViewData["Title"] = "Case closure";
+    var nonce = HttpContext.GetNonce();
+    var backLink = $"/case/{Model.CaseId}/management";
+}
+
+<partial name="_BannerError" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
+
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseId</span>
+                Delete case
+            </h1>
+
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    Cases cannot be recovered after they have been deleted.
+                </strong>
+            </div>
+
+            <form asp-page-handler="DeleteCase" method="post" id="delete-case-form" novalidate>
+
+                <partial name="Components/_TextArea" model="Model.RationaleForClosure" />
+
+                <div class="govuk-button-group">
+                    <!--delete case-->
+                    <button data-prevent-double-click="true" class="govuk-button" id="delete-case-button" data-module="govuk-button">
+                        Delete case
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+
+            </form>
+        }
+    </div>
+</div>
