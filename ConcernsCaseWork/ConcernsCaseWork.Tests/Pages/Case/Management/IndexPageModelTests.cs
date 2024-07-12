@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
 		private Mock<ICasePermissionsService> _casePermissionsService = null;
 		private Mock<IUserStateCachedService> _mockUserStateCacheService = null;
-		private Mock<ICloseCaseValidatorService> _mockCloseCaseValidationService = null;
+		private Mock<ICaseValidatorService> _mockCloseCaseValidationService = null;
 
 		private readonly static Fixture _fixture = new();
 
@@ -77,8 +77,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_casePermissionsService = new Mock<ICasePermissionsService>();
 			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(new GetCasePermissionsResponse());
 
-			_mockCloseCaseValidationService = new Mock<ICloseCaseValidatorService>();
-			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(new List<CloseCaseErrorModel>());
+			_mockCloseCaseValidationService = new Mock<ICaseValidatorService>();
+			_mockCloseCaseValidationService.Setup(m => m.ValidateClose(1)).ReturnsAsync(new List<CaseValidationErrorModel>());
 
 			_mockLogger = new Mock<ILogger<IndexPageModel>>();
 		}
@@ -170,7 +170,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var pageModel = SetupIndexPageModel(isAuthenticated: true);
 			pageModel.CaseUrn = 1;
 
-			var result = await pageModel.OnPostAsync();
+			var result = await pageModel.OnPostCloseCaseAsync();
 
 			var errors = pageModel.ModelState.GetValidationMessages();
 
@@ -186,11 +186,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		[Test]
 		public async Task Post_WhenCaseHasOpenConcernsAndActions_Returns_ValidationsErrors()
 		{
-			_mockCloseCaseValidationService.Setup(m => m.Validate(1)).ReturnsAsync(
-				new List<CloseCaseErrorModel>() 
+			_mockCloseCaseValidationService.Setup(m => m.ValidateClose(1)).ReturnsAsync(
+				new List<CaseValidationErrorModel>() 
 				{ 
-					new CloseCaseErrorModel() { Type = CloseCaseError.Concern, Error = "Resolve concerns" },
-					new CloseCaseErrorModel() { Type = CloseCaseError.CaseAction, Error = "Resolve SRMA" }
+					new CaseValidationErrorModel() { Type = CaseValidationError.Concern, Error = "Resolve concerns" },
+					new CaseValidationErrorModel() { Type = CaseValidationError.CaseAction, Error = "Resolve SRMA" }
 				});
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
@@ -199,7 +199,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var pageModel = SetupIndexPageModel(isAuthenticated: true);
 			pageModel.CaseUrn = 1;
 
-			await pageModel.OnPostAsync();
+			await pageModel.OnPostCloseCaseAsync();
 
 			var errors = pageModel.ModelState.GetValidationMessages().ToList();
 
