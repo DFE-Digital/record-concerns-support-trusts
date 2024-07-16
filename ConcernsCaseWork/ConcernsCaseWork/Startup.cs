@@ -80,6 +80,11 @@ namespace ConcernsCaseWork
 					options.AccessDeniedPath = "/access-denied";
 				});
 
+			services.AddAntiforgery(options =>
+			{
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+			});
+
 			// Redis
 			services.AddRedis(Configuration);
 
