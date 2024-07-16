@@ -37,7 +37,11 @@ namespace ConcernsCaseWork.Pages
 		{
 			_logger.LogMethodEntered();
 
-			var cookieOptions = new CookieOptions { Expires = DateTime.Today.AddMonths(6), Secure = true };
+			var cookieOptions = new CookieOptions {
+				Expires = DateTime.Today.AddMonths(6),
+				Secure = true,
+				HttpOnly = true,
+			};
 
 			if (bannerConsent != null)
 			{
