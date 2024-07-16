@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Pages
 
 		[BindProperty]
 		public bool HasConsented { get; set; }
-		
+
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public CookiesPageModel(ILogger<CookiesPageModel> logger)
