@@ -44,12 +44,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			
 			try
 			{
-				_logger.LogInformation("Case::Concern::ClosurePageModel::OnGet");
+				_logger.LogInformation("Case::Concern::DeletePageModel::OnGet");
 				(caseUrn, recordId) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosurePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::DeletePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -57,36 +57,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordId);
 		}
 
-		public async Task<ActionResult> OnGetCloseConcern()
+		public async Task<ActionResult> OnGetDeleteConcern()
 		{
 			long caseUrn = 0;
 			long recordId = 0;
 
 			try
 			{
-				_logger.LogInformation("Case::Concern::ClosurePageModel::CloseConcern");
+				_logger.LogInformation("Case::Concern::DeletePageModel::DeleteConcern");
 
 				(caseUrn, recordId) = GetRouteData();
 				
 				var currentDate = DateTimeOffset.Now;
-				var patchRecordModel = new PatchRecordModel()
-				{
-					Id = recordId,
-					CaseUrn = caseUrn,
-					CreatedBy = User.Identity.Name,
-					UpdatedAt = currentDate,
-					ClosedAt = currentDate,
-					StatusId = (int)ConcernStatus.Close
-				};
 
-				await _recordModelService.PatchRecordStatus(patchRecordModel);
+				await _recordModelService.DeleteRecord(caseUrn, recordId);
 
 				var url = $"/case/{caseUrn}/management";
 				return Redirect(url);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosurePageModel::CloseConcern::OnGetCloseConcern::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::DeletePageModel::DeleteConcern::OnGetDeleteConcern::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -106,7 +97,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosurePageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::DeletePageModel::OnGetCancel::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -130,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosurePageModel::LoadPage::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::DeletePageModel::LoadPage::Exception - {Message}", ex.Message);
 					
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();

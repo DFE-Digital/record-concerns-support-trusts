@@ -1,9 +1,9 @@
-﻿@page "/case/{urn:long}/management/record/{recordId:long}/edit_rating/closure/{handler?}"
+﻿@page "/case/{urn:long}/management/record/{recordId:long}/edit_rating/delete/{handler?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.Management.Concern.DeletePageModel
 
 @{
-    ViewData["Title"] = "Concern closure";
+    ViewData["Title"] = "Concern deletion";
 }
 
 <partial name="_BannerError" />
@@ -13,14 +13,14 @@
 
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-m">Case ID @Model.CaseModel.Urn</span>
-            Close concern
+            Delete concern
         </h1>
 
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-warning-text__assistive">Warning</span>
-                This concern cannot be reopened
+                This concern cannot be recovered
             </strong>
         </div>
 
@@ -59,16 +59,16 @@
             <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
             <div class="govuk-form-group govuk-!-margin-top-9">
-                <p class="govuk-body">Do you still want to close this concern?</p>
+                <p class="govuk-body">Do you still want to delete this concern?</p>
 
                 <div class="govuk-button-group">
                     <a data-prevent-double-click="true"
                        class="govuk-button govuk-!-margin-top-6"
-                       asp-page-handler="CloseConcern"
+                       asp-page-handler="DeleteConcern"
                        data-module="govuk-button"
                        role="button"
-                       data-testid="close-concern-button">
-                        Close concern
+                       data-testid="delete-concern-button">
+                        Delete concern
                     </a>
                     <a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
                         Cancel
