@@ -162,10 +162,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				in cases.ConcernsRecords
 							 where concerns.StatusId == 1
 							 select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
-			Decisions = from decisions
-				in cases.Decisions
-						where !decisions.ClosedAt.HasValue
-						select decisions,
+			Decisions = _concernsDbContext.Decisions.Where(d => d.ConcernsCaseId == cases.Id && !d.ClosedAt.HasValue).Include(d => d.DecisionTypes).ToArray(),
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
 				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.FinancialPlan))
@@ -220,7 +217,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 							from concerns in cases.ConcernsRecords
 							where concerns.StatusId == 3
 							select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
-			Decisions = from decisions in cases.Decisions select decisions,
+			Decisions = _concernsDbContext.Decisions.Where(d => d.ConcernsCaseId == cases.Id && d.ClosedAt.HasValue).Include(d => d.DecisionTypes).ToArray(),
 			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 							.Where(x => x.CaseUrn == cases.Urn)
 							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.FinancialPlan))
