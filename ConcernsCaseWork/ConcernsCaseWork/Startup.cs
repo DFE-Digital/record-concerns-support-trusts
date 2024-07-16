@@ -104,6 +104,7 @@ namespace ConcernsCaseWork
 				options.Cookie.Name = ".ConcernsCasework.Session";
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 			});
 
 			services.AddRouting(options =>
