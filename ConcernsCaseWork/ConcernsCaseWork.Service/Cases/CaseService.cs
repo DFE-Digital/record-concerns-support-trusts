@@ -264,13 +264,11 @@ namespace ConcernsCaseWork.Service.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Unwrap response
+				// Throw error is any message is returned as it should be empty
 				if (content is not "")
 				{
-					return;
+					throw new Exception(content);
 				}
-
-				throw new Exception(content);
 			}
 			catch (Exception ex)
 			{

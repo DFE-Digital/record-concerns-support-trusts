@@ -75,8 +75,8 @@ namespace ConcernsCaseWork.Services.Cases
 			var result = new List<CaseValidationErrorModel>();
 			var (recordModels, caseActionModels) = await GetAllModels(caseUrn);
 
-			var numberOfOpenConcerns = recordModels.Count(r => r.StatusId == (int)CaseStatus.Live);
-			if (numberOfOpenConcerns > 0)
+			var numberOfConcerns = recordModels.Count;
+			if (numberOfConcerns > 0)
 				result.Add(new CaseValidationErrorModel() { Type = CaseValidationError.Concern, Error = "Delete concerns" });
 
 			var caseActionErrorMessages = _caseActionValidator.ValidateDelete(caseActionModels);

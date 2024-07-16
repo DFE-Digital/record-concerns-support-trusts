@@ -17,5 +17,7 @@ namespace ConcernsCaseWork.Services.Records
 		Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(long caseUrn);
 		
 		Task<RecordDto> PostRecordByCaseUrn(CreateRecordModel createRecordModel);
+
+		Task DeleteRecord(long caseUrn, long id);
 	}
 }

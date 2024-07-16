@@ -140,10 +140,44 @@ namespace ConcernsCaseWork.Service.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("RecordService::PatchRecordByUrn::Exception message::{Message}", ex.Message);
+				_logger.LogError("RecordService::PatchRecordById::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
+		}
+
+		public async Task DeleteRecordById(RecordDto recordDto)
+		{
+			try
+			{
+				_logger.LogInformation("RecordService::DeleteRecordById {id}", recordDto.Id);
+
+				// Create http client
+				var client = CreateHttpClient();
+				
+				// Execute request
+				var response = await client.DeleteAsync(
+					$"/{EndpointsVersion}/concerns-records/{recordDto.Id}");
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+				
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+				
+				// Throw error is any message is returned as it should be empty
+				if (content is not "")
+				{
+					throw new Exception(content);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("RecordService::DeleteRecordById::Exception message::{Message}", ex.Message);
+
+				throw;
+			}
+			
 		}
 	}
 }
