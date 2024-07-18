@@ -46,8 +46,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public TrustOverviewModel TrustOverviewModel { get; set; }
 
 		public bool IsEditableCase { get; private set; }
+		public bool UserCanDelete { get; private set; }
 
-		[TempData]
+	[TempData]
 		public bool CaseOwnerChanged { get; set; }
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
@@ -175,6 +176,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			// Check if case is editable
 			IsEditableCase = await IsCaseEditable(CaseUrn);
 
+
+			// Check if case is editable
+			UserCanDelete = await IsCaseDeletable(CaseUrn);
+
 			// Get Case concerns
 			var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(CaseUrn);
 
@@ -211,10 +216,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return permissionsResponse.HasEditPermissions();
 		}
 		
-		private async Task<bool> UserHasDeleteCasePrivileges(long caseId)
+		private async Task<bool> LoggedInUserHasDeletePrivileges(long caseId)
 		{
 			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
-			return permissionsResponse.HasEditPermissions();
+			return permissionsResponse.HasDeletePermissions();
 		}
 
 		private async Task<bool> IsCaseEditable(long caseId)
@@ -231,9 +236,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task<bool> IsCaseDeletable(long caseId)
 		{
-			var userHasEditCasePrivileges = await UserHasEditCasePrivileges(caseId);
+			var userHasDeletePrivileges = await LoggedInUserHasDeletePrivileges(caseId);
 
-			if (!CaseModel.IsClosed() && userHasEditCasePrivileges)
+			if (!CaseModel.IsClosed() && userHasDeletePrivileges)
 			{
 				return true;
 			}

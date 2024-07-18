@@ -61,5 +61,10 @@ namespace ConcernsCaseWork.UserContext
 		{
 			return this.Roles.Contains(Claims.AdminRoleClaim);
 		}
+
+		public bool IsPaasAdmin()
+		{
+			return this.Roles.Contains(Claims.PaasAdminRoleClaim);
+		}
 	}
 }

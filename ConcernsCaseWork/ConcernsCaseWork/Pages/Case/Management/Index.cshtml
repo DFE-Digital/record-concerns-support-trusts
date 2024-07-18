@@ -44,15 +44,21 @@ else
 		@if (Model.IsEditableCase)
 		{
 			<form method="post">
-				<button role="button" class="govuk-button govuk-button--warning float__right" id="delete-case-button" data-module="govuk-button" asp-page-handler="DeleteCase">
-					Delete case
-				</button>
 				<button role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button" asp-page-handler="CloseCase">
 					Close case
 				</button>
-
 			</form>
 		}
+
+        @if (Model.UserCanDelete)
+        {
+            <form method="post">
+                <button role="button" class="govuk-button govuk-button--warning float__right" id="delete-case-button" data-module="govuk-button" asp-page-handler="DeleteCase">
+                    Delete case
+                </button>
+            </form>
+        }
+        
 	</div>
 	@if (Model.CaseOwnerChanged)
 	{
@@ -208,10 +214,10 @@ else
 											</div>
 										}
 										<div class="govuk-!-padding-bottom-1">
-											@if (Model.IsEditableCase)
+											@if (Model.UserCanDelete)
 											{
 												<span class="govuk-divider">|</span>
-												<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating/delete" aria-label="Delete @concern.GetConcernTypeName() rating" data-testid="delete-concern">Delete</a>
+												<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/delete" aria-label="Delete @concern.GetConcernTypeName() rating" data-testid="delete-concern">Delete</a>
 											}
 										</div>
 									}

@@ -6,5 +6,7 @@
 		public const string CaseWorkerRoleClaim = $"{ClaimPrefix}caseworker";
 		public const string TeamLeaderRoleClaim = $"{ClaimPrefix}teamleader";
 		public const string AdminRoleClaim = $"{ClaimPrefix}admin";
+		//public const string PaasAdminRoleClaim = $"{ClaimPrefix}paasadmin";
+		public const string PaasAdminRoleClaim = $"{ClaimPrefix}admin";
 	}
 }

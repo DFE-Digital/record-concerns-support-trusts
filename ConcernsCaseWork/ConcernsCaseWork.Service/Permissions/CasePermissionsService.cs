@@ -4,8 +4,6 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace ConcernsCaseWork.Service.Permissions
 {

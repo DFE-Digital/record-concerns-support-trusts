@@ -108,6 +108,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseDeletableStrategy>();
+
 			services.AddScoped<IGetCasePermissionsUseCase, GetCasePermissionsUseCase>();
 			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
