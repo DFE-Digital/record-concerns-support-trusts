@@ -1,3 +1,7 @@
+## 38.0.1
+
+* bug fix to show decision type/title on trust cases overview
+
 ## 38.0.0
 
 * updated the description of the SFSO territories and removed North and UTC - UTC and National Operations as options
