@@ -53,7 +53,7 @@ jobs:
       docker-image-name: 'amsd-app'
       docker-build-file-name: './Dockerfile'
       environment: ${{ needs.set-env.outputs.environment }}
-      annotate-release: ${{ needs.set-env.outputs.environment == 'dev' }}
+      annotate-release: true
       docker-build-args: |
         COMMIT_SHA="${{ needs.set-env.outputs.checked-out-sha }}"
     secrets:
