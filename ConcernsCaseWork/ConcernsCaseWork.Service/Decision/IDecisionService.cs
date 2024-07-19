@@ -18,5 +18,7 @@ namespace ConcernsCaseWork.Service.Decision
 		Task<UpdateDecisionOutcomeResponse> PutDecisionOutcome(long caseUrn, long decisionId, UpdateDecisionOutcomeRequest updateDecisionOutcomeRequest);
 
 		Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest);
+
+		Task DeleteDecision(long caseUrn, long decisionId);
 	}
 }

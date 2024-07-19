@@ -52,7 +52,8 @@ namespace ConcernsCaseWork.Services.Decisions
 				Outcome = ToViewDecisionOutcomeModel(decisionResponse),
 				IsEditable = decisionResponse.IsEditable && casePermissionsResponse.HasEditPermissions(),
 				CreatedDate = DateTimeHelper.ParseToDisplayDate(decisionResponse.CreatedAt),
-				ClosedDate = decisionResponse.ClosedAt.HasValue ? DateTimeHelper.ParseToDisplayDate(decisionResponse.ClosedAt.Value) : string.Empty
+				ClosedDate = decisionResponse.ClosedAt.HasValue ? DateTimeHelper.ParseToDisplayDate(decisionResponse.ClosedAt.Value) : string.Empty,
+				Title = decisionResponse.Title
 			};
 
 			return result;

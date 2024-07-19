@@ -21,5 +21,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public bool IsEditable { get; set; }
 		public string CreatedDate { get; set; }
 		public string ClosedDate { get; set; }
+		public string Title { get; set; }
 	}
 }
