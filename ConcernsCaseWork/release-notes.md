@@ -1,6 +1,11 @@
+
 ## 38.1.0
 
 * updated the footer with new UCD changes
+
+## 38.0.1
+
+* bug fix to show decision type/title on trust cases overview
 
 ## 38.0.0
 
