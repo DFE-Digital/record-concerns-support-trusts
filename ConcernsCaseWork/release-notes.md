@@ -1,3 +1,7 @@
+## 38.1.0
+
+* updated the footer with new UCD changes
+
 ## 38.0.0
 
 * updated the description of the SFSO territories and removed North and UTC - UTC and National Operations as options
