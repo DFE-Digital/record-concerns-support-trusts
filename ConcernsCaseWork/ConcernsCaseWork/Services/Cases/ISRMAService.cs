@@ -20,5 +20,6 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate);
 		public Task SetDateReportSent(long srmaId, DateTime? reportSentDate);
 		public Task SetDateClosed(long srmaId);
+		public Task DeleteSRMA(long srmaId);
 	}
 }

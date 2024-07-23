@@ -32,6 +32,11 @@ else
 {
     <partial name="_ValidationErrors" />
 
+    @if (Model.UserCanDelete)
+    {
+        <a class="govuk-button govuk-button--warning float__right" href="@Request.Path/delete" aria-label="Delete SRMA" data-testid="delete-srma">Delete SRMA</a>
+    }
+
     <h1 class="govuk-heading-l">
         <span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
         SRMA (School Resource Management Adviser)

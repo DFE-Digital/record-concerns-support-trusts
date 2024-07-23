@@ -87,5 +87,11 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);
 		}
+
+		public async Task DeleteSRMA(long srmaId)
+		{
+			await _srmaProvider.DeleteSRMA(srmaId);
+		}
+
 	}
 }

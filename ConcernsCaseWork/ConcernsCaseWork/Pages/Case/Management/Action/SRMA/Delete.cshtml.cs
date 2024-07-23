@@ -1,37 +1,37 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
+namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class DeletePageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly IDecisionService _decisionService;
+		private readonly ISRMAService _srmaModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<DeletePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		public string SRMATitle { get; private set; }
 
-		public string DecisionTitle { get; set; }
 
 		public DeletePageModel(ICaseModelService caseModelService,
-			IDecisionService decisionService,
+			ISRMAService srmaService,
 			ITrustModelService trustModelService, 
 			ILogger<DeletePageModel> logger)
 		{
 			_caseModelService = caseModelService;
-			_decisionService = decisionService;
+			_srmaModelService = srmaService;
 			_trustModelService = trustModelService;
 			_logger = logger;
 		}
@@ -39,47 +39,47 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public async Task OnGet()
 		{
 			long caseUrn = 0;
-			long decisionId = 0;
+			long srmaId = 0;
 			
 			try
 			{
-				_logger.LogInformation("Case::Decision::DeletePageModel::OnGet");
-				(caseUrn, decisionId) = GetRouteData();
+				_logger.LogInformation("Case::SRMA::DeletePageModel::OnGet");
+				(caseUrn, srmaId) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Decision::DeletePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::SRMA::DeletePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
-			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, decisionId);
+			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, srmaId);
 		}
 
-		public async Task<ActionResult> OnGetDeleteDecision()
+		public async Task<ActionResult> OnGetDeleteSRMA()
 		{
 			long caseUrn = 0;
-			long decisionId = 0;
+			long srmaId = 0;
 
 			try
 			{
-				_logger.LogInformation("Case::Decision::DeletePageModel::DeleteDecision");
+				_logger.LogInformation("Case::SRMA::DeletePageModel::DeleteSRMA");
 
-				(caseUrn, decisionId) = GetRouteData();
-				
-				await _decisionService.DeleteDecision(caseUrn, decisionId);
+				(caseUrn, srmaId) = GetRouteData();
+
+				await _srmaModelService.DeleteSRMA(srmaId);
 
 				var url = $"/case/{caseUrn}/management";
 				return Redirect(url);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Decision::DeletePageModel::DeleteDecision::OnGetDeleteDecision::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::SRMA::DeletePageModel::DeleteSRMA::OnGetDeleteSRMA::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, decisionId);
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, srmaId);
 		}
 
 		public ActionResult OnGetCancel()
@@ -94,48 +94,48 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Decision::DeletePageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::SRMA::DeletePageModel::OnGetCancel::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
 		}
 
-		private async Task<ActionResult> LoadPage(string url, long caseUrn, long decisionId)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn, long srmaId)
 		{
 			try
 			{
-				if (caseUrn == 0 || decisionId == 0)
-					throw new Exception("Case urn or decision id cannot be 0");
+				if (caseUrn == 0 || srmaId == 0)
+					throw new Exception("Case urn or srma id cannot be 0");
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				var decisionModel = await _decisionService.GetDecision(caseUrn, (int)decisionId);
+				var srmaModel = await _srmaModelService.GetSRMAViewModel(caseUrn, srmaId);
+				SRMATitle = srmaModel.Status.Description();
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				DecisionTitle = decisionModel.Title;
 				CaseModel.PreviousUrl = url;
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Decision::DeletePageModel::LoadPage::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::SRMA::DeletePageModel::LoadPage::Exception - {Message}", ex.Message);
 					
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
 		} 
 
-		private (long caseUrn, long decisionId) GetRouteData()
+		private (long caseUrn, long srmaId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 				throw new Exception("CaseUrn is null or invalid to parse");
 
-			var decisionIdValue = RouteData.Values["decisionId"];
-			if (decisionIdValue == null || !long.TryParse(decisionIdValue.ToString(), out long decisionId) || decisionId == 0)
-				throw new Exception("DecisionId is null or invalid to parse");
+			var srmaIdValue = RouteData.Values["srmaId"];
+			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
+				throw new Exception("srmaId is null or invalid to parse");
 
-			return (caseUrn, decisionId);
+			return (caseUrn, srmaId);
 		}
 	}
 }
