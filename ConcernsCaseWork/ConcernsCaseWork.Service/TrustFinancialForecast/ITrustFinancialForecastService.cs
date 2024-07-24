@@ -9,4 +9,5 @@ public interface ITrustFinancialForecastService
 	Task Update(UpdateTrustFinancialForecastRequest request);
 	Task<IEnumerable<TrustFinancialForecastResponse>> GetAllForCase(int caseUrn);
 	Task Close(CloseTrustFinancialForecastRequest request);
+	Task Delete(DeleteTrustFinancialForecastRequest request);
 }

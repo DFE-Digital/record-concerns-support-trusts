@@ -61,5 +61,12 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 
 		await Patch<CloseTrustFinancialForecastRequest, string>($"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}", request);
 	}
+
+	public async Task Delete(DeleteTrustFinancialForecastRequest request)
+	{
+		_logger.LogMethodEntered();
+
+		await Delete($"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}");
+	}
 }
 

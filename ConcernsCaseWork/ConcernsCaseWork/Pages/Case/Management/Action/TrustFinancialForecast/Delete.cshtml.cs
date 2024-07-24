@@ -1,6 +1,7 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
@@ -9,30 +10,32 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Helpers;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
+
+namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class DeletePageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly IDecisionService _decisionService;
+		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<DeletePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		public string DateOpened { get; set; }
 
-		public string DecisionTitle { get; set; }
 
 		public DeletePageModel(ICaseModelService caseModelService,
-			IDecisionService decisionService,
+			ITrustFinancialForecastService trustFinancialForecastService,
 			ITrustModelService trustModelService, 
 			ILogger<DeletePageModel> logger)
 		{
 			_caseModelService = caseModelService;
-			_decisionService = decisionService;
+			_trustFinancialForecastService = trustFinancialForecastService;
 			_trustModelService = trustModelService;
 			_logger = logger;
 		}
@@ -40,12 +43,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public async Task OnGet()
 		{
 			long caseUrn = 0;
-			long decisionId = 0;
+			long trustFinancialForecastId = 0;
 			
 			try
 			{
 				_logger.LogMethodEntered();
-				(caseUrn, decisionId) = GetRouteData();
+
+				(caseUrn, trustFinancialForecastId) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
@@ -54,21 +58,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
-			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, decisionId);
+			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, trustFinancialForecastId);
 		}
 
-		public async Task<ActionResult> OnGetDeleteDecision()
+		public async Task<ActionResult> OnGetDeleteTFF()
 		{
 			long caseUrn = 0;
-			long decisionId = 0;
+			long trustFinancialForecastId = 0;
 
 			try
 			{
 				_logger.LogMethodEntered();
 
-				(caseUrn, decisionId) = GetRouteData();
-				
-				await _decisionService.DeleteDecision(caseUrn, decisionId);
+				(caseUrn, trustFinancialForecastId) = GetRouteData();
+
+				var request = new DeleteTrustFinancialForecastRequest() { CaseUrn = (int)caseUrn, TrustFinancialForecastId = (int)trustFinancialForecastId };
+
+				await _trustFinancialForecastService.Delete(request);
 
 				var url = $"/case/{caseUrn}/management";
 				return Redirect(url);
@@ -80,7 +86,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, decisionId);
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, trustFinancialForecastId);
 		}
 
 		public ActionResult OnGetCancel()
@@ -102,17 +108,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 		}
 
-		private async Task<ActionResult> LoadPage(string url, long caseUrn, long decisionId)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn, long trustFinancialForecastId)
 		{
 			try
 			{
-				if (caseUrn == 0 || decisionId == 0)
-					throw new Exception("Case urn or decision id cannot be 0");
-				
+				if (caseUrn == 0 || trustFinancialForecastId == 0)
+					throw new Exception("Case urn or tff id cannot be 0");
+
+				var request = new GetTrustFinancialForecastByIdRequest() { CaseUrn = (int)caseUrn,  TrustFinancialForecastId = (int)trustFinancialForecastId };
+
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-				var decisionModel = await _decisionService.GetDecision(caseUrn, (int)decisionId);
+				var tffModel = await _trustFinancialForecastService.GetById(request);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				DecisionTitle = decisionModel.Title;
+				DateOpened = DateTimeHelper.ParseToDisplayDate(tffModel.CreatedAt);
 				CaseModel.PreviousUrl = url;
 
 				return Page();
@@ -126,17 +134,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 		} 
 
-		private (long caseUrn, long decisionId) GetRouteData()
+		private (long caseUrn, long trustFinancialForecastId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 				throw new Exception("CaseUrn is null or invalid to parse");
 
-			var decisionIdValue = RouteData.Values["decisionId"];
-			if (decisionIdValue == null || !long.TryParse(decisionIdValue.ToString(), out long decisionId) || decisionId == 0)
-				throw new Exception("DecisionId is null or invalid to parse");
+			var trustFinancialForecastIdValue = RouteData.Values["trustFinancialForecastId"];
+			if (trustFinancialForecastIdValue == null || !long.TryParse(trustFinancialForecastIdValue.ToString(), out long trustFinancialForecastId) || trustFinancialForecastId == 0)
+				throw new Exception("trustFinancialForecastId is null or invalid to parse");
 
-			return (caseUrn, decisionId);
+			return (caseUrn, trustFinancialForecastId);
 		}
 	}
 }

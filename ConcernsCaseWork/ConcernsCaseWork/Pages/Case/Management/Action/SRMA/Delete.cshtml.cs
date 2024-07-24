@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
@@ -43,13 +44,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			
 			try
 			{
-				_logger.LogInformation("Case::SRMA::DeletePageModel::OnGet");
+				_logger.LogMethodEntered();
+
 				(caseUrn, srmaId) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::DeletePageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
+				_logger.LogErrorMsg(ex);
+
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
@@ -63,7 +65,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			try
 			{
-				_logger.LogInformation("Case::SRMA::DeletePageModel::DeleteSRMA");
+				_logger.LogMethodEntered();
 
 				(caseUrn, srmaId) = GetRouteData();
 
@@ -74,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::DeletePageModel::DeleteSRMA::OnGetDeleteSRMA::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -94,7 +96,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::DeletePageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -118,8 +120,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::DeletePageModel::LoadPage::Exception - {Message}", ex.Message);
-					
+				_logger.LogErrorMsg(ex);
+
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
