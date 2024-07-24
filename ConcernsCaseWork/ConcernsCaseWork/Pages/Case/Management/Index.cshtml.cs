@@ -215,12 +215,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
 			return permissionsResponse.HasEditPermissions();
 		}
-		
-		private async Task<bool> LoggedInUserHasDeletePrivileges(long caseId)
-		{
-			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
-			return permissionsResponse.HasDeletePermissions();
-		}
 
 		private async Task<bool> IsCaseEditable(long caseId)
 		{
@@ -236,7 +230,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task<bool> IsCaseDeletable(long caseId)
 		{
-			var userHasDeletePrivileges = await LoggedInUserHasDeletePrivileges(caseId);
+			var userHasDeletePrivileges = await _casePermissionsService.UserHasDeletePermissions(caseId);
 
 			if (!CaseModel.IsClosed() && userHasDeletePrivileges)
 			{

@@ -11,5 +11,6 @@ namespace ConcernsCaseWork.Services.NtiUnderConsideration
 		public Task<NtiUnderConsiderationModel> GetNtiUnderConsideration(long ntiUcId);
 		Task<NtiUnderConsiderationModel> GetNtiUnderConsiderationViewModel(long caseId, long ntiUcId);
 		public Task<NtiUnderConsiderationModel> PatchNtiUnderConsideration(NtiUnderConsiderationModel nti);
+		public Task DeleteNtiUnderConsideration(long ntiUcId);
 	}
 }

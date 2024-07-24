@@ -121,5 +121,31 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		{
 			return await GetNTIUnderConsiderationById(ntiId);
 		}
+
+		public async Task DeleteNti(long ntiId)
+		{
+			try
+			{
+				_logger.LogInformation("NTIUnderConsiderationService::DeleteNti");
+
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Delete,
+					$"{Url}/{ntiId}");
+
+				// Create http client
+				var client = CreateHttpClient();
+
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to delete NTI");
+				throw;
+			}
+		}
 	}
 }

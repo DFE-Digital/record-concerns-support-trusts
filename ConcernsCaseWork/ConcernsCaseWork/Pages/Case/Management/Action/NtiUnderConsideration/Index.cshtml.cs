@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -16,15 +17,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiUnderConsiderationModel NTIUnderConsiderationModel { get; set; }
-		
+		public bool UserCanDelete { get; set; }
+
+
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
-		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, ICasePermissionsService casePermissionsService, ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -44,6 +49,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					throw new Exception($"Could not load NTI: UnderConsideration with ID {ntiUnderConsiderationId}");
 				}
+
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(caseId);
 			}
 			catch (Exception ex)
 			{
@@ -64,5 +71,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			return (caseUrn, ntiUnderConsiderationId);
 		}
+
 	}
 }

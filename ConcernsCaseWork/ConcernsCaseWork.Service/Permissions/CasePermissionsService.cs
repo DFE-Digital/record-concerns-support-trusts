@@ -44,10 +44,17 @@ namespace ConcernsCaseWork.Service.Permissions
 				Permissions = queryResult.CasePermissionResponses.Single(x => x.CaseId == caseId).Permissions.ToList()
 			};
 		}
+
+		public async Task<bool> UserHasDeletePermissions(long caseId)
+		{
+			var casePermissions = await GetCasePermissions(caseId);
+			return casePermissions.HasDeletePermissions();
+		}
 	}
 
 	public interface ICasePermissionsService
 	{
 		public Task<GetCasePermissionsResponse> GetCasePermissions(long caseId);
+		public Task<bool> UserHasDeletePermissions(long caseId);
 	}
 }

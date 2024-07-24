@@ -57,5 +57,10 @@ namespace ConcernsCaseWork.Services.NtiUnderConsideration
 			var patched = await _ntiUnderConsiderationService.PatchNti(NtiUnderConsiderationMappers.ToDBModel(nti));
 			return NtiUnderConsiderationMappers.ToServiceModel(patched);
 		}
+
+		public async Task DeleteNtiUnderConsideration(long ntiUcId)
+		{
+			await _ntiUnderConsiderationService.DeleteNti(ntiUcId);
+		}
 	}
 }

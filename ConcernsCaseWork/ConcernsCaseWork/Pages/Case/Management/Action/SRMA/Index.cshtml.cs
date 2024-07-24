@@ -175,7 +175,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				throw new Exception("Could not load this SRMA");
 			}
 
-			UserCanDelete = await LoggedInUserHasDeletePrivileges(caseId);
+			UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(caseId);
 		}
 
 		private void PerformReasonValidation(SRMAModel model)
@@ -204,12 +204,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				ModelState.AddModelError("DateReportSentToTrust", "Enter date report sent to trust");
 			}
-		}
-
-		private async Task<bool> LoggedInUserHasDeletePrivileges(long caseId)
-		{
-			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
-			return permissionsResponse.HasDeletePermissions();
 		}
 	}
 }

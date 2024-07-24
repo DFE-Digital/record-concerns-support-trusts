@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				Decision = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
 
-				UserCanDelete = await LoggedInUserHasDeletePrivileges(caseModelService.Urn);
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions((int)urn);
 			}
 			catch (Exception ex)
 			{
@@ -69,12 +69,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 
 			return Page();
-		}
-
-		private async Task<bool> LoggedInUserHasDeletePrivileges(long caseId)
-		{
-			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
-			return permissionsResponse.HasDeletePermissions();
 		}
 	}
 }
