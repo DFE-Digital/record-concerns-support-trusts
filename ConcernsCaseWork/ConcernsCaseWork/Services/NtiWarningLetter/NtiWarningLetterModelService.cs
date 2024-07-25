@@ -81,5 +81,10 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 
 			return NtiWarningLetterMappers.ToServiceModel(patchedDto);
 		}
+
+		public async Task DeleteNtiWarningLetter(long caseUrn, long wlId)
+		{
+			await _ntiWarningLetterCachedService.DeleteNtiWarningLetter(caseUrn, wlId);
+		}
 	}
 }

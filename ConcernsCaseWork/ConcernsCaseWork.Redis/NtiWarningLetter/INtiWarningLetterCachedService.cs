@@ -12,5 +12,6 @@ namespace ConcernsCaseWork.Redis.NtiWarningLetter
 		Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter);
 		Task SaveNtiWarningLetter(NtiWarningLetterDto ntiWarningLetter, string continuationId);
 		Task<NtiWarningLetterDto> GetNtiWarningLetter(string continuationId);
+		Task DeleteNtiWarningLetter(long caseUrn, long ntiWarningLetterId);
 	}
 }
