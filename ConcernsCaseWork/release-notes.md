@@ -1,4 +1,8 @@
 
+## 38.2.0
+
+* updated the footer with how to guidance and remove line break
+
 ## 38.1.0
 
 * updated the footer with new UCD changes
