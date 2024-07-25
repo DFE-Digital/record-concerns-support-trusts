@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.8.1"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.9.0"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -47,6 +47,7 @@ module "azure_container_apps_hosting" {
   cdn_frontdoor_host_add_response_headers         = local.cdn_frontdoor_host_add_response_headers
   cdn_frontdoor_health_probe_path                 = local.cdn_frontdoor_health_probe_path
   cdn_frontdoor_enable_rate_limiting              = local.cdn_frontdoor_enable_rate_limiting
+  cdn_frontdoor_waf_custom_rules                  = local.cdn_frontdoor_waf_custom_rules
   cdn_frontdoor_rate_limiting_duration_in_minutes = local.cdn_frontdoor_rate_limiting_duration_in_minutes
   cdn_frontdoor_rate_limiting_threshold           = local.cdn_frontdoor_rate_limiting_threshold
   cdn_frontdoor_origin_fqdn_override              = local.cdn_frontdoor_origin_fqdn_override

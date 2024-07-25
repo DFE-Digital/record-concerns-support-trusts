@@ -45,6 +45,7 @@ locals {
   cdn_frontdoor_enable_rate_limiting              = var.cdn_frontdoor_enable_rate_limiting
   cdn_frontdoor_rate_limiting_threshold           = var.cdn_frontdoor_rate_limiting_threshold
   cdn_frontdoor_rate_limiting_duration_in_minutes = var.cdn_frontdoor_rate_limiting_duration_in_minutes
+  cdn_frontdoor_waf_custom_rules                  = var.cdn_frontdoor_waf_custom_rules
   cdn_frontdoor_origin_fqdn_override              = var.cdn_frontdoor_origin_fqdn_override
   cdn_frontdoor_origin_host_header_override       = var.cdn_frontdoor_origin_host_header_override
   cdn_frontdoor_forwarding_protocol               = var.cdn_frontdoor_forwarding_protocol
