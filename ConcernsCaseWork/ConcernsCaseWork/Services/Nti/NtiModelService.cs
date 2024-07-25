@@ -83,5 +83,10 @@ namespace ConcernsCaseWork.Services.Nti
 
 			await _ntiCachedService.SaveNtiAsync(NtiMappers.ToDBModel(ntiModel), continuationId);
 		}
+
+		public async Task DeleteNtiByIdAsync(long caseUrn, long ntiId)
+		{
+			await _ntiCachedService.DeleteNtiAsync(caseUrn, ntiId);
+		}
 	}
 }

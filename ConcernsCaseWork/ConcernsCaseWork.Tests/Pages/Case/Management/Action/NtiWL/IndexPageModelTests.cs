@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		{
 			// arrange
 			var mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockCasePermissionService = new Mock<ICasePermissionsService>();
 			var ntiWarningLetterModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();	
 
 			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterViewModel(1, It.IsAny<long>())).ReturnsAsync(ntiWarningLetterModel);
 
-			var pageModel = SetupIndexPageModel(mockModelService: mockNtiWarningLetterModelService, mockLogger: mockLogger);
+			var pageModel = SetupIndexPageModel(mockModelService: mockNtiWarningLetterModelService, mockCasePermissionService: mockCasePermissionService, mockLogger: mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseId = 1;
@@ -45,6 +47,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiWarningLetterModelService> mockModelService = null,
 			Mock<INtiWarningLetterConditionsService> mockConditionsService = null,
+			Mock<ICasePermissionsService> mockCasePermissionService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
 			bool isAuthenticated = false)
 		{
@@ -54,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			mockConditionsService ??= new Mock<INtiWarningLetterConditionsService>();
 			mockLogger ??= new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(mockModelService.Object, mockConditionsService.Object,
+			return new IndexPageModel(mockModelService.Object, mockConditionsService.Object, mockCasePermissionService.Object,
 				mockLogger.Object)
 			{
 				PageContext = pageContext,

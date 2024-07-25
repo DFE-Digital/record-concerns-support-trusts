@@ -12,5 +12,6 @@ namespace ConcernsCaseWork.Redis.Nti
 		Task<NtiDto> PatchNtiAsync(NtiDto nti);
 		Task SaveNtiAsync(NtiDto nti, string continuationId);
 		Task<NtiDto> GetNtiAsync(string continuationId);
+		Task DeleteNtiAsync(long caseUrn, long ntiId);
 	}
 }
