@@ -90,6 +90,15 @@ export class ViewFinancialPlanPage
         return this;
     }
 
+    public delete(): this
+    {
+        Logger.log("Deleting financial plan");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     public canClose(): this
     {
         Logger.log("Can close financial plan");
@@ -115,5 +124,9 @@ export class ViewFinancialPlanPage
 
     private getClose() {
         return cy.getByTestId("close-financialplan-button");
+    }
+
+    private getDelete() {
+        return cy.getByTestId("delete-financial-plan");
     }
 }

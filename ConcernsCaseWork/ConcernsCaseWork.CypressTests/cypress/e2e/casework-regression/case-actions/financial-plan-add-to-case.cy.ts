@@ -7,11 +7,13 @@ import CaseManagementPage from "../../../pages/caseMangementPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import { DeleteFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/DeleteFinancialPlanPage";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
     let editFinancialPlanPage = new EditFinancialPlanPage();
     let closeFinancialPlanPage = new CloseFinancialPlanPage();
+    let deleteFinancialPlanPage = new DeleteFinancialPlanPage();
     let now: Date;
     
     beforeEach(() => {
@@ -229,6 +231,48 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.log("Checking accessibility on Creating a duplicate financial plan");
         cy.excuteAccessibilityTests();
     });
+
+    it("Should add and delete a financial plan", () => 
+        {
+            Logger.log("Configuring a valid financial plan");
+    
+            editFinancialPlanPage
+                .withPlanRequestedDay("06")
+                .withPlanRequestedMonth("07")
+                .withPlanRequestedYear("2022")
+                .withNotes("Notes!")
+                .save();
+    
+            Logger.log("Selecting Financial Plan from open actions");
+            actionSummaryTable
+                .getOpenAction("Financial Plan")
+                .then(row =>
+                {
+                    row.hasName("Financial Plan")
+                    row.hasStatus("In progress")
+                    row.hasCreatedDate(toDisplayDate(now))
+                    row.select();
+                });
+    
+            Logger.log("Checking Financial Plan values");
+    
+            viewFinancialPlanPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasPlanRequestedDate("06 July 2022")
+                .hasNotes("Notes!");
+
+
+            Logger.log("Delete Financial Plan");
+            viewFinancialPlanPage
+                .delete();
+
+            deleteFinancialPlanPage
+                .delete();
+
+            Logger.log("Confirm Financial Plan no longer exist");
+		    actionSummaryTable
+			   .assertRowDoesNotExist("Financial Plan", "open");
+        });
 
     function checkFormValidation()
     {
