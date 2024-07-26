@@ -18,7 +18,7 @@ public class IsCaseDeletableStrategy : ICaseActionPermissionStrategy
 	/// <returns></returns>
 	public CasePermission GetAllowedActionPermission(ConcernsCase concernsCase, UserInfo userInfo)
 	{
-		// Deletable if user is paas admin.
+		// Deletable if user is delete case admin group.
 		// Otherwise not deletable
 
 		if (concernsCase == null)
@@ -26,7 +26,7 @@ public class IsCaseDeletableStrategy : ICaseActionPermissionStrategy
 
 		Guard.Against.Null(userInfo);
 
-		if (userInfo.IsPaasAdmin())
+		if (userInfo.IsInCaseDeleteGroup())
 			return CasePermission.EditAndDelete;
 
 		return CasePermission.None;

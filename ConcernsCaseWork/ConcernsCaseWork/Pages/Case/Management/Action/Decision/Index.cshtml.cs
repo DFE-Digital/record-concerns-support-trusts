@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				Decision = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
 
-				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions((int)urn);
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(urn);
 			}
 			catch (Exception ex)
 			{

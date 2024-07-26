@@ -6,5 +6,6 @@
 		Task<FinancialPlanDto> GetFinancialPlansById(long caseUrn, long financialPlanId);
 		Task<FinancialPlanDto> PostFinancialPlanByCaseUrn(CreateFinancialPlanDto createFinancialPlanDto);
 		Task<FinancialPlanDto> PatchFinancialPlanById(FinancialPlanDto financialPlanDto);
+		Task DeleteFinancialPlan(long financialPlanId);
 	}
 }

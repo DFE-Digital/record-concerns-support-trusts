@@ -14,5 +14,6 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 		public Task<FinancialPlanDto> PostFinancialPlanByCaseUrn(CreateFinancialPlanModel financialPlan);
 
 		public Task PatchFinancialById(PatchFinancialPlanModel patchFinancialPlanModel);
+		public Task DeleteFinancialPlan(long financialPlanId);
 	}
 }

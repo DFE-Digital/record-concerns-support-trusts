@@ -62,9 +62,9 @@ namespace ConcernsCaseWork.UserContext
 			return this.Roles.Contains(Claims.AdminRoleClaim);
 		}
 
-		public bool IsPaasAdmin()
+		public bool IsInCaseDeleteGroup()
 		{
-			return this.Roles.Contains(Claims.PaasAdminRoleClaim);
+			return this.Roles.Contains(Claims.CaseDeleteRoleClaim);
 		}
 	}
 }
