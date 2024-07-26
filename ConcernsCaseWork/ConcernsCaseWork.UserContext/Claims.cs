@@ -7,6 +7,6 @@
 		public const string TeamLeaderRoleClaim = $"{ClaimPrefix}teamleader";
 		public const string AdminRoleClaim = $"{ClaimPrefix}admin";
 		//public const string CaseDeleteRoleClaim = $"{ClaimPrefix}case-delete-group";
-		public const string CaseDeleteRoleClaim = $"{ClaimPrefix}admin";
+		public const string CaseDeleteRoleClaim = $"{ClaimPrefix}caseworker";
 	}
 }

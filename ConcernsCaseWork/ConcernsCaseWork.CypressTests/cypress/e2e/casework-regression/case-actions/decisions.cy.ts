@@ -10,11 +10,13 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
+import { DeleteDecisionPage } from "cypress/pages/caseActions/decision/deleteDecisionPage";
 
 describe("User can add decisions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
 	const closeDecisionPage = new CloseDecisionPage();
+	const deleteDecisionPage = new DeleteDecisionPage();
 	const decisionOutcomePage = new DecisionOutcomePage();
 
 	let now: Date;
@@ -501,5 +503,55 @@ describe("User can add decisions to an existing case", () => {
 			.hasAuthoriser("Minister")
 			.hasBusinessArea("Regions Group")
 			.hasBusinessArea("Funding");
+	});
+
+	it("Creating and deleting a decision", function () {
+		const repayableFinancialSupportOption = "RepayableFinancialSupport";
+		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
+
+		Logger.log("Validating Decision");
+
+		Logger.log("Creating Decision");
+		editDecisionPage
+			.withHasCrmCase("yes")
+			.withCrmEnquiry("444")
+			.withRetrospectiveRequest("no")
+			.withSubmissionRequired("yes")
+			.withSubmissionLink("www.gov.uk")
+			.withDateESFADay("21")
+			.withDateESFAMonth("04")
+			.withDateESFAYear("2022")
+			.withTypeOfDecision("NoticeToImprove")
+			.withTypeOfDecision("Section128")
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.withTypeOfDecision(shortTermCashAdvanceOption)
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.withTotalAmountRequested("£140,000")
+			.withSupportingNotes("These are some supporting notes!")
+			.save();
+
+		Logger.log("Selecting Decision from open actions");
+		actionSummaryTable
+			.getOpenAction("Decision: Multiple Decision Types")
+			.then(row =>
+			{
+				row.hasName("Decision: Multiple Decision Types")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now));
+				row.select();
+			});
+
+		Logger.log("Deleting Decision");
+		viewDecisionPage
+			.deleteDecision();
+
+		deleteDecisionPage
+			.delete();
+
+		Logger.log("Confirm Decision no longer exist");
+		actionSummaryTable
+			.assertRowDoesNotExist("Decision: Multiple Decision Types", "open")
 	});
 });

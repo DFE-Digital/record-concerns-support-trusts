@@ -231,6 +231,14 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public deleteDecision(): this {
+		Logger.log("Delete decision");
+
+		this.getDeleteDecision().click();
+
+		return this;
+	}
+
 	public canEditDecision(): this
 	{
 		Logger.log("Can edit decision");
@@ -314,6 +322,10 @@ export class ViewDecisionPage
 
 	private getEditDecision() {
 		return cy.getByTestId("edit-decision-text");
+	}
+
+	private getDeleteDecision() {
+		return cy.getByTestId("delete-decision");
 	}
 
 	private getEditDecisionOutcome() {

@@ -23,6 +23,15 @@ export class ActionSummaryTable {
                 return new ActionSummaryRow(el);
             });
     }
+
+    public assertRowDoesNotExist(value: string, rowType: "open" | "closed"): void {
+        const rowId = rowType === "open" ? "open-case-actions" : "close-case-actions";
+        Logger.log(`Asserting that ${rowType} action summary row ${value} does not exist`);
+
+        cy.getById(rowId)
+            .find(`[data-testid='row-${value}']`)
+            .should('not.exist');
+    }
 }
 
 const actionSummaryTable = new ActionSummaryTable();
