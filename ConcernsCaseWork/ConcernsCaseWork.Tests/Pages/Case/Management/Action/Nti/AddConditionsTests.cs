@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var continuationId = Guid.NewGuid().ToString();
 
-			mockNtiModelService.Setup(svc => svc.GetNtiAsync(continuationId)).ReturnsAsync(new NtiModel
+			mockNtiModelService.Setup(svc => svc.GetNtiFromCacheAsync(continuationId)).ReturnsAsync(new NtiModel
 			{
 				Id = 1,
 				CaseUrn = caseUrn

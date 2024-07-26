@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Services.Nti
 		Task<NtiModel> GetNtiViewModelAsync(long caseId, long ntiId);
 
 		Task<NtiModel> PatchNtiAsync(NtiModel patchNti);
-		Task<NtiModel> GetNtiAsync(string continuationId);
+		Task<NtiModel> GetNtiFromCacheAsync(string continuationId);
 		Task StoreNtiAsync(NtiModel ntiModel, string continuationId);
 
 	}
