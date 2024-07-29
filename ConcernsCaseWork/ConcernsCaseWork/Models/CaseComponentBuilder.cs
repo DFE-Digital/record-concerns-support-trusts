@@ -11,8 +11,21 @@ namespace ConcernsCaseWork.Models
 	{
 		public static RadioButtonsUiComponent BuildTerritory(string name, int? selectedId = null)
 		{
-			var radioItems = Enum.GetValues(typeof(Territory))
-				.Cast<Territory>()
+			// National operations and utc are kept for existing cases, but are not selectable for new cases
+			var enumValues = new Territory[]
+			{
+				Territory.Midlands_And_West__East_Midlands,
+				Territory.North_And_Utc__North_East,
+				Territory.North_And_Utc__North_West,
+				Territory.Midlands_And_West__West_Midlands,
+				Territory.North_And_Utc__Yorkshire_And_Humber,
+				Territory.South_And_South_East__East_Of_England,
+				Territory.South_And_South_East__London,
+				Territory.South_And_South_East__South_East,
+				Territory.Midlands_And_West__SouthWest,
+			};
+
+			var radioItems = enumValues
 				.Select(v =>
 				{
 					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.Description() };

@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Pages
 
 		[BindProperty]
 		public bool HasConsented { get; set; }
-		
+
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public CookiesPageModel(ILogger<CookiesPageModel> logger)
@@ -37,7 +37,11 @@ namespace ConcernsCaseWork.Pages
 		{
 			_logger.LogMethodEntered();
 
-			var cookieOptions = new CookieOptions { Expires = DateTime.Today.AddMonths(6), Secure = true };
+			var cookieOptions = new CookieOptions {
+				Expires = DateTime.Today.AddMonths(6),
+				Secure = true,
+				HttpOnly = true,
+			};
 
 			if (bannerConsent != null)
 			{
