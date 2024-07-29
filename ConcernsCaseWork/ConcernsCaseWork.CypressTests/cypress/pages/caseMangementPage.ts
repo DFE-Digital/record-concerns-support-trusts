@@ -106,6 +106,18 @@ class CaseManagementPage {
 		return this;
 	}
 
+	public deleteConcern(): this {
+		this.getDeleteConcern().first().click();
+
+		return this;
+	}
+
+	public deleteCase(): this {
+		this.getDeleteCase().click();
+
+		return this;
+	}
+
 	public addAnotherConcern(): this {
 		Logger.log("Adding another concern");
 		cy.getByTestId("add-additional-concern").click();
@@ -255,6 +267,14 @@ class CaseManagementPage {
 
 	private getCloseConcern() {
 		return cy.getByTestId("close-concern");
+	}
+
+	private getDeleteConcern() {
+		return cy.getByTestId("delete-concern");
+	}
+
+	private getDeleteCase() {
+		return cy.getById("delete-case-button");
 	}
 
 	private getEditRiskToTrust() {

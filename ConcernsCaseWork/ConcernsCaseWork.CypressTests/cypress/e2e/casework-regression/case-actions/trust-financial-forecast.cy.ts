@@ -240,7 +240,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 		cy.excuteAccessibilityTests();
 	});
 
-	it.only("Delete a TFF", function () {
+	it("Delete a TFF", function () {
 		Logger.log("Create a TFF with populated values");
 		editTFFPage
 			.withForecastingTool("Previous year - Autumn")
