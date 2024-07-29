@@ -80,6 +80,11 @@ namespace ConcernsCaseWork
 					options.AccessDeniedPath = "/access-denied";
 				});
 
+			services.AddAntiforgery(options =>
+			{
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+			});
+
 			// Redis
 			services.AddRedis(Configuration);
 
@@ -104,6 +109,7 @@ namespace ConcernsCaseWork
 				options.Cookie.Name = ".ConcernsCasework.Session";
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 			});
 
 			services.AddRouting(options =>

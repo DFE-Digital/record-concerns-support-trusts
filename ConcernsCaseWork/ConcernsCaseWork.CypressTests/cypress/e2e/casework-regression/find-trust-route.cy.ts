@@ -101,17 +101,17 @@ describe("User interactions via Find Trust route", () => {
 				.hasManagedBy("SFSO", "");
 
 			Logger.log("Populate territory");
-			addTerritoryPage.withTerritory("North and UTC - North East").nextStep();
+			addTerritoryPage.withTerritory("North - North East").nextStep();
 
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 
 			selectCaseTypePage.withCaseType("Concerns").continue();
 
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 
 			Logger.log("Create a valid concern");
 			createConcernPage
@@ -123,7 +123,7 @@ describe("User interactions via Find Trust route", () => {
 			Logger.log("Check Concern details are correctly populated");
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 				.hasConcernType("Deficit")
 				.hasConcernRiskRating("Red Amber");
 
@@ -137,7 +137,7 @@ describe("User interactions via Find Trust route", () => {
 			);
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 				.hasConcernType("Deficit")
 				.hasConcernRiskRating("Red Amber")
 				.hasRiskToTrust("Red Plus");
@@ -147,8 +147,8 @@ describe("User interactions via Find Trust route", () => {
 			);
 			createCaseSummary
 				.hasTrustSummaryDetails(trustName)
-				.hasManagedBy("SFSO", "North and UTC - North East")
-				.hasConcernType("Deficit") 
+				.hasManagedBy("SFSO", "North - North East")
+				.hasConcernType("Deficit")
 				.hasConcernRiskRating("Red Amber")
 				.hasRiskToTrust("Red Plus");
 
@@ -160,7 +160,7 @@ describe("User interactions via Find Trust route", () => {
 				.hasTrust(trustName)
 				.hasRiskToTrust("Red Plus")
 				.hasConcerns("Deficit", ["Red", "Amber"])
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 				.hasIssue("This is an issue");
 		});
 	});
@@ -182,7 +182,7 @@ describe("User interactions via Find Trust route", () => {
 					cy.wrap(cases).each((request: CreateCaseRequest, index, $list) => {
 						request.trustUkprn = trustUkPrn;
 
-						caseApi.post(request).then(() => {});
+						caseApi.post(request).then(() => { });
 					});
 
 					// Wait 1ms per case created

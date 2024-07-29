@@ -40,7 +40,7 @@ describe("Creating a non concerns case", () => {
 
 	const trustName = "Ashton West End Primary Academy";
 	const alternativeTrustName = "Denton West End Primary School";
-	const territory = "North and UTC - North East";
+	const territory = "North - North East";
 
 	let now: Date;
 
@@ -242,7 +242,7 @@ describe("Creating a non concerns case", () => {
 				.hasConcerns("Financial compliance", ["Amber", "Green"])
 				.hasConcerns("Deficit", ["Red", "Amber"])
 				.hasNumberOfConcerns(2)
-				.hasManagedBy("SFSO", "North and UTC - North East")
+				.hasManagedBy("SFSO", "North - North East")
 				.hasIssue("This is an issue")
 				.hasCurrentStatus("This is the current status")
 				.hasCaseAim("This is the case aim")
@@ -286,7 +286,7 @@ describe("Creating a non concerns case", () => {
 
 						createCaseSummary
 							.hasTrustSummaryDetails(trustName)
-							.hasManagedBy("SFSO", "North and UTC - North East");
+							.hasManagedBy("SFSO", "North - North East");
 
 						createConcernPage
 							.withConcernType("Viability")
@@ -303,7 +303,7 @@ describe("Creating a non concerns case", () => {
 
 						createCaseSummary
 							.hasTrustSummaryDetails(trustName)
-							.hasManagedBy("SFSO", "North and UTC - North East");
+							.hasManagedBy("SFSO", "North - North East");
 
 						createConcernPage
 							.withConcernType("Deficit")
@@ -313,7 +313,7 @@ describe("Creating a non concerns case", () => {
 
 						createCaseSummary
 							.hasTrustSummaryDetails(trustName)
-							.hasManagedBy("SFSO", "North and UTC - North East")
+							.hasManagedBy("SFSO", "North - North East")
 							.hasConcernType("Deficit")
 							.hasConcernRiskRating("Red Amber");
 
@@ -321,7 +321,7 @@ describe("Creating a non concerns case", () => {
 
 						createCaseSummary
 							.hasTrustSummaryDetails(trustName)
-							.hasManagedBy("SFSO", "North and UTC - North East")
+							.hasManagedBy("SFSO", "North - North East")
 							.hasConcernType("Deficit")
 							.hasConcernRiskRating("Red Amber");
 
@@ -329,7 +329,7 @@ describe("Creating a non concerns case", () => {
 
 						createCaseSummary
 							.hasTrustSummaryDetails(trustName)
-							.hasManagedBy("SFSO", "North and UTC - North East")
+							.hasManagedBy("SFSO", "North - North East")
 							.hasConcernType("Deficit")
 							.hasConcernRiskRating("Red Amber")
 							.hasRiskToTrust("Red Plus");
