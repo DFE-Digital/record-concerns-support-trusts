@@ -30,9 +30,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseId { get; set; }
 
-		[BindProperty]
-		public TextAreaUiComponent RationaleForClosure { get; set; }
-
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 
 		public DeletePageModel(
@@ -105,20 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var caseModel = await _caseModelService.GetCaseByUrn(CaseId);
 
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-			RationaleForClosure = BuildRationaleForClosureComponent(RationaleForClosure?.Text.StringContents);
 		}
-
-		private TextAreaUiComponent BuildRationaleForClosureComponent(string contents = "")
-		=> new("case-outcomes", nameof(RationaleForClosure), "Rationale for closure")
-		{
-			Text = new ValidateableString()
-			{
-				MaxLength = 200,
-				StringContents = contents,
-				DisplayName = "Rationale for closure",
-				Required = true
-			}
-		};
 
 		private async Task<UserState> GetUserState()
 		{
