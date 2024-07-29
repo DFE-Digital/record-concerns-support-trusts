@@ -11,10 +11,12 @@ import {
 	SrmaNotesError,
 } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
+import { DeleteSrmaPage } from "cypress/pages/caseActions/srma/deleteSrmaPage";
 
 describe("Testing the SRMA case action", () => {
 	const editSrmaPage = new EditSrmaPage();
 	const viewSrmaPage = new ViewSrmaPage();
+	const deleteSrmaPage = new DeleteSrmaPage();
 	let now: Date;
 
 	beforeEach(() => {
@@ -528,6 +530,18 @@ describe("Testing the SRMA case action", () => {
 				.hasDateOfVisit("")
 				.hasDateReportSentToTrust("")
 				.hasNotes("Declined notes");
+		});
+
+		it("Deleting an SRMA", () => {
+			partiallyConfigureSrma("TrustConsidering");
+
+			Logger.log("Delete the SRMA");
+			viewSrmaPage.delete();
+			deleteSrmaPage.delete();
+
+			Logger.log("Confirm SRMA no longer exist");
+			actionSummaryTable
+				.assertRowDoesNotExist("SRMA", "open");
 		});
 	});
 
