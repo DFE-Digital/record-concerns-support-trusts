@@ -552,6 +552,6 @@ describe("User can add decisions to an existing case", () => {
 
 		Logger.log("Confirm Decision no longer exist");
 		actionSummaryTable
-			.assertRowDoesNotExist("Decision: Multiple Decision Types", "open")
+			.assertRowDoesNotExist("Decision: Multiple Decision Types", "open");
 	});
 });

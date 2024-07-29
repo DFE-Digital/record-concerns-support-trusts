@@ -7,12 +7,14 @@ import { CloseNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUn
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import {NotesError} from "../../../constants/validationErrorConstants";
+import { DeleteNtiUnderConsiderationPage } from "cypress/pages/caseActions/ntiUnderConsideration/deleteNtiUnderConsiderationPage";
 
 describe("Testing the NTI under consideration", () =>
 {
     const editNtiUnderConsiderationPage = new EditNtiUnderConsiderationPage();
     const viewNtiUnderConsiderationPage = new ViewNtiUnderConsiderationPage();
     const closeNtiUnderConsiderationPage = new CloseNtiUnderConsiderationPage();
+    const deleteNtiUnderConsiderationPage = new DeleteNtiUnderConsiderationPage();
     let now: Date;
 
     beforeEach(() => {
@@ -193,6 +195,34 @@ describe("Testing the NTI under consideration", () =>
             cy.excuteAccessibilityTests();
         });
     });
+
+    describe("When deleting an NTI under consideration", () =>
+        {
+            it.only("Should be able to delete the NTI under consideration", () =>
+            {
+                editNtiUnderConsiderationPage
+                    .withReason("Cash flow problems")
+                    .withReason("Safeguarding")
+                    .withNotes("These are my notes")
+                    .save();
+    
+                Logger.log("Close NTI on the view page");
+                actionSummaryTable
+                .getOpenAction("NTI Under Consideration")
+                .then(row =>
+                {
+                    row.select();
+                });
+    
+                Logger.log("Delete the NTI UC");
+                viewNtiUnderConsiderationPage.delete();
+                deleteNtiUnderConsiderationPage.delete();
+
+                Logger.log("Confirm NTI UCno longer exist");
+                actionSummaryTable
+                    .assertRowDoesNotExist("NTI Under Consideration", "open");
+            });
+        });
 
     function addNtiUnderConsiderationToCase()
     {
