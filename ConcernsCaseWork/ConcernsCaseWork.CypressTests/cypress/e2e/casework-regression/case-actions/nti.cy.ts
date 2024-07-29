@@ -13,6 +13,7 @@ import {
 	DateInvalidError,
 	NotesError,
 } from "cypress/constants/validationErrorConstants";
+import { DeleteNoticeToImprovePage } from "cypress/pages/caseActions/noticeToImprove/deleteNoticeToImprovePage";
 
 describe("Testing case action NTI", () => {
 	const editNtiPage = new EditNoticeToImprovePage();
@@ -20,6 +21,7 @@ describe("Testing case action NTI", () => {
 	const cancelNtiPage = new CancelNoticeToImprovePage();
 	const liftNtiPage = new LiftNoticeToImprovePage();
 	const closeNtiPage = new CloseNoticeToImprovePage();
+	const deleteNtiPage = new DeleteNoticeToImprovePage();
 	let now;
 
 	beforeEach(() => {
@@ -365,6 +367,22 @@ describe("Testing case action NTI", () => {
 		assertEmptyClosedNti("Closed");
 
 		viewNtiPage.hasDateClosed("Empty");
+	});
+
+	it("Should be able to close an NTI", () => {
+		configureNtiWithConditions();
+
+		actionSummaryTable.getOpenAction("NTI").then((row) => {
+			row.select();
+		});
+
+		Logger.log("Delete the NTI");
+		viewNtiPage.delete();
+		deleteNtiPage.delete();
+
+		Logger.log("Confirm NTI no longer exist");
+		actionSummaryTable
+			.assertRowDoesNotExist("NTI", "open");
 	});
 
 	function addNtiToCase() {
