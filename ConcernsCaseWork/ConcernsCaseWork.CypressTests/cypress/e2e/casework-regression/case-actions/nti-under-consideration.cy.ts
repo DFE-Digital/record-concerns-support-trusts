@@ -198,7 +198,7 @@ describe("Testing the NTI under consideration", () =>
 
     describe("When deleting an NTI under consideration", () =>
         {
-            it.only("Should be able to delete the NTI under consideration", () =>
+            it("Should be able to delete the NTI under consideration", () =>
             {
                 editNtiUnderConsiderationPage
                     .withReason("Cash flow problems")
@@ -218,7 +218,7 @@ describe("Testing the NTI under consideration", () =>
                 viewNtiUnderConsiderationPage.delete();
                 deleteNtiUnderConsiderationPage.delete();
 
-                Logger.log("Confirm NTI UCno longer exist");
+                Logger.log("Confirm NTI UC no longer exist");
                 actionSummaryTable
                     .assertRowDoesNotExist("NTI Under Consideration", "open");
             });
