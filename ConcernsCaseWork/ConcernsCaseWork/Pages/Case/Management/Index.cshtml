@@ -8,458 +8,485 @@
 @using ConcernsCaseWork.Helpers;
 
 @{
-    ViewData["Title"] = "Case management";
-    var nonce = HttpContext.GetNonce();
+	ViewData["Title"] = "Case management";
+	var nonce = HttpContext.GetNonce();
 
-    var errorClass = "govuk-error-message";
-    var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
-    var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
+	var errorClass = "govuk-error-message";
+	var concernsErrorClass = ModelState.ContainsKey(Model.ConcernsErrorKey) ? errorClass : "";
+	var caseActionsErrorClass = ModelState.ContainsKey(Model.CaseActionsErrorKey) ? errorClass : "";
 
-    var locationChangeLink = "";
-    var locationAria = "";
+	var locationChangeLink = "";
+	var locationAria = "";
 
-    if (Model.CaseModel?.Division == Division.RegionsGroup)
-    {
-        locationChangeLink = $"{Request.Path}/edit-region";
-        locationAria = "Change region";
-    }
-    else
-    {
-        locationChangeLink = $"{Request.Path}/edit-territory";
-        locationAria = "Change territory";
-    }
+	if (Model.CaseModel?.Division == Division.RegionsGroup)
+	{
+		locationChangeLink = $"{Request.Path}/edit-region";
+		locationAria = "Change region";
+	}
+	else
+	{
+		locationChangeLink = $"{Request.Path}/edit-territory";
+		locationAria = "Change territory";
+	}
 }
 
-<partial name="_BannerError" />
+<partial name="_BannerError"/>
 
 @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 {
-    <partial name="_Error" />
+	<partial name="_Error"/>
 }
 else
 {
-    <partial name="_ValidationErrors" />
+	<partial name="_ValidationErrors"/>
 
-    <div class="buttons-topOfPage">
-        @if (Model.IsEditableCase)
+	<div class="govuk-button-group concerns-align-buttons-right-in-govuk-button-group">
+		@if (Model.IsEditableCase)
+		{
+			<form method="post">
+				<button role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button" asp-page-handler="CloseCase">
+					Close case
+				</button>
+			</form>
+		}
+
+        @if (Model.UserCanDelete)
         {
             <form method="post">
-
-                <button role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
-                    Close case
+                <button role="button" class="govuk-button govuk-button--warning float__right" id="delete-case-button" data-module="govuk-button" asp-page-handler="DeleteCase">
+                    Delete case
                 </button>
-
             </form>
         }
-    </div>
-    @if (@Model.CaseOwnerChanged)
-    {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
-                     aria-labelledby="govuk-notification-banner-title"
-                     data-module="govuk-notification-banner">
-                    <div class="govuk-notification-banner__header">
-                        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                            Success
-                        </h2>
-                    </div>
-                    <div class="govuk-notification-banner__content">
-                        <h3 class="govuk-notification-banner__heading" data-testid="case-reassigned-success">
-                            Case has been reassigned
-                        </h3>
+        
+	</div>
+	@if (Model.CaseOwnerChanged)
+	{
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-full">
+				<div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+				     aria-labelledby="govuk-notification-banner-title"
+				     data-module="govuk-notification-banner">
+					<div class="govuk-notification-banner__header">
+						<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+							Success
+						</h2>
+					</div>
+					<div class="govuk-notification-banner__content">
+						<h3 class="govuk-notification-banner__heading" data-testid="case-reassigned-success">
+							Case has been reassigned
+						</h3>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    <h1 class="govuk-heading-l" name="caseID">
-        <span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseModel.Urn</span>
-        @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupNameTitle
-    </h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 
-    <nav class="moj-sub-navigation" aria-label="Sub navigation">
+	<h1 class="govuk-heading-l" name="caseID">
+		<span class="govuk-caption-m" data-testid="heading-case-id">Case ID @Model.CaseModel?.Urn</span>
+		@Model.TrustOverviewModel?.TrustDetailsModel.GiasData.GroupNameTitle
+	</h1>
 
-        <ul class="moj-sub-navigation__list">
-            <li class="moj-sub-navigation__item">
-                <a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
-            </li>
+	<nav class="moj-sub-navigation" aria-label="Sub navigation">
 
-            <li class="moj-sub-navigation__item">
-                <a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
-            </li>
-        </ul>
-    </nav>
+		<ul class="moj-sub-navigation__list">
+			<li class="moj-sub-navigation__item">
+				<a id="case-overview-tab" data-testid="case-overview-tab" class="moj-sub-navigation__link" aria-current="page" tabindex="0"><span aria-hidden="false"></span>About the case</a>
+			</li>
 
-    <div id="case-overview">
-        <div id="case-details">
+			<li class="moj-sub-navigation__item">
+				<a id="trust-overview-tab" data-testid="trust-overview-tab" class="moj-sub-navigation__link" tabindex="0"><span aria-hidden="true"></span>About the trust</a>
+			</li>
+		</ul>
+	</nav>
 
-            <!-- Case Details -->
-            <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m govuk-!-display-none"></caption>
-                <thead class="govuk-!-display-none">
-                    <tr>
-                        <th scope="col" class="govuk-!-width-one-quarter"></th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Trust</th>
-                        <td class="govuk-table__cell" data-testid="trust_Field">
-                            @Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right"></td>
-                    </tr>
+	<div id="case-overview">
+	<div id="case-details">
 
-                    @if (!Model.CaseModel.IsConcernsCase())
-                    {
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Concerns</th>
-                            <td class="govuk-table__cell" data-testid="concern_Field">
+	<!-- Case Details -->
+	<table class="govuk-table">
+		<caption class="govuk-table__caption govuk-table__caption--m govuk-!-display-none"></caption>
+		<thead class="govuk-!-display-none">
+		<tr>
+			<th scope="col" class="govuk-!-width-one-quarter"></th>
+			<th scope="col"></th>
+			<th scope="col"></th>
+		</tr>
+		</thead>
+		<tbody class="govuk-table__body">
+		<tr class="govuk-table__row">
+			<th scope="row" class="govuk-table-case-details__header">Trust</th>
+			<td class="govuk-table__cell" data-testid="trust_Field">
+				@Model.TrustOverviewModel.TrustDetailsModel.GiasData.GroupName
+			</td>
+			<td class="govuk-table__cell govuk-table__header__right"></td>
+		</tr>
 
-                                <a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
-                                    Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
-                                </a>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__header__right"></td>
-                        </tr>
-                    }
-                    @if (Model.CaseModel.IsConcernsCase())
-                    {
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
-                            <td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
-                                <partial name="_RatingLabel" model="@Model.CaseModel?.RatingId" />
-                            </td>
-                            <td class="govuk-table__cell govuk-table__header__right">
-                                @if (Model.IsEditableCase)
-                                {
-                                    <a data-testid="edit-risk-to-trust" class="govuk-link" href="@Request.Path/edit_rating" aria-label="Change risk to trust rating">
-                                        Change<span class="govuk-visually-hidden"> risk to trust rating</span>
-                                    </a>
-                                }
-                            </td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
-                            <td class="govuk-table__cell" data-testid="direction-of-travel">
-                                @Model.CaseModel.DirectionOfTravel
-                            </td>
-                            <td class="govuk-table__cell govuk-table__header__right">
-                                @if (Model.IsEditableCase)
-                                {
-                                    <a data-testid="edit-direction-of-travel" class="govuk-link" href="@Request.Path/edit_directionoftravel" aria-label="Change direction of travel">
-                                        Change<span class="govuk-visually-hidden"> direction of travel</span>
-                                    </a>
-                                }
-                            </td>
-                        </tr>
+		@if (Model.CaseModel != null && !Model.CaseModel.IsConcernsCase())
+		{
+			<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table-case-details__header">Concerns</th>
+				<td class="govuk-table__cell" data-testid="concern_Field">
 
-                        <tr class="govuk-table__row" id="container-Concerns">
-                            <th scope="row" class="govuk-table-case-details__header">
-                                <span class="@concernsErrorClass">Concerns</span>
-                            </th>
-                            <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
+					<a class="govuk-link" data-testid="Add_Button_Concern" href="/case/concern/@Model.CaseModel.Urn" aria-label="Add Concern">
+						Add Concern<span class="govuk-visually-hidden"> Add Concern</span>
+					</a>
+				</td>
+				<td class="govuk-table__cell govuk-table__header__right"></td>
+			</tr>
+		}
+		@if (Model.CaseModel != null && Model.CaseModel.IsConcernsCase())
+		{
+			<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
+				<td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
+					@if (Model.CaseModel?.RatingId != null)
+					{
+						<partial name="_RatingLabel" model="@Model.CaseModel?.RatingId"/>
+					}
+				</td>
+				<td class="govuk-table__cell govuk-table__header__right">
+					@if (Model.IsEditableCase)
+					{
+						<a data-testid="edit-risk-to-trust" class="govuk-link" href="@Request.Path/edit_rating" aria-label="Change risk to trust rating">
+							Change<span class="govuk-visually-hidden"> risk to trust rating</span>
+						</a>
+					}
+				</td>
+			</tr>
+			<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
+				<td class="govuk-table__cell" data-testid="direction-of-travel">
+					@Model.CaseModel?.DirectionOfTravel
+				</td>
+				<td class="govuk-table__cell govuk-table__header__right">
+					@if (Model.IsEditableCase)
+					{
+						<a data-testid="edit-direction-of-travel" class="govuk-link" href="@Request.Path/edit_directionoftravel" aria-label="Change direction of travel">
+							Change<span class="govuk-visually-hidden"> direction of travel</span>
+						</a>
+					}
+				</td>
+			</tr>
 
-                                <table class="govuk-table" data-testid="concerns-details-table">
-                                    <tbody class="govuk-table__body">
-                                        @foreach (var concern in Model.CaseModel.RecordsModel)
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td>
-                                                    @concern.GetConcernTypeName()
-                                                </td>
-                                                <td>
-                                                    <div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
-                                                        @{
-                                                            if (concern.IsClosed())
-                                                            {
-                                                                <span class="govuk-tag ragtag ragtag__grey">
-                                                                    Closed
-                                                                </span>
-                                                            }
-                                                            else
-                                                            {
-                                                                <partial name="_RatingLabel" model="@concern.RatingId" />
-                                                            }
-                                                        }
-                                                    </div>
-                                                </td>
-                                                <td class="govuk-table__header__right">
-                                                    @{
-                                                        if (concern.IsClosed())
-                                                        {
-                                                            <br />
-                                                        }
-                                                        else
-                                                        {
-                                                            <div class="govuk-!-padding-bottom-1">
-                                                                @if (Model.IsEditableCase)
-                                                                {
-                                                                    <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating/closure" aria-label="Close @concern.GetConcernTypeName() rating" data-testid="close-concern">Close</a>
-                                                                    <span class="govuk-divider">|</span>
-                                                                    <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.GetConcernTypeName() rating" data-testid="edit-concern">Change</a>
-                                                                }
-                                                            </div>
-                                                        }
-                                                    }
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
+			<tr class="govuk-table__row" id="container-Concerns">
+				<th scope="row" class="govuk-table-case-details__header">
+					<span class="@concernsErrorClass">Concerns</span>
+				</th>
+				<td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
 
-                                <div class="govuk-o-grid__item--one-half">
-                                    @if (Model.IsEditableCase)
-                                    {
-                                        <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add concern</a>
-                                    }
-                                </div>
+					<table class="govuk-table" data-testid="concerns-details-table">
+						<tbody class="govuk-table__body">
+						@foreach (var concern in Model.CaseModel?.RecordsModel)
+						{
+							<tr class="govuk-table__row">
+								<td>
+									@concern.GetConcernTypeName()
+								</td>
+								<td>
+									<div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
+										@{
+											if (concern.IsClosed())
+											{
+												<span class="govuk-tag ragtag ragtag__grey">
+													Closed
+												</span>
+											}
+											else
+											{
+												<partial name="_RatingLabel" model="@concern.RatingId"/>
+											}
+										}
+									</div>
+								</td>
+								<td class="govuk-table__header__right">
+									@{
+										if (concern.IsClosed() is false)
+										{
+											<div class="govuk-!-padding-bottom-1">
+												@if (Model.IsEditableCase)
+												{
+													<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating/closure" aria-label="Close @concern.GetConcernTypeName() rating" data-testid="close-concern">Close</a>
+													<span class="govuk-divider">|</span>
+													<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.GetConcernTypeName() rating" data-testid="edit-concern">Change</a>
+												}
+											</div>
+										}
+										<div class="govuk-!-padding-bottom-1">
+											@if (Model.UserCanDelete)
+											{
+												<span class="govuk-divider">|</span>
+												<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/delete" aria-label="Delete @concern.GetConcernTypeName() rating" data-testid="delete-concern">Delete</a>
+											}
+										</div>
+									}
+								</td>
+							</tr>
+						}
+						</tbody>
+					</table>
 
-                            </td>
-                            <td class="govuk-table__cell__no_border"></td>
-                        </tr>
-                    }
+					<div class="govuk-o-grid__item--one-half">
+						@if (Model.IsEditableCase)
+						{
+							<a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state" data-testid="add-additional-concern">Add concern</a>
+						}
+					</div>
 
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Managed by</th>
-                        <td class="govuk-table__cell" data-testid="territory_Field">
-                            @{
-                                RenderValue(Model.CaseModel.Division?.Description());
-                            }
-                            <br />
-                            @{
-                                RenderValue(Model.CaseModel.Area);
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @if (Model.IsEditableCase)
-                            {
-                                <a class="govuk-link" data-testid="edit_Button_SFSO" href="@locationChangeLink" aria-label="@locationAria">
-                                    Change
-                                </a>
-                            }
-                        </td>
-                    </tr>
+				</td>
+				<td class="govuk-table__cell__no_border"></td>
+			</tr>
+		}
 
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Owned by</th>
-                        <td class="govuk-table__cell" data-testid="case owner_field">
-                            @Model.CaseModel.CreatedBy.FromEmailToFullName()
-                        </td>
+		<tr class="govuk-table__row">
+			<th scope="row" class="govuk-table-case-details__header">Managed by</th>
+			<td class="govuk-table__cell" data-testid="territory_Field">
+				@{
+					RenderValue(Model.CaseModel?.Division?.Description());
+				}
+				<br/>
+				@{
+					RenderValue(Model.CaseModel?.Area);
+				}
+			</td>
+			<td class="govuk-table__cell govuk-table__header__right">
+				@if (Model.IsEditableCase)
+				{
+					<a class="govuk-link" data-testid="edit_Button_SFSO" href="@locationChangeLink" aria-label="@locationAria">
+						Change
+					</a>
+				}
+			</td>
+		</tr>
 
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @if (Model.IsEditableCase)
-                            {
-                                <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change owned by">
-                                    Change
-                                </a>
-                            }
-                        </td>
-                    </tr>
+		<tr class="govuk-table__row">
+			<th scope="row" class="govuk-table-case-details__header">Owned by</th>
+			<td class="govuk-table__cell" data-testid="case owner_field">
+				@Model.CaseModel?.CreatedBy.FromEmailToFullName()
+			</td>
 
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date created</th>
-                        <td class="govuk-table__cell">
-                            @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.CreatedAt)
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right"></td>
-                    </tr>
+			<td class="govuk-table__cell govuk-table__header__right">
+				@if (Model.IsEditableCase)
+				{
+					<a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change owned by">
+						Change
+					</a>
+				}
+			</td>
+		</tr>
 
-                </tbody>
-            </table>
+		<tr class="govuk-table__row">
+			<th scope="row" class="govuk-table-case-details__header">Date created</th>
+			<td class="govuk-table__cell">
+				@DateTimeHelper.ParseToDisplayDate(Model.CaseModel?.CreatedAt)
+			</td>
+			<td class="govuk-table__cell govuk-table__header__right"></td>
+		</tr>
 
-            @if (Model.CaseModel.IsConcernsCase())
-            {
-                <h2 class="govuk-heading-m">Case details</h2>
+		</tbody>
+	</table>
 
-                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion" data-testid="case-narritive-fields-container">
+	@if (Model.CaseModel != null && Model.CaseModel.IsConcernsCase())
+	{
+		<h2 class="govuk-heading-m">Case details</h2>
+
+		<div class="govuk-accordion" data-module="govuk-accordion" id="accordion" data-testid="case-narritive-fields-container">
 
 
-                    @* Issue *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-issue-heading">
-                                    Issue
-                                </span>
-                            </h2>
-                        </div>
-                        <div id="accordion-issue-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Change</a></div>
-                            }
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="issue">@Model.CaseModel.Issue</span>
-                            </div>
-                        </div>
-                    </div>
+			@* Issue *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-issue-heading">
+							Issue
+						</span>
+					</h2>
+				</div>
+				<div id="accordion-issue-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Change</a>
+						</div>
+					}
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="issue">@Model.CaseModel.Issue</span>
+					</div>
+				</div>
+			</div>
 
-                    @* Status *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-status-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Change</a></div>
-                            }
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="status">@Model.CaseModel.CurrentStatus</span>
-                            </div>
-                        </div>
-                    </div>
+			@* Status *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
+					</h2>
+				</div>
+				<div id="accordion-status-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Change</a>
+						</div>
+					}
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="status">@Model.CaseModel.CurrentStatus</span>
+					</div>
+				</div>
+			</div>
 
-                    @* Case aim *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-case-aim-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Change</a></div>
-                            }
+			@* Case aim *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
+					</h2>
+				</div>
+				<div id="accordion-case-aim-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Change</a>
+						</div>
+					}
 
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="case-aim">@Model.CaseModel.CaseAim</span>
-                            </div>
-                        </div>
-                    </div>
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="case-aim">@Model.CaseModel.CaseAim</span>
+					</div>
+				</div>
+			</div>
 
-                    @* De-escalation point *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Change</a></div>
-                            }
+			@* De-escalation point *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
+					</h2>
+				</div>
+				<div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Change</a>
+						</div>
+					}
 
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="de-escalation-point">@Model.CaseModel.DeEscalationPoint</span>
-                            </div>
-                        </div>
-                    </div>
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="de-escalation-point">@Model.CaseModel.DeEscalationPoint</span>
+					</div>
+				</div>
+			</div>
 
-                    @* Next steps *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-next-steps-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Change</a></div>
-                            }
+			@* Next steps *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
+					</h2>
+				</div>
+				<div id="accordion-next-steps-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Change</a>
+						</div>
+					}
 
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="next-steps">@Model.CaseModel.NextSteps</span>
-                            </div>
-                        </div>
-                    </div>
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="next-steps">@Model.CaseModel.NextSteps</span>
+					</div>
+				</div>
+			</div>
 
-                    @* Case history *@
-                    <div class="govuk-accordion__section">
-                        <div class="govuk-accordion__section-header">
-                            <h2 class="govuk-accordion__section-heading">
-                                <span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case notes</span>
-                            </h2>
-                        </div>
-                        <div id="accordion-case-history-content" class="govuk-accordion__section-content">
-                            @if (Model.IsEditableCase)
-                            {
-                                <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case notes">Change</a></div>
-                            }
+			@* Case history *@
+			<div class="govuk-accordion__section">
+				<div class="govuk-accordion__section-header">
+					<h2 class="govuk-accordion__section-heading">
+						<span class="govuk-accordion__section-button" id="accordion-case-history-heading">Case notes</span>
+					</h2>
+				</div>
+				<div id="accordion-case-history-content" class="govuk-accordion__section-content">
+					@if (Model.IsEditableCase)
+					{
+						<div>
+							<a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case notes">Change</a>
+						</div>
+					}
 
-                            <div class="govuk-!-width-three-quarters">
-                                <span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
+					<div class="govuk-!-width-three-quarters">
+						<span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 
-            <h3 class="govuk-heading-m">Case actions and decisions</h3>
-            @if (Model.IsEditableCase)
-            {
-                <a data-testid="add-case-action" href="management/action" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                    Add to case
-                </a>
-            }
+	<h3 class="govuk-heading-m">Case actions and decisions</h3>
+	@if (Model.IsEditableCase)
+	{
+		<a data-testid="add-case-action" href="management/action" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+			Add to case
+		</a>
+	}
 
-            <table id="open-case-actions" class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
-                    Active actions and decisions
-                </caption>
-                <thead class="govuk-table__head" id="container-CaseActions">
-                    <tr class="govuk-table__row tr__large">
-                        <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                            <span>Active actions and decisions</span>
-                        </th>
-                        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
-                            <span class="govuk-visually-hidden">Status</span>
-                        </th>
-                        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                            Date opened
-                        </th>
-                    </tr>
-                </thead>
+	<table id="open-case-actions" class="govuk-table">
+		<caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+			Active actions and decisions
+		</caption>
+		<thead class="govuk-table__head" id="container-CaseActions">
+		<tr class="govuk-table__row tr__large">
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				<span>Active actions and decisions</span>
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
+				<span class="govuk-visually-hidden">Status</span>
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
+				Date opened
+			</th>
+		</tr>
+		</thead>
 
-                <tbody class="govuk-table__body">
+		<tbody class="govuk-table__body">
 
-                    @if (!Model.OpenCaseActions.Any())
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" colspan="3">
-                                There are no active actions or decisions added to this case.
-                            </td>
-                        </tr>
-                    }
+		@if (!Model.OpenCaseActions.Any())
+		{
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell" colspan="3">
+					There are no active actions or decisions added to this case.
+				</td>
+			</tr>
+		}
 
-                    @foreach (ActionSummaryModel action in Model.OpenCaseActions)
-                    {
-                        <tr class="govuk-table__row" data-testid="row-@action.Name">
-                            <td class="govuk-table__cell">
-                                <a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
-                                    <span class="@caseActionsErrorClass">@action.Name</span>
-                                </a>
-                            </td>
-                            <td class="govuk-table__cell" data-testid="status">
-                                <span>@action.StatusName</span>
-                            </td>
-                            <td class="govuk-table__cell govuk-table__header__right" data-testid="opened-date">
-                                @action.OpenedDate
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+		@foreach (ActionSummaryModel action in Model.OpenCaseActions)
+		{
+			<tr class="govuk-table__row" data-testid="row-@action.Name">
+				<td class="govuk-table__cell">
+					<a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
+						<span class="@caseActionsErrorClass">@action.Name</span>
+					</a>
+				</td>
+				<td class="govuk-table__cell" data-testid="status">
+					<span>@action.StatusName</span>
+				</td>
+				<td class="govuk-table__cell govuk-table__header__right" data-testid="opened-date">
+					@action.OpenedDate
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
 
-            <partial name="Shared/_ListClosedActionsForCase" model="Model.ClosedCaseActions" />
+	<partial name="Shared/_ListClosedActionsForCase" model="Model.ClosedCaseActions"/>
 
-        </div>
-    </div>
-    <div id="trust-overview" hidden>
-        <partial name="_TrustOverview" model="@Model.TrustOverviewModel" />
-    </div>
+	</div>
+	</div>
+	<div id="trust-overview" hidden>
+		<partial name="_TrustOverview" model="@Model.TrustOverviewModel"/>
+	</div>
 
-    <script type="application/javascript" nonce="@nonce">
+	<script type="application/javascript" nonce="@nonce">
 
         $(function () {
             onTabMove({ from: "trust-overview", to: "case-overview" });
@@ -495,31 +522,32 @@ else
 }
 
 @functions {
-    private void RenderValue<T>(T value)
-    {
-        if (IsEmpty(value))
-        {
-            RenderEmptyLabel();
-        }
-        else
-        {
-            @value
-        }
-    }
 
-    private bool IsEmpty<T>(T value)
-    {
-        if (value is string)
-        {
-            return string.IsNullOrWhiteSpace(value as string);
-        }
+	private void RenderValue<T>(T value)
+	{
+		if (IsEmpty(value))
+		{
+			RenderEmptyLabel();
+		}
+		else
+		{
+			@value
+		}
+	}
 
-        return value == null || value.Equals(default(T));
-    }
+	private bool IsEmpty<T>(T value)
+	{
+		if (value is string)
+		{
+			return string.IsNullOrWhiteSpace(value as string);
+		}
 
-    private void RenderEmptyLabel()
-    {
-        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
-    }
+		return value == null || value.Equals(default(T));
+	}
+
+	private void RenderEmptyLabel()
+	{
+		<span class="govuk-tag ragtag ragtag__grey">Empty</span>
+	}
+
 }
-

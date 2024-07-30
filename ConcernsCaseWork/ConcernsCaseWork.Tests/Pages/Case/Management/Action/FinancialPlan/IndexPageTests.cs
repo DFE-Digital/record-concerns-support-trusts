@@ -1,6 +1,7 @@
 using ConcernsCaseWork.API.Contracts.FinancialPlan;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ public class IndexPageTests
 	{
 		// arrange
 		var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+		var mockCasePermissionService = new Mock<ICasePermissionsService>();
 		var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 		var caseUrn = 4;
@@ -31,7 +33,7 @@ public class IndexPageTests
 		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 	
-		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
+		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockCasePermissionService.Object, mockLogger.Object);
 			
 		var routeData = pageModel.RouteData.Values;
 		routeData.Add("urn", caseUrn);
@@ -65,6 +67,7 @@ public class IndexPageTests
 	{
 		// arrange
 		var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+		var mockCasePermissionService = new Mock<ICasePermissionsService>();
 		var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 		var caseUrn = 4;
@@ -75,7 +78,7 @@ public class IndexPageTests
 		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(financialPlan);
 			
-		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
+		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockCasePermissionService.Object, mockLogger.Object);
 			
 		var routeData = pageModel.RouteData.Values;
 		routeData.Add("urn", caseUrn);
@@ -115,12 +118,13 @@ public class IndexPageTests
 	
 	private static IndexPageModel SetupIndexPageModel(
 		IFinancialPlanModelService mockFinancialPlanModelService,
+		ICasePermissionsService mockCasePermissionService,
 		ILogger<IndexPageModel> mockLogger,
 		bool isAuthenticated = false)
 	{
 		(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-		return new IndexPageModel(mockFinancialPlanModelService, mockLogger)
+		return new IndexPageModel(mockFinancialPlanModelService, mockCasePermissionService, mockLogger)
 		{
 			PageContext = pageContext,
 			TempData = tempData,

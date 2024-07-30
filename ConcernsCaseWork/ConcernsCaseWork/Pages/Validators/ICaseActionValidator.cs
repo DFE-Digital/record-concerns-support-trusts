@@ -6,5 +6,6 @@ namespace ConcernsCaseWork.Pages.Validators
 	public interface ICaseActionValidator
 	{
 		List<string> Validate(IEnumerable<CaseActionModel> caseActions);
+		List<string> ValidateDelete(IEnumerable<CaseActionModel> caseActions);
 	}
 }

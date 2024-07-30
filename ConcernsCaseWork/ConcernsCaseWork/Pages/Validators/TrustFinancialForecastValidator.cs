@@ -16,5 +16,15 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return result;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var hasOpenActions = caseActions
+				.Any(c => c is TrustFinancialForecastSummaryModel);
+
+			var result = hasOpenActions ? "Delete trust financial forecast" : string.Empty;
+
+			return result;
+		}
 	}
 }

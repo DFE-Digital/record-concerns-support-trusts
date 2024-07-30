@@ -233,6 +233,24 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 		}
 
+		public async Task DeleteSRMA(long srmaId)
+		{
+			try
+			{
+				var client = CreateHttpClient();
+				var request = new HttpRequestMessage(HttpMethod.Delete, $"{Url}/{srmaId}");
+
+				await client.SendAsync(request);
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to delete SRMA");
+				throw;
+			}
+		}
+
+
 		private string SerialiseDateTime(DateTime dateTime)
 		{
 			return dateTime.ToString("dd-MM-yyyy");

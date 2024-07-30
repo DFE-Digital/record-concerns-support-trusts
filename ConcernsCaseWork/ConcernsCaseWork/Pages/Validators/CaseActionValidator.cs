@@ -29,5 +29,22 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return validationMessages;
 		}
+
+		public List<string> ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			List<string> validationMessages = new();
+
+			foreach (var strategy in _strategies.ToList())
+			{
+				var validationErrorMessage = strategy.ValidateDelete(caseActions);
+
+				if (!string.IsNullOrEmpty(validationErrorMessage))
+				{
+					validationMessages.Add(validationErrorMessage);
+				}
+			}
+
+			return validationMessages;
+		}
 	}
 }

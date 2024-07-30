@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +23,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiConditionsService = new Mock<INtiConditionsService>();
+			var mockCasePermissionService = new Mock<ICasePermissionsService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiViewModelAsync(1, It.IsAny<long>())).ReturnsAsync(ntiModel);
 
-			var pageModel = SetupIndexPageModel(mockNtiModelService, mockNtiConditionsService, mockLogger);
+			var pageModel = SetupIndexPageModel(mockNtiModelService, mockNtiConditionsService, mockCasePermissionService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 
@@ -44,12 +46,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiModelService> mockModelService,
 			Mock<INtiConditionsService> mockConditionsService = null,
+			Mock<ICasePermissionsService> mockCasePermissionService = null,
 			Mock<ILogger<IndexPageModel>> mockLogger = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockModelService.Object, mockConditionsService.Object, mockLogger.Object)
+			return new IndexPageModel(mockModelService.Object, mockConditionsService.Object, mockCasePermissionService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

@@ -12,11 +12,13 @@ import {
 	NotesError,
 } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
+import { DeleteTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/deleteTrustFinancialForecastPage";
 
 describe("User can add trust financial forecast to an existing case", () => {
 	const editTFFPage = new EditTrustFinancialForecastPage();
 	const viewTFFPage = new ViewTrustFinancialForecastPage();
 	const closeTFFPage = new CloseTrustFinancialForecastPage();
+	const deleteTFFPage = new DeleteTrustFinancialForecastPage();
 	let now: Date;
 
 	beforeEach(() => {
@@ -236,6 +238,37 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		Logger.log("Checking accessibility on View Closed TFF");
 		cy.excuteAccessibilityTests();
+	});
+
+	it("Delete a TFF", function () {
+		Logger.log("Create a TFF with populated values");
+		editTFFPage
+			.withForecastingTool("Previous year - Autumn")
+			.withDayReviewHappened("14")
+			.withMonthReviewHappened("02")
+			.withYearReviewHappened("2022")
+			.withDayTrustResponded("15")
+			.withMonthTrustResponded("03")
+			.withYearTrustResponded("2024")
+			.withTrustResponseSatisfactory("Not satisfactory")
+			.withSRMAOffered("No")
+			.withNotes("very important notes")
+			.save();
+
+		Logger.log("Validate the Trust Financial Forecast on the view page");
+		actionSummaryTable
+			.getOpenAction("TFF (trust financial forecast)")
+			.then((row) => {
+				row.select();
+			});
+
+		Logger.log("Delete the TFF");
+		viewTFFPage.delete();
+		deleteTFFPage.delete();
+
+		Logger.log("Confirm TFF no longer exist");
+		actionSummaryTable
+			.assertRowDoesNotExist("TFF (trust financial forecast)", "open");
 	});
 
 	function addTFFToCase() {

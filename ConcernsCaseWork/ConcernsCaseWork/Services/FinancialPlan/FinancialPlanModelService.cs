@@ -26,6 +26,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			_logger = logger;
 		}
 
+	
 		public async Task<IList<FinancialPlanModel>> GetFinancialPlansModelByCaseUrn(long caseUrn)
 		{
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
@@ -98,5 +99,11 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 				throw;
 			}
 		}
+
+		public async Task DeleteFinancialPlan(long financialPlanId)
+		{
+			await _financialPlanService.DeleteFinancialPlan(financialPlanId);
+		}
+
 	}
 }

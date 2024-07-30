@@ -8,6 +8,8 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Service.Permissions;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -16,14 +18,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
+		public bool UserCanDelete { get; private set; }
 
-		public IndexPageModel(IFinancialPlanModelService financialPlanModelService, ILogger<IndexPageModel> logger)
+
+		public IndexPageModel(IFinancialPlanModelService financialPlanModelService, ICasePermissionsService casePermissionsService, ILogger<IndexPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -39,6 +45,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				(caseUrn, financialPlanId) = GetRouteData();
 
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(caseUrn);
 
 				if (FinancialPlanModel == null)
 				{

@@ -186,5 +186,30 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 
 			return null;
 		}
+
+		public async Task DeleteFinancialPlan(long financialPlanId)
+		{
+			try
+			{
+				_logger.LogInformation("FinancialPlanService::DeleteFinancialPlan");
+
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Delete,
+					$"/{EndpointsVersion}/case-actions/financial-plan/{financialPlanId}");
+
+				// Create http client
+				var client = CreateHttpClient();
+
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("FinancialPlanService::DeleteFinancialPlan::Exception message::{Message}", ex.Message);
+			}
+		}
 	}
 }

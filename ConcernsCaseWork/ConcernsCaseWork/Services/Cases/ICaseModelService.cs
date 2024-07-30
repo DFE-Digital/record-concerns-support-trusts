@@ -24,5 +24,6 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchOwner(int caseUrn, string owner);
 
 		Task PatchRegion(int caseUrn, Region? region);
+		Task DeleteCase(int caseUrn);
 	}
 }

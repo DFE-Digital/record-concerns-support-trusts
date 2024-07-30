@@ -24,6 +24,8 @@ import { DecisionOutcomePage } from "cypress/pages/caseActions/decision/decision
 import addToCasePage from "cypress/pages/caseActions/addToCasePage";
 import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
+import deleteConcernPage from "cypress/pages/deleteConcernPage";
+import deleteCasePage from "cypress/pages/deleteCasePage";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -182,6 +184,89 @@ describe("Creating a case", () => {
                 viewClosedCasePage.hasManagedBy("Regions Group", "South West");
             }));
 
+        });
+
+        it("Should delete a concern", () => {
+            Logger.log("Create a case");
+            createCasePage
+                .createCase()
+                .withTrustName("Ashton West End Primary Academy")
+                .selectOption()
+                .confirmOption();
+    
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy");
+    
+            Logger.log("Create a valid case division");
+            selectCaseDivisionPage
+                .withCaseDivision("RegionsGroup")
+                .continue();
+    
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy")
+                .hasManagedBy("Regions Group", "");
+    
+            Logger.log("Select valid region");
+            addRegionPage
+                .withRegion("London")
+                .nextStep();
+    
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy")
+                .hasManagedBy("Regions Group", "London");
+
+            Logger.log("Create a valid concern");
+            createConcernPage
+                .withConcernType("Governance capability")
+                .withConcernRating("Amber-Green")
+                .withMeansOfReferral(SourceOfConcernExternal)
+                .addConcern();
+    
+            Logger.log("Check Concern details are correctly populated");
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy")
+                .hasManagedBy("Regions Group", "London")
+                .hasConcernRiskRating("Amber Green")
+                .hasConcernType("Governance capability");
+    
+            createConcernPage.nextStep();
+    
+            Logger.log("Populate risk to trust");
+            addDetailsPage.withRiskToTrust("Red").nextStep();
+    
+            Logger.log(
+                "Check Trust, concern and risk to trust details are correctly populated"
+            );
+            createCaseSummary
+                .hasTrustSummaryDetails("Ashton West End Primary Academy")
+                .hasManagedBy("Regions Group", "London")
+                .hasConcernType("Governance capability")
+                .hasConcernRiskRating("Amber Green")
+                .hasRiskToTrust("Red");
+    
+            Logger.log("Add concern details with valid text limit");
+            addConcernDetailsPage.withIssue("This is an issue").createCase();
+    
+            Logger.log("Verify case details");
+            caseManagementPage
+                .hasTrust("Ashton West End Primary Academy")
+                .hasRiskToTrust("Red")
+                .hasConcerns("Governance capability", ["Amber", "Green"])
+                .hasManagedBy("Regions Group", "London")
+                .hasIssue("This is an issue");
+    
+            Logger.log("Validate a case cant be deleted with open concerns");
+            caseManagementPage.deleteCase();
+            validationComponent.hasValidationError("Delete concerns");
+
+            Logger.log("Delete the concern");
+            caseManagementPage.deleteConcern();
+            deleteConcernPage.confirmDeleteConcern();
+
+            Logger.log("Delete the case");
+            caseManagementPage.deleteCase();
+            deleteCasePage.withRationaleForClosure("Opened by accident");
+            deleteCasePage.confirmDeleteCase();
         });
     });
 

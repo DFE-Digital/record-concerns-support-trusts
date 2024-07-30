@@ -106,6 +106,15 @@ export class ViewNtiUnderConsiderationPage
         return this;
     }
 
+    public delete(): this
+    {
+        Logger.log("Deleting NTI under consideration");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     private getEdit()
     {
         return cy.getById("edit-nti-uc-button");
@@ -113,6 +122,11 @@ export class ViewNtiUnderConsiderationPage
 
     private getClose()
     {
-        return cy.getByTestId("close-nti-uc-button");
+        return cy.getByTestId("close-nti-uc-button"); 
+    }
+
+    private getDelete()
+    {
+        return cy.getByTestId("delete-nti-uc"); 
     }
 }

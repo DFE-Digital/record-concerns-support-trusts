@@ -20,32 +20,25 @@ namespace ConcernsCaseWork.API.Features.Case
 			_context = concernsDbContext;
 		}
 
-
 		public UseCaseResult Execute(int id)
 		{
+			bool hasRelatedRecords = _context.ConcernsRecord.Any(f => f.CaseId == id) ||
+						 _context.Decisions.Any(f => f.ConcernsCaseId == id) ||
+						 _context.NoticesToImprove.Any(f => f.CaseUrn == id) ||
+						 _context.NTIUnderConsiderations.Any(f => f.CaseUrn == id) ||
+						 _context.NTIWarningLetters.Any(f => f.CaseUrn == id) ||
+						 _context.FinancialPlanCases.Any(f => f.CaseUrn == id) ||
+						 _context.SRMACases.Any(f => f.CaseUrn == id) ||
+						 _context.TrustFinancialForecasts.Any(f => f.CaseUrn == id);
 
-			bool HasConcernsRecord = _context.ConcernsRecord.Where(f => f.CaseId == id).Any();
-			bool HasDecisions = _context.Decisions.Where(f => f.ConcernsCaseId == id).Any();
-			bool HasNoticeToImprove = _context.NoticesToImprove.Where(f => f.CaseUrn == id).Any();
-			bool HasNTIUnderconsideration = _context.NTIUnderConsiderations.Where(f => f.CaseUrn == id).Any();
-			bool HasNTIWarningLetters = _context.NTIWarningLetters.Where(f => f.CaseUrn == id).Any();
-			bool HasFinancialPlans = _context.FinancialPlanCases.Where(f => f.CaseUrn == id).Any();
-			bool HasSRMAs = _context.SRMACases.Where(f => f.CaseUrn == id).Any();
-			bool HasTFF = _context.TrustFinancialForecasts.Where(f => f.CaseUrn == id).Any();
+			if (hasRelatedRecords)
+				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) or case actions"));
 
-			bool HasNoRelatedCaseActions = new[] { HasDecisions, HasNoticeToImprove, HasNTIUnderconsideration, HasNTIWarningLetters, HasFinancialPlans, HasSRMAs, HasTFF }.All(x => x == false);
+			var concernsCase = _context.ConcernsCase.SingleOrDefault(f => f.Id == id);
+			if (concernsCase == null)
+				return UseCaseResult.Failure(new UseCaseResultError("Case not found."));
 
-
-			if (HasConcernsRecord && !HasNoRelatedCaseActions)
-				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) and case actions"));
-
-			if (HasConcernsRecord)
-				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s)"));
-
-			if (!HasNoRelatedCaseActions)
-				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related case actions"));
-			var cc = _context.ConcernsCase.SingleOrDefault(f => f.Id == id);
-			cc.DeletedAt = DateTime.Now;
+			concernsCase.DeletedAt = DateTime.Now;
 			_context.SaveChanges();
 
 			return UseCaseResult.Success();

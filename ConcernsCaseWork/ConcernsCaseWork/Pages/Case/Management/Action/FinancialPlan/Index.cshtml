@@ -24,6 +24,10 @@
 }
 else
 {
+    @if (Model.UserCanDelete)
+    {
+        <a class="govuk-button govuk-button--warning float__right" href="@Request.Path/delete" aria-label="Delete financial plan" data-testid="delete-financial-plan">Delete financial plan</a>
+    }
 
     <h1 class="govuk-heading-l">
         <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>

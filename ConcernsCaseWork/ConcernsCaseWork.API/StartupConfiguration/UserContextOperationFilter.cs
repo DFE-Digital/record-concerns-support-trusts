@@ -28,7 +28,8 @@ public class UserContextOperationFilter : IOperationFilter
 			{
 				{ "caseworker", new OpenApiExample(){ Value = new OpenApiString("concerns-casework.caseworker") } },
 				{ "team-leader", new OpenApiExample(){ Value = new OpenApiString("concerns-casework.teamleader") } },
-				{ "admin", new OpenApiExample(){ Value = new OpenApiString("concerns-casework.admin") } }
+				{ "admin", new OpenApiExample(){ Value = new OpenApiString("concerns-casework.admin") } }, 
+				{ "case-delete-group", new OpenApiExample(){ Value = new OpenApiString("concerns-casework.case-delete-group") } } 
 			},
 			Required = true,
 		});

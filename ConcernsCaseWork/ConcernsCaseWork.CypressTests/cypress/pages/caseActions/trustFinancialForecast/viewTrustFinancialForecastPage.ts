@@ -115,11 +115,23 @@ export class ViewTrustFinancialForecastPage
         return this;
     }
 
+    public delete(): this {
+        Logger.log("Deleting Trust financial forecast");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     private getEdit() {
         return cy.getById("trust-financial-forecast-edit-button");
     }
 
     private getClose() {
         return cy.getById("trust-financial-forecast-close-button");
+    }
+
+    private getDelete() {
+        return cy.getByTestId("delete-tff");
     }
 }

@@ -2,6 +2,7 @@
 using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
@@ -33,6 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
+			var mockCasePermissionsService = new Mock<ICasePermissionsService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
@@ -40,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
-			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockCasePermissionsService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = 1;
@@ -63,6 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			var srmaId = 1;
 			
 			var mockSrmaService = new Mock<ISRMAService>();
+			var mockCasePermissionsService = new Mock<ICasePermissionsService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, closedAt: DateTime.Now);
@@ -70,7 +73,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
-			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockCasePermissionsService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = caseUrn;
@@ -95,6 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
+			var mockCasePermissionsService = new Mock<ICasePermissionsService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
@@ -102,7 +106,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
-			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockCasePermissionsService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = 1;
@@ -121,6 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public void WhenOnPost_UnrecognisedAction_ThrowsError()
 		{
 			var mockSrmaService = new Mock<ISRMAService>();
+			var mockCasePermissionsService = new Mock<ICasePermissionsService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
@@ -128,7 +133,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
-			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockCasePermissionsService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			pageModel.CaseUrn = 1;
@@ -144,12 +149,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 		private static IndexPageModel SetupIndexPageModel(
 			ISRMAService mockSrmaService,
+			ICasePermissionsService mockCasePermissionsService,
 			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockSrmaService, mockLogger)
+			return new IndexPageModel(mockSrmaService, mockCasePermissionsService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

@@ -14,5 +14,14 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return errorMessage;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var ntiUC = caseActions.Any(ca => ca is NtiUnderConsiderationModel);
+
+			var errorMessage = ntiUC ? "Delete NTI: Under consideration" : string.Empty;
+
+			return errorMessage;
+		}
 	}
 }

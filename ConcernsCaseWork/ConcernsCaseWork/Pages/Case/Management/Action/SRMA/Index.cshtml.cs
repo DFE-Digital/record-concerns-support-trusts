@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Cases;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly ISRMAService _srmaModelService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public readonly string ReasonErrorKey = "Reason";
@@ -33,9 +35,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		[BindProperty(Name = "srmaId", SupportsGet = true)]
 		public int SrmaId { get; set; }
 
-		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
+		public bool UserCanDelete { get; set; }
+
+		public IndexPageModel(ISRMAService srmaService, ICasePermissionsService casePermissionsService, ILogger<IndexPageModel> logger)
 		{
 			_srmaModelService = srmaService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -169,6 +174,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				throw new Exception("Could not load this SRMA");
 			}
+
+			UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(caseId);
 		}
 
 		private void PerformReasonValidation(SRMAModel model)

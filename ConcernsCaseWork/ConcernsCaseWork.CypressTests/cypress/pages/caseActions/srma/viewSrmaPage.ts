@@ -308,6 +308,15 @@ export class ViewSrmaPage {
         return this;
     }
 
+    public delete()
+    {
+        Logger.log("Deleting SRMA");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     public canDecline()
     {
         Logger.log("Can decline SRMA");
@@ -372,5 +381,9 @@ export class ViewSrmaPage {
 
     private getDecline() {
         return cy.getByTestId("decline-srma-button");
+    }
+
+    private getDelete() {
+        return cy.getByTestId("delete-srma");
     }
 }

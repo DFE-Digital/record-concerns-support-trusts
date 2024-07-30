@@ -261,6 +261,12 @@ namespace ConcernsCaseWork.Services.Cases
 			await _caseService.PatchCaseByUrn(newCaseDto);
 		}
 
+		public async Task DeleteCase(int caseUrn)
+		{
+			var caseDto = await _caseService.GetCaseByUrn(caseUrn);
+			await _caseService.DeleteCaseByUrn(caseDto);
+		}
+
 		public async Task<long> PostCase(CreateCaseModel createCaseModel)
 		{
 			try

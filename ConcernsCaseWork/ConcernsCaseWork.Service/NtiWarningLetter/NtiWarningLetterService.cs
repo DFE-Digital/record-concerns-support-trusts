@@ -113,5 +113,24 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 				throw;
 			}
 		}
+
+		public async Task DeleteNtiWarningLetterAsync(long ntiWarningLetterId)
+		{
+			try
+			{
+				var client = CreateHttpClient();
+				var request = new HttpRequestMessage(HttpMethod.Delete, $"{_url}/{ntiWarningLetterId}");
+
+				var response = await client.SendAsync(request);
+
+				response.EnsureSuccessStatusCode();
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to delete NTI");
+				throw;
+			}
+		}
 	}
 }

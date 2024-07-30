@@ -159,7 +159,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 			services.AddScoped<IApiCaseSummaryService, ApiCaseSummaryService>();
-			services.AddScoped<ICloseCaseValidatorService, CloseCaseValidatorService>();
+			services.AddScoped<ICaseValidatorService, CaseValidatorService>();
 
 			// api services
 			services.AddScoped<ICaseService, CaseService>();

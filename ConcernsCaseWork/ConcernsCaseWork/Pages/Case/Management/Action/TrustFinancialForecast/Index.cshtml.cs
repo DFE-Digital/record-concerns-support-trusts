@@ -24,6 +24,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 		public ViewTrustFinancialForecastModel TrustFinancialForecastModel { get; set; }
 
+		public bool UserCanDelete { get; set; }
+
 		public IndexPageModel(
 			ITrustFinancialForecastService trustFinancialForecastService,
 			ICasePermissionsService casePermissionsService,
@@ -45,6 +47,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
 
 				var casePermissions = await _casePermissionsService.GetCasePermissions(Urn);
+
+				UserCanDelete = casePermissions.HasDeletePermissions();
 
 				TrustFinancialForecastModel = TrustFinancialForecastMapping.ToViewModel(trustFinancialForecast, casePermissions);
 			}

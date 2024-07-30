@@ -175,5 +175,11 @@ namespace ConcernsCaseWork.Redis.Nti
 
 			return await GetData<NtiDto>(continuationId);
 		}
+
+		public async Task DeleteNtiAsync(long caseUrn, long ntiId)
+		{
+			await _ntiService.DeleteNtiAsync(ntiId);
+			await ClearNtisForCaseFromCacheAsync(caseUrn);
+		}
 	}
 }

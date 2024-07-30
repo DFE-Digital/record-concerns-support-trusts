@@ -14,5 +14,14 @@ namespace ConcernsCaseWork.Pages.Validators
 
 			return errorMessage;
 		}
+
+		public string ValidateDelete(IEnumerable<CaseActionModel> caseActions)
+		{
+			var ntiModel = caseActions.Any(ca => ca is NtiModel);
+
+			var errorMessage = ntiModel ? "Delete NTI: Notice to improve" : string.Empty;
+
+			return errorMessage;
+		}
 	}
 }

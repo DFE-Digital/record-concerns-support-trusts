@@ -7,12 +7,14 @@ import { CloseNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarning
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import { DeleteNtiWarningLetterPage } from "cypress/pages/caseActions/ntiWarningLetter/deleteNtiWarningLetterPage";
 
 describe("Testing the NTI warning letter action", () =>
 {
     const editNtiWarningLetterPage = new EditNtiWarningLetterPage();
     const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
     const closeNtiWarningLetterPage = new CloseNtiWarningLetterPage();
+    const deleteNtiWarningLetterPage = new DeleteNtiWarningLetterPage();
     let now;
 
     beforeEach(() => {
@@ -228,6 +230,28 @@ describe("Testing the NTI warning letter action", () =>
         Logger.log("Checking accessibility on View Closed NTI warning letter");
         cy.excuteAccessibilityTests();
     });
+
+    it("Should be able to delete an NTI warning letter", () =>
+        {
+            createConfiguredNtiWarningLetter();
+    
+            Logger.log("Closing the NTI warning letter");
+            actionSummaryTable
+                .getOpenAction("NTI Warning Letter")
+                .then(row =>
+                {
+                    row.select();
+                });
+    
+            Logger.log("Delete the NTI WL");
+            viewNtiWarningLetterPage.delete();
+            deleteNtiWarningLetterPage.delete();
+
+            Logger.log("Confirm NTI WL no longer exist");
+            actionSummaryTable
+                .assertRowDoesNotExist("NTI Warning Letter", "open");
+    
+        });
 
     function createConfiguredNtiWarningLetter()
     {

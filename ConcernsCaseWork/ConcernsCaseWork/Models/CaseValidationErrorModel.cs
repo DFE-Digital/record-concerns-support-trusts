@@ -2,9 +2,9 @@
 
 namespace ConcernsCaseWork.Models
 {
-	public class CloseCaseErrorModel
+	public class CaseValidationErrorModel
 	{
-		public CloseCaseError Type { get; set; }
+		public CaseValidationError Type { get; set; }
 		public string Error { get; set; }
 	}
 }

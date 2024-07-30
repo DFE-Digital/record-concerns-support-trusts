@@ -5,9 +5,11 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,10 +24,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	{
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsService _ntiWarningLetterConditionsService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiWarningLetterModel NtiWarningLetterModel { get; set; }
 		public ICollection<NtiWarningLetterConditionDto> NtiWarningLetterConditions { get; private set; }
+		public bool UserCanDelete { get; set; }
+
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		[BindProperty(SupportsGet = true, Name = "urn")]
@@ -37,10 +42,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public IndexPageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiWarningLetterConditionsService ntiWarningLetterConditionsService,
+			ICasePermissionsService casePermissionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiWarningLetterConditionsService = ntiWarningLetterConditionsService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -51,6 +58,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			try
 			{
 				NtiWarningLetterModel = await GetWarningLetterModel(CaseId, NtiWarningLetterId);
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(CaseId);
+
 			}
 			catch (Exception ex)
 			{

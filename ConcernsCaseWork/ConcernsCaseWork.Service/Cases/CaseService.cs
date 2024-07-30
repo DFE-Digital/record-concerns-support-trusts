@@ -245,5 +245,37 @@ namespace ConcernsCaseWork.Service.Cases
 				throw;
 			}
 		}
+		
+		public async Task DeleteCaseByUrn(CaseDto caseDto)
+		{
+			try
+			{
+				_logger.LogInformation("CaseService::DeleteCaseByUrn {Urn}", caseDto.Urn);
+				
+				// Create http client
+				var client = CreateHttpClient();
+				
+				// Execute request
+				var response = await client.DeleteAsync($"/{EndpointsVersion}/{EndpointPrefix}/{caseDto.Urn}");
+				
+				// Check status code
+				response.EnsureSuccessStatusCode();
+				
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+				
+				// Throw error is any message is returned as it should be empty
+				if (content is not "")
+				{
+					throw new Exception(content);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseService::DeleteCaseByUrn::Exception message::{Message}", ex.Message);
+
+				throw;
+			}
+		}
 	}
 }

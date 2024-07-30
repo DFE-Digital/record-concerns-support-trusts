@@ -15,6 +15,6 @@ namespace ConcernsCaseWork.Services.Nti
 		Task<NtiModel> PatchNtiAsync(NtiModel patchNti);
 		Task<NtiModel> GetNtiAsync(string continuationId);
 		Task StoreNtiAsync(NtiModel ntiModel, string continuationId);
-
+		Task DeleteNtiByIdAsync(long caseId, long ntiId);
 	}
 }

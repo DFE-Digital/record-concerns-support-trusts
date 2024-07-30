@@ -27,6 +27,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public Division? Division { get; set; }
 
+		public bool UserCanDelete { get; private set; }
+
 		public IndexPageModel(
 			IDecisionService decisionService,
 			ICaseModelService caseModelService,
@@ -57,6 +59,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				Division = caseModelService.Division;
 
 				Decision = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
+
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(urn);
 			}
 			catch (Exception ex)
 			{

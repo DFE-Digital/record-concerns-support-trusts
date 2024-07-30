@@ -63,6 +63,17 @@ namespace ConcernsCaseWork.Service.Decision
 			return putResponse;
 		}
 
+		public async Task DeleteDecision(long caseUrn, long decisionId)
+		{
+			_logger.LogMethodEntered();
+
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}";
+
+			// delete the decision
+			await Delete(endpoint);
+			_logger.LogInformation($"Decision deleted. caseUrn: {caseUrn}, DecisionId:{decisionId}");
+		}
+
 		public async Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(
 			long caseUrn,
 			long decisionId,

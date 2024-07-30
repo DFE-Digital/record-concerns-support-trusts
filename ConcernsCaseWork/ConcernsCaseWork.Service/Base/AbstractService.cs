@@ -464,5 +464,40 @@ namespace ConcernsCaseWork.Service.Base
 
 			return DoWork();
 		}
+
+
+		/// <summary>
+		/// Sends a DELETE request. Ensures the response is success
+		/// </summary>
+		/// <param name="endpoint"></param>
+		/// <returns>Task</returns>
+		public Task Delete(string endpoint)
+		{
+			Guard.Against.NullOrWhiteSpace(endpoint);
+
+			async Task DoWork()
+			{
+				try
+				{
+					// Create http client
+					var client = CreateHttpClient();
+
+					// Execute request
+					var response = await client.DeleteAsync(endpoint);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, ex.Message);
+					throw;
+				}
+			}
+
+			return DoWork();
+		}
+
+
 	}
 }

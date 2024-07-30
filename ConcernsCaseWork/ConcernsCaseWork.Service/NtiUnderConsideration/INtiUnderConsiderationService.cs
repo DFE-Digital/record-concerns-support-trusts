@@ -6,5 +6,6 @@
 		Task<NtiUnderConsiderationDto> GetNti(long ntiId);
 		Task<ICollection<NtiUnderConsiderationDto>> GetNtisForCase(long caseUrn);
 		Task<NtiUnderConsiderationDto> PatchNti(NtiUnderConsiderationDto ntiDto);
+		Task DeleteNti(long ntiId);
 	}
 }

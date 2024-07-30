@@ -4,6 +4,7 @@
 	{
 		None = 0,
 		View = 1,
-		Edit = 2
+		Edit = 2,
+		EditAndDelete = 3
 	}
 }

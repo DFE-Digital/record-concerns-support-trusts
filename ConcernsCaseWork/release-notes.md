@@ -1,4 +1,8 @@
 
+## 39.0.0
+
+* added delete button to the case, concerns and actions
+
 ## 38.2.0
 
 * updated the footer with how to guidance and remove line break

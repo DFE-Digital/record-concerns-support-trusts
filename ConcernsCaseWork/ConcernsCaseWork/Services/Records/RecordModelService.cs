@@ -107,5 +107,24 @@ namespace ConcernsCaseWork.Services.Records
 			
 			return recordDto;
 		}
+
+		public async Task DeleteRecord(long caseUrn, long id)
+		{
+			try
+			{
+				// Fetch Records & statuses
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseUrn);
+
+				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(id) == 0);
+
+				await _recordCachedService.DeleteRecordById(recordDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("RecordModelService::PatchRecordStatus exception {Message}", ex.Message);
+
+				throw;
+			}
+		}
 	}
 }

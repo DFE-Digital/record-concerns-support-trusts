@@ -156,5 +156,11 @@ namespace ConcernsCaseWork.Redis.NtiWarningLetter
 
 			return await GetData<NtiWarningLetterDto>(continuationId);
 		}
+
+		public async Task DeleteNtiWarningLetter(long caseUrn, long ntiWarningLetterId)
+		{
+			await _ntiWarningLetterService.DeleteNtiWarningLetterAsync(ntiWarningLetterId);
+			await ClearNtiWLForCaseFromCacheAsync(caseUrn);
+		}
 	}
 }

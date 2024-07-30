@@ -5,6 +5,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	{
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiConditionsService _ntiConditionsService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiModel NtiModel { get; set; }
@@ -33,15 +35,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		[BindProperty(SupportsGet = true, Name = "ntiId")]
 		public int NtiId { get; set; }
-		
+
+		public bool UserCanDelete { get; set; }
+
+
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiModelService ntiModelService,
 			INtiConditionsService ntiConditionsService,
+			ICasePermissionsService casePermissionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
 			_ntiConditionsService = ntiConditionsService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -52,6 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				NtiModel = await GetNTIModel();
+				UserCanDelete = await _casePermissionsService.UserHasDeletePermissions(CaseId);
 			}
 			catch (Exception ex)
 			{

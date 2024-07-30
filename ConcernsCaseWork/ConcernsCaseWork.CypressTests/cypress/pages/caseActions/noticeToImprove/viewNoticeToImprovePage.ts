@@ -156,6 +156,14 @@ export class ViewNoticeToImprovePage {
         return this;
     }
 
+    public delete(): this {
+        Logger.log("Deleting Notice To Improve");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     public canClose(): this
     {
         Logger.log("Cannot close");
@@ -214,5 +222,9 @@ export class ViewNoticeToImprovePage {
 
     private getLift() {
         return cy.getByTestId("lift-nti-button");
+    }
+
+    private getDelete() {
+        return cy.getByTestId("delete-nti");
     }
 }

@@ -10,5 +10,6 @@ namespace ConcernsCaseWork.Service.Cases
 		Task<ApiListWrapper<CaseDto>> GetCases(PageSearch pageSearch);
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
 		Task<CaseDto> PatchCaseByUrn(CaseDto caseDto);
+		Task DeleteCaseByUrn(CaseDto caseDto);
 	}
 }

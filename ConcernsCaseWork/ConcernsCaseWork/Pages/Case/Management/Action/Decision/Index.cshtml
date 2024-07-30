@@ -21,6 +21,11 @@
 }
 else
 {
+    @if (Model.UserCanDelete)
+    {
+        <a class="govuk-button govuk-button--warning float__right" href="@Request.Path/delete" aria-label="Delete @Model.Decision.Title" data-testid="delete-decision">Delete decision</a>
+    }
+
     <h1 class="govuk-heading-l" data-testid="decision-heading">
         <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
         Decision

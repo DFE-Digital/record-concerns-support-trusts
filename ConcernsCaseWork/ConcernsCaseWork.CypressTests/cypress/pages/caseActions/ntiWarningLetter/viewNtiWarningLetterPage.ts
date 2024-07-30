@@ -111,6 +111,14 @@ export class ViewNtiWarningLetterPage {
         return this;
     }
 
+    public delete(): this {
+        Logger.log("Deleting NTI warning letter");
+
+        this.getDelete().click();
+
+        return this;
+    }
+
     public canClose()
     {
         Logger.log("Can close");
@@ -137,5 +145,10 @@ export class ViewNtiWarningLetterPage {
     private getClose()
     {
         return cy.getByTestId("close-nti-wl-button");
+    }
+
+    private getDelete()
+    {
+        return cy.getByTestId("delete-nti-wl");
     }
 }
