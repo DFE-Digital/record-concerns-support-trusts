@@ -22,7 +22,6 @@ namespace ConcernsCaseWork.API.Features.Case
 
 		public UseCaseResult Execute(int id)
 		{
-
 			bool hasRelatedRecords = _context.ConcernsRecord.Any(f => f.CaseId == id) ||
 						 _context.Decisions.Any(f => f.ConcernsCaseId == id) ||
 						 _context.NoticesToImprove.Any(f => f.CaseUrn == id) ||
@@ -33,7 +32,7 @@ namespace ConcernsCaseWork.API.Features.Case
 						 _context.TrustFinancialForecasts.Any(f => f.CaseUrn == id);
 
 			if (hasRelatedRecords)
-				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) and case actions"));
+				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) or case actions"));
 
 			var concernsCase = _context.ConcernsCase.SingleOrDefault(f => f.Id == id);
 			if (concernsCase == null)
