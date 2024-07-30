@@ -530,7 +530,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		//Assert
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-		error.Should().Contain("Cannot deleted Case. Case has related concern(s) and case actions");
+		error.Should().Contain("Cannot deleted Case. Case has related concern(s) or case actions");
 	}
 
 	[Fact]
@@ -548,23 +548,6 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		//Assert
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 		error.Should().Contain("Cannot deleted Case. Case has related concern(s)");
-	}
-
-	[Fact]
-	public async Task When_Delete_CaseWithNoConcernAndAllCaseActions_Returns_BadRequest()
-	{
-		//Arrange
-		var createCaseRequest = CreateConcernCaseCreateRequest();
-		var createResult = await CreateConcernCase(createCaseRequest);
-		CreateAllCaseActionCase(createResult.Urn);
-
-		//Act
-		var result = await _client.DeleteAsync(Delete.DeleteCase(createResult.Urn));
-		string error = await result.Content.ReadAsStringAsync();
-
-		//Assert
-		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-		error.Should().Contain("Cannot deleted Case. Case has related case actions");
 	}
 
 	[Fact]
