@@ -22,21 +22,27 @@ namespace ConcernsCaseWork.API.Features.Case
 
 		public UseCaseResult Execute(int id)
 		{
-			bool hasRelatedRecords = _context.ConcernsRecord.Any(f => f.CaseId == id) ||
-						 _context.Decisions.Any(f => f.ConcernsCaseId == id) ||
-						 _context.NoticesToImprove.Any(f => f.CaseUrn == id) ||
-						 _context.NTIUnderConsiderations.Any(f => f.CaseUrn == id) ||
-						 _context.NTIWarningLetters.Any(f => f.CaseUrn == id) ||
-						 _context.FinancialPlanCases.Any(f => f.CaseUrn == id) ||
-						 _context.SRMACases.Any(f => f.CaseUrn == id) ||
-						 _context.TrustFinancialForecasts.Any(f => f.CaseUrn == id);
-
-			if (hasRelatedRecords)
-				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) or case actions"));
-
 			var concernsCase = _context.ConcernsCase.SingleOrDefault(f => f.Id == id);
 			if (concernsCase == null)
 				return UseCaseResult.Failure(new UseCaseResultError("Case not found."));
+
+			var hasRelatedRecords = _context.ConcernsCase
+				.Where(cr => cr.Id == id)
+				.Select(cr => new
+				{
+					HasRelatedRecords = _context.ConcernsRecord.Any(d => d.CaseId == id) ||
+										_context.Decisions.Any(d => d.ConcernsCaseId == id) ||
+										_context.NoticesToImprove.Any(nti => nti.CaseUrn == id) ||
+										_context.NTIUnderConsiderations.Any(ntiuc => ntiuc.CaseUrn == id) ||
+										_context.NTIWarningLetters.Any(ntiwl => ntiwl.CaseUrn == id) ||
+										_context.FinancialPlanCases.Any(fp => fp.CaseUrn == id) ||
+										_context.SRMACases.Any(srma => srma.CaseUrn == id) ||
+										_context.TrustFinancialForecasts.Any(tff => tff.CaseUrn == id)
+				})
+				.FirstOrDefault();
+
+			if (hasRelatedRecords != null && hasRelatedRecords.HasRelatedRecords)
+				return UseCaseResult.Failure(new UseCaseResultError($"Cannot deleted Case. Case has related concern(s) or case actions"));
 
 			concernsCase.DeletedAt = DateTime.Now;
 			_context.SaveChanges();
