@@ -1,12 +1,14 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Data.Auditing;
 using ConcernsCaseWork.Data.Conventions;
+using ConcernsCaseWork.Data.EFInterceptors;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using ConcernsCaseWork.Data.Models.Decisions;
 using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using ConcernsCaseWork.UserContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -123,6 +125,14 @@ namespace ConcernsCaseWork.Data
 			{
 				optionsBuilder.UseConcernsSqlServer("Server=localhost;Database=sip;Integrated Security=true;TrustServerCertificate=True");
 			}
+
+			// Enable SQL Command Interceptor only if the following env variable exist and set to true
+			var enableDetailedLogging = Environment.GetEnvironmentVariable("ENABLE_DETAILED_SQL_LOGGING");
+			if (!string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.ToLower() == "true")
+			{
+				optionsBuilder.AddInterceptors(new SqlCommandInterceptor());
+			}
+			base.OnConfiguring(optionsBuilder);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
