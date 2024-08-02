@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace ConcernsCaseWork.Data
 {
+	[ExcludeFromCodeCoverage]
 	public class ConcernsDbContextFactory : IDesignTimeDbContextFactory<ConcernsDbContext>
 	{
 		public ConcernsDbContext CreateDbContext(string[] args)
