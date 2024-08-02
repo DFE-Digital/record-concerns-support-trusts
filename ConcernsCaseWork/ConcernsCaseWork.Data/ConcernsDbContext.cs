@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Data
 		{
 		}
 
-		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService, IEnumerable<IInterceptor>? interceptors = null)
+		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService, IEnumerable<IInterceptor> interceptors = null)
 			: base(options)
 		{
 			Guard.Against.Null(userInfoService);
@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.Data
 			}
 
 			var enableDetailedLogging = Environment.GetEnvironmentVariable("ENABLE_DETAILED_SQL_LOGGING");
-			bool isDetailedLoggingEnabled = !string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.ToLower() == "true";
+			bool isDetailedLoggingEnabled = !string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.Equals("true", StringComparison.OrdinalIgnoreCase);
 
 			// Ensure SqlCommandInterceptor is included based on the environment variable
 			if (isDetailedLoggingEnabled && !_interceptors.OfType<SqlCommandInterceptor>().Any())

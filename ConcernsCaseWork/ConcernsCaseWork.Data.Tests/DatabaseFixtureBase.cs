@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Data.Tests;
 
 public class DatabaseTestFixture
 {
-	public readonly string? _connectionString;
+	private readonly string? _connectionString;
 
 	private static readonly object _lock = new();
 	private static bool _databaseInitialized;
@@ -61,15 +61,5 @@ public class DatabaseTestFixture
 		};
 
 		return new ConcernsDbContext(new DbContextOptionsBuilder<ConcernsDbContext>().UseSqlServer(_connectionString).Options, userInfoService, interceptors);
-	}
-
-	public void SetEnvironmentVariable(string key, string value)
-	{
-		Environment.SetEnvironmentVariable(key, value);
-	}
-
-	public void ResetEnvironmentVariable(string key)
-	{
-		Environment.SetEnvironmentVariable(key, null);
 	}
 }

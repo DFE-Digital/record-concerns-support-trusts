@@ -21,12 +21,15 @@ public class SqlCommandInterceptorTests
 		// This ensures that the environment is consistent for the entire test class
 		_sqlCommandInterceptorMock = new Mock<SqlCommandInterceptor> { CallBase = true };
 		_fixture = new DatabaseTestFixture([_sqlCommandInterceptorMock.Object]);
+		Environment.SetEnvironmentVariable(_envVarName, null);
+
 	}
 
 	[SetUp]
 	public void SetUp()
 	{
 		_context = _fixture.CreateContext([_sqlCommandInterceptorMock.Object]);
+		Environment.SetEnvironmentVariable(_envVarName, null);
 	}
 
 	[TearDown]
@@ -46,7 +49,7 @@ public class SqlCommandInterceptorTests
 	public void Should_AddSqlCommandInterceptor_When_EnableDetailedSqlLoggingIsTrue()
 	{
 		// Arrange
-		_fixture.SetEnvironmentVariable(_envVarName, "true");
+		Environment.SetEnvironmentVariable(_envVarName, "true");
 
 		// Act
 		_context.Set<ConcernsCase>().AsNoTracking().FirstOrDefault();
@@ -63,7 +66,7 @@ public class SqlCommandInterceptorTests
 	public void Should_AddSqlCommandInterceptor_When_EnableDetailedSqlLoggingIsFalse()
 	{
 		// Arrange
-		_fixture.SetEnvironmentVariable(_envVarName, "false");
+		Environment.SetEnvironmentVariable(_envVarName, "false");
 
 		// Act
 		_context.Set<ConcernsCase>().AsNoTracking().FirstOrDefault();
