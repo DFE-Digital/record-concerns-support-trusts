@@ -19,16 +19,18 @@ namespace ConcernsCaseWork.Data
 	public partial class ConcernsDbContext : DbContext
 	{
 		private readonly IServerUserInfoService _userInfoService;
+		private IEnumerable<IInterceptor> _interceptors;
 
 		public ConcernsDbContext()
 		{
 		}
 
-		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService)
+		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService, IEnumerable<IInterceptor>? interceptors = null)
 			: base(options)
 		{
 			Guard.Against.Null(userInfoService);
 			_userInfoService = userInfoService;
+			_interceptors = interceptors ?? Enumerable.Empty<IInterceptor>();
 		}
 
 		public virtual DbSet<Audit> Audits { get; set; }
@@ -126,12 +128,31 @@ namespace ConcernsCaseWork.Data
 				optionsBuilder.UseConcernsSqlServer("Server=localhost;Database=sip;Integrated Security=true;TrustServerCertificate=True");
 			}
 
-			// Enable SQL Command Interceptor only if the following env variable exist and set to true
 			var enableDetailedLogging = Environment.GetEnvironmentVariable("ENABLE_DETAILED_SQL_LOGGING");
-			if (!string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.ToLower() == "true")
+			bool isDetailedLoggingEnabled = !string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.ToLower() == "true";
+
+			// Ensure SqlCommandInterceptor is included based on the environment variable
+			if (isDetailedLoggingEnabled && !_interceptors.OfType<SqlCommandInterceptor>().Any())
 			{
-				optionsBuilder.AddInterceptors(new SqlCommandInterceptor());
+				_interceptors = _interceptors.Append(new SqlCommandInterceptor());
 			}
+
+			// Separate interceptors into SqlCommandInterceptor and others
+			var sqlCommandInterceptor = _interceptors.OfType<SqlCommandInterceptor>().FirstOrDefault();
+			var otherInterceptors = _interceptors.Except(new[] { sqlCommandInterceptor });
+
+			// Add SqlCommandInterceptor if logging is enabled
+			if (isDetailedLoggingEnabled && sqlCommandInterceptor != null)
+			{
+				optionsBuilder.AddInterceptors(sqlCommandInterceptor);
+			}
+
+			// Always add other interceptors
+			foreach (var interceptor in otherInterceptors)
+			{
+				optionsBuilder.AddInterceptors(interceptor);
+			}
+
 			base.OnConfiguring(optionsBuilder);
 		}
 

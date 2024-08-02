@@ -1,20 +1,20 @@
 using ConcernsCaseWork.UserContext;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
 namespace ConcernsCaseWork.Data.Tests;
 
 public class DatabaseTestFixture
 {
-	private readonly string? _connectionString;
+	public readonly string? _connectionString;
 
 	private static readonly object _lock = new();
 	private static bool _databaseInitialized;
 
-	protected DatabaseTestFixture()
+	public DatabaseTestFixture(IEnumerable<IInterceptor>? interceptors = null)
 	{
-
 		var configPath = Path.Combine(
 		Directory.GetCurrentDirectory(), "appsettings.tests.json");
 
@@ -28,7 +28,7 @@ public class DatabaseTestFixture
 		{
 			if (!_databaseInitialized)
 			{
-				using (var context = CreateContext())
+				using (var context = CreateContext(interceptors))
 				{
 					context.Database.EnsureDeleted();
 					context.Database.Migrate();
@@ -53,13 +53,23 @@ public class DatabaseTestFixture
 		return result;
 	}
 
-	protected ConcernsDbContext CreateContext()
+	public ConcernsDbContext CreateContext(IEnumerable<IInterceptor>? interceptors = null)
 	{
 		var userInfoService = new ServerUserInfoService()
 		{
 			UserInfo = new UserInfo() { Name = "Data.Tests@test.gov.uk", Roles = new[] { Claims.CaseWorkerRoleClaim } }
 		};
 
-		return new ConcernsDbContext(new DbContextOptionsBuilder<ConcernsDbContext>().UseSqlServer(_connectionString).Options, userInfoService);
+		return new ConcernsDbContext(new DbContextOptionsBuilder<ConcernsDbContext>().UseSqlServer(_connectionString).Options, userInfoService, interceptors);
+	}
+
+	public void SetEnvironmentVariable(string key, string value)
+	{
+		Environment.SetEnvironmentVariable(key, value);
+	}
+
+	public void ResetEnvironmentVariable(string key)
+	{
+		Environment.SetEnvironmentVariable(key, null);
 	}
 }
