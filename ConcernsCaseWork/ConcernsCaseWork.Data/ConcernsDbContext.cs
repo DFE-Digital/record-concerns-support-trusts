@@ -1,12 +1,14 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Data.Auditing;
 using ConcernsCaseWork.Data.Conventions;
+using ConcernsCaseWork.Data.EFInterceptors;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using ConcernsCaseWork.Data.Models.Decisions;
 using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using ConcernsCaseWork.UserContext;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -17,16 +19,18 @@ namespace ConcernsCaseWork.Data
 	public partial class ConcernsDbContext : DbContext
 	{
 		private readonly IServerUserInfoService _userInfoService;
+		private IEnumerable<IInterceptor> _interceptors;
 
 		public ConcernsDbContext()
 		{
 		}
 
-		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService)
+		public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService, IEnumerable<IInterceptor> interceptors = null)
 			: base(options)
 		{
 			Guard.Against.Null(userInfoService);
 			_userInfoService = userInfoService;
+			_interceptors = interceptors ?? Enumerable.Empty<IInterceptor>();
 		}
 
 		public virtual DbSet<Audit> Audits { get; set; }
@@ -123,6 +127,33 @@ namespace ConcernsCaseWork.Data
 			{
 				optionsBuilder.UseConcernsSqlServer("Server=localhost;Database=sip;Integrated Security=true;TrustServerCertificate=True");
 			}
+
+			var enableDetailedLogging = Environment.GetEnvironmentVariable("ENABLE_DETAILED_SQL_LOGGING");
+			bool isDetailedLoggingEnabled = !string.IsNullOrEmpty(enableDetailedLogging) && enableDetailedLogging.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+			// Ensure SqlCommandInterceptor is included based on the environment variable
+			if (isDetailedLoggingEnabled && !_interceptors.OfType<SqlCommandInterceptor>().Any())
+			{
+				_interceptors = _interceptors.Append(new SqlCommandInterceptor());
+			}
+
+			// Separate interceptors into SqlCommandInterceptor and others
+			var sqlCommandInterceptor = _interceptors.OfType<SqlCommandInterceptor>().FirstOrDefault();
+			var otherInterceptors = _interceptors.Except(new[] { sqlCommandInterceptor });
+
+			// Add SqlCommandInterceptor if logging is enabled
+			if (isDetailedLoggingEnabled && sqlCommandInterceptor != null)
+			{
+				optionsBuilder.AddInterceptors(sqlCommandInterceptor);
+			}
+
+			// Always add other interceptors
+			foreach (var interceptor in otherInterceptors)
+			{
+				optionsBuilder.AddInterceptors(interceptor);
+			}
+
+			base.OnConfiguring(optionsBuilder);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
