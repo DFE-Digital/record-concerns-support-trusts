@@ -26,6 +26,7 @@ import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 import deleteConcernPage from "cypress/pages/deleteConcernPage";
 import deleteCasePage from "cypress/pages/deleteCasePage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Creating a case", () => {
 	const createCasePage = new CreateCasePage();
@@ -42,7 +43,9 @@ describe("Creating a case", () => {
     describe("Case journey", () =>
     {
         beforeEach(() => {
-            cy.login();
+            cy.login({
+                role: DeleteCaseGroupClaim,
+            });
         });
 
         it("Should create a case with region group", () => {

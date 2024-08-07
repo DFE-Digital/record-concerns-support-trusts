@@ -11,6 +11,7 @@ import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
 import { DeleteDecisionPage } from "cypress/pages/caseActions/decision/deleteDecisionPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("User can add decisions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -22,7 +23,9 @@ describe("User can add decisions to an existing case", () => {
 	let now: Date;
 	
 	beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
 		now = new Date();
 
 		cy.basicCreateCase();
