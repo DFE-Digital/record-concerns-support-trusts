@@ -6,3 +6,4 @@ export const EnvAuthKey = "authKey";
 export const CaseworkerClaim = "concerns-casework.caseworker";
 export const TeamLeaderClaim = "concerns-casework.teamleader";
 export const AdminClaim = "concerns-casework.admin";
+export const DeleteCaseGroupClaim = "concerns-casework.case-delete-group";

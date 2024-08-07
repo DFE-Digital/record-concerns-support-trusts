@@ -8,6 +8,7 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { toDisplayDate } from "cypress/support/formatDate";
 import {NotesError} from "../../../constants/validationErrorConstants";
 import { DeleteNtiUnderConsiderationPage } from "cypress/pages/caseActions/ntiUnderConsideration/deleteNtiUnderConsiderationPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Testing the NTI under consideration", () =>
 {
@@ -18,7 +19,9 @@ describe("Testing the NTI under consideration", () =>
     let now: Date;
 
     beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
         now = new Date();
 
         cy.basicCreateCase();
