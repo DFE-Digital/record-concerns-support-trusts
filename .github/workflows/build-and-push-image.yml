@@ -71,7 +71,7 @@ jobs:
       - id: release
         name: Set release name
         run: |
-          RELEASE=${${{ steps.environment.outputs.environment }},,}-`date +%Y-%m-%d`.${{ github.run_number }}
+          RELEASE=${{ steps.environment.outputs.environment }}-`date +%Y-%m-%d`.${{ github.run_number }}
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
 
   deploy-image:
