@@ -16,6 +16,7 @@
   ],
   "timezone": "Europe/London",
   "minimumReleaseAge": "7 days",
+  "baseBranches": ["main", "staging"],
   "automergeSchedule": ["after 10am every weekday", "before 4pm every weekday"],
   "labels": ["dependencies", "renovate"],
   "vulnerabilityAlerts": {
