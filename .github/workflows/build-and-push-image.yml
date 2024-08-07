@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
+      - staging
   workflow_dispatch:
     inputs:
       environment:
         type: environment
         description: "Choose an environment to deploy to"
+        default: dev
         required: true
 
 concurrency:
@@ -19,30 +21,55 @@ jobs:
     name: Determine environment
     runs-on: ubuntu-latest
     outputs:
-      environment: ${{ steps.var.outputs.environment }}
-      branch: ${{ steps.var.outputs.branch }}
-      release: ${{ steps.var.outputs.release }}
-      checked-out-sha: ${{ steps.var.outputs.checked-out-sha }}
+      environment: ${{ steps.environment.outputs.environment }}
+      branch: ${{ steps.branch.outputs.branch }}
+      release: ${{ steps.release.outputs.release }}
+      checked-out-sha: ${{ steps.sha.outputs.checked-out-sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Get branch name for push/dispatch event
+      - id: sha
+        name: Set SHA
+        run: |
+          CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
+          echo "checked-out-sha=${CHECKED_OUT_SHA}" >> $GITHUB_OUTPUT
+
+      - id: branch
+        name: Set branch name
         run: |
           GIT_REF=${{ github.ref_name }}
-          echo "branch_ref=${GIT_REF}" >> $GITHUB_ENV
-
-      - id: var
-        run: |
-          GIT_REF=${{ env.branch_ref }}
           GIT_BRANCH=${GIT_REF##*/}
-          INPUT=${{ github.event.inputs.environment }}
-          ENVIRONMENT=${INPUT:-"dev"}
-          CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
-          RELEASE=${ENVIRONMENT,,}-`date +%Y-%m-%d`.${{ github.run_number }}
-          echo "environment=${ENVIRONMENT,,}" >> $GITHUB_OUTPUT
           echo "branch=$GIT_BRANCH" >> $GITHUB_OUTPUT
-          echo "checked-out-sha=${CHECKED_OUT_SHA}" >> $GITHUB_OUTPUT
+
+      - id: environment
+        name: Set default environment
+        run: |
+          ENVIRONMENT=${{ github.event.inputs.environment }}
+          # If no target environment is defined...
+          if [[ -z $ENVIRONMENT ]];
+          then
+            # Then it must be a Push event trigger
+            if [[ $BRANCH == 'main' ]];
+            then
+              # Set target environment to production
+              ENVIRONMENT='production'
+            elif [[ $BRANCH == 'staging' ]];
+            then
+              # Set target environment to staging
+              ENVIRONMENT='staging'
+            else
+              # Only main and staging branches can auto-deploy via push trigger
+              # Exit with failure
+              exit 1
+            fi
+          fi
+          echo "environment=${ENVIRONMENT,,}" >> $GITHUB_OUTPUT
+
+      - id: release
+        name: Set release name
+        run: |
+          RELEASE=${${{ steps.environment.outputs.environment }},,}-`date +%Y-%m-%d`.${{ github.run_number }}
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
 
   deploy-image:
