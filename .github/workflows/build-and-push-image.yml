@@ -45,6 +45,7 @@ jobs:
       - id: environment
         name: Set default environment
         run: |
+          BRANCH=${{ steps.branch.outputs.branch }}
           ENVIRONMENT=${{ github.event.inputs.environment }}
           # If no target environment is defined...
           if [[ -z $ENVIRONMENT ]];
