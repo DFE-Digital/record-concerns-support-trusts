@@ -62,6 +62,7 @@ jobs:
             else
               # Only main and staging branches can auto-deploy via push trigger
               # Exit with failure
+              echo "Only 'main' and 'staging' branches can be deployed via a push trigger"
               exit 1
             fi
           fi
