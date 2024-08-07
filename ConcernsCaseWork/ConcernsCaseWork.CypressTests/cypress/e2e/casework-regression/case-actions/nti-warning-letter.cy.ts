@@ -8,6 +8,7 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 import { DeleteNtiWarningLetterPage } from "cypress/pages/caseActions/ntiWarningLetter/deleteNtiWarningLetterPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Testing the NTI warning letter action", () =>
 {
@@ -18,7 +19,9 @@ describe("Testing the NTI warning letter action", () =>
     let now;
 
     beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
         now = new Date();
 
         cy.basicCreateCase();

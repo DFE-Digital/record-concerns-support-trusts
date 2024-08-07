@@ -14,6 +14,7 @@ import {
 	NotesError,
 } from "cypress/constants/validationErrorConstants";
 import { DeleteNoticeToImprovePage } from "cypress/pages/caseActions/noticeToImprove/deleteNoticeToImprovePage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Testing case action NTI", () => {
 	const editNtiPage = new EditNoticeToImprovePage();
@@ -25,7 +26,9 @@ describe("Testing case action NTI", () => {
 	let now;
 
 	beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
 		now = new Date();
 
 		cy.basicCreateCase();

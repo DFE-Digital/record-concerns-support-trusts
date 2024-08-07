@@ -12,6 +12,7 @@ import {
 } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
 import { DeleteSrmaPage } from "cypress/pages/caseActions/srma/deleteSrmaPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Testing the SRMA case action", () => {
 	const editSrmaPage = new EditSrmaPage();
@@ -20,7 +21,9 @@ describe("Testing the SRMA case action", () => {
 	let now: Date;
 
 	beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
 		now = new Date();
 
 		cy.basicCreateCase();

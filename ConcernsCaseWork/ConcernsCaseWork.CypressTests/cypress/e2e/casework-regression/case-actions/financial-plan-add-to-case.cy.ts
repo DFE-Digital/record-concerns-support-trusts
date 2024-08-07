@@ -8,6 +8,7 @@ import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryT
 import { toDisplayDate } from "cypress/support/formatDate";
 import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
 import { DeleteFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/DeleteFinancialPlanPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -17,7 +18,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
     let now: Date;
     
     beforeEach(() => {
-        cy.login();
+        cy.login({
+			role: DeleteCaseGroupClaim,
+		});
 
         now = new Date();
         Logger.log("Given a case");

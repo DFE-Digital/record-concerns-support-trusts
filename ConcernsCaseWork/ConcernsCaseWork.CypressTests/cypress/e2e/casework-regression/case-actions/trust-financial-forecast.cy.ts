@@ -13,6 +13,7 @@ import {
 } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
 import { DeleteTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/deleteTrustFinancialForecastPage";
+import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("User can add trust financial forecast to an existing case", () => {
 	const editTFFPage = new EditTrustFinancialForecastPage();
@@ -22,7 +23,9 @@ describe("User can add trust financial forecast to an existing case", () => {
 	let now: Date;
 
 	beforeEach(() => {
-		cy.login();
+		cy.login({
+			role: DeleteCaseGroupClaim,
+		});
 		now = new Date();
 		cy.basicCreateCase();
 		addTFFToCase();
