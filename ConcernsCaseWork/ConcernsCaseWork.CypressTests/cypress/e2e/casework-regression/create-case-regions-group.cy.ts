@@ -268,7 +268,6 @@ describe("Creating a case", () => {
 
             Logger.log("Delete the case");
             caseManagementPage.deleteCase();
-            deleteCasePage.withRationaleForClosure("Opened by accident");
             deleteCasePage.confirmDeleteCase();
         });
     });
