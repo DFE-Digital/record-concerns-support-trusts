@@ -62,6 +62,7 @@ jobs:
             else
               # Only main and staging branches can auto-deploy via push trigger
               # Exit with failure
+              echo "Only 'main' and 'staging' branches can be deployed via a push trigger"
               exit 1
             fi
           fi
@@ -70,7 +71,7 @@ jobs:
       - id: release
         name: Set release name
         run: |
-          RELEASE=${${{ steps.environment.outputs.environment }},,}-`date +%Y-%m-%d`.${{ github.run_number }}
+          RELEASE=${{ steps.environment.outputs.environment }}-`date +%Y-%m-%d`.${{ github.run_number }}
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
 
   deploy-image:
