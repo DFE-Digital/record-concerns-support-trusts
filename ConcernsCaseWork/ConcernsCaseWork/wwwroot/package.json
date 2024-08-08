@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^0.2.5",
-    "accessible-autocomplete": "^2.0.3",
+    "accessible-autocomplete": "^3.0.0",
     "dfe-frontend-alpha": "^0.1.9",
     "govuk-frontend": "^4.4.1",
     "jquery": "^3.6.2"
