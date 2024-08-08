@@ -10,7 +10,7 @@
     "build:sass-migrator": "sass-migrator division **/*.scss"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^9.0.1",
+    "copy-webpack-plugin": "^12.0.0",
     "css-loader": "^5.2.7",
     "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^1.3.9",
