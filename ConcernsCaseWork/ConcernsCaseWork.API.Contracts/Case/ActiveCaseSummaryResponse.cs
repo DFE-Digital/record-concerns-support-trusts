@@ -18,6 +18,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
 		public IEnumerable<ActionOrDecision> NtisUnderConsideration { get; set; }
 		public IEnumerable<ActionOrDecision> SrmaCases { get; set; }
 		public IEnumerable<ActionOrDecision> TrustFinancialForecasts { get; set; }
+		public IEnumerable<ActionOrDecision> TargetedTrustEngagements { get; set; }
 
 		public Division? Division { get; set; }
 

@@ -1,4 +1,3 @@
-using Azure;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
 using ConcernsCaseWork.Data.Models;
@@ -186,7 +185,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
 				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast))
-				.ToArray()
+				.ToArray(),
+			TargetTrustEngagements = _concernsDbContext.TargetedTrustEngagements.Where(t => t.CaseUrn == cases.Id && !t.ClosedAt.HasValue).Include(at => at.ActivityTypes).ToArray(),
 		});
 	}
 
@@ -241,7 +241,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
 							.Where(x => x.CaseUrn == cases.Urn)
 							.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, action.ClosedAt.Value.DateTime, CaseSummaryConstants.TrustFinancialForecast))
-							.ToArray()
+							.ToArray(),
+			TargetTrustEngagements = _concernsDbContext.TargetedTrustEngagements.Where(t => t.CaseUrn == cases.Id && t.ClosedAt.HasValue).Include(at => at.ActivityTypes).ToArray(),
 		});
 	}
 }

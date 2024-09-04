@@ -68,8 +68,13 @@ namespace ConcernsCaseWork.Data
 		public virtual DbSet<SRMAReason> SRMAReasons { get; set; }
 		public virtual DbSet<SRMAStatus> SRMAStatuses { get; set; }
 		public virtual DbSet<TrustFinancialForecast> TrustFinancialForecasts { get; set; }
-
 		public virtual DbSet<CityTechnologyCollege> CityTechnologyColleges { get; set; }
+		public virtual DbSet<TargetedTrustEngagementCase> TargetedTrustEngagements { get; set; }
+		public virtual DbSet<TargetedTrustEngagementActivity> TargetedTrustEngagementActivities { get; set; }
+		public virtual DbSet<TargetedTrustEngagementActivityType> TargetedTrustEngagementActivityTypes { get; set; }
+		public virtual DbSet<TargetedTrustEngagementOutcome> TargetedTrustEngagementOutcomes { get; set; }
+		public virtual DbSet<TargetedTrustEngagementType> TrustEngagementActivities { get; set; }
+
 
 		public override int SaveChanges(bool acceptAllChangesOnSuccess)
 		{
