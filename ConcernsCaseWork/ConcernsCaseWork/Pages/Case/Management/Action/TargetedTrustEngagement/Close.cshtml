@@ -1,0 +1,74 @@
+﻿@page "/case/{urn:long}/management/action/targetedtrustengagement/{targetedtrustengagementId:int?}/close"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement.ClosePageModel;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders
+
+@{
+    ViewData["Title"] = "Close Targeted trust engagement";
+    var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+    <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case overview"></back-link>
+}
+
+<partial name="_BannerError" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
+            <form method="post" id="close-engagement-form" novalidate>
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Engagement ID @Model.TargetedtrustengagementId</span>
+                    Close engagement
+                </h1>
+
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This action cannot be reopened. Check the details are correct, especially dates, before closing.
+                    </strong>
+                </div>
+
+                @* End date *@
+                <partial name="Components/_DateTime" model="Model.EngagementEndDate" />
+
+                @* Outcomes *@
+                <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-tte-outcomes">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">
+                                What was the outcome of the engagement?
+                            </h2>
+                        </legend>
+
+                        <partial name="Components/_RadioList" model="Model.EngagementOutcomeComponent" />
+
+                    </fieldset>
+                </div>
+
+                @* Notes *@
+                <partial name="Components/_TextArea" model="Model.Notes" />
+
+                <p class="govuk-body">Do you still want to close this engagement?</p>
+
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close-engagement-button" name="action">
+                        Close this engagement
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
+
+    </div>
+</div>

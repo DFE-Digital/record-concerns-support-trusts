@@ -170,6 +170,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		allActionsAndDecisions.AddRange(caseSummary.NtiWarningLetters);
 		allActionsAndDecisions.AddRange(caseSummary.SrmaCases);
 		allActionsAndDecisions.AddRange(caseSummary.TrustFinancialForecasts);
+		allActionsAndDecisions.AddRange(caseSummary.TargetedTrustEngagements);
 
 		return allActionsAndDecisions
 			.OrderBy(action => action.CreatedAt)

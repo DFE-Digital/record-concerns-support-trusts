@@ -20,6 +20,7 @@ public record CaseSummaryDto
 	public IEnumerable<ActionDecisionSummaryDto> NtisUnderConsideration { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> SrmaCases { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> TrustFinancialForecasts { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> TargetedTrustEngagements { get; set; }
 
 	public Division? Division { get; set; }
 	public string? Area { get; set; }
