@@ -14,6 +14,9 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 	public string? HintFromPartialView { get; set; }
 
 	public int? SelectedSubId { get; set; }
+	public List<int>? SelectedSubIds { get; set; }
+
+	public bool SubOptionsAlwaysShown { get; set; }
 
 	public List<int>? OptionsWithSubItems { get; set; }
 
@@ -35,7 +38,7 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 
 		var hasSubItem = OptionsWithSubItems?.Any(o => o == SelectedId);
 
-		if (hasSubItem == true && !SelectedSubId.HasValue)
+		if (hasSubItem == true && (!SelectedSubId.HasValue && SelectedSubIds == null))
 		{
 			var subItemErrorName = string.IsNullOrEmpty(SubItemDisplayName) ? displayName : SubItemDisplayName;
 

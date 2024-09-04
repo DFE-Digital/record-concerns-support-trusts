@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Service.TargetedTrustEngagement;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
@@ -25,6 +26,8 @@ namespace ConcernsCaseWork.Services.Actions
 		private readonly INtiModelService _ntiModelService;
 		private readonly IDecisionModelService _decisionModelService;
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
+		private readonly ITargetedTrustEngagementService _targetedTrustEngagementService;
+		
 		private readonly ILogger<ActionsModelService> _logger;
 
 		public ActionsModelService(
@@ -35,7 +38,8 @@ namespace ConcernsCaseWork.Services.Actions
 			INtiModelService ntiModelService,
 			ILogger<ActionsModelService> logger, 
 			IDecisionModelService decisionModelService, 
-			ITrustFinancialForecastService trustFinancialForecastService)
+			ITrustFinancialForecastService trustFinancialForecastService,
+			ITargetedTrustEngagementService targetedTrustEngagementService)
 		{
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
@@ -45,6 +49,7 @@ namespace ConcernsCaseWork.Services.Actions
 			_logger = logger;
 			_decisionModelService = decisionModelService;
 			_trustFinancialForecastService = trustFinancialForecastService;
+			_targetedTrustEngagementService = targetedTrustEngagementService;
 		}
 
 		public async Task<ActionSummaryBreakdownModel> GetActionsSummary(long caseUrn)
@@ -62,6 +67,7 @@ namespace ConcernsCaseWork.Services.Actions
 				caseActions.AddRange(await GetNtisForCase(caseUrn));
 				caseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
 				caseActions.AddRange(await GetTrustFinancialForecastsForCase(caseUrn));
+				caseActions.AddRange(await GetTargetedTrustEngagementForCase(caseUrn));
 
 				result = ActionSummaryMapping.ToActionSummaryBreakdown(caseActions);
 
@@ -101,6 +107,10 @@ namespace ConcernsCaseWork.Services.Actions
 		
 		private async Task<IEnumerable<ActionSummaryModel>> GetTrustFinancialForecastsForCase(long caseUrn)
 			=> (await _trustFinancialForecastService.GetAllForCase((int)caseUrn))
+				.Select(a => a.ToActionSummary());
+
+		private async Task<IEnumerable<ActionSummaryModel>> GetTargetedTrustEngagementForCase(long caseUrn)
+			=> (await _targetedTrustEngagementService.GetTargetedTrustEngagementByCaseUrn((int)caseUrn))
 				.Select(a => a.ToActionSummary());
 	}
 }

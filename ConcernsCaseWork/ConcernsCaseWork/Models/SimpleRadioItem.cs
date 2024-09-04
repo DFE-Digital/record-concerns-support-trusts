@@ -9,9 +9,11 @@ public record SimpleRadioItem
 		Label = label;
 		Id = id;
 		SubRadioItems = new List<SubRadioItem>();
+		SubCheckboxItems = new List<SubCheckboxItem>();
 	}
 
 	public List<SubRadioItem> SubRadioItems { get; set; }
+	public List<SubCheckboxItem> SubCheckboxItems { get; set; }
 
 	public string Label { get; set; }
 
@@ -27,6 +29,8 @@ public record SimpleRadioItem
 	public string? TestId { get; set; }
 
 	public string? HintText { get; set; }
+	public string? HintLink { get; set; }
+	public string? HintLinkTitle { get; set; }
 
 	/// <summary>
 	/// Whether our label is HTML

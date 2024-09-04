@@ -24,6 +24,7 @@ public static class CaseSummaryResponseFactory
 			Rating = ConcernsRatingResponseFactory.Create(caseSummary.Rating),
 			SrmaCases = Create(caseSummary.SrmaCases),
 			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
+			TargetedTrustEngagements = Create(caseSummary.TargetTrustEngagements),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt,
@@ -49,6 +50,7 @@ public static class CaseSummaryResponseFactory
 			NoticesToImprove = Create(caseSummary.NoticesToImprove),
 			SrmaCases = Create(caseSummary.SrmaCases),
 			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
+			TargetedTrustEngagements = Create(caseSummary.TargetTrustEngagements),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt,
@@ -79,4 +81,10 @@ public static class CaseSummaryResponseFactory
 
 	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Data.Models.Decisions.Decision> decisions)
 		=> decisions == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : decisions.Select(Create);
+
+	private static CaseSummaryResponse.ActionOrDecision Create(Data.Models.TargetedTrustEngagementCase tte)
+	=> new(tte.CreatedAt, tte.ClosedAt, "Action: TTE - " + tte.GetTitle());
+
+	private static IEnumerable<CaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Data.Models.TargetedTrustEngagementCase> tte)
+		=> tte == null ? Array.Empty<CaseSummaryResponse.ActionOrDecision>() : tte.Select(Create);
 }
