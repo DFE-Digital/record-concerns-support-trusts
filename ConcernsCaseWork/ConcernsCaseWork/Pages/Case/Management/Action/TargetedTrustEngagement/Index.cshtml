@@ -65,10 +65,10 @@ else
             @if (isClosed)
             {
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-ended-label">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-closed-label">
                         Date engagement closed
                     </th>
-                    <td class="govuk-table__cell" data-testid="engagement-ended-text">
+                    <td class="govuk-table__cell" data-testid="engagement-closed-text">
                         @{
                             RenderValue(Model.TargetedTrustEngagement.DateClosed);
                         }
