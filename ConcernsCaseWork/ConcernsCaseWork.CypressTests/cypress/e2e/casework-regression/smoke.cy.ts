@@ -26,9 +26,6 @@ import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage"
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import actionTable from "cypress/pages/caseRows/caseActionTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
-import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
-import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
@@ -74,10 +71,6 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 	const editNtiPage = new EditNoticeToImprovePage();
 	const viewNtiPage = new ViewNoticeToImprovePage();
 	const closeNtiPage = new CloseNoticeToImprovePage();
-
-	const editTffPage = new EditTrustFinancialForecastPage();
-	const viewTffPage = new ViewTrustFinancialForecastPage();
-	const closeTffPage = new CloseTrustFinancialForecastPage();
 
 	const viewClosedCasePage = new ViewClosedCasePage();
 
@@ -370,13 +363,6 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		AddToCasePage.getAddToCaseBtn().click();
 
 		editNtiUnderConsiderationPage.save();
-
-		Logger.log("Creating Trust Financial Forecast(TFF)");
-		CaseManagementPage.getAddToCaseBtn().click();
-		AddToCasePage.addToCase("TrustFinancialForecast");
-		AddToCasePage.getAddToCaseBtn().click();
-
-		editTffPage.save();
 	}
 
 	function resolveAllAllowedCaseActions() {
@@ -425,16 +411,6 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 
 		viewDecisionPage.closeDecision();
 		closeDecisionPage.closeDecision();
-
-		Logger.log("Completing Trust financial forecast");
-		actionSummaryTable
-			.getOpenAction("TFF (trust financial forecast)")
-			.then((row) => {
-				row.select();
-			});
-
-		viewTffPage.close();
-		closeTffPage.close();
 	}
 
 	function closeConcern() {
