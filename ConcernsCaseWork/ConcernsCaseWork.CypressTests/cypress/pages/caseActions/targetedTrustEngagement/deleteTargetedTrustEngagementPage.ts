@@ -3,9 +3,9 @@ import { Logger } from "../../../common/logger";
 export class DeleteTargetedTrustEngagementPage
 {
 	public delete(): this {
-		Logger.log("Delete the decision");
+		Logger.log("Delete the TTE");
 
-		cy.getByTestId('delete-decision-button').click();
+		cy.getByTestId('delete-tte-button').click();
 
 		return this;
 	}

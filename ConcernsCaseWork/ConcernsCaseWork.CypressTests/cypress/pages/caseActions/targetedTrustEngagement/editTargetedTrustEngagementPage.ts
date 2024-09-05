@@ -56,7 +56,6 @@ export class EditTargetedTrustEngagementPage
 		return this;
 	}
 
-
 	public withNotesExceedingLimit(): this {
 		cy.task("log", `With Notes exceeding limit`);
 
@@ -113,100 +112,9 @@ export class EditTargetedTrustEngagementPage
 		return this;
 	}
 
-
-
-
-
-    // public withCrmEnquiry(crmNumber: string): this {
-	// 	Logger.log(`With Crm enquiry ${crmNumber}`);
-
-	// 	cy.getById("crm-enquiry-number").clear().type(crmNumber);
-
-	// 	return this;
-	// }
-
-	// public hasCrmEnquiry(crmNumber: string): this {
-	// 	Logger.log(`Has Crm enquiry ${crmNumber}`);
-
-	// 	cy.getById("crm-enquiry-number").should("have.value", crmNumber);
-
-	// 	return this;
-	// }
-
-	// public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
-	// 	Logger.log(`With retrospective request ${isRetrospectiveRequest}`);
-
-	// 	cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
-
-	// 	return this;
-	// }
-
-
-
-	// public hasTypeOfDecisionOptions(types: Array<string>)
-	// {
-	// 	Logger.log(`Has type of decision options ${types.join()}`);
-
-	// 	cy
-	// 		.getByTestId('container-decision-types')
-	// 		.find('.govuk-checkboxes__label')
-	// 		.should("have.length", types.length)
-	// 		.each(($elem, index) => {
-	// 			expect($elem.text().trim()).to.contain(types[index]);
-	// 		});
-
-	// 	return this;
-	// }
-
-	// public withDrawdownFacilityAgreed(type: string, value: string): this {
-	// 	Logger.log(`With ${type} drawdown facility agreed ${value}`);
-
-	// 	cy.getByTestId(`${type}-${value}`).click();
-
-	// 	return this;
-	// }
-
-	// public hasDrawdownFacilityAgreed(type: string, value: string): this {
-	// 	Logger.log(`Has ${type} drawdown facility agreed ${value}`);
-		
-	// 	cy.getByTestId(`${type}-${value}`).should("be.checked");
-
-	// 	return this;
-	// }
-
-	// public withFrameworkCategory(type: string, value): this {
-	// 	Logger.log(`With ${type} framework category ${value}`);
-
-	// 	cy.getByTestId(`${type}-${value}`).click();
-
-	// 	return this;
-	// }
-
-	// public hasFrameworkCategory(type: string, value): this {
-	// 	Logger.log(`Has ${type} framework category ${value}`);
-
-	// 	cy.getByTestId(`${type}-${value}`).should("be.checked");
-
-	// 	return this;
-	// }
-
-	// public hasNoEnabledOrSelectedSubQuestions(type: string): this {
-	// 	Logger.log(`${type} sub questions are not enabled`);
-
-	// 	var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
-		
-	// 	elements.should("not.be.enabled");
-	// 	elements.should("not.be.checked");
-		
-	// 	return this;
-	// }
-
-
-	
-
 	public save(): this {
 
-		Logger.log("Saving decision");
+		Logger.log("Saving TTE");
 
 		cy.getById('add-tte-button').click();
 
@@ -214,7 +122,7 @@ export class EditTargetedTrustEngagementPage
 	}
 
 	public cancel(): this {
-		Logger.log("Cancelling edit decision");
+		Logger.log("Cancelling edit TTE");
 
 		cy.getById("cancel-link-event").click();
 
