@@ -5,7 +5,7 @@ export class CloseTargetedTrustEngagementPage
     public withFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
 		Logger.log(`With Supporting Notes ${finaliseSupportingNotes}`);
 
-		cy.getById("SupportingNotes").clear().type(finaliseSupportingNotes);
+		cy.getByTestId("SupportingNotes").clear().type(finaliseSupportingNotes);
 
 		return this;
 	}
@@ -13,15 +13,84 @@ export class CloseTargetedTrustEngagementPage
 	public hasFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
 		Logger.log(`With Supporting Notes ${finaliseSupportingNotes}`);
 
-		cy.getById("SupportingNotes").should("have.value", finaliseSupportingNotes);
+		cy.getByTestId("SupportingNotes").should("have.value", finaliseSupportingNotes);
 
 		return this;
 	}
 
-	public closeDecision(): this {
-		Logger.log("Confirm closing the decision");
+	public withDateEngagementEndDay(dateEngagementEndtDay: string): this {
+		Logger.log(`With Date Engagement end Day ${dateEngagementEndtDay}`);
 
-		cy.get('#add-decision-button').click();
+		cy.getById("dtr-day-engagement-end").clear().type(dateEngagementEndtDay);
+
+		return this;
+	}
+
+	public hasDateEngagementEndDay(dateEngagementEndtDay: string): this {
+		Logger.log(`Has Date Engagement end Day ${dateEngagementEndtDay}`);
+
+		cy.getById("dtr-day-engagement-end").should("have.value", dateEngagementEndtDay);
+
+		return this;
+	}
+
+	public withDateEngagementEndMonth(dateEngagementEndMonth: string): this {
+		Logger.log(`With Date Engagement Month ${dateEngagementEndMonth}`);
+
+		cy.getById("dtr-month-engagement-end").clear().type(dateEngagementEndMonth);
+
+		return this;
+	}
+
+	public hasDateEngagementEndMonth(dateEngagementEndMonth: string): this {
+		Logger.log(`Has Date Engagement Month ${dateEngagementEndMonth}`);
+
+		cy.getById("dtr-month-engagement-end").should("have.value", dateEngagementEndMonth);
+
+		return this;
+	}
+
+	public withDateEngagementEndYear(dateEngagementEndYear: string): this {
+		Logger.log(`With Date Engagement Year ${dateEngagementEndYear}`);
+
+		const element = cy.getById("dtr-year-engagement-end");
+		element.clear();
+
+		if (dateEngagementEndYear.length > 0) {
+			element.type(dateEngagementEndYear);
+		}
+
+		return this;
+	}
+
+	public hasDateEngagementStartYear(dateESFAYear: string): this {
+		Logger.log(`Has Date Engagement Year ${dateESFAYear}`);
+
+		cy.getById("dtr-year-engagement-start").should("have.value", dateESFAYear);
+
+		return this;
+	}
+
+	public withOutcome(outcome: string): this {
+		Logger.log(`With outcome ${outcome}`);
+
+		cy.getByTestId(outcome).click();
+
+		return this;
+	}
+
+	public hasOutcome(outcome: string): this {
+		Logger.log(`With outcome ${outcome}`);
+
+		cy.getByTestId(outcome).should("be.checked");
+
+		return this;
+	}
+
+	public closeTTE(): this {
+		Logger.log("Confirm closing the tte");
+
+		cy.get('#close-engagement-button').click();
 
 		return this;
 	}
