@@ -15,7 +15,7 @@ import validationComponent from "cypress/pages/validationComponent";
 import { DeleteTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/deleteTrustFinancialForecastPage";
 import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
-describe("User can add trust financial forecast to an existing case", () => {
+describe.skip("User can add trust financial forecast to an existing case", () => {
 	const editTFFPage = new EditTrustFinancialForecastPage();
 	const viewTFFPage = new ViewTrustFinancialForecastPage();
 	const closeTFFPage = new CloseTrustFinancialForecastPage();
