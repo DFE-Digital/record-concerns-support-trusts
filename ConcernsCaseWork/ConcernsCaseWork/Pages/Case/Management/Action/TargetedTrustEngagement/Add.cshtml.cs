@@ -333,6 +333,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 						var subRadioItem = new SubCheckboxItem((int)s.Id, s.Id.Description(), s.Id.Description());
 						subRadioItem.Text = s.Id.Description();
 						subRadioItem.HintText = s.Hint;
+
 						return subRadioItem;
 					}).ToList();
 				}
@@ -341,6 +342,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 					radioItem.SubRadioItems = value.SubOptions.Select(s =>
 					{
 						var subRadioItem = new SubRadioItem(s.Id.Description(), (int)s.Id);
+
+						subRadioItem.TestId = s.Id.Description();
 
 						return subRadioItem;
 					}).ToList();

@@ -1,12 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
-using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement;
-using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.TargetedTrustEngagement;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
@@ -21,8 +18,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
 
