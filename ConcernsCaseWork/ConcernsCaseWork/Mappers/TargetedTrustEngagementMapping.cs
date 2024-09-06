@@ -17,7 +17,7 @@ public static class TargetedTrustEngagementMapping
 			Name = $"TTE - {model.Title}",
 			OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 			RelativeUrl = $"/case/{model.CaseUrn}/management/action/targetedtrustengagement/{model.TargetedTrustEngagementId}",
-			StatusName = (model.ClosedAt.HasValue) ? "Completed" : "In progress",
+			StatusName = (model.Outcome.HasValue) ? ((TargetedTrustEngagementOutcome)model.Outcome).Description() : "In progress",
 			RawOpenedDate = model.CreatedAt,
 			RawClosedDate = model.ClosedAt
 		};

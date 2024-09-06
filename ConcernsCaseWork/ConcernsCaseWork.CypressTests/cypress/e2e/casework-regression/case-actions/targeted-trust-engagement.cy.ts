@@ -185,7 +185,7 @@ describe("User can add tte to an existing case", () => {
 			.then(row =>
 			{
 				row.hasName("TTE - Budget Forecast Return/Accounts Return driven")
-				row.hasStatus("Completed")
+				row.hasStatus("No response required")
 				row.hasCreatedDate(toDisplayDate(now))
 				row.hasClosedDate(toDisplayDate(now))
 				row.select();

@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Service.Cases
 		NtiUnderConsideration,
 		[Description("NTI: Warning letter")]
 		NtiWarningLetter,
-		[Description("Targeted Trust Engagement")]
+		[Description("TTE (Targeted trust engagement)")]
 		TargetedTrustEngagement
 	}
 }
