@@ -32,6 +32,7 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 					CreatedAt = t.CreatedAt,
 					UpdatedAt = t.UpdatedAt,
 					Title = t.GetTitle(),
+					Outcome = t.EngagementOutcomeId,
 					ClosedAt = t.ClosedAt,
 				}).ToArray();
 
