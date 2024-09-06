@@ -276,7 +276,7 @@ describe("Editing a case", () => {
 			"NTI: Warning letter",
 			"NTI: Notice to improve",
 			"SRMA (School Resource Management Adviser)",
-			"TFF (trust financial forecast)"
+			"Targeted Trust Engagement"
 		]);
 
 		AddToCasePage.getAddToCaseBtn().click();

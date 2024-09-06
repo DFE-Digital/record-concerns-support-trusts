@@ -234,31 +234,6 @@ describe("Testing permissions on cases and case actions", () => {
             .cannotCloseDecision();
     });
 
-    it("Should not allow the user to edit a trust financial forecast that they did not create", () => {
-        Logger.log("Check that the user can edit a trust financial forecast that they did create");
-        caseMangementPage
-            .addCaseAction("TrustFinancialForecast");
-
-        editTffPage.save();
-
-        actionSummaryTable
-            .getOpenAction("TFF (trust financial forecast)")
-            .then((row) =>
-            {
-                row.select();
-            })
-
-        viewTffPage
-            .canEdit()
-            .canClose();
-
-        Logger.log("Check that the user cannot edit a trust financial forecast that they did not create");
-        updateCaseOwner(caseId);
-
-        viewTffPage
-            .cannotEdit()
-            .cannotClose();
-    });
 
     function updateCaseOwner(caseId: number) {
         caseApi.get(caseId)
