@@ -195,7 +195,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				switch (v)
 				{
 					case Service.Cases.CaseActionEnum.TargetedTrustEngagement:
-						radioButton.HintText = "Includes BFR/AR driven, executive pay engagement, financial returns assistance, local proactive engagement, other vulnerability, ROAP, and no action beyond triage.";
+						radioButton.HintText = "Includes BFR/AR driven, executive pay engagement, financial returns assurance, local proactive engagement, other vulnerability, ROAP, and no action beyond triage.";
 					break;
 
 					default:

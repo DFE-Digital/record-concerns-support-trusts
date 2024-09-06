@@ -2,6 +2,7 @@ using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Utils.Extensions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -80,12 +81,16 @@ public class TargetedTrustEngagementTests
 	[Test]
 	public void WhenMapToActionSummary_WhenClosed_ReturnsActionSummary()
 	{
+
+		var outcome = TargetedTrustEngagementOutcome.NoResponseRequired;
+
 		//arrange
 		var testData = new
 		{
 			Id = _fixture.Create<int>(),
 			CaseUrn = _fixture.Create<int>(),
 			Title = _fixture.Create<string>(),
+			Outcome = (int)outcome,
 			CreatedAt = new DateTimeOffset(2021, 9, 5, 0, 0, 0, new TimeSpan()),
 			ClosedAt = new DateTimeOffset(2024, 8, 30, 0, 0, 0, new TimeSpan()),
 			UpdatedAt = _fixture.Create<DateTimeOffset>()
@@ -96,6 +101,7 @@ public class TargetedTrustEngagementTests
 			TargetedTrustEngagementId = testData.Id,
 			CaseUrn = testData.CaseUrn,
 			Title = testData.Title,
+			Outcome = testData.Outcome,
 			CreatedAt = testData.CreatedAt,
 			UpdatedAt = testData.UpdatedAt,
 			ClosedAt = testData.ClosedAt
@@ -112,7 +118,7 @@ public class TargetedTrustEngagementTests
 			Assert.That(result.ClosedDate, Is.EqualTo("30 August 2024"));
 			Assert.That(result.OpenedDate, Is.EqualTo("05 September 2021"));
 			Assert.That(result.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/targetedtrustengagement/{testData.Id}"));
-			Assert.That(result.StatusName, Is.EqualTo("Completed"));
+			Assert.That(result.StatusName, Is.EqualTo(outcome.Description()));
 		});
 
 		result.RawOpenedDate.Should().Be(testData.CreatedAt);
