@@ -95,7 +95,7 @@ describe("Creating a non concerns case", () => {
 		AddToCasePage.hasActions([
 			"Decision",
 			"SRMA (School Resource Management Adviser)",
-			"Targeted Trust Engagement",
+			"TTE (Targeted trust engagement)",
 		]);
 
 		Logger.log("Create an SRMA on non concerns");

@@ -7,5 +7,6 @@ public class TargetedTrustEngagementSummaryResponse
 	public DateTimeOffset CreatedAt { get; set; }
 	public DateTimeOffset UpdatedAt { get; set; }
 	public string Title { get; set; }
+	public int? Outcome { get; set; }
 	public DateTimeOffset? ClosedAt { get; set; }
 }
