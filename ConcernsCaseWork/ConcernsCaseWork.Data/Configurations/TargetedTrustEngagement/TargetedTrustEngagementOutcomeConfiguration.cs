@@ -8,7 +8,7 @@ public class TargetedTrustEngagementOutcomeConfiguration : IEntityTypeConfigurat
 {
 	public void Configure(EntityTypeBuilder<TargetedTrustEngagementOutcome> builder)
 	{
-		builder.ToTable("TargetedTrustEngagementOutcome", "concerns");
+		builder.ToTable("TargetedTrustEngagementOutcomeType", "concerns");
 
 		builder.HasKey(e => e.Id);
     

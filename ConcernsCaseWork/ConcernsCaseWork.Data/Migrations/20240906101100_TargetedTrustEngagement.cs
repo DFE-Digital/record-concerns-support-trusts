@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TargetedTrustEngagementOutcome",
+                name: "TargetedTrustEngagementOutcomeType",
                 schema: "concerns",
                 columns: table => new
                 {
@@ -81,11 +81,11 @@ namespace ConcernsCaseWork.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TargetedTrustEngagementOutcome", x => x.Id);
+                    table.PrimaryKey("PK_TargetedTrustEngagementOutcomeType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TargetedTrustEngagementType",
+                name: "TargetedTrustEngagementActivityMapping",
                 schema: "concerns",
                 columns: table => new
                 {
@@ -97,9 +97,9 @@ namespace ConcernsCaseWork.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TargetedTrustEngagementType", x => x.Id);
+                    table.PrimaryKey("PK_TargetedTrustEngagementActivityMapping", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TargetedTrustEngagementType_TargetedTrustEngagementCase_TargetedTrustEngagementCaseId",
+                        name: "FK_TargetedTrustEngagementActivityMapping_TargetedTrustEngagementCase_TargetedTrustEngagementCaseId",
                         column: x => x.TargetedTrustEngagementCaseId,
                         principalSchema: "concerns",
                         principalTable: "TargetedTrustEngagementCase",
@@ -152,7 +152,7 @@ namespace ConcernsCaseWork.Data.Migrations
 
             migrationBuilder.InsertData(
                 schema: "concerns",
-                table: "TargetedTrustEngagementOutcome",
+                table: "TargetedTrustEngagementOutcomeType",
                 columns: new[] { "Id", "CreatedAt", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
@@ -163,17 +163,17 @@ namespace ConcernsCaseWork.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_TargetedTrustEngagementActivityMapping_TargetedTrustEngagementCaseId",
+                schema: "concerns",
+                table: "TargetedTrustEngagementActivityMapping",
+                column: "TargetedTrustEngagementCaseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TargetedTrustEngagementCase_CaseUrn_CreatedAt",
                 schema: "concerns",
                 table: "TargetedTrustEngagementCase",
                 columns: new[] { "CaseUrn", "CreatedAt" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TargetedTrustEngagementType_TargetedTrustEngagementCaseId",
-                schema: "concerns",
-                table: "TargetedTrustEngagementType",
-                column: "TargetedTrustEngagementCaseId");
         }
 
         /// <inheritdoc />
@@ -184,15 +184,15 @@ namespace ConcernsCaseWork.Data.Migrations
                 schema: "concerns");
 
             migrationBuilder.DropTable(
+                name: "TargetedTrustEngagementActivityMapping",
+                schema: "concerns");
+
+            migrationBuilder.DropTable(
                 name: "TargetedTrustEngagementActivityType",
                 schema: "concerns");
 
             migrationBuilder.DropTable(
-                name: "TargetedTrustEngagementOutcome",
-                schema: "concerns");
-
-            migrationBuilder.DropTable(
-                name: "TargetedTrustEngagementType",
+                name: "TargetedTrustEngagementOutcomeType",
                 schema: "concerns");
 
             migrationBuilder.DropTable(

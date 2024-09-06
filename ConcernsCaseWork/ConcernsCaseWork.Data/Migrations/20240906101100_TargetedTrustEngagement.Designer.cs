@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    [Migration("20240829101826_TargetedTrustEngagement")]
+    [Migration("20240906101100_TargetedTrustEngagement")]
     partial class TargetedTrustEngagement
     {
         /// <inheritdoc />
@@ -3335,9 +3335,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TargetedTrustEngagementOutcome", "concerns", t =>
+                    b.ToTable("TargetedTrustEngagementOutcomeType", "concerns", t =>
                         {
-                            t.HasTrigger("TargetedTrustEngagementOutcome_Trigger");
+                            t.HasTrigger("TargetedTrustEngagementOutcomeType_Trigger");
                         });
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
@@ -3394,9 +3394,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("TargetedTrustEngagementCaseId");
 
-                    b.ToTable("TargetedTrustEngagementType", "concerns", t =>
+                    b.ToTable("TargetedTrustEngagementActivityMapping", "concerns", t =>
                         {
-                            t.HasTrigger("TargetedTrustEngagementType_Trigger");
+                            t.HasTrigger("TargetedTrustEngagementActivityMapping_Trigger");
                         });
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);

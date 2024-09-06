@@ -41,14 +41,14 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 				var request = command.Request;
 				var exp = _context.ConcernsCase;
 
-				var concernsCase = exp.FirstOrDefault(c => c.Urn == command.ConcernsCaseUrn);
+				var concernsCase = await exp.FirstOrDefaultAsync(c => c.Urn == command.ConcernsCaseUrn);
 
 				if (concernsCase == null)
 				{
 					throw new NotFoundException($"Concerns case {command.ConcernsCaseUrn}");
 				}
 
-				var tte = _context.TargetedTrustEngagements.Include(a => a.ActivityTypes).FirstOrDefault(t => t.Id == command.TargetedTrustEngagementId);
+				var tte = await _context.TargetedTrustEngagements.Include(a => a.ActivityTypes).FirstOrDefaultAsync(t => t.Id == command.TargetedTrustEngagementId);
 
 				if (tte == null)
 				{

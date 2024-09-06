@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 					throw new NotFoundException($"Concerns case with id {request.ConcernsCaseUrn}");
 				}
 
-				var targetedTrustEngagement = _context.TargetedTrustEngagements.Include(x => x.ActivityTypes).FirstOrDefault(d => d.Id == request.TargetedTrustEngagementId);
+				var targetedTrustEngagement = await _context.TargetedTrustEngagements.Include(x => x.ActivityTypes).FirstOrDefaultAsync(d => d.Id == request.TargetedTrustEngagementId);
 
 				if (targetedTrustEngagement == null)
 				{
