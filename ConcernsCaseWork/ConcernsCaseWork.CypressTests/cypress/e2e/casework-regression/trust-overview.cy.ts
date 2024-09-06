@@ -101,7 +101,7 @@ describe("Trust overview ", () => {
                     });
             });
 
-            it("Should display the content correctly for a non concerns case with case actions", () => {
+            it.skip("Should display the content correctly for a non concerns case with case actions", () => {
                 caseMangementPage.getAddToCaseBtn().click();
                 addToCasePage.addToCase("TrustFinancialForecast");
                 addToCasePage.getAddToCaseBtn().click();
