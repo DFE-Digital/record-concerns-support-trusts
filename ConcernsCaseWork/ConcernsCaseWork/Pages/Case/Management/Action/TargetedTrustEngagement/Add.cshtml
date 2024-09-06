@@ -1,0 +1,126 @@
+﻿@page "/case/{urn:long}/management/action/targetedtrustengagement/addOrUpdate/{targetedtrustengagementId:int?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement.AddPageModel;
+@using ConcernsCaseWork.API.Contracts.Case;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@using ConcernsCaseWork.Helpers;
+
+@{
+    var nonce = HttpContext.GetNonce();
+
+    var tteValidationErrors = TempData["TTE.Message"] as IEnumerable<string>;
+}
+
+@section BeforeMain {
+    <back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
+}
+
+<partial name="_BannerError" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <partial name="_ValidationErrors" />
+
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+                TTE (Targeted trust engagement)
+            </h1>
+
+            <div class="govuk-hint" id="nti-underconsideration-hint">
+                <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Engaging-with-academy-trusts.aspx" class="govuk-link" rel="noreferrer noopener">
+                    SFSO Knowledge: Pro-active engagament
+                </a>
+            </div>
+
+            <form method="post" id="add-tte-form" novalidate>
+
+                <input type="hidden" name="TargetedTrustEngagement.CaseUrn" value="@RouteData.Values["urn"]" />
+
+                <partial name="Components/_DateTime" model="Model.EngagementStartDate" />
+
+                @* Activities *@
+                <div class="govuk-form-group govuk-!-margin-top-6" data-testid="container-tte-activities">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">Which activity was taken forward after the triage stage?</h2>
+                        </legend>
+
+                        <div id="tte-type-hint" class="govuk-hint">
+                            Select a type, and where relevant, a sub-type. 
+                        </div>
+                        <br>
+
+                        <partial name="Components/_RadioList" model="Model.EngagementActivitiesComponent" />
+                  
+                    </fieldset>
+                </div>
+
+                @* Notes *@
+                <partial name="Components/_TextArea" model="Model.Notes" />
+
+                <div class="govuk-button-group">
+                    <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-tte-button" name="action">
+                        @Model.SaveAndContinueButtonText
+                    </button>
+
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+
+            <script type="application/javascript" nonce="@nonce">
+                $(function () {
+
+                    function onSubQuestionSelected(type) {
+
+                        $(`#${type}`).on('click', function () {
+                            hideIfNotSelected(type);
+                        });
+
+                        hideIfNotSelected(type);
+                    }
+
+                    function hideIfNotSelected(type) {
+
+                        let isChecked = $(`#${type}`).is(":checked");
+
+                        let inputElement = $(`.${type}`);
+                        inputElement.prop('disabled', !isChecked);
+                        inputElement.prop('aria-disabled', !isChecked);
+
+                        if(isChecked){
+
+                            let engagementActivitiesContainers = $(`.govuk-radios__conditional :input:not(.${type})`);
+
+                            engagementActivitiesContainers.prop('disabled', true);
+                            engagementActivitiesContainers.prop('aria-disabled', true);
+                            engagementActivitiesContainers.prop('checked', false);
+                        }
+
+                        if (!isChecked) {
+                            inputElement.prop('checked', false);
+                        }
+                    }
+
+                    onSubQuestionSelected("case-tte-activities-1");
+                    onSubQuestionSelected("case-tte-activities-2");
+                    onSubQuestionSelected("case-tte-activities-3");
+                    onSubQuestionSelected("case-tte-activities-4");
+                    onSubQuestionSelected("case-tte-activities-5");
+                    onSubQuestionSelected("case-tte-activities-6");
+                    onSubQuestionSelected("case-tte-activities-7");
+
+                    var submitButton = $('#add-tte-button')[0];
+                    disableOnSubmit(submitButton);
+                });
+            </script>
+        }
+
+    </div>
+</div>

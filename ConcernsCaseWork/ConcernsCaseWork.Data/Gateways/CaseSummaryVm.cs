@@ -19,6 +19,7 @@ public abstract record CaseSummaryVm
 	public IEnumerable<Action> NtisUnderConsideration { get; set; }
 	public IEnumerable<Action> SrmaCases { get; set; }
 	public IEnumerable<Action> TrustFinancialForecasts { get; set; }
+	public IEnumerable<TargetedTrustEngagementCase> TargetTrustEngagements { get; set; }
 	public Division? Division { get; set; }
 	public Region? Region { get; set; }
 	public Territory? Territory { get; set; }

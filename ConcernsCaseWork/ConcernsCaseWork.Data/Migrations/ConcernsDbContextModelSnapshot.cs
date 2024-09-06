@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -53,6 +53,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("AuditLog_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.CaseDivision", b =>
@@ -76,6 +78,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("Division_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -115,6 +119,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("Region_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -233,6 +239,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("CityTechnologyCollege_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", b =>
@@ -246,6 +254,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsCaseworkTeam_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeamMember", b =>
@@ -268,6 +278,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsCaseworkTeamMember_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsCase", b =>
@@ -384,6 +396,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsCase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsMeansOfReferral", b =>
@@ -413,6 +427,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsMeansOfReferral_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -465,6 +481,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsRating_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -569,6 +587,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsRecord_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsStatus", b =>
@@ -595,6 +615,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -647,6 +669,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsType_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -790,6 +814,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsDecision_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionDrawdownFacilityAgreed", b =>
@@ -806,6 +832,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsDecisionDrawdownFacilityAgreed_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -839,6 +867,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsDecisionFrameworkCategory_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -883,6 +913,8 @@ namespace ConcernsCaseWork.Data.Migrations
                             t.HasTrigger("ConcernsDecisionStates_Trigger");
                         });
 
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
                     b.HasData(
                         new
                         {
@@ -916,6 +948,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsDecisionType_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionTypeId", b =>
@@ -932,6 +966,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("ConcernsDecisionTypeId_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1032,6 +1068,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("DecisionOutcome_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
@@ -1048,6 +1086,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("DecisionOutcomeAuthorizer_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1102,6 +1142,8 @@ namespace ConcernsCaseWork.Data.Migrations
                             t.HasTrigger("DecisionOutcomeBusinessArea_Trigger");
                         });
 
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
                     b.HasData(
                         new
                         {
@@ -1149,6 +1191,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("DecisionOutcomeBusinessAreaMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.Outcome.DecisionOutcomeStatus", b =>
@@ -1165,6 +1209,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("DecisionOutcomeStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1246,6 +1292,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("FinancialPlanCase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.FinancialPlanStatus", b =>
@@ -1278,6 +1326,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("FinancialPlanStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1362,6 +1412,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIUnderConsiderationCase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReason", b =>
@@ -1387,6 +1439,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIUnderConsiderationReason_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1471,6 +1525,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIUnderConsiderationReasonMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationStatus", b =>
@@ -1499,6 +1555,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIUnderConsiderationStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1570,6 +1628,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterCase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterCondition", b =>
@@ -1603,6 +1663,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterCondition_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1694,6 +1756,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterConditionMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionType", b =>
@@ -1722,6 +1786,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterConditionType_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1781,6 +1847,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterReason_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -1865,6 +1933,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterReasonMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterStatus", b =>
@@ -1899,6 +1969,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NTIWarningLetterStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -2012,6 +2084,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveCase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
@@ -2045,6 +2119,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveCondition_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -2424,6 +2500,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveConditionMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveConditionType", b =>
@@ -2452,6 +2530,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveConditionType_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -2536,6 +2616,8 @@ namespace ConcernsCaseWork.Data.Migrations
                             t.HasTrigger("NoticeToImproveReason_Trigger");
                         });
 
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
                     b.HasData(
                         new
                         {
@@ -2619,6 +2701,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveReasonMapping_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", b =>
@@ -2647,6 +2731,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("NoticeToImproveStatus_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -2796,6 +2882,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("SRMACase_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.SRMAReason", b =>
@@ -2821,6 +2909,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("SRMAReason_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -2870,6 +2960,8 @@ namespace ConcernsCaseWork.Data.Migrations
                             t.HasTrigger("SRMAStatus_Trigger");
                         });
 
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
                     b.HasData(
                         new
                         {
@@ -2913,6 +3005,398 @@ namespace ConcernsCaseWork.Data.Migrations
                             Name = "Complete",
                             UpdatedAt = new DateTime(2022, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementActivity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TargetedTrustEngagementActivity", "concerns", t =>
+                        {
+                            t.HasTrigger("TargetedTrustEngagementActivity_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "BudgetForecastReturnAccountsReturnDriven",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "ExecutivePayEngagement",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "FinancialReturnsAssurance",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "ReservesOversightAndAssuranceProject",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "LocalProactiveEngagament",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "OtherNationalProcesses",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "NoEngagementActivitiesWereTakenForward",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementActivityType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TargetedTrustEngagementActivityType", "concerns", t =>
+                        {
+                            t.HasTrigger("TargetedTrustEngagementActivityType_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Category1",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Category2",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Category3",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Category4",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "CEOs",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Leadership",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "CEOsAndLeadership",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "AnnualSummaryInternalScrutinyReports",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "AuditIssues",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "ManagementLetterIssues",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "RegularityIssues",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Priority1",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Priority2",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Priority3",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Priority4",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "BudgetForecastReturnAccountsReturnDriven",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "ExecutivePayEngagement",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "FinancialReturnsAssurance",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "ReservesOversightAssuranceProject",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "LocalProactiveEngagament",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "OtherVulnerability",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementCase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CaseUrn")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset?>("EngagementEndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("EngagementOutcomeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("EngagementStartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("VARCHAR(2000)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
+
+                    b.ToTable("TargetedTrustEngagementCase", "concerns", t =>
+                        {
+                            t.HasTrigger("TargetedTrustEngagementCase_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementOutcome", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TargetedTrustEngagementOutcomeType", "concerns", t =>
+                        {
+                            t.HasTrigger("TargetedTrustEngagementOutcomeType_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "AdequateResponseReceived",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "InadequateResponseReceived",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "NoEngagementTookPlace",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "NoResponseRequired",
+                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ActivityTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TargetedTrustEngagementCaseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TargetedTrustEngagementCaseId");
+
+                    b.ToTable("TargetedTrustEngagementActivityMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("TargetedTrustEngagementActivityMapping_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.TrustFinancialForecast", b =>
@@ -2966,6 +3450,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             t.HasTrigger("TrustFinancialForecast_Trigger");
                         });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeamMember", b =>
@@ -3262,6 +3748,13 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("Reason");
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementType", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.TargetedTrustEngagementCase", null)
+                        .WithMany("ActivityTypes")
+                        .HasForeignKey("TargetedTrustEngagementCaseId");
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", b =>
                 {
                     b.Navigation("TeamMembers");
@@ -3343,6 +3836,11 @@ namespace ConcernsCaseWork.Data.Migrations
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveReason", b =>
                 {
                     b.Navigation("NoticeToImproveReasonsMapping");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TargetedTrustEngagementCase", b =>
+                {
+                    b.Navigation("ActivityTypes");
                 });
 #pragma warning restore 612, 618
         }
