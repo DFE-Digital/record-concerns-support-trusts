@@ -8,7 +8,7 @@ public class EngagementTypeConfiguration : IEntityTypeConfiguration<TargetedTrus
 {
 	public void Configure(EntityTypeBuilder<TargetedTrustEngagementType> builder)
 	{
-		builder.ToTable("TargetedTrustEngagementType", "concerns");
+		builder.ToTable("TargetedTrustEngagementActivityMapping", "concerns");
 		builder.HasKey(x => x.Id);
 	}
 }
