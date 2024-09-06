@@ -179,8 +179,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 				.hasClosedCaseValidationError("Close SRMA action")
 				.hasClosedCaseValidationError("Close NTI: Under consideration")
 				.hasClosedCaseValidationError("Close decisions")
-				.hasClosedCaseValidationError("Close concerns")
-				.hasClosedCaseValidationError("Close trust financial forecast");
+				.hasClosedCaseValidationError("Close concerns");
 
 			Logger.log("Checking accessibility on case management error page");
 			cy.excuteAccessibilityTests();
@@ -232,15 +231,6 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 					.hasClosedDate(toDisplayDate(now));
 			});
 
-			actionTable
-				.getRowByAction("TFF (trust financial forecast)")
-				.then((row) => {
-					row
-						.hasName("TFF (trust financial forecast)")
-						.hasStatus("Completed")
-						.hasOpenedDate(toDisplayDate(now))
-						.hasClosedDate(toDisplayDate(now));
-				});
 		});
 
 		it("Should raise a validation error for NTI warning letter and only close when the action resolved", () => {
