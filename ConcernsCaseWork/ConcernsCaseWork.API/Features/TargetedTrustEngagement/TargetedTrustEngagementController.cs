@@ -47,7 +47,6 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 		}
 
 		[HttpPut("{targetedTrustEngagementId}")]
-		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
 		public async Task<IActionResult> Update(int concernsCaseUrn, int targetedTrustEngagementId, [FromBody] UpdateTargetedTrustEngagementRequest request, CancellationToken cancellationToken = default)
@@ -61,7 +60,6 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 		}
 
 		[HttpGet()]
-		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> GetTargetedTrustEngagements([FromRoute] ListByCaseUrn.Query query)
 		{
 			var targetedTrustEngagement = await _mediator.Send(query);
@@ -70,7 +68,6 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 		}
 
 		[HttpPatch("{targetedTrustEngagementId}/close")]
-		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
 		public async Task<IActionResult> Close(int concernsCaseUrn, int targetedTrustEngagementId, [FromBody] CloseTargetedTrustEngagementRequest request, CancellationToken cancellationToken = default)
@@ -82,7 +79,6 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 		}
 
 		[HttpDelete("{targetedTrustEngagementId:int}")]
-		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
 		{
 			await _mediator.Send(command);

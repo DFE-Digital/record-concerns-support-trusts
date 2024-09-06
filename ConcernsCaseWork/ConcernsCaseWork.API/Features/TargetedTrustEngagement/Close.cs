@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 				try
 				{
 					var now = DateTime.UtcNow;
-					var tte = _context.TargetedTrustEngagements.FirstOrDefault(t => t.Id == command.TargetedTrustEngagementId);
+					var tte = await _context.TargetedTrustEngagements.FirstOrDefaultAsync(t => t.Id == command.TargetedTrustEngagementId);
 
 					tte.EngagementOutcomeId = (int)request.OutcomeId;
 					tte.EngagementEndDate = request.EngagementEndDate;

@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 				}
 
 				var now = DateTime.UtcNow;
-				var tte = _context.TargetedTrustEngagements.FirstOrDefault(t => t.Id == request.TargetedTrustEngagementId);
+				var tte = await _context.TargetedTrustEngagements.FirstOrDefaultAsync(t => t.Id == request.TargetedTrustEngagementId);
 				tte.DeletedAt = now;
 
 				await _context.SaveChangesAsync();
