@@ -52,8 +52,9 @@ RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
 ARG COMMIT_SHA
 
 COPY --from=publish /app /app
-COPY --from=build /app/wwwroot /wwwroot
+COPY --from=build /app/wwwroot /app/wwwroot
 WORKDIR /app
+RUN chown -R app:app /app
 RUN chmod +x ./docker-entrypoint.sh
 RUN chmod +x ./init.sh
 RUN chmod +x ./set-appsettings-release-tag.sh
