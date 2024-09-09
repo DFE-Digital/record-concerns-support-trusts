@@ -18,6 +18,7 @@ RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... 
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
 
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY ./script/init-docker-entrypoint.sh /app/init.sh
 COPY ./script/set-appsettings-release-tag.sh /app/set-appsettings-release-tag.sh
 
 # Stage 2 - Build assets
@@ -37,6 +38,7 @@ COPY --from=publish /app /app
 COPY --from=build /app/wwwroot /wwwroot
 WORKDIR /app
 RUN chmod +x ./docker-entrypoint.sh
+RUN chmod +x ./init.sh
 RUN chmod +x ./set-appsettings-release-tag.sh
 RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
 RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
