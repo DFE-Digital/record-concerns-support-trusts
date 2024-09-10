@@ -5,6 +5,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Actions;
@@ -245,15 +246,18 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task UpdateCacheService(CaseModel model)
 		{
-			var userState = await _cachedService.GetData(GetUserName());
-			var trustUkPrn = userState?.TrustUkPrn;
-			if (trustUkPrn == null)
+			var userName = GetUserName();
+
+			var userState = await _cachedService.GetData(userName);
+
+			if (userState?.TrustUkPrn != null)
 			{
-				if (userState != null)
-					userState.TrustUkPrn = model.TrustUkPrn;
-				await _cachedService.StoreData(GetUserName(), userState);
+				return;
 			}
-			
+
+			if (userState != null)
+					userState.TrustUkPrn = model.TrustUkPrn;
+				await _cachedService.StoreData(userName, userState);
 		}
 
 		public async Task<IActionResult> OnGetPaginatedActiveCases(string trustUkPrn, int pageNumber)
