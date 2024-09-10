@@ -246,11 +246,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private async Task UpdateCacheService(CaseModel model)
 		{
 			var userState = await _cachedService.GetData(GetUserName());
-			var trustUkPrn = userState.TrustUkPrn;
+			var trustUkPrn = userState?.TrustUkPrn;
 			if (trustUkPrn == null)
 			{
-				userState.TrustUkPrn = model.TrustUkPrn;
-				await _cachedService.StoreData(userState.UserName, userState);
+				if (userState != null)
+					userState.TrustUkPrn = model.TrustUkPrn;
+				await _cachedService.StoreData(GetUserName(), userState);
 			}
 			
 		}
