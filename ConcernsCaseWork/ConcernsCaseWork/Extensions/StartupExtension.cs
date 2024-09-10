@@ -118,6 +118,7 @@ namespace ConcernsCaseWork.Extensions
 				client.BaseAddress = new Uri(tramsApiEndpoint);
 				client.DefaultRequestHeaders.Add("ApiKey", tramsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
+				client.DefaultRequestHeaders.Add("User-Agent", "RecordConcernsSupportTrusts/1.0");
 			});
 		}
 
