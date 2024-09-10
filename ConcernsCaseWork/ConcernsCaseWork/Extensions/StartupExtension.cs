@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
-		
+
 			try
 			{
 				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new Exception("AddRedis::VCAP_SERVICES missing");
@@ -191,7 +191,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
-			
+
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			services.AddHttpContextAccessor();
