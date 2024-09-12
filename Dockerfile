@@ -37,8 +37,8 @@ RUN dotnet ef migrations bundle -r linux-x64 --configuration Release -p Concerns
 FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS initcontainer
 WORKDIR /sql
 COPY --from=efbuilder /sql /sql
-COPY --from=builder /app/appsettings* /sql/ConcernsCaseWork/
-ENTRYPOINT [ "./migratedb" ]
+COPY --from=builder /app/appsettings* /ConcernsCaseWork/
+# ENTRYPOINT [ "./migratedb" ]
 
 # ==============================================
 # Front End Builder
