@@ -4,9 +4,9 @@
 set -e
 set -o pipefail
 
-if ! which "jq" || ! type -p "jq" > /dev/null; then
+# if ! which "jq" || ! type -p "jq" > /dev/null; then
   apt-get update && apt-get install jq -y
-fi
+# fi
 
 RELEASE_TAG="$1"
 
