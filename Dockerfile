@@ -25,11 +25,11 @@ RUN rm ./set-appsettings-release-tag.sh
 # Entity Framework: Migration Builder
 # ==============================================
 FROM builder AS efbuilder
+WORKDIR /build
 ENV PATH=$PATH:/root/.dotnet/tools
 RUN dotnet tool install --global dotnet-ef
 RUN mkdir /sql
-WORKDIR /app
-RUN dotnet ef migrations bundle -r linux-x64 --configuration Release -p /build/ConcernsCaseWork.Data --no-build -o /sql/migratedb
+RUN dotnet ef migrations bundle -r linux-x64 --configuration Release -p ConcernsCaseWork.Data --no-build -o /sql/migratedb
 
 # ==============================================
 # Entity Framework: Migration Runner
