@@ -14,6 +14,12 @@ COPY ConcernsCaseWork/. .
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
+WORKDIR /app
+COPY ./script/set-appsettings-release-tag.sh set-appsettings-release-tag.sh
+RUN chmod +x ./set-appsettings-release-tag.sh
+RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
+RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
+RUN rm ./set-appsettings-release-tag.sh
 
 # ==============================================
 # Entity Framework: Migration Builder
@@ -50,13 +56,9 @@ LABEL org.opencontainers.image.source=https://github.com/DFE-Digital/record-conc
 ARG COMMIT_SHA
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
-COPY ./script/set-appsettings-release-tag.sh /app/set-appsettings-release-tag.sh
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
 RUN chown -R app:app /app
 RUN chmod +x ./docker-entrypoint.sh
-RUN chmod +x ./set-appsettings-release-tag.sh
-RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
-RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
 USER app
 EXPOSE 8080/tcp
