@@ -19,6 +19,9 @@ locals {
   container_min_replicas                          = var.container_min_replicas
   container_max_replicas                          = var.container_max_replicas
   container_scale_http_concurrency                = var.container_scale_http_concurrency
+  enable_init_container                           = var.enable_init_container
+  init_container_image                            = var.init_container_image
+  init_container_command                          = var.init_container_command
   enable_redis_cache                              = var.enable_redis_cache
   enable_mssql_database                           = var.enable_mssql_database
   mssql_sku_name                                  = var.mssql_sku_name
