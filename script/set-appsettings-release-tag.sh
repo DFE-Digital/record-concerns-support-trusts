@@ -4,6 +4,8 @@
 set -e
 set -o pipefail
 
+apt-get update && apt-get install jq -y
+
 RELEASE_TAG="$1"
 
 APP_SETTINGS_FILES=(

@@ -77,10 +77,24 @@ jobs:
   deploy-image:
     name: Deploy '${{ needs.set-env.outputs.branch }}' to ${{ needs.set-env.outputs.environment }}
     needs: [ set-env ]
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v2.2.0
+    strategy:
+      matrix:
+        stage: [
+          "final",
+          "initcontainer"
+        ]
+        include:
+          - stage: "final"
+            tag-prefix: ""
+          - stage: "initcontainer"
+            tag-prefix: "init-"
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v2.5.0
     with:
       docker-image-name: 'amsd-app'
+      docker-build-target: ${{ matrix.stage }}
       docker-build-file-name: './Dockerfile'
+      docker-tag-prefix: ${{ matrix.tag-prefix }}
+      import-without-deploy: ${{ matrix.stage == 'initcontainer' }}
       environment: ${{ needs.set-env.outputs.environment }}
       annotate-release: true
       docker-build-args: |
