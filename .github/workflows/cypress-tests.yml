@@ -38,6 +38,18 @@ jobs:
     if: inputs.environment == 'staging' || inputs.environment == 'dev'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    strategy:
+      matrix:
+        stage: [
+          "general",
+          "case-actions"
+        ]
+        include:
+          - stage: "general"
+            spec: "cypress/e2e/casework-regression/*.ts"
+          - stage: "case-actions"
+            spec: "cypress/e2e/casework-regression/case-actions/*.ts"
+
     defaults:
       run:
         working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
@@ -55,13 +67,13 @@ jobs:
         run: npm install
 
       - name: Run cypress
-        run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+        run: npm run cy:run -- --spec ${{ matrix.spec }} --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{ secrets.CYPRESS_TEST_SECRET }}
 
       - name: Upload screenshots
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-${{ inputs.environment }}
+          name: screenshots-${{ inputs.environment }}-${{ matrix.stage }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
 
       - name: Generate report
@@ -74,11 +86,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reports-${{ inputs.environment }}
+          name: reports-${{ inputs.environment }}-${{ matrix.stage }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 
       - name: Report results
         if: always()
-        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
+        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, Test group ${{ matrix.stage }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
