@@ -109,7 +109,7 @@ public class EditPageModelTests
 
 		// assert
 		var message = sut.TempData["Error.Message"].ToString();
-		message.Should().Contain("There was an error loading the page.");
+		message.Should().Contain("Try again later.");
 	}
 	
 	[Test]
@@ -134,7 +134,7 @@ public class EditPageModelTests
 
 		// assert
 		var message = sut.TempData["Error.Message"].ToString();
-		message.Should().Contain("There was an error loading the page.");
+		message.Should().Contain("Try again later.");
 	}
 	
 	[Test]
