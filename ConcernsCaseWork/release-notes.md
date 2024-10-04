@@ -1,3 +1,6 @@
+## 40.0.0
+
+* updated footer inline with UCD changes
 
 ## 39.0.0
 
