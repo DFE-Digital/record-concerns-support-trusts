@@ -297,7 +297,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.LocalProactiveEngagament,  "Division-led work to target trusts with potential financial concerns."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.OtherVulnerability,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
+						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
 					}
 				}
 			};

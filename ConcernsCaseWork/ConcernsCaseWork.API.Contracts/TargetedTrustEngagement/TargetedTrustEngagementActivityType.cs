@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
 		ReservesOversightAssuranceProject = 19,
 		[Description("Local proactive engagament")]
 		LocalProactiveEngagament = 20,
-		[Description("Other vulnerability")]
-		OtherVulnerability = 21
+		[Description("Other national processes")]
+		OtherNationalProcesses = 21
 	}
 }
