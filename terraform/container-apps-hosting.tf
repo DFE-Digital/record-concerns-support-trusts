@@ -39,6 +39,10 @@ module "azure_container_apps_hosting" {
   init_container_image                   = local.init_container_image
   init_container_command                 = local.init_container_command
 
+  enable_health_insights_api          = local.enable_health_insights_api
+  health_insights_api_cors_origins    = local.health_insights_api_cors_origins
+  health_insights_api_ipv4_allow_list = local.health_insights_api_ipv4_allow_list
+
   enable_redis_cache   = local.enable_redis_cache
   redis_cache_sku      = local.redis_cache_sku
   redis_cache_capacity = local.redis_cache_capacity
