@@ -75,6 +75,10 @@ jobs:
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
 
   deploy-image:
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
     name: Deploy '${{ needs.set-env.outputs.branch }}' to ${{ needs.set-env.outputs.environment }}
     needs: [ set-env ]
     strategy:
@@ -88,7 +92,7 @@ jobs:
             tag-prefix: ""
           - stage: "initcontainer"
             tag-prefix: "init-"
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v2.5.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v3.0.0
     with:
       docker-image-name: 'amsd-app'
       docker-build-target: ${{ matrix.stage }}
@@ -100,11 +104,13 @@ jobs:
       docker-build-args: |
         COMMIT_SHA="${{ needs.set-env.outputs.checked-out-sha }}"
     secrets:
+      azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      azure-acr-client-id: ${{ secrets.ACR_CLIENT_ID }}
       azure-acr-name: ${{ secrets.ACR_NAME }}
-      azure-acr-credentials: ${{ secrets.ACR_CREDENTIALS }}
-      azure-aca-credentials: ${{ secrets.AZURE_ACA_CREDENTIALS }}
-      azure-aca-name: ${{ secrets.AZURE_ACA_NAME }}
-      azure-aca-resource-group: ${{ secrets.AZURE_ACA_RESOURCE_GROUP }}
+      azure-aca-client-id: ${{ secrets.ACA_CLIENT_ID }}
+      azure-aca-name: ${{ secrets.ACA_CONTAINERAPP_NAME }}
+      azure-aca-resource-group: ${{ secrets.ACA_RESOURCE_GROUP }}
 
   create-tag:
     name: Tag and release
