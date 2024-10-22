@@ -142,7 +142,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				{
 					Service.Cases.CaseActionEnum.Decision,
 					Service.Cases.CaseActionEnum.Srma,
-					Service.Cases.CaseActionEnum.TrustFinancialForecast
+					Service.Cases.CaseActionEnum.TargetedTrustEngagement,
+					//Service.Cases.CaseActionEnum.TrustFinancialForecast
 				};
 			}
 
@@ -166,7 +167,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				Service.Cases.CaseActionEnum.NtiWarningLetter,
 				Service.Cases.CaseActionEnum.Nti,
 				Service.Cases.CaseActionEnum.Srma,
-				Service.Cases.CaseActionEnum.TrustFinancialForecast
+				//Service.Cases.CaseActionEnum.TrustFinancialForecast
+				Service.Cases.CaseActionEnum.TargetedTrustEngagement,
+
 			};
 		}
 
@@ -178,7 +181,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				new FinancialPlanCreateHelper(_financialPlanModelService),
 				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService, _ntiModelService),
 				new CaseDecisionCreateHelper(),
-				new TrustFinancialForecastCreateHelper(_trustFinancialForecastService)
+				new TrustFinancialForecastCreateHelper(_trustFinancialForecastService),
+				new TargetedTrustEngagementCreateHelper()
 			};
 		}
 
@@ -186,7 +190,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		{
 			var radioItems = caseActions.Select(v =>
 			{
-				return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+				var radioButton = new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
+
+				switch (v)
+				{
+					case Service.Cases.CaseActionEnum.TargetedTrustEngagement:
+						radioButton.HintText = "Includes BFR/AR driven, executive pay engagement, financial returns assurance, local proactive engagement, other vulnerability, ROAP, and no action beyond triage.";
+					break;
+
+					default:
+						break;
+				}
+
+				return radioButton;
 			}).ToArray();
 
 			return new(ElementRootId: "case-action", Name: nameof(CaseActionEnum), "What are you recording?")

@@ -18,6 +18,7 @@ using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.TargetedTrustEngagement;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Service.Trusts;
@@ -180,6 +181,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 			services.AddScoped<IFakeTrustService, FakeTrustService>();
 			services.AddScoped<ICityTechnologyCollegeService, CityTechnologyCollegeService>();
+			services.AddScoped<ITargetedTrustEngagementService, TargetedTrustEngagementService>();
+
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

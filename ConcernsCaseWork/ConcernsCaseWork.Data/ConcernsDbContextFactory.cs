@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Data
 			};
 
 			var connectionString = configuration.GetConnectionString("DefaultConnection");
-			optionsBuilder.UseSqlServer(connectionString);
+			optionsBuilder.UseConcernsSqlServer(connectionString);
 
 			var interceptors = new List<IInterceptor>();
 

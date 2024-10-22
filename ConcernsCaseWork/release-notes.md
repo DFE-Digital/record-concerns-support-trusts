@@ -1,3 +1,5 @@
+## 40.0.0
+* added Targeted Trust Engagement and hid Trust Financial Forecase
 
 ## 39.0.0
 

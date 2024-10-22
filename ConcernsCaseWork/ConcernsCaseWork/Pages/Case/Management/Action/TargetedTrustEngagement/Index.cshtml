@@ -1,0 +1,238 @@
+﻿@page "/case/{urn:long}/management/action/targetedtrustengagement/{targetedtrustengagementId:int}/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement.IndexPageModel
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@section BeforeMain {
+    <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+}
+
+@{
+    var isClosed = Model.TargetedTrustEngagement.IsClosed;
+}
+
+<partial name="_BannerError" />
+
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+    <partial name="_Error" />
+}
+else
+{
+    @if (Model.UserCanDelete)
+    {
+        <a class="govuk-button govuk-button--warning float__right" href="@Request.Path/delete" aria-label="Delete engagement" data-testid="delete-engagement">Delete engagement</a>
+    }
+
+    <h1 class="govuk-heading-l" data-testid="engagement-heading">
+        <span class="govuk-caption-m">Targeted Trust Engagement ID @Model.TargetedTrustEngagement.Id</span>
+        Targeted Trust Engagement
+    </h1>
+
+    @if (isClosed)
+    {
+        <span class="govuk-tag ragtag ragtag__grey govuk-!-margin-bottom-3">Closed</span>
+    }
+
+    <div class="govuk-hint" id="nti-underconsideration-hint">
+        <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Engaging-with-academy-trusts.aspx" class="govuk-link" rel="noreferrer noopener">
+            SFSO Knowledge: Pro-active engagament
+        </a>
+    </div>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m govuk-visually-hidden">
+            Targeted Trust Engagement
+        </caption>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-open-label">
+                    Date engagement open
+                </th>
+                <td class="govuk-table__cell" data-testid="engagement-open-text">
+                    @{
+                        if (!string.IsNullOrEmpty(Model.TargetedTrustEngagement.DateOpened))
+                        {
+                            RenderValue(Model.TargetedTrustEngagement.DateOpened);
+                        }
+                        else
+                        {
+                            RenderEmptyLabel();
+                        }
+                    }
+                </td>
+            </tr>
+            @if (isClosed)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-closed-label">
+                        Date engagement closed
+                    </th>
+                    <td class="govuk-table__cell" data-testid="engagement-closed-text">
+                        @{
+                            RenderValue(Model.TargetedTrustEngagement.DateClosed);
+                        }
+                    </td>
+                </tr>
+            }
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-began-label">
+                    Date engagement began
+                </th>
+                <td class="govuk-table__cell" data-testid="engagement-began-text">
+                    @{
+                        if (!string.IsNullOrEmpty(Model.TargetedTrustEngagement.DateBegan))
+                        {
+                            RenderValue(Model.TargetedTrustEngagement.DateBegan);
+                        }
+                        else
+                        {
+                            RenderEmptyLabel();
+                        }
+                    }
+                </td>
+            </tr>
+
+            @if (isClosed)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-ended-label">
+                        Date engagement ended
+                    </th>
+                    <td class="govuk-table__cell" data-testid="engagement-ended-text">
+                        @{
+                            RenderValue(Model.TargetedTrustEngagement.DateEnded);
+                        }
+                    </td>
+                </tr>
+            }
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-type-label">Type of engagement</th>
+                <td class="govuk-table__cell" data-testid="engagement-type-text">
+
+                    @{
+                        RenderValue(Model.TargetedTrustEngagement.Activity);
+
+                        if (Model.TargetedTrustEngagement.ActivityTypes.Any())
+                        {
+                            <ul class="govuk-list govuk-list--bullet">
+                                @foreach (var activityType in Model.TargetedTrustEngagement.ActivityTypes)
+                                {
+                                    <li>
+                                        @{
+                                            RenderValue(activityType);
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    }
+                </td>
+            </tr>
+
+            @if (isClosed)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="engagement-outcome-label">Reason engagement ended</th>
+                    <td class="govuk-table__cell" data-testid="engagement-outcome-text">
+                        @{
+                            RenderValue(Model.TargetedTrustEngagement.Outcome);
+                        }
+                    </td>
+                </tr>
+            }
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="supporting-notes-label">Supporting notes (optional)</th>
+                <td class="govuk-table__cell" data-testid="supporting-notes-text">
+                    @{
+                        if (!string.IsNullOrEmpty(Model.TargetedTrustEngagement.Notes))
+                        {
+                            RenderTextAreaValue(Model.TargetedTrustEngagement.Notes);
+                        }
+                        else
+                        {
+                            RenderEmptyLabel();
+                        }
+                    }
+                </td>
+            </tr>
+            @if (Model.TargetedTrustEngagement.IsEditable)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="edit-engagement-label">Action</th>
+                    <td class="govuk-table__cell" data-testid="edit-engagement-text">
+                        @{
+                            RenderLink("Edit information", "action", Model.TargetedTrustEngagement.EditLink);
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+  
+    @if (Model.TargetedTrustEngagement.IsEditable)
+    {
+        <div class="govuk-button-group">
+            <a data-prevent-double-click="true"
+               class="govuk-button govuk-!-margin-top-6"
+               data-module="govuk-button"
+               role="button"
+               data-testid="close-engagement-button"
+               href="@Request.Path/close">
+                Continue to close engagement
+            </a>
+        </div>
+    }
+}
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private void RenderTextAreaValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            <span class="dfe-text-area-display">@value</span>
+        }
+    }
+
+    private void RenderLink(string value, string fieldName, string url)
+    {
+        <a class="govuk-link" href="@url">
+            @value
+            <span class="govuk-visually-hidden" data-testid=testid>@fieldName</span>
+        </a>
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}
