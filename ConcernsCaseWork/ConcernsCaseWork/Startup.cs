@@ -8,13 +8,16 @@ using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.PageHistory;
+using ConcernsCaseWork.UserContext;
 using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -23,10 +26,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork
 {
@@ -66,7 +71,15 @@ namespace ConcernsCaseWork
 			services.AddConfigurationOptions(Configuration);
 
 			// Azure AD
-			services.AddAuthorization(options => { options.DefaultPolicy = SetupAuthorizationPolicyBuilder().Build(); });
+			services.AddAuthorization(options =>
+			{
+				options.DefaultPolicy = SetupAuthorizationPolicyBuilder().Build();
+				options.AddPolicy("CanDelete", builder =>
+				{
+					builder.RequireClaim(ClaimTypes.Role, Claims.CaseDeleteRoleClaim);
+			});
+			});
+
 			services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
 			services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
 				options =>
@@ -120,7 +133,6 @@ namespace ConcernsCaseWork
 			{
 				options.ConnectionString = Configuration["ApplicationInsights:ConnectionString"];
 			});
-
 			// Enforce HTTPS in ASP.NET Core
 			// @link https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?
 			services.AddHsts(options =>
@@ -174,15 +186,17 @@ namespace ConcernsCaseWork
 			// Enable session for the application
 			app.UseSession();
 
-			app.UseRouting();
 
+			app.UseMiddleware<UserContextTranslatorMiddleware>();
+
+
+			app.UseRouting();
 
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextMiddleware>();
-			app.UseMiddleware<UserContextReceiverMiddleware>();
 			app.UseMiddlewareForFeature<MaintenanceModeMiddleware>(FeatureFlags.IsMaintenanceModeEnabled);
 
 			app.UseConcernsCaseworkEndpoints();

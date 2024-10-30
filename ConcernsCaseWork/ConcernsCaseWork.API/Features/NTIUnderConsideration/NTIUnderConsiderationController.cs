@@ -2,7 +2,9 @@
 using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.UserContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.NTIUnderConsideration
@@ -107,6 +109,7 @@ namespace ConcernsCaseWork.API.Features.NTIUnderConsideration
 			return Ok(response);
 		}
 
+		[Authorize(Policy = "CanDelete")]
 		[HttpDelete("{underConsiderationId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
