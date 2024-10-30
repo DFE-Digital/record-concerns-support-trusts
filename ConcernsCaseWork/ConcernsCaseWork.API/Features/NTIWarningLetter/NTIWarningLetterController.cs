@@ -2,6 +2,8 @@
 using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.UserContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
@@ -90,6 +92,8 @@ namespace ConcernsCaseWork.API.Features.NTIWarningLetter
 
 			return Ok(response);
 		}
+
+		[Authorize(Policy = "CanDelete")]
 		[HttpDelete("{warningLetterId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(long warningLetterId, CancellationToken cancellationToken = default)

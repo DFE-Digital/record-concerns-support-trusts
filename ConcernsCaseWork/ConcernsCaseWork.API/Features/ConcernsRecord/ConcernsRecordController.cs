@@ -1,7 +1,9 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.UserContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -69,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 			return Ok(new ApiSingleResponseV2<ConcernsRecordResponse>(result));
 		}
 
-
+		[Authorize(Policy = "CanDelete")]
 		[HttpDelete("{id}")]
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
