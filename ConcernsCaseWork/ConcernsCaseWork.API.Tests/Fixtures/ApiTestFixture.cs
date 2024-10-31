@@ -2,10 +2,12 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Security.Claims;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
@@ -57,6 +60,15 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 									[ConnectionStringKey] = connectionString
 								});
 							});
+
+							builder.ConfigureServices(services =>
+							{
+								services.AddAuthorization(options =>
+								{
+										options.AddPolicy("CanDelete", policy => policy.RequireAssertion(_ => true));
+								});
+							});
+
 						});
 
 					var fakeUserInfo = new UserInfo()
