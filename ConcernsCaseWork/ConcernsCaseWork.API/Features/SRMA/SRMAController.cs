@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Srma;
+using ConcernsCaseWork.UserContext;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -185,6 +187,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			}
 		}
 
+		[Authorize(Policy = "CanDelete")]
 		[HttpDelete("{srmaId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
