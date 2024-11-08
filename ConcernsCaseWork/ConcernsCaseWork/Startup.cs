@@ -22,16 +22,12 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting; 
 using Microsoft.FeatureManagement;
-using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Reflection;
+using Microsoft.Identity.Web; 
+using System; 
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Threading; 
 
 namespace ConcernsCaseWork
 {
@@ -49,6 +45,15 @@ namespace ConcernsCaseWork
 		{
 			services.AddRazorPages(options =>
 			{
+				options.Conventions.AuthorizeFolder("/");
+				options.Conventions.AllowAnonymousToPage("/Health");
+				options.Conventions.AllowAnonymousToPage("/AccessDenied");
+				options.Conventions.AllowAnonymousToPage("/Maintenance");
+				options.Conventions.AllowAnonymousToPage("/Accessibility");
+				options.Conventions.AllowAnonymousToPage("/Cookies");
+				options.Conventions.AllowAnonymousToPage("/PrivacyPolicy");
+				options.Conventions.AllowAnonymousToPage("/NotFound");
+				options.Conventions.AllowAnonymousToPage("/Error");
 				options.Conventions.AddPageRoute("/home", "");
 				options.Conventions.AddPageRoute("/notfound", "/error/404");
 				options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
