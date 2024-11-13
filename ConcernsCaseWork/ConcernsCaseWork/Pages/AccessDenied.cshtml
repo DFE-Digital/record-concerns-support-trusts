@@ -1,6 +1,8 @@
 ﻿@page "/access-denied"
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Microsoft.Identity.Web.UI.Areas.MicrosoftIdentity.Pages.Account.AccessDeniedModel
+@attribute [AllowAnonymous]
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Access denied";
