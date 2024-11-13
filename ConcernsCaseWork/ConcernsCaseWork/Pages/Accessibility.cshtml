@@ -1,5 +1,7 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authorization
 @model AccessibilityPageModel
+@attribute [AllowAnonymous]
 @{
     ViewData["Title"] = "Accessibility";
 }
