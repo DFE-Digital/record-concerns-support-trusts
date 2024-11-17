@@ -278,7 +278,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				},
 				new EngagementActivityQuestionModel()
 				{
-					Id = TargetedTrustEngagementActivity.LocalProactiveEngagament,
+					Id = TargetedTrustEngagementActivity.LocalProactiveEngagement,
 					Hint = "Division-led work to target trusts with potential financial concerns."
 				},
 				new EngagementActivityQuestionModel()
@@ -296,7 +296,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ExecutivePayEngagement, "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type."),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.LocalProactiveEngagament,  "Division-led work to target trusts with potential financial concerns."),
+						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.LocalProactiveEngagement,  "Division-led work to target trusts with potential financial concerns."),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
 					}
 				}
