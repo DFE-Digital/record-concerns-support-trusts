@@ -136,7 +136,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		private List<CaseActionEnum> GetSupportedActions(CaseModel caseModel)
 		{
-			if (caseModel.RecordsModel.IsNullOrEmpty())
+			if (caseModel.RecordsModel == null || !caseModel.RecordsModel.Any())
 			{
 				return new List<CaseActionEnum>()
 				{

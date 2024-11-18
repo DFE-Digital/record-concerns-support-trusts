@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -23,7 +24,12 @@ public static class ApplicationBuilderExtensions
 	    
 	public static IApplicationBuilder UseConcernsCaseworkEndpoints(this IApplicationBuilder app)
 	{
-		app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+		app.UseEndpoints(endpoints => {
+			endpoints.MapControllers().RequireAuthorization(new AuthorizeAttribute
+			{
+				AuthenticationSchemes = "ApiScheme"
+			});
+		});
 
 		return app;
 	}

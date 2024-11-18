@@ -15,7 +15,7 @@ public static class ApiConfigurationExtensions
 		services.AddHttpClient("ConcernsClient", config =>
 		{
 			config.BaseAddress = new Uri(concernsApiEndpoint);
-			config.DefaultRequestHeaders.Add("ApiKey", concernsApiKey);
+			//config.DefaultRequestHeaders.Add("ApiKey", concernsApiKey);
 			config.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 		});
 

@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -14,7 +15,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<SRMAProvider> _logger;
 		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(httpClientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

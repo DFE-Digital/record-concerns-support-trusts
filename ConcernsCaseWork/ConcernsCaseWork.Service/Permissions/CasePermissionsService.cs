@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Permissions
@@ -17,7 +18,7 @@ namespace ConcernsCaseWork.Service.Permissions
 			IHttpClientFactory clientFactory,
 			ILogger<CasePermissionsService> logger,
 			ICorrelationContext correlationContext,
-			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+			IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = logger;
 		}

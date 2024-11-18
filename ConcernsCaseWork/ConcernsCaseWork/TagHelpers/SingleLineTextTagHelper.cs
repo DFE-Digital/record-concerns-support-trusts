@@ -1,3 +1,4 @@
+using Castle.Core.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,7 +10,7 @@ public class SingleLineTextTagHelper : TagHelper
 	
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{		
-		if (Text.IsNullOrEmpty())
+		if (string.IsNullOrEmpty(Text))
 		{
 			output.BuildEmptyTextTag();
 		}

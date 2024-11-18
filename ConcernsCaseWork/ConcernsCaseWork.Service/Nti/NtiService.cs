@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -14,7 +15,7 @@ namespace ConcernsCaseWork.Service.Nti
 		private readonly ILogger<NtiService> _logger;
 		private const string Url = @"/v2/case-actions/notice-to-improve";
 
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(httpClientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = logger;
 		}

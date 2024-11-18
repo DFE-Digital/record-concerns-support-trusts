@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
 
 namespace ConcernsCaseWork.UserContext
 {
@@ -7,6 +8,7 @@ namespace ConcernsCaseWork.UserContext
 	{
 		public string Name { get; set; }
 		public string[] Roles { get; set; }
+		public ClaimsPrincipal User { get; set;}
 
 		private const string NameHeaderKey = "x-user-context-name";
 		private const string RoleHeaderKeyPrefix = "x-user-context-role-";

@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Decision
@@ -12,7 +13,7 @@ namespace ConcernsCaseWork.Service.Decision
 	{
 		private readonly ILogger<DecisionService> _logger;
 
-		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = Guard.Against.Null(logger);
 		}

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.IdentityModel.Tokens;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ConcernsCaseWork.TagHelpers;
 
@@ -9,7 +10,7 @@ public class MultiLineTextTagHelper : TagHelper
 	
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		if (Contents.IsNullOrEmpty())
+		if (string.IsNullOrEmpty(Contents))
 		{
 			output.BuildEmptyTextTag();
 		}

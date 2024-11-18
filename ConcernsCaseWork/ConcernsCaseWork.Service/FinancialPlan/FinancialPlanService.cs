@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -12,7 +13,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanService> _logger;
 
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = logger;
 		}

@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.TeamCasework;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -32,6 +33,7 @@ namespace ConcernsCaseWork.API.Features.TeamCasework
 			_getOwnersOfOpenCases = Guard.Against.Null(getOwnersOfOpenCases);
 		}
 
+		[Authorize(Policy = "CanReadWrite")]
 		[HttpGet("owners/{ownerId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> GetTeam(string ownerId, CancellationToken cancellationToken = default)

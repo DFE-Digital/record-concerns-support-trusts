@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Teams
@@ -10,7 +11,7 @@ namespace ConcernsCaseWork.Service.Teams
 	{
 		private readonly ILogger<TeamsService> _logger;
 
-		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = Guard.Against.Null(logger);
 		}

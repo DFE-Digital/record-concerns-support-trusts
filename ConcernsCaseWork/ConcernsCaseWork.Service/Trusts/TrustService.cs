@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
@@ -28,7 +29,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			IClientUserInfoService userInfoService,
 			IFakeTrustService fakeTrustService,
 			ICityTechnologyCollegeService cityTechnologyCollegeService,
-			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
+			IFeatureManager featureManager, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService)
 		{
 			_logger = logger;
 			_fakeTrustService = fakeTrustService;

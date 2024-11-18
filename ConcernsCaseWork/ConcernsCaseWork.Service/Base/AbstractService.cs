@@ -1,9 +1,12 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
@@ -19,18 +22,20 @@ namespace ConcernsCaseWork.Service.Base
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
 		private readonly IClientUserInfoService _userInfoService;
+		private readonly IUserTokenService _apiTokenService;
 
 		private string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, string httpClientName)
+		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService apiTokenService, string httpClientName)
 		{
 			_clientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
 			_correlationContext = Guard.Against.Null(correlationContext);
 			_userInfoService = Guard.Against.Null(userInfoService);
 			HttpClientName = httpClientName;
+			_apiTokenService = apiTokenService;
 		}
 
 		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
@@ -92,6 +97,10 @@ namespace ConcernsCaseWork.Service.Base
 		{
 			var client = _clientFactory.CreateClient(HttpClientName);
 
+			var apiToken = _apiTokenService.GetUserTokenAsync(_userInfoService.UserInfo.User).Result;
+
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiToken);
+
 			AddDefaultRequestHeaders(client, _correlationContext, _userInfoService, _logger);
 
 			return client;
@@ -99,6 +108,7 @@ namespace ConcernsCaseWork.Service.Base
 
 		public static void AddDefaultRequestHeaders(HttpClient httpClient, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, [CanBeNull] ILogger<AbstractService> logger)
 		{
+
 			var headerAdded = httpClient.DefaultRequestHeaders.TryAddWithoutValidation(correlationContext.HeaderKey, correlationContext.CorrelationId);
 			if (!headerAdded)
 			{

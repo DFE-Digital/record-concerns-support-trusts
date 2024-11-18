@@ -9,9 +9,14 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security;
+using DfE.CoreLibs.Security.Authorization;
+using DfE.CoreLibs.Security.Authorization.Events;
+using DfE.CoreLibs.Security.Configurations;
 using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,18 +25,25 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace ConcernsCaseWork
 {
@@ -47,6 +59,8 @@ namespace ConcernsCaseWork
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			//services.AddControllers();
+
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AddPageRoute("/home", "");
@@ -70,28 +84,64 @@ namespace ConcernsCaseWork
 			// Configuration options
 			services.AddConfigurationOptions(Configuration);
 
-			// Azure AD
-			services.AddAuthorization(options =>
+			services.AddUserTokenService(Configuration);
+
+			services.AddApplicationAuthorization(Configuration);
+
+			var authenticationBuilder = services.AddAuthentication(options =>
 			{
-				options.DefaultPolicy = SetupAuthorizationPolicyBuilder().Build();
-				options.AddPolicy("CanDelete", builder =>
-				{
-					builder.RequireClaim(ClaimTypes.Role, Claims.CaseDeleteRoleClaim);
-			});
+				options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
 			});
 
-			services.AddMicrosoftIdentityWebAppAuthentication(Configuration);
+			authenticationBuilder.AddMicrosoftIdentityWebApp(Configuration);
+
 			services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
 				options =>
+			{
+				options.Cookie.Name = ".ConcernsCasework.Login";
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(int.Parse(Configuration["AuthenticationExpirationInMinutes"]));
+				options.SlidingExpiration = true;
+				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+				options.AccessDeniedPath = "/access-denied";
+			});
+
+			services.AddCustomJwtAuthentication(Configuration, "ApiScheme", authenticationBuilder,
+				new JwtBearerEvents
 				{
-					options.Cookie.Name = ".ConcernsCasework.Login";
-					options.Cookie.HttpOnly = true;
-					options.Cookie.IsEssential = true;
-					options.ExpireTimeSpan = TimeSpan.FromMinutes(int.Parse(Configuration["AuthenticationExpirationInMinutes"]));
-					options.SlidingExpiration = true;
-					options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // in A2B this was only if string.IsNullOrEmpty(Configuration["CI"]), but why not always?
-					options.AccessDeniedPath = "/access-denied";
+					OnAuthenticationFailed = context =>
+					{
+						var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+						logger.LogError(context.Exception, "Authentication failed.");
+						return Task.CompletedTask;
+					},
+					//OnChallenge = context =>
+					//{
+					//	var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+					//	logger.LogWarning("Authentication challenge triggered. Scheme: {Scheme}", context.Scheme.Name);
+					//	// Suppress the default challenge behavior to prevent redirection
+					//	context.HandleResponse();
+					//	context.Response.StatusCode = 401;
+					//	context.Response.ContentType = "application/json";
+					//	return context.Response.WriteAsync("{\"error\":\"Unauthorized\"}");
+					//},
+					OnMessageReceived = context =>
+					{
+						var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+						logger.LogInformation("Authentication message received.");
+						return Task.CompletedTask;
+					},
+					OnTokenValidated = context =>
+					{
+						var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Startup>>();
+						logger.LogInformation("Token validated successfully.");
+						return Task.CompletedTask;
+					}
 				});
+
+
 
 			services.AddAntiforgery(options =>
 			{
@@ -141,13 +191,27 @@ namespace ConcernsCaseWork
 				options.IncludeSubDomains = true;
 				options.MaxAge = TimeSpan.FromDays(365);
 			});
+
+			services.AddLogging(logging =>
+			{
+				logging.AddConsole();
+				logging.AddDebug();
+				logging.SetMinimumLevel(LogLevel.Debug);
+			});
+
+			services.Configure<LoggerFilterOptions>(options =>
+			{
+				options.AddFilter("Microsoft.AspNetCore.Authorization", LogLevel.Debug);
+			});
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
 		{
 			// Ensure we do not lose X-Forwarded-* Headers when behind a Proxy
-			var forwardOptions = new ForwardedHeadersOptions {
+			var forwardOptions = new ForwardedHeadersOptions
+			{
 				ForwardedHeaders = ForwardedHeaders.All,
 				RequireHeaderSymmetry = false
 			};
@@ -169,7 +233,7 @@ namespace ConcernsCaseWork
 			}
 
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
-			app.UseMiddleware<ApiKeyMiddleware>();
+			//app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
 			app.UseSecurityHeaders(
@@ -187,23 +251,28 @@ namespace ConcernsCaseWork
 			app.UseSession();
 
 
-			app.UseMiddleware<UserContextTranslatorMiddleware>();
+			//app.UseMiddleware<UserContextTranslatorMiddleware>();
 
 
 			app.UseRouting();
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-			app.UseMiddleware<CorrelationIdMiddleware>();
+			//app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextMiddleware>();
-			app.UseMiddlewareForFeature<MaintenanceModeMiddleware>(FeatureFlags.IsMaintenanceModeEnabled);
+			//app.UseMiddlewareForFeature<MaintenanceModeMiddleware>(FeatureFlags.IsMaintenanceModeEnabled);
 
-			app.UseConcernsCaseworkEndpoints();
+			//app.UseConcernsCaseworkEndpoints();
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapRazorPages();
+				endpoints.MapControllers().RequireAuthorization(new AuthorizeAttribute
+				{
+					AuthenticationSchemes = "ApiScheme"
+				});
+				endpoints.MapRazorPages()
+					.RequireAuthorization("WebAppPolicy");
 			});
 
 			mapper.CompileAndValidate();

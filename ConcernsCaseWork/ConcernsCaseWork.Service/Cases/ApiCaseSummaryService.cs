@@ -1,6 +1,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Cases;
@@ -11,7 +12,7 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		ILogger<ApiCaseSummaryService> logger, 
 		ICorrelationContext correlationContext, 
 		IHttpClientFactory clientFactory, 
-		IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService) 
+		IClientUserInfoService userInfoService, IUserTokenService apiTokenService) : base(clientFactory, logger, correlationContext, userInfoService, apiTokenService) 
 	{
 
 	}
