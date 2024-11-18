@@ -1,13 +1,14 @@
-﻿# Stage 1
-ARG ASPNET_SDK_TAG=8.0
-ARG ASPNET_IMAGE_TAG=8.0-bookworm-slim
-ARG NODEJS_IMAGE_TAG=20.17-bullseye
+﻿# Set the major version of dotnet
+ARG DOTNET_VERSION=8.0
+# Set the major version of nodejs
+ARG NODEJS_VERSION_MAJOR=22
+
 ARG COMMIT_SHA=not-set
 
 # ==============================================
 # Base SDK
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/sdk:${ASPNET_SDK_TAG}" AS builder
+FROM "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0" AS builder
 ARG COMMIT_SHA
 WORKDIR /build
 COPY ConcernsCaseWork/. .
@@ -34,7 +35,7 @@ RUN dotnet ef migrations bundle -r linux-x64 --configuration Release -p Concerns
 # ==============================================
 # Entity Framework: Migration Runner
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS initcontainer
+FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS initcontainer
 WORKDIR /sql
 COPY --from=efbuilder /sql /sql
 COPY --from=builder /app/appsettings* /ConcernsCaseWork/
@@ -42,7 +43,7 @@ COPY --from=builder /app/appsettings* /ConcernsCaseWork/
 # ==============================================
 # Front End Builder
 # ==============================================
-FROM node:${NODEJS_IMAGE_TAG} AS frontend
+FROM "node:${NODEJS_VERSION_MAJOR}-bullseye-slim" AS frontend
 COPY --from=builder /app/wwwroot /app/wwwroot
 WORKDIR /app/wwwroot
 RUN npm install
@@ -51,14 +52,13 @@ RUN npm run build
 # ==============================================
 # Application
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
-LABEL org.opencontainers.image.source=https://github.com/DFE-Digital/record-concerns-support-trusts
+FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS final
+LABEL org.opencontainers.image.source="https://github.com/DFE-Digital/record-concerns-support-trusts"
 ARG COMMIT_SHA
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
-RUN chown -R app:app /app
 RUN chmod +x ./docker-entrypoint.sh
-USER app
+USER $APP_UID
 EXPOSE 8080/tcp
