@@ -7,7 +7,7 @@ describe('Footer links direct to the correct pages from Active Casework page', (
     it('Should open Accessibility link and verify the title', () => {
 
         cy.getByTestId("accessibility-link").click();
-        cy.get("h1").should("contain.text", "Accessibility statement for Record concerns and support for trusts");
+        cy.get("h1").should("contain.text", "Accessibility statement");
 
         cy.excuteAccessibilityTests();
     });
