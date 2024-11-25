@@ -42,6 +42,9 @@ FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS initco
 WORKDIR /sql
 COPY --from=efbuilder /sql /sql
 COPY --from=builder /app/appsettings* /ConcernsCaseWork/
+RUN chown "$APP_UID" "/sql" -R
+RUN chown "$APP_UID" "/ConcernsCaseWork" -R
+USER $APP_UID
 
 # ==============================================
 # Front End Builder
