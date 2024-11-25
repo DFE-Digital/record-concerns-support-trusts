@@ -11,6 +11,9 @@ ARG COMMIT_SHA=not-set
 FROM "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0" AS builder
 ARG COMMIT_SHA
 WORKDIR /build
+RUN ["tdnf", "update"]
+RUN ["tdnf", "install", "-y", "jq"]
+RUN ["tdnf", "clean", "all"]
 COPY ConcernsCaseWork/. .
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
