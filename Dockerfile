@@ -50,7 +50,7 @@ USER $APP_UID
 # Front End Builder
 # ==============================================
 FROM "node:${NODEJS_VERSION_MAJOR}-bullseye-slim" AS frontend
-COPY --from=builder /app/wwwroot /app/wwwroot
+COPY ConcernsCaseWork/ConcernsCaseWork/wwwroot /app/wwwroot
 WORKDIR /app/wwwroot
 RUN npm install
 RUN npm run build
