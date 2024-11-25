@@ -60,11 +60,9 @@ RUN npm run build
 # ==============================================
 FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS final
 LABEL org.opencontainers.image.source="https://github.com/DFE-Digital/record-concerns-support-trusts"
-ARG COMMIT_SHA
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
 RUN chmod +x ./docker-entrypoint.sh
 USER $APP_UID
-EXPOSE 8080/tcp
