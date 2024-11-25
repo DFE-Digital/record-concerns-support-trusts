@@ -11,6 +11,9 @@ ARG COMMIT_SHA=not-set
 FROM "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0" AS builder
 ARG COMMIT_SHA
 WORKDIR /build
+RUN ["tdnf", "update"]
+RUN ["tdnf", "install", "-y", "jq"]
+RUN ["tdnf", "clean", "all"]
 COPY ConcernsCaseWork/. .
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
@@ -39,12 +42,15 @@ FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS initco
 WORKDIR /sql
 COPY --from=efbuilder /sql /sql
 COPY --from=builder /app/appsettings* /ConcernsCaseWork/
+RUN chown "$APP_UID" "/sql" -R
+RUN chown "$APP_UID" "/ConcernsCaseWork" -R
+USER $APP_UID
 
 # ==============================================
 # Front End Builder
 # ==============================================
 FROM "node:${NODEJS_VERSION_MAJOR}-bullseye-slim" AS frontend
-COPY --from=builder /app/wwwroot /app/wwwroot
+COPY ConcernsCaseWork/ConcernsCaseWork/wwwroot /app/wwwroot
 WORKDIR /app/wwwroot
 RUN npm install
 RUN npm run build
@@ -54,11 +60,9 @@ RUN npm run build
 # ==============================================
 FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS final
 LABEL org.opencontainers.image.source="https://github.com/DFE-Digital/record-concerns-support-trusts"
-ARG COMMIT_SHA
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
 RUN chmod +x ./docker-entrypoint.sh
 USER $APP_UID
-EXPOSE 8080/tcp
