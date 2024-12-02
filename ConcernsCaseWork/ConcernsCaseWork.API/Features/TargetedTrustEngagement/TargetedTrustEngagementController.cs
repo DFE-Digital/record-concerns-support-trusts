@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
 using ConcernsCaseWork.UserContext;
 using MediatR;
@@ -80,7 +81,7 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 			return Ok(new ApiSingleResponseV2<CloseTargetedTrustEngagementResponse>(commandResult));
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{targetedTrustEngagementId:int}")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
 		{

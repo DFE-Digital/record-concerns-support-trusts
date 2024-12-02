@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.UserContext;
@@ -113,7 +114,7 @@ namespace ConcernsCaseWork.API.Features.FinancialPlan
 			return Ok(new ApiSingleResponseV2<FinancialPlanResponse>(model));
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{Id}")]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]

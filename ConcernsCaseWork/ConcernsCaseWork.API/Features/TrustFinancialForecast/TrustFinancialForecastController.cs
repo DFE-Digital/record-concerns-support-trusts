@@ -1,4 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.UserContext;
@@ -133,7 +134,7 @@ namespace ConcernsCaseWork.API.Features.TrustFinancialForecast
 			return new OkObjectResult(response);
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{id:int}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(int caseUrn, int id, CancellationToken cancellationToken = default)

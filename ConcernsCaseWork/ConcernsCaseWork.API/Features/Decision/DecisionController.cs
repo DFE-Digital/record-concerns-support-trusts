@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.UserContext;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -83,7 +84,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 			return Ok(new ApiSingleResponseV2<CloseDecisionResponse>(commandResult));
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{decisionId:int}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)

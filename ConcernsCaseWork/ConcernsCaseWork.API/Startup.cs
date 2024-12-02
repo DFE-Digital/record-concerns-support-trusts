@@ -9,18 +9,12 @@ namespace ConcernsCaseWork.API
 	/// <summary>
 	/// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE. It is used when running API tests
 	/// </summary>
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+    public class Startup(IConfiguration configuration)
+	{ 
 
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
+		public void ConfigureServices(IServiceCollection services)
         {
-	        services.AddConcernsApiProject(Configuration);
+			services.AddConcernsApiProject(configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)

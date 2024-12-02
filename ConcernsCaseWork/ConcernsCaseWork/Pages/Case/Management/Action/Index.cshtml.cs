@@ -136,15 +136,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		private List<CaseActionEnum> GetSupportedActions(CaseModel caseModel)
 		{
-			if (caseModel.RecordsModel.IsNullOrEmpty())
+			if (caseModel.RecordsModel?.Any() != true)
 			{
-				return new List<CaseActionEnum>()
-				{
+				return
+				[
 					Service.Cases.CaseActionEnum.Decision,
 					Service.Cases.CaseActionEnum.Srma,
 					Service.Cases.CaseActionEnum.TargetedTrustEngagement,
 					//Service.Cases.CaseActionEnum.TrustFinancialForecast
-				};
+				];
 			}
 
 			if (caseModel.Division == Division.RegionsGroup)

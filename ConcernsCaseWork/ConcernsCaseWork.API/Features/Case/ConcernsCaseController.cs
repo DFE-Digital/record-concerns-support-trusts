@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Features.Paging;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.UserContext;
@@ -297,7 +298,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			return Ok(response);
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{urn}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(int urn, CancellationToken cancellationToken = default)

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.NoticeToImprove;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.UserContext;
@@ -73,7 +74,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 			return Ok(response);
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{noticeToImproveId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(long noticeToImproveId, CancellationToken cancellationToken = default)
