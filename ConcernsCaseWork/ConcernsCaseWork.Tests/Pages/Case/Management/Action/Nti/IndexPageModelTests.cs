@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.NtiModel);
+			Assert.That(pageModel.NtiModel, Is.Not.Null);
 		}
 
 		private static IndexPageModel SetupIndexPageModel(

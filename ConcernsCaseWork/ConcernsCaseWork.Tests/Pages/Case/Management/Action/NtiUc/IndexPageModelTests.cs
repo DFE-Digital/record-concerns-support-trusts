@@ -62,8 +62,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.NTIUnderConsiderationModel);
-			Assert.AreEqual(JsonConvert.SerializeObject(expectedModel), JsonConvert.SerializeObject(ntiUnderConsiderationModel));
+			Assert.That(pageModel.NTIUnderConsiderationModel, Is.Not.Null);
+			Assert.That(JsonConvert.SerializeObject(expectedModel), Is.EqualTo(JsonConvert.SerializeObject(ntiUnderConsiderationModel)));
 			
 			mockLogger.Verify(
 				m => m.Log(
@@ -99,8 +99,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.NTIUnderConsiderationModel);
-			Assert.AreEqual(JsonConvert.SerializeObject(expectedModel), JsonConvert.SerializeObject(ntiUnderConsiderationModel));
+			Assert.That(pageModel.NTIUnderConsiderationModel, Is.Not.Null);
+			Assert.That(JsonConvert.SerializeObject(expectedModel), Is.EqualTo(JsonConvert.SerializeObject(ntiUnderConsiderationModel)));
 
 			mockLogger.Verify(
 				m => m.Log(

@@ -56,8 +56,8 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.GetTeam("user.one");
 
-			Assert.AreEqual(expectedDto.OwnerId, result.OwnerId);
-			Assert.AreEqual(expectedDto.TeamMembers, result.TeamMembers);
+			Assert.That(expectedDto.OwnerId, Is.EqualTo(result.OwnerId));
+			Assert.That(expectedDto.TeamMembers, Is.EqualTo(result.TeamMembers));
 		}
 
 		[Test]
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.GetTeam("user.one");
 
-			Assert.IsNull(result);
+			Assert.That(result, Is.Null);
 		}
 
 		[Test]
@@ -106,10 +106,10 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.GetTeamOwners();
 
-			Assert.IsNotNull(result);
-			Assert.AreEqual(2, result.Length);
-			Assert.Contains(expectedData[0], result);
-			Assert.Contains(expectedData[1], result);
+			Assert.That(result, Is.Not.Null);
+			Assert.That(2, Is.EqualTo(result.Length));
+			Assert.That(result, Does.Contain(expectedData[0]));
+			Assert.That(result, Does.Contain(expectedData[1]));
 		}
 
 		[Test]
@@ -132,8 +132,8 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.GetTeamOwners();
 
-			Assert.IsNotNull(result);
-			Assert.AreEqual(0, result.Length);
+			Assert.That(result, Is.Not.Null);
+			Assert.That(0, Is.EqualTo(result.Length));
 		}
 
 		// Todo. Work out how to validate the Put method is working.

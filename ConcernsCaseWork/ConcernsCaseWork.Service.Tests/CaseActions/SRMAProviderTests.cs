@@ -50,12 +50,12 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.GetSRMAsForCase(123).Result;
 
 			// Assert
-			Assert.IsNotNull(response);
-			Assert.AreEqual(srmas.Length, response.Count);
-			Assert.AreEqual(srmas.First().Id, response.First().Id);
-			Assert.AreEqual(srmas.First().Status, response.First().Status);
-			Assert.AreEqual(srmas.First().Reason, response.First().Reason);
-			Assert.AreEqual(srmas.First().Notes, response.First().Notes);
+			Assert.That(response, Is.Not.Null);
+			Assert.That(srmas.Length, Is.EqualTo(response.Count));
+			Assert.That(srmas.First().Id, Is.EqualTo(response.First().Id));
+			Assert.That(srmas.First().Status, Is.EqualTo(response.First().Status));
+			Assert.That(srmas.First().Reason, Is.EqualTo(response.First().Reason));
+			Assert.That(srmas.First().Notes, Is.EqualTo(response.First().Notes));
 		}
 
 		[Test]
@@ -80,10 +80,10 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.GetSRMAById(654).Result;
 
 			// Assert
-			Assert.AreEqual(srmaDto.Id, response.Id);
-			Assert.AreEqual(srmaDto.Status, response.Status);
-			Assert.AreEqual(srmaDto.Reason, response.Reason);
-			Assert.AreEqual(srmaDto.Notes, response.Notes);
+			Assert.That(srmaDto.Id, Is.EqualTo(response.Id));
+			Assert.That(srmaDto.Status, Is.EqualTo(response.Status));
+			Assert.That(srmaDto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(srmaDto.Notes, Is.EqualTo(response.Notes));
 		}
 
 		[Test]
@@ -108,10 +108,10 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SaveSRMA(expectedSRMADto).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.Notes, response.Notes);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.Notes, Is.EqualTo(response.Notes));
 		}
 
 		[Test]
@@ -138,11 +138,11 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetDateAccepted(654, dateAccepted).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.Notes, response.Notes);
-			Assert.AreEqual(expectedSRMADto.DateAccepted, response.DateAccepted);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.Notes, Is.EqualTo(response.Notes));
+			Assert.That(expectedSRMADto.DateAccepted, Is.EqualTo(response.DateAccepted));
 		}
 
 		[Test]
@@ -169,11 +169,11 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetDateClosed(654).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.Notes, response.Notes);
-			Assert.AreEqual(expectedSRMADto.ClosedAt, response.ClosedAt);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.Notes, Is.EqualTo(response.Notes));
+			Assert.That(expectedSRMADto.ClosedAt, Is.EqualTo(response.ClosedAt));
 		}
 
 		[Test]
@@ -200,11 +200,11 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetDateReportSent(654, dateReportSent).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.Notes, response.Notes);
-			Assert.AreEqual(expectedSRMADto.DateReportSentToTrust, response.DateReportSentToTrust);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.Notes, Is.EqualTo(response.Notes));
+			Assert.That(expectedSRMADto.DateReportSentToTrust, Is.EqualTo(response.DateReportSentToTrust));
 		}
 
 		[Test]
@@ -230,10 +230,10 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetNotes(654, notes).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.Notes, response.Notes);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.Notes, Is.EqualTo(response.Notes));
 		}
 
 		[Test]
@@ -259,10 +259,10 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetOfferedDate(654, offeredDate).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.DateOffered, response.DateOffered);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.DateOffered, Is.EqualTo(response.DateOffered));
 		}
 
 		[Test]
@@ -290,11 +290,11 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetVisitDates(654, visitStartDate, visitEndDate).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
-			Assert.AreEqual(expectedSRMADto.DateVisitStart, response.DateVisitStart);
-			Assert.AreEqual(expectedSRMADto.DateVisitEnd, response.DateVisitEnd);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
+			Assert.That(expectedSRMADto.DateVisitStart, Is.EqualTo(response.DateVisitStart));
+			Assert.That(expectedSRMADto.DateVisitEnd, Is.EqualTo(response.DateVisitEnd));
 		}
 
 		[Test]
@@ -319,9 +319,9 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetStatus(654, status).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
 		}
 
 		[Test]
@@ -346,9 +346,9 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.SetReason(654, reason).Result;
 
 			// Assert
-			Assert.AreEqual(expectedSRMADto.Id, response.Id);
-			Assert.AreEqual(expectedSRMADto.Status, response.Status);
-			Assert.AreEqual(expectedSRMADto.Reason, response.Reason);
+			Assert.That(expectedSRMADto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedSRMADto.Status, Is.EqualTo(response.Status));
+			Assert.That(expectedSRMADto.Reason, Is.EqualTo(response.Reason));
 		}
 
 		private Mock<IHttpClientFactory> CreateMockFactory<T>(T content)

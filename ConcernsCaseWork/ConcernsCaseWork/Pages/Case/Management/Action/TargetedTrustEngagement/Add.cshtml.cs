@@ -290,15 +290,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				{
 					Id = TargetedTrustEngagementActivity.NoEngagementActivitiesWereTakenForward,
 					Hint = "If engagement was considered but not taken forward, select which of the following activities were \r\ntriaged. Pick all that apply.\r\n",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.BudgetForecastReturnAccountsReturnDriven, "Engagement with any trusts identified at potential risk from the latest financial returns."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ExecutivePayEngagement, "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.LocalProactiveEngagament,  "Division-led work to target trusts with potential financial concerns."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.BudgetForecastReturnAccountsReturnDriven, "Engagement with any trusts identified at potential risk from the latest financial returns."),
+						new(TargetedTrustEngagementActivityType.ExecutivePayEngagement, "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type."),
+						new(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
+						new(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
+						new(TargetedTrustEngagementActivityType.LocalProactiveEngagament,  "Division-led work to target trusts with potential financial concerns."),
+						new(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
+					]
 				}
 			};
 

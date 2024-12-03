@@ -228,7 +228,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			var pageResponseInstance = pageResponse as RedirectResult;
 
 			// assert
-			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseId}/management"));
 		}
 

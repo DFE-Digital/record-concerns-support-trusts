@@ -43,10 +43,10 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.GetNtisForCase(123).Result;
 
 			// Assert
-			Assert.IsNotNull(response);
-			Assert.AreEqual(ntis.Count, response.Count);
-			Assert.AreEqual(ntis.First().Id, response.First().Id);
-			Assert.AreEqual(ntis.First().Notes, response.First().Notes);
+			Assert.That(response, Is.Not.Null);
+			Assert.That(ntis.Count, Is.EqualTo(response.Count));
+			Assert.That(ntis.First().Id, Is.EqualTo(response.First().Id));
+			Assert.That(ntis.First().Notes, Is.EqualTo(response.First().Notes));
 		}
 
 		[Test]
@@ -70,8 +70,8 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var response = sut.CreateNti(expectedNtiDto).Result;
 
 			// Assert
-			Assert.AreEqual(expectedNtiDto.Id, response.Id);
-			Assert.AreEqual(expectedNtiDto.Notes, response.Notes);
+			Assert.That(expectedNtiDto.Id, Is.EqualTo(response.Id));
+			Assert.That(expectedNtiDto.Notes, Is.EqualTo(response.Notes));
 		}
 
 		private Mock<IHttpClientFactory> CreateMockFactory<T>(T content)
