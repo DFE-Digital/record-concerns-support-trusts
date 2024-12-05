@@ -88,7 +88,6 @@ namespace ConcernsCaseWork.Extensions
 						options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
 						options.ConnectionMultiplexerFactory = () => Task.FromResult(_redisConnectionMultiplexer);
 					});
-
 			}
 			catch (Exception ex)
 			{

@@ -109,6 +109,8 @@ namespace ConcernsCaseWork
 			// AutoMapper
 			services.ConfigureAndAddAutoMapper();
 
+			// Add Health Checks
+			services.AddHealthChecks();
 
 			// Route options
 			services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
@@ -171,6 +173,8 @@ namespace ConcernsCaseWork
 
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
+
+			app.MapHealthChecks("/health").AllowAnonymous();
 
 			// Security headers
 			app.UseSecurityHeaders(
