@@ -9,25 +9,22 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.UserContext;
-using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting; 
+using Microsoft.Extensions.Hosting;
 using Microsoft.FeatureManagement;
-using Microsoft.Identity.Web; 
-using System; 
+using Microsoft.Identity.Web;
+using System;
 using System.Security.Claims;
-using System.Threading; 
+using System.Threading;
 
 namespace ConcernsCaseWork
 {
@@ -46,7 +43,6 @@ namespace ConcernsCaseWork
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AuthorizeFolder("/");
-				options.Conventions.AllowAnonymousToPage("/Health");
 				options.Conventions.AllowAnonymousToPage("/AccessDenied");
 				options.Conventions.AllowAnonymousToPage("/Maintenance");
 				options.Conventions.AllowAnonymousToPage("/Accessibility");
