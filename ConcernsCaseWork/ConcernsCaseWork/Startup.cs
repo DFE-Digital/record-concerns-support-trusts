@@ -99,6 +99,9 @@ namespace ConcernsCaseWork
 				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 			});
 
+			// Add Health Checks
+			services.AddHealthChecks();
+
 			// Redis
 			services.AddRedis(Configuration);
 
@@ -108,9 +111,6 @@ namespace ConcernsCaseWork
 
 			// AutoMapper
 			services.ConfigureAndAddAutoMapper();
-
-			// Add Health Checks
-			services.AddHealthChecks();
 
 			// Route options
 			services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
