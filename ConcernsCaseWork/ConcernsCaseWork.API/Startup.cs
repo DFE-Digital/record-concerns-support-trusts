@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace ConcernsCaseWork.API
 {
-	/// <summary>
-	/// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE. It is used when running API tests
-	/// </summary>
+    /// <summary>
+    /// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE. It is used when running API tests
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -20,12 +20,12 @@ namespace ConcernsCaseWork.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-	        services.AddConcernsApiProject(Configuration);
+            services.AddConcernsApiProject(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-	        app.UseConcernsCaseworkSwagger(provider);
+            app.UseConcernsCaseworkSwagger(provider);
 
             if (env.IsDevelopment())
             {
@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.API
             app.UseMiddleware<ApiKeyMiddleware>();
             app.UseMiddleware<UrlDecoderMiddleware>();
             app.UseMiddleware<CorrelationIdMiddleware>();
-			app.UseMiddleware<UserContextReceiverMiddleware>();
+            app.UseMiddleware<UserContextReceiverMiddleware>();
 
             app.UseHttpsRedirection();
 
@@ -45,6 +45,9 @@ namespace ConcernsCaseWork.API
             app.UseAuthorization();
 
             app.UseConcernsCaseworkEndpoints();
+
+            // Add Health Checks
+            app.UseHealthChecks("/health");
         }
     }
 }
