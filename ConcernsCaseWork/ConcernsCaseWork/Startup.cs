@@ -99,9 +99,6 @@ namespace ConcernsCaseWork
 				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 			});
 
-			// Add Health Checks
-			services.AddHealthChecks();
-
 			// Redis
 			services.AddRedis(Configuration);
 
