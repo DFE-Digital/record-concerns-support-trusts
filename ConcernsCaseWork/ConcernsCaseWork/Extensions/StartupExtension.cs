@@ -89,6 +89,7 @@ namespace ConcernsCaseWork.Extensions
 						options.ConnectionMultiplexerFactory = () => Task.FromResult(_redisConnectionMultiplexer);
 					});
 
+				services.AddHealthChecks().AddRedis(_redisConnectionMultiplexer);
 			}
 			catch (Exception ex)
 			{

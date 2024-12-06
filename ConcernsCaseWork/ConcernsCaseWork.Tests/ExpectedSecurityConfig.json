@@ -1,10 +1,6 @@
 ﻿{
 	"Endpoints": [
 		{
-			"Route": "/Health",
-			"ExpectedSecurity": "AllowAnonymous"
-		},
-		{
 			"Route": "/AccessDenied",
 			"ExpectedSecurity": "AllowAnonymous"
 		},
