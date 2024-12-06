@@ -174,8 +174,6 @@ namespace ConcernsCaseWork
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
 
-			app.MapHealthChecks("/health").AllowAnonymous();
-
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
@@ -220,6 +218,9 @@ namespace ConcernsCaseWork
 			// Re-evaluate this based on performance tests
 			// Found because redis kept timing out because it was delayed too long waiting for a thread to execute
 			ThreadPool.SetMinThreads(400, 400);
+
+			// Add Health Checks
+			app.MapHealthChecks("/health").AllowAnonymous();
 		}
 
 		/// <summary>
