@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
-		
+
 			try
 			{
 				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new Exception("AddRedis::VCAP_SERVICES missing");
@@ -89,6 +89,7 @@ namespace ConcernsCaseWork.Extensions
 						options.ConnectionMultiplexerFactory = () => Task.FromResult(_redisConnectionMultiplexer);
 					});
 
+				services.AddHealthChecks().AddRedis(_redisConnectionMultiplexer);
 			}
 			catch (Exception ex)
 			{
@@ -118,6 +119,7 @@ namespace ConcernsCaseWork.Extensions
 				client.BaseAddress = new Uri(tramsApiEndpoint);
 				client.DefaultRequestHeaders.Add("ApiKey", tramsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
+				client.DefaultRequestHeaders.Add("User-Agent", "RecordConcernsSupportTrusts/1.0");
 			});
 		}
 
@@ -191,7 +193,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
-			
+
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			services.AddHttpContextAccessor();
