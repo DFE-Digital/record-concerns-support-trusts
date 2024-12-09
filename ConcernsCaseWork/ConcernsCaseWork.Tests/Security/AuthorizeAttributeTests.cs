@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.Tests.Security
 		{
 			this.UnauthorizedPages = new Type[]
 			{
-				typeof(HealthModel),
 				typeof(ErrorPageModel),
 			};
 		}
@@ -39,27 +38,6 @@ namespace ConcernsCaseWork.Tests.Security
 					if (authAttributes == null || !authAttributes.Any())
 					{
 						scope.AddPreFormattedFailure($"Could not find [Authorize] attribute and no exemption for the following page type: {page.Name} ({page.FullName})");
-					}
-				}
-			}
-		}
-
-		[Test]
-		public void Open_Pages_Do_Not_Require_Authorization()
-		{
-			Type[] UnauthorizedPages = new[]
-			{
-				typeof(HealthModel),
-			};
-
-			using (var scope = new AssertionScope())
-			{
-				foreach (Type page in this.UnauthorizedPages)
-				{
-					var authAttribute = page.GetCustomAttribute<AuthorizeAttribute>();
-					if (authAttribute != null)
-					{
-						scope.AddPreFormattedFailure($"Expected page to be open and not require authorisation. But found [Authorize] attribute on the following page type: {page.Name} ({page.FullName})");
 					}
 				}
 			}
