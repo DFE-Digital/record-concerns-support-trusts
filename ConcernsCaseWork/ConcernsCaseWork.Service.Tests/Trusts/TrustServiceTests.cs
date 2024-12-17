@@ -4,6 +4,7 @@ using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
@@ -19,7 +20,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 	public class TrustServiceTests
 	{
 		private static readonly Fixture _fixture = new();
-
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public async Task WhenGetTrustsByPagination_ReturnsTrusts()
 		{
@@ -59,10 +66,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object,
 				logger.Object,
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			// act
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), expectedTrusts.Count);
@@ -89,13 +97,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			var trustInfo = new TrustSearchResponseDto()
 			{
-				Trusts = new List<TrustSearchDto>()
-				{
-					new TrustSearchDto()
+				Trusts =
+				[
+					new()
 					{
 						UkPrn = "123"
 					}
-				}
+				]
 			};
 
 			var fakeTrustService = new Mock<IFakeTrustService>();
@@ -105,10 +113,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<IHttpClientFactory>(),
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				fakeTrustService.Object,
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(), 
+				Mock.Of<IUserTokenService>());
 
 			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
 
@@ -167,10 +176,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object,
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				ctcService.Object,
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			var trustSearchParams = new TrustSearch() { GroupName = "Test" };
 
@@ -206,10 +216,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object, 
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
@@ -229,10 +240,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<IHttpClientFactory>(), 
 				Mock.Of<ILogger<TrustService>>(), 
 				Mock.Of<ICorrelationContext>(), 
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
@@ -279,10 +291,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object, 
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
@@ -325,10 +338,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<IHttpClientFactory>(),
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				fakeTrustService.Object,
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			var result = await trustService.GetTrustByUkPrn("123");
 
@@ -377,10 +391,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object,
 				logger.Object,
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
@@ -420,10 +435,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				httpClientFactory.Object, 
 				logger.Object, 
 				Mock.Of<ICorrelationContext>(), 
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				CreateCityTechnologyCollegeService(),
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
@@ -451,10 +467,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				Mock.Of<IHttpClientFactory>(),
 				Mock.Of<ILogger<TrustService>>(),
 				Mock.Of<ICorrelationContext>(),
-				Mock.Of<IClientUserInfoService>(),
+				_clientUserInfoService.Object,
 				CreateFakeTrustService(),
 				fakeTrustService.Object,
-				CreateFeatureManager());
+				CreateFeatureManager(),
+				Mock.Of<IUserTokenService>());
 
 			var result = await trustService.GetTrustByUkPrn("987");
 			

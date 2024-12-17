@@ -9,20 +9,16 @@ using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Services.PageHistory;
-using ConcernsCaseWork.UserContext;
+using ConcernsCaseWork.Services.PageHistory; 
 using DfE.CoreLibs.Security;
 using DfE.CoreLibs.Security.Authorization;
-using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.HttpOverrides; 
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -30,24 +26,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
-using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web; 
 using System;
-using System.Reflection;
-using System.Security.Claims;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork
 {
 	public class Startup(IConfiguration configuration)
 	{
-
+		private string _authenticationScheme = "ApiScheme";
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddRazorPages(options =>
 			{
+				options.Conventions.AuthorizeFolder("/");
+				options.Conventions.AllowAnonymousToPage("/Health");
+				options.Conventions.AllowAnonymousToPage("/AccessDenied");
+				options.Conventions.AllowAnonymousToPage("/Maintenance");
+				options.Conventions.AllowAnonymousToPage("/Accessibility");
+				options.Conventions.AllowAnonymousToPage("/Cookies");
+				options.Conventions.AllowAnonymousToPage("/PrivacyPolicy");
+				options.Conventions.AllowAnonymousToPage("/NotFound");
+				options.Conventions.AllowAnonymousToPage("/Error");
 				options.Conventions.AddPageRoute("/home", "");
 				options.Conventions.AddPageRoute("/notfound", "/error/404");
 				options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
@@ -69,16 +70,8 @@ namespace ConcernsCaseWork
 			// Configuration options
 			services.AddConfigurationOptions(configuration);
 
-			// Azure AD 
-			/*services.AddAuthorization(options =>
-			{
-				options.DefaultPolicy = SetupAuthorizationPolicyBuilder().Build();
-				options.AddPolicy("CanDelete", builder =>
-				{
-					builder.RequireClaim(ClaimTypes.Role, Claims.CaseDeleteRoleClaim);
-				});
-			});*/
-			//services.AddUserTokenService(configuration);
+			// Azure AD   
+			services.AddUserTokenService(configuration);
 			services.AddApplicationAuthorization(configuration);
 			var authenticationBuilder = services.AddAuthentication(options =>
 			{
@@ -97,8 +90,7 @@ namespace ConcernsCaseWork
 					options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // in A2B this was only if string.IsNullOrEmpty(Configuration["CI"]), but why not always?
 					options.AccessDeniedPath = "/access-denied";
 				});
-			services.AddCustomJwtAuthentication(configuration, "ApiSchema", authenticationBuilder);
-
+			services.AddCustomJwtAuthentication(configuration, _authenticationScheme, authenticationBuilder);
 			services.AddAntiforgery(options =>
 			{
 				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -147,6 +139,18 @@ namespace ConcernsCaseWork
 				options.IncludeSubDomains = true;
 				options.MaxAge = TimeSpan.FromDays(365);
 			});
+
+			services.AddLogging(logging =>
+			{
+				logging.AddConsole();
+				logging.AddDebug();
+				logging.SetMinimumLevel(LogLevel.Debug);
+			});
+
+			services.Configure<LoggerFilterOptions>(options =>
+			{
+				options.AddFilter("Microsoft.AspNetCore.Authorization", LogLevel.Debug);
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -175,7 +179,6 @@ namespace ConcernsCaseWork
 			}
 
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
-			app.UseMiddleware<ApiKeyMiddleware>();
 
 			// Security headers
 			app.UseSecurityHeaders(
@@ -193,9 +196,6 @@ namespace ConcernsCaseWork
 			app.UseSession();
 
 
-			app.UseMiddleware<UserContextTranslatorMiddleware>();
-
-
 			app.UseRouting();
 
 			app.UseAuthentication();
@@ -203,6 +203,7 @@ namespace ConcernsCaseWork
 			app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextMiddleware>();
+			app.UseMiddleware<UserContextReceiverMiddleware>();
 			app.UseMiddlewareForFeature<MaintenanceModeMiddleware>(FeatureFlags.IsMaintenanceModeEnabled);
 
 			app.UseConcernsCaseworkEndpoints();
@@ -211,9 +212,10 @@ namespace ConcernsCaseWork
 			{
 				endpoints.MapControllers().RequireAuthorization(new AuthorizeAttribute
 				{
-					AuthenticationSchemes = "ApiSchema"
+					AuthenticationSchemes = _authenticationScheme,
+					Policy = Policy.Default
 				});
-				endpoints.MapRazorPages().RequireAuthorization(Policy.CaseWorker);
+				endpoints.MapRazorPages().RequireAuthorization(Policy.Default);
 			});
 
 			mapper.CompileAndValidate();
@@ -225,25 +227,6 @@ namespace ConcernsCaseWork
 			// Re-evaluate this based on performance tests
 			// Found because redis kept timing out because it was delayed too long waiting for a thread to execute
 			ThreadPool.SetMinThreads(400, 400);
-		}
-
-		/// <summary>
-		/// Builds Authorization policy
-		/// Ensure authenticated user and restrict roles if they are provided in configuration
-		/// </summary>
-		/// <returns>AuthorizationPolicyBuilder</returns>
-		private AuthorizationPolicyBuilder SetupAuthorizationPolicyBuilder()
-		{
-			var policyBuilder = new AuthorizationPolicyBuilder();
-			var allowedRoles = configuration.GetSection("AzureAd")["AllowedRoles"];
-			policyBuilder.RequireAuthenticatedUser();
-			// Allows us to add in role support later.
-			if (!string.IsNullOrWhiteSpace(allowedRoles))
-			{
-				policyBuilder.RequireClaim(ClaimTypes.Role, allowedRoles.Split(','));
-			}
-
-			return policyBuilder;
 		}
 	}
 }

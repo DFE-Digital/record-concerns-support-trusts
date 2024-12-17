@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Json;
@@ -22,7 +23,8 @@ namespace ConcernsCaseWork.Service.Trusts
 		public CityTechnologyCollegeService(IHttpClientFactory clientFactory,
 			ILogger<CityTechnologyCollegeService> logger,
 			ICorrelationContext correlationContext,
-			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+			IClientUserInfoService userInfoService,
+			IUserTokenService userTokenService) : base(clientFactory, logger, correlationContext, userInfoService, userTokenService)
 		{
 
 		}

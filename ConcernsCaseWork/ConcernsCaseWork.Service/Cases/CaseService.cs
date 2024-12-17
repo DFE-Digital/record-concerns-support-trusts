@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -12,7 +13,7 @@ namespace ConcernsCaseWork.Service.Cases
 	{
 		private readonly ILogger<CaseService> _logger;
 
-		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : base(clientFactory, logger, correlationContext, userInfoService, userTokenService)
 		{
 			_logger = logger;
 		}

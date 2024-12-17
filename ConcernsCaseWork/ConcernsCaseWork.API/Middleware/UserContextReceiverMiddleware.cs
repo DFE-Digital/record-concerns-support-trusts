@@ -5,15 +5,8 @@ using System.Text;
 
 namespace ConcernsCaseWork.API.Middleware
 {
-	public class UserContextReceiverMiddleware
+	public class UserContextReceiverMiddleware(RequestDelegate next)
 	{
-		private readonly RequestDelegate _next;
-
-		public UserContextReceiverMiddleware(RequestDelegate next)
-		{
-			_next = next;
-		}
-
 		public async Task InvokeAsync(HttpContext httpContext, IServerUserInfoService userInfoService, ILogger<UserContextReceiverMiddleware> logger)
 		{
 			Guard.Against.Null(userInfoService);
@@ -33,10 +26,10 @@ namespace ConcernsCaseWork.API.Middleware
 				}
 			}
 
-			await _next(httpContext);
+			await next(httpContext);
 		}
 
-		private string HeadersToStrings(HttpRequest httpContextRequest)
+		private static string HeadersToStrings(HttpRequest httpContextRequest)
 		{
 			var sb = new StringBuilder();
 			var headerStrings = httpContextRequest.Headers.Select(x => $"Key:{x.Key}, Value'{x.Value.ToString()}'; ").ToArray();

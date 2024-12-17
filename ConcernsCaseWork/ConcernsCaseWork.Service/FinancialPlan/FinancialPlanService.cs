@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
 using System.Text;
+using DfE.CoreLibs.Security.Authorization;
+using DfE.CoreLibs.Security.Interfaces;
 
 namespace ConcernsCaseWork.Service.FinancialPlan
 {
@@ -12,7 +14,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanService> _logger;
 
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : base(clientFactory, logger, correlationContext, userInfoService, userTokenService)
 		{
 			_logger = logger;
 		}

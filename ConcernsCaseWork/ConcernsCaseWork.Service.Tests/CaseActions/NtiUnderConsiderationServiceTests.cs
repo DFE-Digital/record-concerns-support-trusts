@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -12,6 +13,13 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 {
 	public class NtiUnderConsiderationServiceTests
 	{
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public void GetNtisByCaseId_Returns_ListOfNtiDto()
 		{
@@ -19,25 +27,22 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
 			var ntis = new List<NtiUnderConsiderationDto> {
-			new NtiUnderConsiderationDto
-			{
+			new() {
 				Id = 654,
 				Notes = "Test1"
 			},
-			new NtiUnderConsiderationDto
-			{
+			new() {
 				Id = 667,
 				Notes = "Test2"
 			},
-			new NtiUnderConsiderationDto
-			{
+			new() {
 				Id = 948,
 				Notes = "Test3"
 			}};
 
 			var httpClientFactory = CreateMockFactory(ntis);
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// Act
 			var response = sut.GetNtisForCase(123).Result;
@@ -64,7 +69,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// Act
 			var response = sut.CreateNti(expectedNtiDto).Result;

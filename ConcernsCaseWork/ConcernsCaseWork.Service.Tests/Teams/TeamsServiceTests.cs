@@ -5,6 +5,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -15,21 +16,28 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 {
 	public class TeamsServiceTests
 	{
+		private Fixture _fixture;
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_fixture = new();
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public void Methods_GuardAgainstNullArgs()
 		{
-			var fixture = new AutoFixture.Fixture();
-			fixture.Customize(new AutoMoqCustomization());
-			var assertion = fixture.Create<GuardClauseAssertion>();
+			_fixture.Customize(new AutoMoqCustomization());
+			var assertion = _fixture.Create<GuardClauseAssertion>();
 			assertion.Verify(typeof(TeamsService).GetMethods());
 		}
 
 		[Test]
 		public void Constructors_GuardAgainstNullArgs()
 		{
-			var fixture = new AutoFixture.Fixture();
-			fixture.Customize(new AutoMoqCustomization());
-			var assertion = fixture.Create<GuardClauseAssertion>();
+			_fixture.Customize(new AutoMoqCustomization());
+			var assertion = _fixture.Create<GuardClauseAssertion>();
 			assertion.Verify(typeof(TeamsService).GetConstructors());
 		}
 
@@ -53,7 +61,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.GetTeam("user.one");
 
 			Assert.That(expectedDto.OwnerId, Is.EqualTo(result.OwnerId));
@@ -77,7 +85,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.GetTeam("user.one");
 
 			Assert.That(result, Is.Null);
@@ -103,7 +111,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.GetTeamOwners();
 
 			Assert.That(result, Is.Not.Null);
@@ -129,7 +137,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.GetTeamOwners();
 
 			Assert.That(result, Is.Not.Null);

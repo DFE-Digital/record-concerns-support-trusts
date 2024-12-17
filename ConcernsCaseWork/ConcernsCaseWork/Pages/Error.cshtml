@@ -1,5 +1,7 @@
 ﻿@page "/Error"
+@using Microsoft.AspNetCore.Authorization
 @using NetEscapades.AspNetCore.SecurityHeaders
+@attribute [AllowAnonymous]
 @{
     var nonce = HttpContext.GetNonce();
 
