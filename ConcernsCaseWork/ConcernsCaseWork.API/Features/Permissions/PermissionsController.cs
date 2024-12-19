@@ -1,30 +1,26 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.Permissions
 {
 	[ApiVersion("2.0")]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/permissions/")]
 	[ApiController]
-	public class PermissionsController : Controller
+	public class PermissionsController(
+		ILogger<PermissionsController> logger,
+		IServerUserInfoService userInfoService,
+		IGetCasePermissionsUseCase getCasePermissionsUseCase) : Controller
 	{
-		private readonly IGetCasePermissionsUseCase _getCasePermissionsUseCase;
-		private readonly ILogger<PermissionsController> _logger;
-		private readonly IServerUserInfoService _userInfoService;
-
-		public PermissionsController(
-			ILogger<PermissionsController> logger,
-			IServerUserInfoService userInfoService,
-			IGetCasePermissionsUseCase getCasePermissionsUseCase)
-		{
-			_logger = Guard.Against.Null(logger);
-			_userInfoService = Guard.Against.Null(userInfoService);
-			_getCasePermissionsUseCase = Guard.Against.Null(getCasePermissionsUseCase);
-		}
+		private readonly IGetCasePermissionsUseCase _getCasePermissionsUseCase = Guard.Against.Null(getCasePermissionsUseCase);
+		private readonly ILogger<PermissionsController> _logger = Guard.Against.Null(logger);
+		private readonly IServerUserInfoService _userInfoService = Guard.Against.Null(userInfoService);
 
 		[HttpPost]
 		[MapToApiVersion("2.0")]

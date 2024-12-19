@@ -17,19 +17,12 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	[Collection(ApiTestCollection.ApiTestCollectionName)]
-	public class NtiUnderConsiderationIntegrationTests
+	[Collection(ApiTestCollection._apiTestCollectionName)]
+	public class NtiUnderConsiderationIntegrationTests(ApiTestFixture apiTestFixture)
 	{
-		private readonly Fixture _fixture;
-		private readonly HttpClient _client;
-		private readonly RandomGenerator _randomGenerator;
-
-		public NtiUnderConsiderationIntegrationTests(ApiTestFixture apiTestFixture)
-		{
-			_client = apiTestFixture.Client;
-			_fixture = new();
-			_randomGenerator = new RandomGenerator();
-		}
+		private readonly Fixture _fixture = new();
+		private readonly HttpClient _client = apiTestFixture.Client;
+		private readonly RandomGenerator _randomGenerator = new RandomGenerator();
 
 		[Fact]
 		public async Task When_Post_InvalidRequest_Returns_ValidationErrors()

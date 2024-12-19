@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var createRecordsModel = await recordModelService.GetCreateRecordsModelByCaseUrn(It.IsAny<long>());
 
 			// assert
-			Assert.NotNull(createRecordsModel);
+			Assert.That(createRecordsModel, Is.Not.Null);
 			Assert.That(createRecordsModel.Count, Is.EqualTo(recordsDto.Count));
 
 			for (var index = 0; index < createRecordsModel.Count; ++index)
@@ -165,7 +165,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var actualRecordDto = await recordModelService.PostRecordByCaseUrn(createRecordModel);
 			
 			// assert
-			Assert.NotNull(actualRecordDto);
+			Assert.That(actualRecordDto, Is.Not.Null);
 			Assert.That(actualRecordDto.TypeId, Is.EqualTo(recordDto.TypeId));
 			Assert.That(actualRecordDto.CaseUrn, Is.EqualTo(recordDto.CaseUrn));
 			Assert.That(actualRecordDto.RatingId, Is.EqualTo(recordDto.RatingId));

@@ -3,18 +3,14 @@ using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.TargetedTrustEngagement
 {
-	public class TargetedTrustEngagementService : ConcernsAbstractService, ITargetedTrustEngagementService
+	public class TargetedTrustEngagementService(IHttpClientFactory clientFactory, ILogger<TargetedTrustEngagementService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ITargetedTrustEngagementService
 	{
-		private readonly ILogger<TargetedTrustEngagementService> _logger;
-
-		public TargetedTrustEngagementService(IHttpClientFactory clientFactory, ILogger<TargetedTrustEngagementService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = Guard.Against.Null(logger);
-		}
+		private readonly ILogger<TargetedTrustEngagementService> _logger = Guard.Against.Null(logger);
 
 		public async Task<CreateTargetedTrustEngagementResponse> PostTargetedTrustEngagement(CreateTargetedTrustEngagementRequest createTargetedTrustEngagementRequestDto)
 		{

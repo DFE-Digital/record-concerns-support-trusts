@@ -3,29 +3,23 @@ using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Permissions
 {
 	// TODO: Rename this service to 'PermissionsService'
-	public class CasePermissionsService : ConcernsAbstractService, ICasePermissionsService
+	public class CasePermissionsService(
+		IHttpClientFactory clientFactory,
+		ILogger<CasePermissionsService> logger,
+		ICorrelationContext correlationContext,
+		IClientUserInfoService userInfoService,
+		IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ICasePermissionsService
 	{
-		private readonly ILogger<CasePermissionsService> _logger;
-		private const string _url = @"/v2/case-actions/nti-warning-letter";
-
-		public CasePermissionsService(
-			IHttpClientFactory clientFactory,
-			ILogger<CasePermissionsService> logger,
-			ICorrelationContext correlationContext,
-			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-
 		public async Task<GetCasePermissionsResponse> GetCasePermissions(long caseId)
 		{
-			_logger.LogMethodEntered();
-			_logger.LogInformation($"Client getting permissions for case {caseId}");
+			logger.LogMethodEntered();
+			logger.LogInformation($"Client getting permissions for case {caseId}");
 
 			Guard.Against.NegativeOrZero(caseId);
 
@@ -36,7 +30,7 @@ namespace ConcernsCaseWork.Service.Permissions
 
 			var queryResult = await Post<PermissionQueryRequest, PermissionQueryResponse>($"/{EndpointsVersion}/permissions/", query, true);
 
-			_logger.LogInformation($"Client retrieved permissions for case {caseId}");
+			logger.LogInformation($"Client retrieved permissions for case {caseId}");
 
 			// find the result for the given case and return that
 			return new GetCasePermissionsResponse()

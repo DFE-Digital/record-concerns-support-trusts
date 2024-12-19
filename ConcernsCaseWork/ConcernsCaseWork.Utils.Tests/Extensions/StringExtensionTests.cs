@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		[TestCase("100", 100)]
 		[TestCase("invalid_string", 0)]
 		[TestCase("", 0)]
-		[TestCase(null, 0)]
+		[TestCase(null!, 0)]
 		public void WhenParseToInt_ReturnsExpected(string input, int expected)
 		{
 			// assert

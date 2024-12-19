@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -8,27 +9,20 @@ using System.Text;
 
 namespace ConcernsCaseWork.Service.NtiUnderConsideration
 {
-	public class NtiUnderConsiderationService : ConcernsAbstractService, INtiUnderConsiderationService
+	public class NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService), INtiUnderConsiderationService
 	{
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly ILogger<NtiUnderConsiderationService> _logger;
-		private const string Url = @"/v2/case-actions/nti-under-consideration";
-
-		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_httpClientFactory = httpClientFactory;
-			_logger = logger;
-		}
+		private const string _url = @"/v2/case-actions/nti-under-consideration";
 
 		public async Task<NtiUnderConsiderationDto> CreateNti(NtiUnderConsiderationDto ntiDto)
 		{
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
-
-				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
-					Encoding.UTF8, MediaTypeNames.Application.Json);
+				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}")
+				{
+					Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
+					Encoding.UTF8, MediaTypeNames.Application.Json)
+				};
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -37,7 +31,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create NTI");
+				logger.LogError(ex, $"Error occured while trying to create NTI");
 				throw;
 			}
 		}
@@ -47,7 +41,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -56,18 +50,18 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
+				logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
 				throw;
 			}
 		}
 
 		public async Task<NtiUnderConsiderationDto> GetNTIUnderConsiderationById(long underConsiderationId)
 		{
-			_logger.LogInformation("NTIUnderConsiderationService::GetNTIUnderConsiderationById");
+			logger.LogInformation("NTIUnderConsiderationService::GetNTIUnderConsiderationById");
 
 			// Create a request
 			var request = new HttpRequestMessage(HttpMethod.Get,
-				$"{Url}/{underConsiderationId}");
+				$"{_url}/{underConsiderationId}");
 
 			// Create http client
 			var client = CreateHttpClient();
@@ -98,7 +92,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
 					Encoding.UTF8, MediaTypeNames.Application.Json);
@@ -112,7 +106,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to patch NTI");
+				logger.LogError(ex, $"Error occured while trying to patch NTI");
 				throw;
 			}
 		}
@@ -126,11 +120,11 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		{
 			try
 			{
-				_logger.LogInformation("NTIUnderConsiderationService::DeleteNti");
+				logger.LogInformation("NTIUnderConsiderationService::DeleteNti");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Delete,
-					$"{Url}/{ntiId}");
+					$"{_url}/{ntiId}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -143,7 +137,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to delete NTI");
+				logger.LogError(ex, $"Error occured while trying to delete NTI");
 				throw;
 			}
 		}

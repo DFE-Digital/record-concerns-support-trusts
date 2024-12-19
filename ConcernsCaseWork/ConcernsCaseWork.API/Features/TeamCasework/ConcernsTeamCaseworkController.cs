@@ -1,6 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.TeamCasework;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -9,28 +11,20 @@ namespace ConcernsCaseWork.API.Features.TeamCasework
 {
 	[ApiVersion("2.0")]
 	[ApiController]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-team-casework")]
 
-	public class ConcernsTeamCaseworkController : ControllerBase
+	public class ConcernsTeamCaseworkController(ILogger<ConcernsTeamCaseworkController> logger,
+		IGetConcernsCaseworkTeam getTeamCommand,
+		IGetConcernsCaseworkTeamOwners getTeamOwnersCommand,
+		IUpdateConcernsCaseworkTeam updateCommand,
+		IGetOwnersOfOpenCases getOwnersOfOpenCases) : ControllerBase
 	{
-		private readonly ILogger<ConcernsTeamCaseworkController> _logger;
-		private readonly IGetConcernsCaseworkTeam _getCommand;
-		private readonly IGetConcernsCaseworkTeamOwners _getTeamOwnersCommand;
-		private readonly IUpdateConcernsCaseworkTeam _updateCommand;
-		private readonly IGetOwnersOfOpenCases _getOwnersOfOpenCases;
-
-		public ConcernsTeamCaseworkController(ILogger<ConcernsTeamCaseworkController> logger,
-			IGetConcernsCaseworkTeam getTeamCommand,
-			IGetConcernsCaseworkTeamOwners getTeamOwnersCommand,
-			IUpdateConcernsCaseworkTeam updateCommand,
-			IGetOwnersOfOpenCases getOwnersOfOpenCases)
-		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_getCommand = getTeamCommand ?? throw new ArgumentNullException(nameof(getTeamCommand));
-			_getTeamOwnersCommand = getTeamOwnersCommand ?? throw new ArgumentNullException(nameof(getTeamOwnersCommand));
-			_updateCommand = updateCommand ?? throw new ArgumentNullException(nameof(updateCommand));
-			_getOwnersOfOpenCases = Guard.Against.Null(getOwnersOfOpenCases);
-		}
+		private readonly ILogger<ConcernsTeamCaseworkController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		private readonly IGetConcernsCaseworkTeam _getCommand = getTeamCommand ?? throw new ArgumentNullException(nameof(getTeamCommand));
+		private readonly IGetConcernsCaseworkTeamOwners _getTeamOwnersCommand = getTeamOwnersCommand ?? throw new ArgumentNullException(nameof(getTeamOwnersCommand));
+		private readonly IUpdateConcernsCaseworkTeam _updateCommand = updateCommand ?? throw new ArgumentNullException(nameof(updateCommand));
+		private readonly IGetOwnersOfOpenCases _getOwnersOfOpenCases = Guard.Against.Null(getOwnersOfOpenCases);
 
 		[HttpGet("owners/{ownerId}")]
 		[MapToApiVersion("2.0")]
