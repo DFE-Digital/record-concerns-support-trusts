@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Microsoft.Identity.Web;
 using System;
@@ -163,7 +164,7 @@ namespace ConcernsCaseWork
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>(); 
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             // Security headers
             app.UseSecurityHeaders(
@@ -194,7 +195,6 @@ namespace ConcernsCaseWork
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapRazorPages();
 				endpoints.MapControllers().RequireAuthorization(new AuthorizeAttribute
 				{
 					AuthenticationSchemes = _authenticationScheme,

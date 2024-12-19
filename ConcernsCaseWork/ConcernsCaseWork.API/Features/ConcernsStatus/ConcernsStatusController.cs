@@ -1,15 +1,12 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Features.Paging;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.ConcernsStatus
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-statuses")]
 	public class ConcernsStatusController(
 		ILogger<ConcernsStatusController> logger,
