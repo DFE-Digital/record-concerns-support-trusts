@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 namespace ConcernsCaseWork.API.Features.NoticeToImprove
 {
 	[ApiVersion("2.0")]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/notice-to-improve")]
 	[ApiController]
 	public class NoticeToImproveController(ILogger<NoticeToImproveController> logger,

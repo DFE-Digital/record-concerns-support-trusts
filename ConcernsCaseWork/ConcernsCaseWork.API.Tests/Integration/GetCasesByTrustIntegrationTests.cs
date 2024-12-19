@@ -18,7 +18,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	[Collection(ApiTestCollection._apiTestCollectionName)]
 	public class GetCasesByTrustIntegrationTests
 	{
 		private readonly Fixture _fixture;

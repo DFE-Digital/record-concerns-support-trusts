@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConcernsCaseWork.API.Features.NTIUnderConsideration
 {
 	[ApiVersion("2.0")]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/nti-under-consideration")]
 	[ApiController]
 	public class NTIUnderConsiderationController(ILogger<NTIUnderConsiderationController> logger,

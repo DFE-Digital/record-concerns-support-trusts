@@ -17,7 +17,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	[Collection(ApiTestCollection._apiTestCollectionName)]
 	public class NtiWarningLetterIntegrationTests
 	{
 		private readonly Fixture _fixture;

@@ -1,5 +1,7 @@
-﻿using ConcernsCaseWork.API.Contracts.Trusts;
+﻿using ConcernsCaseWork.API.Contracts.PolicyType;
+using ConcernsCaseWork.API.Contracts.Trusts;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -7,6 +9,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 {
 	[ApiVersion("2.0")]
 	[ApiController]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/citytechnologycolleges")]
 	public class CityTechnologyCollegeController(IMediator mediator) : ControllerBase
 	{
