@@ -1,5 +1,8 @@
-﻿using DfE.CoreLibs.Testing.Authorization;
-using Microsoft.AspNetCore.Routing; 
+﻿using DfE.CoreLibs.Testing.Authorization.Helpers;
+using DfE.CoreLibs.Testing.Authorization;
+using DfE.CoreLibs.Testing.Mocks.WebApplicationFactory;
+using Microsoft.AspNetCore.Routing;
+using NUnit.Framework;
 using System;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -44,8 +47,8 @@ namespace ConcernsCaseWork.Tests.Security
 
 			var endpoints = endpointDataSource.Endpoints
 			   .OfType<RouteEndpoint>()
-			   .DistinctBy(x=> x.DisplayName)
-			   .Where(x => !x.RoutePattern.RawText.Contains("MicrosoftIdentity") && 
+			   .DistinctBy(x => x.DisplayName)
+			   .Where(x => !x.RoutePattern.RawText.Contains("MicrosoftIdentity") &&
 						   !x.DisplayName.Contains("ConcernsCaseWork.API.Features") &&
 						   !x.RoutePattern.RawText.Equals("/") &&
 						   !x.Metadata.Any(m => m is RouteNameMetadata && ((RouteNameMetadata)m).RouteName == "default"));
