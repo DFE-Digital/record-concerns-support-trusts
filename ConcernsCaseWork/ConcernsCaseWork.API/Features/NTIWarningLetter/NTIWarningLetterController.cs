@@ -3,7 +3,6 @@ using ConcernsCaseWork.API.Contracts.NtiWarningLetter;
 using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -11,7 +10,6 @@ using System.Runtime.CompilerServices;
 namespace ConcernsCaseWork.API.Features.NTIWarningLetter
 {
 	[ApiVersion("2.0")]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
 	[ApiController]
 	public class NTIWarningLetterController(ILogger<NTIWarningLetterController> logger,

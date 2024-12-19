@@ -1,8 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Common;
-using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.TeamCasework;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
@@ -11,7 +9,6 @@ namespace ConcernsCaseWork.API.Features.TeamCasework
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-team-casework")]
 
 	public class ConcernsTeamCaseworkController(ILogger<ConcernsTeamCaseworkController> logger,
