@@ -1,8 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.PolicyType;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -10,7 +8,6 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-cases/{concernsCaseUrn:int}/decisions/{decisionId:int}/outcome")]
 	public class DecisionController(IMediator mediator) : ControllerBase
 	{

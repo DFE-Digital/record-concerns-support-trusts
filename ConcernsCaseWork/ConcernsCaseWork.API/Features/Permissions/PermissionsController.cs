@@ -1,16 +1,13 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Features.Permissions
 {
 	[ApiVersion("2.0")]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/permissions/")]
 	[ApiController]
 	public class PermissionsController(

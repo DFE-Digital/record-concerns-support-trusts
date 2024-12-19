@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using DfE.CoreLibs.Security.Interfaces;
 using Newtonsoft.Json;

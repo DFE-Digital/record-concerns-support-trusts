@@ -99,13 +99,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			var trustInfo = new TrustSearchResponseDto()
 			{
-				Trusts = new List<TrustSearchDto>()
-				{
-					new TrustSearchDto()
+				Trusts =
+				[
+					new()
 					{
 						UkPrn = "123"
 					}
-				}
+				]
 			};
 
 			var fakeTrustService = new Mock<IFakeTrustService>();

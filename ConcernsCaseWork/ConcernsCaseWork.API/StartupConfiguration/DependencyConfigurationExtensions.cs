@@ -94,7 +94,6 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
-
 			services.AddScoped<IUseCaseAsync<CreateTrustFinancialForecastRequest, int>, CreateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>, UpdateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>, GetTrustFinancialForecastById>();
