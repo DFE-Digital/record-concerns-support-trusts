@@ -39,7 +39,6 @@ namespace ConcernsCaseWork.API
             }
 
             app.UseMiddleware<ExceptionHandlerMiddleware>(); 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseMiddleware<UrlDecoderMiddleware>();
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<UserContextReceiverMiddleware>();

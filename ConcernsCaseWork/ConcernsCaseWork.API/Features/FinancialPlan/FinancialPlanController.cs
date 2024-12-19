@@ -10,6 +10,7 @@ using System.Net;
 namespace ConcernsCaseWork.API.Features.FinancialPlan
 {
 	[ApiVersion("2.0")]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/financial-plan")]
 	[ApiController]
 	public class FinancialPlanController(
