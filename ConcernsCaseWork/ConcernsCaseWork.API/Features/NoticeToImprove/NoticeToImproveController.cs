@@ -3,7 +3,6 @@ using ConcernsCaseWork.API.Contracts.NoticeToImprove;
 using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -11,7 +10,6 @@ using System.Runtime.CompilerServices;
 namespace ConcernsCaseWork.API.Features.NoticeToImprove
 {
 	[ApiVersion("2.0")]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/notice-to-improve")]
 	[ApiController]
 	public class NoticeToImproveController(ILogger<NoticeToImproveController> logger,
@@ -28,7 +26,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 	{
 		[HttpPost]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> Create(CreateNoticeToImproveRequest request, CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> Create(CreateNoticeToImproveRequest request, CancellationToken cancellationToken = default)
 		{
 			var createdNoticeToImprove = createNoticeToImproveUseCase.Execute(request);
 			var response = new ApiSingleResponseV2<NoticeToImproveResponse>(createdNoticeToImprove);
@@ -39,7 +37,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("{noticeToImproveId}")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> GetNoticeToImproveById(long noticeToImproveId, CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> GetNoticeToImproveById(long noticeToImproveId, CancellationToken cancellationToken = default)
 		{
 			var noticeToImprove = getNoticeToImproveByIdUseCase.Execute(noticeToImproveId);
 			if (noticeToImprove == null)
@@ -51,7 +49,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{noticeToImproveId}")]
 		[MapToApiVersion("2.0")]
-		public async Task<IActionResult> Delete(long noticeToImproveId, CancellationToken cancellationToken = default)
+		public IActionResult Delete(long noticeToImproveId, CancellationToken cancellationToken = default)
 		{
 			LogInfo($"Attempting to delete Notice To Improve matching Id {noticeToImproveId}");
 			if (!ValidateNoticeToImproveId(noticeToImproveId, nameof(Delete)))
@@ -73,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("case/{caseUrn}")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveResponse>>>> GetNoticesToImproveByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<List<NoticeToImproveResponse>>> GetNoticesToImproveByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
 		{
 			var noticesToImprove = getNoticeToImproveByCaseUrnUseCase.Execute(caseUrn);
 			var response = new ApiSingleResponseV2<List<NoticeToImproveResponse>>(noticesToImprove);
@@ -83,7 +81,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 
 		[HttpPatch]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>>> Patch(PatchNoticeToImproveRequest request, CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<NoticeToImproveResponse>> Patch(PatchNoticeToImproveRequest request, CancellationToken cancellationToken = default)
 		{
 			var createdNoticeToImprove = patchNoticeToImproveUseCase.Execute(request);
 			var response = new ApiSingleResponseV2<NoticeToImproveResponse>(createdNoticeToImprove);
@@ -94,7 +92,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("all-statuses")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<List<NoticeToImproveStatus>>> GetAllStatuses(CancellationToken cancellationToken = default)
 		{
 			var statuses = getAllStatuses.Execute(null);
 			var response = new ApiSingleResponseV2<List<NoticeToImproveStatus>>(statuses);
@@ -105,7 +103,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("all-reasons")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveReason>>>> GetAllReasons(CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<List<NoticeToImproveReason>>> GetAllReasons(CancellationToken cancellationToken = default)
 		{
 			var reasons = getAllReasons.Execute(null);
 			var response = new ApiSingleResponseV2<List<NoticeToImproveReason>>(reasons);
@@ -116,7 +114,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("all-conditions")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveCondition>>>> GetAllConditions(CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<List<NoticeToImproveCondition>>> GetAllConditions(CancellationToken cancellationToken = default)
 		{
 			var conditions = getAllConditions.Execute(null);
 			var response = new ApiSingleResponseV2<List<NoticeToImproveCondition>>(conditions);
@@ -127,7 +125,7 @@ namespace ConcernsCaseWork.API.Features.NoticeToImprove
 		[HttpGet]
 		[Route("all-condition-types")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<List<NoticeToImproveConditionType>>>> GetAllConditionTypes(CancellationToken cancellationToken = default)
+		public ActionResult<ApiSingleResponseV2<List<NoticeToImproveConditionType>>> GetAllConditionTypes(CancellationToken cancellationToken = default)
 		{
 			var conditionTypes = getAllConditionTypes.Execute(null);
 			var response = new ApiSingleResponseV2<List<NoticeToImproveConditionType>>(conditionTypes);
