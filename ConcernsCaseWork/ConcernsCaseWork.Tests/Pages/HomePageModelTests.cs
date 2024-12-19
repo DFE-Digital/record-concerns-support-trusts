@@ -131,7 +131,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			await sut.OnGetAsync();
 
 			// assert
-			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(sut.ActiveCases);
+			Assert.That(sut.ActiveCases, Is.AssignableFrom<List<ActiveCaseSummaryModel>>());
 			Assert.That(sut.ActiveCases, Is.Empty);
 
 			// Not sure that these verifications should take place. it leads to a brittle test.

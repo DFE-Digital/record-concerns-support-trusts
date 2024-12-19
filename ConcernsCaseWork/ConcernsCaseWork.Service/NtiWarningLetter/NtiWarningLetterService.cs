@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -8,27 +9,20 @@ using System.Text;
 
 namespace ConcernsCaseWork.Service.NtiWarningLetter
 {
-	public class NtiWarningLetterService : ConcernsAbstractService, INtiWarningLetterService
+	public class NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService), INtiWarningLetterService
 	{
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly ILogger<NtiWarningLetterService> _logger;
 		private const string _url = @"/v2/case-actions/nti-warning-letter";
-
-		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_httpClientFactory = httpClientFactory;
-			_logger = logger;
-		}
 
 		public async Task<NtiWarningLetterDto> CreateNtiWarningLetterAsync(NtiWarningLetterDto newNtiWarningLetter)
 		{
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
-
-				request.Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
-					Encoding.UTF8, MediaTypeNames.Application.Json);
+				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}")
+				{
+					Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
+					Encoding.UTF8, MediaTypeNames.Application.Json)
+				};
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -37,7 +31,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create NTI Warning Letter");
+				logger.LogError(ex, $"Error occured while trying to create NTI Warning Letter");
 				throw;
 			}
 		}
@@ -85,7 +79,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
+				logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
 				throw;
 			}
 		}
@@ -95,10 +89,11 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
-
-				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),
-					Encoding.UTF8, MediaTypeNames.Application.Json);
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}")
+				{
+					Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),
+					Encoding.UTF8, MediaTypeNames.Application.Json)
+				};
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -109,7 +104,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to patch NTI");
+				logger.LogError(ex, $"Error occured while trying to patch NTI");
 				throw;
 			}
 		}
@@ -128,7 +123,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to delete NTI");
+				logger.LogError(ex, $"Error occured while trying to delete NTI");
 				throw;
 			}
 		}

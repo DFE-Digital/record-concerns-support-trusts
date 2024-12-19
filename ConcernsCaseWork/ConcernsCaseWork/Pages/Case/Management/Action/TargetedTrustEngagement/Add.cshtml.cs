@@ -22,11 +22,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : AbstractPageModel
+	public class AddPageModel(
+		ITargetedTrustEngagementService targetedTrustEngagementService,
+		ILogger<AddPageModel> logger) : AbstractPageModel
 	{
-		private readonly ITargetedTrustEngagementService _targetedTrustEngagementService;
-		private readonly ILogger<AddPageModel> _logger;
-
 		[BindProperty(SupportsGet = true, Name = "urn")]
 		public int CaseUrn { get; set; }
 
@@ -48,17 +47,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 
 		public string SaveAndContinueButtonText { get; set; }
 
-		public AddPageModel(
-			ITargetedTrustEngagementService targetedTrustEngagementService,
-			ILogger<AddPageModel> logger)
-		{
-			_targetedTrustEngagementService = targetedTrustEngagementService;
-			_logger = logger;
-		}
-
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogMethodEntered();
+			logger.LogMethodEntered();
 
 			try
 			{
@@ -70,7 +61,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 			}
 			catch (Exception ex)
 			{
-				_logger.LogErrorMsg(ex);
+				logger.LogErrorMsg(ex);
 
 				SetErrorMessage(ErrorOnGetPage);
 			}
@@ -80,7 +71,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			_logger.LogMethodEntered();
+			logger.LogMethodEntered();
 
 			try
 			{
@@ -99,18 +90,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				if (TargetedTrustEngagementId.HasValue)
 				{
 					var updateTargetedTrustEngagementRequest = TargetedTrustEngagementMapping.ToTargetedTrustEngagementRequest(TargetedTrustEngagement);
-					await _targetedTrustEngagementService.PutTargetedTrustEngagement(CaseUrn, (int)TargetedTrustEngagementId, updateTargetedTrustEngagementRequest);
+					await targetedTrustEngagementService.PutTargetedTrustEngagement(CaseUrn, (int)TargetedTrustEngagementId, updateTargetedTrustEngagementRequest);
 
 					return Redirect($"/case/{CaseUrn}/management/action/targetedtrustengagement/{TargetedTrustEngagementId}");
 				}
 
-				await _targetedTrustEngagementService.PostTargetedTrustEngagement(TargetedTrustEngagement);
+				await targetedTrustEngagementService.PostTargetedTrustEngagement(TargetedTrustEngagement);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogErrorMsg(ex);
+				logger.LogErrorMsg(ex);
 
 				SetErrorMessage(ErrorOnPostPage);
 			}
@@ -166,13 +157,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 
 		private async Task<CreateTargetedTrustEngagementRequest> CreateTargetedTrustEngagementModel()
 		{
-			var result = new CreateTargetedTrustEngagementRequest();
-
-			result.CaseUrn = (int)CaseUrn;
+			var result = new CreateTargetedTrustEngagementRequest
+			{
+				CaseUrn = (int)CaseUrn
+			};
 
 			if (TargetedTrustEngagementId.HasValue)
 			{
-				var apiEngagement = await _targetedTrustEngagementService.GetTargetedTrustEngagement(CaseUrn, (int)TargetedTrustEngagementId);
+				var apiEngagement = await targetedTrustEngagementService.GetTargetedTrustEngagement(CaseUrn, (int)TargetedTrustEngagementId);
 
 				result = TargetedTrustEngagementMapping.ToEditTTEModel(apiEngagement);
 			}
@@ -199,7 +191,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				subIDs.AddRange(types);
 			}
 
-			return subIDs.ToArray();
+			return [.. subIDs];
 		}
 
 		private static OptionalDateTimeUiComponent BuildEngagementStartDateComponent(OptionalDateModel? date = null)
@@ -227,78 +219,78 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 		{
 			var activities = new List<EngagementActivityQuestionModel>()
 			{
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.BudgetForecastReturnAccountsReturnDriven,
 					Hint = "Engagement with any trusts identified at potential risk from the latest financial returns.",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Category1),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Category2),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Category3),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Category4)
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.Category1),
+						new(TargetedTrustEngagementActivityType.Category2),
+						new(TargetedTrustEngagementActivityType.Category3),
+						new(TargetedTrustEngagementActivityType.Category4)
+					]
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.ExecutivePayEngagement,
 					Hint = "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type.",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.CEOs),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Leadership),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.CEOsAndLeadership)
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.CEOs),
+						new(TargetedTrustEngagementActivityType.Leadership),
+						new(TargetedTrustEngagementActivityType.CEOsAndLeadership)
+					]
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.FinancialReturnsAssurance,
 					Hint = "Following up with trusts on issues flagged in their latest financial statements.",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.AnnualSummaryInternalScrutinyReports),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.AuditIssues),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ManagementLetterIssues),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.RegularityIssues)
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.AnnualSummaryInternalScrutinyReports),
+						new(TargetedTrustEngagementActivityType.AuditIssues),
+						new(TargetedTrustEngagementActivityType.ManagementLetterIssues),
+						new(TargetedTrustEngagementActivityType.RegularityIssues)
+					]
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.ReservesOversightAndAssuranceProject,
 					Hint = "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds.",
 					HintLinkTitle = "SFSO Knowledge: ROAP",
 					HintLink = "https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Reserves--Oversight-%26-Assurance-Project-(ROAP).aspx?csf=1&web=1&e=yomR4Z&cid=59072d93-d6cb-4cf8-bd89-c81e2e3891e5#process",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority1),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority2),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority3),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority4)
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.Priority1),
+						new(TargetedTrustEngagementActivityType.Priority2),
+						new(TargetedTrustEngagementActivityType.Priority3),
+						new(TargetedTrustEngagementActivityType.Priority4)
+					]
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.LocalProactiveEngagement,
 					Hint = "Division-led work to target trusts with potential financial concerns."
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.OtherNationalProcesses,
 					Hint = "Other activities to target trusts with potential financial concerns (e.g. declining pupil numbers)."
 				},
-				new EngagementActivityQuestionModel()
+				new()
 				{
 					Id = TargetedTrustEngagementActivity.NoEngagementActivitiesWereTakenForward,
 					Hint = "If engagement was considered but not taken forward, select which of the following activities were \r\ntriaged. Pick all that apply.\r\n",
-					SubOptions = new List<SubEngagementActivityModel>()
-					{
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.BudgetForecastReturnAccountsReturnDriven, "Engagement with any trusts identified at potential risk from the latest financial returns."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ExecutivePayEngagement, "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.LocalProactiveEngagement,  "Division-led work to target trusts with potential financial concerns."),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
-					}
+					SubOptions =
+					[
+						new(TargetedTrustEngagementActivityType.BudgetForecastReturnAccountsReturnDriven, "Engagement with any trusts identified at potential risk from the latest financial returns."),
+						new(TargetedTrustEngagementActivityType.ExecutivePayEngagement, "Contacting trusts that have flagged for high pay when compared with trusts of similar size and type."),
+						new(TargetedTrustEngagementActivityType.FinancialReturnsAssurance, "Following up with trusts on issues flagged in their latest financial statements."),
+						new(TargetedTrustEngagementActivityType.ReservesOversightAssuranceProject,  "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds."),
+						new(TargetedTrustEngagementActivityType.LocalProactiveEngagement,  "Division-led work to target trusts with potential financial concerns."),
+						new(TargetedTrustEngagementActivityType.OtherNationalProcesses,  "Other national processes to target trusts with potential financial concerns (e.g. declining pupil \r\nnumbers)."),
+					]
 				}
 			};
 
@@ -307,12 +299,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 
 		private static RadioButtonsUiComponent BuildEngagementActivitiesComponent()
 		{
-			var result = new RadioButtonsUiComponent("case-tte-activities", nameof(EngagementActivitiesComponent), "");
-
-			result.SubItemDisplayName = "Engagement Activity Type";
-			result.SubOptionsAlwaysShown = true;
-			result.Required = true;
-			result.ErrorTextForRequiredField = "Select Engagement Activity";
+			var result = new RadioButtonsUiComponent("case-tte-activities", nameof(EngagementActivitiesComponent), "")
+			{
+				SubItemDisplayName = "Engagement Activity Type",
+				SubOptionsAlwaysShown = true,
+				Required = true,
+				ErrorTextForRequiredField = "Select Engagement Activity"
+			};
 
 			var activities = BuildEngagementActivitiesList();
 
@@ -330,9 +323,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				{
 					radioItem.SubCheckboxItems = value.SubOptions.Select(s =>
 					{
-						var subRadioItem = new SubCheckboxItem((int)s.Id, s.Id.Description(), s.Id.Description());
-						subRadioItem.Text = s.Id.Description();
-						subRadioItem.HintText = s.Hint;
+						var subRadioItem = new SubCheckboxItem((int)s.Id, s.Id.Description(), s.Id.Description())
+						{
+							Text = s.Id.Description(),
+							HintText = s.Hint
+						};
 
 						return subRadioItem;
 					}).ToList();
@@ -341,9 +336,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				{
 					radioItem.SubRadioItems = value.SubOptions.Select(s =>
 					{
-						var subRadioItem = new SubRadioItem(s.Id.Description(), (int)s.Id);
-
-						subRadioItem.TestId = s.Id.Description();
+						var subRadioItem = new SubRadioItem(s.Id.Description(), (int)s.Id)
+						{
+							TestId = s.Id.Description()
+						};
 
 						return subRadioItem;
 					}).ToList();

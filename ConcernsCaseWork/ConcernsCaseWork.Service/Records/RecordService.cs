@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -8,20 +9,13 @@ using System.Text;
 
 namespace ConcernsCaseWork.Service.Records
 {
-	public sealed class RecordService : ConcernsAbstractService, IRecordService
+	public sealed class RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), IRecordService
 	{
-		private readonly ILogger<RecordService> _logger;
-		
-		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-		
 		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(long caseUrn)
 		{
 			try
 			{
-				_logger.LogInformation("RecordService::GetRecordsByCaseUrn");
+				logger.LogInformation("RecordService::GetRecordsByCaseUrn");
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
@@ -52,7 +46,7 @@ namespace ConcernsCaseWork.Service.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("RecordService::GetRecordsByCaseUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("RecordService::GetRecordsByCaseUrn::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -62,7 +56,7 @@ namespace ConcernsCaseWork.Service.Records
 		{
 			try
 			{
-				_logger.LogInformation("RecordService::PostRecordByCaseUrn");
+				logger.LogInformation("RecordService::PostRecordByCaseUrn");
 				
 				// Create a request
 				var request = new StringContent(
@@ -96,7 +90,7 @@ namespace ConcernsCaseWork.Service.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("RecordService::PostRecordByCaseUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("RecordService::PostRecordByCaseUrn::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -106,7 +100,7 @@ namespace ConcernsCaseWork.Service.Records
 		{
 			try
 			{
-				_logger.LogInformation("RecordService::PatchRecordById");
+				logger.LogInformation("RecordService::PatchRecordById");
 				
 				// Create a request
 				var request = new StringContent(
@@ -140,7 +134,7 @@ namespace ConcernsCaseWork.Service.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("RecordService::PatchRecordById::Exception message::{Message}", ex.Message);
+				logger.LogError("RecordService::PatchRecordById::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -150,7 +144,7 @@ namespace ConcernsCaseWork.Service.Records
 		{
 			try
 			{
-				_logger.LogInformation("RecordService::DeleteRecordById {id}", recordDto.Id);
+				logger.LogInformation("RecordService::DeleteRecordById {id}", recordDto.Id);
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -173,7 +167,7 @@ namespace ConcernsCaseWork.Service.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("RecordService::DeleteRecordById::Exception message::{Message}", ex.Message);
+				logger.LogError("RecordService::DeleteRecordById::Exception message::{Message}", ex.Message);
 
 				throw;
 			}

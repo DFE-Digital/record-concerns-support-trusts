@@ -1,6 +1,4 @@
 using AutoFixture;
-using Azure;
-using Azure.Core;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
@@ -22,29 +20,20 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration;
 
-[Collection(ApiTestCollection.ApiTestCollectionName)]
-public class ConcernsCaseIntegrationTests : IDisposable
+[Collection(ApiTestCollection._apiTestCollectionName)]
+public class ConcernsCaseIntegrationTests(ApiTestFixture fixture) : IDisposable
 {
-	private readonly Fixture _autoFixture;
-	private readonly HttpClient _client;
-	private readonly RandomGenerator _randomGenerator;
-	private readonly ApiTestFixture _testFixture;
-
-	public ConcernsCaseIntegrationTests(ApiTestFixture fixture)
-	{
-		_autoFixture = new Fixture();
-		_randomGenerator = new RandomGenerator();
-		_testFixture = fixture;
-		_client = fixture.Client;
-	}
+	private readonly Fixture _autoFixture = new();
+	private readonly HttpClient _client = fixture.Client;
+	private readonly RandomGenerator _randomGenerator = new RandomGenerator();
 
 	private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new();
 
 	public void Dispose()
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		using ConcernsDbContext context = fixture.GetContext();
 
-		if (CasesToBeDisposedAtEndOfTests.Any())
+		if (CasesToBeDisposedAtEndOfTests.Count != 0)
 		{
 			context.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
 			context.SaveChanges();
@@ -111,13 +100,15 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	[Fact]
 	public async Task CanCreateNewConcernCase_WithMinimumValuesSet()
 	{
-		ConcernCaseRequest createRequest = new ConcernCaseRequest();
-		createRequest.CreatedBy = _randomGenerator.NextString(3, 10);
-		createRequest.TrustUkprn = DatabaseModelBuilder.CreateUkPrn();
-		createRequest.StatusId = 1;
-		createRequest.RatingId = 2;
-		createRequest.Division = Division.SFSO;
-		createRequest.Territory = Territory.Midlands_And_West__SouthWest;
+		ConcernCaseRequest createRequest = new()
+		{
+			CreatedBy = _randomGenerator.NextString(3, 10),
+			TrustUkprn = DatabaseModelBuilder.CreateUkPrn(),
+			StatusId = 1,
+			RatingId = 2,
+			Division = Division.SFSO,
+			Territory = Territory.Midlands_And_West__SouthWest
+		};
 
 		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
@@ -130,7 +121,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		ApiSingleResponseV2<ConcernsCaseResponse> result = await createResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-		await using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = fixture.GetContext();
 
 		ConcernsCase createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
 
@@ -213,7 +204,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 	[Fact]
 	public async Task CanGetConcernCaseByUrn()
 	{
-		await using ConcernsDbContext context = _testFixture.GetContext();
+		await using ConcernsDbContext context = fixture.GetContext();
 
 		SetupConcernsCaseTestData("mockUkprn");
 		ConcernsCase concernsCase = context.ConcernsCase.First();
@@ -692,7 +683,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 	private void AddConcernsCaseToDatabase(ConcernsCase concernsCase)
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		using ConcernsDbContext context = fixture.GetContext();
 
 		try
 		{
@@ -742,7 +733,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 	protected void CreateConcern(int Id)
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		using ConcernsDbContext context = fixture.GetContext();
 		var cr = DatabaseModelBuilder.BuildConcernsRecord();
 		cr.CaseId = Id;
 
@@ -752,7 +743,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 	protected void CreateAllCaseActionCase(int Id)
 	{
-		using ConcernsDbContext context = _testFixture.GetContext();
+		using ConcernsDbContext context = fixture.GetContext();
 
 		var cd = DatabaseModelBuilder.BuildDecision(Id);
 
