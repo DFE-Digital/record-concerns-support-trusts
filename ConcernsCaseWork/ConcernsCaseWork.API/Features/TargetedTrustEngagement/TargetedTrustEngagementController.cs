@@ -10,7 +10,6 @@ namespace ConcernsCaseWork.API.Features.TargetedTrustEngagement
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-cases/{concernsCaseUrn:int}/targetedtrustengagement/")]
 	public class TargetedTrustEngagementController(IMediator mediator) : ControllerBase
 	{
