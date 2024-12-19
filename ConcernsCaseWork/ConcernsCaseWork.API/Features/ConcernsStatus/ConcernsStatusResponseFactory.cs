@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.Contracts.Concerns;
-using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Features.ConcernsStatus
 {

@@ -6,16 +6,10 @@ using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Features.TrustFinancialForecast
 {
-	public class CreateTrustFinancialForecast : IUseCaseAsync<CreateTrustFinancialForecastRequest, int>
+	public class CreateTrustFinancialForecast(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway) : IUseCaseAsync<CreateTrustFinancialForecastRequest, int>
 	{
-		private readonly IConcernsCaseGateway _concernsCaseGateway;
-		private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway;
-
-		public CreateTrustFinancialForecast(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway)
-		{
-			_concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
-			_trustFinancialForecastGateway = trustFinancialForecastGateway ?? throw new ArgumentNullException(nameof(trustFinancialForecastGateway));
-		}
+		private readonly IConcernsCaseGateway _concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
+		private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway = trustFinancialForecastGateway ?? throw new ArgumentNullException(nameof(trustFinancialForecastGateway));
 
 		public async Task<int> Execute(CreateTrustFinancialForecastRequest request, CancellationToken cancellationToken)
 		{
