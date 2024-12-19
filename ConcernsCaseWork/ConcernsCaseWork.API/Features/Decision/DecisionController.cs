@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 {
 	[ApiVersion("2.0")]
 	[ApiController]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-cases/{concernsCaseUrn:int}/decisions/")]
 	public class DecisionController(IMediator mediator) : ControllerBase
 	{

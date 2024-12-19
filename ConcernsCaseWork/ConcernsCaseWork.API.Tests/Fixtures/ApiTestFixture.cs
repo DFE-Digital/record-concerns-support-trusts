@@ -2,27 +2,19 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
-using DfE.CoreLibs.Security.Authorization;
-using DfE.CoreLibs.Security.Configurations;
-using DfE.CoreLibs.Security.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Moq;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Claims;
+using System.Net.Mime;
 using Xunit;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
@@ -64,25 +56,17 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 								connectionString = BuildDatabaseConnectionString(config);
 								config.AddInMemoryCollection(new Dictionary<string, string>
 								{
-									[_connectionStringKey] = connectionString, 
+									[_connectionStringKey] = connectionString,
 									[_tokenSetting] = JsonConvert.SerializeObject(GetAppSettings<TokenSettings>(config, _tokenSetting)),
 									[_policies] = JsonConvert.SerializeObject(GetAppSettings<List<PolicyDefinition>>(config, _policies))
 								}); 
-							});
-							builder.ConfigureServices(services =>
-							{
-								services.AddSingleton(GetTokenSettings());
-								services.AddSingleton(GetMemoryCache());
-								services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-								services.AddSingleton<IUserTokenService, UserTokenService>();
 							});
 						}); 
 
 					var fakeUserInfo = new UserInfo()
 					{ 
 						Name = "API.TestFixture@test.gov.uk",
-						Roles = [Claims.CaseWorkerRoleClaim, Claims.CaseDeleteRoleClaim] 
-						
+						Roles = [Claims.CaseWorkerRoleClaim, Claims.CaseDeleteRoleClaim]
 					};
 					ServerUserInfoService = new ServerUserInfoService() { UserInfo = fakeUserInfo };
 					
@@ -99,44 +83,11 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 				}
 			}
 		}
-		private static IMemoryCache GetMemoryCache()
-		{
-			var mockMemoryCache = new Mock<IMemoryCache>();
 
-			// Set up the mock behavior
-			string key = "testKey";
-			object expectedValue = "testValue";
-
-			mockMemoryCache
-				.Setup(m => m.TryGetValue(key, out expectedValue))
-				.Returns(true);
-
-			mockMemoryCache
-				.Setup(m => m.CreateEntry(It.IsAny<object>()))
-				.Returns(Mock.Of<ICacheEntry>);
-			return mockMemoryCache.Object;
-		}
-
-		private static ClaimsPrincipal GetClaimsPrincipal(UserInfo user)
-		{
-			var claims = new List<Claim>
-			{
-				new(ClaimTypes.Name, user.Name),
-				new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", user.Name)
-			};
-			foreach (var role in user.Roles)
-			{
-				claims.Add(new(ClaimTypes.Role, role));
-			}
-			return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthenticationType"));
-		}
-
-		private IOptions<TokenSettings> GetTokenSettings()
+		private TokenSettings GetTokenSettings()
 		{
 			var configuration = _application.Services.GetRequiredService<IConfiguration>();
-			var mockTokenSettingsOption = new Mock<IOptions<TokenSettings>>();
-			mockTokenSettingsOption.Setup(x => x.Value).Returns(configuration.GetSection(_tokenSetting).Get<TokenSettings>());
-			return mockTokenSettingsOption.Object;
+			return configuration.GetSection(_tokenSetting).Get<TokenSettings>();
 		}
 
 		private HttpClient CreateHttpClient(UserInfo userInfo)
@@ -148,9 +99,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			clientUserInfoService.SetPrincipal(userInfo);
 			clientUserInfoService.AddUserInfoRequestHeaders(client);
 
-			var userToken = _application.Services.GetService<IUserTokenService>();
-
-			var token = userToken.GetUserTokenAsync(GetClaimsPrincipal(userInfo)).Result;
+			var token = GenerateToken(userInfo, GetTokenSettings());
 			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			
 			var correlationContext = new CorrelationContext();
@@ -159,6 +108,21 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			AbstractService.AddDefaultRequestHeaders(client, correlationContext, clientUserInfoService, null);
 
 			return client;
+		}
+
+		private string GenerateToken(UserInfo user, TokenSettings tokenSettings)
+		{ 
+			List<Claim> claims =
+			[
+				new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", user.Name ?? string.Empty),
+			];
+			foreach (var role in user.Roles)
+			{
+				claims.Add(new Claim(ClaimTypes.Role, role));
+			}
+			DateTime? expires = DateTime.UtcNow.AddMinutes(tokenSettings.TokenLifetimeMinutes);
+			JwtSecurityToken token = new(tokenSettings.Issuer, tokenSettings.Audience, claims, null, expires, new(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.SecretKey)), "HS256"));
+			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
 		private static string BuildDatabaseConnectionString(IConfigurationBuilder config)
@@ -190,10 +154,10 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		}
 	}
 
-	[CollectionDefinition(ApiTestCollectionName)]
+	[CollectionDefinition(_apiTestCollectionName)]
 	public class ApiTestCollection : ICollectionFixture<ApiTestFixture>
 	{
-		public const string ApiTestCollectionName = "ApiTestCollection";
+		public const string _apiTestCollectionName = "ApiTestCollection";
 
 		// This class has no code, and is never created. Its purpose is simply
 		// to be the place to apply [CollectionDefinition] and all the

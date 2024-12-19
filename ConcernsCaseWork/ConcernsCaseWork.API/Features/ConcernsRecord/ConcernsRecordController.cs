@@ -2,6 +2,7 @@
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Contracts.PolicyType;
+using ConcernsCaseWork.UserContext;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace ConcernsCaseWork.API.Features.ConcernsRecord
 {
 	[ApiVersion("2.0")]
 	[ApiController]
+	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-records")]
 	public class ConcernsRecordController(IMediator mediator) : ControllerBase
 	{
