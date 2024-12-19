@@ -2,25 +2,19 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.Nti
 {
-	public class NtiConditionsService : ConcernsAbstractService, INtiConditionsService
+	public class NtiConditionsService(IHttpClientFactory httpClientFactory, ILogger<NtiConditionsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService), INtiConditionsService
 	{
-		private readonly ILogger<NtiConditionsService> _logger;
-
-		public NtiConditionsService(IHttpClientFactory httpClientFactory, ILogger<NtiConditionsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-
 		public async Task<ICollection<NtiConditionDto>> GetAllConditionsAsync()
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-conditions");
@@ -44,7 +38,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}

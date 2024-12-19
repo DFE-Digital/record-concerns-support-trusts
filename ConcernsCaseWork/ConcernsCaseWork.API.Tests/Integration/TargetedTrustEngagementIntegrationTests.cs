@@ -17,7 +17,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	[Collection(ApiTestCollection._apiTestCollectionName)]
 	public class TargetedTrustEngagementIntegrationTests
 	{
 		private readonly HttpClient _client;
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.CaseUrn = concernsCase.Id;
 
 			request.ActivityId = Contracts.TargetedTrustEngagement.TargetedTrustEngagementActivity.NoEngagementActivitiesWereTakenForward;
-			request.ActivityTypes = new Contracts.TargetedTrustEngagement.TargetedTrustEngagementActivityType[] { Contracts.TargetedTrustEngagement.TargetedTrustEngagementActivityType.Category1 } ;
+			request.ActivityTypes = [Contracts.TargetedTrustEngagement.TargetedTrustEngagementActivityType.Category1];
 
 			var createResponse = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/targetedtrustengagement", request.ConvertToJson());
 			createResponse.StatusCode.Should().Be(HttpStatusCode.Created);

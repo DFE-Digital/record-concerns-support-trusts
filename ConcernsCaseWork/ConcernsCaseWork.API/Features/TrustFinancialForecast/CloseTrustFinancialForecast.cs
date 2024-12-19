@@ -8,16 +8,10 @@ using NotFoundException = ConcernsCaseWork.API.Exceptions.NotFoundException;
 
 namespace ConcernsCaseWork.API.Features.TrustFinancialForecast;
 
-public class CloseTrustFinancialForecast : IUseCaseAsync<CloseTrustFinancialForecastRequest, int>
+public class CloseTrustFinancialForecast(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway) : IUseCaseAsync<CloseTrustFinancialForecastRequest, int>
 {
-	private readonly IConcernsCaseGateway _concernsCaseGateway;
-	private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway;
-
-	public CloseTrustFinancialForecast(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway)
-	{
-		_concernsCaseGateway = Guard.Against.Null(concernsCaseGateway);
-		_trustFinancialForecastGateway = Guard.Against.Null(trustFinancialForecastGateway);
-	}
+	private readonly IConcernsCaseGateway _concernsCaseGateway = Guard.Against.Null(concernsCaseGateway);
+	private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway = Guard.Against.Null(trustFinancialForecastGateway);
 
 	public async Task<int> Execute(CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken)
 	{

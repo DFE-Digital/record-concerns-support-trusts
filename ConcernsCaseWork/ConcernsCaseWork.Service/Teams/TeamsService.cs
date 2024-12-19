@@ -2,18 +2,16 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Teams
 {
-	public class TeamsService : ConcernsAbstractService, ITeamsService
+	public class TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ITeamsService
 	{
-		private readonly ILogger<TeamsService> _logger;
-
-		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = Guard.Against.Null(logger);
-		}
+		private readonly ILogger<TeamsService> _logger = Guard.Against.Null(logger);
+		private readonly IClientUserInfoService _userInfoService = Guard.Against.Null(userInfoService);
+		private readonly IUserTokenService _userTokenService = Guard.Against.Null(userTokenService);
 
 		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
 		{

@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto);
 
 			// assert
-			Assert.NotNull(createRecordsDto);
+			Assert.That(createRecordsDto, Is.Not.Null);
 			Assert.That(createRecordsDto.Count, Is.EqualTo(recordsDto.Count));
 			
 			for (var index = 0; index < createRecordsDto.Count; ++index)
@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null);
 
 			// assert
-			Assert.NotNull(createRecordsDto);
+			Assert.That(createRecordsDto, Is.Not.Null);
 			Assert.That(createRecordsDto.Count, Is.EqualTo(recordsDto.Count));
 		}
 	}

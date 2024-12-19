@@ -59,9 +59,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsInstanceOf<PageResult>(response);
+			Assert.That(response, Is.InstanceOf<PageResult>());
 			
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
 		
 		[Test]

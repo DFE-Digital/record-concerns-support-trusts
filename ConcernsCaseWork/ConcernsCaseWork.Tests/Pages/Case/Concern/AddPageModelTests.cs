@@ -47,13 +47,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 
 			var trustDetailsModel = pageModel.TrustDetailsModel;
 			var createRecordsModel = pageModel.CreateRecordsModel;
 
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
-			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
+			Assert.That(trustDetailsModel, Is.AssignableFrom<TrustDetailsModel>());
+			Assert.That(createRecordsModel, Is.AssignableFrom<List<CreateRecordModel>>());
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -90,9 +90,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -125,9 +125,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -162,7 +162,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
-			Assert.IsNotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo("/"));
 		}
 
@@ -185,8 +185,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			Assert.IsNotNull(pageResponseInstance);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponseInstance, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 		}
 
 		private static AddPageModel SetupAddPageModel(

@@ -38,8 +38,8 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
-			Assert.IsInstanceOf<(TrustSearchModelPageResponseData, IList<TrustSearchModel>)>(trustsSummaryModel);
-			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsSummaryModel.Data);
+			Assert.That(trustsSummaryModel, Is.TypeOf<(TrustSearchModelPageResponseData, IList<TrustSearchModel>)>());
+			Assert.That(trustsSummaryModel.Data, Is.AssignableFrom<List<TrustSearchModel>>());
 			Assert.That(trustsSummaryModel.Data.Count, Is.EqualTo(trustSummaryDto.Count));
 			Assert.That(trustsSummaryModel.PageData.TotalMatchesFromApi, Is.EqualTo(125));
 			Assert.That(trustsSummaryModel.PageData.IsMoreDataOnServer, Is.EqualTo(true));
@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
 					Assert.That(expected.TrustType, Is.EqualTo(actual.TrustType));
 
-					Assert.IsAssignableFrom<GroupContactAddressModel>(expected.GroupContactAddress);
+					Assert.That(expected.GroupContactAddress, Is.AssignableFrom<GroupContactAddressModel>());
 					Assert.That(expected.GroupContactAddress, Is.Not.Null);
 					Assert.That(expected.GroupContactAddress.County, Is.EqualTo(actual.GroupContactAddress.County));
 					Assert.That(expected.GroupContactAddress.Locality, Is.EqualTo(actual.GroupContactAddress.Locality));
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
-			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsSummaryModel.Data.ToList());
+			Assert.That(trustsSummaryModel.Data.ToList(), Is.AssignableFrom<List<TrustSearchModel>>());
 			Assert.That(trustsSummaryModel.Data.Count, Is.EqualTo(0));
 			Assert.That(trustsSummaryModel.PageData.TotalMatchesFromApi, Is.EqualTo(0));
 			Assert.That(trustsSummaryModel.PageData.IsMoreDataOnServer, Is.EqualTo(false));
@@ -109,7 +109,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var trustsDetailsModel = await trustModelService.GetTrustByUkPrn(It.IsAny<string>());
 
 			// assert
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustsDetailsModel);
+			Assert.That(trustsDetailsModel, Is.AssignableFrom<TrustDetailsModel>());
 			Assert.That(trustsDetailsModel, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
@@ -127,10 +127,10 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
 
 			// Ifd Data
-			Assert.IsAssignableFrom<IfdDataModel>(trustsDetailsModel.IfdData);
+			Assert.That(trustsDetailsModel.IfdData, Is.AssignableFrom<IfdDataModel>());
 			Assert.That(trustsDetailsModel.IfdData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.IfdData.TrustType, Is.EqualTo(trustDetailsDto.IfdData.TrustType));
-			Assert.IsAssignableFrom<GroupContactAddressModel>(trustsDetailsModel.IfdData.GroupContactAddress);
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress, Is.AssignableFrom<GroupContactAddressModel>());
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress, Is.Not.Null);
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.County, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.County));
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Locality, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Locality));
@@ -142,7 +142,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.IfdData.TrustContactPhoneNumber, Is.EqualTo(trustDetailsDto.IfdData.TrustContactPhoneNumber));
 
 			// Establisment
-			Assert.IsAssignableFrom<List<EstablishmentModel>>(trustsDetailsModel.Establishments);
+			Assert.That(trustsDetailsModel.Establishments, Is.AssignableFrom<List<EstablishmentModel>>());
 			Assert.That(trustsDetailsModel.Establishments, Is.Not.Null);
 			Assert.That(trustsDetailsModel.Establishments.Count, Is.EqualTo(1));
 			var establishment = trustsDetailsModel.Establishments.First();
