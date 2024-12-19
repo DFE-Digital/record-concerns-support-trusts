@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
 			var page = pageResponse as RedirectToPageResult;
 
-			Assert.IsEmpty(pageModel.TempData);
+			Assert.That(pageModel.TempData, Is.Empty);
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.PageName, Is.EqualTo(expectedRedirectLink));
 		}

@@ -3,27 +3,21 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using DfE.CoreLibs.Security.Interfaces;
 using Newtonsoft.Json;
 using System.Net.Mime;
 using System.Text;
 
 namespace ConcernsCaseWork.Service.CaseActions
 {
-	public class SRMAProvider : ConcernsAbstractService
+	public class SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService)
 	{
-		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly ILogger<SRMAProvider> _logger;
-		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_httpClientFactory = httpClientFactory;
-			_logger = logger;
-		}
+		private const string _url = @"/v2/case-actions/srma";
 
 		public async Task<SRMADto> GetSRMAById(long srmaId)
 		{
 			var client = CreateHttpClient();
-			var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}?srmaId={srmaId}");
+			var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}?srmaId={srmaId}");
 
 			try
 			{
@@ -35,7 +29,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetSRMAById");
+				logger.LogError(ex, $"Error occured while trying to GetSRMAById");
 				throw;
 			}
 		}
@@ -45,7 +39,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -54,7 +48,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetSRMAById");
+				logger.LogError(ex, $"Error occured while trying to GetSRMAById");
 				throw;
 			}
 		}
@@ -64,7 +58,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
+				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(srma),
 					Encoding.UTF8, MediaTypeNames.Application.Json);
@@ -76,7 +70,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create SRMA");
+				logger.LogError(ex, $"Error occured while trying to create SRMA");
 				throw;
 			}
 		}
@@ -86,7 +80,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-accepted?acceptedDate={SerialiseDateTime(acceptedDate)}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-date-accepted?acceptedDate={SerialiseDateTime(acceptedDate)}");
 
 				var response = await client.SendAsync(request); 
 				var content = await response.Content.ReadAsStringAsync();
@@ -95,7 +89,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA date accepted");
+				logger.LogError(ex, $"Error occured while trying to set SRMA date accepted");
 				throw;
 			}
 		}
@@ -105,7 +99,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-closed-date");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -114,7 +108,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA date closed");
+				logger.LogError(ex, $"Error occured while trying to set SRMA date closed");
 				throw;
 			}
 		}
@@ -124,7 +118,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-report-sent?dateReportSent={SerialiseDateTime(reportSentDate)}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-date-report-sent?dateReportSent={SerialiseDateTime(reportSentDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -133,7 +127,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA SetDateReportSent");
+				logger.LogError(ex, $"Error occured while trying to set SRMA SetDateReportSent");
 				throw;
 			}
 		}
@@ -143,7 +137,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-notes?notes={notes ?? String.Empty}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-notes?notes={notes ?? String.Empty}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -152,7 +146,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA notes");
+				logger.LogError(ex, $"Error occured while trying to set SRMA notes");
 				throw;
 			}
 		}
@@ -162,7 +156,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-offered-date?offeredDate={SerialiseDateTime(offeredDate)}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-offered-date?offeredDate={SerialiseDateTime(offeredDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -171,7 +165,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA OfferedDate");
+				logger.LogError(ex, $"Error occured while trying to set SRMA OfferedDate");
 				throw;
 			}
 		}
@@ -181,7 +175,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-reason?reason={(int)reason}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-reason?reason={(int)reason}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -190,7 +184,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA reason");
+				logger.LogError(ex, $"Error occured while trying to set SRMA reason");
 				throw;
 			}
 		}
@@ -200,7 +194,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-status?status={(int)status}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-status?status={(int)status}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -209,7 +203,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA status");
+				logger.LogError(ex, $"Error occured while trying to set SRMA status");
 				throw;
 			}
 		}
@@ -219,7 +213,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-visit-dates?startDate={SerialiseDateTime(startDate)}&endDate={SerialiseDateTime(endDate)}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}/{srmaId}/update-visit-dates?startDate={SerialiseDateTime(startDate)}&endDate={SerialiseDateTime(endDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -228,7 +222,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to set SRMA OfferedDate");
+				logger.LogError(ex, $"Error occured while trying to set SRMA OfferedDate");
 				throw;
 			}
 		}
@@ -238,14 +232,14 @@ namespace ConcernsCaseWork.Service.CaseActions
 			try
 			{
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Delete, $"{Url}/{srmaId}");
+				var request = new HttpRequestMessage(HttpMethod.Delete, $"{_url}/{srmaId}");
 
 				await client.SendAsync(request);
 
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to delete SRMA");
+				logger.LogError(ex, $"Error occured while trying to delete SRMA");
 				throw;
 			}
 		}

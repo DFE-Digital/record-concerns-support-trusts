@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.NtiWarningLetterModel);
+			Assert.That(pageModel.NtiWarningLetterModel, Is.Not.Null);
 		}
 
 		private static IndexPageModel SetupIndexPageModel(

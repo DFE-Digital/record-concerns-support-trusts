@@ -20,23 +20,23 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		public void TeamsService_Implements_ITeamsService()
 		{
 			var sut = new TestFixture().BuildSut();
-			Assert.IsInstanceOf<ITeamsModelService>(sut);
+			Assert.That(sut, Is.InstanceOf<ITeamsModelService>());
 		}
 
 		[Test]
 		public async Task When_GetCaseworkTeam_Returns_Team_From_TramsApi()
 		{
 			var testFixture = new TestFixture()
-				.WithPreviouslySelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
+				.WithPreviouslySelectedTeamMembers(["Fred.Flintstone", "Barney.Rubble"]);
 
 			var sut = testFixture.BuildSut();
 
 			var result = await sut.GetCaseworkTeam(testFixture.CurrentUserName);
 
-			Assert.IsNotNull(result);
+			Assert.That(result, Is.Not.Null);
 			Assert.That(result.OwnerId, Is.EqualTo(testFixture.CurrentUserName));
 			Assert.That(result.TeamMembers, Is.Not.Null);
-			Assert.AreEqual(result.TeamMembers.Length, 2);
+			Assert.That(result.TeamMembers.Length, Is.EqualTo(2));
 		}
 
 		[Test]

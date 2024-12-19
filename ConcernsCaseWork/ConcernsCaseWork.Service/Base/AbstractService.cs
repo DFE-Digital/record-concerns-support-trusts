@@ -1,9 +1,11 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
@@ -13,25 +15,15 @@ namespace ConcernsCaseWork.Service.Base
 	/// Abstract base class for services which call the Trams/Academies API.
 	/// Provides basic implementations of methods so they don't have to be implemented per specialized service.
 	/// </summary>
-	public abstract class AbstractService
+	public abstract class AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, string httpClientName, IUserTokenService userTokenService)
 	{
-		private readonly ICorrelationContext _correlationContext;
-		private readonly IHttpClientFactory _clientFactory;
-		private readonly ILogger<AbstractService> _logger;
-		private readonly IClientUserInfoService _userInfoService;
+		private readonly ICorrelationContext _correlationContext = Guard.Against.Null(correlationContext);
+		private readonly IHttpClientFactory _clientFactory = Guard.Against.Null(clientFactory);
+		private readonly ILogger<AbstractService> _logger = Guard.Against.Null(logger);
+		private readonly IClientUserInfoService _userInfoService = Guard.Against.Null(userInfoService);
 
-		private string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
-
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, string httpClientName)
-		{
-			_clientFactory = Guard.Against.Null(clientFactory);
-			_logger = Guard.Against.Null(logger);
-			_correlationContext = Guard.Against.Null(correlationContext);
-			_userInfoService = Guard.Against.Null(userInfoService);
-			HttpClientName = httpClientName;
-		}
 
 		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
@@ -90,7 +82,10 @@ namespace ConcernsCaseWork.Service.Base
 
 		protected HttpClient CreateHttpClient()
 		{
-			var client = _clientFactory.CreateClient(HttpClientName);
+			var client = _clientFactory.CreateClient(httpClientName);
+			var token = userTokenService.GetUserTokenAsync(_userInfoService.UserInfo.User).Result;
+
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
 			AddDefaultRequestHeaders(client, _correlationContext, _userInfoService, _logger);
 

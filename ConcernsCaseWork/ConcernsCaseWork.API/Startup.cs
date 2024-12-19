@@ -1,7 +1,12 @@
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.Middleware;
+using DfE.CoreLibs.Security;
+using DfE.CoreLibs.Security.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace ConcernsCaseWork.API
@@ -9,21 +14,22 @@ namespace ConcernsCaseWork.API
     /// <summary>
     /// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE. It is used when running API tests
     /// </summary>
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
+    public class Startup(IConfiguration configuration)
+	{
+		private string _authenticationScheme = "ApiScheme";
+		public void ConfigureServices(IServiceCollection services)
         {
-            Configuration = configuration;
-        }
+			services.AddConcernsApiProject(configuration);
+			var authenticationBuilder = services.AddAuthentication(options =>
+			{
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			});
+			services.AddApplicationAuthorization(configuration);
+			services.AddCustomJwtAuthentication(configuration, _authenticationScheme, authenticationBuilder);
+		}
 
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddConcernsApiProject(Configuration);
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             app.UseConcernsCaseworkSwagger(provider);
 
@@ -32,8 +38,7 @@ namespace ConcernsCaseWork.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
-            app.UseMiddleware<ApiKeyMiddleware>();
+            app.UseMiddleware<ExceptionHandlerMiddleware>(); 
             app.UseMiddleware<UrlDecoderMiddleware>();
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<UserContextReceiverMiddleware>();
@@ -43,8 +48,15 @@ namespace ConcernsCaseWork.API
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseConcernsCaseworkEndpoints();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers().RequireAuthorization(new AuthorizeAttribute
+				{
+					AuthenticationSchemes = _authenticationScheme,
+					Policy = Policy.Default
+				});
+			});
+			app.UseConcernsCaseworkEndpoints();
 
             // Add Health Checks
             app.UseHealthChecks("/health");
