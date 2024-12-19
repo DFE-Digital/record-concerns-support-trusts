@@ -21,6 +21,6 @@ public class AuthorizationHeaderTests
 		var sut = new ClaimsPrincipalHelper();
 		var actualName = sut.GetPrincipalName(mockPrincipal.Object);
 
-		Assert.AreEqual(expectedName, actualName);
+		Assert.That(expectedName,Is.EqualTo(actualName));
 	}
 }

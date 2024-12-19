@@ -52,13 +52,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			
 			var trustDetailsPageModel = pageModel.TrustDetailsModel;
 			var createRecordsPageModel = pageModel.CreateRecordsModel;
 			
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsPageModel);
-			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsPageModel);
+			Assert.That(trustDetailsPageModel, Is.AssignableFrom<TrustDetailsModel>());
+			Assert.That(createRecordsPageModel, Is.AssignableFrom<List<CreateRecordModel>>());
 			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
@@ -89,9 +89,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 			
 			mockUserStateService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -116,9 +116,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 			
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -149,7 +149,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var pageResponseInstance = pageResponse as RedirectToPageResult;
 			
 			// assert
-			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.PageName, Is.EqualTo("details"));
 
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
@@ -180,7 +180,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			_ = await pageModel.OnPostAsync();
 			
 			// assert
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 		}		
 		
 		private static RatingPageModel SetupRatingPageModel(

@@ -3,19 +3,14 @@ using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.TrustFinancialForecast;
 
-public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFinancialForecastService
+public class TrustFinancialForecastService(IHttpClientFactory clientFactory, ILogger<TrustFinancialForecastService> logger, ICorrelationContext correlationContext, IClientUserInfoService clientUserInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, clientUserInfoService, userTokenService), ITrustFinancialForecastService
 {
-	private readonly ILogger<TrustFinancialForecastService> _logger;
-
-	public TrustFinancialForecastService(IHttpClientFactory clientFactory, ILogger<TrustFinancialForecastService> logger, ICorrelationContext correlationContext, IClientUserInfoService clientUserInfoService)
-		: base(clientFactory, logger, correlationContext, clientUserInfoService)
-	{
-		_logger = Guard.Against.Null(logger);
-	}
+	private readonly ILogger<TrustFinancialForecastService> _logger = Guard.Against.Null(logger);
 
 	public async Task<string> Create(CreateTrustFinancialForecastRequest request)
 	{

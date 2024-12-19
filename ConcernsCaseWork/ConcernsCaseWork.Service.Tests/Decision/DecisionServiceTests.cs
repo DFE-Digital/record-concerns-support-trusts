@@ -7,6 +7,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,6 +19,13 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 {
 	public class DecisionServiceTests
 	{
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public void Constructors_Guard_Against_Null_Arguments()
 		{
@@ -46,7 +54,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			Assert.That(sut, Is.AssignableTo<ConcernsAbstractService>());
 		}
 
-		private Fixture CreateMockedFixture()
+		private static Fixture CreateMockedFixture()
 		{
 			var fixture = new Fixture();
 			fixture.Customize(new AutoMoqCustomization());
@@ -65,7 +73,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.ConcernsCaseUrn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.PostDecision(expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
@@ -85,7 +93,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.GetDecisionsByCaseUrn(urn);
 
 			result.Should().BeEquivalentTo(expectedResponseDto);
@@ -103,7 +111,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{1}/decisions/{2}", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.PutDecision(1, 2, request);
 
 			result.ConcernsCaseUrn.Should().Be(response.ConcernsCaseUrn);
@@ -125,7 +133,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{caseUrn}/decisions/{decisionId}", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 			var result = await sut.PostDecisionOutcome(caseUrn, decisionId, expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
@@ -140,14 +148,16 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 
 			var result = new Mock<IHttpClientFactory>();
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			result.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			return result;
 		}
 
-		private Mock<HttpMessageHandler> SetupMessageHandler<T>(string url, T responseWrapper)
+		private static Mock<HttpMessageHandler> SetupMessageHandler<T>(string url, T responseWrapper)
 		{
 			var result = new Mock<HttpMessageHandler>();
 

@@ -68,9 +68,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var createRecordsModel = pageModel.CreateRecordsModel;
 
 			// assert
-			Assert.IsAssignableFrom<CreateCaseModel>(createCaseModel);
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
-			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
+			Assert.That(createCaseModel, Is.AssignableFrom<CreateCaseModel>());
+			Assert.That(trustDetailsModel, Is.AssignableFrom<TrustDetailsModel>());
+			Assert.That(createRecordsModel, Is.AssignableFrom<List<CreateRecordModel>>());
 
 			Assert.That(trustDetailsModel, Is.Not.Null);
 			Assert.That(trustDetailsModel.TrustNameCounty, Is.Not.Null);
