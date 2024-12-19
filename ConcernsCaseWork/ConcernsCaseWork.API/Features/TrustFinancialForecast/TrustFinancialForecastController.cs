@@ -11,7 +11,6 @@ namespace ConcernsCaseWork.API.Features.TrustFinancialForecast
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/concerns-cases/{caseUrn:int}/trustfinancialforecast")]
 	public class TrustFinancialForecastController(
 		ILogger<TrustFinancialForecastController> logger,

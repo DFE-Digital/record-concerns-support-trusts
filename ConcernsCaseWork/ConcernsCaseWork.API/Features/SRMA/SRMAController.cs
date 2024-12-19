@@ -12,7 +12,6 @@ namespace ConcernsCaseWork.API.Features.SRMA
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/srma")]
 	public class SRMAController(
 		ILogger<SRMAController> logger,
