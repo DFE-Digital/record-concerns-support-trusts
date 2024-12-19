@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 namespace ConcernsCaseWork.API.Features.NTIWarningLetter
 {
 	[ApiVersion("2.0")]
-	[Authorize(Policy = Policy.Default)]
 	[Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
 	[ApiController]
 	public class NTIWarningLetterController(ILogger<NTIWarningLetterController> logger,
