@@ -54,10 +54,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			await pageModel.OnGetAsync();
 			
 			// assert
-			Assert.NotNull(pageModel.CreateRecordsModel);
-			Assert.NotNull(pageModel.TrustDetailsModel);
+			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel.Count, Is.EqualTo(createRecordsModel.Count));
-			Assert.Null(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			pageModel.ConcernRiskRating.Should().NotBeNull();
 			pageModel.ConcernType.Should().NotBeNull();
 			pageModel.MeansOfReferral.Should().NotBeNull();
@@ -99,10 +99,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			pageResponse = pageResponse as RedirectResult;
 			
 			// assert
-			Assert.NotNull(pageResponse);
-			Assert.Null(pageModel.CreateRecordsModel);
-			Assert.Null(pageModel.TrustDetailsModel);
-			Assert.Null(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			
 			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()), Times.Once());
 		}		

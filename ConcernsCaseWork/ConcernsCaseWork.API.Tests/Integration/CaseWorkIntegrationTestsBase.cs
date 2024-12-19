@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		protected async Task HasActiveCasesWithCaseActions_Returns_CorrectInformation_200(string createdBy, string url)
 		{
-			List<ConcernsCase> cases = new List<ConcernsCase>();
+			List<ConcernsCase> cases = [];
 
 			var expectedCase = CreateCase(createdBy);
 
@@ -71,9 +71,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		protected async Task<List<ConcernsCase>> CreateCasesWithDifferentOwners(string owner, string differentOwner)
 		{
 
-			List<ConcernsCase> cases = new List<ConcernsCase>();
-			List<ConcernsCase> casesDifferentOwner = new List<ConcernsCase>();
-			List<ConcernsCase> closedCases = new List<ConcernsCase>();
+			List<ConcernsCase> cases = [];
+			List<ConcernsCase> casesDifferentOwner = [];
+			List<ConcernsCase> closedCases = [];
 
 			for (var idx = 0; idx < 5; idx++)
 			{

@@ -53,10 +53,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			await pageModel.OnGet();
 
 			// assert
-			Assert.IsNotNull(pageModel);
-			Assert.IsNotNull(pageModel.TrustDetailsModel);
-			Assert.IsNotNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -92,10 +92,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			await pageModel.OnGet();
 
 			// assert
-			Assert.IsNotNull(pageModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -134,10 +134,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			await pageModel.OnGet();
 
 			// assert
-			Assert.IsNotNull(pageModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -190,9 +190,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var pageResponseInstance = pageResponse as RedirectResult;
 
 			// assert
-			Assert.IsNotNull(pageModel);
+			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
-			Assert.IsNotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo(expectedUrl));
 
 			mockRecordModelService.Verify(r => r.PatchRecordStatus(It.IsAny<PatchRecordModel>()), Times.Once);
@@ -217,11 +217,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var pageResponse = await pageModel.OnGetCloseConcern();
 
 			// assert
-			Assert.NotNull(pageResponse);
-			Assert.IsNotNull(pageModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			mockRecordModelService.Verify(r => r.PatchRecordStatus(It.IsAny<PatchRecordModel>()), Times.Never);
 		}
@@ -262,9 +262,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var pageResponseInstance = pageResponse as RedirectResult;
 
 			// assert
-			Assert.IsNotNull(pageModel);
+			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
-			Assert.IsNotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo(expectedUrl));
 		}
 
@@ -287,11 +287,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var pageResponse = pageModel.OnGetCancel();
 
 			// assert
-			Assert.NotNull(pageResponse);
-			Assert.IsNotNull(pageModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNull(pageModel.TrustDetailsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 		}
 
 		private static ClosurePageModel SetupClosurePageModel(

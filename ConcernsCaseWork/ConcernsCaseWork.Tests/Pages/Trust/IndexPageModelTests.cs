@@ -4,6 +4,7 @@ using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
@@ -43,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var response = await pageModel.OnGetTrustsSearchResult(searchQuery, nonce);
 
 			// assert
-			Assert.IsInstanceOf(typeof(JsonResult), response);
+			Assert.That(response, Is.InstanceOf<JsonResult>());
 			var jsonResponse = response as JsonResult;
 
 			Assert.That(jsonResponse, Is.Not.Null);
@@ -83,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var response = await pageModel.OnGetTrustsSearchResult("north", nonce);
 
 			// assert
-			Assert.IsInstanceOf(typeof(JsonResult), response);
+			Assert.That(response, Is.InstanceOf<JsonResult>());
 			var partialPage = response as JsonResult;
 
 			Assert.That(partialPage, Is.Not.Null);
@@ -132,7 +133,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var response = await pageModel.OnGetTrustsSearchResult("north", nonce);
 
 			// assert
-			Assert.IsInstanceOf(typeof(JsonResult), response);
+			Assert.That(response, Is.InstanceOf<JsonResult>());
 			var partialPage = response as JsonResult;
 
 			Assert.That(partialPage, Is.Not.Null);
@@ -203,7 +204,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var response = await pageModel.OnPost();
 
 			// assert
-			Assert.IsInstanceOf(typeof(ObjectResult), response);
+			Assert.That(response, Is.InstanceOf<ObjectResult>()); 
 			var jsonPageResponse = response as ObjectResult;
 
 			Assert.That(jsonPageResponse, Is.Not.Null);

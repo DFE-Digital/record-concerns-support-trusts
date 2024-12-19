@@ -3,38 +3,26 @@ using ConcernsCaseWork.API.Contracts.Configuration;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
-using System.Net;
 using System.Web;
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class TrustService : TramsAbstractService, ITrustService
+	public sealed class TrustService(
+		IHttpClientFactory clientFactory,
+		ILogger<TrustService> logger,
+		ICorrelationContext correlationContext,
+		IClientUserInfoService userInfoService,
+		IFakeTrustService fakeTrustService,
+		ICityTechnologyCollegeService cityTechnologyCollegeService,
+		IFeatureManager featureManager,
+		IUserTokenService userTokenService) : TramsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ITrustService
 	{
-		private readonly ILogger<TrustService> _logger;
-		private readonly IFakeTrustService _fakeTrustService;
-		private readonly IFeatureManager _featureManager;
-		private readonly ICityTechnologyCollegeService _cityTechnologyCollegeService;
-
-		private const string EndpointV3 = "v3";
-		private const string EndpointV4 = "v4";
-
-		public TrustService(
-			IHttpClientFactory clientFactory,
-			ILogger<TrustService> logger,
-			ICorrelationContext correlationContext,
-			IClientUserInfoService userInfoService,
-			IFakeTrustService fakeTrustService,
-			ICityTechnologyCollegeService cityTechnologyCollegeService,
-			IFeatureManager featureManager) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-			_fakeTrustService = fakeTrustService;
-			_cityTechnologyCollegeService = cityTechnologyCollegeService;
-			_featureManager = featureManager;
-		}
+		private const string _endpointV3 = "v3";
+		private const string _endpointV4 = "v4";
 
 		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
@@ -66,13 +54,13 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			try
 			{
-				_logger.LogInformation("TrustService::GetTrustByUkPrn");
+				logger.LogInformation("TrustService::GetTrustByUkPrn");
 
-				var fakeTrust = _fakeTrustService.GetTrustByUkPrn(ukPrn);
+				var fakeTrust = fakeTrustService.GetTrustByUkPrn(ukPrn);
 
 				if (fakeTrust != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn Found fake trust, returning {fakeTrust.GiasData.GroupName}");
+					logger.LogInformation($"TrustService::GetTrustByUkPrn Found fake trust, returning {fakeTrust.GiasData.GroupName}");
 					return fakeTrust;
 				}
 
@@ -83,7 +71,7 @@ namespace ConcernsCaseWork.Service.Trusts
 					return cityTechnologyCollege;
 				}
 
-				var isV4Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
+				var isV4Enabled = await featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
 
 				TrustDetailsDto result = null;
 
@@ -100,7 +88,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+				logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
 		}
@@ -124,7 +112,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<TrustDetailsDto> GetTrustByUkPrnV3(string ukPrn)
 		{
-			var response = await PerformGet<ApiWrapper<TrustDetailsV3Dto>>($"/{EndpointV3}/trust/{ukPrn}");
+			var response = await PerformGet<ApiWrapper<TrustDetailsV3Dto>>($"/{_endpointV3}/trust/{ukPrn}");
 
 			var result = new TrustDetailsDto()
 			{
@@ -138,7 +126,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<TrustDetailsDto> GetTrustByUkPrnV4(string ukPrn)
 		{
-			var trustDetailsResponse = await PerformGet<TrustDetailsV4Dto>($"/{EndpointV4}/trust/{ukPrn}");
+			var trustDetailsResponse = await PerformGet<TrustDetailsV4Dto>($"/{_endpointV4}/trust/{ukPrn}");
 
 			var result = new TrustDetailsDto()
 			{
@@ -168,7 +156,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		private async Task<List<EstablishmentDto>> GetEstablishments(string ukPrn)
 		{
-			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/{EndpointV4}/establishments/trust?trustUkprn={ukPrn}");
+			var establishmentResponse = await PerformGet<List<EstablishmentV4Dto>>($"/{_endpointV4}/establishments/trust?trustUkprn={ukPrn}");
 
 			var result = establishmentResponse.Select(e =>
 			{
@@ -195,20 +183,20 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			TrustDetailsDto cityTechnologyCollege = null;
 
-			_logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
+			logger.LogInformation($"TrustService::GetTrustByUkPrn Feature Flag ShouldCTCBeAddedToTrustSearch True. Starting Search for CTCs");
 
 			try
 			{
-				cityTechnologyCollege = await _cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
+				cityTechnologyCollege = await cityTechnologyCollegeService.GetCollegeByUkPrn(ukPrn);
 				if (cityTechnologyCollege != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
+					logger.LogInformation($"TrustService::GetTrustByUkPrn Found CTC , returning {cityTechnologyCollege.GiasData.GroupName}");
 				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Containing search from Trust List");
-				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+				logger.LogInformation($"TrustService::GetTrustByUkPrn An error occured searching for CTCs. Containing search from Trust List");
+				logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 			}
 
 			return cityTechnologyCollege;
@@ -221,13 +209,13 @@ namespace ConcernsCaseWork.Service.Trusts
 
 			try
 			{
-				_logger.LogInformation("TrustService::GetTrustsByPagination");
+				logger.LogInformation("TrustService::GetTrustsByPagination");
 
-				var fakeTrust = _fakeTrustService.GetTrustsByPagination(trustSearch.GroupName);
+				var fakeTrust = fakeTrustService.GetTrustsByPagination(trustSearch.GroupName);
 
 				if (fakeTrust != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustsByPagination Found fake trust, returning {fakeTrust.Trusts.Count} results");
+					logger.LogInformation($"TrustService::GetTrustsByPagination Found fake trust, returning {fakeTrust.Trusts.Count} results");
 					return fakeTrust;
 				}
 
@@ -238,8 +226,8 @@ namespace ConcernsCaseWork.Service.Trusts
 					maxResultsFromApi = maxRecordsPerPage - ctcList.Trusts.Count();
 				}
 
-				var isV4Enabled = await _featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
-				var endpointVersion = isV4Enabled ? EndpointV4 : EndpointV3;
+				var isV4Enabled = await featureManager.IsEnabledAsync(FeatureFlags.IsTrustSearchV4Enabled);
+				var endpointVersion = isV4Enabled ? _endpointV4 : _endpointV3;
 
 				// Create a request
 				var endpoint = $"/{endpointVersion}/trusts?{BuildRequestUri(trustSearch, maxResultsFromApi)}";
@@ -270,7 +258,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+				logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -304,19 +292,19 @@ namespace ConcernsCaseWork.Service.Trusts
 		{
 			TrustSearchResponseDto ctcList = null;
 
-			_logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
+			logger.LogInformation($"TrustService::GetTrustsByPagination Feature Flag ShouldCTCBeIncludedInTrustSearch True. Starting Search for CTCs");
 			try
 			{
-				ctcList = await _cityTechnologyCollegeService.GetCollegeByPagination(groupName);
+				ctcList = await cityTechnologyCollegeService.GetCollegeByPagination(groupName);
 				if (ctcList != null)
 				{
-					_logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
+					logger.LogInformation($"TrustService::GetTrustsByPagination Found items in CTC list, returning {ctcList.Trusts.Count} results");
 				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
-				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+				logger.LogInformation($"TrustService::GetTrustsByPagination An error occured searching for CTCs. Contining search from Trust List");
+				logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
 			}
 
 			return ctcList;

@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var trustsModel = mapper.Map<IList<TrustSearchModel>>(trustsDto);
 
 			// assert
-			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsModel);
+			Assert.That(trustsModel, Is.AssignableFrom<List<TrustSearchModel>>());
 			Assert.That(trustsModel.Count, Is.EqualTo(trustsDto.Count));
 			foreach (var expected in trustsModel)
 			{
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var trustDetailsModel = mapper.Map<TrustDetailsModel>(trustDetailsDto);
 
 			// assert
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
+			Assert.That(trustDetailsModel, Is.AssignableFrom<TrustDetailsModel>());
 			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
 			Assert.That(trustDetailsModel.GiasData.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(trustDetailsDto.GiasData.GroupName)));
@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var establishmentSummaryModel = mapper.Map<EstablishmentSummaryModel>(establishmentSummaryDto);
 
 			// assert
-			Assert.IsAssignableFrom<EstablishmentSummaryModel>(establishmentSummaryModel);
+			Assert.That(establishmentSummaryModel, Is.AssignableFrom<EstablishmentSummaryModel>());
 			Assert.That(establishmentSummaryModel.Name, Is.EqualTo(establishmentSummaryDto.Name));
 			Assert.That(establishmentSummaryModel.Urn, Is.EqualTo(establishmentSummaryDto.Urn));
 			Assert.That(establishmentSummaryModel.UkPrn, Is.EqualTo(establishmentSummaryDto.UkPrn));
@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var giasDataModel = mapper.Map<GiasDataModel>(giasDataDto);
 
 			// assert
-			Assert.IsAssignableFrom<GiasDataModel>(giasDataModel);
+			Assert.That(giasDataModel, Is.AssignableFrom<GiasDataModel>());
 			Assert.That(giasDataModel, Is.Not.Null);
 			Assert.That(giasDataModel.GroupId, Is.EqualTo(giasDataDto.GroupId));
 			Assert.That(giasDataModel.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(giasDataDto.GroupName)));
@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var establishmentModel = mapper.Map<EstablishmentModel>(establishmentDto);
 
 			// assert
-			Assert.IsAssignableFrom<EstablishmentModel>(establishmentModel);
+			Assert.That(establishmentModel, Is.AssignableFrom<EstablishmentModel>());
 			Assert.That(establishmentModel.Urn, Is.EqualTo(establishmentDto.Urn));
 			Assert.That(establishmentModel.EstablishmentName, Is.EqualTo(establishmentDto.EstablishmentName));
 			Assert.That(establishmentModel.EstablishmentNumber, Is.EqualTo(establishmentDto.EstablishmentNumber));

@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Tests.Models.Teams
 		{
 			// Arrange
 			var sut = new ConcernsTeamCaseworkModel("john.smith", Array.Empty<string>());
-			Assert.NotNull(sut);
+			Assert.That(sut, Is.Not.Null);
 			Assert.That(sut.TeamMembers.Length, Is.Zero);
 		}
 	}

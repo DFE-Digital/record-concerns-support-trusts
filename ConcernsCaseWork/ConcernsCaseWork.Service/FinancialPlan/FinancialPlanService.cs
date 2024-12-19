@@ -5,23 +5,17 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
 using System.Text;
+using DfE.CoreLibs.Security.Interfaces;
 
 namespace ConcernsCaseWork.Service.FinancialPlan
 {
-	public sealed class FinancialPlanService : ConcernsAbstractService, IFinancialPlanService
+	public sealed class FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), IFinancialPlanService
 	{
-		private readonly ILogger<FinancialPlanService> _logger;
-
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-
 		public async Task<IList<FinancialPlanDto>> GetFinancialPlansByCaseUrn(long caseUrn)
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanService::GetFinancialPlansByCaseUrn");
+				logger.LogInformation("FinancialPlanService::GetFinancialPlansByCaseUrn");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
@@ -52,7 +46,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("FinancialPlanService::GetFinancialPlansByCaseUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("FinancialPlanService::GetFinancialPlansByCaseUrn::Exception message::{Message}", ex.Message);
 			}
 
 			return Array.Empty<FinancialPlanDto>();
@@ -62,7 +56,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanService::GetFinancialPlansById");
+				logger.LogInformation("FinancialPlanService::GetFinancialPlansById");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
@@ -93,7 +87,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("FinancialPlanService::GetFinancialPlansById::Exception message::{Message}", ex.Message);
+				logger.LogError("FinancialPlanService::GetFinancialPlansById::Exception message::{Message}", ex.Message);
 			}
 
 			return null;
@@ -103,7 +97,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanService::PostFinancialPlanByCaseUrn");
+				logger.LogInformation("FinancialPlanService::PostFinancialPlanByCaseUrn");
 
 				// Create a request
 				var request = new StringContent(
@@ -137,7 +131,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("FinancialPlanService::PostFinancialPlanByCaseUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("FinancialPlanService::PostFinancialPlanByCaseUrn::Exception message::{Message}", ex.Message);
 			}
 
 			return null;
@@ -147,7 +141,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanService::PatchFinancialPlanById");
+				logger.LogInformation("FinancialPlanService::PatchFinancialPlanById");
 
 				// Create a request
 				var request = new StringContent(
@@ -181,7 +175,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("FinancialPlanService::PatchFinancialPlanById::Exception message::{Message}", ex.Message);
+				logger.LogError("FinancialPlanService::PatchFinancialPlanById::Exception message::{Message}", ex.Message);
 			}
 
 			return null;
@@ -191,7 +185,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanService::DeleteFinancialPlan");
+				logger.LogInformation("FinancialPlanService::DeleteFinancialPlan");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Delete,
@@ -208,7 +202,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("FinancialPlanService::DeleteFinancialPlan::Exception message::{Message}", ex.Message);
+				logger.LogError("FinancialPlanService::DeleteFinancialPlan::Exception message::{Message}", ex.Message);
 			}
 		}
 	}

@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
+			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
+			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
@@ -174,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.IsNull(pageModel.CaseModel);
+			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 
