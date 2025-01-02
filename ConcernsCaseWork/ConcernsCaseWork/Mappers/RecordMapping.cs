@@ -68,7 +68,8 @@ namespace ConcernsCaseWork.Mappers
 				{
 					CaseUrn = recordDto.CaseUrn,
 					TypeId = recordDto.TypeId,
-					RatingId = recordDto.RatingId
+					RatingId = recordDto.RatingId,
+					StatusId = recordDto.StatusId
 				};
 
 				return createRecordModel;

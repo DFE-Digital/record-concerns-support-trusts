@@ -14,7 +14,16 @@
                             @concern.GetConcernTypeName()
                         </span>
                         <div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third" data-testid="concern-risk-rating">
-                            <partial name="_RatingLabel" model="@concern.RatingId" />
+                            @if (concern.IsClosed())
+                            {
+                                <span class="govuk-tag ragtag ragtag__grey">
+                                    Closed
+                                </span>
+                            }
+                            else
+                            {
+                                <partial name="_RatingLabel" model="@concern.RatingId" />
+                            } 
                         </div>
                     </div>
                 }
