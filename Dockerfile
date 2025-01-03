@@ -15,6 +15,7 @@ RUN ["tdnf", "update", "--security", "-y"]
 RUN ["tdnf", "install", "-y", "jq"]
 RUN ["tdnf", "clean", "all"]
 COPY ConcernsCaseWork/. .
+RUN dotnet nuget add source "https://nuget.pkg.github.com/DFE-Digital/index.json" --name github --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
