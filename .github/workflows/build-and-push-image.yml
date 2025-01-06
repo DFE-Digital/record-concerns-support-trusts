@@ -92,7 +92,7 @@ jobs:
             tag-prefix: ""
           - stage: "initcontainer"
             tag-prefix: "init-"
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v3.0.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v3.1.0
     with:
       docker-image-name: 'amsd-app'
       docker-build-target: ${{ matrix.stage }}
