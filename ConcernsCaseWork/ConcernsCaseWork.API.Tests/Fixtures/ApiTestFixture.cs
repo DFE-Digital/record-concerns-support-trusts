@@ -190,10 +190,10 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		}
 	}
 
-	[CollectionDefinition(_apiTestCollectionName)]
+	[CollectionDefinition(ApiTestCollectionName)]
 	public class ApiTestCollection : ICollectionFixture<ApiTestFixture>
 	{
-		public const string _apiTestCollectionName = "ApiTestCollection";
+		public const string ApiTestCollectionName = "ApiTestCollection";
 
 		// This class has no code, and is never created. Its purpose is simply
 		// to be the place to apply [CollectionDefinition] and all the
