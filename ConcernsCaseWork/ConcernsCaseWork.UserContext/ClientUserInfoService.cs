@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.UserContext
 		/// </summary>
 		public ClientUserInfoService()
 		{
-
+			UserInfo = null!;
 		}
 
 		/// <summary>
@@ -38,7 +38,8 @@ namespace ConcernsCaseWork.UserContext
 			return new UserInfo()
 			{
 				Name = GetPrincipalName(claimsPrincipal),
-				Roles = UserInfo.ParseRoleClaims(claimsPrincipal.Claims.Select(x => x.Value).ToArray())
+				Roles = UserInfo.ParseRoleClaims(claimsPrincipal.Claims.Select(x => x.Value).ToArray()),
+				User = claimsPrincipal
 			};
 		}
 

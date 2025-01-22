@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var response = await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsInstanceOf<PageResult>(response);
+			Assert.That(response, Is.InstanceOf<PageResult>());
 		}
 
 		[Test]
@@ -62,8 +62,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm =>
 					fpm.DatePlanRequested == dateRequested)), Times.Once);
 			
-			Assert.IsNotNull(pageResponse);
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
 				
 		[Test]

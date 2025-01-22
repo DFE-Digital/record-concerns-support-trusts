@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(It.IsAny<CreateNTIUnderConsiderationRequest>()))
                 .Returns(response);
 
-            var result = await controllerSUT.Create(new CreateNTIUnderConsiderationRequest
+            var result = controllerSUT.Create(new CreateNTIUnderConsiderationRequest
             {
                 CaseUrn = caseUrn,
                 CreatedAt = createdAt
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(statuses);
 
-            var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
+            var controllerResponse = (controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>;
 
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(reasons);
 
-            var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
+            var controllerResponse = (controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationReason>>;
 
@@ -153,7 +153,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(caseUrn))
                 .Returns(collection);
 
-			var controllerResponse = (await controllerSUT.GetNtiUnderConsiderationByCaseUrn(caseUrn)).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetNtiUnderConsiderationByCaseUrn(caseUrn)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>;
 
@@ -183,7 +183,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(considerationId))
                 .Returns(considerationResponse);
 
-            var controllerResponse = (await controllerSUT.GetNTIUnderConsiderationById(considerationId)).Result as OkObjectResult;
+            var controllerResponse = (controllerSUT.GetNTIUnderConsiderationById(considerationId)).Result as OkObjectResult;
 
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<NTIUnderConsiderationResponse>;
@@ -223,7 +223,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(request))
                 .Returns(response);
 
-            var controllerResponse = (await controllerSUT.Patch(request)).Result as OkObjectResult;
+            var controllerResponse = (controllerSUT.Patch(request)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<NTIUnderConsiderationResponse>;
 

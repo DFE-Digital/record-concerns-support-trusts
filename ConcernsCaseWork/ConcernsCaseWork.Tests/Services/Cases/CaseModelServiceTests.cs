@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var actualCaseModel = await caseModelService.GetCaseByUrn(1);
 
 			// assert
-			Assert.IsAssignableFrom<CaseModel>(actualCaseModel);
+			Assert.That(actualCaseModel, Is.AssignableFrom<CaseModel>());
 			Assert.That(actualCaseModel, Is.Not.Null);
 			Assert.That(actualCaseModel.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
 			Assert.That(actualCaseModel.UpdatedAt, Is.EqualTo(caseDto.UpdatedAt));
