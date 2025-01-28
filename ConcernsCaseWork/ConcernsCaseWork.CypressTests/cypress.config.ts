@@ -1,9 +1,11 @@
 import { defineConfig } from 'cypress'
+import { CaseworkerClaim, EnvUsername, JwtSecretIssuer, JwtSecretKey } from 'cypress/constants/cypressConstants';
 import { generateZapReport } from 'cypress/plugins/generateZapReport'
+import jwt from 'jsonwebtoken';
 
 export default defineConfig({
-  defaultCommandTimeout: 30000,
-  pageLoadTimeout: 30000,
+  defaultCommandTimeout: 20000,
+  pageLoadTimeout: 20000,
   watchForFileChanges: false,
   chromeWebSecurity: false,
   video: false,
@@ -31,6 +33,33 @@ export default defineConfig({
         // Map cypress env vars to process env vars for usage outside of Cypress run environment
         process.env = config.env
       })
+      on('task', {
+        generateJwtToken() {
+          // Fetch the secret key and roles from environment variables
+          const secretKey = Cypress.env(JwtSecretKey); 
+          const issuer = Cypress.env(JwtSecretIssuer); 
+          if (!secretKey) {
+            throw new Error('JWT secret key is not defined in cypress.env.json');
+          } 
+          if (!issuer) {
+            throw new Error('JWT secret issuer is not defined in cypress.env.json');
+          } 
+          
+
+          const payload = {
+            userId: 123,
+            username: Cypress.env(EnvUsername),
+            roles: [CaseworkerClaim, ], // Add roles as a list to the payload
+          };
+          const options: jwt.SignOptions = {
+            expiresIn: '1h',
+            issuer: issuer,
+          };
+
+          // Generate the JWT token
+          return jwt.sign(payload, secretKey, options);
+        },
+      });
 
       on('after:run', async () => {
         if (process.env.ZAP) {
