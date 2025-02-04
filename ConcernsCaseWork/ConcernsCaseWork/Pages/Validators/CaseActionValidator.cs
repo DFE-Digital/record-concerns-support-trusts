@@ -4,20 +4,13 @@ using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Validators
 {
-	public class CaseActionValidator : ICaseActionValidator
+	public class CaseActionValidator(IEnumerable<ICaseActionValidationStrategy> strategies) : ICaseActionValidator
 	{
-		private readonly IEnumerable<ICaseActionValidationStrategy> _strategies;
-
-		public CaseActionValidator(IEnumerable<ICaseActionValidationStrategy> strategies)
-		{
-			_strategies = strategies;
-		}
-
 		public List<string> Validate(IEnumerable<CaseActionModel> caseActions)
 		{
-			List<string> validationMessages = new List<string>();
+			List<string> validationMessages = [];
 
-			foreach (var strategy in _strategies.ToList())
+			foreach (var strategy in strategies.ToList())
 			{
 				var validationErrorMessage = strategy.Validate(caseActions);
 
@@ -32,9 +25,9 @@ namespace ConcernsCaseWork.Pages.Validators
 
 		public List<string> ValidateDelete(IEnumerable<CaseActionModel> caseActions)
 		{
-			List<string> validationMessages = new();
+			List<string> validationMessages = [];
 
-			foreach (var strategy in _strategies.ToList())
+			foreach (var strategy in strategies.ToList())
 			{
 				var validationErrorMessage = strategy.ValidateDelete(caseActions);
 
