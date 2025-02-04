@@ -217,5 +217,30 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 
 			result.Should().Be("Close trust financial forecast");
 		}
+
+		[Test]
+		public void When_NoOpenTargetedTrustEngagement_Returns_EmptyString()
+		{
+			var input = _fixture.CreateMany<TargetedTrustEngagmentModel>().ToList();
+
+			var validator = new TargetedTrustEngagementValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().BeEmpty();
+		}
+
+		[Test]
+		public void When_OpenTargetedTrustEngagement_Returns_ValidationError()
+		{
+			var input = _fixture.CreateMany<TargetedTrustEngagmentModel>().ToList();
+			input.ForEach(c => c.ClosedAt = null);
+
+			var validator = new TargetedTrustEngagementValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().Be("Close TTE (targeted trust engagement)");
+		}
 	}
 }
