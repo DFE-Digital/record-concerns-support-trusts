@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			var builder = new TestBuilder();
 			var sut = builder.BuildSut();
 
-			Assert.IsInstanceOf<CaseActionCreateHelper>(sut);
+			Assert.That(sut, Is.InstanceOf<CaseActionCreateHelper>());
 		}
 
 		[Test]

@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(closedCases, Is.Not.Null);
-				Assert.IsAssignableFrom<List<ClosedCaseSummaryModel>>(closedCases);
+				Assert.That(closedCases, Is.AssignableFrom<List<ClosedCaseSummaryModel>>());
 				Assert.That(closedCases.Count, Is.EqualTo(caseSummaryModels.Count));
 
 				foreach (var expected in closedCases)
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(closedCases, Is.Not.Null);
-				Assert.IsAssignableFrom<List<ClosedCaseSummaryModel>>(closedCases);
+				Assert.That(closedCases, Is.AssignableFrom<List<ClosedCaseSummaryModel>>());
 				Assert.That(closedCases, Is.Empty);
 			});
 		}

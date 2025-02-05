@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// act
 			var response = await pageModel.OnGetAsync();
 			
-			Assert.IsInstanceOf(typeof(RedirectToPageResult), response);
+			Assert.That(response, Is.InstanceOf<RedirectToPageResult>());
 			var redirectResult = response as RedirectToPageResult;
 			
 			Assert.That(redirectResult, Is.Not.Null);
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// act
 			var response = await pageModel.OnGetAsync();
 			
-			Assert.IsInstanceOf(typeof(RedirectToPageResult), response);
+			Assert.That(response, Is.InstanceOf<RedirectToPageResult>());
 			var redirectResult = response as RedirectToPageResult;
 			
 			Assert.That(redirectResult, Is.Not.Null);

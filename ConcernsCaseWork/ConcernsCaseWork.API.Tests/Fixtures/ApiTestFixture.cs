@@ -2,18 +2,28 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Authorization;
+using DfE.CoreLibs.Security.Configurations;
+using DfE.CoreLibs.Security.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Moq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Net.Http;
-using System.Net.Mime;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
 {
@@ -25,12 +35,14 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 		private DbContextOptions<ConcernsDbContext> _dbContextOptions { get; init; }
 
-		private ServerUserInfoService _serverUserInfoService { get; init; }
+		private ServerUserInfoService ServerUserInfoService { get; init; }
 
 		private static readonly object _lock = new();
 		private static bool _isInitialised = false;
 
-		private const string ConnectionStringKey = "ConnectionStrings:DefaultConnection";
+		private const string _connectionStringKey = "ConnectionStrings:DefaultConnection";
+		private const string _tokenSetting = "Authorization:TokenSettings";
+		private const string _policies = "Authorization:Policies";
 
 		public ApiTestFixture()
 		{
@@ -38,8 +50,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			{
 				if (!_isInitialised)
 				{
-					string connectionString = null;
-
+					string connectionString = null; 
 					_application = new WebApplicationFactory<Startup>()
 						.WithWebHostBuilder(builder =>
 						{
@@ -51,18 +62,30 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 									.AddEnvironmentVariables();
 
 								connectionString = BuildDatabaseConnectionString(config);
-
 								config.AddInMemoryCollection(new Dictionary<string, string>
 								{
-									[ConnectionStringKey] = connectionString
-								});
+									[_connectionStringKey] = connectionString, 
+									[_tokenSetting] = JsonConvert.SerializeObject(GetAppSettings<TokenSettings>(config, _tokenSetting)),
+									[_policies] = JsonConvert.SerializeObject(GetAppSettings<List<PolicyDefinition>>(config, _policies))
+								}); 
 							});
-						});
+							builder.ConfigureServices(services =>
+							{
+								services.AddSingleton(GetTokenSettings());
+								services.AddSingleton(GetMemoryCache());
+								services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+								services.AddSingleton<IUserTokenService, UserTokenService>();
+							});
+						}); 
 
 					var fakeUserInfo = new UserInfo()
-						{ Name = "API.TestFixture@test.gov.uk", Roles = new[] { Claims.CaseWorkerRoleClaim } };
-					_serverUserInfoService = new ServerUserInfoService() { UserInfo = fakeUserInfo };
-
+					{ 
+						Name = "API.TestFixture@test.gov.uk",
+						Roles = [Claims.CaseWorkerRoleClaim, Claims.CaseDeleteRoleClaim] 
+						
+					};
+					ServerUserInfoService = new ServerUserInfoService() { UserInfo = fakeUserInfo };
+					
 					Client = CreateHttpClient(fakeUserInfo);
 
 					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
@@ -76,21 +99,63 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 				}
 			}
 		}
+		private static IMemoryCache GetMemoryCache()
+		{
+			var mockMemoryCache = new Mock<IMemoryCache>();
+
+			// Set up the mock behavior
+			string key = "testKey";
+			object expectedValue = "testValue";
+
+			mockMemoryCache
+				.Setup(m => m.TryGetValue(key, out expectedValue))
+				.Returns(true);
+
+			mockMemoryCache
+				.Setup(m => m.CreateEntry(It.IsAny<object>()))
+				.Returns(Mock.Of<ICacheEntry>);
+			return mockMemoryCache.Object;
+		}
+
+		private static ClaimsPrincipal GetClaimsPrincipal(UserInfo user)
+		{
+			var claims = new List<Claim>
+			{
+				new(ClaimTypes.Name, user.Name),
+				new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", user.Name)
+			};
+			foreach (var role in user.Roles)
+			{
+				claims.Add(new(ClaimTypes.Role, role));
+			}
+			return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthenticationType"));
+		}
+
+		private IOptions<TokenSettings> GetTokenSettings()
+		{
+			var configuration = _application.Services.GetRequiredService<IConfiguration>();
+			var mockTokenSettingsOption = new Mock<IOptions<TokenSettings>>();
+			mockTokenSettingsOption.Setup(x => x.Value).Returns(configuration.GetSection(_tokenSetting).Get<TokenSettings>());
+			return mockTokenSettingsOption.Object;
+		}
 
 		private HttpClient CreateHttpClient(UserInfo userInfo)
 		{
-			var client = _application.CreateClient();
-			client.DefaultRequestHeaders.Add("ApiKey", "app-key");
-			client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
-
+			var client = _application.CreateClient(); 
+			client.DefaultRequestHeaders.Add("ContentType", Application.Json); 
 			// add standard headers for correlation and user context.
 			var clientUserInfoService = new ClientUserInfoService();
 			clientUserInfoService.SetPrincipal(userInfo);
 			clientUserInfoService.AddUserInfoRequestHeaders(client);
 
+			var userToken = _application.Services.GetService<IUserTokenService>();
+
+			var token = userToken.GetUserTokenAsync(GetClaimsPrincipal(userInfo)).Result;
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+			
 			var correlationContext = new CorrelationContext();
 			correlationContext.SetContext(Guid.NewGuid().ToString());
-
+			
 			AbstractService.AddDefaultRequestHeaders(client, correlationContext, clientUserInfoService, null);
 
 			return client;
@@ -99,16 +164,24 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		private static string BuildDatabaseConnectionString(IConfigurationBuilder config)
 		{
 			var currentConfig = config.Build();
-			var connection = currentConfig[ConnectionStringKey];
-			var sqlBuilder = new SqlConnectionStringBuilder(connection);
-			sqlBuilder.InitialCatalog = "ApiTests";
+			var connection = currentConfig[_connectionStringKey];
+			var sqlBuilder = new SqlConnectionStringBuilder(connection)
+			{
+				InitialCatalog = "ApiTests"
+			};
 
 			var result = sqlBuilder.ToString();
 
 			return result;
 		}
 
-		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions, _serverUserInfoService);
+		private static T GetAppSettings<T>(IConfigurationBuilder config, string appSettingSection)
+		{
+			var currentConfig = config.Build();
+			return currentConfig.Get<T>(); 
+		}
+
+		public ConcernsDbContext GetContext() => new(_dbContextOptions, ServerUserInfoService);
 
 		public void Dispose()
 		{

@@ -4,6 +4,7 @@ using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -16,7 +17,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 	public class CaseServiceTests
 	{
 		private static readonly Fixture _fixture = new();
-
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
@@ -35,12 +42,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiListWrapper))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var cases = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1));
@@ -91,12 +100,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1)));
@@ -121,11 +132,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var actualCase = await caseService.GetCaseByUrn(1);
@@ -168,12 +181,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCaseByUrn(1));
@@ -197,11 +212,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => caseService.GetCaseByUrn(1));
@@ -233,12 +250,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var apiWrapperCasesDto = await caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn"));
@@ -294,12 +313,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn")));
@@ -328,7 +349,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var cases = await caseService.GetCases(new PageSearch());
@@ -385,7 +406,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCases(new PageSearch()));
@@ -415,7 +436,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var actualCase = await caseService.PostCase(CaseFactory.BuildCreateCaseDto());
@@ -463,7 +484,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
@@ -492,7 +513,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
@@ -516,12 +537,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperCase))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act
 			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto());
@@ -564,12 +587,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
@@ -593,12 +618,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperCase))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
 
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));

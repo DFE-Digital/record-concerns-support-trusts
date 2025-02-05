@@ -1,12 +1,12 @@
-﻿using DfE.CoreLibs.Testing.Authorization;
-using Microsoft.AspNetCore.Routing; 
-using System;
+﻿using DfE.CoreLibs.Testing.Authorization.Helpers;
+using DfE.CoreLibs.Testing.Authorization;
+using DfE.CoreLibs.Testing.Mocks.WebApplicationFactory;
+using Microsoft.AspNetCore.Routing;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DfE.CoreLibs.Testing.Mocks.WebApplicationFactory;
 using Microsoft.Extensions.DependencyInjection;
-using DfE.CoreLibs.Testing.Authorization.Helpers;
 
 namespace ConcernsCaseWork.Tests.Security
 {
@@ -40,15 +40,16 @@ namespace ConcernsCaseWork.Tests.Security
 		{
 			// Using a temporary factory to access the EndpointDataSource for lazy initialization
 			var factory = new CustomWebApplicationFactory<Startup>();
+			
 			var endpointDataSource = factory.Services.GetRequiredService<EndpointDataSource>();
 
 			var endpoints = endpointDataSource.Endpoints
 			   .OfType<RouteEndpoint>()
-			   .DistinctBy(x=> x.DisplayName)
-			   .Where(x => !x.RoutePattern.RawText.Contains("MicrosoftIdentity") && 
+			   .DistinctBy(x => x.DisplayName)
+			   .Where(x => !x.RoutePattern.RawText.Contains("MicrosoftIdentity") &&
 						   !x.DisplayName.Contains("ConcernsCaseWork.API.Features") &&
 						   !x.RoutePattern.RawText.Equals("/") &&
-						   !x.Metadata.Any(m => m is RouteNameMetadata && ((RouteNameMetadata)m).RouteName == "default"));
+						   !x.Metadata.Any(m => m is RouteNameMetadata metadata && metadata.RouteName == "default"));
 
 			return endpoints;
 		}
