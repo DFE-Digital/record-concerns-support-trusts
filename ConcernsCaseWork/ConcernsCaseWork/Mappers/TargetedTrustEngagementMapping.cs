@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Utils.Extensions;
@@ -23,6 +24,18 @@ public static class TargetedTrustEngagementMapping
 		};
 
 		return result;
+	}
+
+	public static TargetedTrustEngagmentModel ToTargetedTrustEngagmentModel(this TargetedTrustEngagementSummaryResponse model)
+	{
+		return new TargetedTrustEngagmentModel
+		{
+			CaseUrn = model.CaseUrn,
+			ClosedAt = model.ClosedAt?.DateTime,
+			CreatedAt = model.CreatedAt.DateTime,
+			Id = model.TargetedTrustEngagementId,
+			UpdatedAt = model.UpdatedAt.DateTime
+		};
 	}
 
 	public static CreateTargetedTrustEngagementRequest ToEditTTEModel(GetTargetedTrustEngagementResponse getTTEResponse)
