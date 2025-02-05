@@ -4,6 +4,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.TargetedTrustEngagement;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -27,6 +28,7 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly INtiModelService _ntiModelService;
 		private readonly IDecisionService _decisionService;
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
+		private readonly ITargetedTrustEngagementService _targetedTrustEngagementService;
 		private readonly ICaseActionValidator _caseActionValidator;
 
 		public CaseValidatorService(
@@ -38,6 +40,7 @@ namespace ConcernsCaseWork.Services.Cases
 			INtiModelService ntiModelService,
 			IDecisionService decisionService,
 			ITrustFinancialForecastService trustFinancialForecastService,
+			ITargetedTrustEngagementService targetedTrustEngagementService,
 			ICaseActionValidator caseActionValidator)
 		{
 			_recordModelService = recordModelService;
@@ -49,6 +52,7 @@ namespace ConcernsCaseWork.Services.Cases
 			_ntiModelService = ntiModelService;
 			_decisionService = decisionService;
 			_trustFinancialForecastService = trustFinancialForecastService;
+			_targetedTrustEngagementService = targetedTrustEngagementService;
 			_caseActionValidator = caseActionValidator;
 		}
 
@@ -100,7 +104,7 @@ namespace ConcernsCaseWork.Services.Cases
 		private async Task<(IList<RecordModel>, IList<CaseActionModel>)> GetAllModels(long caseUrn)
 		{
 			var result = new List<CaseValidationErrorModel>();
-			List<CaseActionModel> caseActionModels = new();
+			List<CaseActionModel> caseActionModels = [];
 
 			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 
@@ -111,6 +115,7 @@ namespace ConcernsCaseWork.Services.Cases
 			var ntiModelModelsTask = _ntiModelService.GetNtisForCaseAsync(caseUrn);
 			var decisionsTask = GetDecisions(caseUrn);
 			var trustFinancialForecastTask = _trustFinancialForecastService.GetAllForCase((int)caseUrn);
+			var targetedTrustEngagementTask = _targetedTrustEngagementService.GetTargetedTrustEngagementByCaseUrn((int)caseUrn);
 
 			caseActionModels.AddRange(await srmaModelsTask);
 			caseActionModels.AddRange(await financialPlanModelsTask);
@@ -119,6 +124,7 @@ namespace ConcernsCaseWork.Services.Cases
 			caseActionModels.AddRange(await ntiModelModelsTask);
 			caseActionModels.AddRange(await decisionsTask);
 			caseActionModels.AddRange((await trustFinancialForecastTask).Select(x => x.ToTrustFinancialForecastSummaryModel()));
+			caseActionModels.AddRange((await targetedTrustEngagementTask).Select(x => x.ToTargetedTrustEngagmentModel()));
 
 			return (recordsModels, caseActionModels);
 		} 
