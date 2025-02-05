@@ -82,7 +82,17 @@ jobs:
         name: Set image name
         run: |
           IMAGE_NAME=${{ env.IMAGE_NAME }}
-          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "image-name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+
+      - run: |
+          echo '### Environment outputs' >> $GITHUB_STEP_SUMMARY
+          echo '|Key|Value|' >> $GITHUB_STEP_SUMMARY
+          echo '|--|--|' >> $GITHUB_STEP_SUMMARY
+          echo "|\`environment\`|${{ steps.environment.outputs.environment }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`branch\`|${{ steps.branch.outputs.branch }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`release\`|${{ steps.release.outputs.release }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`checked-out-sha\`|${{ steps.sha.outputs.checked-out-sha }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`image-name\`|${{ steps.image.outputs.image-name }}|" >> $GITHUB_STEP_SUMMARY
 
   build:
     name: Build
