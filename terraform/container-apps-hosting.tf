@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.16.3"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.16.6"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -25,6 +25,9 @@ module "azure_container_apps_hosting" {
   mssql_managed_identity_assign_role = local.mssql_managed_identity_assign_role
 
   image_name = local.image_name
+
+  monitor_http_availability_fqdn = local.monitor_http_availability_fqdn
+  dns_alias_records              = local.dns_alias_records
 
   container_command                      = local.container_command
   container_secret_environment_variables = local.container_secret_environment_variables
