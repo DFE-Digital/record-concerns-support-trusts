@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.16.3"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.16.6"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -25,6 +25,9 @@ module "azure_container_apps_hosting" {
   mssql_managed_identity_assign_role = local.mssql_managed_identity_assign_role
 
   image_name = local.image_name
+
+  monitor_http_availability_fqdn = local.monitor_http_availability_fqdn
+  dns_alias_records              = local.dns_alias_records
 
   container_command                      = local.container_command
   container_secret_environment_variables = local.container_secret_environment_variables
@@ -80,4 +83,7 @@ module "azure_container_apps_hosting" {
   existing_logic_app_workflow                  = local.existing_logic_app_workflow
   existing_network_watcher_name                = local.existing_network_watcher_name
   existing_network_watcher_resource_group_name = local.existing_network_watcher_resource_group_name
+
+  enable_cdn_frontdoor_vdp_redirects     = local.enable_cdn_frontdoor_vdp_redirects
+  cdn_frontdoor_vdp_destination_hostname = local.cdn_frontdoor_vdp_destination_hostname
 }
