@@ -94,9 +94,21 @@ jobs:
           echo "|\`checked-out-sha\`|${{ steps.sha.outputs.checked-out-sha }}|" >> $GITHUB_STEP_SUMMARY
           echo "|\`image-name\`|${{ steps.image.outputs.image-name }}|" >> $GITHUB_STEP_SUMMARY
 
+  validate-packages:
+    runs-on: windows-latest
+    name: Package Validation
+    permissions:
+      contents: read
+    needs: [ set-env ]
+    steps:
+      - name: Validate Packages
+        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@v1.1.2
+        with:
+          environment: ${{ needs.set-env.outputs.environment }}
+
   build:
     name: Build
-    needs: [ set-env ]
+    needs: [ set-env, validate-packages ]
     permissions:
       packages: write
     uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@v4.1.0
