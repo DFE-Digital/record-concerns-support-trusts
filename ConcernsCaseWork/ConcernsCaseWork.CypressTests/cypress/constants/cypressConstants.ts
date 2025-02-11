@@ -7,4 +7,4 @@ export const CaseworkerClaim = "concerns-casework.caseworker";
 export const TeamLeaderClaim = "concerns-casework.teamleader";
 export const AdminClaim = "concerns-casework.admin";
 export const DeleteCaseGroupClaim = "concerns-casework.case-delete-group";
-export const jwtToken = "jwtToken";
+export const EnvJwtToken = "jwtToken";
