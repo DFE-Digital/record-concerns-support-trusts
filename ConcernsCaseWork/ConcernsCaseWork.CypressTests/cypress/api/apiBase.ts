@@ -1,11 +1,11 @@
-import { EnvApiKey, EnvUsername, CaseworkerClaim, jwtToken } from "cypress/constants/cypressConstants";
+import { EnvJwtToken, EnvUsername, CaseworkerClaim } from "cypress/constants/cypressConstants";
 
 export class ApiBase
 {
     protected getHeaders(): object
     {
         const result = {
-            'Authorization': `Bearer ${Cypress.env(jwtToken)}`,
+            Authorization: Cypress.env(EnvJwtToken),
             "Content-type": "application/json",
             "x-user-context-role-0" : CaseworkerClaim,
             "x-user-context-name" : Cypress.env(EnvUsername)
