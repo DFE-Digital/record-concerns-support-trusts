@@ -155,6 +155,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, DecisionValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, TrustFinancialForecastValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, TargetedTrustEngagementValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();

@@ -16,6 +16,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.inputs.environment }}-${{ github.ref_name }}
 
+env:
+  IMAGE_NAME: amsd-app
+
 jobs:
   set-env:
     name: Determine environment
@@ -25,6 +28,7 @@ jobs:
       branch: ${{ steps.branch.outputs.branch }}
       release: ${{ steps.release.outputs.release }}
       checked-out-sha: ${{ steps.sha.outputs.checked-out-sha }}
+      image-name: ${{ steps.image.outputs.image-name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,13 +78,28 @@ jobs:
           RELEASE=${{ steps.environment.outputs.environment }}-`date +%Y-%m-%d`.${{ github.run_number }}
           echo "release=${RELEASE}" >> $GITHUB_OUTPUT
 
-  deploy-image:
-    permissions:
-      id-token: write
-      contents: read
-      packages: write
-    name: Deploy '${{ needs.set-env.outputs.branch }}' to ${{ needs.set-env.outputs.environment }}
+      - id: image
+        name: Set image name
+        run: |
+          IMAGE_NAME=${{ env.IMAGE_NAME }}
+          echo "image-name=${IMAGE_NAME}" >> $GITHUB_OUTPUT
+
+      - run: |
+          echo '### Environment outputs' >> $GITHUB_STEP_SUMMARY
+          echo '|Key|Value|' >> $GITHUB_STEP_SUMMARY
+          echo '|--|--|' >> $GITHUB_STEP_SUMMARY
+          echo "|\`environment\`|${{ steps.environment.outputs.environment }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`branch\`|${{ steps.branch.outputs.branch }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`release\`|${{ steps.release.outputs.release }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`checked-out-sha\`|${{ steps.sha.outputs.checked-out-sha }}|" >> $GITHUB_STEP_SUMMARY
+          echo "|\`image-name\`|${{ steps.image.outputs.image-name }}|" >> $GITHUB_STEP_SUMMARY
+
+  build:
+    name: Build
     needs: [ set-env ]
+    permissions:
+      packages: write
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@v4.1.0
     strategy:
       matrix:
         stage: [
@@ -92,21 +111,53 @@ jobs:
             tag-prefix: ""
           - stage: "initcontainer"
             tag-prefix: "init-"
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build-push-deploy.yml@v3.0.0
     with:
-      docker-image-name: 'amsd-app'
-      docker-build-target: ${{ matrix.stage }}
-      docker-build-file-name: './Dockerfile'
-      docker-tag-prefix: ${{ matrix.tag-prefix }}
-      import-without-deploy: ${{ matrix.stage == 'initcontainer' }}
       environment: ${{ needs.set-env.outputs.environment }}
-      annotate-release: true
-      docker-build-args: |
-        COMMIT_SHA="${{ needs.set-env.outputs.checked-out-sha }}"
+      docker-image-name: ${{ needs.set-env.outputs.image-name }}
+      docker-build-args: CI=true
+      docker-build-target: ${{ matrix.stage }}
+      docker-tag-prefix: ${{ matrix.tag-prefix }}
+
+  import:
+    name: Import
+    needs: [ set-env, build ]
+    permissions:
+      id-token: write
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@v4.1.0
+    strategy:
+      matrix:
+        stage: [
+          "final",
+          "initcontainer"
+        ]
+        include:
+          - stage: "final"
+            tag-prefix: ""
+          - stage: "initcontainer"
+            tag-prefix: "init-"
+    with:
+      environment: ${{ needs.set-env.outputs.environment }}
+      docker-image-name: ${{ needs.set-env.outputs.image-name }}
+      docker-tag-prefix: ${{ matrix.tag-prefix }}
     secrets:
       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
       azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       azure-acr-client-id: ${{ secrets.ACR_CLIENT_ID }}
+      azure-acr-name: ${{ secrets.ACR_NAME }}
+
+  deploy:
+    name: Deploy
+    needs: [ set-env, import ]
+    permissions:
+      id-token: write
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@v4.1.0
+    with:
+      environment: ${{ needs.set-env.outputs.environment }}
+      docker-image-name: ${{ needs.set-env.outputs.image-name }}
+      annotate-release: true
+    secrets:
+      azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       azure-acr-name: ${{ secrets.ACR_NAME }}
       azure-aca-client-id: ${{ secrets.ACA_CLIENT_ID }}
       azure-aca-name: ${{ secrets.ACA_CONTAINERAPP_NAME }}
@@ -114,7 +165,7 @@ jobs:
 
   create-tag:
     name: Tag and release
-    needs: set-env
+    needs: [ deploy, set-env ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -148,7 +199,7 @@ jobs:
   cypress-tests:
     name: Run Cypress Tests
     if: needs.set-env.outputs.environment == 'staging' || needs.set-env.outputs.environment == 'dev'
-    needs: [ deploy-image, set-env ]
+    needs: [ deploy, set-env ]
     uses: ./.github/workflows/cypress-tests.yml
     with:
       environment: ${{ needs.set-env.outputs.environment }}

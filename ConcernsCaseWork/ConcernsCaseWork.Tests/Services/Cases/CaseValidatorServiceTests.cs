@@ -1,10 +1,12 @@
 ﻿using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
 using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.TargetedTrustEngagement;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -15,7 +17,6 @@ using ConcernsCaseWork.Services.Records;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -110,6 +111,9 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var trustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			trustFinancialForecastService.Setup(m => m.GetAllForCase(1)).ReturnsAsync(new List<TrustFinancialForecastResponse>());
 
+			var targetedTrustEngagementService = new Mock<ITargetedTrustEngagementService>();
+			targetedTrustEngagementService.Setup(m => m.GetTargetedTrustEngagementByCaseUrn(1)).ReturnsAsync([]);
+
 			var result = new CaseValidatorService(
 				recordsModelService.Object,
 				srmaService.Object,
@@ -119,6 +123,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				ntiService.Object,
 				decisionService.Object,
 				trustFinancialForecastService.Object,
+				targetedTrustEngagementService.Object,
 				caseActionValidator.Object);
 
 			return result;
