@@ -1,4 +1,4 @@
-import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername } from "../constants/cypressConstants";
+import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername, DeleteCaseGroupClaim } from "../constants/cypressConstants";
 
 export class AuthenticationInterceptor {
 
@@ -14,8 +14,9 @@ export class AuthenticationInterceptor {
                 req.headers = {
                     ...req.headers,
                     'Authorization': `Bearer ${Cypress.env(EnvAuthKey)}`,
-                    "x-user-context-role-0": params?.role ? params.role : CaseworkerClaim,
-                    "x-user-context-name": params?.username ? params.username : Cypress.env(EnvUsername)
+                    "x-user-context-role-0": CaseworkerClaim,
+                    "x-user-context-role-1": params?.role ? params.role : CaseworkerClaim,
+                    "x-user-context-name": params?.username ? params.username : Cypress.env(EnvUsername),
                 };
             }
         ).as("AuthInterceptor");
