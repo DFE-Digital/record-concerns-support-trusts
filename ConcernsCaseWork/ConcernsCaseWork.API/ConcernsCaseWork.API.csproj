@@ -18,7 +18,7 @@
       <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0" />
       <PackageReference Include="AutoMapper" Version="12.0.1" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-      <PackageReference Include="DfE.CoreLibs.Security" Version="1.0.6" />
+      <PackageReference Include="DfE.CoreLibs.Security" Version="1.0.9-prerelease" />
       <PackageReference Include="FluentValidation" Version="11.11.0" />
       <PackageReference Include="MediatR" Version="12.4.1" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
