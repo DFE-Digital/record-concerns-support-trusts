@@ -30,6 +30,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using ConcernsCaseWork.API.Contracts.PolicyType;
 using Microsoft.AspNetCore.Authentication;
 using ConcernsCaseWork.Authorization;
+using DfE.CoreLibs.Security.Cypress;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork
 {
@@ -39,8 +41,19 @@ namespace ConcernsCaseWork
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.Configure<CypressAwareAntiForgeryOptions>(opts =>
+			{
+				opts.ShouldSkipAntiforgery = httpContext =>
+				{
+					var path = httpContext.Request.Path;
+					return path.StartsWithSegments("/v2");
+				};
+			});
+
 			services.AddRazorPages(options =>
 			{
+				options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+
 				options.Conventions.AuthorizeFolder("/");
 				options.Conventions.AllowAnonymousToPage("/AccessDenied");
 				options.Conventions.AllowAnonymousToPage("/Maintenance");
@@ -63,7 +76,7 @@ namespace ConcernsCaseWork
 			}).AddViewOptions(options =>
 			{
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
-			});
+			}).AddCypressAntiForgeryHandling();
 
 			services.AddFeatureManagement();
 
@@ -77,25 +90,7 @@ namespace ConcernsCaseWork
 			{
 				options.DefaultScheme = "MultiAuth";
 				options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-			})
-			.AddPolicyScheme("MultiAuth", "Multi Auth", options =>
-			{
-				options.ForwardDefaultSelector = context =>
-				{
-					var hasCypressHeaders =
-						context.Request.Headers.ContainsKey("x-user-context-role-0") &&
-						context.Request.Headers.ContainsKey("x-user-context-name");
-
-					if (hasCypressHeaders)
-					{
-						return "CypressAuth";
-					}
-
-					// Otherwise, use cookies
-					return CookieAuthenticationDefaults.AuthenticationScheme;
-				};
-			})
-			.AddScheme<AuthenticationSchemeOptions, CypressAuthenticationHandler>("CypressAuth", null);
+			}).AddCypressMultiAuthentication();
 
 			authenticationBuilder.AddMicrosoftIdentityWebApp(configuration);
 			services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme,
@@ -110,6 +105,7 @@ namespace ConcernsCaseWork
 					options.AccessDeniedPath = "/access-denied";
 				});
 			services.AddCustomJwtAuthentication(configuration, _authenticationScheme, authenticationBuilder);
+
 			services.AddAntiforgery(options =>
 			{
 				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
@@ -205,8 +201,8 @@ namespace ConcernsCaseWork
 			app.UseRouting();
 
 			app.UseAuthentication();
-			app.UseAuthorization();
 			app.UseMiddleware<UserContextMiddleware>();
+			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextReceiverMiddleware>();
