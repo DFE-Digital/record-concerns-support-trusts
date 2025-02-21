@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsValid(formCollection);
 
 			// assert
-			Assert.True(isValid);
+			Assert.That(isValid, Is.True);
 		}
 		
 		[Test]
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsValid(formCollection);
 
 			// assert
-			Assert.True(isValid);
+			Assert.That(isValid, Is.True);
 		}
 		
 		[Test]
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsValid(formCollection);
 
 			// assert
-			Assert.False(isValid);
+			Assert.That(isValid, Is.False);
 		}
 		
 		[Test]
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsEditValid(formCollection);
 
 			// assert
-			Assert.True(isValid);
+			Assert.That(isValid, Is.True);
 		}
 		
 		[Test]
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsEditValid(formCollection);
 
 			// assert
-			Assert.True(isValid);
+			Assert.That(isValid, Is.True);
 		}
 		
 		[Test]
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			var isValid = ConcernTypeValidator.IsEditValid(formCollection);
 
 			// assert
-			Assert.False(isValid);
+			Assert.That(isValid, Is.False);
 		}
 	}
 }

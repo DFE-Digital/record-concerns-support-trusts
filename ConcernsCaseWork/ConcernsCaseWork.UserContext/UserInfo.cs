@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
 
 namespace ConcernsCaseWork.UserContext
 {
@@ -7,7 +8,7 @@ namespace ConcernsCaseWork.UserContext
 	{
 		public string Name { get; set; }
 		public string[] Roles { get; set; }
-
+		public ClaimsPrincipal User { get; set; }
 		private const string NameHeaderKey = "x-user-context-name";
 		private const string RoleHeaderKeyPrefix = "x-user-context-role-";
 
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.UserContext
 
 			if (string.IsNullOrWhiteSpace(name) || roles.Length == 0)
 			{
-				return null;
+				return null!;
 			}
 			else
 			{
@@ -49,22 +50,22 @@ namespace ConcernsCaseWork.UserContext
 
 		public bool IsCaseworker()
 		{
-			return this.Roles.Contains(Claims.CaseWorkerRoleClaim);
+			return Roles.Contains(Claims.CaseWorkerRoleClaim);
 		}
 
 		public bool IsTeamLeader()
 		{
-			return this.Roles.Contains(Claims.TeamLeaderRoleClaim);
+			return Roles.Contains(Claims.TeamLeaderRoleClaim);
 		}
 
 		public bool IsAdmin()
 		{
-			return this.Roles.Contains(Claims.AdminRoleClaim);
+			return Roles.Contains(Claims.AdminRoleClaim);
 		}
 
 		public bool IsInCaseDeleteGroup()
 		{
-			return this.Roles.Contains(Claims.CaseDeleteRoleClaim);
+			return Roles.Contains(Claims.CaseDeleteRoleClaim);
 		}
 	}
 }

@@ -120,7 +120,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var showEditActions = pageModel.IsEditableCase;
 
 			// assert
-			Assert.False(showEditActions);
+			Assert.That(showEditActions, Is.False);
 		}
 
 		[Test]
@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var showEditActions = pageModel.IsEditableCase;
 
 			// assert
-			Assert.True(showEditActions);
+			Assert.That(showEditActions, Is.True);
 		}
 
 		[Test]
@@ -161,7 +161,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var showEditActions = pageModel.IsEditableCase;
 
 			// assert
-			Assert.False(showEditActions);
+			Assert.That(showEditActions, Is.False);
 		}
 
 		[Test]

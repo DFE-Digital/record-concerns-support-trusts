@@ -1,7 +1,7 @@
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
-using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -12,33 +12,22 @@ namespace ConcernsCaseWork.API.Features.TrustFinancialForecast
 	[ApiVersion("2.0")]
 	[ApiController]
 	[Route("v{version:apiVersion}/concerns-cases/{caseUrn:int}/trustfinancialforecast")]
-	public class TrustFinancialForecastController : ControllerBase
+	public class TrustFinancialForecastController(
+		ILogger<TrustFinancialForecastController> logger,
+		IUseCaseAsync<CreateTrustFinancialForecastRequest, int> createTrustFinancialForecast,
+		IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
+		IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> updateTrustFinancialForecast,
+		IUseCaseAsync<CloseTrustFinancialForecastRequest, int> closeFinancialTrustForecast,
+		IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase,
+		IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> deleteFinancialTrustForecast) : ControllerBase
 	{
-		private readonly ILogger<TrustFinancialForecastController> _logger;
-		private readonly IUseCaseAsync<CreateTrustFinancialForecastRequest, int> _createTrustFinancialForecast;
-		private readonly IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> _getTrustFinancialForecast;
-		private readonly IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase;
-		private readonly IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> _updateTrustFinancialForecast;
-		private readonly IUseCaseAsync<CloseTrustFinancialForecastRequest, int> _closeFinancialTrustForecast;
-		private readonly IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> _deleteFinancialTrustForecast;
-
-		public TrustFinancialForecastController(
-			ILogger<TrustFinancialForecastController> logger,
-			IUseCaseAsync<CreateTrustFinancialForecastRequest, int> createTrustFinancialForecast,
-			IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
-			IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> updateTrustFinancialForecast,
-			IUseCaseAsync<CloseTrustFinancialForecastRequest, int> closeFinancialTrustForecast,
-			IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase,
-			IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> deleteFinancialTrustForecast)
-		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_createTrustFinancialForecast = createTrustFinancialForecast ?? throw new ArgumentNullException(nameof(createTrustFinancialForecast));
-			_getTrustFinancialForecast = getTrustFinancialForecast ?? throw new ArgumentNullException(nameof(getTrustFinancialForecast));
-			_updateTrustFinancialForecast = updateTrustFinancialForecast ?? throw new ArgumentNullException(nameof(updateTrustFinancialForecast));
-			_closeFinancialTrustForecast = closeFinancialTrustForecast ?? throw new ArgumentNullException(nameof(closeFinancialTrustForecast));
-			_getTrustFinancialForecastsForCase = getTrustFinancialForecastsForCase ?? throw new ArgumentNullException(nameof(getTrustFinancialForecastsForCase));
-			_deleteFinancialTrustForecast = deleteFinancialTrustForecast ?? throw new ArgumentNullException(nameof(deleteFinancialTrustForecast));
-		}
+		private readonly ILogger<TrustFinancialForecastController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		private readonly IUseCaseAsync<CreateTrustFinancialForecastRequest, int> _createTrustFinancialForecast = createTrustFinancialForecast ?? throw new ArgumentNullException(nameof(createTrustFinancialForecast));
+		private readonly IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> _getTrustFinancialForecast = getTrustFinancialForecast ?? throw new ArgumentNullException(nameof(getTrustFinancialForecast));
+		private readonly IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase = getTrustFinancialForecastsForCase ?? throw new ArgumentNullException(nameof(getTrustFinancialForecastsForCase));
+		private readonly IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> _updateTrustFinancialForecast = updateTrustFinancialForecast ?? throw new ArgumentNullException(nameof(updateTrustFinancialForecast));
+		private readonly IUseCaseAsync<CloseTrustFinancialForecastRequest, int> _closeFinancialTrustForecast = closeFinancialTrustForecast ?? throw new ArgumentNullException(nameof(closeFinancialTrustForecast));
+		private readonly IUseCaseAsync<DeleteTrustFinancialForecastRequest, int> _deleteFinancialTrustForecast = deleteFinancialTrustForecast ?? throw new ArgumentNullException(nameof(deleteFinancialTrustForecast));
 
 		[HttpPost]
 		[MapToApiVersion("2.0")]
@@ -133,7 +122,7 @@ namespace ConcernsCaseWork.API.Features.TrustFinancialForecast
 			return new OkObjectResult(response);
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{id:int}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(int caseUrn, int id, CancellationToken cancellationToken = default)

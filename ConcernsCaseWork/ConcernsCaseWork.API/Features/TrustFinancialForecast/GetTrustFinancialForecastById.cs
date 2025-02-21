@@ -1,22 +1,14 @@
 using ConcernsCaseWork.API.Contracts.TrustFinancialForecast;
 using ConcernsCaseWork.API.Exceptions;
-using ConcernsCaseWork.API.Features.TrustFinancialForecast;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Features.TrustFinancialForecast;
 
-public class GetTrustFinancialForecastById : IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>
+public class GetTrustFinancialForecastById(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway) : IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>
 {
-	private readonly IConcernsCaseGateway _concernsCaseGateway;
-	private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway;
-
-	public GetTrustFinancialForecastById(IConcernsCaseGateway concernsCaseGateway, ITrustFinancialForecastGateway trustFinancialForecastGateway)
-	{
-		_concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
-		_trustFinancialForecastGateway = trustFinancialForecastGateway ?? throw new ArgumentNullException(nameof(trustFinancialForecastGateway));
-	}
+	private readonly IConcernsCaseGateway _concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
+	private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway = trustFinancialForecastGateway ?? throw new ArgumentNullException(nameof(trustFinancialForecastGateway));
 
 	public async Task<TrustFinancialForecastResponse> Execute(GetTrustFinancialForecastByIdRequest request, CancellationToken cancellationToken)
 	{

@@ -8,14 +8,8 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 	[ApiVersion("2.0")]
 	[ApiController]
 	[Route("v{version:apiVersion}/citytechnologycolleges")]
-	public class CityTechnologyCollegeController : ControllerBase
+	public class CityTechnologyCollegeController(IMediator mediator) : ControllerBase
 	{
-		private readonly IMediator _mediator;
-
-		public CityTechnologyCollegeController(IMediator mediator)
-		{
-			_mediator = mediator;
-		}
 
 		/// <summary>
 		/// Get a list of city technology colleges
@@ -26,7 +20,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		[ProducesResponseType((int)HttpStatusCode.OK)]
 		public async Task<IActionResult> List([FromQuery]List.Query query)
 		{
-			var model = await _mediator.Send(query);
+			var model = await mediator.Send(query);
 			return Ok(model.Items);
 		}
 
@@ -40,7 +34,7 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		[ProducesResponseType((int)HttpStatusCode.NoContent)]
 		public async Task<IActionResult> GetByUKPRN([FromRoute]GetByUKPRN.Query query)
 		{
-			var model = await _mediator.Send(query);
+			var model = await mediator.Send(query);
 
 			// Our caller does not know if the UKPRN exists
 			// We need to return a 204 instead of 404 in the case of null and let the client decide
@@ -54,8 +48,8 @@ namespace ConcernsCaseWork.API.Features.CityTechnicalCollege
 		public async Task<IActionResult> Create([FromBody] CityTechnologyCollege request)
 		{
 			var command = new Create.Command(request);
-			var response = await _mediator.Send(command);
-			return CreatedAtAction(nameof(GetByUKPRN), new { UKPRN = request.UKPRN }, null);
+			var response = await mediator.Send(command);
+			return CreatedAtAction(nameof(GetByUKPRN), new { request.UKPRN }, null);
 		}
 	}
 }

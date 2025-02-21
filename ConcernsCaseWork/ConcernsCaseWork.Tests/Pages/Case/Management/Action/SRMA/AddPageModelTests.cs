@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
 			var page = pageResponse as RedirectResult;
 
-			Assert.IsEmpty(pageModel.TempData);
+			Assert.That(pageModel.TempData, Is.Empty);
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.Url, Is.EqualTo($"/case/1/management"));
 		}

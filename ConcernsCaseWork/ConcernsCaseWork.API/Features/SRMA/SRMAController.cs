@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.PolicyType;
 using ConcernsCaseWork.API.Contracts.Srma;
-using ConcernsCaseWork.UserContext;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +13,10 @@ namespace ConcernsCaseWork.API.Features.SRMA
 	[ApiVersion("2.0")]
 	[ApiController]
 	[Route("v{version:apiVersion}/case-actions/srma")]
-	public class SRMAController : ControllerBase
+	public class SRMAController(
+		ILogger<SRMAController> logger,
+		IMediator mediator) : ControllerBase
 	{
-		private readonly ILogger<SRMAController> _logger;
-		private readonly IMediator _mediator;
-
-		public SRMAController(
-			ILogger<SRMAController> logger,
-			IMediator mediator)
-		{
-			_mediator = mediator;
-			_logger = logger;
-		}
-
 		[HttpPost]
 		[MapToApiVersion("2.0")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
@@ -33,8 +24,8 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		public async Task<IActionResult> Create(CreateSRMARequest request, CancellationToken cancellationToken = default)
 		{
 			var command = new Create.Command(request);
-			var commandResult = await _mediator.Send(command);
-			var model = await _mediator.Send(new GetByID.Query() { srmaId = commandResult });
+			var commandResult = await mediator.Send(command);
+			var model = await mediator.Send(new GetByID.Query() { srmaId = commandResult });
 			return CreatedAtAction(nameof(GetByID), new { srmaId = model.Id }, new ApiSingleResponseV2<SRMAResponse>(model));
 		}
 
@@ -43,7 +34,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> GetByID([FromQuery] GetByID.Query query)
 		{
-			var model = await _mediator.Send(query);
+			var model = await mediator.Send(query);
 			if (model == null)
 			{
 				return NotFound();
@@ -58,7 +49,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> ListByCaseUrn([FromRoute] ListByCaseUrn.Query query)
 		{
-			var model = await _mediator.Send(query);
+			var model = await mediator.Send(query);
 			return Ok(new ApiSingleResponseV2<ICollection<SRMAResponse>>(model));
 		}
 
@@ -70,7 +61,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		public async Task<IActionResult> UpdateStatus(int srmaId, SRMAStatus status, CancellationToken cancellationToken = default)
 		{
 			var command = SRMA.UpdateStatus.Command.Create(srmaId, status);
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
 
@@ -80,7 +71,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		public async Task<IActionResult> UpdateReason(int srmaId, SRMAReasonOffered reason, CancellationToken cancellationToken = default)
 		{
 			var command = SRMA.UpdateReason.Command.Create(srmaId, reason);
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
 
@@ -90,7 +81,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		public async Task<IActionResult> UpdateSrmaNotes(int srmaId, [StringLength(SrmaConstants.NotesLength)] string notes, CancellationToken cancellationToken = default)
 		{
 			var command = UpdateNotes.Command.Create(srmaId, notes);
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
 
@@ -99,7 +90,7 @@ namespace ConcernsCaseWork.API.Features.SRMA
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> UpdateClosedDate([FromRoute] UpdateDateClosed.Command command, CancellationToken cancellationToken = default)
 		{
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 			return await GetByID(new GetByID.Query() { srmaId = commandResult });
 		}
 
@@ -118,13 +109,13 @@ namespace ConcernsCaseWork.API.Features.SRMA
 				}
 
 				var command = SRMA.UpdateOfferedDate.Command.Create(srmaId, date.Value);
-				var commandResult = await _mediator.Send(command);
+				var commandResult = await mediator.Send(command);
 				return await GetByID(new GetByID.Query() { srmaId = commandResult });
 				
 			}
 			catch (FormatException ex)
 			{
-				_logger.LogError(ex, "DateTime received doesn't conform to format");
+				logger.LogError(ex, "DateTime received doesn't conform to format");
 
 				return BadRequest($"Offered date {offeredDate} is not in the expected format dd-MM-yyyy");
 			}
@@ -139,12 +130,12 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			try
 			{
 				var command = UpdateDateAccepted.Command.Create(srmaId, DeserialiseDateTime(acceptedDate));
-				var commandResult = await _mediator.Send(command);
+				var commandResult = await mediator.Send(command);
 				return await GetByID(new GetByID.Query() { srmaId = commandResult });
 			}
 			catch (FormatException ex)
 			{
-				_logger.LogError(ex, "DateTime received doesn't conform to format");
+				logger.LogError(ex, "DateTime received doesn't conform to format");
 
 				return BadRequest($"Accepted date {acceptedDate} is not in the expected format dd-MM-yyyy");
 			}
@@ -158,12 +149,12 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			try
 			{
 				var command = UpdateDateReportSent.Command.Create(srmaId, DeserialiseDateTime(dateReportSent));
-				var commandResult = await _mediator.Send(command);
+				var commandResult = await mediator.Send(command);
 				return await GetByID(new GetByID.Query() { srmaId = commandResult });
 			}
 			catch (FormatException ex)
 			{
-				_logger.LogError(ex, "DateTime received doesn't conform to format");
+				logger.LogError(ex, "DateTime received doesn't conform to format");
 
 				return BadRequest($"Date report sent {dateReportSent} is not in the expected format dd-MM-yyyy");
 			}
@@ -176,23 +167,23 @@ namespace ConcernsCaseWork.API.Features.SRMA
 			try
 			{
 				var command = SRMA.UpdateVisitDates.Command.Create(srmaId, DeserialiseDateTime(startDate), DeserialiseDateTime(endDate));
-				var commandResult = await _mediator.Send(command);
+				var commandResult = await mediator.Send(command);
 				return await GetByID(new GetByID.Query() { srmaId = commandResult });
 			}
 			catch (FormatException ex)
 			{
-				_logger.LogError(ex, "DateTime received doesn't conform to format");
+				logger.LogError(ex, "DateTime received doesn't conform to format");
 
 				return BadRequest($"Visit dates start: {startDate} end: {endDate} is not in the expected format dd-MM-yyyy");
 			}
 		}
 
-		[Authorize(Policy = "CanDelete")]
+		[Authorize(Policy = Policy.CanDelete)]
 		[HttpDelete("{srmaId}")]
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete([FromRoute] Delete.Command command, CancellationToken cancellationToken = default)
 		{
-			await _mediator.Send(command);
+			await mediator.Send(command);
 
 			return NoContent();
 		}
