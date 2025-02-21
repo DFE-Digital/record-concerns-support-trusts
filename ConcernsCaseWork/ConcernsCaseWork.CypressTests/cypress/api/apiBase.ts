@@ -8,7 +8,8 @@ export class ApiBase
             Authorization: Cypress.env(EnvJwtToken),
             "Content-type": "application/json",
             "x-user-context-role-0" : CaseworkerClaim,
-            "x-user-context-name" : Cypress.env(EnvUsername)
+            "x-user-context-name" : Cypress.env(EnvUsername),
+            "x-cypress-user": "cypressUser"
         };
         return result;
     }
