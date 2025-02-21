@@ -496,3 +496,9 @@ variable "dns_alias_records" {
   )
   default = {}
 }
+
+variable "enable_monitoring_traces" {
+  description = "Monitor App Insights traces for error messages"
+  type        = bool
+  default     = true
+}

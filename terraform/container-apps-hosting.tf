@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.16.6"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.17.1"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -86,4 +86,6 @@ module "azure_container_apps_hosting" {
 
   enable_cdn_frontdoor_vdp_redirects     = local.enable_cdn_frontdoor_vdp_redirects
   cdn_frontdoor_vdp_destination_hostname = local.cdn_frontdoor_vdp_destination_hostname
+
+  enable_monitoring_traces = local.enable_monitoring_traces
 }
