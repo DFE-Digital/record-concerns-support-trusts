@@ -46,7 +46,8 @@ namespace ConcernsCaseWork
 				opts.ShouldSkipAntiforgery = httpContext =>
 				{
 					var path = httpContext.Request.Path;
-					return path.StartsWithSegments("/v2");
+					return path.StartsWithSegments("/v2") ||
+						   path.StartsWithSegments("/error");
 				};
 			});
 
@@ -105,11 +106,6 @@ namespace ConcernsCaseWork
 					options.AccessDeniedPath = "/access-denied";
 				});
 			services.AddCustomJwtAuthentication(configuration, _authenticationScheme, authenticationBuilder);
-
-			services.AddAntiforgery(options =>
-			{
-				options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-			});
 
 			// Redis
 			services.AddRedis(configuration);
