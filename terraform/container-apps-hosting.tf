@@ -86,4 +86,6 @@ module "azure_container_apps_hosting" {
 
   enable_cdn_frontdoor_vdp_redirects     = local.enable_cdn_frontdoor_vdp_redirects
   cdn_frontdoor_vdp_destination_hostname = local.cdn_frontdoor_vdp_destination_hostname
+
+  enable_monitoring_traces = local.enable_monitoring_traces
 }
