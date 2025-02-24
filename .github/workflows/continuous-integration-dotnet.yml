@@ -2,20 +2,20 @@
 
 on:
   push:
-    branches:
-    - main
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
+      - '**.csproj'
+      - '**.cs'
+      - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
   pull_request:
     branches: [ main, release/** ]
-    types: [ opened, synchronize, reopened ]
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
+      - '**.csproj'
+      - '**.cs'
+      - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
 
 env:
-  JAVA_VERSION: '17'
+  JAVA_VERSION: '21'
+  DOTNET_VERSION: 8.0.x
 
 jobs:
   appsettings:
@@ -64,12 +64,12 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
 
-      - name: Setup .NET
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
@@ -84,7 +84,7 @@ jobs:
 
       - name: Install SonarCloud scanners
         run: dotnet tool install --global dotnet-sonarscanner
-        
+
       - name: Install dotnet reportgenerator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
@@ -101,6 +101,6 @@ jobs:
         run: |
           dotnet-sonarscanner begin /d:sonar.scanner.skipJreProvisioning=true /k:"DFE-Digital_record-concerns-support-trusts" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=./ConcernsCaseWork/CoverageReport/SonarQube.xml
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{env.CONNECTION_STRING_KEY}}"="${{env.CONNECTION_STRING}}" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
+          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{ env.CONNECTION_STRING_KEY }}"="${{ env.CONNECTION_STRING }}" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:"./**/coverage.cobertura.xml" -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
