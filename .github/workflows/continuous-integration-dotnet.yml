@@ -2,17 +2,16 @@
 
 on:
   push:
-    branches:
-    - main
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
+      - '**.csproj'
+      - '**.cs'
+      - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
   pull_request:
     branches: [ main, release/** ]
-    types: [ opened, synchronize, reopened ]
     paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
+      - '**.csproj'
+      - '**.cs'
+      - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
 
 env:
   JAVA_VERSION: '17'
