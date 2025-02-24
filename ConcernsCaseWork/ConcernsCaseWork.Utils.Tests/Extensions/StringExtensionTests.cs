@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		[TestCase("invalid_string", 0)]
 		[TestCase("", 0)]
 		[TestCase(null, 0)]
-		public void WhenParseToInt_ReturnsExpected(string input, int expected)
+		public void WhenParseToInt_ReturnsExpected(string? input, int expected)
 		{
 			// assert
 			Assert.That(input.ParseToInt(), Is.EqualTo(expected));
