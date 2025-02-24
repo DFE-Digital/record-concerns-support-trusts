@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		{
 			// act
 			(string actualTypeUrn, string actualType, string actualSubType) = type.SplitType(subType);
-			
+
 			// assert
 			Assert.That(actualTypeUrn, Is.EqualTo(expectedTypeUrn));
 			Assert.That(actualType, Is.EqualTo(expectedType));
