@@ -99,7 +99,7 @@ jobs:
     needs: [ set-env ]
     permissions:
       packages: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@v5.0.0
     strategy:
       matrix:
         stage: [
@@ -123,7 +123,7 @@ jobs:
     needs: [ set-env, build ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@v5.0.0
     strategy:
       matrix:
         stage: [
@@ -150,7 +150,7 @@ jobs:
     needs: [ set-env, import ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@v5.0.0
     with:
       environment: ${{ needs.set-env.outputs.environment }}
       docker-image-name: ${{ needs.set-env.outputs.image-name }}
