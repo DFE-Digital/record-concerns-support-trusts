@@ -35,6 +35,7 @@ public class SqlCommandInterceptorTests
 	[TearDown]
 	public void TearDown()
 	{
+		_context?.Dispose();
 		Environment.SetEnvironmentVariable(_envVarName, null);
 	}
 
@@ -79,4 +80,3 @@ public class SqlCommandInterceptorTests
 		);
 	}
 }
-

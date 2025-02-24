@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		[TestCase("invalid_string", 0)]
 		[TestCase("", 0)]
 		[TestCase(null, 0)]
-		public void WhenParseToInt_ReturnsExpected(string input, int expected)
+		public void WhenParseToInt_ReturnsExpected(string? input, int expected)
 		{
 			// assert
 			Assert.That(input.ParseToInt(), Is.EqualTo(expected));
@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		{
 			// act
 			(string actualTypeUrn, string actualType, string actualSubType) = type.SplitType(subType);
-			
+
 			// assert
 			Assert.That(actualTypeUrn, Is.EqualTo(expectedTypeUrn));
 			Assert.That(actualType, Is.EqualTo(expectedType));
