@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Json;
@@ -14,18 +15,14 @@ namespace ConcernsCaseWork.Service.Trusts
 		Task<TrustDetailsDto> GetCollegeByUkPrn(string ukPrn);
 	}
 
-	public class CityTechnologyCollegeService : ConcernsAbstractService, ICityTechnologyCollegeService
+	public class CityTechnologyCollegeService(IHttpClientFactory clientFactory,
+		ILogger<CityTechnologyCollegeService> logger,
+		ICorrelationContext correlationContext,
+		IClientUserInfoService userInfoService,
+		IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ICityTechnologyCollegeService
 	{
 		private const string _endpointVersion = "v2";
 		private readonly string _defaultGroupTypeName = "City Technology College";
-
-		public CityTechnologyCollegeService(IHttpClientFactory clientFactory,
-			ILogger<CityTechnologyCollegeService> logger,
-			ICorrelationContext correlationContext,
-			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-
-		}
 
 		public async Task<TrustSearchResponseDto> GetCollegeByPagination(string groupName)
 		{

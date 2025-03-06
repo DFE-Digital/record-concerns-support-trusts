@@ -5,19 +5,13 @@ using System.Text;
 
 namespace ConcernsCaseWork.API.Middleware;
 
-public class ExceptionHandlerMiddleware
+public class ExceptionHandlerMiddleware(RequestDelegate next)
 {
-	private readonly RequestDelegate _next;
-	public ExceptionHandlerMiddleware(RequestDelegate next)
-	{
-		_next = next;
-	}
-
 	public async Task InvokeAsync(HttpContext httpContext, ILogger<ExceptionHandlerMiddleware> logger)
 	{
 		if (!IsApiRequest(httpContext.Request.Path)) 
 		{
-			await _next(httpContext);
+			await next(httpContext);
 			return;
 		}
 
@@ -29,7 +23,7 @@ public class ExceptionHandlerMiddleware
 			httpContext.Request.EnableBuffering();
 			httpContext.Response.Body = memoryStream;
 
-			await _next(httpContext);
+			await next(httpContext);
 
 			await LogValidationFailed(httpContext, logger);
 		}

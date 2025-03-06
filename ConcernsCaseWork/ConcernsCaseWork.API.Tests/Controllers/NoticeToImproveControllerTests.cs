@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(It.IsAny<CreateNoticeToImproveRequest>()))
 				.Returns(response);
 
-			var result = await controllerSUT.Create(new CreateNoticeToImproveRequest { CaseUrn = caseUrn, CreatedAt = createdAt });
+			var result = controllerSUT.Create(new CreateNoticeToImproveRequest { CaseUrn = caseUrn, CreatedAt = createdAt });
 
 			result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
 		}
@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(statuses);
 
-			var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveStatus>>;
 
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(reasons);
 
-			var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveReason>>;
 
@@ -135,7 +135,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(conditions);
 
-			var controllerResponse = (await controllerSUT.GetAllConditions()).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetAllConditions()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveCondition>>;
 
@@ -158,7 +158,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(conditionTypes);
 
-			var controllerResponse = (await controllerSUT.GetAllConditionTypes()).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetAllConditionTypes()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveConditionType>>;
 
@@ -193,7 +193,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(caseUrn))
 				.Returns(collection);
 
-			var controllerResponse = (await controllerSUT.GetNoticesToImproveByCaseUrn(caseUrn)).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetNoticesToImproveByCaseUrn(caseUrn)).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveResponse>>;
 
@@ -220,7 +220,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Returns(noticeToImproveResponse);
 
 
-			var controllerResponse = (await controllerSUT.GetNoticeToImproveById(noticeToImproveId)).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.GetNoticeToImproveById(noticeToImproveId)).Result as OkObjectResult;
 
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
@@ -256,7 +256,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(request))
 				.Returns(response);
 
-			var controllerResponse = (await controllerSUT.Patch(request)).Result as OkObjectResult;
+			var controllerResponse = (controllerSUT.Patch(request)).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
 

@@ -9,15 +9,16 @@ namespace ConcernsCaseWork.API.StartupConfiguration
     {
         private readonly IApiVersionDescriptionProvider _provider;
 
-        private const string ApiKeyName = "ApiKey";
-        private const string ServiceTitle = "Record concerns and support for trusts API";
-        private const string ServiceDescription = "Record concerns and support for trusts API";
-        private const string ContactName = "Support";
-        private const string ContactEmail = "servicedelivery.rdd@education.gov.uk";
-
-        private const string SecuritySchemeDescription = "A valid ApiKey in the 'ApiKey' header is required to " +
+        private const string _authorisationName = "Authorization";
+		private const string _serviceTitle = "Record concerns and support for trusts API";
+        private const string _serviceDescription = "Record concerns and support for trusts API";
+        private const string _contactName = "Support";
+        private const string _contactEmail = "servicedelivery.rdd@education.gov.uk";
+		private const string _securityScheme = "bearer";
+		private const string _securityFormat = "JWT";
+		private const string _securitySchemeDescription = "A valid Token in the 'Authorization' header is required to " +
 														 "access the Record concerns and support for trusts API.";
-        private const string DeprecatedMessage = "- API version has been deprecated.";
+        private const string _deprecatedMessage = "- API version has been deprecated.";
         
         public SwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
         
@@ -29,28 +30,30 @@ namespace ConcernsCaseWork.API.StartupConfiguration
             {
                 var openApiInfo = new OpenApiInfo
                 {
-                    Title = ServiceTitle,
-                    Description = ServiceDescription,
+                    Title = _serviceTitle,
+                    Description = _serviceDescription,
                     Contact = new OpenApiContact
                     {
-                        Name = ContactName,
-                        Email = ContactEmail 
+                        Name = _contactName,
+                        Email = _contactEmail 
                     },
                     Version = desc.ApiVersion.ToString()
                 };
-                if (desc.IsDeprecated) openApiInfo.Description += DeprecatedMessage;
+                if (desc.IsDeprecated) openApiInfo.Description += _deprecatedMessage;
                 
                 options.SwaggerDoc(desc.GroupName, openApiInfo);
             }
             
             var securityScheme = new OpenApiSecurityScheme
             {
-                Name = ApiKeyName,
-                Description = SecuritySchemeDescription,
-                Type = SecuritySchemeType.ApiKey,
-                In = ParameterLocation.Header
+                Name = _authorisationName,
+                Description = _securitySchemeDescription,
+                Type = SecuritySchemeType.Http,
+				Scheme = _securityScheme,
+				BearerFormat = _securityFormat,
+				In = ParameterLocation.Header
             };
-            options.AddSecurityDefinition(ApiKeyName, securityScheme);
+            options.AddSecurityDefinition(_authorisationName, securityScheme);
             options.OperationFilter<AuthenticationHeaderOperationFilter>();
             options.OperationFilter<UserContextOperationFilter>();
         }

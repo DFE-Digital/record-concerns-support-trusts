@@ -1,20 +1,18 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Cases;
 
-public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummaryService
+public class ApiCaseSummaryService(
+	ILogger<ApiCaseSummaryService> logger,
+	ICorrelationContext correlationContext,
+	IHttpClientFactory clientFactory,
+	IClientUserInfoService userInfoService,
+	IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), IApiCaseSummaryService
 {
-	public ApiCaseSummaryService(
-		ILogger<ApiCaseSummaryService> logger, 
-		ICorrelationContext correlationContext, 
-		IHttpClientFactory clientFactory, 
-		IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService) 
-	{
-
-	}
 
 	//public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker)
 	//	=> await Get<IEnumerable<ActiveCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/{caseworker}/active/team");

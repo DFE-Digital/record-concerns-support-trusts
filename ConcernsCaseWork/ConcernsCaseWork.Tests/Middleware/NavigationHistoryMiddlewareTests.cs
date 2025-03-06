@@ -12,6 +12,7 @@ namespace ConcernsCaseWork.Tests.Middleware
 	[Parallelizable(ParallelScope.All)]
 	public class NavigationHistoryMiddlewareTests
 	{
+
 		[Test]
 		public async Task WhenNoValuesSet_DoesNotThrowException()
 		{
@@ -19,12 +20,13 @@ namespace ConcernsCaseWork.Tests.Middleware
 			var ctxt = new DefaultHttpContext();
 			var storageHandlerMock = Mock.Of<IPageHistoryStorageHandler>();
 			var sut = new NavigationHistoryMiddleware(Mock.Of<RequestDelegate>());
+			var actual = true;
 
 			// Act
 			await sut.Invoke(ctxt, storageHandlerMock);
 
 			// Assert
-			Assert.True(true); // Just checking we got here with no exceptions being thrown
+			Assert.That(actual, Is.True); // Just checking we got here with no exceptions being thrown
 		}
 		
 		[Test]

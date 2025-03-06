@@ -1,0 +1,32 @@
+﻿{
+	"Endpoints": [
+		{
+			"Route": "/AccessDenied",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/Accessibility",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/Cookies",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/Maintenance",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/PrivacyPolicy",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/NotFound",
+			"ExpectedSecurity": "AllowAnonymous"
+		},
+		{
+			"Route": "/Error",
+			"ExpectedSecurity": "AllowAnonymous"
+		}
+	]
+}

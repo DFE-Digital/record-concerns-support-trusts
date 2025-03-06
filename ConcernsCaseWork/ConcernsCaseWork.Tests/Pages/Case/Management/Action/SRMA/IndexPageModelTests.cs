@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.SRMAModel);
+			Assert.That(pageModel.SRMAModel, Is.Not.Null);
 
 			mockLogger.VerifyLogErrorWasNotCalled();
 		}
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			var pageResponseInstance = pageResponse as RedirectResult;
 
 			// assert
-			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/1/management/action/srma/1/resolve/{action}"));
 		}
 

@@ -4,16 +4,9 @@ using System.Web;
 
 namespace ConcernsCaseWork.API.Middleware
 {
-    public class UrlDecoderMiddleware
-    {
-        private readonly RequestDelegate _next;
-        
-        public UrlDecoderMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public async Task InvokeAsync(HttpContext context)
+    public class UrlDecoderMiddleware(RequestDelegate next)
+	{
+		public async Task InvokeAsync(HttpContext context)
         {
             var queryString = context.Request.QueryString.ToString();
             var decodedQueryString = HttpUtility.UrlDecode(queryString);
@@ -23,7 +16,7 @@ namespace ConcernsCaseWork.API.Middleware
             var qb = new QueryBuilder(items);
             context.Request.QueryString = qb.ToQueryString();
             
-            await _next(context);
+            await next(context);
         }
     }
 }

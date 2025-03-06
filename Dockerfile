@@ -15,6 +15,10 @@ RUN tdnf update --security -y && \
     tdnf install -y jq && \
     tdnf clean all
 COPY ConcernsCaseWork/. .
+
+# Mount GitHub Token as a Docker secret so that NuGet Feed can be accessed
+RUN --mount=type=secret,id=github_token dotnet nuget add source --username USERNAME --password $(cat /run/secrets/github_token) --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
+
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build

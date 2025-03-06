@@ -4,18 +4,16 @@ using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Decision
 {
-	public class DecisionService : ConcernsAbstractService, IDecisionService
+	public class DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), IDecisionService
 	{
-		private readonly ILogger<DecisionService> _logger;
-
-		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = Guard.Against.Null(logger);
-		}
+		private readonly ILogger<DecisionService> _logger = Guard.Against.Null(logger);
+		private readonly IClientUserInfoService _userInfoService = Guard.Against.Null(userInfoService);
+		private readonly IUserTokenService _userTokenService = Guard.Against.Null(userTokenService);
 
 		public async Task<CreateDecisionResponse> PostDecision(CreateDecisionRequest createDecisionDto)
 		{

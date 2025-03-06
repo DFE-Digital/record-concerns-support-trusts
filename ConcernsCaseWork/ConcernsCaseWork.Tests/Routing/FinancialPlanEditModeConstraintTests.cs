@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Routing
 			bool actualResult = sut.Match(null, null, "editMode", routeValues, RouteDirection.IncomingRequest);
 
 			// assert
-			Assert.AreEqual(expectedMatch, actualResult);
+			Assert.That(expectedMatch, Is.EqualTo(actualResult));
 		}
 	}
 }
