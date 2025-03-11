@@ -8,12 +8,12 @@ ARG COMMIT_SHA=not-set
 # ==============================================
 # Base SDK
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0" AS builder
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0 AS builder
 ARG COMMIT_SHA
 WORKDIR /build
-RUN ["tdnf", "update", "--security", "-y"]
-RUN ["tdnf", "install", "-y", "jq"]
-RUN ["tdnf", "clean", "all"]
+RUN tdnf update --security -y && \
+    tdnf install -y jq && \
+    tdnf clean all
 COPY ConcernsCaseWork/. .
 
 # Mount GitHub Token as a Docker secret so that NuGet Feed can be accessed
@@ -22,12 +22,12 @@ RUN --mount=type=secret,id=github_token dotnet nuget add source --username USERN
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Manifest commit SHA... ${COMMIT_SHA};" -c Release
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
-WORKDIR /app
-COPY ./script/set-appsettings-release-tag.sh set-appsettings-release-tag.sh
-RUN chmod +x ./set-appsettings-release-tag.sh
-RUN echo "Setting appsettings releasetag=${COMMIT_SHA}"
-RUN ./set-appsettings-release-tag.sh "$COMMIT_SHA"
-RUN rm ./set-appsettings-release-tag.sh
+
+# Set release tag in appsettings
+COPY ./script/set-appsettings-release-tag.sh /build/set-appsettings-release-tag.sh
+RUN chmod +x /build/set-appsettings-release-tag.sh && \
+    echo "Setting appsettings releasetag=${COMMIT_SHA}" && \
+    /build/set-appsettings-release-tag.sh "$COMMIT_SHA"
 
 # ==============================================
 # Entity Framework: Migration Builder
@@ -42,30 +42,32 @@ RUN dotnet ef migrations bundle -r linux-x64 --configuration Release -p Concerns
 # ==============================================
 # Entity Framework: Migration Runner
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS initcontainer
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0 AS initcontainer
 WORKDIR /sql
 COPY --from=efbuilder /sql /sql
 COPY --from=builder /app/appsettings* /ConcernsCaseWork/
-RUN chown "$APP_UID" "/sql" -R
-RUN chown "$APP_UID" "/ConcernsCaseWork" -R
+RUN chown "$APP_UID" "/sql" -R && \
+    chown "$APP_UID" "/ConcernsCaseWork" -R
 USER $APP_UID
 
 # ==============================================
 # Front End Builder
 # ==============================================
-FROM "node:${NODEJS_VERSION_MAJOR}-bullseye-slim" AS frontend
-COPY ConcernsCaseWork/ConcernsCaseWork/wwwroot /app/wwwroot
+FROM node:${NODEJS_VERSION_MAJOR}-bullseye-slim AS frontend
 WORKDIR /app/wwwroot
-RUN npm install
-RUN npm run build
+COPY ConcernsCaseWork/ConcernsCaseWork/wwwroot .
+RUN npm ci && \
+    npm run build
 
 # ==============================================
 # Application
 # ==============================================
-FROM "mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0" AS final
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0 AS final
 LABEL org.opencontainers.image.source="https://github.com/DFE-Digital/record-concerns-support-trusts"
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
+
+# Entrypoint script
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
 RUN chmod +x ./docker-entrypoint.sh

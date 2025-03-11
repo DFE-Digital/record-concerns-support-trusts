@@ -1,5 +1,4 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": [ "github>DFE-Digital/rsd-renovate-config" ],
-	"baseBranches": [ "main", "staging" ]
+	"extends": [ "github>DFE-Digital/rsd-renovate-config" ]
 }
