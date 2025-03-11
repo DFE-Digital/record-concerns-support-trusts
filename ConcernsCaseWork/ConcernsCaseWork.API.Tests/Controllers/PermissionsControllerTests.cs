@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var mockUserInfoService = new Mock<IServerUserInfoService>();
 			var mockUseCase = new Mock<IGetCasePermissionsUseCase>();
 
-			UserInfo fakeUserInfo = new() { Name = "John.Smith", Roles = new[] { Claims.CaseWorkerRoleClaim } };
+			UserInfo fakeUserInfo = new() { Name = "John.Smith", Roles = [Claims.CaseWorkerRoleClaim] };
 			mockUserInfoService.SetupGet(x => x.UserInfo).Returns(fakeUserInfo);
 
 			var fakeCaseIds = new long[] { 123 };

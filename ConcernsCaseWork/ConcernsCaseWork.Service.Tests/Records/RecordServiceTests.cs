@@ -3,6 +3,7 @@ using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -14,6 +15,13 @@ namespace ConcernsCaseWork.Service.Tests.Records
 	[Parallelizable(ParallelScope.All)]
 	public class RecordServiceTests
 	{
+		private Mock<IClientUserInfoService> _clientUserInfoService;
+		[SetUp]
+		public void Setup()
+		{
+			_clientUserInfoService = new Mock<IClientUserInfoService>();
+			_clientUserInfoService.Setup(x => x.UserInfo).Returns(new UserInfo());
+		}
 		[Test]
 		public async Task WhenGetRecordsByCaseUrn_ReturnsRecords()
 		{
@@ -32,13 +40,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiListWrapperRecords))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act
 			var actualRecords = await recordService.GetRecordsByCaseUrn(1);
 
@@ -81,13 +91,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.GetRecordsByCaseUrn(1));
 		}
@@ -109,13 +121,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiListWrapperRecords))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.GetRecordsByCaseUrn(1));
 		}
@@ -138,13 +152,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act
 			var actualRecord = await recordService.PostRecordByCaseUrn(expectedRecord);
 
@@ -178,13 +194,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
 		}
@@ -206,13 +224,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
 		}
@@ -235,13 +255,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act
 			var actualRecord = await recordService.PatchRecordById(expectedRecord);
 
@@ -276,13 +298,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					StatusCode = HttpStatusCode.BadRequest
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordById(RecordFactory.BuildRecordDto()));
 		}
@@ -304,13 +328,15 @@ namespace ConcernsCaseWork.Service.Tests.Records
 					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
+			var httpClient = new HttpClient(mockMessageHandler.Object)
+			{
+				BaseAddress = new Uri(concernsApiEndpoint)
+			};
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), _clientUserInfoService.Object, Mock.Of<IUserTokenService>());
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.PatchRecordById(RecordFactory.BuildRecordDto()));
 		}

@@ -36,6 +36,9 @@ public class SqlCommandInterceptorTests
 	public void TearDown()
 	{
 		Environment.SetEnvironmentVariable(_envVarName, null);
+		// Dispose of _context
+		_context?.Dispose();
+		_context = null!;
 	}
 
 	[OneTimeTearDown]
@@ -43,6 +46,9 @@ public class SqlCommandInterceptorTests
 	{
 		// Clean up environment after all tests have run
 		Environment.SetEnvironmentVariable(_envVarName, null);
+		// Dispose of _context
+		_context?.Dispose();
+		_context = null!;
 	}
 
 	[Test]

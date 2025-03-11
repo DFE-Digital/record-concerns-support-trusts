@@ -88,9 +88,9 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			// assert
 			var page = pageResponse as RedirectResult;
-			Assert.NotNull(page);
 			Assert.That(page, Is.Not.Null);
-			Assert.IsTrue(page.Url.Equals(ExpectedRedirectUrl));
+			Assert.That(page, Is.Not.Null);
+			Assert.That(page.Url.Equals(ExpectedRedirectUrl), Is.True);
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 			testFixture.MockTeamsService.Verify(x => x.UpdateCaseworkTeam(It.Is<ConcernsTeamCaseworkModel>(m => m.OwnerId == testFixture.CurrentUserName

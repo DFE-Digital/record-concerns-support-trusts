@@ -1,6 +1,3 @@
-using AutoMapper;
-using ConcernsCaseWork.API.UseCases;
-using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
 namespace ConcernsCaseWork.API.StartupConfiguration;

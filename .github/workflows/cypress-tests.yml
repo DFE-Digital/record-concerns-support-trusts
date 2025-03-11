@@ -1,4 +1,4 @@
-name: Run Cypress tests
+name: Cypress Tests using Cypress Docker Image
 
 on:
   workflow_call:
@@ -29,15 +29,18 @@ on:
 concurrency:
   group: ${{ github.workflow }}
 
-env:
-  NODE_VERSION: 18.x
-
 jobs:
   cypress-tests:
     name: Run Cypress Tests
-    if: inputs.environment == 'staging' || inputs.environment == 'dev'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    strategy:
+      matrix:
+        browser: [
+          "edge"
+        ]
+    container:
+      image: cypress/browsers:22.12.0
     defaults:
       run:
         working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
@@ -46,22 +49,25 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup node.js
-        uses: actions/setup-node@v4
+      - name: Run
+        uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_username: ${{ secrets.USERNAME }}
+          CYPRESS_password: ${{ secrets.PASSWORD }}
+          CYPRESS_url: ${{ secrets.AZURE_ENDPOINT }}
+          CYPRESS_api: ${{ secrets.AZURE_ENDPOINT }}
+          CYPRESS_apiKey: ${{ secrets.AZURE_API_KEY }}
+          CYPRESS_authKey: ${{secrets.CYPRESS_TEST_SECRET}}
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Npm install
-        run: npm install
-
-      - name: Run cypress
-        run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+          browser: ${{ matrix.browser }}
+          working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
+          wait-on: ${{ secrets.AZURE_ENDPOINT }}
 
       - name: Upload screenshots
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-${{ inputs.environment }}
+          name: screenshots-${{ inputs.environment }}-${{ matrix.browser }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
 
       - name: Generate report
@@ -74,11 +80,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reports-${{ inputs.environment }}
+          name: reports-${{ inputs.environment }}-${{ matrix.browser }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 
       - name: Report results
         if: always()
-        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
+        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, See more information https://github.com/DFE-Digital/record-concerns-support-trusts/actions/runs/${{github.run_id}}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

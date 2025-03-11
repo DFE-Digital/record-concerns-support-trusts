@@ -30,7 +30,7 @@ export default defineConfig({
       on('before:run', () => {
         // Map cypress env vars to process env vars for usage outside of Cypress run environment
         process.env = config.env
-      })
+      });
 
       on('after:run', async () => {
         if (process.env.ZAP) {

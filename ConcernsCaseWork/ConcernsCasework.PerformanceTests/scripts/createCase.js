@@ -13,7 +13,7 @@ const config = getConfig();
 
 function getHeaders() {
     return {
-        "ApiKey": "app-key",
+        'Authorization': `Bearer ${Cypress.env(jwtToken)}`,
         "Content-Type": "application/json",
         "x-user-context-role-0": "concerns-casework.caseworker",
         "x-user-context-name": config.username

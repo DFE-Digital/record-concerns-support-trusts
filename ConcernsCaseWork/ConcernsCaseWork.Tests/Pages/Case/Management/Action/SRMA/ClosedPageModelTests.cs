@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.IsNotNull(pageModel.SRMAModel);
+			Assert.That(pageModel.SRMAModel, Is.Not.Null);
 
 			mockLogger.Verify(
 				m => m.Log(

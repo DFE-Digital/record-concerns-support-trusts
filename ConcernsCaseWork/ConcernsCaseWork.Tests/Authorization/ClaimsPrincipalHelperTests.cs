@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 			var sut = new ClaimsPrincipalHelper();
 			var actualName = sut.GetPrincipalName(mockPrincipal.Object);
 
-			Assert.AreEqual(expectedName, actualName);
+			Assert.That(expectedName, Is.EqualTo(actualName));
 		}
 
 		[Test]
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsCaseworker(mockPrincipal.Object);
 
-			Assert.AreEqual(expectation, actual);
+			Assert.That(expectation, Is.EqualTo(actual));
 		}
 
 		[Theory]
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsTeamLeader(mockPrincipal.Object);
 
-			Assert.AreEqual(expectation, actual);
+			Assert.That(expectation, Is.EqualTo(actual));
 		}
 
 		[Theory]
@@ -99,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsAdmin(mockPrincipal.Object);
 
-			Assert.AreEqual(expectation, actual);
+			Assert.That(expectation, Is.EqualTo(actual));
 		}
 	}
 }

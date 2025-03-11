@@ -224,7 +224,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync();
 
-			Assert.IsNotNull(sut.Decision.ReceivedRequestDate);
+			Assert.That(sut.Decision.ReceivedRequestDate, Is.Not.Null);
 		}
 
 		private class TestBuilder

@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -8,20 +9,13 @@ using System.Text;
 
 namespace ConcernsCaseWork.Service.Cases
 {
-	public sealed class CaseService : ConcernsAbstractService, ICaseService
+	public sealed class CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(clientFactory, logger, correlationContext, userInfoService, userTokenService), ICaseService
 	{
-		private readonly ILogger<CaseService> _logger;
-
-		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-		
 		public async Task<ApiListWrapper<CaseDto>> GetCasesByCaseworkerAndStatus(CaseCaseWorkerSearch caseCaseWorkerSearch)
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusId}", caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusId);
+				logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusId}", caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusId);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
@@ -46,7 +40,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -56,7 +50,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByUrn {Urn}", urn);
+				logger.LogInformation("CaseService::GetCasesByUrn {Urn}", urn);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
@@ -86,7 +80,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::GetCasesByUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::GetCasesByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -96,7 +90,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn {TrustUkPrn} - {Page}", caseTrustSearch.TrustUkPrn, caseTrustSearch.Page);
+				logger.LogInformation("CaseService::GetCasesByTrustUkPrn {TrustUkPrn} - {Page}", caseTrustSearch.TrustUkPrn, caseTrustSearch.Page);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
@@ -120,7 +114,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::GetCasesByTrustUkPrn::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::GetCasesByTrustUkPrn::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -130,7 +124,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCases {Page}", pageSearch.Page);
+				logger.LogInformation("CaseService::GetCases {Page}", pageSearch.Page);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={pageSearch.Page}");
@@ -154,7 +148,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::GetCases::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::GetCases::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -164,7 +158,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::PostCase");
+				logger.LogInformation("CaseService::PostCase");
 				
 				// Create a request
 				var request = new StringContent(
@@ -197,7 +191,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::PostCase::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::PostCase::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -207,7 +201,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::PatchCaseByUrn {Urn}", caseDto.Urn);
+				logger.LogInformation("CaseService::PatchCaseByUrn {Urn}", caseDto.Urn);
 				
 				// Create a request
 				var request = new StringContent(
@@ -240,7 +234,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::PatchCaseByUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::PatchCaseByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -250,7 +244,7 @@ namespace ConcernsCaseWork.Service.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::DeleteCaseByUrn {Urn}", caseDto.Urn);
+				logger.LogInformation("CaseService::DeleteCaseByUrn {Urn}", caseDto.Urn);
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -272,7 +266,7 @@ namespace ConcernsCaseWork.Service.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::DeleteCaseByUrn::Exception message::{Message}", ex.Message);
+				logger.LogError("CaseService::DeleteCaseByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
