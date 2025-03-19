@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "dfe-digital",
+    "projectKey": "DFE-Digital_record-concerns-support-trusts"
+  }
+}
