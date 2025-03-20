@@ -1,39 +1,18 @@
-﻿name: .NET Build and Test
+﻿name: .NET
 
 on:
   push:
-    branches:
-    - main
-    paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
+    branches: [ main ]
   pull_request:
-    branches: [ main, release/** ]
-    types: [ opened, synchronize, reopened ]
-    paths:
-    - 'ConcernsCaseWork/ConcernsCaseWork*/**'
-    - '!ConcernsCaseWork/ConcernsCaseWork.CypressTests/**'
 
 env:
-  JAVA_VERSION: '17'
+  JAVA_VERSION: '21'
+  DOTNET_VERSION: 8.0.x
 
 jobs:
-  appsettings:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check appsettings validity
-        run: |
-          DIRECTORY=./ConcernsCaseWork/ConcernsCaseWork
-          for i in "$DIRECTORY"/appsettings*.json; do
-            echo "$i" && jq . "$i"
-          done
-
   build-test:
-    runs-on: ubuntu-latest
-    environment: dev
+    name: Build and Test
+    runs-on: ubuntu-24.04
     services:
       sql-server:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -57,12 +36,19 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
 
-      - name: Setup .NET
+      - name: Check appsettings validity
+        run: |
+          DIRECTORY=./ConcernsCaseWork/ConcernsCaseWork
+          for i in "$DIRECTORY"/appsettings*.json; do
+            echo "$i" && jq . "$i"
+          done
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Set up JDK 11
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
@@ -75,11 +61,10 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Install SonarCloud scanners
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Install dotnet reportgenerator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
+      - name: Install SonarCloud tools
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-reportgenerator-globaltool
 
       - name: Add nuget package source
         run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
