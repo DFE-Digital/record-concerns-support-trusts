@@ -13,7 +13,8 @@ export class EditNoticeToImprovePage {
     public withDayIssued(value: string): this {
         Logger.log(`With day issued ${value}`);
 
-        cy.getById('dtr-day-date-issued').clear().type(value);
+        cy.getById('dtr-day-date-issued').clear();
+        cy.getById('dtr-day-date-issued').type(value);
 
         return this;
     }
@@ -21,7 +22,8 @@ export class EditNoticeToImprovePage {
     public withMonthIssued(value: string): this {
         Logger.log(`With month issued ${value}`);
 
-        cy.getById('dtr-month-date-issued').clear().type(value);
+        cy.getById('dtr-month-date-issued').clear();
+        cy.getById('dtr-month-date-issued').type(value);
 
         return this;
     }
@@ -29,7 +31,8 @@ export class EditNoticeToImprovePage {
     public withYearIssued(value: string): this {
         Logger.log(`With year issued ${value}`);
 
-        cy.getById('dtr-year-date-issued').clear().type(value);
+        cy.getById('dtr-year-date-issued').clear();
+        cy.getById('dtr-year-date-issued').type(value);
 
         return this;
     }
@@ -45,7 +48,8 @@ export class EditNoticeToImprovePage {
     public withNotes(value: string): this {
         Logger.log(`With notes ${value}`);
 
-        cy.getById('nti-notes').clear().type(value);
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').type(value);
 
         return this;
     }
@@ -53,7 +57,8 @@ export class EditNoticeToImprovePage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

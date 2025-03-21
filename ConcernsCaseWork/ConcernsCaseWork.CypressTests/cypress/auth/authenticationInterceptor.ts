@@ -3,13 +3,10 @@ import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername } from "../constants/c
 export class AuthenticationInterceptor {
 
     register(params?: AuthenticationInterceptorParams) {
-        cy.intercept(
-            {
+        cy.intercept({
                 url: Cypress.env(EnvUrl) + "/**",
                 middleware: true,
-            },
-            (req) =>
-            {
+            }, (req) => {
                 // Set an auth header on every request made by the browser
                 req.headers = {
                     ...req.headers,
@@ -18,7 +15,8 @@ export class AuthenticationInterceptor {
                     "x-user-context-name": params?.username ? params.username : Cypress.env(EnvUsername)
                 };
             }
-        ).as("AuthInterceptor");
+        )
+        .as("AuthInterceptor");
     }
 }
 

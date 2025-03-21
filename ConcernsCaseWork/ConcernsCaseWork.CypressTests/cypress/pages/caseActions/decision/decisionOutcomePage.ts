@@ -1,254 +1,245 @@
 import { Logger } from "../../../common/logger";
 
 export class DecisionOutcomePage {
-	
-	public withDecisionOutcomeStatus(decisionOutcomeID: string): this {
-		cy.task("log", `With decision outcome status ${decisionOutcomeID}`);
 
-		cy.getByTestId(decisionOutcomeID).click();
+    public withDecisionOutcomeStatus(decisionOutcomeID: string): this {
+        Logger.log(`With decision outcome status ${decisionOutcomeID}`);
 
-		return this;
-	}
-	
-	public withTotalAmountApproved(totalAmountApproved: string): this {
-		cy.task("log", `With total Amount Approved ${totalAmountApproved}`);
+        cy.getByTestId(decisionOutcomeID).click();
 
-		cy.getByTestId("total-amount-approved").clear().type(totalAmountApproved);
+        return this;
+    }
 
-		return this;
-	}
+    public withTotalAmountApproved(totalAmountApproved: string): this {
+        Logger.log(`With total Amount Approved ${totalAmountApproved}`);
 
-	public hasNoTotalAmountApprovedField(): this {
-		Logger.log("Has no total amount field");
+        cy.getByTestId("total-amount-approved").clear();
+        cy.getByTestId("total-amount-approved").type(totalAmountApproved);
 
-		cy.getByTestId("container-total-amount-approved").should("not.exist");
+        return this;
+    }
 
-		return this;
-	}
+    public hasNoTotalAmountApprovedField(): this {
+        Logger.log("Has no total amount field");
 
-	public withDateDecisionMadeDay(dateDecisionMadeDay: string): this {
-		cy.task(
-			"log", `With Decision Made Day ${dateDecisionMadeDay}`
-		);
+        cy.getByTestId("container-total-amount-approved").should("not.exist");
 
-		cy.getByTestId("dtr-day-decision-made").clear().type(dateDecisionMadeDay);
+        return this;
+    }
 
-		return this;
-	}
+    public withDateDecisionMadeDay(dateDecisionMadeDay: string): this {
+        Logger.log(`With Decision Made Day ${dateDecisionMadeDay}`);
 
-	public withDateDecisionMadeMonth(dateDecisionMadeMonth: string): this {
-		cy.task(
-			"log", `With Decision Made Month ${dateDecisionMadeMonth}`
-		);
+        cy.getByTestId("dtr-day-decision-made").clear();
+        cy.getByTestId("dtr-day-decision-made").type(dateDecisionMadeDay);
 
-		cy.getByTestId("dtr-month-decision-made").clear().type(dateDecisionMadeMonth);
+        return this;
+    }
 
-		return this;
-	}
+    public withDateDecisionMadeMonth(dateDecisionMadeMonth: string): this {
+        Logger.log(`With Decision Made Month ${dateDecisionMadeMonth}`);
 
-	public withDateDecisionMadeYear(dateDecisionMadeYear: string): this {
-		cy.task(
-			"log", `With Decision Made Year ${dateDecisionMadeYear}`
-		);
+        cy.getByTestId("dtr-month-decision-made").clear();
+        cy.getByTestId("dtr-month-decision-made").type(dateDecisionMadeMonth);
 
-		const element = cy.getByTestId("dtr-year-decision-made");
-		element.clear();
+        return this;
+    }
 
-		if (dateDecisionMadeYear.length > 0) {
-			element.type(dateDecisionMadeYear);
-		}
+    public withDateDecisionMadeYear(dateDecisionMadeYear: string): this {
+        Logger.log(`With Decision Made Year ${dateDecisionMadeYear}`);
 
-		return this;
-	}
+        cy.getByTestId("dtr-year-decision-made").clear();
 
-	public withDecisionTakeEffectDay(dateDecisionTakeEffectDay: string): this {
-		cy.task(
-			"log", `With Decision Take Effect Day ${dateDecisionTakeEffectDay}`
-		);
+        if (dateDecisionMadeYear.length > 0) {
+            cy.getByTestId("dtr-year-decision-made").type(dateDecisionMadeYear);
+        }
 
-		cy.getByTestId("dtr-day-take-effect").clear().type(dateDecisionTakeEffectDay);
+        return this;
+    }
 
-		return this;
-	}
+    public withDecisionTakeEffectDay(dateDecisionTakeEffectDay: string): this {
+        Logger.log(`With Decision Take Effect Day ${dateDecisionTakeEffectDay}`);
 
-	public withDecisionTakeEffectMonth(dateDecisionTakeEffectMonth: string): this {
-		cy.task(
-			"log", `With Decision Take Effect Month ${dateDecisionTakeEffectMonth}`
-		);
+        cy.getByTestId("dtr-day-take-effect").clear();
+        cy.getByTestId("dtr-day-take-effect").type(dateDecisionTakeEffectDay);
 
-		cy.getByTestId("dtr-month-take-effect").clear().type(dateDecisionTakeEffectMonth);
+        return this;
+    }
 
-		return this;
-	}
+    public withDecisionTakeEffectMonth(dateDecisionTakeEffectMonth: string): this {
+        Logger.log(`With Decision Take Effect Month ${dateDecisionTakeEffectMonth}`);
 
-	public withDecisionTakeEffectYear(dateDecisionTakeEffectYear: string): this {
-		cy.task(
-			"log", `With Decision Take Effect Year ${dateDecisionTakeEffectYear}`
-		);
+        cy.getByTestId("dtr-month-take-effect").clear();
+        cy.getByTestId("dtr-month-take-effect").type(dateDecisionTakeEffectMonth);
 
-		const element = cy.getByTestId("dtr-year-take-effect");
-		element.clear();
+        return this;
+    }
 
-		if (dateDecisionTakeEffectYear.length > 0) {
-			element.type(dateDecisionTakeEffectYear);
-		}
+    public withDecisionTakeEffectYear(dateDecisionTakeEffectYear: string): this {
+        Logger.log(`With Decision Take Effect Year ${dateDecisionTakeEffectYear}`);
 
-		return this;
-	}
+        cy.getByTestId("dtr-year-take-effect").clear();
 
-	public withDecisionAuthouriser(authoriserID: string): this {
-		cy.task("log", `With decision authouriser to pick ${authoriserID}`);
+        if (dateDecisionTakeEffectYear.length > 0) {
+            cy.getByTestId("dtr-year-take-effect").type(dateDecisionTakeEffectYear);
+        }
 
-		cy.getByTestId(authoriserID).click();
+        return this;
+    }
 
-		return this;
-	}
+    public withDecisionAuthouriser(authoriserID: string): this {
+        Logger.log(`With decision authouriser to pick ${authoriserID}`);
 
-	public withBusinessArea(businessAreaID: string): this {
-		cy.task("log", `With decision business area consulted to pick ${businessAreaID}`);
+        cy.getByTestId(authoriserID).click();
 
-		cy.getByTestId(businessAreaID).click();
+        return this;
+    }
 
-		return this;
-	}
+    public withBusinessArea(businessAreaID: string): this {
+        Logger.log(`With decision business area consulted to pick ${businessAreaID}`);
 
-	public hasBusinessAreaOptions(areas: Array<string>): this {
-		Logger.log(`Has business area options ${areas.join()}`);
+        cy.getByTestId(businessAreaID).click();
 
-		cy
-			.getByTestId('container-business-areas')
-			.find('.govuk-checkboxes__label')
-			.should("have.length", areas.length)
-			.each(($elem, index) => {
-				expect($elem.text().trim()).to.equal(areas[index]);
-			});
+        return this;
+    }
 
-		return this;
-	}
+    public hasBusinessAreaOptions(areas: Array<string>): this {
+        Logger.log(`Has business area options ${areas.join()}`);
 
-	public deselectAllBusinessAreas(): this
-	{
-		Logger.log("Deselecting all business areas");
-		cy.get(".govuk-checkboxes__input").uncheck();
+        cy
+            .getByTestId('container-business-areas')
+            .find('.govuk-checkboxes__label')
+            .should("have.length", areas.length)
+            .each(($elem, index) => {
+                expect($elem.text().trim()).to.equal(areas[index]);
+            });
 
-		return this;
-	}
+        return this;
+    }
 
-	public saveDecisionOutcome(): this {
-		cy.get('#add-decision-outcome-button').click();
+    public deselectAllBusinessAreas(): this
+    {
+        Logger.log("Deselecting all business areas");
+        cy.get(".govuk-checkboxes__input").uncheck();
 
-		return this;
-	}
-	
-	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+        return this;
+    }
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+    public saveDecisionOutcome(): this {
+        cy.get('#add-decision-outcome-button').click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionOutcomeStatus(decisionOutcomeID: string): this {
-		cy.task("log", `Has decision outcome status ${decisionOutcomeID}`);
+    public hasValidationError(message: string): this {
+        Logger.log(`Has Validation error ${message}`);
 
-		cy.getByTestId(decisionOutcomeID).should('be.checked');
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasTotalAmountApproved(totalAmountApproved: string): this {
-		cy.task("log", `Total amount approved ${totalAmountApproved}`);
+    public hasDecisionOutcomeStatus(decisionOutcomeID: string): this {
+        Logger.log(`Has decision outcome status ${decisionOutcomeID}`);
 
-		cy.getByTestId("total-amount-approved").should(
-			"contain.value",
-			totalAmountApproved
-		);
+        cy.getByTestId(decisionOutcomeID).should('be.checked');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionMadeDay(decisionMadeDay: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeDay}`);
+    public hasTotalAmountApproved(totalAmountApproved: string): this {
+        Logger.log(`Total amount approved ${totalAmountApproved}`);
 
-		cy.getByTestId("dtr-day-decision-made").should(
-			"contain.value",
-			decisionMadeDay
-		);
+        cy.getByTestId("total-amount-approved").should(
+            "contain.value",
+            totalAmountApproved
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionMadeMonth(decisionMadeMonth: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeMonth}`);
+    public hasDecisionMadeDay(decisionMadeDay: string): this {
+        Logger.log(`Decision Made Date ${decisionMadeDay}`);
 
-		cy.getByTestId("dtr-month-decision-made").should(
-			"contain.value",
-			decisionMadeMonth
-		);
+        cy.getByTestId("dtr-day-decision-made").should(
+            "contain.value",
+            decisionMadeDay
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionMadeYear(decisionMadeYear: string): this {
-		cy.task("log", `Decision Made Date ${decisionMadeYear}`);
+    public hasDecisionMadeMonth(decisionMadeMonth: string): this {
+        Logger.log(`Decision Made Date ${decisionMadeMonth}`);
 
-		cy.getByTestId("dtr-year-decision-made").should(
-			"contain.value",
-			decisionMadeYear
-		);
+        cy.getByTestId("dtr-month-decision-made").should(
+            "contain.value",
+            decisionMadeMonth
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateEffectiveFromDay(dateEffectiveFromDay: string): this {
-		cy.task("log", `Date Effective From Day ${dateEffectiveFromDay}`);
+    public hasDecisionMadeYear(decisionMadeYear: string): this {
+        Logger.log(`Decision Made Date ${decisionMadeYear}`);
 
-		cy.getByTestId("dtr-day-take-effect").should(
-			"contain.value",
-			dateEffectiveFromDay
-		);
+        cy.getByTestId("dtr-year-decision-made").should(
+            "contain.value",
+            decisionMadeYear
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateEffectiveFromMonth(dateEffectiveFromMonth: string): this {
-		cy.task("log", `Date Effective From Month ${dateEffectiveFromMonth}`);
+    public hasDateEffectiveFromDay(dateEffectiveFromDay: string): this {
+        Logger.log(`Date Effective From Day ${dateEffectiveFromDay}`);
 
-		cy.getByTestId("dtr-month-take-effect").should(
-			"contain.value",
-			dateEffectiveFromMonth
-		);
+        cy.getByTestId("dtr-day-take-effect").should(
+            "contain.value",
+            dateEffectiveFromDay
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateEffectiveFromYear(dateEffectiveFromYear: string): this {
-		cy.task("log", `Date Effective From Year ${dateEffectiveFromYear}`);
+    public hasDateEffectiveFromMonth(dateEffectiveFromMonth: string): this {
+        Logger.log(`Date Effective From Month ${dateEffectiveFromMonth}`);
 
-		cy.getByTestId("dtr-year-take-effect").should(
-			"contain.value",
-			dateEffectiveFromYear
-		);
+        cy.getByTestId("dtr-month-take-effect").should(
+            "contain.value",
+            dateEffectiveFromMonth
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionAuthouriser(authoriserID: string): this {
-		cy.task("log", `Has authoriser ${authoriserID}`);
+    public hasDateEffectiveFromYear(dateEffectiveFromYear: string): this {
+        Logger.log(`Date Effective From Year ${dateEffectiveFromYear}`);
 
-		cy.getByTestId(authoriserID).should('be.checked');
+        cy.getByTestId("dtr-year-take-effect").should(
+            "contain.value",
+            dateEffectiveFromYear
+        );
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasBusinessArea(businessAreaID: string): this {
-		cy.task("log", `Has Business Area ${businessAreaID}`);
+    public hasDecisionAuthouriser(authoriserID: string): this {
+        Logger.log(`Has authoriser ${authoriserID}`);
 
-		cy.getByTestId(businessAreaID).should('have.value', businessAreaID);
+        cy.getByTestId(authoriserID).should('be.checked');
 
-		return this;
-	}
+        return this;
+    }
+
+    public hasBusinessArea(businessAreaID: string): this {
+        Logger.log(`Has Business Area ${businessAreaID}`);
+
+        cy.getByTestId(businessAreaID).should('have.value', businessAreaID);
+
+        return this;
+    }
 }
