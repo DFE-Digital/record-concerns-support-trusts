@@ -32,4 +32,3 @@ class SelectCaseTypePage {
 var selectCaseTypePage = new SelectCaseTypePage();
 
 export default selectCaseTypePage;
-

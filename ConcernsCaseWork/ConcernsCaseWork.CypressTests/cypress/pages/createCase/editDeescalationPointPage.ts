@@ -4,24 +4,24 @@ import { Logger } from "../../common/logger";
 export default class EditDeEscalationPointPage {
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+        Logger.log(`Has Validation error ${message}`);
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 
     public hasDeescalationPoint(value: string): this
     {
         Logger.log(`Has Deescalation point ${value}`);
 
         cy.getByTestId(`de-escalation-point`).should(
-			"contain.text",
-			value
-		);
+            "contain.text",
+            value
+        );
 
         return this;
     }
@@ -36,14 +36,16 @@ export default class EditDeEscalationPointPage {
             return this;
         }
 
-        cy.getByTestId(`de-escalation-point`).clear().type(value);
+        cy.getByTestId(`de-escalation-point`).clear();
+        cy.getByTestId(`de-escalation-point`).type(value);
 
         return this;
     }
 
     public withExceedingTextLimit(): this {
 
-        cy.getByTestId('de-escalation-point').clear().invoke("val", "x".repeat(1001));
+        cy.getByTestId('de-escalation-point').clear();
+        cy.getByTestId(`de-escalation-point`).invoke("val", "x".repeat(1001));
 
         return this;
     }

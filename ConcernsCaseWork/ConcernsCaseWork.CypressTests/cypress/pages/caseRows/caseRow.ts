@@ -40,7 +40,7 @@ export class CaseRow {
 
     public hasTrust(value: string): this {
         Logger.log(`Has trust name ${value}`);
-        
+
         this.containsText("trust-name", value);
 
         return this;
@@ -84,15 +84,15 @@ export class CaseRow {
     public hasOwner(value: string): this
     {
         Logger.log(`Has owner ${value}`);
-        
+
         cy.wrap(this.element)
-        .within(() => 
-        {
-            cy.getByTestId("created-by").should(($element: any) =>
+            .within(() =>
             {
-                expect($element.text().toLowerCase()).to.include(value.toLocaleLowerCase());
-            });
-        })
+                cy.getByTestId("created-by").should(($element: any) =>
+                {
+                    expect($element.text().toLowerCase()).to.include(value.toLocaleLowerCase());
+                });
+            })
 
         return this;
     }
@@ -101,20 +101,20 @@ export class CaseRow {
         Logger.log(`Selecting case`);
 
         cy.wrap(this.element)
-        .within(() =>
-        {
-            cy.get('a').click();
-        })
+            .within(() =>
+            {
+                cy.get('a').click();
+            })
 
         return this;
     }
 
     private containsText(id: string, value: string) {
         cy.wrap(this.element)
-        .within(() => 
-        {
-            cy.getByTestId(id).should("contain.text", value);
-        })
+            .within(() =>
+            {
+                cy.getByTestId(id).should("contain.text", value);
+            })
 
     }
 }

@@ -15,7 +15,8 @@ export class CloseNtiWarningLetterPage
     {
         Logger.log(`With notes ${notes}`);
 
-        cy.getById("nti-notes").clear().type(notes);
+        cy.getById("nti-notes").clear();
+        cy.getById("nti-notes").type(notes);
 
         return this;
     }
@@ -23,7 +24,8 @@ export class CloseNtiWarningLetterPage
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

@@ -4,7 +4,8 @@ export class LiftNoticeToImprovePage {
     public withSubmissionDecisionId(value: string): this {
         Logger.log(`With submission decision id ${value}`);
 
-        cy.getById(`submission-decision-id`).clear().type(value);
+        cy.getById(`submission-decision-id`).clear();
+        cy.getById(`submission-decision-id`).type(value);
 
         return this;
     }
@@ -12,7 +13,8 @@ export class LiftNoticeToImprovePage {
     public withDayLifted(value: string): this {
         Logger.log(`With day lifted ${value}`);
 
-        cy.getById(`dtr-day-date-nti-lifted`).clear().type(value);
+        cy.getById(`dtr-day-date-nti-lifted`).clear();
+        cy.getById(`dtr-day-date-nti-lifted`).type(value);
 
         return this;
     }
@@ -20,7 +22,8 @@ export class LiftNoticeToImprovePage {
     public withMonthLifted(value: string): this {
         Logger.log(`With month lifted ${value}`);
 
-        cy.getById(`dtr-month-date-nti-lifted`).clear().type(value);
+        cy.getById(`dtr-month-date-nti-lifted`).clear();
+        cy.getById(`dtr-month-date-nti-lifted`).type(value);
 
         return this;
     }
@@ -28,7 +31,8 @@ export class LiftNoticeToImprovePage {
     public withYearLifted(value: string): this {
         Logger.log(`With year lifted ${value}`);
 
-        cy.getById(`dtr-year-date-nti-lifted`).clear().type(value);
+        cy.getById(`dtr-year-date-nti-lifted`).clear();
+        cy.getById(`dtr-year-date-nti-lifted`).type(value);
 
         return this;
     }
@@ -36,7 +40,8 @@ export class LiftNoticeToImprovePage {
     public withNotes(value: string): this {
         Logger.log(`With notes ${value}`);
 
-        cy.getById('nti-notes').clear().type(value);
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').type(value);
 
         return this;
     }
@@ -44,7 +49,8 @@ export class LiftNoticeToImprovePage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }
