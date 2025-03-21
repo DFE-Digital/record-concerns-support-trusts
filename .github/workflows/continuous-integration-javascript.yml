@@ -3,8 +3,7 @@ name: Cypress test linting
 on:
   pull_request:
     paths:
-      - ConcernsCaseWork/ConcernsCaseWork.CypressTests
-    types: [opened, synchronize]
+      - ConcernsCaseWork/ConcernsCaseWork.CypressTests/**/*
 
 jobs:
   lint:
