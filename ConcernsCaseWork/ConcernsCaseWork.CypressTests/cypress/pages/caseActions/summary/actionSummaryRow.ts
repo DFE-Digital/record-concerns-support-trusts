@@ -2,7 +2,7 @@ import { Logger } from "cypress/common/logger";
 
 export class ActionSummaryRow {
 
-    constructor(private element: Element) 
+    constructor(private element: Element)
     {
     }
 
@@ -10,7 +10,7 @@ export class ActionSummaryRow {
         Logger.log(`Has name ${value}`);
 
         cy.wrap(this.element)
-        .within(() => 
+        .within(() =>
         {
             cy.getByTestId(value).should("contain.text", value);
         })
@@ -63,4 +63,3 @@ export class ActionSummaryRow {
         return this;
     }
 }
-

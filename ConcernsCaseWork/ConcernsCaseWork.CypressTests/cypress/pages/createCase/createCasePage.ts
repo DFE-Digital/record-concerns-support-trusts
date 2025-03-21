@@ -13,7 +13,8 @@ export class CreateCasePage
     public withTrustName(value: string): this
     {
         Logger.log(`With trustName ${value}`);
-        cy.getById(`search`).clear().type(value);
+        cy.getById(`search`).clear();
+        cy.getByTestId(`search`).type(value);
 
         return this;
     }
@@ -52,32 +53,32 @@ export class CreateCasePage
     }
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+        Logger.log(`Has Validation error ${message}`);
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 
     public shouldNotHaveVisibleLoader(): this {
-		cy.task("log", `Should not have visible loader}`);
+        Logger.log(`Should not have visible loader}`);
 
-		cy.get('.ccms-loader').should('not.be.visible');
+        cy.get('.ccms-loader').should('not.be.visible');
 
-		return this;
-	}
+        return this;
+    }
 
     public hasTooManyResultsWarning(message: string): this {
-		cy.task("log", `Has too many results warning ${message}`);
+        Logger.log(`Has too many results warning ${message}`);
 
-		cy.getById("tooManyResultsWarning").should(
-			"contain.text",
-			message
-		);
+        cy.getById("tooManyResultsWarning").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 }

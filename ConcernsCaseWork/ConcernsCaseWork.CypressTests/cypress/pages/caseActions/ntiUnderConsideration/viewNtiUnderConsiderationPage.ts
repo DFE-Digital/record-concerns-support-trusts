@@ -6,7 +6,7 @@ export class ViewNtiUnderConsiderationPage
 
         Logger.log(`Has date opened ${value}`);
 
-        cy.getByTestId("date-opened-text").should("contain.text", value); 
+        cy.getByTestId("date-opened-text").should("contain.text", value);
 
         return this;
     }
@@ -15,7 +15,7 @@ export class ViewNtiUnderConsiderationPage
 
         Logger.log(`Has date closed ${value}`);
 
-        cy.getByTestId("date-closed-text").should("contain.text", value); 
+        cy.getByTestId("date-closed-text").should("contain.text", value);
 
         return this;
     }
@@ -122,11 +122,11 @@ export class ViewNtiUnderConsiderationPage
 
     private getClose()
     {
-        return cy.getByTestId("close-nti-uc-button"); 
+        return cy.getByTestId("close-nti-uc-button");
     }
 
     private getDelete()
     {
-        return cy.getByTestId("delete-nti-uc"); 
+        return cy.getByTestId("delete-nti-uc");
     }
 }

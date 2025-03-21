@@ -16,18 +16,18 @@ describe("Testing the NTI warning letter action", () =>
     const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
     const closeNtiWarningLetterPage = new CloseNtiWarningLetterPage();
     const deleteNtiWarningLetterPage = new DeleteNtiWarningLetterPage();
-    let now;
+    let now: Date;
 
     beforeEach(() => {
-		cy.login({
-			role: DeleteCaseGroupClaim,
-		});
+        cy.login({
+            role: DeleteCaseGroupClaim,
+        });
         now = new Date();
 
         cy.basicCreateCase();
 
         addNtiWarningLetterToCase();
-	});
+    });
 
     it("Should be able to add and edit an NTI warning letter", () =>
     {
@@ -51,15 +51,15 @@ describe("Testing the NTI warning letter action", () =>
 
         createConfiguredNtiWarningLetter();
 
-		actionSummaryTable
-			.getOpenAction("NTI Warning Letter")
-			.then(row =>
-			{
-				row.hasName("NTI Warning Letter")
-				row.hasStatus("Sent to trust")
-				row.hasCreatedDate(toDisplayDate(now))
-				row.select();
-			});
+        actionSummaryTable
+            .getOpenAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.hasName("NTI Warning Letter")
+                row.hasStatus("Sent to trust")
+                row.hasCreatedDate(toDisplayDate(now))
+                row.select();
+            });
 
         viewNtiWarningLetterPage
             .hasStatus("Sent to trust")
@@ -113,13 +113,13 @@ describe("Testing the NTI warning letter action", () =>
         editNtiWarningLetterPage.save();
 
         Logger.log("Validate the NTI warning letter on the view page");
-		actionSummaryTable
-			.getOpenAction("NTI Warning Letter")
-			.then(row =>
-			{
-				row.hasStatus("Preparing warning letter")
-				row.select();
-			});
+        actionSummaryTable
+            .getOpenAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.hasStatus("Preparing warning letter")
+                row.select();
+            });
 
         viewNtiWarningLetterPage
             .hasOpenedDate(toDisplayDate(now))
@@ -141,13 +141,13 @@ describe("Testing the NTI warning letter action", () =>
             .save();
 
         Logger.log("Validate the NTI warning letter on the view page");
-		actionSummaryTable
-			.getOpenAction("NTI Warning Letter")
-			.then(row =>
-			{
-				row.hasStatus("In progress")
-				row.select();
-			});
+        actionSummaryTable
+            .getOpenAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.hasStatus("In progress")
+                row.select();
+            });
 
         viewNtiWarningLetterPage
             .hasOpenedDate(toDisplayDate(now))
@@ -174,12 +174,12 @@ describe("Testing the NTI warning letter action", () =>
         createConfiguredNtiWarningLetter();
 
         Logger.log("Closing the NTI warning letter");
-		actionSummaryTable
-			.getOpenAction("NTI Warning Letter")
-			.then(row =>
-			{
-				row.select();
-			});
+        actionSummaryTable
+            .getOpenAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewNtiWarningLetterPage.close();
 
@@ -199,20 +199,20 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage
             .withReason("ConditionsMet")
             .withNotes("This is my final notes")
-        
+
         closeNtiWarningLetterPage.close();
 
         Logger.log("Validate the Closed NTI warning letter on the view page");
-		actionSummaryTable
-			.getClosedAction("NTI Warning Letter")
-			.then(row =>
-			{
-				row.hasName("NTI Warning Letter")
-				row.hasStatus("Conditions met")
-				row.hasCreatedDate(toDisplayDate(now))
+        actionSummaryTable
+            .getClosedAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.hasName("NTI Warning Letter")
+                row.hasStatus("Conditions met")
+                row.hasCreatedDate(toDisplayDate(now))
                 row.hasClosedDate(toDisplayDate(now))
-				row.select();
-			});
+                row.select();
+            });
 
         viewNtiWarningLetterPage
             .hasOpenedDate(toDisplayDate(now))
@@ -237,7 +237,7 @@ describe("Testing the NTI warning letter action", () =>
     it("Should be able to delete an NTI warning letter", () =>
         {
             createConfiguredNtiWarningLetter();
-    
+
             Logger.log("Closing the NTI warning letter");
             actionSummaryTable
                 .getOpenAction("NTI Warning Letter")
@@ -245,7 +245,7 @@ describe("Testing the NTI warning letter action", () =>
                 {
                     row.select();
                 });
-    
+
             Logger.log("Delete the NTI WL");
             viewNtiWarningLetterPage.delete();
             deleteNtiWarningLetterPage.delete();
@@ -253,7 +253,7 @@ describe("Testing the NTI warning letter action", () =>
             Logger.log("Confirm NTI WL no longer exist");
             actionSummaryTable
                 .assertRowDoesNotExist("NTI Warning Letter", "open");
-    
+
         });
 
     function createConfiguredNtiWarningLetter()

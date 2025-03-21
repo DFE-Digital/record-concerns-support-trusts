@@ -6,7 +6,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import {
-	SourceOfConcernExternal,
+    SourceOfConcernExternal,
 } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 import addRegionPage from "cypress/pages/createCase/addRegionPage";
@@ -29,10 +29,10 @@ import deleteCasePage from "cypress/pages/deleteCasePage";
 import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
 
 describe("Creating a case", () => {
-	const createCasePage = new CreateCasePage();
-	const createConcernPage = new CreateConcernPage();
-	const addDetailsPage = new AddDetailsPage();
-	const addConcernDetailsPage = new AddConcernDetailsPage();
+    const createCasePage = new CreateCasePage();
+    const createConcernPage = new CreateConcernPage();
+    const addDetailsPage = new AddDetailsPage();
+    const addConcernDetailsPage = new AddConcernDetailsPage();
     const viewClosedCasePage = new ViewClosedCasePage();
     const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
@@ -55,30 +55,30 @@ describe("Creating a case", () => {
                 .withTrustName("Ashton West End Primary Academy")
                 .selectOption()
                 .confirmOption();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy");
-    
+
             Logger.log("Create a valid case division");
             selectCaseDivisionPage
                 .withCaseDivision("RegionsGroup")
                 .continue();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "");
-    
+
             Logger.log("Check validation error if region is not selected");
             addRegionPage.nextStep();
             validationComponent.hasValidationError("Select region");
-    
+
             cy.excuteAccessibilityTests();
-    
+
             Logger.log("Select valid region");
             addRegionPage
                 .withRegion("London")
                 .nextStep();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London");
@@ -89,25 +89,25 @@ describe("Creating a case", () => {
                 .withConcernRating("Amber-Green")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
-    
+
             Logger.log("Check Concern details are correctly populated");
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
                 .hasConcernType("Governance capability");
-    
+
             createConcernPage.nextStep();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
                 .hasConcernType("Governance capability");
-    
+
             Logger.log("Populate risk to trust");
             addDetailsPage.withRiskToTrust("Red").nextStep();
-    
+
             Logger.log(
                 "Check Trust, concern and risk to trust details are correctly populated"
             );
@@ -117,10 +117,10 @@ describe("Creating a case", () => {
                 .hasConcernType("Governance capability")
                 .hasConcernRiskRating("Amber Green")
                 .hasRiskToTrust("Red");
-    
+
             Logger.log("Add concern details with valid text limit");
             addConcernDetailsPage.withIssue("This is an issue").createCase();
-    
+
             Logger.log("Verify case details");
             caseManagementPage
                 .hasTrust("Ashton West End Primary Academy")
@@ -128,26 +128,26 @@ describe("Creating a case", () => {
                 .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasManagedBy("Regions Group", "London")
                 .hasIssue("This is an issue");
-    
+
             Logger.log("Editing the existing region");
             caseManagementPage.editManagedBy();
-    
+
             editRegionPage
                 .hasRegion("London")
                 .withRegion("South West")
                 .apply();
-    
+
             caseManagementPage.hasManagedBy("Regions Group", "South West");
-    
+
             Logger.log("Add another concern after case creation");
             caseManagementPage.addAnotherConcern();
-    
+
             createConcernPage
                 .withConcernType("Safeguarding non-compliance")
                 .withConcernRating("Red-Amber")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
-    
+
             caseManagementPage
                 .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasConcerns("Safeguarding non-compliance", ["Red", "Amber"]);
@@ -155,38 +155,37 @@ describe("Creating a case", () => {
             Logger.log("Check the available case actions");
             caseManagementPage.getAddToCaseBtn().click();
             addToCasePage.hasActions([
-                "Decision",
-                "NTI: Under consideration",
-                "NTI: Warning letter",
-                "NTI: Notice to improve",
-                "SRMA (School Resource Management Adviser)"
-            ])
-            .cancel();
-    
+                    "Decision",
+                    "NTI: Under consideration",
+                    "NTI: Warning letter",
+                    "NTI: Notice to improve",
+                    "SRMA (School Resource Management Adviser)"
+                ])
+                .cancel();
+
             Logger.log("Close down the concerns");
             caseManagementPage.closeConcern();
             closeConcernPage.confirmCloseConcern();
-    
+
             caseManagementPage.closeConcern();
             closeConcernPage.confirmCloseConcern();
-    
-            caseManagementPage.getCaseIDText()
-            .then((caseId =>
-            {
-                caseManagementPage.getCloseCaseBtn().click();
-                caseManagementPage.withRationaleForClosure("Closing").getCloseCaseBtn().click();
-        
-                Logger.log("Viewing case is closed");
-                homePage.getClosedCasesBtn().click();
-        
-                Logger.log("Checking accessibility on closed case");
-                cy.excuteAccessibilityTests();
-        
-                closedCasePage.getClosedCase(caseId).click();
-        
-                viewClosedCasePage.hasManagedBy("Regions Group", "South West");
-            }));
 
+            caseManagementPage.getCaseIDText()
+                .then((caseId =>
+                {
+                    caseManagementPage.getCloseCaseBtn().click();
+                    caseManagementPage.withRationaleForClosure("Closing").getCloseCaseBtn().click();
+
+                    Logger.log("Viewing case is closed");
+                    homePage.getClosedCasesBtn().click();
+
+                    Logger.log("Checking accessibility on closed case");
+                    cy.excuteAccessibilityTests();
+
+                    closedCasePage.getClosedCase(caseId).click();
+
+                    viewClosedCasePage.hasManagedBy("Regions Group", "South West");
+                }));
         });
 
         it("Should delete a concern", () => {
@@ -196,24 +195,24 @@ describe("Creating a case", () => {
                 .withTrustName("Ashton West End Primary Academy")
                 .selectOption()
                 .confirmOption();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy");
-    
+
             Logger.log("Create a valid case division");
             selectCaseDivisionPage
                 .withCaseDivision("RegionsGroup")
                 .continue();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "");
-    
+
             Logger.log("Select valid region");
             addRegionPage
                 .withRegion("London")
                 .nextStep();
-    
+
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London");
@@ -224,19 +223,19 @@ describe("Creating a case", () => {
                 .withConcernRating("Amber-Green")
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
-    
+
             Logger.log("Check Concern details are correctly populated");
             createCaseSummary
                 .hasTrustSummaryDetails("Ashton West End Primary Academy")
                 .hasManagedBy("Regions Group", "London")
                 .hasConcernRiskRating("Amber Green")
                 .hasConcernType("Governance capability");
-    
+
             createConcernPage.nextStep();
-    
+
             Logger.log("Populate risk to trust");
             addDetailsPage.withRiskToTrust("Red").nextStep();
-    
+
             Logger.log(
                 "Check Trust, concern and risk to trust details are correctly populated"
             );
@@ -246,10 +245,10 @@ describe("Creating a case", () => {
                 .hasConcernType("Governance capability")
                 .hasConcernRiskRating("Amber Green")
                 .hasRiskToTrust("Red");
-    
+
             Logger.log("Add concern details with valid text limit");
             addConcernDetailsPage.withIssue("This is an issue").createCase();
-    
+
             Logger.log("Verify case details");
             caseManagementPage
                 .hasTrust("Ashton West End Primary Academy")
@@ -257,7 +256,7 @@ describe("Creating a case", () => {
                 .hasConcerns("Governance capability", ["Amber", "Green"])
                 .hasManagedBy("Regions Group", "London")
                 .hasIssue("This is an issue");
-    
+
             Logger.log("Validate a case cant be deleted with open concerns");
             caseManagementPage.deleteCase();
             validationComponent.hasValidationError("Delete concerns");
@@ -298,20 +297,19 @@ describe("Creating a case", () => {
 
             Logger.log("Creating a decision");
             editDecisionPage
-			.withHasCrmCase("yes")
-			.withCrmEnquiry("444")
-			.withSubmissionRequired("yes")
-			.withSubmissionLink("www.gov.uk")
-			.withTypeOfDecision("NoticeToImprove")
-			.withTypeOfDecision("Section128")
-			.withSupportingNotes("These are some supporting notes!")
-			.save();
+                .withHasCrmCase("yes")
+                .withCrmEnquiry("444")
+                .withSubmissionRequired("yes")
+                .withSubmissionLink("www.gov.uk")
+                .withTypeOfDecision("NoticeToImprove")
+                .withTypeOfDecision("Section128")
+                .withSupportingNotes("These are some supporting notes!")
+                .save();
 
             Logger.log("Checking the decision values that have been set");
             actionSummaryTable
                 .getOpenAction("Decision: Multiple Decision Types")
-                .then(row =>
-                {
+                .then(row => {
                     row.select();
                 });
 
@@ -343,8 +341,7 @@ describe("Creating a case", () => {
 
             actionSummaryTable
                 .getOpenAction("Decision: Multiple Decision Types")
-                .then(row =>
-                {
+                .then(row => {
                     row.select();
                 });
 
@@ -372,9 +369,9 @@ describe("Creating a case", () => {
         });
 
         it("Should create an SRMA", () => {
-        
+
             caseManagementPage.addCaseAction("Srma");
-    
+
             Logger.log("Filling out the SRMA form");
             editSrmaPage
                 .withStatus("TrustConsidering")
@@ -383,20 +380,20 @@ describe("Creating a case", () => {
                 .withYearTrustContacted("2022")
                 .withNotes("This is my notes")
                 .save();
-    
+
             Logger.log("Add optional SRMA fields on the view page");
             actionSummaryTable.getOpenAction("SRMA").then((row) => {
                 row.hasName("SRMA");
                 row.hasStatus("Trust considering");
                 row.select();
             });
-    
+
             Logger.log("Checking accessibility on View SRMA");
             cy.excuteAccessibilityTests();
-    
+
             Logger.log("Configure reason");
             viewSrmaPage.addReason();
-    
+
             Logger.log("Verify hint text");
             editSrmaPage.hasReasonHintText();
         });

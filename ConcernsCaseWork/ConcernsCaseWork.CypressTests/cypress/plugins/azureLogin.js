@@ -7,7 +7,7 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
         headless: false,
         args: [
             "--incognito"
-          ]
+        ]
     });
 
     const [page] = await browser.pages();

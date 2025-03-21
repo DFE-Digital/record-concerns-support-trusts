@@ -1,6 +1,6 @@
 import { Logger } from "../../../common/logger";
 
-export class EditFinancialPlanPage 
+export class EditFinancialPlanPage
 {
     public hasHeadingText(heading: string): this
     {
@@ -15,7 +15,8 @@ export class EditFinancialPlanPage
     {
         Logger.log(`With plan requested day ${day}`);
 
-        cy.getById("dtr-day-date-plan-requested").clear().type(day);
+        cy.getById("dtr-day-date-plan-requested").clear();
+        cy.getById("dtr-day-date-plan-requested").type(day);
 
         return this;
     }
@@ -24,7 +25,8 @@ export class EditFinancialPlanPage
     {
         Logger.log(`With plan requested month ${month}`);
 
-        cy.getById("dtr-month-date-plan-requested").clear().type(month);
+        cy.getById("dtr-month-date-plan-requested").clear();
+        cy.getById("dtr-month-date-plan-requested").type(month);
 
         return this;
     }
@@ -33,7 +35,8 @@ export class EditFinancialPlanPage
     {
         Logger.log(`With plan requested year ${year}`);
 
-        cy.getById("dtr-year-date-plan-requested").clear().type(year);
+        cy.getById("dtr-year-date-plan-requested").clear();
+        cy.getById("dtr-year-date-plan-requested").type(year);
 
         return this;
     }
@@ -55,18 +58,20 @@ export class EditFinancialPlanPage
     {
         Logger.log(`With notes ${notes}`);
 
-        cy.getById("financial-plan-notes").clear().type(notes);
+        cy.getById("financial-plan-notes").clear();
+        cy.getById("financial-plan-notes").type(notes);
 
         return this;
     }
 
     public withNotesExceedingLimit(): this {
-		cy.task("log", `With Notes exceeding limit`);
+        Logger.log(`With Notes exceeding limit`);
 
-		cy.getById('financial-plan-notes').clear().invoke("val", "x 1".repeat(666) + "\n".repeat(3));
+        cy.getById('financial-plan-notes').clear();
+        cy.getById('financial-plan-notes').invoke("val", "x 1".repeat(666) + "\n".repeat(3));
 
-		return this;
-	}
+        return this;
+    }
 
     public save(): this
     {
@@ -82,9 +87,9 @@ export class EditFinancialPlanPage
         Logger.log(`Has validation error ${error}`);
 
         cy.getById("errorSummary").should(
-			"contain.text",
-			error
-		);
+            "contain.text",
+            error
+        );
 
         return this;
     }
@@ -93,7 +98,7 @@ export class EditFinancialPlanPage
     {
         Logger.log(`With entered status ${status}`);
 
-        var selector = `status-${status.split(" ").join("")}`;
+        const selector = `status-${status.split(" ").join("")}`;
 
         cy.getByTestId(selector).should("be.checked");
 

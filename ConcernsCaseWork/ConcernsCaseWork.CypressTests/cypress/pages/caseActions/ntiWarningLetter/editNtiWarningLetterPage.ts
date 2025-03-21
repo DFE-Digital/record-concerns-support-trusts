@@ -12,7 +12,8 @@ export class EditNtiWarningLetterPage {
     public withDaySent(value: string): this {
         Logger.log(`With day sent ${value}`);
 
-        cy.getById(`dtr-day-date-sent`).clear().type(value);
+        cy.getById(`dtr-day-date-sent`).clear();
+        cy.getById(`dtr-day-date-sent`).type(value);
 
         return this;
     }
@@ -20,7 +21,8 @@ export class EditNtiWarningLetterPage {
     public withMonthSent(value: string): this {
         Logger.log(`With month sent ${value}`);
 
-        cy.getById(`dtr-month-date-sent`).clear().type(value);
+        cy.getById(`dtr-month-date-sent`).clear();
+        cy.getById(`dtr-month-date-sent`).type(value);
 
         return this;
     }
@@ -28,7 +30,8 @@ export class EditNtiWarningLetterPage {
     public withYearSent(value: string): this {
         Logger.log(`With year sent ${value}`);
 
-        cy.getById(`dtr-year-date-sent`).clear().type(value);
+        cy.getById(`dtr-year-date-sent`).clear();
+        cy.getById(`dtr-year-date-sent`).type(value);
 
         return this;
     }
@@ -44,7 +47,8 @@ export class EditNtiWarningLetterPage {
     public withNotes(value: string): this {
         Logger.log(`With notes ${value}`);
 
-        cy.getById(`nti-notes`).clear().type(value);
+        cy.getById(`nti-notes`).clear();
+        cy.getById(`nti-notes`).type(value);
 
         return this;
     }
@@ -52,7 +56,8 @@ export class EditNtiWarningLetterPage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }
@@ -141,7 +146,7 @@ export class EditNtiWarningLetterPage {
             {
                 cy.wrap(element).uncheck();
             });
-    
+
 
         return this;
     }

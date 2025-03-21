@@ -6,10 +6,10 @@ class CaseActionTable {
         Logger.log(`Getting the case action row for ${action}`);
 
         return cy.getByTestId(`row-${action}`)
-        .then((el) =>
-        {
-            return new ActionRow(el);
-        });
+            .then((el) =>
+            {
+                return new ActionRow(el);
+            });
     }
 }
 

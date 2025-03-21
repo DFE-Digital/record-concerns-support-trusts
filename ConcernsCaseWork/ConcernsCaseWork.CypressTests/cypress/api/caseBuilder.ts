@@ -13,7 +13,7 @@ export class CaseBuilder
 
     public static buildRegionsGroupCase(): CreateCaseRequest
     {
-        var result = this.buildOpenCase();
+        let result = this.buildOpenCase();
         result.division = 2;
 
         return result;
@@ -97,7 +97,7 @@ export class CaseBuilder
         }
 
         return result;
-    } 
+    }
 
     private static chooseRandomTrust()
     {
@@ -167,7 +167,7 @@ export class CaseBuilder
             "10058468",
             "10064307",
         ];
-    
+
         let trustIndex = Math.floor(Math.random() * searchTerm.length);
         let result = searchTerm[trustIndex];
 

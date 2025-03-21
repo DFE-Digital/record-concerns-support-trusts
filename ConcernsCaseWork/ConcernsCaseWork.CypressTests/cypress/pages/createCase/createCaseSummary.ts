@@ -7,9 +7,9 @@ export class CreateCaseSummary
         Logger.log(`Has Trust summary details ${value}`);
 
         cy.getByTestId("trust-summary").should(
-			"contain.text",
-			value
-		);
+            "contain.text",
+            value
+        );
         return this;
     }
 
@@ -18,9 +18,9 @@ export class CreateCaseSummary
         Logger.log(`Has Concern Type ${value}`);
 
         cy.getByTestId("concern-type").should(
-			"contain.text",
-			value
-		);
+            "contain.text",
+            value
+        );
         return this;
     }
 
@@ -45,10 +45,10 @@ export class CreateCaseSummary
         Logger.log(`Has Risk to trust ${value}`);
 
         cy.getByTestId(`risk-to-trust`).should(
-			"contain.text",
-			value
-		);
-        
+            "contain.text",
+            value
+        );
+
         return this;
     }
 
@@ -57,14 +57,14 @@ export class CreateCaseSummary
         Logger.log(`Has Managed By ${division} ${territory}`);
 
         cy.getByTestId(`managed-by`).should(
-			"contain.text",
-			division
-		);
+            "contain.text",
+            division
+        );
 
         cy.getByTestId(`managed-by`).should(
-			"contain.text",
-			territory
-		);
+            "contain.text",
+            territory
+        );
 
         return this;
     }
@@ -74,9 +74,9 @@ export class CreateCaseSummary
         Logger.log(`Has Hint Text By ${hintText} `);
 
         cy.getByTestId(`hint-text`).should(
-			"contain.text",
-			hintText
-		);
+            "contain.text",
+            hintText
+        );
 
         return this;
     }
@@ -84,4 +84,4 @@ export class CreateCaseSummary
 
 const createCaseSummary = new CreateCaseSummary();
 
-export default createCaseSummary; 
+export default createCaseSummary;

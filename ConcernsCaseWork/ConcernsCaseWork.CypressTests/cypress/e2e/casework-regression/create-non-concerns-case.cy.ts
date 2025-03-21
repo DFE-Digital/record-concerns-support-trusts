@@ -57,16 +57,16 @@ describe("Creating a non concerns case", () => {
 
         Logger.log("You must select a division error");
         selectCaseDivisionPage
-        .continue()
-        .hasValidationError("Select case division");
+            .continue()
+            .hasValidationError("Select case division");
 
         Logger.log("Checking accessibility on select case division");
         cy.excuteAccessibilityTests();
 
         Logger.log("Create a valid case division");
         selectCaseDivisionPage
-        .withCaseDivision("SFSO")
-        .continue();
+            .withCaseDivision("SFSO")
+            .continue();
 
         Logger.log("Populate territory");
         addTerritoryPage.withTerritory(territory).nextStep();
@@ -82,9 +82,9 @@ describe("Creating a non concerns case", () => {
 
         Logger.log("Verify case details");
         caseManagementPage
-        .hasTrust(trustName)
-        .hasManagedBy("SFSO", territory)
-        .hasCaseOwner(name);
+            .hasTrust(trustName)
+            .hasManagedBy("SFSO", territory)
+            .hasCaseOwner(name);
 
         Logger.log("Ensure we cannot see the narritive fields");
         caseManagementPage.hasNoCaseNarritiveFields();
@@ -104,12 +104,12 @@ describe("Creating a non concerns case", () => {
         AddToCasePage.getAddToCaseBtn().click();
 
         editSrmaPage
-        .withStatus("TrustConsidering")
-        .withDayTrustContacted("05")
-        .withMonthTrustContacted("06")
-        .withYearTrustContacted("2022")
-        .withNotes("This is my notes")
-        .save();
+            .withStatus("TrustConsidering")
+            .withDayTrustContacted("05")
+            .withMonthTrustContacted("06")
+            .withYearTrustContacted("2022")
+            .withNotes("This is my notes")
+            .save();
 
         actionSummaryTable.getOpenAction("SRMA").then((row) => {
             row.hasName("SRMA");
@@ -118,11 +118,9 @@ describe("Creating a non concerns case", () => {
         });
 
         viewSrmaPage
-        .hasStatus("Trust considering")
-        .hasDateTrustContacted("05 June 2022")
-        .hasNotes("This is my notes");
-
-
+            .hasStatus("Trust considering")
+            .hasDateTrustContacted("05 June 2022")
+            .hasNotes("This is my notes");
 
         Logger.log("Closing SRMA");
         viewSrmaPage.addReason();
@@ -141,10 +139,10 @@ describe("Creating a non concerns case", () => {
         Logger.log("Verifying the closed case actions details are displayed");
         actionTable.getRowByAction("SRMA").then((row) => {
             row
-            .hasName("SRMA")
-            .hasStatus("SRMA cancelled")
-            .hasOpenedDate(toDisplayDate(now))
-            .hasClosedDate(toDisplayDate(now));
+                .hasName("SRMA")
+                .hasStatus("SRMA cancelled")
+                .hasOpenedDate(toDisplayDate(now))
+                .hasClosedDate(toDisplayDate(now));
         });
     });
 
@@ -155,8 +153,8 @@ describe("Creating a non concerns case", () => {
 
             Logger.log("Create a valid case division");
             selectCaseDivisionPage
-            .withCaseDivision("SFSO")
-            .continue();
+                .withCaseDivision("SFSO")
+                .continue();
 
             Logger.log("Populate territory");
             addTerritoryPage.withTerritory(territory).nextStep();
@@ -175,31 +173,31 @@ describe("Creating a non concerns case", () => {
 
             Logger.log("Attempt to create an invalid concern");
             createConcernPage
-            .addConcern()
-            .hasValidationError("Select concern type")
-            .hasValidationError("Select concern risk rating")
-            .hasValidationError("Select means of referral");
+                .addConcern()
+                .hasValidationError("Select concern type")
+                .hasValidationError("Select concern risk rating")
+                .hasValidationError("Select means of referral");
 
             Logger.log("Create an invalid sub concern");
             createConcernPage
-            .withConcernType("Deficit")
-            .withConcernRating("Red-Amber")
-            .withMeansOfReferral(SourceOfConcernExternal)
-            .addConcern();
+                .withConcernType("Deficit")
+                .withConcernRating("Red-Amber")
+                .withMeansOfReferral(SourceOfConcernExternal)
+                .addConcern();
 
             Logger.log("Adding another concern during case creation");
             createConcernPage
-            .addAnotherConcern()
-            .withConcernType("Financial compliance")
-            .withConcernRating("Amber-Green")
-            .withMeansOfReferral(SourceOfConcernInternal)
-            .addConcern()
-            .nextStep();
+                .addAnotherConcern()
+                .withConcernType("Financial compliance")
+                .withConcernRating("Amber-Green")
+                .withMeansOfReferral(SourceOfConcernInternal)
+                .addConcern()
+                .nextStep();
 
             Logger.log("Check unpopulated risk to trust throws validation error");
             addConcernDetailsPage
-            .nextStep()
-            .hasValidationError("Select risk to trust rating");
+                .nextStep()
+                .hasValidationError("Select risk to trust rating");
 
             createConcernPage.withConcernRating("Red Plus").nextStep();
 
@@ -208,47 +206,47 @@ describe("Creating a non concerns case", () => {
 
             Logger.log("Validate unpopulated concern details");
             addConcernDetailsPage
-            .withIssueExceedingLimit()
-            .withCurrentStatusExceedingLimit()
-            .withCaseAimExceedingLimit()
-            .withDeEscalationPointExceedingLimit()
-            .withNextStepsExceedingLimit()
-            .withCaseHistoryExceedingLimit()
-            .createCase()
-            .hasValidationError("Issue must be 2000 characters or less")
-            .hasValidationError("Current status must be 4000 characters or less")
-            .hasValidationError("Next steps must be 4000 characters or less")
-            .hasValidationError("De-escalation point must be 1000 characters or less")
-            .hasValidationError("Case aim must be 1000 characters or less")
-            .hasValidationError("Case notes must be 4300 characters or less");
+                .withIssueExceedingLimit()
+                .withCurrentStatusExceedingLimit()
+                .withCaseAimExceedingLimit()
+                .withDeEscalationPointExceedingLimit()
+                .withNextStepsExceedingLimit()
+                .withCaseHistoryExceedingLimit()
+                .createCase()
+                .hasValidationError("Issue must be 2000 characters or less")
+                .hasValidationError("Current status must be 4000 characters or less")
+                .hasValidationError("Next steps must be 4000 characters or less")
+                .hasValidationError("De-escalation point must be 1000 characters or less")
+                .hasValidationError("Case aim must be 1000 characters or less")
+                .hasValidationError("Case notes must be 4300 characters or less");
 
             Logger.log("Checking accessibility on concerns case confirmation");
             cy.excuteAccessibilityTests();
 
             Logger.log("Add concern details with valid text limit");
             addConcernDetailsPage
-            .withIssue("This is an issue")
-            .withCurrentStatus("This is the current status")
-            .withCaseAim("This is the case aim")
-            .withDeEscalationPoint("This is the de-escalation point")
-            .withNextSteps("This is the next steps")
-            .withCaseHistory("This is the case history")
-            .createCase();
+                .withIssue("This is an issue")
+                .withCurrentStatus("This is the current status")
+                .withCaseAim("This is the case aim")
+                .withDeEscalationPoint("This is the de-escalation point")
+                .withNextSteps("This is the next steps")
+                .withCaseHistory("This is the case history")
+                .createCase();
 
             Logger.log("Verify case details");
             caseManagementPage
-            .hasTrust("Ashton West End Primary Academy")
-            .hasRiskToTrust("Red Plus")
-            .hasConcerns("Financial compliance", ["Amber", "Green"])
-            .hasConcerns("Deficit", ["Red", "Amber"])
-            .hasNumberOfConcerns(2)
-            .hasManagedBy("SFSO", "North - North East")
-            .hasIssue("This is an issue")
-            .hasCurrentStatus("This is the current status")
-            .hasCaseAim("This is the case aim")
-            .hasDeEscalationPoint("This is the de-escalation point")
-            .hasNextSteps("This is the next steps")
-            .hasCaseHistory("This is the case history");
+                .hasTrust("Ashton West End Primary Academy")
+                .hasRiskToTrust("Red Plus")
+                .hasConcerns("Financial compliance", ["Amber", "Green"])
+                .hasConcerns("Deficit", ["Red", "Amber"])
+                .hasNumberOfConcerns(2)
+                .hasManagedBy("SFSO", "North - North East")
+                .hasIssue("This is an issue")
+                .hasCurrentStatus("This is the current status")
+                .hasCaseAim("This is the case aim")
+                .hasDeEscalationPoint("This is the de-escalation point")
+                .hasNextSteps("This is the next steps")
+                .hasCaseHistory("This is the case history");
 
             Logger.log("Verify the means of referral is set");
             caseManagementPage.getCaseIDText().then((caseId) => {
@@ -266,8 +264,8 @@ describe("Creating a non concerns case", () => {
                 createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
                 selectCaseDivisionPage
-                .withCaseDivision("SFSO")
-                .continue();
+                    .withCaseDivision("SFSO")
+                    .continue();
 
                 addTerritoryPage.withTerritory(territory).nextStep();
                 selectCaseTypePage.withCaseType("NonConcerns").continue();
@@ -285,14 +283,14 @@ describe("Creating a non concerns case", () => {
                     caseManagementPage.addAnotherConcernForNonConcern();
 
                     createCaseSummary
-                    .hasTrustSummaryDetails(trustName)
-                    .hasManagedBy("SFSO", "North - North East");
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy("SFSO", "North - North East");
 
                     createConcernPage
-                    .withConcernType("Viability")
-                    .withConcernRating("Amber-Green")
-                    .withMeansOfReferral(SourceOfConcernExternal)
-                    .addConcern();
+                        .withConcernType("Viability")
+                        .withConcernRating("Amber-Green")
+                        .withMeansOfReferral(SourceOfConcernExternal)
+                        .addConcern();
 
                     Logger.log("Exit early again and create another concern");
 
@@ -302,47 +300,47 @@ describe("Creating a non concerns case", () => {
                     Logger.log("It should show us the trust for the case we are on");
 
                     createCaseSummary
-                    .hasTrustSummaryDetails(trustName)
-                    .hasManagedBy("SFSO", "North - North East");
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy("SFSO", "North - North East");
 
                     createConcernPage
-                    .withConcernType("Deficit")
-                    .withConcernRating("Red-Amber")
-                    .withMeansOfReferral(SourceOfConcernExternal)
-                    .addConcern();
+                        .withConcernType("Deficit")
+                        .withConcernRating("Red-Amber")
+                        .withMeansOfReferral(SourceOfConcernExternal)
+                        .addConcern();
 
                     createCaseSummary
-                    .hasTrustSummaryDetails(trustName)
-                    .hasManagedBy("SFSO", "North - North East")
-                    .hasConcernType("Deficit")
-                    .hasConcernRiskRating("Red Amber");
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy("SFSO", "North - North East")
+                        .hasConcernType("Deficit")
+                        .hasConcernRiskRating("Red Amber");
 
                     createConcernPage.nextStep();
 
                     createCaseSummary
-                    .hasTrustSummaryDetails(trustName)
-                    .hasManagedBy("SFSO", "North - North East")
-                    .hasConcernType("Deficit")
-                    .hasConcernRiskRating("Red Amber");
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy("SFSO", "North - North East")
+                        .hasConcernType("Deficit")
+                        .hasConcernRiskRating("Red Amber");
 
                     createConcernPage.withConcernRating("Red Plus").nextStep();
 
                     createCaseSummary
-                    .hasTrustSummaryDetails(trustName)
-                    .hasManagedBy("SFSO", "North - North East")
-                    .hasConcernType("Deficit")
-                    .hasConcernRiskRating("Red Amber")
-                    .hasRiskToTrust("Red Plus");
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy("SFSO", "North - North East")
+                        .hasConcernType("Deficit")
+                        .hasConcernRiskRating("Red Amber")
+                        .hasRiskToTrust("Red Plus");
 
                     addConcernDetailsPage
-                    .withIssue("This is an issue").createCase();
+                        .withIssue("This is an issue").createCase();
 
                     Logger.log("It should create just one concern against the correct trust");
                     caseManagementPage
-                    .hasTrust(trustName)
-                    .hasRiskToTrust("Red Plus")
-                    .hasConcerns("Deficit", ["Red", "Amber"])
-                    .hasNumberOfConcerns(1);
+                        .hasTrust(trustName)
+                        .hasRiskToTrust("Red Plus")
+                        .hasConcerns("Deficit", ["Red", "Amber"])
+                        .hasNumberOfConcerns(1);
                 });
             });
         });
@@ -364,20 +362,20 @@ describe("Creating a non concerns case", () => {
         Logger.log("Validate Closed Case row has correct details");
         caseworkTable.getRowByCaseId(caseId).then((row) => {
             row
-            .hasCaseId(caseId)
-            .hasCreatedDate(toDisplayDate(now))
-            .hasClosedDate(toDisplayDate(now))
-            .hasTrust(trustName)
-            .hasAction("Action: School Resource Management Adviser")
-            .select();
+                .hasCaseId(caseId)
+                .hasCreatedDate(toDisplayDate(now))
+                .hasClosedDate(toDisplayDate(now))
+                .hasTrust(trustName)
+                .hasAction("Action: School Resource Management Adviser")
+                .select();
         });
 
         Logger.log("Validate Closed Case has correct details");
         viewClosedCasePage
-        .hasTrust(trustName)
-        .hasManagedBy("SFSO", territory)
-        .hasCaseOwner(name)
-        .hasRationaleForClosure("Closing non concerns case")
-        .hasNoCaseNarritiveFields();
+            .hasTrust(trustName)
+            .hasManagedBy("SFSO", territory)
+            .hasCaseOwner(name)
+            .hasRationaleForClosure("Closing non concerns case")
+            .hasNoCaseNarritiveFields();
     }
 });

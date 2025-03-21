@@ -5,24 +5,24 @@ export default class AddConcernDetailsPage {
 
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+        Logger.log(`Has Validation error ${message}`);
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 
     public hasTrustSummaryDetails(value: string): this
     {
         Logger.log(`Has Trust summary details ${value}`);
 
         cy.getByTestId("trust-summary").should(
-			"contain.text",
-			value
-		);
+            "contain.text",
+            value
+        );
         return this;
     }
 
@@ -76,7 +76,8 @@ export default class AddConcernDetailsPage {
 
     public withExceedingTextLimit(field: string, limit: number): this {
 
-        cy.getByTestId(field).clear().invoke("val", "x 1".repeat(limit));
+        cy.getByTestId(field).clear();
+        cy.getByTestId(field).invoke("val", "x 1".repeat(limit));
 
         return this;
     }
@@ -84,7 +85,8 @@ export default class AddConcernDetailsPage {
     public withIssue(value: string): this {
         Logger.log(`With issue ${value}`);
 
-        cy.getByTestId(`issue`).clear({force: true}).type(value);
+        cy.getByTestId(`issue`).clear({force: true});
+        cy.getByTestId(`issue`).type(value);
 
         return this;
     }
@@ -92,7 +94,8 @@ export default class AddConcernDetailsPage {
     public withCurrentStatus(value: string): this {
         Logger.log(`With current status ${value}`);
 
-        cy.getByTestId(`current-status`).clear({force: true}).type(value);
+        cy.getByTestId(`current-status`).clear({force: true});
+        cy.getByTestId(`current-status`).type(value);
 
         return this;
     }
@@ -100,7 +103,8 @@ export default class AddConcernDetailsPage {
     public withCaseAim(value: string): this {
         Logger.log(`With case aim ${value}`);
 
-        cy.getByTestId(`case-aim`).clear({force: true}).type(value);
+        cy.getByTestId(`case-aim`).clear({force: true});
+        cy.getByTestId(`case-aim`).type(value);
 
         return this;
     }
@@ -108,7 +112,8 @@ export default class AddConcernDetailsPage {
     public withDeEscalationPoint(value: string): this {
         Logger.log(`With deEscalation point ${value}`);
 
-        cy.getByTestId(`de-escalation-point`).clear({force: true}).type(value);
+        cy.getByTestId(`de-escalation-point`).clear({force: true});
+        cy.getByTestId(`de-escalation-point`).type(value);
 
         return this;
     }
@@ -116,14 +121,17 @@ export default class AddConcernDetailsPage {
     public withNextSteps(value: string): this {
         Logger.log(`With next steps ${value}`);
 
-        cy.getByTestId(`next-steps`).clear({force: true}).type(value);
+        cy.getByTestId(`next-steps`).clear({force: true});
+        cy.getByTestId(`next-steps`).type(value);
 
         return this;
     }
 
     public withCaseHistory(value: string): this {
         Logger.log(`With case history ${value}`);
-        cy.getByTestId(`case-history`).click({ force: true }).clear().type(value);
+        cy.getByTestId(`case-history`).click();
+        cy.getByTestId(`case-history`).clear();
+        cy.getByTestId(`case-history`).type(value);
 
         return this;
     }

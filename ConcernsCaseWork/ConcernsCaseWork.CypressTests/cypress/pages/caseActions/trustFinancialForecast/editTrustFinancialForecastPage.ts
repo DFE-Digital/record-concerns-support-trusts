@@ -34,7 +34,8 @@ export class EditTrustFinancialForecastPage
     public withDayReviewHappened(value: string): this {
         Logger.log(`With day review happened ${value}`);
 
-        cy.getById(`dtr-day-sfso-initial-review-happened-at`).clear().type(value);
+        cy.getById(`dtr-day-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-day-sfso-initial-review-happened-at`).type(value);
 
         return this;
     }
@@ -50,7 +51,8 @@ export class EditTrustFinancialForecastPage
     public withMonthReviewHappened(value: string): this {
         Logger.log(`With month review happen ${value}`);
 
-        cy.getById(`dtr-month-sfso-initial-review-happened-at`).clear().type(value);
+        cy.getById(`dtr-month-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-month-sfso-initial-review-happened-at`).type(value);
 
         return this;
     }
@@ -66,7 +68,8 @@ export class EditTrustFinancialForecastPage
     public withYearReviewHappened(value: string): this {
         Logger.log(`With year review happen ${value}`);
 
-        cy.getById(`dtr-year-sfso-initial-review-happened-at`).clear().type(value);
+        cy.getById(`dtr-year-sfso-initial-review-happened-at`).clear();
+        cy.getById(`dtr-year-sfso-initial-review-happened-at`).type(value);
 
         return this;
     }
@@ -82,7 +85,8 @@ export class EditTrustFinancialForecastPage
     public withDayTrustResponded(value: string): this {
         Logger.log(`With day review happen ${value}`);
 
-        cy.getById(`dtr-day-trust-responded-at`).clear().type(value);
+        cy.getById(`dtr-day-trust-responded-at`).clear();
+        cy.getById(`dtr-day-trust-responded-at`).type(value);
 
         return this;
     }
@@ -98,7 +102,8 @@ export class EditTrustFinancialForecastPage
     public withMonthTrustResponded(value: string): this {
         Logger.log(`With month review happen ${value}`);
 
-        cy.getById(`dtr-month-trust-responded-at`).clear().type(value);
+        cy.getById(`dtr-month-trust-responded-at`).clear();
+        cy.getById(`dtr-month-trust-responded-at`).type(value);
 
         return this;
     }
@@ -114,7 +119,8 @@ export class EditTrustFinancialForecastPage
     public withYearTrustResponded(value: string): this {
         Logger.log(`With year review happen ${value}`);
 
-        cy.getById(`dtr-year-trust-responded-at`).clear().type(value);
+        cy.getById(`dtr-year-trust-responded-at`).clear();
+        cy.getById(`dtr-year-trust-responded-at`).type(value);
 
         return this;
     }
@@ -135,7 +141,7 @@ export class EditTrustFinancialForecastPage
         return this;
     }
 
-    
+
     public hasTrustResponseSatisfactory(trustResponseSatisfactory: string): this {
         Logger.log(`Has trust response satisfactory ${trustResponseSatisfactory}`);
 
@@ -163,7 +169,8 @@ export class EditTrustFinancialForecastPage
     public withNotes(notes: string): this {
         Logger.log(`With Notes ${notes}`);
 
-        cy.getByTestId(`notes`).clear().type(notes);
+        cy.getByTestId(`notes`).clear();
+        cy.getByTestId(`notes`).type(notes);
 
         return this;
     }
@@ -179,7 +186,8 @@ export class EditTrustFinancialForecastPage
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getByTestId('notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getByTestId('notes').clear();
+        cy.getByTestId('notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

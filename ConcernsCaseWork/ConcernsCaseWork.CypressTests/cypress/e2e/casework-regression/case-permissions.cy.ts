@@ -1,7 +1,4 @@
 import { EditFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/editFinancialPlanPage";
-import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
-import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import caseApi from "../../api/caseApi";
 import { Logger } from "../../common/logger";
 import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
@@ -33,8 +30,6 @@ describe("Testing permissions on cases and case actions", () => {
     const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
-    const editTffPage = new EditTrustFinancialForecastPage();
-    const viewTffPage = new ViewTrustFinancialForecastPage();
 
     let caseId: number;
 
@@ -195,7 +190,7 @@ describe("Testing permissions on cases and case actions", () => {
 
         Logger.log("Check that the user cannot edit an nti under consideration that they did not create");
         updateCaseOwner(caseId);
-        
+
         viewNtiUnderConsiderationPage
             .cannotEdit()
             .cannotClose();
