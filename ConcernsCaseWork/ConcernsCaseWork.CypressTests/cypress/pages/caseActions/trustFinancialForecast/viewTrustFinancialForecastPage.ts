@@ -69,7 +69,7 @@ export class ViewTrustFinancialForecastPage
 
     public canEdit(): this {
         Logger.log("Can edit");
-        
+
         this.getEdit();
 
         return this;

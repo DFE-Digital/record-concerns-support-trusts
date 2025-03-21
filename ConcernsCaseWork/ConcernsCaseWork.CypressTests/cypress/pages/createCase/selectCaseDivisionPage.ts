@@ -39,4 +39,3 @@ class SelectCaseDivisionPage {
 var selectCaseDivisionPage = new SelectCaseDivisionPage();
 
 export default selectCaseDivisionPage;
-

@@ -2,7 +2,7 @@ import { Logger } from "../../common/logger";
 import { CookieBanner } from "../../pages/cookieBanner";
 import { CookiesPage } from "../../pages/cookiesPage";
 
-describe("Testing cookies on the site", () => 
+describe("Testing cookies on the site", () =>
 {
     let cookiesPage = new CookiesPage();
     let cookiesBanner = new CookieBanner();
@@ -25,8 +25,7 @@ describe("Testing cookies on the site", () =>
 
         cy.visit("/cookies");
 
-        cookiesPage
-            .hasConsent("Yes")
+        cookiesPage.hasConsent("Yes")
 
         hasCookieValue("True");
 
@@ -51,14 +50,13 @@ describe("Testing cookies on the site", () =>
             .reject()
             .notVisible();
 
-        cookiesPage
-        .hasConsent("No")
+        cookiesPage.hasConsent("No")
 
         hasCookieValue("False");
 
         cookiesPage
-        .withConsent("Yes")
-        .save();
+            .withConsent("Yes")
+            .save();
 
         cy.reload();
 
@@ -72,9 +70,9 @@ describe("Testing cookies on the site", () =>
         Logger.log(`Should set the consent cookie to ${cookieValue}`);
 
         cy.getCookie(".ConcernsCasework.Consent")
-        .then(cookie =>
-        {
-            expect(cookie?.value).to.equal(cookieValue);
-        });
+            .then(cookie =>
+            {
+                expect(cookie?.value).to.equal(cookieValue);
+            });
     }
 });

@@ -1,7 +1,9 @@
+import { Logger } from "cypress/common/logger";
+
 class ValidationComponent
 {
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.log(`Has Validation error ${message}`);
 
 		cy.getById("errorSummary").should(
 			"contain.text",
@@ -13,7 +15,7 @@ class ValidationComponent
 
     public hasValidationErrorsInOrder(errors: string[])
     {
-        cy.task("log", `Has validation errors in order ${errors.join(",")}`);
+        Logger.log(`Has validation errors in order ${errors.join(",")}`);
 
         cy.getById("errorSummary")
             .find(".govuk-error-message")

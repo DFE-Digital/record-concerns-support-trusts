@@ -12,7 +12,8 @@ export class EditSrmaPage {
     public withDayTrustContacted(day: string): this {
         Logger.log(`With day trust contacted ${day}`);
 
-        cy.getByTestId("dtr-day-date-offered").clear().type(day);
+        cy.getByTestId("dtr-day-date-offered").clear();
+        cy.getByTestId("dtr-day-date-offered").type(day);
 
         return this;
     }
@@ -20,7 +21,8 @@ export class EditSrmaPage {
     public withMonthTrustContacted(month: string): this {
         Logger.log(`With month trust contacted ${month}`);
 
-        cy.getByTestId("dtr-month-date-offered").clear().type(month);
+        cy.getByTestId("dtr-month-date-offered").clear();
+        cy.getByTestId("dtr-month-date-offered").type(month);
 
         return this;
     }
@@ -28,7 +30,8 @@ export class EditSrmaPage {
     public withYearTrustContacted(year: string): this {
         Logger.log(`With year trust contacted ${year}`);
 
-        cy.getByTestId("dtr-year-date-offered").clear().type(year);
+        cy.getByTestId("dtr-year-date-offered").clear();
+        cy.getByTestId("dtr-year-date-offered").type(year);
 
         return this;
     }
@@ -58,7 +61,8 @@ export class EditSrmaPage {
     public withNotes(notes: string) {
         Logger.log(`With notes ${notes}`);
 
-        cy.getById("srma-notes").clear({ force: true }).type(notes);
+        cy.getById("srma-notes").clear({ force: true });
+        cy.getById("srma-notes").type(notes);
 
         return this;
     }
@@ -66,7 +70,8 @@ export class EditSrmaPage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('srma-notes').clear().invoke("val", "x 1 D".repeat(1001));
+        cy.getById('srma-notes').clear();
+        cy.getById('srma-notes').invoke("val", "x 1 D".repeat(1001));
 
         return this;
     }
@@ -82,7 +87,8 @@ export class EditSrmaPage {
     public withDayAccepted(value: string): this {
         Logger.log(`With day accepted ${value}`);
 
-        cy.getById(`dtr-day-date-accepted`).clear().type(value);
+        cy.getById(`dtr-day-date-accepted`).clear();
+        cy.getById(`dtr-day-date-accepted`).type(value);
 
         return this;
     }
@@ -90,7 +96,8 @@ export class EditSrmaPage {
     public withMonthAccepted(value: string): this {
         Logger.log(`With month accepted ${value}`);
 
-        cy.getById(`dtr-month-date-accepted`).clear().type(value);
+        cy.getById(`dtr-month-date-accepted`).clear();
+        cy.getById(`dtr-month-date-accepted`).type(value);
 
         return this;
     }
@@ -98,7 +105,8 @@ export class EditSrmaPage {
     public withYearAccepted(value: string): this {
         Logger.log(`With year accepted ${value}`);
 
-        cy.getById(`dtr-year-date-accepted`).clear().type(value);
+        cy.getById(`dtr-year-date-accepted`).clear();
+        cy.getById(`dtr-year-date-accepted`).type(value);
 
         return this;
     }
@@ -106,7 +114,8 @@ export class EditSrmaPage {
     public withStartDayOfVisit(value: string): this {
         Logger.log(`With start day of visit ${value}`);
 
-        cy.getById(`dtr-day-start`).clear().type(value);
+        cy.getById(`dtr-day-start`).clear();
+        cy.getById(`dtr-day-start`).type(value);
 
         return this;
     }
@@ -114,7 +123,8 @@ export class EditSrmaPage {
     public withStartMonthOfVisit(value: string): this {
         Logger.log(`With start month of visit ${value}`);
 
-        cy.getById(`dtr-month-start`).clear().type(value);
+        cy.getById(`dtr-month-start`).clear();
+        cy.getById(`dtr-month-start`).type(value);
 
         return this;
     }
@@ -122,7 +132,8 @@ export class EditSrmaPage {
     public withStartYearOfVisit(value: string): this {
         Logger.log(`With start year of visit ${value}`);
 
-        cy.getById(`dtr-year-start`).clear().type(value);
+        cy.getById(`dtr-year-start`).clear();
+        cy.getById(`dtr-year-start`).type(value);
 
         return this;
     }
@@ -130,7 +141,8 @@ export class EditSrmaPage {
     public withEndDayOfVisit(value: string): this {
         Logger.log(`With end day of visit ${value}`);
 
-        cy.getById(`dtr-day-end`).clear().type(value);
+        cy.getById(`dtr-day-end`).clear();
+        cy.getById(`dtr-day-end`).type(value);
 
         return this;
     }
@@ -138,7 +150,8 @@ export class EditSrmaPage {
     public withEndMonthOfVisit(value: string): this {
         Logger.log(`With end month of visit ${value}`);
 
-        cy.getById(`dtr-month-end`).clear().type(value);
+        cy.getById(`dtr-month-end`).clear();
+        cy.getById(`dtr-month-end`).type(value);
 
         return this;
     }
@@ -146,7 +159,8 @@ export class EditSrmaPage {
     public withEndYearOfVisit(value: string): this {
         Logger.log(`With end year of visit ${value}`);
 
-        cy.getById(`dtr-year-end`).clear().type(value);
+        cy.getById(`dtr-year-end`).clear();
+        cy.getById(`dtr-year-end`).type(value);
 
         return this;
     }
@@ -154,7 +168,8 @@ export class EditSrmaPage {
     public withDayReportSentToTrust(value: string): this {
         Logger.log(`With day report sent to trust ${value}`);
 
-        cy.getById(`dtr-day-date-report-sent`).clear().type(value);
+        cy.getById(`dtr-day-date-report-sent`).clear();
+        cy.getById(`dtr-day-date-report-sent`).type(value);
 
         return this;
     }
@@ -162,7 +177,8 @@ export class EditSrmaPage {
     public withMonthReportSentToTrust(value: string): this {
         Logger.log(`With month report sent to trust ${value}`);
 
-        cy.getById(`dtr-month-date-report-sent`).clear().type(value);
+        cy.getById(`dtr-month-date-report-sent`).clear();
+        cy.getById(`dtr-month-date-report-sent`).type(value);
 
         return this;
     }
@@ -170,7 +186,8 @@ export class EditSrmaPage {
     public withYearReportSentToTrust(value: string): this {
         Logger.log(`With year report sent to trust ${value}`);
 
-        cy.getById(`dtr-year-date-report-sent`).clear().type(value);
+        cy.getById(`dtr-year-date-report-sent`).clear();
+        cy.getById(`dtr-year-date-report-sent`).type(value);
 
         return this;
     }
@@ -187,7 +204,7 @@ export class EditSrmaPage {
     public confirmCancelled(): this
     {
         Logger.log("Confirming the SRMA is cancelled");
-        
+
         cy.getById("srma-confirm-check").check();
 
         return this;
@@ -196,7 +213,7 @@ export class EditSrmaPage {
     public confirmDeclined(): this
     {
         Logger.log("Confirming the SRMA is declined");
-        
+
         cy.getById("srma-confirm-check").check();
 
         return this;
@@ -364,7 +381,7 @@ export class EditSrmaPage {
     public hasReasonHintText(): this
     {
         Logger.log("Verify Text Hint ");
-        
+
         this.getReasonHintText().should("exist");
 
         return this;
@@ -373,7 +390,7 @@ export class EditSrmaPage {
     public hasNoReasonHintText(): this
     {
         Logger.log("Verify Text Hint is not displayed");
-        
+
         this.getReasonHintText().should("not.exist");
 
         return this;

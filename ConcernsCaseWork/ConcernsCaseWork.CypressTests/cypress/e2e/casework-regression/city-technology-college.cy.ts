@@ -1,8 +1,5 @@
 import { Logger } from "cypress/common/logger";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
-
-import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
-import AddDetailsPage from "cypress/pages/createCase/addDetailsPage";
 import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
@@ -16,24 +13,17 @@ describe("Creating a case for a city technology college", () => {
     const createCasePage = new CreateCasePage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-
     const territory = "North - North East";
+
     let email: string;
     let name: string;
-    let now: Date;
-
     let ctcRequest: CreateCityTechnologyCollegeRequest
 
     beforeEach(() => {
+        email = Cypress.env(EnvUsername).split("@")[0];
+        name = email.includes('.') ? email.replace('.', ' ') : email;
+
         cy.login();
-        now = new Date();
-        email = Cypress.env(EnvUsername);
-        var x = email.split("@")[0];
-        if (x.includes('.')) {
-            name = x.replace('.', ' ');
-        } else {
-            name = x;
-        }
 
         ctcRequest = {
             name: "Automation CTC",

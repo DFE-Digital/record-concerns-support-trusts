@@ -19,15 +19,15 @@ describe("Testing the NTI under consideration", () =>
     let now: Date;
 
     beforeEach(() => {
-		cy.login({
-			role: DeleteCaseGroupClaim,
-		});
+        cy.login({
+            role: DeleteCaseGroupClaim,
+        });
         now = new Date();
 
         cy.basicCreateCase();
 
         addNtiUnderConsiderationToCase();
-	});
+    });
 
     describe("When adding or editing a new NTI under consideration", () =>
     {
@@ -50,20 +50,20 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.log("Validate the NTI on the view page");
             actionSummaryTable
-			.getOpenAction("NTI Under Consideration")
-			.then(row =>
-			{
-				row.hasName("NTI Under Consideration")
-				row.hasStatus("In progress")
-				row.hasCreatedDate(toDisplayDate(now))
-				row.select();
-			});
+            .getOpenAction("NTI Under Consideration")
+            .then(row =>
+            {
+                row.hasName("NTI Under Consideration")
+                row.hasStatus("In progress")
+                row.hasCreatedDate(toDisplayDate(now))
+                row.select();
+            });
 
             viewNtiUnderConsiderationPage
                 .hasReason("Cash flow problems")
                 .hasReason("Safeguarding")
                 .hasNotes("These are my notes");
-                
+
             viewNtiUnderConsiderationPage.edit();
 
             editNtiUnderConsiderationPage
@@ -108,24 +108,23 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.log("Validate the NTI on the view page");
             actionSummaryTable
-			.getOpenAction("NTI Under Consideration")
-			.then(row =>
-			{
-				row.hasStatus("In progress")
-				row.select();
-			});
+            .getOpenAction("NTI Under Consideration")
+            .then(row =>
+            {
+                row.hasStatus("In progress")
+                row.select();
+            });
 
             viewNtiUnderConsiderationPage
                 .hasDateOpened(toDisplayDate(now))
                 .hasReason("Empty")
-                .hasNotes("Empty");   
+                .hasNotes("Empty");
         });
     });
 
     it("Should only let nti be open per case", () =>
     {
-        editNtiUnderConsiderationPage
-           .save();
+        editNtiUnderConsiderationPage.save();
 
         addNtiUnderConsiderationToCase();
 
@@ -145,11 +144,11 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.log("Close NTI on the view page");
             actionSummaryTable
-			.getOpenAction("NTI Under Consideration")
-			.then(row =>
-			{
-				row.select();
-			});
+            .getOpenAction("NTI Under Consideration")
+            .then(row =>
+            {
+                row.select();
+            });
 
             viewNtiUnderConsiderationPage.close();
 
@@ -174,15 +173,15 @@ describe("Testing the NTI under consideration", () =>
 
             Logger.log("Review the closed NTI under consideration");
             actionSummaryTable
-			.getClosedAction("NTI Under Consideration")
-			.then(row =>
-			{
-				row.hasName("NTI Under Consideration")
-				row.hasStatus("No further action being taken")
-				row.hasCreatedDate(toDisplayDate(now))
+            .getClosedAction("NTI Under Consideration")
+            .then(row =>
+            {
+                row.hasName("NTI Under Consideration")
+                row.hasStatus("No further action being taken")
+                row.hasCreatedDate(toDisplayDate(now))
                 row.hasClosedDate(toDisplayDate(now))
-				row.select();
-			});
+                row.select();
+            });
 
             viewNtiUnderConsiderationPage
                 .hasDateOpened(toDisplayDate(now))
@@ -208,7 +207,7 @@ describe("Testing the NTI under consideration", () =>
                     .withReason("Safeguarding")
                     .withNotes("These are my notes")
                     .save();
-    
+
                 Logger.log("Close NTI on the view page");
                 actionSummaryTable
                 .getOpenAction("NTI Under Consideration")
@@ -216,7 +215,7 @@ describe("Testing the NTI under consideration", () =>
                 {
                     row.select();
                 });
-    
+
                 Logger.log("Delete the NTI UC");
                 viewNtiUnderConsiderationPage.delete();
                 deleteNtiUnderConsiderationPage.delete();
