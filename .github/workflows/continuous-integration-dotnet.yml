@@ -76,7 +76,7 @@ jobs:
           # Note: The database name may be overridden by the tests
           ConnectionStrings__DefaultConnection: 'Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True'
         run: |
-          dotnet-sonarscanner begin /d:sonar.scanner.skipJreProvisioning=true /k:"DFE-Digital_record-concerns-support-trusts" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=./ConcernsCaseWork/CoverageReport/SonarQube.xml
+          dotnet-sonarscanner begin /d:sonar.qualitygate.wait=true /d:sonar.scanner.skipJreProvisioning=true /k:"DFE-Digital_record-concerns-support-trusts" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=./ConcernsCaseWork/CoverageReport/SonarQube.xml
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
           dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
           reportgenerator -reports:"./**/coverage.cobertura.xml" -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
