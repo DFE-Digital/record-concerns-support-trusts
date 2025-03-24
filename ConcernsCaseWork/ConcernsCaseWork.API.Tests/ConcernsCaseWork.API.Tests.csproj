@@ -14,8 +14,8 @@
         <PackageReference Include="AutoFixture.Xunit2" Version="4.18.1" />
         <PackageReference Include="DfE.CoreLibs.Testing" Version="1.1.12" />
         <PackageReference Include="FluentAssertions" Version="7.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.13" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
