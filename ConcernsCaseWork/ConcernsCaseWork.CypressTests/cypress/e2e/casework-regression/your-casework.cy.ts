@@ -16,11 +16,11 @@ describe("Your casework tests", () =>
         let caseId: string;
         let trustName: string;
         let now: Date;
-    
+
         beforeEach(() => {
             cy.login();
             now = new Date();
-    
+
             cy.basicCreateCase()
             .then((caseResponse) => {
                 caseId = caseResponse.urn + "";
@@ -74,9 +74,9 @@ describe("Your casework tests", () =>
                     });
 
                     // Wait 1ms per case created
-					// Each case is created one 1ms apart so that we don't break the table constraint
-					// Max will be 15ms
-					cy.wait(casesToCreate);
+                    // Each case is created one 1ms apart so that we don't break the table constraint
+                    // Max will be 15ms
+                    cy.wait(casesToCreate);
 
                     cy.reload();
                 }
@@ -107,7 +107,7 @@ describe("Your casework tests", () =>
 
                     Logger.log("Ensure we have 5 cases on page 2");
                     expect(pageTwoCases.length).to.equal(5);
-                    
+
                     Logger.log("Ensure that the cases on page one and two are different");
                     hasNoSimilarElements(pageOneCases, pageTwoCases);
 

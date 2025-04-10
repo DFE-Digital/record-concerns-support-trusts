@@ -6,7 +6,8 @@ class EditCaseManagementPage
     {
         Logger.log(`With case owner ${value}`);
 
-        cy.getById("case-owner-input").clear().type(value);
+        cy.getById("case-owner-input").clear();
+        cy.getById("case-owner-input").type(value);
 
         return this;
     }
@@ -25,7 +26,7 @@ class EditCaseManagementPage
 
         return this;
     }
-    
+
     public clearCaseOwner(): this
     {
         Logger.log(`Clearing the case owner`);
@@ -38,7 +39,8 @@ class EditCaseManagementPage
     public withIssue(value: string): this
     {
         Logger.log(`With issue ${value}`);
-        cy.getById("issue").clear().type(value);
+        cy.getById("issue").clear()
+        cy.getById("issue").type(value);
 
         return this;
     }
@@ -47,7 +49,8 @@ class EditCaseManagementPage
     {
         Logger.log(`With case history ${value}`);
 
-        cy.getById("case-history").clear().type(value);
+        cy.getById("case-history").clear();
+        cy.getById("case-history").type(value);
 
         return this;
     }
@@ -56,7 +59,8 @@ class EditCaseManagementPage
     {
         Logger.log(`With case history exceeding limit`);
 
-        cy.getById('case-history').clear().invoke("val", "x 1".repeat(2001));
+        cy.getById('case-history').clear();
+        cy.getById('case-history').invoke("val", "x 1".repeat(2001));
 
         return this;
     }
@@ -88,12 +92,12 @@ class EditCaseManagementPage
         Logger.log(`Has no concern type for ${value}`);
 
         cy
-        .getByTestId("concern-type-container")
-        .contains(value).should("not.exist");
+            .getByTestId("concern-type-container")
+            .contains(value).should("not.exist");
 
         return this;
     }
-    
+
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);

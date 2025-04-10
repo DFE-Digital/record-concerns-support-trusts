@@ -14,7 +14,8 @@ export class CloseNtiUnderConsiderationPage
     public withNotes(value: string): this {
         Logger.log(`With notes ${value}`);
 
-        cy.getById(`nti-notes`).clear().type(value);
+        cy.getById(`nti-notes`).clear();
+        cy.getById(`nti-notes`).type(value);
 
         return this;
     }
@@ -22,7 +23,8 @@ export class CloseNtiUnderConsiderationPage
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

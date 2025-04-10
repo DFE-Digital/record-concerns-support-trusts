@@ -4,24 +4,24 @@ import { Logger } from "../../common/logger";
 export default class EditCurrentStatusPage {
 
     public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+        Logger.log(`Has Validation error ${message}`);
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
 
-		return this;
-	}
+        return this;
+    }
 
     public hasCurrentStatus(value: string): this
     {
         Logger.log(`Has Current status ${value}`);
 
         cy.getByTestId(`current-status`).should(
-			"contain.text",
-			value
-		);
+            "contain.text",
+            value
+        );
 
         return this;
     }
@@ -36,14 +36,16 @@ export default class EditCurrentStatusPage {
             return this;
         }
 
-        cy.getByTestId(`current-status`).clear({ force: true }).type(value);
+        cy.getByTestId(`current-status`).clear({ force: true });
+        cy.getByTestId(`current-status`).type(value);
 
         return this;
     }
 
     public withExceedingTextLimit(): this {
 
-        cy.getByTestId('current-status').clear().invoke("val", "x".repeat(4001));
+        cy.getByTestId('current-status').clear();
+        cy.getByTestId('current-status').invoke("val", "x".repeat(4001));
 
         return this;
     }
