@@ -146,11 +146,13 @@
                 @if (Context.User.Identity.IsAuthenticated)
                 {
 
-                    <ul class="dfe-header__action-links">
-                        <p class="govuk-body">
-                            <a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
-                        </p>
-                    </ul>
+	                <ul class="dfe-header__action-links">
+		                <li>
+			                <p class="govuk-body">
+				                <a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
+				            </p>
+                        </li>
+	                </ul>
                 }
 
             </div>

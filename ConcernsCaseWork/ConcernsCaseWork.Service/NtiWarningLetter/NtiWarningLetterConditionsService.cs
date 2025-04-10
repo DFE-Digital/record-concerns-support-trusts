@@ -2,25 +2,19 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.NtiWarningLetter
 {
-	public class NtiWarningLetterConditionsService : ConcernsAbstractService, INtiWarningLetterConditionsService
+	public class NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterConditionsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService), INtiWarningLetterConditionsService
 	{
-		private readonly ILogger<NtiWarningLetterConditionsService> _logger;
-
-		public NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterConditionsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
-
 		public async Task<ICollection<NtiWarningLetterConditionDto>> GetAllConditionsAsync()
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-conditions");
@@ -44,7 +38,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}

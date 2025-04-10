@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using ConcernsCaseWork.Mappers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ConcernsCaseWork.Extensions

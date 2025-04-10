@@ -109,9 +109,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustAddress);
-			Assert.IsNull(pageModel.CreateRecordsModel);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TrustAddress, Is.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 
 			// Verify ILogger
 			mockLogger.VerifyLogInformationWasCalled("OnGetAsync");
@@ -252,8 +252,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			Assert.IsNotNull(pageResponseInstance);
-			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageResponseInstance, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 		}
 
 		private static IndexPageModel SetupIndexPageModel(

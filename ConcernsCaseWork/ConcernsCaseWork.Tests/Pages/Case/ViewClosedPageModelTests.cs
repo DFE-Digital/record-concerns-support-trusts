@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			// assert
 			mockLogger.VerifyLogErrorWasNotCalled();
-			Assert.IsNull(pageModel.TempData["Error.Message"]);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
