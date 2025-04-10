@@ -26,6 +26,7 @@ jobs:
         ports:
         - 6379:6379
         options: >-
+          --requirepass "my-secureP@$$1"
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
@@ -74,6 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           # Note: The database name may be overridden by the tests
+          VCAP_SERVICES: "{'redis': [{'credentials': {'host': 'localhost','password': 'my-secureP@$$1','port': '6379','tls_enabled': 'true'}}]}"
           ConnectionStrings__DefaultConnection: 'Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True'
         run: |
           dotnet-sonarscanner begin /d:sonar.qualitygate.wait=true /d:sonar.scanner.skipJreProvisioning=true /k:"DFE-Digital_record-concerns-support-trusts" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=./ConcernsCaseWork/CoverageReport/SonarQube.xml
