@@ -21,16 +21,21 @@ jobs:
         env:
           ACCEPT_EULA: Y
           SA_PASSWORD: P1swrd!$
-      redis:
-        image: redis:alpine
-        ports:
-        - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
+      - name: Start Redis
+        run: |
+          docker run -d --rm \
+            -p 6379:6379 \
+            --health-cmd "redis-cli ping" \
+            --health-interval "10s" \
+            --health-timeout "5s" \
+            --health-retries "5" \
+            --env GITHUB_ACTIONS=true \
+            --env CI=true \
+            --name redis \
+            redis:6-alpine \
+            redis-server --requirepass "my-secureP@SS1"
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -74,6 +79,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           # Note: The database name may be overridden by the tests
+          VCAP_SERVICES: "{'redis': [{'credentials': {'host': 'localhost','password': 'my-secureP@SS1','port': '6379','tls_enabled': 'true'}}]}"
           ConnectionStrings__DefaultConnection: 'Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True'
         run: |
           dotnet-sonarscanner begin /d:sonar.qualitygate.wait=true /d:sonar.scanner.skipJreProvisioning=true /k:"DFE-Digital_record-concerns-support-trusts" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=./ConcernsCaseWork/CoverageReport/SonarQube.xml
@@ -81,3 +87,7 @@ jobs:
           dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
           reportgenerator -reports:"./**/coverage.cobertura.xml" -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Stop Redis
+        if: always()
+        run: docker stop redis
