@@ -33,7 +33,7 @@ jobs:
             --env GITHUB_ACTIONS=true \
             --env CI=true \
             --name redis \
-            redis:alpine \
+            redis:6-alpine \
             redis-server --requirepass "my-secureP@SS1"
 
       - name: Checkout repository
