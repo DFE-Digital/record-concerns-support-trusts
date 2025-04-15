@@ -14,11 +14,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class PageContextFactory
 	{
-		private const string ClaimNameIdentifier = "1";
-		private const string AuthenticationType = "mock";
-		public const string ClaimName = "Tester";
+		private const string _claimNameIdentifier = "1";
+		private const string _authenticationType = "mock";
+		public const string _claimName = "Tester";
 
-		public static (PageContext, TempDataDictionary, ActionContext) PageContextBuilder(bool isAuthenticated, string userName = ClaimName)
+		public static (PageContext, TempDataDictionary, ActionContext) PageContextBuilder(bool isAuthenticated, string userName = _claimName)
 		{
 			var authServiceMock = new Mock<IAuthenticationService>();
 			authServiceMock
@@ -51,9 +51,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new ClaimsPrincipal(new ClaimsIdentity(new[]
 				{
 					new Claim(ClaimTypes.Name, claimName),
-					new Claim(ClaimTypes.NameIdentifier, ClaimNameIdentifier)
+					new Claim(ClaimTypes.NameIdentifier, _claimNameIdentifier)
 				},
-				AuthenticationType
+				_authenticationType
 			));
 		}
 	}

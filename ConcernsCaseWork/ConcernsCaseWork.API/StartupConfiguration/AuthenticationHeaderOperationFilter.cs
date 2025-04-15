@@ -7,11 +7,11 @@ namespace ConcernsCaseWork.API.StartupConfiguration
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            operation.Security ??= new List<OpenApiSecurityRequirement>();
+            operation.Security ??= [];
             
             var securityScheme = new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             };
             
             operation.Security.Add(new OpenApiSecurityRequirement {{ securityScheme, new List<string>() }});

@@ -5,8 +5,7 @@ using ConcernsCaseWork.API.Contracts.Srma;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
 using FizzWare.NBuilder;
-using FluentAssertions;
-using StackExchange.Redis;
+using FluentAssertions; 
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,18 +19,11 @@ using Xunit;
 namespace ConcernsCaseWork.API.Tests.Integration
 {
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
-	public class SrmaIntegrationTests
+	public class SrmaIntegrationTests(ApiTestFixture apiTestFixture)
 	{
-		private readonly Fixture _fixture;
-		private readonly HttpClient _client;
-		private readonly RandomGenerator _randomGenerator;
-
-		public SrmaIntegrationTests(ApiTestFixture apiTestFixture)
-		{
-			_client = apiTestFixture.Client;
-			_fixture = new();
-			_randomGenerator = new RandomGenerator();
-		}
+		private readonly Fixture _fixture = new();
+		private readonly HttpClient _client = apiTestFixture.Client;
+		private readonly RandomGenerator _randomGenerator = new RandomGenerator();
 
 		[Fact]
 		public async Task When_GetByCaseUrn_ReturnOK()

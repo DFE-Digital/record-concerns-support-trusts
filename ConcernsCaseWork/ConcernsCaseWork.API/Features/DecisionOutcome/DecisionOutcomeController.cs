@@ -9,15 +9,8 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 	[ApiVersion("2.0")]
 	[ApiController]
 	[Route("v{version:apiVersion}/concerns-cases/{concernsCaseUrn:int}/decisions/{decisionId:int}/outcome")]
-	public class DecisionController : ControllerBase
+	public class DecisionController(IMediator mediator) : ControllerBase
 	{
-		private readonly IMediator _mediator;
-
-		public DecisionController(IMediator mediator)
-		{
-			_mediator = mediator;
-		}
-
 		[HttpPost(Name = "CreateDecisionOutcome")]
 		[ProducesResponseType((int)HttpStatusCode.Created)]
 		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -25,7 +18,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 		{
 			var command = new Create.Command(concernsCaseUrn, decisionId, request);
 
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 
 			var response = new ApiSingleResponseV2<CreateDecisionOutcomeResponse>(commandResult);
 
@@ -39,7 +32,7 @@ namespace ConcernsCaseWork.API.Features.Decision.Outcome
 		public async Task<IActionResult> Update(int concernsCaseUrn, int decisionId, [FromBody] UpdateDecisionOutcomeRequest request, CancellationToken cancellationToken = default)
 		{
 			var command = new Update.Command(concernsCaseUrn, decisionId, request);
-			var commandResult = await _mediator.Send(command);
+			var commandResult = await mediator.Send(command);
 
 			return Ok(new ApiSingleResponseV2<UpdateDecisionOutcomeResponse>(commandResult));
 		}

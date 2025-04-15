@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.UserContext;
+using DfE.CoreLibs.Security.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -9,27 +10,22 @@ using System.Text;
 
 namespace ConcernsCaseWork.Service.Nti
 {
-	public class NtiService : ConcernsAbstractService, INtiService
+	public class NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, IUserTokenService userTokenService) : ConcernsAbstractService(httpClientFactory, logger, correlationContext, userInfoService, userTokenService), INtiService
 	{
-		private readonly ILogger<NtiService> _logger;
-		private const string Url = @"/v2/case-actions/notice-to-improve";
-
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
-		{
-			_logger = logger;
-		}
+		private const string _url = @"/v2/case-actions/notice-to-improve";
 
 		public async Task<NtiDto> CreateNtiAsync(NtiDto newNti)
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
-
-				request.Content = new StringContent(JsonConvert.SerializeObject(newNti),
-					Encoding.UTF8, MediaTypeNames.Application.Json);
+				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}")
+				{
+					Content = new StringContent(JsonConvert.SerializeObject(newNti),
+					Encoding.UTF8, MediaTypeNames.Application.Json)
+				};
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -38,7 +34,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}
@@ -47,10 +43,10 @@ namespace ConcernsCaseWork.Service.Nti
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -59,7 +55,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}
@@ -68,9 +64,9 @@ namespace ConcernsCaseWork.Service.Nti
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/{ntiId}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/{ntiId}");
 
 				var client = CreateHttpClient();
 
@@ -84,7 +80,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}
@@ -93,13 +89,14 @@ namespace ConcernsCaseWork.Service.Nti
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
 				var client = CreateHttpClient();
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
-
-				request.Content = new StringContent(JsonConvert.SerializeObject(nti),
-					Encoding.UTF8, MediaTypeNames.Application.Json);
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}")
+				{
+					Content = new StringContent(JsonConvert.SerializeObject(nti),
+					Encoding.UTF8, MediaTypeNames.Application.Json)
+				};
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -110,7 +107,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}
@@ -119,9 +116,9 @@ namespace ConcernsCaseWork.Service.Nti
 		{
 			try
 			{
-				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var request = new HttpRequestMessage(HttpMethod.Delete, $"{Url}/{ntiId}");
+				var request = new HttpRequestMessage(HttpMethod.Delete, $"{_url}/{ntiId}");
 
 				var client = CreateHttpClient();
 
@@ -132,7 +129,7 @@ namespace ConcernsCaseWork.Service.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
+				logger.LogError(ex, $"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}

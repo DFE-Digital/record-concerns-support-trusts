@@ -15,18 +15,10 @@ using Xunit;
 namespace ConcernsCaseWork.API.Tests.Integration
 {
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
-	public class CityTechnologyCollegesIntegrationTests
+	public class CityTechnologyCollegesIntegrationTests(ApiTestFixture apiTestFixture)
 	{
-		private readonly Fixture _autoFixture;
-		private readonly HttpClient _client;
-		private readonly ApiTestFixture _testFixture;
-
-		public CityTechnologyCollegesIntegrationTests(ApiTestFixture apiTestFixture)
-		{
-			_client = apiTestFixture.Client;
-			_autoFixture = new Fixture();
-			_testFixture = apiTestFixture;
-		}
+		private readonly Fixture _autoFixture = new();
+		private readonly HttpClient _client = apiTestFixture.Client;
 
 		public class CityTechnologyCollegeResponse
 		{
@@ -58,6 +50,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			
 			//Act
 			HttpResponseMessage postResponse = await _client.PostAsync("/v2/citytechnologycolleges", ctc.ConvertToJson());
+			var content = await postResponse.Content.ReadAsStringAsync();
 			var createdUrl = postResponse.Headers.Location;
 			var getResponse = await _client.GetAsync(createdUrl);
 			var actual = await getResponse.Content.ReadFromJsonAsync<CityTechnologyCollegeResponse>();
@@ -73,7 +66,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_GetList_Return_OK_And_Created_Items()
 		{
 			//Arrange
-			await using ConcernsDbContext context = _testFixture.GetContext();
+			await using ConcernsDbContext context = apiTestFixture.GetContext();
 
 			CityTechnologyCollege ctc = BuildRecord();
 
@@ -95,7 +88,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_GetList_Return_OK_And_Created_ItemsWithQueryStrings()
 		{
 			//Arrange
-			await using ConcernsDbContext context = _testFixture.GetContext();
+			await using ConcernsDbContext context = apiTestFixture.GetContext();
 
 			CityTechnologyCollege ctc = BuildRecord();
 			context.CityTechnologyColleges.Add(ctc);
@@ -116,7 +109,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_Get_IndividualItem_Return_OK()
 		{
 			//Arrange
-			await using ConcernsDbContext context = _testFixture.GetContext();
+			await using ConcernsDbContext context = apiTestFixture.GetContext();
 
 			CityTechnologyCollege ctcA = BuildRecord();
 			CityTechnologyCollege ctcB = BuildRecord();

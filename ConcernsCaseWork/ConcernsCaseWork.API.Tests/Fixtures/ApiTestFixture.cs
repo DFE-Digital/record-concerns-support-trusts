@@ -2,103 +2,144 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
-using Microsoft.AspNetCore.Authorization;
+using DfE.CoreLibs.Security.Authorization;
+using DfE.CoreLibs.Security.Configurations;
+using DfE.CoreLibs.Security.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Moq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Net.Http;
-using System.Net.Mime;
+using System.Net.Http.Headers;
 using System.Security.Claims;
-using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
 {
 	public class ApiTestFixture : IDisposable
 	{
 		private readonly WebApplicationFactory<Startup> _application;
+		private readonly DbContextOptions<ConcernsDbContext> _dbContextOptions;
 
-		public HttpClient Client { get; init; }
+		private readonly IConfiguration _initialConfig;
 
-		private DbContextOptions<ConcernsDbContext> _dbContextOptions { get; init; }
-
-		private ServerUserInfoService _serverUserInfoService { get; init; }
+		public HttpClient Client { get; }
+		public ServerUserInfoService ServerUserInfoService { get; }
 
 		private static readonly object _lock = new();
-		private static bool _isInitialised = false;
+		private static bool _isInitialized;
 
-		private const string ConnectionStringKey = "ConnectionStrings:DefaultConnection";
+		private const string _connectionStringKey = "ConnectionStrings:DefaultConnection";
+		private const string _tokenSetting = "Authorization:TokenSettings";
+		private const string _policies = "Authorization:Policies";
 
 		public ApiTestFixture()
 		{
 			lock (_lock)
 			{
-				if (!_isInitialised)
+				if (!_isInitialized)
 				{
-					string connectionString = null;
+					var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
+					var configBuilder = new ConfigurationBuilder()
+						.AddJsonFile(configPath, optional: false, reloadOnChange: true)
+						.AddEnvironmentVariables();
+
+					_initialConfig = configBuilder.Build();
+
+					var finalConnectionString = BuildDatabaseConnectionString(_initialConfig);
+
+					var tokenSettings = _initialConfig.GetSection(_tokenSetting).Get<TokenSettings>();
+					var policyList = _initialConfig.GetSection(_policies).Get<List<PolicyDefinition>>();
+
+					var inMemoryOverrides = new Dictionary<string, string>
+					{
+						[_connectionStringKey] = finalConnectionString,
+						[_tokenSetting] = JsonConvert.SerializeObject(tokenSettings),
+						[_policies] = JsonConvert.SerializeObject(policyList)
+					};
 
 					_application = new WebApplicationFactory<Startup>()
 						.WithWebHostBuilder(builder =>
 						{
-							var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
-
 							builder.ConfigureAppConfiguration((context, config) =>
 							{
-								config.AddJsonFile(configPath)
-									.AddEnvironmentVariables();
+								config.AddJsonFile(configPath, optional: false, reloadOnChange: true)
+									  .AddEnvironmentVariables();
 
-								connectionString = BuildDatabaseConnectionString(config);
-
-								config.AddInMemoryCollection(new Dictionary<string, string>
-								{
-									[ConnectionStringKey] = connectionString
-								});
+								config.AddInMemoryCollection(inMemoryOverrides);
 							});
 
 							builder.ConfigureServices(services =>
 							{
-								services.AddAuthorization(options =>
+								services.AddSingleton(GetMockMemoryCache());
+								services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+								services.AddSingleton<IUserTokenService, UserTokenService>();
+
+								services.AddSingleton<IOptions<TokenSettings>>(sp =>
 								{
-									options.AddPolicy("CanDelete", policy => policy.RequireAssertion(_ => true));
+									var cfg = sp.GetRequiredService<IConfiguration>();
+									var ts = cfg.GetSection(_tokenSetting).Get<TokenSettings>();
+									return Options.Create(ts);
 								});
 							});
-
 						});
 
-					var fakeUserInfo = new UserInfo()
-					{ Name = "API.TestFixture@test.gov.uk", Roles = new[] { Claims.CaseWorkerRoleClaim } };
-					_serverUserInfoService = new ServerUserInfoService() { UserInfo = fakeUserInfo };
+					var fakeUserInfo = new UserInfo
+					{
+						Name = "API.TestFixture@test.gov.uk",
+						Roles = [Claims.CaseWorkerRoleClaim, Claims.CaseDeleteRoleClaim]
+					};
+					ServerUserInfoService = new ServerUserInfoService { UserInfo = fakeUserInfo };
 
 					Client = CreateHttpClient(fakeUserInfo);
 
 					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-						.UseSqlServer(connectionString)
+						.UseSqlServer(finalConnectionString)
 						.Options;
 
 					using var context = GetContext();
 					context.Database.EnsureDeleted();
 					context.Database.Migrate();
-					_isInitialised = true;
+
+					_isInitialized = true;
 				}
 			}
+		}
+
+		private static IMemoryCache GetMockMemoryCache()
+		{
+			var mockMemoryCache = new Mock<IMemoryCache>();
+			var cacheEntry = Mock.Of<ICacheEntry>();
+
+			mockMemoryCache
+				.Setup(m => m.CreateEntry(It.IsAny<object>()))
+				.Returns(cacheEntry);
+
+			return mockMemoryCache.Object;
 		}
 
 		private HttpClient CreateHttpClient(UserInfo userInfo)
 		{
 			var client = _application.CreateClient();
-			client.DefaultRequestHeaders.Add("ApiKey", "app-key");
-			client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
+			client.DefaultRequestHeaders.Add("ContentType", Application.Json);
 
-			// add standard headers for correlation and user context.
 			var clientUserInfoService = new ClientUserInfoService();
 			clientUserInfoService.SetPrincipal(userInfo);
 			clientUserInfoService.AddUserInfoRequestHeaders(client);
+
+			var userTokenService = _application.Services.GetRequiredService<IUserTokenService>();
+			var token = userTokenService.GetUserTokenAsync(GetClaimsPrincipal(userInfo)).Result;
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
 			var correlationContext = new CorrelationContext();
 			correlationContext.SetContext(Guid.NewGuid().ToString());
@@ -108,19 +149,34 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			return client;
 		}
 
-		private static string BuildDatabaseConnectionString(IConfigurationBuilder config)
+		private static ClaimsPrincipal GetClaimsPrincipal(UserInfo user)
 		{
-			var currentConfig = config.Build();
-			var connection = currentConfig[ConnectionStringKey];
-			var sqlBuilder = new SqlConnectionStringBuilder(connection);
-			sqlBuilder.InitialCatalog = "ApiTests";
+			var claims = new List<Claim>
+			{
+				new(ClaimTypes.Name, user.Name),
+				new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", user.Name)
+			};
 
-			var result = sqlBuilder.ToString();
+			foreach (var role in user.Roles)
+			{
+				claims.Add(new(ClaimTypes.Role, role));
+			}
 
-			return result;
+			return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthenticationType"));
 		}
 
-		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions, _serverUserInfoService);
+		private static string BuildDatabaseConnectionString(IConfiguration config)
+		{
+			var connection = config[_connectionStringKey];
+			var sqlBuilder = new SqlConnectionStringBuilder(connection)
+			{
+				InitialCatalog = "ApiTests"
+			};
+
+			return sqlBuilder.ToString();
+		}
+
+		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions, ServerUserInfoService);
 
 		public void Dispose()
 		{
@@ -129,13 +185,4 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		}
 	}
 
-	[CollectionDefinition(ApiTestCollectionName)]
-	public class ApiTestCollection : ICollectionFixture<ApiTestFixture>
-	{
-		public const string ApiTestCollectionName = "ApiTestCollection";
-
-		// This class has no code, and is never created. Its purpose is simply
-		// to be the place to apply [CollectionDefinition] and all the
-		// ICollectionFixture<> interfaces.
-	}
 }
