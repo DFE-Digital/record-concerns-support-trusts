@@ -28,7 +28,7 @@ jobs:
       image-name: ${{ steps.var.outputs.image-name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - id: var
         run: |
@@ -47,7 +47,7 @@ jobs:
     needs: [ set-env ]
     steps:
       - name: Validate Packages
-        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@v1.1.2
+        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@9a7a6a7c9aa5914f76a1f34aee8dd2dcc00702bc # v1.1.2
         with:
           environment: ${{ needs.set-env.outputs.environment }}
 
@@ -56,7 +56,7 @@ jobs:
     needs: [ set-env, validate-packages ]
     permissions:
       packages: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
     strategy:
       matrix:
         stage: [
@@ -80,7 +80,7 @@ jobs:
     needs: [ set-env, build ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
     strategy:
       matrix:
         stage: [
@@ -107,7 +107,7 @@ jobs:
     needs: [ set-env, import ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
     with:
       environment: ${{ needs.set-env.outputs.environment }}
       docker-image-name: ${{ needs.set-env.outputs.image-name }}
@@ -125,7 +125,7 @@ jobs:
     needs: [ deploy, set-env ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.ref }}
 
@@ -135,7 +135,7 @@ jobs:
           git push origin ${{ needs.set-env.outputs.release }}
 
       - name: Create release
-        uses: "actions/github-script@v7"
+        uses: "actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea" # v7
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |

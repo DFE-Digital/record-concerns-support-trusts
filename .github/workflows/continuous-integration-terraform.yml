@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Check for terraform version mismatch
         run: |
@@ -28,7 +28,7 @@ jobs:
           fi
 
       - name: Validate Terraform docs
-        uses: terraform-docs/gh-actions@v1.3.0
+        uses: terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25 # v1.3.0
         with:
           working-dir: terraform
           config-file: .terraform-docs.yml
@@ -40,25 +40,25 @@ jobs:
         run: rm ./terraform/backend.tf
 
       - name: Run a Terraform init
-        uses: docker://hashicorp/terraform:1.9.8
+        uses: docker://hashicorp/terraform:1.9.8@sha256:18f9986038bbaf02cf49db9c09261c778161c51dcc7fb7e355ae8938459428cd
         with:
           entrypoint: terraform
           args: -chdir=terraform init
 
       - name: Run a Terraform validate
-        uses: docker://hashicorp/terraform:1.9.8
+        uses: docker://hashicorp/terraform:1.9.8@sha256:18f9986038bbaf02cf49db9c09261c778161c51dcc7fb7e355ae8938459428cd
         with:
           entrypoint: terraform
           args: -chdir=terraform validate
 
       - name: Run a Terraform format check
-        uses: docker://hashicorp/terraform:1.9.8
+        uses: docker://hashicorp/terraform:1.9.8@sha256:18f9986038bbaf02cf49db9c09261c778161c51dcc7fb7e355ae8938459428cd
         with:
           entrypoint: terraform
           args: -chdir=terraform fmt -check=true -diff=true
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
         with:
           tflint_version: v0.44.1
 
@@ -67,6 +67,6 @@ jobs:
         run: tflint -f compact
 
       - name: Run TFSec
-        uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
+        uses: aquasecurity/tfsec-pr-commenter-action@7a44c5dcde5dfab737363e391800629e27b6376b # v1.3.1
         with:
           github_token: ${{ github.token }}

@@ -18,7 +18,7 @@ services:
 
   db:
     container_name: amsd-casework-sql-server
-    image: mcr.microsoft.com/azure-sql-edge:latest
+    image: mcr.microsoft.com/azure-sql-edge:latest@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
     env_file: .env.database
     ports:
       - 1433:1433
@@ -26,7 +26,7 @@ services:
       - dev
 
   sqlcmd:
-    image: mcr.microsoft.com/mssql-tools:latest
+    image: mcr.microsoft.com/mssql-tools:latest@sha256:62556500522072535cb3df2bb5965333dded9be47000473e9e0f84118e248642
     env_file: .env.database
     command: /etc/docker-entrypoint.sh
     depends_on:
@@ -38,7 +38,7 @@ services:
       - dev
 
   redis:
-    image: redis:7
+    image: redis:7@sha256:fbdbaea47b9ae4ecc2082ecdb4e1cea81e32176ffb1dcf643d422ad07427e5d9
     command: redis-server --requirepass password
     ports:
       - 6379:6379

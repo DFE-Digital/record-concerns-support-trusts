@@ -42,12 +42,12 @@ jobs:
       run:
         working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.ref }}
 
       - name: Setup node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload screenshots
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: screenshots-${{ inputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
@@ -72,7 +72,7 @@ jobs:
 
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: reports-${{ inputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
