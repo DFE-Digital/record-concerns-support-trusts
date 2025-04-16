@@ -3,302 +3,306 @@ import { Logger } from "../../../common/logger";
 export class EditDecisionPage
 {
     public withCrmEnquiry(crmNumber: string): this {
-		Logger.log(`With Crm enquiry ${crmNumber}`);
+        Logger.log(`With Crm enquiry ${crmNumber}`);
 
-		cy.getById("crm-enquiry-number").clear().type(crmNumber);
+        cy.getById("crm-enquiry-number").clear();
+        cy.getById("crm-enquiry-number").type(crmNumber);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasCrmEnquiry(crmNumber: string): this {
-		Logger.log(`Has Crm enquiry ${crmNumber}`);
+    public hasCrmEnquiry(crmNumber: string): this {
+        Logger.log(`Has Crm enquiry ${crmNumber}`);
 
-		cy.getById("crm-enquiry-number").should("have.value", crmNumber);
+        cy.getById("crm-enquiry-number").should("have.value", crmNumber);
 
-		return this;
-	}
+        return this;
+    }
 
-	public withHasCrmCase(hasCrmCase: string): this {
-		Logger.log(`With has crm case ${hasCrmCase}`);
-		cy.getByTestId(`has-crm-case-${hasCrmCase}`).click();
+    public withHasCrmCase(hasCrmCase: string): this {
+        Logger.log(`With has crm case ${hasCrmCase}`);
+        cy.getByTestId(`has-crm-case-${hasCrmCase}`).click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasCrmCase(hasCrmCase: string): this {
-		Logger.log(`Has Crm enquiry ${hasCrmCase}`);
+    public hasCrmCase(hasCrmCase: string): this {
+        Logger.log(`Has Crm enquiry ${hasCrmCase}`);
 
-		cy.getByTestId(`has-crm-case-${hasCrmCase}`).should("be.be.checked");
+        cy.getByTestId(`has-crm-case-${hasCrmCase}`).should("be.be.checked");
 
-		return this;
-	}
+        return this;
+    }
 
-	public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
-		Logger.log(`With retrospective request ${isRetrospectiveRequest}`);
+    public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
+        Logger.log(`With retrospective request ${isRetrospectiveRequest}`);
 
-		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
+        cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
-		Logger.log(`Has retrospective request ${isRetrospectiveRequest}`);
+    public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
+        Logger.log(`Has retrospective request ${isRetrospectiveRequest}`);
 
-		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
+        cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoRetrospectiveRequestField(): this
-	{
-		Logger.log("Has no retrospective approval field");
+    public hasNoRetrospectiveRequestField(): this
+    {
+        Logger.log("Has no retrospective approval field");
 
-		cy.getById("container-retrospective-approval").should("not.exist");
-		
-		return this;
-	}
+        cy.getById("container-retrospective-approval").should("not.exist");
 
-	public withSubmissionRequired(isSubmissionRequired: string): this {
-		Logger.log(`With Submission Required ${isSubmissionRequired}`);
+        return this;
+    }
 
-		cy.getByTestId(`submission-required-${isSubmissionRequired}`).click();
+    public withSubmissionRequired(isSubmissionRequired: string): this {
+        Logger.log(`With Submission Required ${isSubmissionRequired}`);
 
-		return this;
-	}
+        cy.getByTestId(`submission-required-${isSubmissionRequired}`).click();
 
-	public hasSubmissionRequired(isSubmissionRequired: string): this {
-		Logger.log(`Has Submission Required ${isSubmissionRequired}`);
+        return this;
+    }
 
-		cy.getByTestId(`submission-required-${isSubmissionRequired}`).should("be.checked");
+    public hasSubmissionRequired(isSubmissionRequired: string): this {
+        Logger.log(`Has Submission Required ${isSubmissionRequired}`);
 
-		return this;
-	}
+        cy.getByTestId(`submission-required-${isSubmissionRequired}`).should("be.checked");
 
-	public withSubmissionLink(submissionLink: string): this {
-		Logger.log(`With Submission link ${submissionLink}`);
+        return this;
+    }
 
-		cy.getById("submission-document-link").clear().type(submissionLink);
+    public withSubmissionLink(submissionLink: string): this {
+        Logger.log(`With Submission link ${submissionLink}`);
 
-		return this;
-	}
+        cy.getById("submission-document-link").clear();
+        cy.getById("submission-document-link").type(submissionLink);
 
-	public hasSubmissionLink(submissionLink: string): this {
-		Logger.log(`Has Submission link ${submissionLink}`);
+        return this;
+    }
 
-		cy.getById("submission-document-link").should("have.value", submissionLink);
+    public hasSubmissionLink(submissionLink: string): this {
+        Logger.log(`Has Submission link ${submissionLink}`);
 
-		return this;
-	}
+        cy.getById("submission-document-link").should("have.value", submissionLink);
 
-	public hasNoDateESFAField(): this
-	{
-		Logger.log("Has no date ESFA field");
+        return this;
+    }
 
-		cy.getById("container-request-received").should("not.exist");
+    public hasNoDateESFAField(): this
+    {
+        Logger.log("Has no date ESFA field");
 
-		return this;
-	}
+        cy.getById("container-request-received").should("not.exist");
 
-	public withDateESFADay(dateESFADay: string): this {
-		Logger.log(`With Date ESFA Day ${dateESFADay}`);
+        return this;
+    }
 
-		cy.getById("dtr-day-request-received").clear().type(dateESFADay);
+    public withDateESFADay(dateESFADay: string): this {
+        Logger.log(`With Date ESFA Day ${dateESFADay}`);
 
-		return this;
-	}
+        cy.getById("dtr-day-request-received").clear();
+        cy.getById("dtr-day-request-received").type(dateESFADay);
 
-	public hasDateESFADay(dateESFADay: string): this {
-		Logger.log(`Has Date ESFA Day ${dateESFADay}`);
+        return this;
+    }
 
-		cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
+    public hasDateESFADay(dateESFADay: string): this {
+        Logger.log(`Has Date ESFA Day ${dateESFADay}`);
 
-		return this;
-	}
+        cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
 
-	public withDateESFAMonth(dateESFAMonth: string): this {
-		Logger.log(`With Date ESFA Month ${dateESFAMonth}`);
+        return this;
+    }
 
-		cy.getById("dtr-month-request-received").clear().type(dateESFAMonth);
+    public withDateESFAMonth(dateESFAMonth: string): this {
+        Logger.log(`With Date ESFA Month ${dateESFAMonth}`);
 
-		return this;
-	}
+        cy.getById("dtr-month-request-received").clear();
+        cy.getById("dtr-month-request-received").type(dateESFAMonth);
 
-	public hasDateESFAMonth(dateESFAMonth: string): this {
-		Logger.log(`Has Date ESFA Month ${dateESFAMonth}`);
+        return this;
+    }
 
-		cy.getById("dtr-month-request-received").should("have.value", dateESFAMonth);
+    public hasDateESFAMonth(dateESFAMonth: string): this {
+        Logger.log(`Has Date ESFA Month ${dateESFAMonth}`);
 
-		return this;
-	}
+        cy.getById("dtr-month-request-received").should("have.value", dateESFAMonth);
 
-	public withDateESFAYear(dateESFAYear: string): this {
-		Logger.log(`With Date ESFA Year ${dateESFAYear}`);
+        return this;
+    }
 
-		const element = cy.getById("dtr-year-request-received");
-		element.clear();
+    public withDateESFAYear(dateESFAYear: string): this {
+        Logger.log(`With Date ESFA Year ${dateESFAYear}`);
 
-		if (dateESFAYear.length > 0) {
-			element.type(dateESFAYear);
-		}
+        cy.getById("dtr-year-request-received").clear();
 
-		return this;
-	}
+        if (dateESFAYear.length > 0) {
+            cy.getById("dtr-year-request-received").type(dateESFAYear);
+        }
 
-	public hasDateESFAYear(dateESFAYear: string): this {
-		Logger.log(`Has Date ESFA Year ${dateESFAYear}`);
+        return this;
+    }
 
-		cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
+    public hasDateESFAYear(dateESFAYear: string): this {
+        Logger.log(`Has Date ESFA Year ${dateESFAYear}`);
 
-		return this;
-	}
+        cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
 
-	public withTypeOfDecision(typeOfDecision: string): this {
-		Logger.log(`With type of decision to pick ${typeOfDecision}`);
+        return this;
+    }
 
-		cy.getById(typeOfDecision).click();
+    public withTypeOfDecision(typeOfDecision: string): this {
+        Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
-		return this;
-	}
+        cy.getById(typeOfDecision).click();
 
-	public hasTypeOfDecision(typeOfDecision: string): this {
-		Logger.log(`With type of decision to pick ${typeOfDecision}`);
+        return this;
+    }
 
-		cy.getById(typeOfDecision).should("be.checked");
+    public hasTypeOfDecision(typeOfDecision: string): this {
+        Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
-		return this;
-	}
+        cy.getById(typeOfDecision).should("be.checked");
 
-	public hasTypeOfDecisionOptions(types: Array<string>)
-	{
-		Logger.log(`Has type of decision options ${types.join()}`);
+        return this;
+    }
 
-		cy
-			.getByTestId('container-decision-types')
-			.find('.govuk-checkboxes__label')
-			.should("have.length", types.length)
-			.each(($elem, index) => {
-				expect($elem.text().trim()).to.contain(types[index]);
-			});
+    public hasTypeOfDecisionOptions(types: Array<string>)
+    {
+        Logger.log(`Has type of decision options ${types.join()}`);
 
-		return this;
-	}
+        cy
+            .getByTestId('container-decision-types')
+            .find('.govuk-checkboxes__label')
+            .should("have.length", types.length)
+            .each(($elem, index) => {
+                expect($elem.text().trim()).to.contain(types[index]);
+            });
 
-	public withDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.log(`With ${type} drawdown facility agreed ${value}`);
+        return this;
+    }
 
-		cy.getByTestId(`${type}-${value}`).click();
+    public withDrawdownFacilityAgreed(type: string, value: string): this {
+        Logger.log(`With ${type} drawdown facility agreed ${value}`);
 
-		return this;
-	}
+        cy.getByTestId(`${type}-${value}`).click();
 
-	public hasDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.log(`Has ${type} drawdown facility agreed ${value}`);
-		
-		cy.getByTestId(`${type}-${value}`).should("be.checked");
+        return this;
+    }
 
-		return this;
-	}
+    public hasDrawdownFacilityAgreed(type: string, value: string): this {
+        Logger.log(`Has ${type} drawdown facility agreed ${value}`);
 
-	public withFrameworkCategory(type: string, value): this {
-		Logger.log(`With ${type} framework category ${value}`);
+        cy.getByTestId(`${type}-${value}`).should("be.checked");
 
-		cy.getByTestId(`${type}-${value}`).click();
+        return this;
+    }
 
-		return this;
-	}
+    public withFrameworkCategory(type: string, value): this {
+        Logger.log(`With ${type} framework category ${value}`);
 
-	public hasFrameworkCategory(type: string, value): this {
-		Logger.log(`Has ${type} framework category ${value}`);
+        cy.getByTestId(`${type}-${value}`).click();
 
-		cy.getByTestId(`${type}-${value}`).should("be.checked");
+        return this;
+    }
 
-		return this;
-	}
+    public hasFrameworkCategory(type: string, value): this {
+        Logger.log(`Has ${type} framework category ${value}`);
 
-	public hasNoEnabledOrSelectedSubQuestions(type: string): this {
-		Logger.log(`${type} sub questions are not enabled`);
+        cy.getByTestId(`${type}-${value}`).should("be.checked");
 
-		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
-		
-		elements.should("not.be.enabled");
-		elements.should("not.be.checked");
-		
-		return this;
-	}
+        return this;
+    }
 
-	public withTotalAmountRequested(totalAmountRequested: string): this {
-		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
+    public hasNoEnabledOrSelectedSubQuestions(type: string): this {
+        Logger.log(`${type} sub questions are not enabled`);
 
-		cy.getById("total-amount-request").clear().type(totalAmountRequested);
+        cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]').should("not.be.enabled");
+        cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]').should("not.be.checked");
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasTotalAmountRequested(totalAmountRequested: string): this {
-		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
+    public withTotalAmountRequested(totalAmountRequested: string): this {
+        Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+        cy.getById("total-amount-request").clear();
+        cy.getById("total-amount-request").type(totalAmountRequested);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoTotalAmountRequestedField(): this
-	{
-		Logger.log("Has no total amount requested field");
-		cy.getByTestId("container-total-amount-requested").should("not.exist");
+    public hasTotalAmountRequested(totalAmountRequested: string): this {
+        Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
-		return this;
-	}
+        cy.getById("total-amount-request").should("have.value", totalAmountRequested);
 
-	public withSupportingNotes(supportingNotes: string): this {
-		Logger.log(`With Supporting Notes ${supportingNotes}`);
+        return this;
+    }
 
-		cy.getById("case-decision-notes").clear().type(supportingNotes);
+    public hasNoTotalAmountRequestedField(): this
+    {
+        Logger.log("Has no total amount requested field");
+        cy.getByTestId("container-total-amount-requested").should("not.exist");
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasSupportingNotes(supportingNotes: string): this {
-		Logger.log(`Has Supporting Notes ${supportingNotes}`);
+    public withSupportingNotes(supportingNotes: string): this {
+        Logger.log(`With Supporting Notes ${supportingNotes}`);
 
-		cy.getById("case-decision-notes").should("have.value", supportingNotes);
+        cy.getById("case-decision-notes").clear();
+        cy.getById("case-decision-notes").type(supportingNotes);
 
-		return this;
-	}
+        return this;
+    }
 
-	public withSupportingNotesExceedingLimit(): this {
-		cy.task("log", `With Supporting Notes exceeding limit`);
+    public hasSupportingNotes(supportingNotes: string): this {
+        Logger.log(`Has Supporting Notes ${supportingNotes}`);
 
-		cy.getById("case-decision-notes").clear().invoke("val", "x 1".repeat(1001));
+        cy.getById("case-decision-notes").should("have.value", supportingNotes);
 
-		return this;
-	}
+        return this;
+    }
 
-	public save(): this {
+    public withSupportingNotesExceedingLimit(): this {
+        Logger.log(`With Supporting Notes exceeding limit`);
 
-		Logger.log("Saving decision");
+        cy.getById("case-decision-notes").clear();
+        cy.getById("case-decision-notes").invoke("val", "x 1".repeat(1001));
 
-		cy.getById('add-decision-button').click();
+        return this;
+    }
 
-		return this;
-	}
+    public save(): this {
 
-	public cancel(): this {
-		Logger.log("Cancelling edit decision");
+        Logger.log("Saving decision");
 
-		cy.getById("cancel-link-event").click();
+        cy.getById('add-decision-button').click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+    public cancel(): this {
+        Logger.log("Cancelling edit decision");
 
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
+        cy.getById("cancel-link-event").click();
 
-		return this;
-	}
+        return this;
+    }
+
+    public hasValidationError(message: string): this {
+        Logger.log(`Has Validation error ${message}`);
+
+        cy.getById("errorSummary").should(
+            "contain.text",
+            message
+        );
+
+        return this;
+    }
 }

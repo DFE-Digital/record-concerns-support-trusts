@@ -1,26 +1,19 @@
+// eslint.config.mjs
+import typescriptParser from "@typescript-eslint/parser"
+import pluginCypress from 'eslint-plugin-cypress/flat'
+
 export default [
+  pluginCypress.configs.globals,
+  pluginCypress.configs.recommended,
   {
     files: [
-      ".js", ".jsx", ".ts", ".tsx"
+      "cypress/**/*.{js,jsx,ts,tsx}"
     ],
-    parser: "@typescript-eslint/parser",
-    plugins: [
-      "cypress"
-    ],
-    rules: {
-      "cypress/no-assigning-return-values": "warn",
-      "cypress/no-unnecessary-waiting": "warn",
-      "cypress/assertion-before-screenshot": "warn",
-      "cypress/no-force": "warn",
-      "cypress/no-async-tests": "warn",
-      "cypress/no-pause": "warn",
-      "cypress/unsafe-to-chain-command": "warn"
+    languageOptions: {
+      parser: typescriptParser
     },
-    env: {
-      "cypress/globals": true
-    },
-    extends: [
-      "plugin:cypress/recommended"
-    ]
+    plugins: {
+      cypress: pluginCypress
+    }
   }
 ]

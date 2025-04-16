@@ -6,7 +6,8 @@ export class CloseTrustFinancialForecastPage
     public withNotes(notes: string): this {
         Logger.log(`With Notes ${notes}`);
 
-        cy.getByTestId(`notes`).clear().type(notes);
+        cy.getByTestId(`notes`).clear();
+        cy.getByTestId(`notes`).type(notes);
 
         return this;
     }
@@ -30,7 +31,8 @@ export class CloseTrustFinancialForecastPage
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getByTestId('notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getByTestId('notes').clear();
+        cy.getByTestId('notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

@@ -55,7 +55,7 @@ class TeamCaseworkPage {
         return this;
     }
 
-    public hasNoTeamMember(name: string): this {  
+    public hasNoTeamMember(name: string): this {
         Logger.log("Team member is not displayed");
         cy.getById("selected-colleagues-container").contains(name).should('not.exist');
 

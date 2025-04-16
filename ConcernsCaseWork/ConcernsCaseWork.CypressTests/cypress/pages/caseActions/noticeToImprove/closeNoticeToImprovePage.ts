@@ -4,7 +4,8 @@ export class CloseNoticeToImprovePage {
     public withDayClosed(value: string): this {
         Logger.log(`With day closed ${value}`);
 
-        cy.getById(`dtr-day-date-nti-closed`).clear().type(value);
+        cy.getById(`dtr-day-date-nti-closed`).clear();
+        cy.getById(`dtr-day-date-nti-closed`).type(value);
 
         return this;
     }
@@ -12,7 +13,8 @@ export class CloseNoticeToImprovePage {
     public withMonthClosed(value: string): this {
         Logger.log(`With month closed ${value}`);
 
-        cy.getById(`dtr-month-date-nti-closed`).clear().type(value);
+        cy.getById(`dtr-month-date-nti-closed`).clear();
+        cy.getById(`dtr-month-date-nti-closed`).type(value);
 
         return this;
     }
@@ -20,7 +22,8 @@ export class CloseNoticeToImprovePage {
     public withYearClosed(value: string): this {
         Logger.log(`With year closed ${value}`);
 
-        cy.getById(`dtr-year-date-nti-closed`).clear().type(value);
+        cy.getById(`dtr-year-date-nti-closed`).clear();
+        cy.getById(`dtr-year-date-nti-closed`).type(value);
 
         return this;
     }
@@ -28,7 +31,8 @@ export class CloseNoticeToImprovePage {
     public withNotes(value: string): this {
         Logger.log(`With notes ${value}`);
 
-        cy.getById('nti-notes').clear().type(value);
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').type(value);
 
         return this;
     }
@@ -36,7 +40,8 @@ export class CloseNoticeToImprovePage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear();
+        cy.getById('nti-notes').invoke("val", "x 1".repeat(1001));
 
         return this;
     }

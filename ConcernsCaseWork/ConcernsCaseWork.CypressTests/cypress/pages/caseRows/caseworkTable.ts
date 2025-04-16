@@ -6,10 +6,10 @@ class CaseworkTable {
         Logger.log(`Getting the case row for ${caseId}`);
 
         return cy.getByTestId(`row-${caseId}`)
-        .then((el) =>
-        {
-            return new CaseRow(el);
-        });
+            .then((el) =>
+            {
+                return new CaseRow(el);
+            });
     }
 
     public getOpenCaseIds(): Cypress.Chainable<Array<string>>
@@ -19,11 +19,11 @@ class CaseworkTable {
         const result: Array<string> = [];
 
         cy.getById("active-cases")
-        .find(`[data-testid*='case-id']`)
-        .each($el =>
-        {
-            result.push($el.text().trim());
-        });
+            .find(`[data-testid*='case-id']`)
+            .each($el =>
+            {
+                result.push($el.text().trim());
+            });
 
         return cy.wrap(result);
     }

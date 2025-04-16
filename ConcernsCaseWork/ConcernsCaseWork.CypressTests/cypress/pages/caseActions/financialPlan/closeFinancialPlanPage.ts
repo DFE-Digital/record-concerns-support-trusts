@@ -15,7 +15,8 @@ export class CloseFinancialPlanPage
     {
         Logger.log(`With plan received day ${day}`);
 
-        cy.getByTestId("dtr-day-date-viable-plan-received").clear().type(day);
+        cy.getByTestId("dtr-day-date-viable-plan-received").clear();
+        cy.getByTestId("dtr-day-date-viable-plan-received").type(day);
 
         return this;
     }
@@ -24,7 +25,8 @@ export class CloseFinancialPlanPage
     {
         Logger.log(`With plan received month ${month}`);
 
-        cy.getByTestId("dtr-month-date-viable-plan-received").clear().type(month);
+        cy.getByTestId("dtr-month-date-viable-plan-received").clear();
+        cy.getByTestId("dtr-month-date-viable-plan-received").type(month);
 
         return this;
     }
@@ -33,7 +35,8 @@ export class CloseFinancialPlanPage
     {
         Logger.log(`With plan received year ${year}`);
 
-        cy.getByTestId("dtr-year-date-viable-plan-received").clear().type(year);
+        cy.getByTestId("dtr-year-date-viable-plan-received").clear();
+        cy.getByTestId("dtr-year-date-viable-plan-received").type(year);
 
         return this;
     }
@@ -42,18 +45,20 @@ export class CloseFinancialPlanPage
     {
         Logger.log(`With notes ${notes}`);
 
-        cy.getById("financial-plan-notes").clear().type(notes);
+        cy.getById("financial-plan-notes").clear();
+        cy.getById("financial-plan-notes").type(notes);
 
         return this;
     }
 
     public withNotesExceedingLimit(): this {
-		Logger.log("With notes exceeding the limit");
+        Logger.log("With notes exceeding the limit");
 
-		cy.getById("financial-plan-notes").clear().invoke("val", "x".repeat(2001));
+        cy.getById("financial-plan-notes").clear();
+        cy.getById("financial-plan-notes").invoke("val", "x".repeat(2001));
 
-		return this;
-	}
+        return this;
+    }
 
     public clearPlanReceivedDate(): this
     {

@@ -1,7 +1,6 @@
-import { EnvApi, EnvUsername } from "../constants/cypressConstants";
+import { EnvApi } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
 import { CreateCaseRequest, CreateCaseResponse, GetOpenCasesByOwnerResponse,GetOpenCasesForTeamByOwnerResponse, GetOpenCasesByTrustResponse, PatchCaseRequest, PatchCaseResponse, ResponseWrapper, PutTeamRequest, PutTeamResponse,GetTeamByOwnerResponse } from "./apiDomain";
-import { CaseBuilder } from "./caseBuilder";
 
 class CaseApi extends ApiBase {
     public get(caseId: number): Cypress.Chainable<CreateCaseResponse> {
@@ -10,9 +9,9 @@ class CaseApi extends ApiBase {
             url: Cypress.env(EnvApi) + `/v2/concerns-cases/urn/${caseId}`,
             headers: this.getHeaders()
         })
-            .then((response) => {
-                return response.body.data;
-            });
+        .then((response) => {
+            return response.body.data;
+        });
     }
 
     public post(request: CreateCaseRequest): Cypress.Chainable<CreateCaseResponse> {

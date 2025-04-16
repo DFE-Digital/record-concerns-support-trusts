@@ -376,7 +376,7 @@ export class ViewSrmaPage {
     }
 
     private getCancel() {
-       return cy.getByTestId("cancel-srma-button"); 
+       return cy.getByTestId("cancel-srma-button");
     }
 
     private getDecline() {

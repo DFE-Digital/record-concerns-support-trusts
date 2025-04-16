@@ -1,5 +1,3 @@
-import { Logger } from "cypress/common/logger";
-
 class DeleteCasePage {
     confirmDeleteCase()
     {
@@ -10,4 +8,3 @@ class DeleteCasePage {
 let deleteCasePage = new DeleteCasePage();
 
 export default deleteCasePage;
-    

@@ -34,7 +34,7 @@ export class ActionRow {
 
     public hasOpenedDate(value: string): this {
         Logger.log(`Has opened date ${value}`);
-        
+
         this.containsText("opened-date", value);
 
         return this;
@@ -42,7 +42,7 @@ export class ActionRow {
 
     public hasClosedDate(value: string): this {
         Logger.log(`Has closed date ${value}`);
-        
+
         this.containsText("closed-date", value);
 
         return this;
@@ -52,10 +52,10 @@ export class ActionRow {
 
     private containsText(id: string, value: string) {
         cy.wrap(this.element)
-        .within(() => 
-        {
-            cy.getByTestId(id).should("contain.text", value);
-        })
+        .within(() =>
+            {
+                cy.getByTestId(id).should("contain.text", value);
+            })
 
     }
 }
