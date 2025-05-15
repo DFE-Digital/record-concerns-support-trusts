@@ -56,7 +56,7 @@ jobs:
     needs: [ set-env, validate-packages ]
     permissions:
       packages: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@23ab6d515b6d3e5cea917134f56c19ce2e93be47 # v5.2.0
     strategy:
       matrix:
         stage: [
@@ -80,7 +80,7 @@ jobs:
     needs: [ set-env, build ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/import.yml@23ab6d515b6d3e5cea917134f56c19ce2e93be47 # v5.2.0
     strategy:
       matrix:
         stage: [
@@ -107,7 +107,7 @@ jobs:
     needs: [ set-env, import ]
     permissions:
       id-token: write
-    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@2669c85cf877ce3161b7d0edf36690106412c70b # v4.1.0
+    uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/deploy.yml@23ab6d515b6d3e5cea917134f56c19ce2e93be47 # v5.2.0
     with:
       environment: ${{ needs.set-env.outputs.environment }}
       docker-image-name: ${{ needs.set-env.outputs.image-name }}
