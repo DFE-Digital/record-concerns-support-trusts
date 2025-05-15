@@ -56,6 +56,7 @@ jobs:
     needs: [ set-env, validate-packages ]
     permissions:
       packages: write
+      attestations: write
     uses: DFE-Digital/deploy-azure-container-apps-action/.github/workflows/build.yml@23ab6d515b6d3e5cea917134f56c19ce2e93be47 # v5.2.0
     strategy:
       matrix:
