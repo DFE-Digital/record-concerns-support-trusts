@@ -29,6 +29,12 @@ variable "key_vault_access_ipv4" {
   type        = list(string)
 }
 
+variable "container_app_environment_internal_load_balancer_enabled" {
+  description = "Should the Container Environment operate in Internal Load Balancing Mode?"
+  type        = bool
+  default     = false
+}
+
 variable "container_port" {
   description = "Container port"
   type        = number
@@ -501,4 +507,18 @@ variable "enable_monitoring_traces" {
   description = "Monitor App Insights traces for error messages"
   type        = bool
   default     = true
+}
+
+variable "container_apps_allow_agw_resource" {
+  description = "Name, Resource Group and VNET name of App Gateway"
+  type = object({
+    name                = string
+    resource_group_name = string
+    vnet_name           = optional(string, "")
+  })
+  default = {
+    name                = ""
+    resource_group_name = ""
+    vnet_name           = ""
+  }
 }
