@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v1.18.0"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v2.0.0"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -28,6 +28,13 @@ module "azure_container_apps_hosting" {
 
   monitor_http_availability_fqdn = local.monitor_http_availability_fqdn
   dns_alias_records              = local.dns_alias_records
+
+  container_app_environment_internal_load_balancer_enabled = local.container_app_environment_internal_load_balancer_enabled
+  container_app_environment_workload_profile_type          = "D4"
+  container_apps_allow_ips_inbound                         = local.container_apps_allow_ips_inbound
+  restrict_container_apps_to_cdn_inbound_only              = local.restrict_container_apps_to_cdn_inbound_only
+  restrict_container_apps_to_agw_inbound_only              = local.restrict_container_apps_to_agw_inbound_only
+  container_apps_allow_agw_resource                        = local.container_apps_allow_agw_resource
 
   container_command                      = local.container_command
   container_secret_environment_variables = local.container_secret_environment_variables
@@ -63,8 +70,6 @@ module "azure_container_apps_hosting" {
   cdn_frontdoor_origin_fqdn_override              = local.cdn_frontdoor_origin_fqdn_override
   cdn_frontdoor_origin_host_header_override       = local.cdn_frontdoor_origin_host_header_override
   enable_cdn_frontdoor_health_probe               = local.enable_cdn_frontdoor_health_probe
-
-  container_apps_allow_ips_inbound = local.container_apps_allow_ips_inbound
 
   enable_dns_zone      = local.enable_dns_zone
   dns_zone_domain_name = local.dns_zone_domain_name
