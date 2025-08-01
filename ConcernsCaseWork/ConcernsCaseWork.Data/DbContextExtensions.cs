@@ -8,7 +8,13 @@ public static class DbContextExtensions
 	{
 		optionsBuilder.UseSqlServer(
 			connectionString,
-			opt => opt.MigrationsHistoryTable("__EfMigrationsHistory", "concerns"));
+			opt => {
+				opt.MigrationsHistoryTable("__EfMigrationsHistory", "concerns");
+				opt.EnableRetryOnFailure(
+					maxRetryCount: 2,
+					maxRetryDelay: TimeSpan.FromSeconds(5),
+					errorNumbersToAdd: null);
+			});
 		return optionsBuilder;
 	}
 }
