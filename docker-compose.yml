@@ -38,7 +38,7 @@ services:
       - dev
 
   redis:
-    image: redis:7@sha256:fbdbaea47b9ae4ecc2082ecdb4e1cea81e32176ffb1dcf643d422ad07427e5d9
+    image: redis:7@sha256:4421962706d7a901cbd435282515704040203d67c653160e3a46a27b79c40e19
     command: redis-server --requirepass password
     ports:
       - 6379:6379
