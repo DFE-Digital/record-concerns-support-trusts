@@ -81,21 +81,25 @@ namespace ConcernsCaseWork.Data
 			var userName = GetCurrentUsername();
 			var auditedEntities = GetAuditsNeeded();
 			int auditsWritten = 0;
+			var strategy = Database.CreateExecutionStrategy();
 
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+			return strategy.Execute(() =>
 			{
-				// commit changes to get IDs for new records. Then commit audits as they refer to those IDs. Use transaction to make the two commits atomic.
-				var entriesWritten = base.SaveChanges(acceptAllChangesOnSuccess);
-				InsertAuditsNeeded(userName, auditedEntities);
-
-				if (auditedEntities.Count > 0)
+				using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
 				{
-					auditsWritten = base.SaveChanges(acceptAllChangesOnSuccess);
-				}
-				scope.Complete();
+					// commit changes to get IDs for new records. Then commit audits as they refer to those IDs. Use transaction to make the two commits atomic.
+					var entriesWritten = base.SaveChanges(acceptAllChangesOnSuccess);
+					InsertAuditsNeeded(userName, auditedEntities);
 
-				return entriesWritten + auditsWritten;
-			}
+					if (auditedEntities.Count > 0)
+					{
+						auditsWritten = base.SaveChanges(acceptAllChangesOnSuccess);
+					}
+					scope.Complete();
+
+					return entriesWritten + auditsWritten;
+				}
+			});
 		}
 
 		public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
@@ -103,22 +107,26 @@ namespace ConcernsCaseWork.Data
 			var userName = GetCurrentUsername();
 			var auditedEntities = GetAuditsNeeded();
 			int auditsWritten = 0;
+			var strategy = Database.CreateExecutionStrategy();
 
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, TransactionScopeAsyncFlowOption.Enabled))
+			return await strategy.ExecuteAsync(async () =>
 			{
-				// commit changes to get IDs for new records. Then commit audits as they refer to those IDs. Use transaction to make the two commits atomic.
-				var entriesWritten = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(true);
-
-				if (auditedEntities.Count > 0)
+				using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }, TransactionScopeAsyncFlowOption.Enabled))
 				{
-					await InsertAuditsNeededAsync(userName, auditedEntities, cancellationToken);
-					auditsWritten = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(true);
+					// commit changes to get IDs for new records. Then commit audits as they refer to those IDs. Use transaction to make the two commits atomic.
+					var entriesWritten = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(true);
+
+					if (auditedEntities.Count > 0)
+					{
+						await InsertAuditsNeededAsync(userName, auditedEntities, cancellationToken);
+						auditsWritten = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken).ConfigureAwait(true);
+					}
+
+					scope.Complete();
+
+					return entriesWritten + auditsWritten;
 				}
-
-				scope.Complete();
-
-				return entriesWritten + auditsWritten;
-			}
+			});
 		}
 
 		protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
