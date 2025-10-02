@@ -273,6 +273,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					Id = DecisionType.FreedomOfInformationExemptions,
 					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
+				},
+				new DecisionTypeQuestionModel()
+				{
+					Id = DecisionType.FinancialRecoveryOfFraudOrIrregularity,
+					Hint = "Some cases of fraud or irregularity identified within an accademy trust may be considered for recovery as per the departments internal processes. Assessment and recommendation will result in a decision to recover an amount of funds from the trust through GAG abatement or decide recovery of funds is not appropriate and therefore recorded as a claim waived in the departments accounts. A decision to recover funds could be a condition of an Notice to Improve."
 				}
 			};
 
@@ -286,7 +291,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			var result = allDecisionTypes.Where(
 				q => q.Id == DecisionType.NoticeToImprove || 
 				q.Id == DecisionType.Section128 || 
-				q.Id == DecisionType.FreedomOfInformationExemptions).ToList();
+				q.Id == DecisionType.FreedomOfInformationExemptions ||
+				q.Id == DecisionType.FinancialRecoveryOfFraudOrIrregularity
+			).ToList();
 
 			return result;
 		}
