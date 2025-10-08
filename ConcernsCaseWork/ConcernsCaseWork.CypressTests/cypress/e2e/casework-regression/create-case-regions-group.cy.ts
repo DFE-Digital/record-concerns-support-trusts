@@ -293,7 +293,8 @@ describe("Creating a case", () => {
             editDecisionPage.hasTypeOfDecisionOptions([
                 "Notice to Improve (NTI)",
                 "Section 128 (S128)",
-                "Freedom of Information exemptions (FOI)"
+                "Freedom of Information exemptions (FOI)",
+                "Financial Recovery of Fraud or irregularity"
             ]);
 
             Logger.log("Creating a decision");
