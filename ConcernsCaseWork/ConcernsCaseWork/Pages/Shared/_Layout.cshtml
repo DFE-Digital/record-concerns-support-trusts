@@ -22,7 +22,7 @@
     var nonce = Context.GetNonce();
     bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
 
-    var classCurrentPage = "dfe-header__navigation-item--current";
+    var classCurrentPage = "govuk-service-navigation__item--active";
 
     var path = Context.Request.Path;
 
@@ -120,10 +120,9 @@
         </div>
     }
 
-    @* <partial name="_Header" /> *@
 
     <header class="govuk-header" role="banner" data-module="govuk-header" data-govuk-header-init="">
-        <div class="govuk-header__container govuk-width-container">
+        <div class="govuk-header__container govuk-extra-width-container">
             <div class="govuk-header__logo">
                 <a class="govuk-header__link govuk-header__link--homepage" href="/project-list">
                     <img src="/assets/department-for-education_white.png" alt="Department for Education" class="govuk-header__logotype">
@@ -133,11 +132,11 @@
     </header>
 
     <section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation" data-govuk-service-navigation-init="">
-        <div class="govuk-width-container">
+        <div class="govuk-extra-width-container">
             <div class="govuk-service-navigation__container">
                 <span class="govuk-service-navigation__service-name">
                     <a href="/" class="govuk-service-navigation__link">
-                        Prepare conversions and transfers
+                        Record concerns and support for trusts
                     </a>
                 </span>
                 <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
@@ -145,24 +144,19 @@
                         Menu
                     </button>
                     <ul class="govuk-service-navigation__list" id="navigation">
-                        <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                            <a class="govuk-service-navigation__link" aria-current="true" href="/project-list">
-                                <strong class="govuk-service-navigation__active-fallback">Conversions</strong>
+                        <li class="govuk-service-navigation__item @yourCasesTabCurrent">
+                            <a class="govuk-service-navigation__link" aria-current="true" href="/">
+                                <strong class="govuk-service-navigation__active-fallback">Your cases</strong>
                             </a>
                         </li>
-                        <li class="govuk-service-navigation__item ">
-                            <a class="govuk-service-navigation__link" href="/transfers/home">
-                                Transfers
+                        <li class="govuk-service-navigation__item @otherCasesTabCurrent">
+                            <a class="govuk-service-navigation__link" href="/TeamCasework">
+                                Other cases
                             </a>
                         </li>
-                        <li class="govuk-service-navigation__item ">
-                            <a class="govuk-service-navigation__link" href="/form-a-mat/project-list">
-                                Form a MAT
-                            </a>
-                        </li>
-                        <li class="govuk-service-navigation__item ">
-                            <a class="govuk-service-navigation__link" href="/groups/project-list">
-                                Groups
+                        <li class="govuk-service-navigation__item @findTrustTabCurrent">
+                            <a class="govuk-service-navigation__link" href="/trust">
+                                Find a trust
                             </a>
                         </li>
                     </ul>
@@ -171,8 +165,12 @@
         </div>
     </section>
 
+    @await RenderSectionAsync("Scripts", required: false)
+
+    @await RenderSectionAsync("SubHeading", required: false)
+
     <div class="govuk-phase-banner">
-        <div class="govuk-width-container">
+        <div class="govuk-extra-width-container">
             <p class="govuk-phase-banner__content">
                 <strong class="govuk-tag govuk-phase-banner__content__tag">
                     beta
@@ -183,94 +181,6 @@
             </p>
         </div>
     </div>
-
-    @* <div class="container body-content"> *@
-    @*     <div class="dfe-width-container govuk-phase-banner print-hide"> *@
-    @*         <p class="govuk-phase-banner__content"> *@
-    @*             <strong class="govuk-tag govuk-phase-banner__content__tag"> *@
-    @*                 Beta *@
-    @*             </strong> *@
-    @*             <span class="govuk-phase-banner__text"> *@
-    @*                 This is a new service – your <a class="govuk-link" rel="noopener noreferrer" target="_blank">feedback<span class="govuk-visually-hidden"> (opens in new tab)</span></a> will help us to improve it. *@
-    @*             </span> *@
-    @*         </p> *@
-    @*     </div> *@
-    @* </div> *@
-
-    <br/>
-
-    <header class="dfe-header" role="banner">
-        <div class="dfe-width-container dfe-header__container">
-            <div class="dfe-header__logo">
-                <a class="dfe-header__link dfe-header__link--service " href="/" aria-label="DfE homepage">
-                    <img src="/assets/dfe-logo.png" class="dfe-logo" alt="DfE Homepage">
-                    <img src="/assets/dfe-logo-alt.png" class="dfe-logo-hover" alt="DfE Homepage">
-                    <span class="dfe-header__service-name" data-testid="go-to-home">
-                        Record concerns and support for trusts
-                    </span>
-                </a>
-            </div>
-
-            <div class="dfe-header__content" id="content-header">
-                <div class="dfe-header__menu">
-                    <button class="dfe-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</button>
-                </div>
-
-                @if (Context.User.Identity.IsAuthenticated)
-                {
-                    <ul class="dfe-header__action-links">
-                        <li>
-                            <a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
-                        </li>
-                    </ul>
-                }
-            </div>
-
-        </div>
-        <nav class="dfe-header__navigation" id="header-navigation" role="navigation" aria-label="Primary navigation" aria-labelledby="label-navigation">
-            <div class="dfe-width-container">
-                <p class="dfe-header__navigation-title">
-                    <span id="label-navigation">Menu</span>
-                    <button class="dfe-header__navigation-close" id="close-menu">
-                        <svg class="dfe-icon dfe-icon__close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
-                            <path d="M13.41 12l5.3-5.29a1 1 0 1 0-1.42-1.42L12 10.59l-5.29-5.3a1 1 0 0 0-1.42 1.42l5.3 5.29-5.3 5.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l5.29-5.3 5.29 5.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
-                        </svg>
-                        <span class="govuk-visually-hidden">Close menu</span>
-                    </button>
-                </p>
-                <ul class="dfe-header__navigation-list">
-                    <li class="dfe-header__navigation-item @yourCasesTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/" data-testid="your-cases-tab">
-                            Your cases
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="dfe-header__navigation-item @otherCasesTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/TeamCasework" data-testid="team-casework-tab">
-                            Other cases
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="dfe-header__navigation-item @findTrustTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/trust">
-                            Find a trust
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    @await RenderSectionAsync("Scripts", required: false)
-
-    @await RenderSectionAsync("SubHeading", required: false)
 
     <div class="dfe-width-container">
         @await RenderSectionAsync("BeforeMain", required: false)
@@ -285,7 +195,6 @@
     <partial name="_Footer" />
 
     <script src="~/dist/main.js" nonce="@nonce"></script>
-    @* <script src="~/dist/dfefrontend/dfefrontend.js" nonce="@nonce"></script> *@
     <script src="~/dist/autocomplete/accessible-autocomplete.min.js" nonce="@nonce"></script>
     <script src="~/assets/govuk-frontend-5.10.0.min.js" asp-add-nonce></script>
 </body>
