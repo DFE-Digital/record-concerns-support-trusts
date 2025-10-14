@@ -11,7 +11,7 @@
 @inject IConfiguration Configuration
 
 @{
-    var notificationBannerMessage = Configuration["NotificationBannerMessage"] ?? "This is a fake notification banner message.Please delete it";
+    var notificationBannerMessage = Configuration["NotificationBannerMessage"];
     bool.TryParse(Configuration["ApplicationInsights:BrowserAnalyticsEnabled"], out bool enableAppInsightsBrowserAnalytics);
     var authenticatedUserId = Context.User.Identity is not null && Context.User.Identity.IsAuthenticated ? Context.User.Identity.Name ?? "Unknown" : "Anonymous";
 }
