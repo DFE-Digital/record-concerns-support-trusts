@@ -11,7 +11,7 @@
 @inject IConfiguration Configuration
 
 @{
-    var notificationBannerMessage = Configuration["NotificationBannerMessage"];
+    var notificationBannerMessage = Configuration["NotificationBannerMessage"] ?? "This is a fake notification banner message.Please delete it";
     bool.TryParse(Configuration["ApplicationInsights:BrowserAnalyticsEnabled"], out bool enableAppInsightsBrowserAnalytics);
     var authenticatedUserId = Context.User.Identity is not null && Context.User.Identity.IsAuthenticated ? Context.User.Identity.Name ?? "Unknown" : "Anonymous";
 }
@@ -45,12 +45,12 @@
         <!-- Google Tag Manager -->
         <script nonce="@nonce">
             (function (w, d, s, l, i) {
-                w[l] = w[l] || []; w[l].push({
-                    'gtm.start':
-                        new Date().getTime(), event: 'gtm.js'
-                }); let f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+            }); let f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', 'GTM-NGC8DRV');
         </script>
         <!-- End Google Tag Manager -->
@@ -105,21 +105,16 @@
     @if (!string.IsNullOrWhiteSpace(notificationBannerMessage))
     {
         <div class="govuk-extra-width-container">
-            <div class="govuk-notification-banner govuk-!-margin-bottom-0" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-                <div class="govuk-notification-banner__header">
-                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                        Important
-                    </h2>
-                </div>
-                <div class="govuk-notification-banner__content">
-                    <p>
-                        @notificationBannerMessage
-                    </p>
-                </div>
-            </div>
+            <govuk-notification-banner>
+                <govuk-notification-banner-title>
+                    Important
+                </govuk-notification-banner-title>
+                <p>
+                    @notificationBannerMessage
+                </p>
+            </govuk-notification-banner>
         </div>
     }
-
 
     <header class="govuk-header" role="banner" data-module="govuk-header" data-govuk-header-init="">
         <div class="govuk-header__container govuk-extra-width-container">
