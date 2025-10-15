@@ -160,10 +160,6 @@
         </div>
     </section>
 
-    @await RenderSectionAsync("Scripts", required: false)
-
-    @await RenderSectionAsync("SubHeading", required: false)
-
     <div class="govuk-phase-banner">
         <div class="govuk-extra-width-container">
             <p class="govuk-phase-banner__content">
@@ -176,6 +172,10 @@
             </p>
         </div>
     </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    @await RenderSectionAsync("SubHeading", required: false)
 
     <div class="govuk-extra-width-container">
         @await RenderSectionAsync("BeforeMain", required: false)
