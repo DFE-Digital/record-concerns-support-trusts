@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Pages
 
 			Response.Cookies.Append(CookieConstants.CookieConsentName, HasConsented.ToString(), cookieOptions);
 
-			return Page();
+			return Redirect(Request.GetTypedHeaders().Referer.ToString());
 		}
 
 		public IActionResult OnPostHide()

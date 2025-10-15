@@ -3,7 +3,7 @@
 @{
     var hasMadeDecision = Context.Request.Cookies.ContainsKey(CookieConstants.CookieConsentName);
     var hasMadeHideDecision = Context.Request.Cookies.ContainsKey(CookieConstants.CookieConsentHide);
-    var isCookiesPage = Context.Request.Path.Value?.Contains("/cookies") ?? false;
+    // var isCookiesPage = Context.Request.Path.Value?.Contains("/cookies") ?? false;
 }
 
 @if (hasMadeDecision) // user has made a decision
@@ -43,7 +43,7 @@
          </form>
     }
 }
-else if (!isCookiesPage) // user has not yet made a decision and we are not on the cookies page neither, so we display the banner
+else // user has not yet made a decision, so we display the banner
 {
     <form data-testid="cookies-banner-form" asp-page="/Cookies" method="post">
         <div class="govuk-cookie-banner"
