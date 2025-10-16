@@ -35,6 +35,9 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		EsfaApproval = 10,
 
 		[Description("Freedom of Information exemptions (FOI) ")]
-		FreedomOfInformationExemptions = 11
+		FreedomOfInformationExemptions = 11,
+
+		[Description("Financial Recovery of Fraud or irregularity")]
+		FinancialRecoveryOfFraudOrIrregularity = 12
 	}
 }
