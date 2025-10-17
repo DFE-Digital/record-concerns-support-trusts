@@ -54,5 +54,19 @@ namespace ConcernsCaseWork.Pages
 
 			return Page();
 		}
+
+		public IActionResult OnPostHide()
+		{
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTime.Today.AddMonths(6),
+				Secure = true,
+				HttpOnly = true,
+			};
+
+			Response.Cookies.Append(CookieConstants.CookieConsentHide, "True", cookieOptions);
+
+			return Redirect(Request.GetTypedHeaders().Referer.ToString());
+		}
 	}
 }

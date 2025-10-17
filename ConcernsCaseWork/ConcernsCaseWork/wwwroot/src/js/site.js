@@ -1,10 +1,10 @@
 // Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-import GOVUKFrontend from "govuk-frontend/govuk/all";
-GOVUKFrontend.initAll();
-import MOJFrontend from "@ministryofjustice/frontend/moj/all";
-MOJFrontend.initAll();
+import { initAll as initGOVUK } from "govuk-frontend";
+initGOVUK();
+import { initAll as initMOJ, FormValidator } from "@ministryofjustice/frontend";
+initMOJ();
 
 // We have our own version of the character counter copied from govuk-frontend
 // The original cannot count characters for c# due to issues with new lines
@@ -62,7 +62,7 @@ window.hideLoader = function() {
 
 // Form validator
 window.formValidator = function(form) {
-	return new MOJFrontend.FormValidator(form);
+	return new FormValidator(form);
 }
 
 window.addDirectionOfTravelValidator = function(validator) {

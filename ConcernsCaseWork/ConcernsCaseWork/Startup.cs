@@ -9,6 +9,7 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.UserContext;
+using GovUk.Frontend.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -111,8 +112,10 @@ namespace ConcernsCaseWork
             // Internal Service
             services.AddInternalServices();
 
-            // Session
-            services.AddSession(options =>
+			services.AddGovUkFrontend();
+
+			// Session
+			services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(24);
                 options.Cookie.Name = ".ConcernsCasework.Session";
@@ -179,8 +182,11 @@ namespace ConcernsCaseWork
 
             app.UseStaticFiles();
 
-            // Enable session for the application
-            app.UseSession();
+			// Enable session for the application
+			app.UseSession();
+			app.UseCookiePolicy();
+
+			app.UseGovUkFrontend();
 
 
             app.UseMiddleware<UserContextTranslatorMiddleware>();

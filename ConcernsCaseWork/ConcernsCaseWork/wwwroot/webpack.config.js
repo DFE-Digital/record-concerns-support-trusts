@@ -15,7 +15,19 @@ module.exports = {
 					// Translates CSS into CommonJS
 					"css-loader",
 					// Compiles Sass to CSS
-					"sass-loader",
+					{
+						loader: "sass-loader",
+						options: {
+							sassOptions: {
+								quietDeps: true,
+								silenceDeprecations: ["legacy-js-api", "mixed-decls", "slash-div", "function-units", "import-using-all"],
+								verbose: false,
+								logger: {
+									warn: function() { /* suppress warnings */ }
+								}
+							}
+						}
+					},
 				],
 			},
 			{test: /\.css$/, use: ['style-loader', 'css-loader']},
