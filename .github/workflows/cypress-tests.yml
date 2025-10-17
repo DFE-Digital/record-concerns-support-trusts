@@ -77,8 +77,66 @@ jobs:
           name: reports-${{ inputs.environment }}
           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 
-      - name: Report results
+      - name: Report results to Teams
         if: always()
-        run: npm run cy:notify -- --custom-text="Environment ${{ inputs.environment }}, See more information https://github.com/DFE-Digital/amsd-casework/actions/runs/${{github.run_id}}"
+        run: |
+          node <<EOF
+          const axios = require('axios');
+          const webhookUrl = process.env.TEAMS_WEBHOOK_URL;
+          const message = {
+            type: "message",
+            attachments: [
+              {
+                contentType: "application/vnd.microsoft.card.adaptive",
+                contentUrl: null,
+                content: {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  type: "AdaptiveCard",
+                  version: "1.2",
+                  body: [
+                    {
+                      type: "Container",
+                      style: process.env.GITHUB_JOB == 'success' ? "good" : "attention",
+                      items: [
+                        {
+                          type: "TextBlock",
+                          wrap: true,
+                          text: process.env.GITHUB_JOB == 'success' ? "**Cypress Test Run Passed** ✅" : "**Cypress Test Run Failed** ❌",
+                          size: "large",
+                          horizontalAlignment: "center"
+                        },
+                        {
+                          type: "TextBlock",
+                          wrap: true,
+                          text: "**Branch:** " + process.env.GITHUB_REF
+                        },
+                        {
+                          type: "TextBlock",
+                          wrap: true,
+                          text: "**Workflow:** " + process.env.GITHUB_WORKFLOW
+                        },
+                        {
+                          type: "TextBlock",
+                          wrap: true,
+                          text: "**Environment:** " + process.env.ENVIRONMENT
+                        },
+                        {
+                          type: "TextBlock",
+                          wrap: true,
+                          text: "**See more information:** [" + process.env.INFORMATION_LINK + "](" + process.env.INFORMATION_LINK + ")"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          axios.post(webhookUrl, message)
+            .then(() => console.log("Message sent to Teams"))
+            .catch(err => { console.error("Error sending to Teams", err); process.exit(1); });
+          EOF
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
