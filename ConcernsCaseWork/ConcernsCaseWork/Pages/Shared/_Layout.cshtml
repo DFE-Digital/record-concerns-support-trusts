@@ -17,12 +17,12 @@
 }
 
 <!DOCTYPE html>
-<html class="govuk-template" lang="en">
+<html lang="en" class="govuk-template govuk-template--rebranded">
 @{
     var nonce = Context.GetNonce();
     bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
 
-    var classCurrentPage = "dfe-header__navigation-item--current";
+    var classCurrentPage = "govuk-service-navigation__item--active";
 
     var path = Context.Request.Path;
 
@@ -45,12 +45,12 @@
         <!-- Google Tag Manager -->
         <script nonce="@nonce">
             (function (w, d, s, l, i) {
-                w[l] = w[l] || []; w[l].push({
-                    'gtm.start':
-                        new Date().getTime(), event: 'gtm.js'
-                }); let f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+            }); let f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', 'GTM-NGC8DRV');
         </script>
         <!-- End Google Tag Manager -->
@@ -75,9 +75,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta property="og:image" content="~/assets/images/govuk-opengraph-image.png">
 
+    <link rel="manifest" href="/assets/rebrand/manifest.json?v=5.10.0">
+    <meta property="og:image" content="/assets/rebrand/images/govuk-opengraph-image.png">
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon">
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/rebrand/images/favicon.ico" type="image/x-icon">
+    <link rel="mask-icon" href="/assets/rebrand/images/govuk-icon-mask.svg" color="#1d70b8">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
     <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
@@ -86,7 +88,7 @@
 
     <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
 </head>
-<body class="govuk-template__body ">
+<body class="govuk-template__body js-enabled govuk-frontend-supported">
     <!-- Google Tag Manager (noscript) -->
     <noscript nonce="@nonce">
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGC8DRV" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -95,199 +97,99 @@
     <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
     <script nonce="@nonce">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    <div class="govuk-extra-width-container">
-        <div class="govuk-phase-banner concerns-phase-banner">
+    <partial name="_EnvironmentBanner" />
+
+    <partial name="_CookiesBanner" />
+
+    @if (!string.IsNullOrWhiteSpace(notificationBannerMessage))
+    {
+        <div class="govuk-extra-width-container">
+            <govuk-notification-banner>
+                <govuk-notification-banner-title>
+                    Important
+                </govuk-notification-banner-title>
+                <p>
+                    @notificationBannerMessage
+                </p>
+            </govuk-notification-banner>
+        </div>
+    }
+
+    <header class="govuk-header" role="banner" data-module="govuk-header" data-govuk-header-init="">
+        <div class="govuk-header__container govuk-extra-width-container">
+            <div class="govuk-header__logo">
+                <a class="govuk-header__link govuk-header__link--homepage" href="/">
+                    <img src="/assets/department-for-education_white.png" alt="Department for Education" class="govuk-header__logotype">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation" data-govuk-service-navigation-init="">
+        <div class="govuk-extra-width-container">
+            <div class="govuk-service-navigation__container">
+                <span class="govuk-service-navigation__service-name" data-testid="go-to-home">
+                    <a href="/" class="govuk-service-navigation__link">
+                        Record concerns and support for trusts
+                    </a>
+                </span>
+                <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+                    <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden="">
+                        Menu
+                    </button>
+                    <ul class="govuk-service-navigation__list" id="navigation">
+                        <li class="govuk-service-navigation__item @yourCasesTabCurrent">
+                            <a class="govuk-service-navigation__link" aria-current="true" href="/">
+                                <strong class="govuk-service-navigation__active-fallback">Your cases</strong>
+                            </a>
+                        </li>
+                        <li class="govuk-service-navigation__item @otherCasesTabCurrent">
+                            <a class="govuk-service-navigation__link" href="/TeamCasework" data-testid="team-casework-tab">
+                                Other cases
+                            </a>
+                        </li>
+                        <li class="govuk-service-navigation__item @findTrustTabCurrent">
+                            <a class="govuk-service-navigation__link" href="/trust">
+                                Find a trust
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <div class="govuk-phase-banner">
+        <div class="govuk-extra-width-container">
             <p class="govuk-phase-banner__content">
                 <strong class="govuk-tag govuk-phase-banner__content__tag">
                     beta
                 </strong>
                 <span class="govuk-phase-banner__text">
-                    This is a new service – your <a class="govuk-link" target="_blank" href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-SZtRygfwTNOqcfRq-MXpv9UOTIyQlNYR0hJT1Q0TUFVSlJGVFhES01LVC4u">feedback (opens in a new tab)</a> will help us to improve it.
+                    This is a new service – your <a class="govuk-link" rel="noopener noreferrer" target="_blank">feedback<span class="govuk-visually-hidden"> (opens in new tab)</span></a> will help us to improve it.
                 </span>
             </p>
         </div>
     </div>
-    <partial name="_EnvironmentBanner" />
-    <partial name="_CookiesBanner" />
-    @if (!string.IsNullOrWhiteSpace(notificationBannerMessage))
-    {
-        <div class="govuk-extra-width-container">
-            <div class="govuk-notification-banner govuk-!-margin-bottom-0" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-                <div class="govuk-notification-banner__header">
-                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                        Important
-                    </h2>
-                </div>
-                <div class="govuk-notification-banner__content">
-                    <p>
-                        @notificationBannerMessage
-                    </p>
-                </div>
-            </div>
-        </div>
-    }
-    <header class="dfe-header" role="banner">
-        <div class="dfe-width-container dfe-header__container">
-            <div class="dfe-header__logo">
-                <a class="dfe-header__link dfe-header__link--service " href="/" aria-label="DfE homepage">
-                    <img src="/assets/dfe-logo.png" class="dfe-logo" alt="DfE Homepage">
-                    <img src="/assets/dfe-logo-alt.png" class="dfe-logo-hover" alt="DfE Homepage">
-                    <span class="dfe-header__service-name" data-testid="go-to-home">
-                        Record concerns and support for trusts
-                    </span>
-                </a>
-            </div>
-
-            <div class="dfe-header__content" id="content-header">
-                <div class="dfe-header__menu">
-                    <button class="dfe-header__menu-toggle" id="toggle-menu" aria-controls="header-navigation" aria-expanded="false">Menu</button>
-                </div>
-
-                @if (Context.User.Identity.IsAuthenticated)
-                {
-                    <ul class="dfe-header__action-links">
-                        <li>
-                            <a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
-                        </li>
-                    </ul>
-                }
-            </div>
-
-        </div>
-        <nav class="dfe-header__navigation" id="header-navigation" role="navigation" aria-label="Primary navigation" aria-labelledby="label-navigation">
-            <div class="dfe-width-container">
-                <p class="dfe-header__navigation-title">
-                    <span id="label-navigation">Menu</span>
-                    <button class="dfe-header__navigation-close" id="close-menu">
-                        <svg class="dfe-icon dfe-icon__close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
-                            <path d="M13.41 12l5.3-5.29a1 1 0 1 0-1.42-1.42L12 10.59l-5.29-5.3a1 1 0 0 0-1.42 1.42l5.3 5.29-5.3 5.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l5.29-5.3 5.29 5.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
-                        </svg>
-                        <span class="govuk-visually-hidden">Close menu</span>
-                    </button>
-                </p>
-                <ul class="dfe-header__navigation-list">
-                    <li class="dfe-header__navigation-item @yourCasesTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/" data-testid="your-cases-tab">
-                            Your cases
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="dfe-header__navigation-item @otherCasesTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/TeamCasework" data-testid="team-casework-tab">
-                            Other cases
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="dfe-header__navigation-item @findTrustTabCurrent">
-                        <a class="dfe-header__navigation-link govuk-!-font-size-19" href="/trust">
-                            Find a trust
-                            <svg class="dfe-icon dfe-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" width="34" height="34">
-                                <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
     @await RenderSectionAsync("Scripts", required: false)
 
     @await RenderSectionAsync("SubHeading", required: false)
 
-    <div class="dfe-width-container">
+    <div class="govuk-extra-width-container">
         @await RenderSectionAsync("BeforeMain", required: false)
     </div>
 
     <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content" role="main">
-        <div class="dfe-width-container">
+        <div class="govuk-extra-width-container">
             @RenderBody()
         </div>
     </main>
 
-    <footer class="govuk-footer" role="contentinfo">
-        <div class="dfe-width-container">
-            <div class="govuk-footer__navigation">
-                <div class="govuk-footer__section govuk-grid-column-two-thirds">
-                    <h2 class="govuk-footer__heading govuk-heading-m">Get help</h2>
-                    <ul class="govuk-footer__list govuk-footer__list--column-1">
-                        <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-X7F89QcWu5CjlJXwF0TVktUMTFEUVRCVVg4WlMyS1AzUEJSUDAySlhQTCQlQCN0PWcu" target="_blank">
-                                Get help with a Regions Group system (opens in a new tab)
-                            </a>
-                        </li>
-                        <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/Record-concerns-and-support-for-trusts.aspx#guides-for-record-concerns-and-support-for-trusts" target="_blank">
-                                How to use this system (opens in a new tab)
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="govuk-footer__section govuk-grid-column-one-third">
-                    <h2 class="govuk-footer__heading govuk-heading-m">Give feedback</h2>
-                    <ul class="govuk-footer__list">
-                        <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-SZtRygfwTNOqcfRq-MXpv9UOTIyQlNYR0hJT1Q0TUFVSlJGVFhES01LVC4u" target="_blank">Give feedback about a Regions Group system (opens in a new tab)</a>
-                        </li>
-                        <li class="govuk-footer__list-item">
-                            <a class="govuk-footer__link" href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-fkHK2JGo_BIpVChpLMaBFpUNUFDSzhQN0FHVklTV0JWTzFZTjNKWTNJUi4u" target="_blank">Suggest a change to a Regions Group system (opens in a new tab)</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="govuk-footer__meta">
-                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow dfe-footer__meta-item--grow">
-                    <h2 class="govuk-visually-hidden">Support links</h2>
-                    <ul class="govuk-footer__inline-list">
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/accessibility" data-testid="accessibility-link">
-                                Accessibility statement
-                            </a>
-                        </li>
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/cookies" data-testid="cookies-link">
-                                Cookies
-                            </a>
-                        </li>
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/privacypolicy" data-testid="privacy-policy-link">
-                                Privacy notice
-                            </a>
-                        </li>
-                        @if (!_env.IsProduction())
-                        {
-                            <li class="govuk-footer__inline-list-item">
-                                <a class="govuk-footer__link" href="/cleardata">
-                                    Clear data
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                    <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
-                        <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"></path>
-                    </svg>
-                    <span class="govuk-footer__licence-description">
-                        All content is available under the
-                        <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">
-                            Open
-                            Government Licence v3.0
-                        </a>, except where otherwise stated
-                    </span>
-                </div>
-                
-                <div class="govuk-footer__meta-item">
-                    <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <partial name="_Footer" />
 
     <script src="~/dist/main.js" nonce="@nonce"></script>
-    <script src="~/dist/dfefrontend/dfefrontend.js" nonce="@nonce"></script>
     <script src="~/dist/autocomplete/accessible-autocomplete.min.js" nonce="@nonce"></script>
+    <script src="~/assets/govuk-frontend-5.10.0.min.js" asp-add-nonce></script>
 </body>
 </html>
