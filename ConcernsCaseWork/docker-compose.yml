@@ -1,0 +1,28 @@
+services:
+  concernscasework:
+    image: ${DOCKER_REGISTRY-}concernscasework
+    build:
+      context: .
+      dockerfile: ConcernsCaseWork/Dockerfile
+    environment:
+       VCAP_SERVICES: "{'redis': [{'credentials': {'host': 'host.docker.internal','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
+    ports:
+       - 5001:5001
+       - 5000:5000
+    networks:
+      - local-dev
+
+  concernscasework.api:
+    image: ${DOCKER_REGISTRY-}concernscasework.api
+    build:
+      context: .
+      dockerfile: ConcernsCaseWork.API/Dockerfile
+    ports:
+       - 3001:3001
+       - 3000:3000
+    networks:
+      - local-dev
+
+networks:
+  local-dev:
+    driver: bridge
