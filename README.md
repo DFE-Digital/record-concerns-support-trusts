@@ -35,6 +35,28 @@ RDD - Regional Delivery Directorate
 The issue is a environment variable name HTTP_PROXY. Remove it from the system, restart IDE and re-try.
 ```
 
+## Development Setup - Docker compose :star2: NEW :star2: 
+ 
+1 - Bring up the dev stack:
+  - Navigate to the root directory of the project
+  - Run the command `docker-compose -f Stack/docker-compose.yml up -d --build`. 
+
+        - This will bring up the sql sever with a username and password set.
+        - Create an empty database.
+        - Apply migrations.
+        - Start redis
+
+2 - Run `npm install; npm run build` from the `ConcernsCaseWork/wwwroot` directory to build the styles.
+
+3 - Open the project in Visual studio :rocket:
+
+# Adding migrations
+
+- In command line navigate to ConcernsCaseWork.Data
+- Issue the command `dotnet ef migrations add <MigrationName>`
+- After making changes to run the migration run the command `dotnet ef database update --context ConcernsDbContext --connection "<db connection string>"`
+
+
 ### Docker Redis
 ***
 ```
