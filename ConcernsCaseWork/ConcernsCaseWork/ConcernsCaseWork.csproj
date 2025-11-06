@@ -13,7 +13,6 @@
 		<BuildGuid>$([System.Guid]::NewGuid().ToString())</BuildGuid>
 		<CustomBuildMessage></CustomBuildMessage>
 		<ApplicationInsightsResourceId>/</ApplicationInsightsResourceId>
-		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
 	</PropertyGroup>
 
 	<ItemGroup>
