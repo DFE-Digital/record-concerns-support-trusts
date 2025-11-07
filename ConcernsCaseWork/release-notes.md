@@ -1,3 +1,8 @@
+## 41.0.0
+* Added new rebrand changes on header and footer
+* Docker implementation
+* XSS Vulnerability
+
 ## 40.0.0
 * added Targeted Trust Engagement and hid Trust Financial Forecase
 
