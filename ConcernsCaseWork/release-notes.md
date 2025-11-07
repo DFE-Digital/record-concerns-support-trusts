@@ -1,6 +1,12 @@
+## 41.0.0
+* Add rebrand of header and footer
+* Run EF migration script to generate enum values in documentation table
+* Added docker to enviroments
+    
 ## 40.0.0
 * added Targeted Trust Engagement and hid Trust Financial Forecase
-
+* Added docker to enviroments
+  
 ## 39.0.0
 
 * added delete button to the case, concerns and actions
