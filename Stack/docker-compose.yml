@@ -1,6 +1,6 @@
 services:     
    recast.sqldb:
-    image: mcr.microsoft.com/azure-sql-edge:latest
+    image: mcr.microsoft.com/azure-sql-edge:latest@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: mySuperStrong_pa55word!!!
@@ -15,7 +15,7 @@ services:
     restart: always
     
    recast.redis:
-    image: redis:latest
+    image: redis:latest@sha256:5c7c0445ed86918cb9efb96d95a6bfc03ed2059fe2c5f02b4d74f477ffe47915
     restart: always
     ports:
      - "6379:6379"
@@ -23,7 +23,7 @@ services:
       - local-dev
 
    recastsqldb.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:46e454273ee7f971f804cfc367b2f0aeaafd258f65b77d34ac6acca85fcb8bc9
     volumes:
       - ./init:/initdb.d
     networks:
