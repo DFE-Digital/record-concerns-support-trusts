@@ -49,7 +49,7 @@ RUN chmod +x /build/set-appsettings-release-tag.sh && \
 FROM builder AS efbuilder
 WORKDIR /build/ConcernsCaseWork.Data
 ENV PATH=$PATH:/root/.dotnet/tools
-RUN dotnet tool install --global dotnet-ef && \
+RUN dotnet tool install --global dotnet-ef --version 8.* && \
     mkdir /sql && \
     dotnet ef migrations bundle \
         -r linux-x64 \
