@@ -13,14 +13,14 @@
 }
 
 <div class="govuk-form-group @errorClass" id="container-@Model.ElementRootId">
-	<fieldset class="govuk-fieldset">
+    <fieldset class="govuk-fieldset">
         @if (!string.IsNullOrEmpty(Model.Heading))
         {
-             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-			    <h2 class="govuk-heading-m">
-				    @Model.Heading
-			    </h2>
-		    </legend>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h2 class="govuk-heading-m">
+                    @Model.Heading
+                </h2>
+            </legend>
         }
 
         @if (!string.IsNullOrEmpty(Model.HintText))
@@ -33,10 +33,10 @@
             <partial name="@Model.HintFromPartialView" />
         }
 
-		<div class="govuk-radios" data-module="govuk-radios">
+        <div class="govuk-radios" data-module="govuk-radios">
             <partial name="Components/_ValidationErrorDetail" model="@errors" />
-			@foreach (var radioItem in Model.RadioItems)
-			{
+            @foreach (var radioItem in Model.RadioItems)
+            {
                 var isChecked = Model.SelectedId == radioItem.Id ? "checked" : "";
                 var testId = !string.IsNullOrEmpty(radioItem.TestId) ? radioItem.TestId : radioItem.Label;
                 var radioItemSubContainerId = $"sub-item-container-{radioItem.Id}";
@@ -44,16 +44,16 @@
                 var disabled = radioItem.Disabled;
                 var dataAriaControls = Model.SubOptionsAlwaysShown ? $"data-aria-controls='{radioItemSubContainerId}'" : "";
 
-				<div class="govuk-radios__item">
-					<input class="govuk-radios__input"
-                           id="@radioItemElementId"
-                           name="@Model.Name.@nameof(Model.SelectedId)"
-					       type="radio"
-					       data-testid="@testId" 
-					       value="@radioItem.Id"
-                           disabled="@disabled"
-                           @dataAriaControls
-					       @isChecked />
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input"
+                    id="@radioItemElementId"
+                    name="@Model.Name.@nameof(Model.SelectedId)"
+                    type="radio"
+                    data-testid="@testId" 
+                    value="@radioItem.Id"
+                    disabled="@disabled"
+                    @dataAriaControls
+                    @isChecked />
 
                     <label class="govuk-label govuk-radios__label" for="@radioItemElementId">
                         @if (@radioItem.IsHtmlLabel == true)
@@ -64,15 +64,20 @@
                         else
                         {
                             <span>
-							    @radioItem.Label
-						    </span>
+                                @radioItem.Label
+                            </span>
                         }
 
-					</label>
-                    @if (!string.IsNullOrEmpty(radioItem.HintText))
+                    </label>
+
+                    @if (!string.IsNullOrEmpty(radioItem.HintText) || !string.IsNullOrEmpty(radioItem.HintLink))
                     {
                         <div class="govuk-hint govuk-radios__hint" data-testid="hint-text">
-                            @Html.Raw(@radioItem.HintText)
+                            @if (!string.IsNullOrEmpty(radioItem.HintText))
+                            {
+                                @Html.Raw(@radioItem.HintText)
+                            }
+
                             @if (!string.IsNullOrEmpty(radioItem.HintLink))
                             {
                                 <a href="@radioItem.HintLink" class="govuk-link govuk-link-no-visited-state" target="_blank" data-testid="@radioItem.HintLinkTitle">
@@ -81,7 +86,7 @@
                             }
                         </div>
                     }
-
+                    
                     @if (@radioItem.SubRadioItems.Count > 0)
                     {
                         // Identify which options have sub items so we can validate them
