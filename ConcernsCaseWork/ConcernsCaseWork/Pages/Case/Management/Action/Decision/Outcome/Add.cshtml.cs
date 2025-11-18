@@ -213,6 +213,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		{
 			var radioItems = Enum.GetValues(typeof(DecisionOutcomeAuthorizer))
 				.Cast<DecisionOutcomeAuthorizer>()
+				// CounterSigningDeputyDirector is decommissioned. But we need to retain its value in DB for reporting purposes
+				.Except(new[] { API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer.CounterSigningDeputyDirector })
 				.Select(v =>
 				{
 					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.ToString() };
