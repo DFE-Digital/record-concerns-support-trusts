@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113011054_ExceptionalAnnualGrantEAG_To_FrameworkCategory")]
+    partial class ExceptionalAnnualGrantEAG_To_FrameworkCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -850,11 +853,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 3,
                             Name = "PaymentUnderExistingArrangement"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FinalDrawdownFromThisPackage"
                         });
                 });
 
@@ -1139,11 +1137,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 7,
                             Name = "Minister"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "SecretaryOfState"
                         });
                 });
 
