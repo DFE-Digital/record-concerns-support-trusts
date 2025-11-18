@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 {
@@ -16,6 +17,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		[Description("Deputy Director")]
 		DeputyDirector = 4,
 
+		[NotMapped]
 		[Description("Countersigning Deputy Director")]
 		CounterSigningDeputyDirector = 5,
 
@@ -23,6 +25,9 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		Director = 6,
 
 		[Description("Minister")]
-		Minister = 7
+		Minister = 7,
+
+		[Description("Secretary of State ")]
+		SecretaryOfState = 8
 	}
 }
