@@ -405,7 +405,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				FrameworkCategory.BuildingFinancialCapability,
 				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
 				FrameworkCategory.FacilitatingTransferEducationallyTriggered,
-				FrameworkCategory.EmergencyFunding
+				FrameworkCategory.EmergencyFunding,
+				FrameworkCategory.ExceptionalAnnualGrantEAG
 			};
 
 			result.RadioItems = values.Select(value =>
