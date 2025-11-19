@@ -377,15 +377,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{ 
 				DrawdownFacilityAgreed.Yes, 
 				DrawdownFacilityAgreed.No, 
-				DrawdownFacilityAgreed.PaymentUnderExistingArrangement 
+				DrawdownFacilityAgreed.PaymentUnderExistingArrangement,
+				DrawdownFacilityAgreed.FinalDrawdownFromThisPackage
 			};
 
-			result.RadioItems = values.Select(value =>
+			result.RadioItems = values.Select(value => new SimpleRadioItem(value.Description(), (int)value)
 			{
-				return new SimpleRadioItem(value.Description(), (int)value)
-				{
-					TestId = $"{model.Id}-{value}"
-				};
+				TestId = $"{model.Id}-{value}"
 			});
 
 			result.SelectedId = 1;
