@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113111433_AddFinalDrawdownFromThisPackage_ToDrawdownFacilityAgreed")]
+    partial class AddFinalDrawdownFromThisPackage_ToDrawdownFacilityAgreed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -900,11 +903,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 5,
                             Name = "EmergencyFunding"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "ExceptionalAnnualGrantEAG"
                         });
                 });
 
@@ -1139,11 +1137,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 7,
                             Name = "Minister"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "SecretaryOfState"
                         });
                 });
 
@@ -3277,20 +3270,6 @@ namespace ConcernsCaseWork.Data.Migrations
                             Id = 21,
                             CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OtherNationalProcesses",
-                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Priority5",
-                            UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CreatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Priority6",
                             UpdatedAt = new DateTime(2024, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
