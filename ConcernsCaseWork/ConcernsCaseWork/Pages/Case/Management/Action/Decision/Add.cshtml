@@ -97,7 +97,7 @@
                                     </div>
                                 </label>
 
-                                @if (decisionTypeQuestion.DrawdownFacilityAgreed != null)
+                                @if (decisionTypeQuestion.FinancialSupportPackageType != null)
                                 {
                                     <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
                                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -105,7 +105,7 @@
                                                 Has drawdown facility been agreed?
                                             </h2>
                                         </legend>
-                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.DrawdownFacilityAgreed" />
+                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.FinancialSupportPackageType" />
 
                                         @if (decisionTypeQuestion.FrameworkCategory != null)
                                         {
@@ -126,23 +126,23 @@
 
                 @if (isNotRegionsGroupCase)
                 {
-                    @* Total amount requested *@
-                    <div class="govuk-form-group" data-testid="container-total-amount-requested">
+                    @* Total additional financial support requested/approved *@
+                    <div class="govuk-form-group" data-testid="container-total-additional-financial-support">
                         <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What was the total amount requested? </h2>
+                                <h2 class="govuk-heading-m">What was the total additional financial support requested/approved? </h2>
                             </legend>
-                            <div id="total-amount-request-hint" class="govuk-hint">
+                            <div id="total-additional-financial-support-hint" class="govuk-hint">
                                 If no amount was requested, enter £0.
                             </div>
                             <div class="govuk-input__wrapper">
                                 <div class="govuk-input__prefix" aria-hidden="true">£</div>
                                 <input class="govuk-input govuk-input--width-6"
-                                       id="total-amount-request"
+                                       id="total-additional-financial-support"
                                        name="Decision.TotalAmountRequested"
                                        type="text"
                                        value="@Model.Decision.TotalAmountRequested"
-                                       aria-label="What was the total amount requested">
+                                       aria-label="What was the total additional financial support requested/approved">
                             </div>
                         </fieldset>
                     </div>
@@ -190,16 +190,16 @@
                     onSubQuestionSelected("RepayableFinancialSupport");
                     onSubQuestionSelected("ShortTermCashAdvance");
 
-                    let totalAmountRequestedElement = $('#total-amount-request');
+                    let totalAdditionalFinancialSupportElement = $('#total-additional-financial-support');
 
-                    if (totalAmountRequestedElement.length)
+                    if (totalAdditionalFinancialSupportElement.length)
                     {
                         $(document).ready(function() {
-                            formatCurrency(totalAmountRequestedElement);
+                            formatCurrency(totalAdditionalFinancialSupportElement);
                         });
 
-                        totalAmountRequestedElement.focusout(function () {
-                            formatCurrency(totalAmountRequestedElement);
+                        totalAdditionalFinancialSupportElement.focusout(function () {
+                            formatCurrency(totalAdditionalFinancialSupportElement);
                         });
                     }
 

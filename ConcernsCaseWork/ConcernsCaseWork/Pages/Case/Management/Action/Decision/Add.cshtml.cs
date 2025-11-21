@@ -207,7 +207,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				Id = (DecisionType)q.Id,
 				DecisionDrawdownFacilityAgreedId = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
-				DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null,
+				DecisionFinancialSupportPackageTypeId = (DrawdownFacilityAgreed?)q.FinancialSupportPackageType?.SelectedId ?? null
 			}).ToArray();
 
 			return result;
@@ -308,13 +309,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
 				{
-					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
+					question.FinancialSupportPackageType = BuildFinancialSupportPackageTypeComponent(question);
 					question.FrameworkCategory = BuildFrameworkCategoryComponent(question);
 				}
 
 				if (question.Id == DecisionType.ShortTermCashAdvance)
 				{
-					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
+					question.FinancialSupportPackageType = BuildFinancialSupportPackageTypeComponent(question);
 				}
 			});
 
@@ -342,6 +343,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				if (question.FrameworkCategory != null)
 				{
 					question.FrameworkCategory.SelectedId = (int?)answer.DecisionFrameworkCategoryId ?? 0;
+				}
+
+				if (question.FinancialSupportPackageType != null)
+				{
+					question.FinancialSupportPackageType.SelectedId = (int?)answer.DecisionFinancialSupportPackageTypeId ?? 0;
 				}
 			});
 		}
@@ -387,6 +393,29 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			});
 
 			result.SelectedId = 1;
+
+			return result;
+		}
+
+		private static RadioButtonsUiComponent BuildFinancialSupportPackageTypeComponent(DecisionTypeQuestionModel model)
+		{
+			var id = $"financial-support-package-type-{model.Id}";
+
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FinancialSupportPackageType", "");
+
+			var values = new List<DrawdownFacilityAgreed>() 
+			{ 
+				DrawdownFacilityAgreed.ANewPackageWithDrawdown,
+				DrawdownFacilityAgreed.ANewPackageWithImmediatePayment,
+				DrawdownFacilityAgreed.ADrawdownFromAnExistingPackage
+			};
+
+			result.RadioItems = values.Select(value => new SimpleRadioItem(value.Description(), (int)value)
+			{
+				TestId = $"{model.Id}-{value}"
+			});
+
+			result.SelectedId = 5;
 
 			return result;
 		}
@@ -472,6 +501,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public DecisionType? Id { get; set; }
 		public RadioButtonsUiComponent? DrawdownFacilityAgreed { get; set; }
 		public RadioButtonsUiComponent? FrameworkCategory { get; set; }
+		public RadioButtonsUiComponent? FinancialSupportPackageType { get; set; }
 		public string Hint { get; set; }
 		public bool IsChecked { get; set; }
 	}

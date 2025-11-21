@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Decision {request.DecisionId}");
 				}
 
-				var decisionTypes = request.Request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.Request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId, x.DecisionFinancialSupportPackageTypeId)).Distinct().ToArray();
 
 				var updatedDecision = Decision.CreateNew(new DecisionParameters()
 				{

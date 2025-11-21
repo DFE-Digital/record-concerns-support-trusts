@@ -229,7 +229,7 @@ export class EditDecisionPage
 	public withTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").clear().type(totalAmountRequested);
+		cy.getById("total-additional-financial-support").clear().type(totalAmountRequested);
 
 		return this;
 	}
@@ -237,7 +237,7 @@ export class EditDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
 
 		return this;
 	}

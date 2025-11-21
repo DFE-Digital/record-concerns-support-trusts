@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
-				var decisionTypes = request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId, x.DecisionFinancialSupportPackageTypeId)).Distinct().ToArray();
 
 				var decision = Decision.CreateNew(new DecisionParameters()
 				{
@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					SubmissionDocumentLink = request.SubmissionDocumentLink, 
 					ReceivedRequestDate = (DateTimeOffset)request.ReceivedRequestDate,
 					DecisionTypes = decisionTypes,
-					TotalAmountRequested = request.TotalAmountRequested, 
+					TotalAmountRequested = request.TotalAmountRequested,
 					SupportingNotes = request.SupportingNotes, 
 					Now = now
 				});

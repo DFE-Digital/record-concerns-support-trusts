@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 
 		public DecisionTypeQuestion[] DecisionTypes { get; set; }
 
-		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
+		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total additional financial support requested/approved must be zero or greater")]
 		public decimal TotalAmountRequested { get; set; }
 
 		[StringLength(_maxSupportingNotesLength, ErrorMessage = "Notes must be 2000 characters or less", MinimumLength = 0)]

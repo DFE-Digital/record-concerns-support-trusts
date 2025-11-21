@@ -95,7 +95,7 @@ export class ViewDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		cy.task("log", `Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getByTestId("amount-requested-text").should(
+		cy.getByTestId("amount-additional-financial-support-text").should(
 			"contain.text",
 			totalAmountRequested
 		);
@@ -105,7 +105,7 @@ export class ViewDecisionPage
 
 	public hasNoTotalAmountRequestedField(): this {
 		Logger.log("Has no total amount requested");
-		cy.getByTestId("row-total-amount-requested").should("not.exist");
+		cy.getByTestId("row-total-additional-financial-support").should("not.exist");
 
 		return this;
 	}
