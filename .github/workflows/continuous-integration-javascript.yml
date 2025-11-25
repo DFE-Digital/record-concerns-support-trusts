@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - ConcernsCaseWork/ConcernsCaseWork.CypressTests/**/*
+  workflow_dispatch:
 
 jobs:
   lint:
