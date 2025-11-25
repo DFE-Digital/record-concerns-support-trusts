@@ -7,7 +7,7 @@ export class ApiBase
         const result = {
             ApiKey: Cypress.env(EnvApiKey),
             "Content-type": "application/json",
-            "x-user-context-role-0" : CaseworkerClaim,
+            "x-user-context-role-0" : CaseworkerClaim, 
             "x-user-context-name" : Cypress.env(EnvUsername)
         };
         return result;
