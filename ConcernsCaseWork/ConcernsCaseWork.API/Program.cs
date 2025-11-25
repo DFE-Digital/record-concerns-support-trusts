@@ -3,7 +3,7 @@ namespace ConcernsCaseWork.API
 	public class Program
 	{
 		/// <summary>
-		/// This is a bit misleading, the api doesn't actually host itself (though it probably should), so this method will never be invoked
+		/// This is a bit misleading, the api doesn't actually host itself (though it probably should), so this method will never be invoked 
 		/// </summary>
 		/// <param name="args"></param>
 
