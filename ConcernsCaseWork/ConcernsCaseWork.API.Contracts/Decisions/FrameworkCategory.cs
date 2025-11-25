@@ -13,8 +13,6 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		[Description("Facilitating transfer - educationally triggered")]
 		FacilitatingTransferEducationallyTriggered = 4,
 		[Description("Emergency funding")]
-		EmergencyFunding = 5,
-		[Description("Exceptional Annual Grant - EAG")]
-		ExceptionalAnnualGrantEAG = 6
+		EmergencyFunding = 5
 	}
 }

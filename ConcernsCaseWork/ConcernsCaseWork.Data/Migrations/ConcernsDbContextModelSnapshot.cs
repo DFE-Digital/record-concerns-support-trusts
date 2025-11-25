@@ -900,11 +900,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 5,
                             Name = "EmergencyFunding"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "ExceptionalAnnualGrantEAG"
                         });
                 });
 
