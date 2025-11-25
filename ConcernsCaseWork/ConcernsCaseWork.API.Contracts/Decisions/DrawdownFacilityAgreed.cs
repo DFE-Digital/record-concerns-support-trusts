@@ -9,8 +9,6 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		[Description("No")]
 		No = 2,
 		[Description("Payment under existing arrangement")]
-		PaymentUnderExistingArrangement = 3,
-		[Description("Final drawdown from this package")]
-		FinalDrawdownFromThisPackage = 4
+		PaymentUnderExistingArrangement = 3
 	}
 }

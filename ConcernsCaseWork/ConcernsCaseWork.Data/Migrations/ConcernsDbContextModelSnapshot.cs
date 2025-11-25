@@ -850,11 +850,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 3,
                             Name = "PaymentUnderExistingArrangement"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FinalDrawdownFromThisPackage"
                         });
                 });
 
