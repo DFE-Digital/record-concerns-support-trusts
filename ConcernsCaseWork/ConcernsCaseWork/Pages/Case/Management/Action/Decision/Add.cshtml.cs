@@ -403,9 +403,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				FrameworkCategory.BuildingFinancialCapability,
 				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
 				FrameworkCategory.FacilitatingTransferEducationallyTriggered,
-				FrameworkCategory.EmergencyFunding,
-				FrameworkCategory.ExceptionalAnnualGrantEAG
+				FrameworkCategory.EmergencyFunding
 			};
+
+			if (model.Id == DecisionType.NonRepayableFinancialSupport)
+			{
+				values.Add(FrameworkCategory.ExceptionalAnnualGrantEAG);
+			}
 
 			result.RadioItems = values.Select(value =>
 			{
