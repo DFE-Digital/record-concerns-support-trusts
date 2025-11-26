@@ -3,19 +3,17 @@ name: Cypress test linting
 on:
   pull_request:
     paths:
-      - ConcernsCaseWork/ConcernsCaseWork.CypressTests
-    types: [opened, synchronize]
+      - ConcernsCaseWork/ConcernsCaseWork.CypressTests/**/*
+  workflow_dispatch:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
     steps:
       - name: checkout code
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
-
       - name: lint cypress tests
+        working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
         run: |
           npm ci
           npm run lint        
