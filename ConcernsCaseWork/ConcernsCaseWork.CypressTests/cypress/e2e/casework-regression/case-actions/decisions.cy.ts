@@ -8,7 +8,7 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import "cypress-axe";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { toDisplayDate } from "cypress/support/formatDate";
-import { DateIncompleteError, DateInvalidError, NotesError } from "cypress/constants/validationErrorConstants";
+import { DateIncompleteError, DateInvalidError, NotesError, NotesRequiredError } from "cypress/constants/validationErrorConstants";
 import validationComponent from "cypress/pages/validationComponent";
 import { DeleteDecisionPage } from "cypress/pages/caseActions/decision/deleteDecisionPage";
 import { DeleteCaseGroupClaim } from "cypress/constants/cypressConstants";
@@ -44,6 +44,7 @@ describe("User can add decisions to an existing case", () => {
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
+			.withSupportingNotes("Test notes")
 			.save()
 			.hasValidationError(
 				DateInvalidError.replace("{0}", "Date ESFA received request")
@@ -323,8 +324,15 @@ describe("User can add decisions to an existing case", () => {
 	});
 
 	it("When Decision is empty", function () {
-		Logger.log("Creating Empty Decision");
-		editDecisionPage.save();
+		Logger.log("Validating that notes are required");
+		editDecisionPage
+			.save()
+			.hasValidationError(NotesRequiredError);
+
+		Logger.log("Creating Empty Decision with required notes");
+		editDecisionPage
+			.withSupportingNotes("decision notes")
+			.save();
 
 		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
@@ -363,7 +371,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasDateESFAReceivedRequest("Empty")
 			.hasTotalAmountRequested("£0.00")
 			.hasTypeOfDecision("Empty")
-			.hasSupportingNotes("Empty")
+			.hasSupportingNotes("decision notes")
 			.hasDecisionOutcomeStatus("Withdrawn")
 			.hasBusinessArea("Empty")
 			.hasMadeDate("Empty")
@@ -375,6 +383,7 @@ describe("User can add decisions to an existing case", () => {
 	it("Create, edit and view a decision outcome, checking validation", () => {
 		Logger.log("Creating Empty Decision");
 		editDecisionPage
+			.withSupportingNotes("decision notes")
 			.save();
 
 		actionSummaryTable
