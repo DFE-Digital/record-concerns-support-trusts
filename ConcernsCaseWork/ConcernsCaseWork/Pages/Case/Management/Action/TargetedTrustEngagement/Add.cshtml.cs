@@ -265,7 +265,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				new EngagementActivityQuestionModel()
 				{
 					Id = TargetedTrustEngagementActivity.ReservesOversightAndAssuranceProject,
-					Hint = "Engaging trusts holding substantial levels of unallocated reserves and clarifying the plans they have for those funds.",
+					Hint = "",
 					HintLinkTitle = "SFSO Knowledge: ROAP",
 					HintLink = "https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Reserves--Oversight-%26-Assurance-Project-(ROAP).aspx?csf=1&web=1&e=yomR4Z&cid=59072d93-d6cb-4cf8-bd89-c81e2e3891e5#process",
 					SubOptions = new List<SubEngagementActivityModel>()
@@ -273,7 +273,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority1),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority2),
 						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority3),
-						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority4)
+						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority4),
+						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority5),
+						new SubEngagementActivityModel(TargetedTrustEngagementActivityType.Priority6)
 					}
 				},
 				new EngagementActivityQuestionModel()
