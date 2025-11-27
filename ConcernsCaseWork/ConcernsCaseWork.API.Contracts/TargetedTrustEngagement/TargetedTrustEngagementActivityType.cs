@@ -45,6 +45,10 @@ namespace ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
 		[Description("Local proactive engagement")]
 		LocalProactiveEngagement = 20,
 		[Description("Other national processes")]
-		OtherNationalProcesses = 21
+		OtherNationalProcesses = 21,
+		[Description("Priority 5")]
+		Priority5 = 22,
+		[Description("Priority 6")]
+		Priority6 = 23
 	}
 }
