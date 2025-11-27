@@ -342,8 +342,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				var drawdownValue = (int?)answer.DecisionDrawdownFacilityAgreedId;
 				
-				// Check if it's an old value (1-4) that should be displayed as read-only
-				if (drawdownValue.HasValue && drawdownValue.Value >= 1 && drawdownValue.Value <= 4)
+				// Check if it's an old value (1-3) that should be displayed as read-only
+				// Value 4 (FinalDrawdownFromThisPackage) is included as a selectable option
+				if (drawdownValue.HasValue && drawdownValue.Value >= 1 && drawdownValue.Value <= 3)
 				{
 					// Store old value description for read-only display
 					var oldEnumValue = (DrawdownFacilityAgreed)drawdownValue.Value;
@@ -353,7 +354,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				}
 				else
 				{
-					// New value (5, 6, 7) - set it normally
+					// New value (4, 5, 6, 7) - set it normally
 					question.FinancialSupportPackageType.SelectedId = drawdownValue ?? 0;
 					question.OldDrawdownFacilityAgreedValue = null;
 				}
@@ -419,6 +420,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			var values = new List<DrawdownFacilityAgreed>() 
 			{ 
+				DrawdownFacilityAgreed.FinalDrawdownFromThisPackage,
 				DrawdownFacilityAgreed.ANewPackageWithDrawdown, 
 				DrawdownFacilityAgreed.ANewPackageWithImmediatePayment, 
 				DrawdownFacilityAgreed.ADrawdownFromAnExistingPackage
@@ -444,13 +446,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				FrameworkCategory.BuildingFinancialCapability,
 				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
 				FrameworkCategory.FacilitatingTransferEducationallyTriggered,
-				FrameworkCategory.EmergencyFunding
+				FrameworkCategory.EmergencyFunding,
+				FrameworkCategory.ExceptionalAnnualGrantEAG
 			};
-
-			if (model.Id == DecisionType.NonRepayableFinancialSupport)
-			{
-				values.Add(FrameworkCategory.ExceptionalAnnualGrantEAG);
-			}
 
 			result.RadioItems = values.Select(value =>
 			{
