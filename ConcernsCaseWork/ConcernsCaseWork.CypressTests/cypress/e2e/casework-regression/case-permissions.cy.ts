@@ -205,7 +205,9 @@ describe("Testing permissions on cases and case actions", () => {
     {
         Logger.log("Check that the user can edit an nti decision that they did create");
         caseMangementPage
-            .addCaseAction("Decision");
+			.addCaseAction("Decision");
+
+		editDecisionPage.withSupportingNotes("Mandatory note");
 
         editDecisionPage.save();
 
