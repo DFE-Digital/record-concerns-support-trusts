@@ -203,11 +203,36 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		private DecisionTypeQuestion[] ModelToDecisionTypeQuestion(List<DecisionTypeQuestionModel> model)
 		{
-			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
+			var result = model.Where(q => q != null && q.Id != null).Select(q => 
 			{
-				Id = (DecisionType)q.Id,
-				DecisionDrawdownFacilityAgreedId = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? (DrawdownFacilityAgreed?)q.FinancialSupportPackageType?.SelectedId ?? null,
-				DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				// For FinancialSupportPackageType: if a new value is selected, use it; otherwise preserve old value if exists
+				DrawdownFacilityAgreed? drawdownValue = null;
+				if (q.FinancialSupportPackageType != null)
+				{
+					var newSelectedId = q.FinancialSupportPackageType?.SelectedId;
+					// If a new value is selected (not null and not 0), use it
+					if (newSelectedId.HasValue && newSelectedId.Value > 0)
+					{
+						drawdownValue = (DrawdownFacilityAgreed?)newSelectedId.Value;
+					}
+					// Otherwise, if there's an old value preserved, use that
+					else if (q.OldDrawdownFacilityAgreedId.HasValue)
+					{
+						drawdownValue = (DrawdownFacilityAgreed?)q.OldDrawdownFacilityAgreedId.Value;
+					}
+				}
+				// Fallback to DrawdownFacilityAgreed if FinancialSupportPackageType is not applicable
+				else if (q.DrawdownFacilityAgreed != null)
+				{
+					drawdownValue = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId;
+				}
+
+				return new DecisionTypeQuestion()
+				{
+					Id = (DecisionType)q.Id,
+					DecisionDrawdownFacilityAgreedId = drawdownValue,
+					DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				};
 			}).ToArray();
 
 			return result;
@@ -346,17 +371,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				// Value 4 (FinalDrawdownFromThisPackage) is included as a selectable option
 				if (drawdownValue.HasValue && drawdownValue.Value >= 1 && drawdownValue.Value <= 3)
 				{
-					// Store old value description for read-only display
+					// Store old value description and ID for read-only display and preservation
 					var oldEnumValue = (DrawdownFacilityAgreed)drawdownValue.Value;
 					question.OldDrawdownFacilityAgreedValue = oldEnumValue.Description();
-					// Don't set SelectedId for new component - it will be empty
+					question.OldDrawdownFacilityAgreedId = drawdownValue.Value;
+					// Don't set SelectedId for new component - it will be empty, preserving old value
 					question.FinancialSupportPackageType.SelectedId = null;
 				}
-				else
+				else if (drawdownValue.HasValue)
 				{
 					// New value (4, 5, 6, 7) - set it normally
-					question.FinancialSupportPackageType.SelectedId = drawdownValue ?? 0;
+					question.FinancialSupportPackageType.SelectedId = drawdownValue.Value;
 					question.OldDrawdownFacilityAgreedValue = null;
+					question.OldDrawdownFacilityAgreedId = null;
 				}
 			}
 
@@ -519,6 +546,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public string Hint { get; set; }
 		public bool IsChecked { get; set; }
 		public string OldDrawdownFacilityAgreedValue { get; set; }
+		public int? OldDrawdownFacilityAgreedId { get; set; }
 	}
 
 }
