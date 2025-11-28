@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		}
 
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
-		=> new("SupportingNotes", nameof(Notes), "Finalise supporting notes")
+		=> new("SupportingNotes", nameof(Notes), "Finalise supporting notes (required)")
 		{
 			HintText = "Case owners can record any information they want that feels relevant to the action. Include any academy name(s) related to the decision",
 			Text = new ValidateableString()
