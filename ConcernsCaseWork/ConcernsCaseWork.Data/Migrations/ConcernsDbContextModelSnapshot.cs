@@ -850,11 +850,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 3,
                             Name = "PaymentUnderExistingArrangement"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FinalDrawdownFromThisPackage"
                         });
                 });
 
@@ -900,11 +895,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 5,
                             Name = "EmergencyFunding"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "ExceptionalAnnualGrantEAG"
                         });
                 });
 

@@ -108,6 +108,33 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
+				// If editing, preserve old values for decision types where no new value was selected
+				if (DecisionId.HasValue)
+				{
+					var existingDecision = await _decisionService.GetDecision(CaseUrn, (int)DecisionId);
+					var existingDecisionModel = DecisionMapping.ToEditDecisionModel(existingDecision);
+					
+					// Merge old values for decision types where no new value was selected
+					foreach (var question in DecisionTypeQuestions.Where(q => q != null && q.Id != null && q.FinancialSupportPackageType != null))
+					{
+						var newSelectedId = question.FinancialSupportPackageType?.SelectedId;
+						// If no new value is selected (null or 0), preserve the old value from existing decision
+						if (!newSelectedId.HasValue || newSelectedId.Value == 0)
+						{
+							var existingAnswer = existingDecisionModel.DecisionTypes?.FirstOrDefault(dt => dt.Id == question.Id);
+							if (existingAnswer != null && existingAnswer.DecisionDrawdownFacilityAgreedId.HasValue)
+							{
+								var existingValue = (int)existingAnswer.DecisionDrawdownFacilityAgreedId.Value;
+								// Only preserve if it's an old value (1-3) or value 4
+								if (existingValue >= 1 && existingValue <= 7)
+								{
+									question.OldDrawdownFacilityAgreedId = existingValue;
+								}
+							}
+						}
+					}
+				}
+
 				Decision.ReceivedRequestDate = ReceivedRequestDate.Date?.ToDateTime() ?? new DateTime();
 				Decision.SupportingNotes = Notes.Text.StringContents;
 				Decision.DecisionTypes = ModelToDecisionTypeQuestion(DecisionTypeQuestions);
@@ -203,11 +230,36 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		private DecisionTypeQuestion[] ModelToDecisionTypeQuestion(List<DecisionTypeQuestionModel> model)
 		{
-			var result = model.Where(q => q != null && q.Id != null).Select(q => new DecisionTypeQuestion()
+			var result = model.Where(q => q != null && q.Id != null).Select(q => 
 			{
-				Id = (DecisionType)q.Id,
-				DecisionDrawdownFacilityAgreedId = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId ?? null,
-				DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				// For FinancialSupportPackageType: if a new value is selected, use it; otherwise preserve old value if exists
+				DrawdownFacilityAgreed? drawdownValue = null;
+				if (q.FinancialSupportPackageType != null)
+				{
+					var newSelectedId = q.FinancialSupportPackageType?.SelectedId;
+					// If a new value is selected (not null and not 0), use it
+					if (newSelectedId.HasValue && newSelectedId.Value > 0)
+					{
+						drawdownValue = (DrawdownFacilityAgreed?)newSelectedId.Value;
+					}
+					// Otherwise, if there's an old value preserved, use that
+					else if (q.OldDrawdownFacilityAgreedId.HasValue)
+					{
+						drawdownValue = (DrawdownFacilityAgreed?)q.OldDrawdownFacilityAgreedId.Value;
+					}
+				}
+				// Fallback to DrawdownFacilityAgreed if FinancialSupportPackageType is not applicable
+				else if (q.DrawdownFacilityAgreed != null)
+				{
+					drawdownValue = (DrawdownFacilityAgreed?)q.DrawdownFacilityAgreed?.SelectedId;
+				}
+
+				return new DecisionTypeQuestion()
+				{
+					Id = (DecisionType)q.Id,
+					DecisionDrawdownFacilityAgreedId = drawdownValue,
+					DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+				};
 			}).ToArray();
 
 			return result;
@@ -306,15 +358,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				question.Name = $"{nameof(DecisionTypeQuestions)}[{question.Id}].Id";
 
-				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
+				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport || question.Id == DecisionType.ShortTermCashAdvance)
 				{
-					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
-					question.FrameworkCategory = BuildFrameworkCategoryComponent(question);
-				}
-
-				if (question.Id == DecisionType.ShortTermCashAdvance)
-				{
-					question.DrawdownFacilityAgreed = BuildDrawdownFacilityAgreedComponent(question);
+					question.FinancialSupportPackageType = BuildFinancialSupportPackageTypeComponent(question);
+					
+					if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
+					{
+						question.FrameworkCategory = BuildFrameworkCategoryComponent(question);
+					}
 				}
 			});
 
@@ -338,6 +389,30 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					question.DrawdownFacilityAgreed.SelectedId = (int?)answer.DecisionDrawdownFacilityAgreedId ?? 0;
 				}
+
+			if (question.FinancialSupportPackageType != null)
+			{
+				var drawdownValue = (int?)answer.DecisionDrawdownFacilityAgreedId;
+				
+				// Check if it's an old value (1-3) that should be displayed as read-only
+				// Value 4 (FinalDrawdownFromThisPackage) is included as a selectable option
+				if (drawdownValue.HasValue && drawdownValue.Value >= 1 && drawdownValue.Value <= 3)
+				{
+					// Store old value description and ID for read-only display and preservation
+					var oldEnumValue = (DrawdownFacilityAgreed)drawdownValue.Value;
+					question.OldDrawdownFacilityAgreedValue = oldEnumValue.Description();
+					question.OldDrawdownFacilityAgreedId = drawdownValue.Value;
+					// Don't set SelectedId for new component - it will be empty, preserving old value
+					question.FinancialSupportPackageType.SelectedId = null;
+				}
+				else if (drawdownValue.HasValue)
+				{
+					// New value (4, 5, 6, 7) - set it normally
+					question.FinancialSupportPackageType.SelectedId = drawdownValue.Value;
+					question.OldDrawdownFacilityAgreedValue = null;
+					question.OldDrawdownFacilityAgreedId = null;
+				}
+			}
 
 				if (question.FrameworkCategory != null)
 				{
@@ -392,6 +467,28 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
+		private static RadioButtonsUiComponent BuildFinancialSupportPackageTypeComponent(DecisionTypeQuestionModel model)
+		{
+			var id = $"financial-support-package-type-{model.Id}";
+
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FinancialSupportPackageType", "");
+
+			var values = new List<DrawdownFacilityAgreed>() 
+			{ 
+				DrawdownFacilityAgreed.FinalDrawdownFromThisPackage,
+				DrawdownFacilityAgreed.ANewPackageWithDrawdown, 
+				DrawdownFacilityAgreed.ANewPackageWithImmediatePayment, 
+				DrawdownFacilityAgreed.ADrawdownFromAnExistingPackage
+			};
+
+			result.RadioItems = values.Select(value => new SimpleRadioItem(value.Description(), (int)value)
+			{
+				TestId = $"{model.Id}-{value}"
+			});
+
+			return result;
+		}
+
 		private static RadioButtonsUiComponent BuildFrameworkCategoryComponent(DecisionTypeQuestionModel model)
 		{
 			var id = $"framwork-category-{model.Id}";
@@ -404,13 +501,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				FrameworkCategory.BuildingFinancialCapability,
 				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
 				FrameworkCategory.FacilitatingTransferEducationallyTriggered,
-				FrameworkCategory.EmergencyFunding
+				FrameworkCategory.EmergencyFunding,
+				FrameworkCategory.ExceptionalAnnualGrantEAG
 			};
-
-			if (model.Id == DecisionType.NonRepayableFinancialSupport)
-			{
-				values.Add(FrameworkCategory.ExceptionalAnnualGrantEAG);
-			}
 
 			result.RadioItems = values.Select(value =>
 			{
@@ -475,10 +568,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	{
 		public string Name { get; set; }
 		public DecisionType? Id { get; set; }
-		public RadioButtonsUiComponent? DrawdownFacilityAgreed { get; set; }
-		public RadioButtonsUiComponent? FrameworkCategory { get; set; }
+		public RadioButtonsUiComponent DrawdownFacilityAgreed { get; set; }
+		public RadioButtonsUiComponent FinancialSupportPackageType { get; set; }
+		public RadioButtonsUiComponent FrameworkCategory { get; set; }
 		public string Hint { get; set; }
 		public bool IsChecked { get; set; }
+		public string OldDrawdownFacilityAgreedValue { get; set; }
+		public int? OldDrawdownFacilityAgreedId { get; set; }
 	}
 
 }
