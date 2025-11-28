@@ -356,14 +356,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		}
 
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
-		=> new("case-decision-notes", nameof(Notes), "Supporting notes (optional)")
+		=> new("case-decision-notes", nameof(Notes), "Supporting notes (required)")
 		{
 			HintText = "Case owners can record any information they want that feels relevant to the action.",
 			Text = new ValidateableString()
 			{
 				MaxLength = DecisionConstants.MaxSupportingNotesLength,
 				StringContents = contents,
-				DisplayName = "Notes"
+				DisplayName = "Notes",
+				Required = true
 			}
 		};
 

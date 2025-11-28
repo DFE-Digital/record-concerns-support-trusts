@@ -322,6 +322,7 @@ describe("Smoke - Testing closing of cases when there are case actions and conce
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase("Decision");
 		AddToCasePage.getAddToCaseBtn().click();
+		editDecisionPage.withSupportingNotes("Supporting notes for decision");
 		editDecisionPage.save();
 
 		actionSummaryTable
