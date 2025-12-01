@@ -1,3 +1,11 @@
+##42.0.0
+* New Db changes and Front end changes
+* Supporting notes making it Mandatory
+* Add EAG decision Type 
+* Reserves Oversight & Assurance changes to support lower priority work
+* create new drawdown option 'final drawdown'
+* Remove countersigning option & Add Secretary of State
+
 ## 41.0.0
 * Added new rebrand changes on header and footer
 * Docker implementation
