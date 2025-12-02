@@ -361,10 +361,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport || question.Id == DecisionType.ShortTermCashAdvance)
 				{
 					question.FinancialSupportPackageType = BuildFinancialSupportPackageTypeComponent(question);
-					
+
 					if (question.Id == DecisionType.NonRepayableFinancialSupport || question.Id == DecisionType.RepayableFinancialSupport)
 					{
-						question.FrameworkCategory = BuildFrameworkCategoryComponent(question);
+						List<FrameworkCategory> frameworkCategoryList =
+						[
+							FrameworkCategory.EnablingFinancialRecovery,
+							FrameworkCategory.BuildingFinancialCapability,
+							FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
+							FrameworkCategory.FacilitatingTransferEducationallyTriggered,
+							FrameworkCategory.EmergencyFunding
+						];
+
+						if (question.Id == DecisionType.NonRepayableFinancialSupport)
+						{
+							frameworkCategoryList.Add(FrameworkCategory.ExceptionalAnnualGrantEAG);						
+						}
+
+						question.FrameworkCategory = BuildFrameworkCategoryComponent(question, frameworkCategoryList);
 					}
 				}
 			});
@@ -489,23 +503,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private static RadioButtonsUiComponent BuildFrameworkCategoryComponent(DecisionTypeQuestionModel model)
+		private static RadioButtonsUiComponent BuildFrameworkCategoryComponent(DecisionTypeQuestionModel model, List<FrameworkCategory> frameworkCategoryList)
 		{
 			var id = $"framwork-category-{model.Id}";
 
-			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "");
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].FrameworkCategory", "");		
 
-			var values = new List<FrameworkCategory>()
-			{
-				FrameworkCategory.EnablingFinancialRecovery,
-				FrameworkCategory.BuildingFinancialCapability,
-				FrameworkCategory.FacilitatingTransferFinanciallyAgreed,
-				FrameworkCategory.FacilitatingTransferEducationallyTriggered,
-				FrameworkCategory.EmergencyFunding,
-				FrameworkCategory.ExceptionalAnnualGrantEAG
-			};
-
-			result.RadioItems = values.Select(value =>
+			result.RadioItems = frameworkCategoryList.Select(value =>
 			{
 				return new SimpleRadioItem(value.Description(), (int)value)
 				{
