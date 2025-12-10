@@ -192,7 +192,7 @@ export class EditDecisionPage
 	}
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.log(`Has ${type} drawdown facility agreed ${value}`);
+		Logger.log(`What ${type} are you recording${value}`);
 		
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
@@ -229,7 +229,7 @@ export class EditDecisionPage
 	public withTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").clear().type(totalAmountRequested);
+		cy.getById("total-additional-financial-support").clear().type(totalAmountRequested);
 
 		return this;
 	}
@@ -237,7 +237,7 @@ export class EditDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
 
 		return this;
 	}
@@ -245,7 +245,7 @@ export class EditDecisionPage
 	public hasNoTotalAmountRequestedField(): this
 	{
 		Logger.log("Has no total amount requested field");
-		cy.getByTestId("container-total-amount-requested").should("not.exist");
+		cy.getByTestId("amount-additional-financial-support-tex").should("not.exist");
 
 		return this;
 	}

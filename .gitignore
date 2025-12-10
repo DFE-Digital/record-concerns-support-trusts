@@ -521,3 +521,22 @@ backend.vars
 
 ## ZAP Report
 ZAP-Report.*
+/ConcernsCaseWork/ConcernsCaseWork/package-lock.json
+/ConcernsCaseWork/ConcernsCaseWork.API/Properties/launchSettings.json
+/cypress/support/commands.js
+/cypress/fixtures/example.json
+/cypress.config.js
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress.config.js
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress/fixtures
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress/fixtures/example.json
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress/support
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress/support/commands.js
+/ConcernsCaseWork/ConcernsCaseWork.Tests/cypress/support/e2e.js
+/ConcernsCaseWork/cypress
+/ConcernsCaseWork/cypress/fixtures
+/ConcernsCaseWork/cypress/fixtures/example.json
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/package.json
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/package-lock.json
+/ConcernsCaseWork/cypress.config.js
+/cypress/support
