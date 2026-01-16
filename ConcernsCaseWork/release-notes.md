@@ -1,4 +1,8 @@
-##42.0.0
+
+## 42.0.1
+*Replace all references to text 'ESFA' to 'SFSO' 
+
+## 42.0.0
 * New Db changes and Front end changes
 * Supporting notes making it Mandatory
 * Add EAG decision Type 
