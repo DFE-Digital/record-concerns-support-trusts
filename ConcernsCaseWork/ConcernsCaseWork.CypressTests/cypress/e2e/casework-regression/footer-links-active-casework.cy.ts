@@ -4,10 +4,13 @@ describe('Footer links direct to the correct pages from Active Casework page', (
         cy.login();
     });
 
-    it('Should open Accessibility link and verify the title', () => {
+    it('Should validate Accessibility link', () => {
 
-        cy.getByTestId("accessibility-link").click();
-        cy.get("h1").should("contain.text", "Accessibility statement");
+		cy.contains('a', 'Accessibility statement')
+			.should('be.visible')
+			.should('have.attr', 'href', 'https://accessibility-statements.education.gov.uk/s/30')
+			.should('have.attr', 'target', '_blank');
+
 
         cy.excuteAccessibilityTests();
     });
