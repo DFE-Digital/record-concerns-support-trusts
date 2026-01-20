@@ -1,4 +1,12 @@
-##42.0.0
+
+## 42.0.2
+*Replace all references to text 'ESFA' to 'SFSO' 
+
+## 42.0.1
+* Remvoing EAG from Repayable Financial Support section
+* Change wording of question on decision page 
+
+## 42.0.0
 * New Db changes and Front end changes
 * Supporting notes making it Mandatory
 * Add EAG decision Type 
