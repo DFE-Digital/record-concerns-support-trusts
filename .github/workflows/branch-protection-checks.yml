@@ -14,7 +14,7 @@ jobs:
         name: Check branch name
         run: |
           GIT_BRANCH=${{ github.head_ref }}
-          if [[ "$GIT_BRANCH" =~ ^hotfix/*|^feature/*|^renovate/* ]];
+          if [[ "$GIT_BRANCH" =~ ^hotfix/*|^feature/*|^renovate/*|^release/* ]];
           then
             echo "'$GIT_BRANCH' is a permitted branch"
             exit 0
