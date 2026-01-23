@@ -1,8 +1,7 @@
 import { Logger } from "../../../common/logger";
 
 export class EditDecisionPage {
-	public withCrmEnquiry(crmNumber: string): this
-	{
+	public withCrmEnquiry(crmNumber: string): this {
 		Logger.log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);

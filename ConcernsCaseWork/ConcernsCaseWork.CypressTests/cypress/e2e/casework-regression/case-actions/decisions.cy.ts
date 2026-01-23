@@ -74,7 +74,6 @@ describe("User can add decisions to an existing case", () => {
 			.withTypeOfDecision(repayableFinancialSupportOption)
 			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
 
-
 		Logger.log("Checking accessibility on Create Decision");
 		cy.excuteAccessibilityTests();
 
