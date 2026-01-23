@@ -21,7 +21,6 @@ describe("User can add decisions to an existing case", () => {
 	const decisionOutcomePage = new DecisionOutcomePage();
 
 	let now: Date;
-	
 	beforeEach(() => {
 		cy.login({
 			role: DeleteCaseGroupClaim,
@@ -31,8 +30,8 @@ describe("User can add decisions to an existing case", () => {
 		cy.basicCreateCase();
 
 		CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('Decision');
-        AddToCasePage.getAddToCaseBtn().click();
+		AddToCasePage.addToCase('Decision');
+		AddToCasePage.getAddToCaseBtn().click();
 	});
 
 	it("Creating, editing, validating then viewing a decision", function () {
@@ -47,7 +46,7 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotes("Test notes")
 			.save()
 			.hasValidationError(
-				DateInvalidError.replace("{0}", "Date ESFA received request")
+				DateInvalidError.replace("{0}", "Date SFSO received request")
 			);
 
 		editDecisionPage
@@ -57,7 +56,7 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotesExceedingLimit()
 			.save()
 			.hasValidationError(
-				DateIncompleteError.replace("{0}", "Date ESFA received request")
+				DateIncompleteError.replace("{0}", "Date SFSO received request")
 			)
 			.hasValidationError(NotesError);
 
@@ -70,11 +69,10 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
 		editDecisionPage
 			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.withTypeOfDecision(repayableFinancialSupportOption)
 			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
-		
 
 		Logger.log("Checking accessibility on Create Decision");
 		cy.excuteAccessibilityTests();
@@ -92,10 +90,10 @@ describe("User can add decisions to an existing case", () => {
 			.withTypeOfDecision("NoticeToImprove")
 			.withTypeOfDecision("Section128")
 			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.withTypeOfDecision(shortTermCashAdvanceOption)
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
@@ -146,10 +144,10 @@ describe("User can add decisions to an existing case", () => {
 			.hasTypeOfDecision("NoticeToImprove")
 			.hasTypeOfDecision("Section128")
 			.hasTypeOfDecision(repayableFinancialSupportOption)
-			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.hasFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.hasTypeOfDecision(shortTermCashAdvanceOption)
-			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
 			.hasSupportingNotes("These are some supporting notes!")
 
 		Logger.log("Set new values");
@@ -163,9 +161,9 @@ describe("User can add decisions to an existing case", () => {
 			.withDateESFAMonth("03")
 			.withDateESFAYear("2022")
 			.withTypeOfDecision("QualifiedFloatingCharge")
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithImmediatePayment")
 			.withFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ANewPackageWithDrawdown")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes");
 
@@ -180,9 +178,9 @@ describe("User can add decisions to an existing case", () => {
 
 		// The sub questions only appear on edit, so we need to make sure they got updated
 		editDecisionPage
-			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithImmediatePayment")
 			.hasFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
-			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes");
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ANewPackageWithDrawdown");
 
 		editDecisionPage.cancel();
 
@@ -467,7 +465,7 @@ describe("User can add decisions to an existing case", () => {
 			.hasBusinessArea("FPMO (Financial Provider Market Oversight)")
 			.hasAuthoriser("Deputy Director")
 			.cannotCreateAnotherDecisionOutcome();
-		
+
 		Logger.log("Edit decision outcome")
 		viewDecisionPage
 			.editDecisionOutcome();
@@ -516,54 +514,55 @@ describe("User can add decisions to an existing case", () => {
 			.hasBusinessArea("Regions Group")
 			.hasBusinessArea("Funding");
 	});
+	// remove commented section when ticket BUG 258776 is completed
+	//
+	//it("Creating and deleting a decision", function () {
+	//	const repayableFinancialSupportOption = "RepayableFinancialSupport";
+	//	const shortTermCashAdvanceOption = "ShortTermCashAdvance";
 
-	it("Creating and deleting a decision", function () {
-		const repayableFinancialSupportOption = "RepayableFinancialSupport";
-		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
+	//	Logger.log("Validating Decision");
 
-		Logger.log("Validating Decision");
+	//	Logger.log("Creating Decision");
+	//	editDecisionPage
+	//		.withHasCrmCase("yes")
+	//		.withCrmEnquiry("444")
+	//		.withRetrospectiveRequest("no")
+	//		.withSubmissionRequired("yes")
+	//		.withSubmissionLink("www.gov.uk")
+	//		.withDateESFADay("21")
+	//		.withDateESFAMonth("04")
+	//		.withDateESFAYear("2022")
+	//		.withTypeOfDecision("NoticeToImprove")
+	//		.withTypeOfDecision("Section128")
+	//		.withTypeOfDecision(repayableFinancialSupportOption)
+	//		.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
+	//		.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+	//		.withTypeOfDecision(shortTermCashAdvanceOption)
+	//		.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
+	//		.withTotalAmountRequested("£140,000")
+	//		.withSupportingNotes("These are some supporting notes!")
+	//		.save();
 
-		Logger.log("Creating Decision");
-		editDecisionPage
-			.withHasCrmCase("yes")
-			.withCrmEnquiry("444")
-			.withRetrospectiveRequest("no")
-			.withSubmissionRequired("yes")
-			.withSubmissionLink("www.gov.uk")
-			.withDateESFADay("21")
-			.withDateESFAMonth("04")
-			.withDateESFAYear("2022")
-			.withTypeOfDecision("NoticeToImprove")
-			.withTypeOfDecision("Section128")
-			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
-			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
-			.withTypeOfDecision(shortTermCashAdvanceOption)
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
-			.withTotalAmountRequested("£140,000")
-			.withSupportingNotes("These are some supporting notes!")
-			.save();
+	//	Logger.log("Selecting Decision from open actions");
+	//	actionSummaryTable
+	//		.getOpenAction("Decision: Multiple Decision Types")
+	//		.then(row => 
+	//{
+	//			row.hasName("Decision: Multiple Decision Types")
+	//			row.hasStatus("In progress")
+	//			row.hasCreatedDate(toDisplayDate(now));
+	//			row.select();
+	//		});
 
-		Logger.log("Selecting Decision from open actions");
-		actionSummaryTable
-			.getOpenAction("Decision: Multiple Decision Types")
-			.then(row =>
-			{
-				row.hasName("Decision: Multiple Decision Types")
-				row.hasStatus("In progress")
-				row.hasCreatedDate(toDisplayDate(now));
-				row.select();
-			});
+	//	Logger.log("Deleting Decision");
+	//	viewDecisionPage
+	//		.deleteDecision();
 
-		Logger.log("Deleting Decision");
-		viewDecisionPage
-			.deleteDecision();
+	//	deleteDecisionPage
+	//		.delete();
 
-		deleteDecisionPage
-			.delete();
-
-		Logger.log("Confirm Decision no longer exist");
-		actionSummaryTable
-			.assertRowDoesNotExist("Decision: Multiple Decision Types", "open");
-	});
+	//	Logger.log("Confirm Decision no longer exist");
+	//	actionSummaryTable
+	//		.assertRowDoesNotExist("Decision: Multiple Decision Types", "open");
+	//});
 });

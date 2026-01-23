@@ -2,7 +2,7 @@ import { Logger } from "../../../common/logger";
 
 export class EditDecisionPage
 {
-    public withCrmEnquiry(crmNumber: string): this {
+	public withCrmEnquiry(crmNumber: string): this {
 		Logger.log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);
@@ -54,7 +54,6 @@ export class EditDecisionPage
 		Logger.log("Has no retrospective approval field");
 
 		cy.getById("container-retrospective-approval").should("not.exist");
-		
 		return this;
 	}
 
@@ -192,8 +191,8 @@ export class EditDecisionPage
 	}
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.log(`Has ${type} drawdown facility agreed ${value}`);
-		
+		Logger.log(`What ${type} are you recording${value}`);
+
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
 		return this;
@@ -219,17 +218,16 @@ export class EditDecisionPage
 		Logger.log(`${type} sub questions are not enabled`);
 
 		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
-		
 		elements.should("not.be.enabled");
 		elements.should("not.be.checked");
-		
+
 		return this;
 	}
 
 	public withTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").clear().type(totalAmountRequested);
+		cy.getById("total-additional-financial-support").clear().type(totalAmountRequested);
 
 		return this;
 	}
@@ -237,7 +235,7 @@ export class EditDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
 
 		return this;
 	}
@@ -245,7 +243,7 @@ export class EditDecisionPage
 	public hasNoTotalAmountRequestedField(): this
 	{
 		Logger.log("Has no total amount requested field");
-		cy.getByTestId("container-total-amount-requested").should("not.exist");
+		cy.getByTestId("amount-additional-financial-support-tex").should("not.exist");
 
 		return this;
 	}
