@@ -1,8 +1,7 @@
 import { Logger } from "../../../common/logger";
 
-export class EditDecisionPage
-{
-    public withCrmEnquiry(crmNumber: string): this {
+export class EditDecisionPage {
+	public withCrmEnquiry(crmNumber: string): this {
 		Logger.log(`With Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").clear().type(crmNumber);
@@ -49,12 +48,11 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasNoRetrospectiveRequestField(): this
-	{
+	public hasNoRetrospectiveRequestField(): this {
 		Logger.log("Has no retrospective approval field");
 
 		cy.getById("container-retrospective-approval").should("not.exist");
-		
+
 		return this;
 	}
 
@@ -90,8 +88,7 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasNoDateESFAField(): this
-	{
+	public hasNoDateESFAField(): this {
 		Logger.log("Has no date ESFA field");
 
 		cy.getById("container-request-received").should("not.exist");
@@ -168,8 +165,7 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasTypeOfDecisionOptions(types: Array<string>)
-	{
+	public hasTypeOfDecisionOptions(types: Array<string>) {
 		Logger.log(`Has type of decision options ${types.join()}`);
 
 		cy
@@ -193,7 +189,7 @@ export class EditDecisionPage
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
 		Logger.log(`What ${type} are you recording${value}`);
-		
+
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
 		return this;
@@ -219,10 +215,10 @@ export class EditDecisionPage
 		Logger.log(`${type} sub questions are not enabled`);
 
 		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
-		
+
 		elements.should("not.be.enabled");
 		elements.should("not.be.checked");
-		
+
 		return this;
 	}
 
@@ -242,8 +238,7 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasNoTotalAmountRequestedField(): this
-	{
+	public hasNoTotalAmountRequestedField(): this {
 		Logger.log("Has no total amount requested field");
 		cy.getByTestId("amount-additional-financial-support-tex").should("not.exist");
 
