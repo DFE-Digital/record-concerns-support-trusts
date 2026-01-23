@@ -54,7 +54,6 @@ export class EditDecisionPage
 		Logger.log("Has no retrospective approval field");
 
 		cy.getById("container-retrospective-approval").should("not.exist");
-
 		return this;
 	}
 
@@ -233,8 +232,7 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasTotalAmountRequested(totalAmountRequested: string): this
-	{
+	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
@@ -242,7 +240,8 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public hasNoTotalAmountRequestedField(): this {
+	public hasNoTotalAmountRequestedField(): this
+	{
 		Logger.log("Has no total amount requested field");
 		cy.getByTestId("amount-additional-financial-support-tex").should("not.exist");
 
