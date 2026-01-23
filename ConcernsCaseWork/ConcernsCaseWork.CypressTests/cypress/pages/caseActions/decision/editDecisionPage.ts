@@ -9,8 +9,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasCrmEnquiry(crmNumber: string): this
-	{
+	public hasCrmEnquiry(crmNumber: string): this {
 		Logger.log(`Has Crm enquiry ${crmNumber}`);
 
 		cy.getById("crm-enquiry-number").should("have.value", crmNumber);
@@ -18,16 +17,14 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withHasCrmCase(hasCrmCase: string): this
-	{
+	public withHasCrmCase(hasCrmCase: string): this {
 		Logger.log(`With has crm case ${hasCrmCase}`);
 		cy.getByTestId(`has-crm-case-${hasCrmCase}`).click();
 
 		return this;
 	}
 
-	public hasCrmCase(hasCrmCase: string): this
-	{
+	public hasCrmCase(hasCrmCase: string): this {
 		Logger.log(`Has Crm enquiry ${hasCrmCase}`);
 
 		cy.getByTestId(`has-crm-case-${hasCrmCase}`).should("be.be.checked");
@@ -35,8 +32,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withRetrospectiveRequest(isRetrospectiveRequest: string): this
-	{
+	public withRetrospectiveRequest(isRetrospectiveRequest: string): this {
 		Logger.log(`With retrospective request ${isRetrospectiveRequest}`);
 
 		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).click();
@@ -44,8 +40,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this
-	{
+	public hasRetrospectiveRequest(isRetrospectiveRequest: string): this {
 		Logger.log(`Has retrospective request ${isRetrospectiveRequest}`);
 
 		cy.getByTestId(`retrospective-approval-${isRetrospectiveRequest}`).should("be.checked");
@@ -53,8 +48,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasNoRetrospectiveRequestField(): this
-	{
+	public hasNoRetrospectiveRequestField(): this {
 		Logger.log("Has no retrospective approval field");
 
 		cy.getById("container-retrospective-approval").should("not.exist");
@@ -62,8 +56,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withSubmissionRequired(isSubmissionRequired: string): this
-	{
+	public withSubmissionRequired(isSubmissionRequired: string): this {
 		Logger.log(`With Submission Required ${isSubmissionRequired}`);
 
 		cy.getByTestId(`submission-required-${isSubmissionRequired}`).click();
@@ -71,8 +64,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasSubmissionRequired(isSubmissionRequired: string): this
-	{
+	public hasSubmissionRequired(isSubmissionRequired: string): this {
 		Logger.log(`Has Submission Required ${isSubmissionRequired}`);
 
 		cy.getByTestId(`submission-required-${isSubmissionRequired}`).should("be.checked");
@@ -80,8 +72,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withSubmissionLink(submissionLink: string): this
-	{
+	public withSubmissionLink(submissionLink: string): this {
 		Logger.log(`With Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").clear().type(submissionLink);
@@ -89,8 +80,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasSubmissionLink(submissionLink: string): this
-	{
+	public hasSubmissionLink(submissionLink: string): this {
 		Logger.log(`Has Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").should("have.value", submissionLink);
@@ -98,8 +88,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasNoDateESFAField(): this
-	{
+	public hasNoDateESFAField(): this {
 		Logger.log("Has no date ESFA field");
 
 		cy.getById("container-request-received").should("not.exist");
@@ -107,8 +96,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withDateESFADay(dateESFADay: string): this
-	{
+	public withDateESFADay(dateESFADay: string): this {
 		Logger.log(`With Date ESFA Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").clear().type(dateESFADay);
@@ -116,8 +104,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasDateESFADay(dateESFADay: string): this
-	{
+	public hasDateESFADay(dateESFADay: string): this {
 		Logger.log(`Has Date ESFA Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
@@ -125,8 +112,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withDateESFAMonth(dateESFAMonth: string): this
-	{
+	public withDateESFAMonth(dateESFAMonth: string): this {
 		Logger.log(`With Date ESFA Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").clear().type(dateESFAMonth);
@@ -142,8 +128,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withDateESFAYear(dateESFAYear: string): this
-	{
+	public withDateESFAYear(dateESFAYear: string): this {
 		Logger.log(`With Date ESFA Year ${dateESFAYear}`);
 
 		const element = cy.getById("dtr-year-request-received");
@@ -156,8 +141,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasDateESFAYear(dateESFAYear: string): this
-	{
+	public hasDateESFAYear(dateESFAYear: string): this {
 		Logger.log(`Has Date ESFA Year ${dateESFAYear}`);
 
 		cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
@@ -165,8 +149,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withTypeOfDecision(typeOfDecision: string): this
-	{
+	public withTypeOfDecision(typeOfDecision: string): this {
 		Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
 		cy.getById(typeOfDecision).click();
@@ -174,8 +157,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasTypeOfDecision(typeOfDecision: string): this
-	{
+	public hasTypeOfDecision(typeOfDecision: string): this {
 		Logger.log(`With type of decision to pick ${typeOfDecision}`);
 
 		cy.getById(typeOfDecision).should("be.checked");
@@ -183,8 +165,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasTypeOfDecisionOptions(types: Array<string>)
-	{
+	public hasTypeOfDecisionOptions(types: Array<string>) {
 		Logger.log(`Has type of decision options ${types.join()}`);
 
 		cy
@@ -198,8 +179,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withDrawdownFacilityAgreed(type: string, value: string): this
-	{
+	public withDrawdownFacilityAgreed(type: string, value: string): this {
 		Logger.log(`With ${type} drawdown facility agreed ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).click();
@@ -207,8 +187,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasDrawdownFacilityAgreed(type: string, value: string): this
-	{
+	public hasDrawdownFacilityAgreed(type: string, value: string): this {
 		Logger.log(`What ${type} are you recording${value}`);
 
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
@@ -216,8 +195,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withFrameworkCategory(type: string, value): this
-	{
+	public withFrameworkCategory(type: string, value): this {
 		Logger.log(`With ${type} framework category ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).click();
@@ -225,8 +203,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasFrameworkCategory(type: string, value): this
-	{
+	public hasFrameworkCategory(type: string, value): this {
 		Logger.log(`Has ${type} framework category ${value}`);
 
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
@@ -234,8 +211,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasNoEnabledOrSelectedSubQuestions(type: string): this
-	{
+	public hasNoEnabledOrSelectedSubQuestions(type: string): this {
 		Logger.log(`${type} sub questions are not enabled`);
 
 		var elements = cy.getByTestId(`${type}-subquestion-container`).find('input[type="radio"]');
@@ -254,8 +230,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasTotalAmountRequested(totalAmountRequested: string): this
-	{
+	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
 		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
@@ -263,16 +238,14 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasNoTotalAmountRequestedField(): this
-	{
+	public hasNoTotalAmountRequestedField(): this {
 		Logger.log("Has no total amount requested field");
 		cy.getByTestId("amount-additional-financial-support-tex").should("not.exist");
 
 		return this;
 	}
 
-	public withSupportingNotes(supportingNotes: string): this
-	{
+	public withSupportingNotes(supportingNotes: string): this {
 		Logger.log(`With Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").clear().type(supportingNotes);
@@ -280,8 +253,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasSupportingNotes(supportingNotes: string): this
-	{
+	public hasSupportingNotes(supportingNotes: string): this {
 		Logger.log(`Has Supporting Notes ${supportingNotes}`);
 
 		cy.getById("case-decision-notes").should("have.value", supportingNotes);
@@ -289,8 +261,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public withSupportingNotesExceedingLimit(): this
-	{
+	public withSupportingNotesExceedingLimit(): this {
 		cy.task("log", `With Supporting Notes exceeding limit`);
 
 		cy.getById("case-decision-notes").clear().invoke("val", "x 1".repeat(1001));
@@ -298,8 +269,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public save(): this
-	{
+	public save(): this {
 
 		Logger.log("Saving decision");
 
@@ -308,8 +278,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public cancel(): this
-	{
+	public cancel(): this {
 		Logger.log("Cancelling edit decision");
 
 		cy.getById("cancel-link-event").click();
@@ -317,8 +286,7 @@ export class EditDecisionPage {
 		return this;
 	}
 
-	public hasValidationError(message: string): this
-	{
+	public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);
 
 		cy.getById("errorSummary").should(
