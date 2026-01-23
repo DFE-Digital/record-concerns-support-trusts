@@ -21,7 +21,6 @@ describe("User can add decisions to an existing case", () => {
 	const decisionOutcomePage = new DecisionOutcomePage();
 
 	let now: Date;
-
 	beforeEach(() => {
 		cy.login({
 			role: DeleteCaseGroupClaim,
@@ -103,7 +102,8 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.hasName("Decision: Multiple Decision Types")
 				row.hasStatus("In progress")
 				row.hasCreatedDate(toDisplayDate(now));
@@ -227,7 +227,8 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.select();
 			});
 
@@ -251,7 +252,8 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: Multiple Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.select();
 			});
 
@@ -281,7 +283,8 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Selecting Decision from closed actions");
 		actionSummaryTable
 			.getClosedAction("Decision: Multiple Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.hasName("Decision: Multiple Decision Types")
 				row.hasStatus("Approved with conditions")
 				row.hasCreatedDate(toDisplayDate(now))
@@ -333,7 +336,8 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Selecting Decision from open actions");
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.hasName("Decision: No Decision Types")
 				row.hasStatus("In progress")
 				row.hasCreatedDate(toDisplayDate(now))
@@ -350,7 +354,8 @@ describe("User can add decisions to an existing case", () => {
 
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.select();
 			});
 
@@ -382,7 +387,8 @@ describe("User can add decisions to an existing case", () => {
 
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.select();
 			});
 
@@ -443,7 +449,8 @@ describe("User can add decisions to an existing case", () => {
 
 		actionSummaryTable
 			.getOpenAction("Decision: No Decision Types")
-			.then(row => {
+			.then(row =>
+			{
 				row.select();
 			});
 
@@ -540,7 +547,8 @@ describe("User can add decisions to an existing case", () => {
 	//	Logger.log("Selecting Decision from open actions");
 	//	actionSummaryTable
 	//		.getOpenAction("Decision: Multiple Decision Types")
-	//		.then(row => {
+	//		.then(row => 
+	//{
 	//			row.hasName("Decision: Multiple Decision Types")
 	//			row.hasStatus("In progress")
 	//			row.hasCreatedDate(toDisplayDate(now));
