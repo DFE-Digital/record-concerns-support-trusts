@@ -19,7 +19,7 @@
     "ConcernsCaseWork": {
       "commandName": "Project",
       "launchBrowser": true,
-			"applicationUrl": "https://localhost;http://localhost",
+	  "applicationUrl": "https://localhost;http://localhost",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
