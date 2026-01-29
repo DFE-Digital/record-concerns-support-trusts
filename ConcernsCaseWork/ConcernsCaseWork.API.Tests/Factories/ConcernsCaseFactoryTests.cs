@@ -18,6 +18,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.UpdatedAt = new DateTime(2022,06,07))
 				.With(c => c.ReviewAt = new DateTime(2022,07,10))
                 .With(c => c.CreatedBy = "7654")
+				.With(c => c.TeamLedBy = "Team leader name")
                 .With(c => c.Description = " Test Description for case")
                 .With(c => c.CrmEnquiry = "3456")
                 .With(c => c.TrustUkprn = "17654")
@@ -44,7 +45,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ReviewAt = request.ReviewAt,
                 ClosedAt = request.ClosedAt,
                 CreatedBy = request.CreatedBy,
-                Description = request.Description,
+				TeamLedBy = request.TeamLedBy,
+				Description = request.Description,
                 CrmEnquiry = request.CrmEnquiry,
                 TrustUkprn = request.TrustUkprn,
                 ReasonAtReview = request.ReasonAtReview,
