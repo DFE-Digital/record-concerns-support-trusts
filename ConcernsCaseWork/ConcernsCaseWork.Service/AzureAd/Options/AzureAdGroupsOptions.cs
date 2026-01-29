@@ -1,5 +1,8 @@
-﻿namespace ConcernsCaseWork.Service.AzureAd.Options;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace ConcernsCaseWork.Service.AzureAd.Options;
+
+[ExcludeFromCodeCoverage(Justification = "This is just a class with properties, no logic")]
 public class AzureAdGroupsOptions
 {
 	public Guid TeamleaderGroupId { get; set; }

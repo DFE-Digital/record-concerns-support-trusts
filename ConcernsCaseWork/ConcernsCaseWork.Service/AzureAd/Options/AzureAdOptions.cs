@@ -1,7 +1,9 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace ConcernsCaseWork.Service.AzureAd.Options;
 
+[ExcludeFromCodeCoverage(Justification = "This is just a class with properties, no logic")]
 public class AzureAdOptions
 {
 	public Guid TenantId { get; set; }
