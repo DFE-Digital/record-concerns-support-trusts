@@ -2,10 +2,12 @@
 using ConcernsCaseWork.Service.AzureAd.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using System.Diagnostics.CodeAnalysis;
 using User = Microsoft.Graph.User;
 
 namespace ConcernsCaseWork.Service.AzureAd.Services;
 
+[ExcludeFromCodeCoverage(Justification = "Mocking out of GraphServiceClient not possible")]
 public class GraphUserService : IGraphUserService
 {
 	private readonly AzureAdGroupsOptions _azureAdGroupsOptions;
