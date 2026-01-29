@@ -1,25 +1,24 @@
-import { EditFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/editFinancialPlanPage";
-import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
-import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
-import caseApi from "../../../api/caseApi";
-import { Logger } from "../../../common/logger";
-import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
-import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
-import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
-import { ViewFinancialPlanPage } from "../../../pages/caseActions/financialPlan/viewFinancialPlanPage";
-import { EditNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
-import { ViewNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
-import { EditNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
-import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
-import { EditNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
-import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
-import { EditSrmaPage } from "../../../pages/caseActions/srma/editSrmaPage";
-import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
-import caseMangementPage from "../../../pages/caseMangementPage";
+import { EditFinancialPlanPage } from 'cypress/pages/caseActions/financialPlan/editFinancialPlanPage';
+import actionSummaryTable from 'cypress/pages/caseActions/summary/actionSummaryTable';
+import { EditTrustFinancialForecastPage } from 'cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage';
+import { ViewTrustFinancialForecastPage } from 'cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage';
+import caseApi from '../../../api/caseApi';
+import { Logger } from '../../../common/logger';
+import { DecisionOutcomePage } from '../../../pages/caseActions/decision/decisionOutcomePage';
+import { EditDecisionPage } from '../../../pages/caseActions/decision/editDecisionPage';
+import { ViewDecisionPage } from '../../../pages/caseActions/decision/viewDecisionPage';
+import { ViewFinancialPlanPage } from '../../../pages/caseActions/financialPlan/viewFinancialPlanPage';
+import { EditNoticeToImprovePage } from '../../../pages/caseActions/noticeToImprove/editNoticeToImprovePage';
+import { ViewNoticeToImprovePage } from '../../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage';
+import { EditNtiUnderConsiderationPage } from '../../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage';
+import { ViewNtiUnderConsiderationPage } from '../../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage';
+import { EditNtiWarningLetterPage } from '../../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage';
+import { ViewNtiWarningLetterPage } from '../../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage';
+import { EditSrmaPage } from '../../../pages/caseActions/srma/editSrmaPage';
+import { ViewSrmaPage } from '../../../pages/caseActions/srma/viewSrmaPage';
+import caseMangementPage from '../../../pages/caseMangementPage';
 
-describe("Testing permissions on cases and case actions", () => {
-
+describe('Testing permissions on cases and case actions', () => {
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
     const editFinancialPlanPage = new EditFinancialPlanPage();
@@ -41,43 +40,33 @@ describe("Testing permissions on cases and case actions", () => {
     beforeEach(() => {
         cy.login();
 
-        cy.basicCreateCase()
-        .then((caseResponse =>
-        {
+        cy.basicCreateCase().then((caseResponse) => {
             caseId = caseResponse.urn;
-        }));
+        });
     });
 
-    it("Should not allow a user to edit a case that they did not create", () => {
+    it('Should not allow a user to edit a case that they did not create', () => {
+        Logger.log('Check that we can edit if we did create the case');
+        caseMangementPage.showAllConcernDetails().canEditCase();
 
-        Logger.log("Check that we can edit if we did create the case");
-        caseMangementPage
-            .showAllConcernDetails()
-            .canEditCase();
-
-        Logger.log("Check that we cannot edit if we did not create the case");
+        Logger.log('Check that we cannot edit if we did not create the case');
         updateCaseOwner(caseId);
 
-        caseMangementPage
-            .showAllConcernDetails()
-            .cannotEditCase();
+        caseMangementPage.showAllConcernDetails().cannotEditCase();
     });
 
-    it("Should not allow the user to edit an srma that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an SRMA that they did create");
-        caseMangementPage
-            .addCaseAction("Srma");
+    it('Should not allow the user to edit an srma that they did not create', () => {
+        Logger.log('Check that the user can edit an SRMA that they did create');
+        caseMangementPage.addCaseAction('Srma');
 
         editSrmaPage
-            .withStatus("TrustConsidering")
-            .withDayTrustContacted("05")
-            .withMonthTrustContacted("06")
-            .withYearTrustContacted("2022")
+            .withStatus('TrustConsidering')
+            .withDayTrustContacted('05')
+            .withMonthTrustContacted('06')
+            .withYearTrustContacted('2022')
             .save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("SRMA").click();
+        cy.get('#open-case-actions td').getByTestId('SRMA').click();
 
         viewSrmaPage
             .canAddStatus()
@@ -90,7 +79,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canCancel()
             .canDecline();
 
-        Logger.log("Check that the user cannot edit an SRMA that they did not create");
+        Logger.log('Check that the user cannot edit an SRMA that they did not create');
         updateCaseOwner(caseId);
 
         viewSrmaPage
@@ -105,145 +94,98 @@ describe("Testing permissions on cases and case actions", () => {
             .cannotDecline();
     });
 
-    it("Should not allow the user to edit a financial plan that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an SRMA that they did create");
-        caseMangementPage
-            .addCaseAction("FinancialPlan");
+    it('Should not allow the user to edit a financial plan that they did not create', () => {
+        Logger.log('Check that the user can edit an SRMA that they did create');
+        caseMangementPage.addCaseAction('FinancialPlan');
 
         editFinancialPlanPage.save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("Financial Plan").click();
+        cy.get('#open-case-actions td').getByTestId('Financial Plan').click();
 
-        viewFinancialPlanPage
-            .canEdit()
-            .canClose();
+        viewFinancialPlanPage.canEdit().canClose();
 
-        Logger.log("Check that the user cannot edit a financial plan that they did not create");
+        Logger.log('Check that the user cannot edit a financial plan that they did not create');
         updateCaseOwner(caseId);
 
-        viewFinancialPlanPage
-            .cannotEdit()
-            .cannotClose();
+        viewFinancialPlanPage.cannotEdit().cannotClose();
     });
 
-    it("Should not allow the user to edit an nti that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an nti that they did create");
-        caseMangementPage
-            .addCaseAction("Nti");
+    it('Should not allow the user to edit an nti that they did not create', () => {
+        Logger.log('Check that the user can edit an nti that they did create');
+        caseMangementPage.addCaseAction('Nti');
 
         editNtiPage.save();
 
-        cy.get("#open-case-actions td")
-        .getByTestId("NTI").click();
+        cy.get('#open-case-actions td').getByTestId('NTI').click();
 
-        viewNtiPage
-            .canEdit()
-            .canCancel()
-            .canClose()
-            .canLift();
+        viewNtiPage.canEdit().canCancel().canClose().canLift();
 
-        Logger.log("Check that the user cannot edit an nti that they did not create");
+        Logger.log('Check that the user cannot edit an nti that they did not create');
         updateCaseOwner(caseId);
 
-        viewNtiPage
-            .cannotEdit()
-            .cannotCancel()
-            .cannotClose()
-            .cannotLift();
+        viewNtiPage.cannotEdit().cannotCancel().cannotClose().cannotLift();
     });
 
-    it("Should not allow the user to edit an nti warning letter that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an nti warning letter that they did create");
-        caseMangementPage
-            .addCaseAction("NtiWarningLetter");
+    it('Should not allow the user to edit an nti warning letter that they did not create', () => {
+        Logger.log('Check that the user can edit an nti warning letter that they did create');
+        caseMangementPage.addCaseAction('NtiWarningLetter');
 
         editNtiWarningLetterPage.save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+        cy.get('#open-case-actions td').getByTestId('NTI Warning Letter').click();
 
-        viewNtiWarningLetterPage
-            .canEdit()
-            .canClose();
+        viewNtiWarningLetterPage.canEdit().canClose();
 
-        Logger.log("Check that the user cannot edit an nti warning letter that they did not create");
+        Logger.log('Check that the user cannot edit an nti warning letter that they did not create');
         updateCaseOwner(caseId);
 
-        viewNtiWarningLetterPage
-            .cannotEdit()
-            .cannotClose();
+        viewNtiWarningLetterPage.cannotEdit().cannotClose();
     });
 
-    it("Should not allow the user to edit an nti under consideration that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an nti under consideration that they did create");
-        caseMangementPage
-            .addCaseAction("NtiUnderConsideration");
+    it('Should not allow the user to edit an nti under consideration that they did not create', () => {
+        Logger.log('Check that the user can edit an nti under consideration that they did create');
+        caseMangementPage.addCaseAction('NtiUnderConsideration');
 
         editNtiUnderConsiderationPage.save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Under Consideration").click();
+        cy.get('#open-case-actions td').getByTestId('NTI Under Consideration').click();
 
-        viewNtiUnderConsiderationPage
-            .canEdit()
-            .canClose();
+        viewNtiUnderConsiderationPage.canEdit().canClose();
 
-        Logger.log("Check that the user cannot edit an nti under consideration that they did not create");
+        Logger.log('Check that the user cannot edit an nti under consideration that they did not create');
         updateCaseOwner(caseId);
-        
-        viewNtiUnderConsiderationPage
-            .cannotEdit()
-            .cannotClose();
+
+        viewNtiUnderConsiderationPage.cannotEdit().cannotClose();
     });
 
-    it("Should not allow the user to edit a decision that they did not create", () =>
-    {
-        Logger.log("Check that the user can edit an nti decision that they did create");
-        caseMangementPage
-			.addCaseAction("Decision");
+    it('Should not allow the user to edit a decision that they did not create', () => {
+        Logger.log('Check that the user can edit an nti decision that they did create');
+        caseMangementPage.addCaseAction('Decision');
 
-		editDecisionPage.withSupportingNotes("Mandatory note");
+        editDecisionPage.withSupportingNotes('Mandatory note');
 
         editDecisionPage.save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("Decision: No Decision Types").click();
+        cy.get('#open-case-actions td').getByTestId('Decision: No Decision Types').click();
 
-        viewDecisionPage.createDecisionOutcome()
-        decisionOutcomePage
-            .withDecisionOutcomeStatus("Approved")
-            .saveDecisionOutcome();
+        viewDecisionPage.createDecisionOutcome();
+        decisionOutcomePage.withDecisionOutcomeStatus('Approved').saveDecisionOutcome();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("Decision: No Decision Types").click();
+        cy.get('#open-case-actions td').getByTestId('Decision: No Decision Types').click();
 
-        viewDecisionPage
-            .canEditDecision()
-            .canEditDecisionOutcome()
-            .canCloseDecision();
+        viewDecisionPage.canEditDecision().canEditDecisionOutcome().canCloseDecision();
 
-        Logger.log("Check that the user cannot edit a decision that they did not create");
+        Logger.log('Check that the user cannot edit a decision that they did not create');
         updateCaseOwner(caseId);
 
-        viewDecisionPage
-            .cannotEditDecision()
-            .cannotEditDecisionOutcome()
-            .cannotCloseDecision();
+        viewDecisionPage.cannotEditDecision().cannotEditDecisionOutcome().cannotCloseDecision();
     });
 
-
     function updateCaseOwner(caseId: number) {
-        caseApi.get(caseId)
-        .then((caseResponse) =>
-        {
-            caseResponse.createdBy = "Automation.User@education.gov.uk";
+        caseApi.get(caseId).then((caseResponse) => {
+            caseResponse.createdBy = 'Automation.User@education.gov.uk';
             caseApi.patch(caseId, caseResponse);
             cy.reload();
-        })
+        });
     }
 });

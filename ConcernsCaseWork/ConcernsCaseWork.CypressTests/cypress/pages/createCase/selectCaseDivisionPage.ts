@@ -1,7 +1,6 @@
-import { Logger } from "../../common/logger";
+import { Logger } from '../../common/logger';
 
 class SelectCaseDivisionPage {
-
     public withCaseDivision(value: string): this {
         Logger.log(`With NonConcernType ${value}`);
 
@@ -13,24 +12,20 @@ class SelectCaseDivisionPage {
     public hasBeenDisabled(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getByTestId(value).should("be.disabled");
+        cy.getByTestId(value).should('be.disabled');
         return this;
     }
-
 
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should(
-            "contain.text",
-            value
-        );
+        cy.getById('errorSummary').should('contain.text', value);
         return this;
     }
 
     public continue(): this {
-        Logger.log("Click continue button");
-        cy.getById("continue").click();
+        Logger.log('Click continue button');
+        cy.getById('continue').click();
 
         return this;
     }
@@ -39,4 +34,3 @@ class SelectCaseDivisionPage {
 var selectCaseDivisionPage = new SelectCaseDivisionPage();
 
 export default selectCaseDivisionPage;
-

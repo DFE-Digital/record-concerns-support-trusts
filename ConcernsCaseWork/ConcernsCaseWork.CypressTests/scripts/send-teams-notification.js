@@ -1,6 +1,6 @@
-const axios = require("axios");
-const fs = require("node:fs");
-const path = require("node:path");
+const axios = require('axios');
+const fs = require('node:fs');
+const path = require('node:path');
 
 /**
  * Read and parse the Cypress test report data
@@ -9,10 +9,10 @@ function readReportData() {
     let reportStats = { tests: 0, passes: 0, failures: 0 };
     let failedTests = [];
 
-    const reportPath = path.join(process.cwd(), "mochareports", "report.json");
+    const reportPath = path.join(process.cwd(), 'mochareports', 'report.json');
 
     if (fs.existsSync(reportPath)) {
-        const reportData = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+        const reportData = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
 
         if (reportData?.stats) {
             reportStats = {
@@ -27,7 +27,7 @@ function readReportData() {
             }
         }
     } else {
-        console.warn("Report file not found at:", reportPath);
+        console.warn('Report file not found at:', reportPath);
     }
 
     return { reportStats, failedTests };
@@ -38,37 +38,37 @@ function readReportData() {
  */
 function buildCardBody(reportStats, failedTests) {
     const hasFailures = reportStats.failures > 0;
-    const statusText = hasFailures ? "**Cypress Test Run Failed** ❌" : "**Cypress Test Run Passed** ✅";
+    const statusText = hasFailures ? '**Cypress Test Run Failed** ❌' : '**Cypress Test Run Passed** ✅';
 
     const cardBody = [
         {
-            type: "TextBlock",
+            type: 'TextBlock',
             wrap: true,
             text: statusText,
-            size: "large",
-            horizontalAlignment: "center",
+            size: 'large',
+            horizontalAlignment: 'center',
         },
         {
-            type: "TextBlock",
+            type: 'TextBlock',
             wrap: true,
-            text: "**Branch:** " + process.env.GITHUB_REF,
+            text: '**Branch:** ' + process.env.GITHUB_REF,
         },
         {
-            type: "TextBlock",
+            type: 'TextBlock',
             wrap: true,
-            text: "**Workflow:** " + process.env.GITHUB_WORKFLOW,
+            text: '**Workflow:** ' + process.env.GITHUB_WORKFLOW,
         },
         {
-            type: "TextBlock",
+            type: 'TextBlock',
             wrap: true,
-            text: "**Environment:** " + process.env.ENVIRONMENT,
+            text: '**Environment:** ' + process.env.ENVIRONMENT,
         },
         {
-            type: "FactSet",
+            type: 'FactSet',
             facts: [
-                { title: "Total Tests:", value: reportStats.tests.toString() },
-                { title: "Passed:", value: reportStats.passes.toString() },
-                { title: "Failed:", value: reportStats.failures.toString() },
+                { title: 'Total Tests:', value: reportStats.tests.toString() },
+                { title: 'Passed:', value: reportStats.passes.toString() },
+                { title: 'Failed:', value: reportStats.failures.toString() },
             ],
         },
     ];
@@ -80,15 +80,10 @@ function buildCardBody(reportStats, failedTests) {
 
     // Add information link
     cardBody.push({
-        type: "TextBlock",
+        type: 'TextBlock',
         wrap: true,
-        text:
-            "**See more information:** [" +
-            process.env.INFORMATION_LINK +
-            "](" +
-            process.env.INFORMATION_LINK +
-            ")",
-        spacing: "medium",
+        text: '**See more information:** [' + process.env.INFORMATION_LINK + '](' + process.env.INFORMATION_LINK + ')',
+        spacing: 'medium',
     });
 
     return cardBody;
@@ -99,11 +94,11 @@ function buildCardBody(reportStats, failedTests) {
  */
 function addFailedTestDetails(cardBody, failedTests) {
     cardBody.push({
-        type: "TextBlock",
+        type: 'TextBlock',
         wrap: true,
-        text: "**Failed Tests:**",
-        weight: "bolder",
-        spacing: "medium",
+        text: '**Failed Tests:**',
+        weight: 'bolder',
+        spacing: 'medium',
     });
 
     // Add each failed test as a separate text block
@@ -111,20 +106,20 @@ function addFailedTestDetails(cardBody, failedTests) {
         // Limit to first 10 failed tests to avoid message size limits
         if (index < 10) {
             cardBody.push({
-                type: "TextBlock",
+                type: 'TextBlock',
                 wrap: true,
                 text: `**${index + 1}.** ${test.fullTitle}`,
-                weight: "bolder",
-                spacing: "small",
+                weight: 'bolder',
+                spacing: 'small',
             });
 
             // Add error message, truncated if too long
             const errorMessage = truncateText(test.errorMessage, 500);
             cardBody.push({
-                type: "TextBlock",
+                type: 'TextBlock',
                 wrap: true,
                 text: `*Error:* ${errorMessage}`,
-                spacing: "none",
+                spacing: 'none',
                 isSubtle: true,
             });
         }
@@ -133,10 +128,10 @@ function addFailedTestDetails(cardBody, failedTests) {
     // Add note if there are more failures than displayed
     if (failedTests.length > 10) {
         cardBody.push({
-            type: "TextBlock",
+            type: 'TextBlock',
             wrap: true,
             text: `*... and ${failedTests.length - 10} more failed tests. See full report for details.*`,
-            spacing: "small",
+            spacing: 'small',
             isSubtle: true,
         });
     }
@@ -146,21 +141,21 @@ function addFailedTestDetails(cardBody, failedTests) {
  * Create the Teams message structure
  */
 function createTeamsMessage(cardBody, hasFailures) {
-    const style = hasFailures ? "attention" : "good";
+    const style = hasFailures ? 'attention' : 'good';
 
     return {
-        type: "message",
+        type: 'message',
         attachments: [
             {
-                contentType: "application/vnd.microsoft.card.adaptive",
+                contentType: 'application/vnd.microsoft.card.adaptive',
                 contentUrl: null,
                 content: {
-                    $schema: "https://adaptivecards.io/schemas/adaptive-card.json",
-                    type: "AdaptiveCard",
-                    version: "1.2",
+                    $schema: 'https://adaptivecards.io/schemas/adaptive-card.json',
+                    type: 'AdaptiveCard',
+                    version: '1.2',
                     body: [
                         {
-                            type: "Container",
+                            type: 'Container',
                             style: style,
                             items: cardBody,
                         },
@@ -180,7 +175,7 @@ function extractFailedTests(results) {
         if (item.fail === true && item.fullTitle && item.err) {
             failedTests.push({
                 fullTitle: item.fullTitle,
-                errorMessage: cleanErrorMessage(item.err.message || "No error message available"),
+                errorMessage: cleanErrorMessage(item.err.message || 'No error message available'),
             });
         }
 
@@ -209,25 +204,25 @@ function extractFailedTests(results) {
  * Clean and format error messages for better readability
  */
 function cleanErrorMessage(errorMessage) {
-    if (!errorMessage) return "No error message available";
+    if (!errorMessage) return 'No error message available';
 
     // Remove stack traces and keep only the main error message
-    const lines = errorMessage.split("\n");
+    const lines = errorMessage.split('\n');
     const relevantLines = [];
 
     for (const line of lines) {
         // Stop at stack trace indicators
-        if (line.includes("    at ") || line.includes("From Your Spec Code:")) {
+        if (line.includes('    at ') || line.includes('From Your Spec Code:')) {
             break;
         }
 
         // Skip lines that are just URLs or technical details
-        if (!line.includes("https://on.cypress.io/") && !line.includes("webpack://") && line.trim() !== "") {
+        if (!line.includes('https://on.cypress.io/') && !line.includes('webpack://') && line.trim() !== '') {
             relevantLines.push(line.trim());
         }
     }
 
-    return relevantLines.join(" ").trim() || errorMessage.split("\n")[0];
+    return relevantLines.join(' ').trim() || errorMessage.split('\n')[0];
 }
 
 /**
@@ -235,7 +230,7 @@ function cleanErrorMessage(errorMessage) {
  */
 function truncateText(text, maxLength) {
     if (!text || text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
+    return text.substring(0, maxLength) + '...';
 }
 
 // used in GitHub Actions to send Cypress test results to Microsoft Teams channel via webhook
@@ -246,9 +241,9 @@ async function sendTeamsNotification() {
         const message = createTeamsMessage(cardBody, reportStats.failures > 0);
 
         await axios.post(process.env.TEAMS_WEBHOOK_URL, message);
-        console.log("Message sent to Teams successfully");
+        console.log('Message sent to Teams successfully');
     } catch (error) {
-        console.error("Error sending notification to Teams:", error);
+        console.error('Error sending notification to Teams:', error);
         process.exit(1);
     }
 }

@@ -15,7 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import { AuthenticationInterceptorParams } from 'cypress/auth/authenticationInterceptor';
-import './commands'
+import './commands';
 import { CreateCaseRequest, CreateCaseResponse } from 'cypress/api/apiDomain';
 
 declare global {

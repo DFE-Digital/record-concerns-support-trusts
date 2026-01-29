@@ -1,79 +1,62 @@
-import { Logger } from "../../../common/logger";
-import { CookieBanner } from "../../../pages/cookieBanner";
-import { CookiesPage } from "../../../pages/cookiesPage";
+import { Logger } from '../../../common/logger';
+import { CookieBanner } from '../../../pages/cookieBanner';
+import { CookiesPage } from '../../../pages/cookiesPage';
 
-describe("Testing cookies on the site", () => 
-{
+describe('Testing cookies on the site', () => {
     let cookiesPage = new CookiesPage();
     let cookiesBanner = new CookieBanner();
 
-    beforeEach(() =>
-    {
+    beforeEach(() => {
         cy.login();
     });
 
-    it("Should accept the cookies on the banner then decline them afterwards", () =>
-    {
-        cy.visit("/trust");
+    it('Should accept the cookies on the banner then decline them afterwards', () => {
+        cy.visit('/trust');
 
-        cookiesBanner
-            .accept()
-            .notVisible();
+        cookiesBanner.accept().notVisible();
 
-        Logger.log("Upon accepting the banner it should stay on the same page");
-        cy.url().should("include", "/trust");
+        Logger.log('Upon accepting the banner it should stay on the same page');
+        cy.url().should('include', '/trust');
 
-        cy.visit("/cookies");
+        cy.visit('/cookies');
 
-        cookiesPage
-            .hasConsent("Yes")
+        cookiesPage.hasConsent('Yes');
 
-        hasCookieValue("True");
+        hasCookieValue('True');
 
-        cookiesPage
-            .withConsent("No")
-            .save();
+        cookiesPage.withConsent('No').save();
 
         cy.reload();
 
-        cookiesPage.hasConsent("No");
+        cookiesPage.hasConsent('No');
 
-        hasCookieValue("False");
+        hasCookieValue('False');
     });
 
-    it("Should reject the cookies on the banner then accept them afterwards", () =>
-    {
+    it('Should reject the cookies on the banner then accept them afterwards', () => {
         cookiesBanner.viewCookies();
 
-        cy.url().should("include", "/cookies");
+        cy.url().should('include', '/cookies');
 
-        cookiesBanner
-            .reject()
-            .notVisible();
+        cookiesBanner.reject().notVisible();
 
-        cookiesPage
-        .hasConsent("No")
+        cookiesPage.hasConsent('No');
 
-        hasCookieValue("False");
+        hasCookieValue('False');
 
-        cookiesPage
-        .withConsent("Yes")
-        .save();
+        cookiesPage.withConsent('Yes').save();
 
         cy.reload();
 
-        cookiesPage.hasConsent("Yes");
+        cookiesPage.hasConsent('Yes');
 
-        hasCookieValue("True");
+        hasCookieValue('True');
     });
 
-    function hasCookieValue(cookieValue: string)
-    {
+    function hasCookieValue(cookieValue: string) {
         Logger.log(`Should set the consent cookie to ${cookieValue}`);
 
-        cy.getCookie(".ConcernsCasework.Consent")
-        .then(cookie =>
-        {
+        cy.getCookie('.ConcernsCasework.Consent').then((cookie) => {
             expect(cookie?.value).to.equal(cookieValue);
         });
     }
