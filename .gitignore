@@ -521,3 +521,6 @@ backend.vars
 
 ## ZAP Report
 ZAP-Report.*
+/ConcernsCaseWork/ConcernsCaseWork.API/Properties/launchSettings.json
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/package-lock.json
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/package.json

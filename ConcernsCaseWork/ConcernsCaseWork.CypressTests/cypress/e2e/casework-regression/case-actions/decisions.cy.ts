@@ -514,55 +514,54 @@ describe("User can add decisions to an existing case", () => {
 			.hasBusinessArea("Regions Group")
 			.hasBusinessArea("Funding");
 	});
-	// remove commented section when ticket BUG 258776 is completed
-	//
-	//it("Creating and deleting a decision", function () {
-	//	const repayableFinancialSupportOption = "RepayableFinancialSupport";
-	//	const shortTermCashAdvanceOption = "ShortTermCashAdvance";
+	
+	it("Creating and deleting a decision", function () {
+		const repayableFinancialSupportOption = "RepayableFinancialSupport";
+		const shortTermCashAdvanceOption = "ShortTermCashAdvance";
 
-	//	Logger.log("Validating Decision");
+		Logger.log("Validating Decision");
 
-	//	Logger.log("Creating Decision");
-	//	editDecisionPage
-	//		.withHasCrmCase("yes")
-	//		.withCrmEnquiry("444")
-	//		.withRetrospectiveRequest("no")
-	//		.withSubmissionRequired("yes")
-	//		.withSubmissionLink("www.gov.uk")
-	//		.withDateESFADay("21")
-	//		.withDateESFAMonth("04")
-	//		.withDateESFAYear("2022")
-	//		.withTypeOfDecision("NoticeToImprove")
-	//		.withTypeOfDecision("Section128")
-	//		.withTypeOfDecision(repayableFinancialSupportOption)
-	//		.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
-	//		.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
-	//		.withTypeOfDecision(shortTermCashAdvanceOption)
-	//		.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
-	//		.withTotalAmountRequested("£140,000")
-	//		.withSupportingNotes("These are some supporting notes!")
-	//		.save();
+		Logger.log("Creating Decision");
+		editDecisionPage
+			.withHasCrmCase("yes")
+			.withCrmEnquiry("444")
+			.withRetrospectiveRequest("no")
+			.withSubmissionRequired("yes")
+			.withSubmissionLink("www.gov.uk")
+			.withDateESFADay("21")
+			.withDateESFAMonth("04")
+			.withDateESFAYear("2022")
+			.withTypeOfDecision("NoticeToImprove")
+			.withTypeOfDecision("Section128")
+			.withTypeOfDecision(repayableFinancialSupportOption)
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
+			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
+			.withTypeOfDecision(shortTermCashAdvanceOption)
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
+			.withTotalAmountRequested("£140,000")
+			.withSupportingNotes("These are some supporting notes!")
+			.save();
 
-	//	Logger.log("Selecting Decision from open actions");
-	//	actionSummaryTable
-	//		.getOpenAction("Decision: Multiple Decision Types")
-	//		.then(row => 
-	//{
-	//			row.hasName("Decision: Multiple Decision Types")
-	//			row.hasStatus("In progress")
-	//			row.hasCreatedDate(toDisplayDate(now));
-	//			row.select();
-	//		});
+		Logger.log("Selecting Decision from open actions");
+		actionSummaryTable
+			.getOpenAction("Decision: Multiple Decision Types")
+			.then(row => 
+	{
+				row.hasName("Decision: Multiple Decision Types")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now));
+				row.select();
+			});
 
-	//	Logger.log("Deleting Decision");
-	//	viewDecisionPage
-	//		.deleteDecision();
+		Logger.log("Deleting Decision");
+		viewDecisionPage
+			.deleteDecision();
 
-	//	deleteDecisionPage
-	//		.delete();
+		deleteDecisionPage
+			.delete();
 
-	//	Logger.log("Confirm Decision no longer exist");
-	//	actionSummaryTable
-	//		.assertRowDoesNotExist("Decision: Multiple Decision Types", "open");
-	//});
+		Logger.log("Confirm Decision no longer exist");
+		actionSummaryTable
+			.assertRowDoesNotExist("Decision: Multiple Decision Types", "open");
+	});
 });
