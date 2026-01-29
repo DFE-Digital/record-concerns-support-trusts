@@ -2,21 +2,21 @@ import { EditFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/e
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
-import caseApi from "../../api/caseApi";
-import { Logger } from "../../common/logger";
-import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
-import { EditDecisionPage } from "../../pages/caseActions/decision/editDecisionPage";
-import { ViewDecisionPage } from "../../pages/caseActions/decision/viewDecisionPage";
-import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/viewFinancialPlanPage";
-import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
-import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
-import { EditNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
-import { ViewNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
-import { EditNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
-import { ViewNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
-import { EditSrmaPage } from "../../pages/caseActions/srma/editSrmaPage";
-import { ViewSrmaPage } from "../../pages/caseActions/srma/viewSrmaPage";
-import caseMangementPage from "../../pages/caseMangementPage";
+import caseApi from "../../../api/caseApi";
+import { Logger } from "../../../common/logger";
+import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
+import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
+import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
+import { ViewFinancialPlanPage } from "../../../pages/caseActions/financialPlan/viewFinancialPlanPage";
+import { EditNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
+import { ViewNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
+import { EditNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
+import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
+import { EditNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
+import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
+import { EditSrmaPage } from "../../../pages/caseActions/srma/editSrmaPage";
+import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
+import caseMangementPage from "../../../pages/caseMangementPage";
 
 describe("Testing permissions on cases and case actions", () => {
 

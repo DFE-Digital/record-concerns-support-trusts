@@ -1,4 +1,4 @@
-import { toDisplayDate } from "../../support/formatDate";
+import { toDisplayDate } from "../../../support/formatDate";
 import { Logger } from "cypress/common/logger";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import trustOverviewPage from "cypress/pages/trustOverviewPage";

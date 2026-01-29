@@ -17,7 +17,7 @@ on:
         required: true
       CYPRESS_TEST_SECRET:
         required: true
-      SLACK_WEBHOOK_URL:
+      TEAMS_WEBHOOK_URL:
         required: true
   workflow_dispatch:
     inputs:
@@ -31,16 +31,33 @@ concurrency:
 
 env:
   NODE_VERSION: 18.x
+  BROWSER: 'edge'
+  WORKING_DIRECTORY: 'ConcernsCaseWork/ConcernsCaseWork.CypressTests'
 
 jobs:
+  # Run Cypress tests in parallel across different test groups
   cypress-tests:
-    name: Run Cypress Tests
+    name: Run Cypress Tests (${{ matrix.group }})
     if: inputs.environment == 'staging' || inputs.environment == 'dev'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: case-actions-nti
+            spec: cypress/e2e/casework-regression/case-actions-nti/**/*.cy.ts
+          - group: case-actions-other
+            spec: cypress/e2e/casework-regression/case-actions-other/**/*.cy.ts
+          - group: case-creation
+            spec: cypress/e2e/casework-regression/case-creation/**/*.cy.ts
+          - group: case-management
+            spec: cypress/e2e/casework-regression/case-management/**/*.cy.ts
+          - group: navigation-ui
+            spec: cypress/e2e/casework-regression/navigation-ui/**/*.cy.ts
     defaults:
       run:
-        working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
+        working-directory: ${{ env.WORKING_DIRECTORY }}
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
         with:
@@ -55,34 +72,88 @@ jobs:
         run: npm install
 
       - name: Run cypress
-        run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+        run: npm run cy:run -- --spec '${{ matrix.spec }}' --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
 
-      - name: Upload screenshots
+      - name: Upload screenshots on failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: screenshots-${{ inputs.environment }}
-          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
+          name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/screenshots
+          retention-days: 5
 
-      - name: Generate report
+      - name: Prepare test results
+        id: prepare-results
         if: always()
         run: |
-          mkdir mochareports
+          mkdir -p cypress/reports/merged
+          # Check if test results exist and process them
+          if [ -d "cypress/reports/mocha" ] && [ "$(find cypress/reports/mocha -name '*.json' 2>/dev/null | wc -l)" -gt 0 ]; then
+            for file in cypress/reports/mocha/*.json; do
+              filename=$(basename "$file")
+              cp "$file" "cypress/reports/merged/${{ matrix.group }}-$filename"
+            done
+            echo "Processed test results for ${{ matrix.group }}"
+          else
+            echo "No test results found for ${{ matrix.group }}, creating placeholder"
+            echo '{"stats":{"suites":0,"tests":0,"passes":0,"pending":0,"failures":0,"start":"","end":"","duration":0}}' > "cypress/reports/merged/${{ matrix.group }}-placeholder.json"
+          fi
+
+      - name: Upload test results
+        if: always() && steps.prepare-results.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: raw-test-reports-${{ matrix.group }}
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/merged/*.json
+          retention-days: 1 # Short retention for raw reports
+
+  # Generate a combined report from all test runs
+  generate-combined-report:
+    name: Generate Combined Report
+    needs: cypress-tests
+    runs-on: ubuntu-latest
+    if: always() && (inputs.environment == 'staging' || inputs.environment == 'dev')
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: '${{ env.WORKING_DIRECTORY }}/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Download all test results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: raw-test-reports-*
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/mocha
+          merge-multiple: true
+
+      - name: Generate combined HTML report
+        run: |
+          mkdir -p mochareports
           npm run generate:html:report
 
-      - name: Upload report
-        if: always()
+      - name: Upload combined report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: reports-${{ inputs.environment }}
-          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+          path: ${{ env.WORKING_DIRECTORY }}/mochareports
+          retention-days: 30 # Longer retention for final report
 
       - name: Report results to Teams
         if: always()
         run: |
-                  node scripts/send-teams-notification.js
+          node scripts/send-teams-notification.js
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           ENVIRONMENT: ${{ inputs.environment }}
           INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          

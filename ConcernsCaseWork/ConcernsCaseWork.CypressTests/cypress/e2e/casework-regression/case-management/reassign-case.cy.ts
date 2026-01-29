@@ -1,8 +1,8 @@
 import caseApi from "cypress/api/caseApi";
 import { Logger } from "cypress/common/logger";
 import { AdminClaim, EnvUsername } from "cypress/constants/cypressConstants";
-import caseMangementPage from "../../pages/caseMangementPage";
-import editCaseMangementPage from "../../pages/editCaseManagementPage";
+import caseMangementPage from "../../../pages/caseMangementPage";
+import editCaseMangementPage from "../../../pages/editCaseManagementPage";
 
 describe("Testing reassigning cases", () => {
 	let caseId: number;

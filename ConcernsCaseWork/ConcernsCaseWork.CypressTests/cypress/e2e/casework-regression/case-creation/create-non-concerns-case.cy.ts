@@ -5,12 +5,12 @@ import caseManagementPage from "cypress/pages/caseMangementPage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
-import CaseManagementPage from "../../pages/caseMangementPage";
-import AddToCasePage from "../../pages/caseActions/addToCasePage";
+import CaseManagementPage from "../../../pages/caseMangementPage";
+import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { EditSrmaPage } from "cypress/pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "cypress/pages/caseActions/srma/viewSrmaPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
-import ClosedCasePage from "../../pages/closedCasePage";
+import ClosedCasePage from "../../../pages/closedCasePage";
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import { toDisplayDate } from "cypress/support/formatDate";
 import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage";
@@ -23,7 +23,7 @@ import {
 } from "cypress/constants/selectorConstants";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
-import homePage from "../../pages/homePage";
+import homePage from "../../../pages/homePage";
 import headerComponent from "cypress/pages/header";
 
 describe("Creating a non concerns case", () => {

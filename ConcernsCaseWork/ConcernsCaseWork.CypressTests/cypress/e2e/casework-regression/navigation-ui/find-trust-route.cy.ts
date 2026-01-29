@@ -1,5 +1,5 @@
 import trustOverviewPage from "cypress/pages/trustOverviewPage";
-import { Logger } from "../../common/logger";
+import { Logger } from "../../../common/logger";
 import createCaseSummary from "cypress/pages/createCase/createCaseSummary";
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";

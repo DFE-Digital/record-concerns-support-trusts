@@ -8,7 +8,7 @@ import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPag
 import selectCaseTypePage from "cypress/pages/createCase/selectCaseTypePage";
 import caseManagementPage from "cypress/pages/caseMangementPage";
 import { EnvUsername } from "cypress/constants/cypressConstants";
-import ctcApi from "../../api/cityTechnologyCollegeApi";
+import ctcApi from "../../../api/cityTechnologyCollegeApi";
 import { CreateCityTechnologyCollegeRequest } from "cypress/api/apiDomain";
 import selectCaseDivisionPage from "cypress/pages/createCase/selectCaseDivisionPage";
 

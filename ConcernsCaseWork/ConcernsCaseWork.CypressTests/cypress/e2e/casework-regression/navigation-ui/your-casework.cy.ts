@@ -1,13 +1,13 @@
-import caseworkTable from "../../pages/caseRows/caseworkTable";
-import { toDisplayDate } from "../../support/formatDate";
-import CaseManagementPage from "../../pages/caseMangementPage";
+import caseworkTable from "../../../pages/caseRows/caseworkTable";
+import { toDisplayDate } from "../../../support/formatDate";
+import CaseManagementPage from "../../../pages/caseMangementPage";
 import caseApi from "cypress/api/caseApi";
 import { EnvUsername } from "cypress/constants/cypressConstants";
 import { CreateCaseRequest } from "cypress/api/apiDomain";
 import { CaseBuilder } from "cypress/api/caseBuilder";
 import { Logger } from "cypress/common/logger";
 import paginationComponent from "cypress/pages/paginationComponent";
-import caseMangementPage from "../../pages/caseMangementPage";
+import caseMangementPage from "../../../pages/caseMangementPage";
 
 describe("Your casework tests", () =>
 {
