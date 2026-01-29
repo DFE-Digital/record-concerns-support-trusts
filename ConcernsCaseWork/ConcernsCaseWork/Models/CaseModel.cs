@@ -24,6 +24,11 @@ namespace ConcernsCaseWork.Models
 		/// </summary>
 		public string CreatedBy { get; set; }
 
+		/// <summary>
+		/// Team leader from azure AD some unique identifier
+		/// </summary>
+		public string TeamLedBy { get; set; }
+
 		public string Description { get; set; }
 
 		public string CrmEnquiry { get; set; }
