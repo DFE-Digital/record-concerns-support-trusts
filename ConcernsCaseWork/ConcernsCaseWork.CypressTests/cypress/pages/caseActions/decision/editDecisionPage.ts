@@ -92,7 +92,7 @@ export class EditDecisionPage
 
 	public hasNoDateESFAField(): this
 	{
-		Logger.log("Has no date ESFA field");
+		Logger.log("Has no date SFSO field");
 
 		cy.getById("container-request-received").should("not.exist");
 
@@ -100,7 +100,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFADay(dateESFADay: string): this {
-		Logger.log(`With Date ESFA Day ${dateESFADay}`);
+		Logger.log(`With Date SFSO  Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").clear().type(dateESFADay);
 
@@ -108,7 +108,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFADay(dateESFADay: string): this {
-		Logger.log(`Has Date ESFA Day ${dateESFADay}`);
+		Logger.log(`Has Date SFSO Day ${dateESFADay}`);
 
 		cy.getById("dtr-day-request-received").should("have.value", dateESFADay);
 
@@ -116,7 +116,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFAMonth(dateESFAMonth: string): this {
-		Logger.log(`With Date ESFA Month ${dateESFAMonth}`);
+		Logger.log(`With Date SFSO Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").clear().type(dateESFAMonth);
 
@@ -124,7 +124,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFAMonth(dateESFAMonth: string): this {
-		Logger.log(`Has Date ESFA Month ${dateESFAMonth}`);
+		Logger.log(`Has Date SFSO Month ${dateESFAMonth}`);
 
 		cy.getById("dtr-month-request-received").should("have.value", dateESFAMonth);
 
@@ -132,7 +132,7 @@ export class EditDecisionPage
 	}
 
 	public withDateESFAYear(dateESFAYear: string): this {
-		Logger.log(`With Date ESFA Year ${dateESFAYear}`);
+		Logger.log(`With Date SFSO Year ${dateESFAYear}`);
 
 		const element = cy.getById("dtr-year-request-received");
 		element.clear();
@@ -145,7 +145,7 @@ export class EditDecisionPage
 	}
 
 	public hasDateESFAYear(dateESFAYear: string): this {
-		Logger.log(`Has Date ESFA Year ${dateESFAYear}`);
+		Logger.log(`Has Date SFSO Year ${dateESFAYear}`);
 
 		cy.getById("dtr-year-request-received").should("have.value", dateESFAYear);
 
@@ -192,7 +192,7 @@ export class EditDecisionPage
 	}
 
 	public hasDrawdownFacilityAgreed(type: string, value: string): this {
-		Logger.log(`Has ${type} drawdown facility agreed ${value}`);
+		Logger.log(`What ${type} are you recording ${value}`);
 		
 		cy.getByTestId(`${type}-${value}`).should("be.checked");
 
@@ -229,7 +229,7 @@ export class EditDecisionPage
 	public withTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`With total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").clear().type(totalAmountRequested);
+		cy.getById("total-additional-financial-support").clear().type(totalAmountRequested);
 
 		return this;
 	}
@@ -237,7 +237,7 @@ export class EditDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		Logger.log(`Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getById("total-amount-request").should("have.value", totalAmountRequested);
+		cy.getById("total-additional-financial-support").should("have.value", totalAmountRequested);
 
 		return this;
 	}
@@ -245,7 +245,7 @@ export class EditDecisionPage
 	public hasNoTotalAmountRequestedField(): this
 	{
 		Logger.log("Has no total amount requested field");
-		cy.getByTestId("container-total-amount-requested").should("not.exist");
+		cy.getByTestId("amount-additional-financial-support-text").should("not.exist");
 
 		return this;
 	}
