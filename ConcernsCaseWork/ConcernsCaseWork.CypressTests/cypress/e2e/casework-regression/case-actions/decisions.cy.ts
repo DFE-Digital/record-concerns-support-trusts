@@ -47,7 +47,7 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotes("Test notes")
 			.save()
 			.hasValidationError(
-				DateInvalidError.replace("{0}", "Date ESFA received request")
+				DateInvalidError.replace("{0}", "Date SFSO received request")
 			);
 
 		editDecisionPage
@@ -57,7 +57,7 @@ describe("User can add decisions to an existing case", () => {
 			.withSupportingNotesExceedingLimit()
 			.save()
 			.hasValidationError(
-				DateIncompleteError.replace("{0}", "Date ESFA received request")
+				DateIncompleteError.replace("{0}", "Date SFSO received request")
 			)
 			.hasValidationError(NotesError);
 
@@ -70,7 +70,7 @@ describe("User can add decisions to an existing case", () => {
 		Logger.log("Ensure that selecting a sub question, selecting a value then deselecting disables and clears the field");
 		editDecisionPage
 			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.withTypeOfDecision(repayableFinancialSupportOption)
 			.hasNoEnabledOrSelectedSubQuestions(repayableFinancialSupportOption);
@@ -92,10 +92,10 @@ describe("User can add decisions to an existing case", () => {
 			.withTypeOfDecision("NoticeToImprove")
 			.withTypeOfDecision("Section128")
 			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.withTypeOfDecision(shortTermCashAdvanceOption)
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
@@ -146,10 +146,10 @@ describe("User can add decisions to an existing case", () => {
 			.hasTypeOfDecision("NoticeToImprove")
 			.hasTypeOfDecision("Section128")
 			.hasTypeOfDecision(repayableFinancialSupportOption)
-			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.hasFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.hasTypeOfDecision(shortTermCashAdvanceOption)
-			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
 			.hasSupportingNotes("These are some supporting notes!")
 
 		Logger.log("Set new values");
@@ -163,9 +163,9 @@ describe("User can add decisions to an existing case", () => {
 			.withDateESFAMonth("03")
 			.withDateESFAYear("2022")
 			.withTypeOfDecision("QualifiedFloatingCharge")
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithImmediatePayment")
 			.withFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ANewPackageWithDrawdown")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes");
 
@@ -180,9 +180,9 @@ describe("User can add decisions to an existing case", () => {
 
 		// The sub questions only appear on edit, so we need to make sure they got updated
 		editDecisionPage
-			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "No")
+			.hasDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithImmediatePayment")
 			.hasFrameworkCategory(repayableFinancialSupportOption, "EnablingFinancialRecovery")
-			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "Yes");
+			.hasDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ANewPackageWithDrawdown");
 
 		editDecisionPage.cancel();
 
@@ -536,10 +536,10 @@ describe("User can add decisions to an existing case", () => {
 			.withTypeOfDecision("NoticeToImprove")
 			.withTypeOfDecision("Section128")
 			.withTypeOfDecision(repayableFinancialSupportOption)
-			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "Yes")
+			.withDrawdownFacilityAgreed(repayableFinancialSupportOption, "ANewPackageWithDrawdown")
 			.withFrameworkCategory(repayableFinancialSupportOption, "BuildingFinancialCapability")
 			.withTypeOfDecision(shortTermCashAdvanceOption)
-			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "PaymentUnderExistingArrangement")
+			.withDrawdownFacilityAgreed(shortTermCashAdvanceOption, "ADrawdownFromAnExistingPackage")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
 			.save();
