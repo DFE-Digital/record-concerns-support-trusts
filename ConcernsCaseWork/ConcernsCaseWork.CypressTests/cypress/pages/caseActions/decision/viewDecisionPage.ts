@@ -75,7 +75,7 @@ export class ViewDecisionPage
 	}
 
 	public hasDateESFAReceivedRequest(dateESFAReceivedRequest: string): this {
-		cy.task("log", `Has Date ESFA Received Request ${dateESFAReceivedRequest}`);
+		cy.task("log", `Has Date SFSO Received Request ${dateESFAReceivedRequest}`);
 
 		cy.getByTestId("date-esfa-received-text").should(
 			"contain.text",
@@ -86,8 +86,8 @@ export class ViewDecisionPage
 	}
 
 	public hasNoDateESFAReceivedRequestField(): this {
-		Logger.log("Has no date ESFA received");
-		cy.getByTestId("row-esfa-date-requested").should("not.exist");
+		Logger.log("Has no date SFSO  received");
+		cy.getByTestId("row--date-requested").should("not.exist");
 
 		return this;
 	}
@@ -95,7 +95,7 @@ export class ViewDecisionPage
 	public hasTotalAmountRequested(totalAmountRequested: string): this {
 		cy.task("log", `Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getByTestId("amount-requested-text").should(
+		cy.getByTestId("amount-additional-financial-support-text").should(
 			"contain.text",
 			totalAmountRequested
 		);
@@ -105,7 +105,7 @@ export class ViewDecisionPage
 
 	public hasNoTotalAmountRequestedField(): this {
 		Logger.log("Has no total amount requested");
-		cy.getByTestId("row-total-amount-requested").should("not.exist");
+		cy.getByTestId("amount-additional-financial-support-text").should("not.exist");
 
 		return this;
 	}
