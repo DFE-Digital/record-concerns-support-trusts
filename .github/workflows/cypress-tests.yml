@@ -112,6 +112,7 @@ jobs:
     name: Generate Combined Report
     needs: cypress-tests
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     if: always() && (inputs.environment == 'staging' || inputs.environment == 'dev')
     defaults:
       run:
