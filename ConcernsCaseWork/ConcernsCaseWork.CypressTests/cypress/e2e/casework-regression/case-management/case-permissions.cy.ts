@@ -39,7 +39,7 @@ describe('Testing permissions on cases and case actions', () => {
 
     beforeEach(() => {
         cy.login();
-		cy.acceptCookies();
+        cy.acceptCookies();
 
         cy.basicCreateCase().then((caseResponse) => {
             caseId = caseResponse.urn;

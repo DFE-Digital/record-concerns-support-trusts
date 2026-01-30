@@ -26,7 +26,7 @@ declare global {
             getById(id: string): Chainable<Element>;
             login(params?: AuthenticationInterceptorParams): Chainable<Element>;
             loginWithCredentials(): Chainable<Element>;
-			acceptCookies(): Chainable<Element>;
+            acceptCookies(): Chainable<Element>;
             excuteAccessibilityTests(): Chainable<Element>;
             basicCreateCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
             createNonConcernsCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;

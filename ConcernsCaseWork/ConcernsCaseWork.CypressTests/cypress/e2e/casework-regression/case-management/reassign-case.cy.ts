@@ -14,7 +14,7 @@ describe('Testing reassigning cases', () => {
         cy.login({
             role: AdminClaim,
         });
-		cy.acceptCookies();
+        cy.acceptCookies();
 
         cy.basicCreateCase().then((caseResponse) => {
             caseId = caseResponse.urn;

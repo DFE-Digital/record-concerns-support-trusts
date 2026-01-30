@@ -21,7 +21,7 @@ describe('User can add Financial Plan case action to an existing case', () => {
         cy.login({
             role: DeleteCaseGroupClaim,
         });
-		cy.acceptCookies();
+        cy.acceptCookies();
 
         now = new Date();
         Logger.log('Given a case');

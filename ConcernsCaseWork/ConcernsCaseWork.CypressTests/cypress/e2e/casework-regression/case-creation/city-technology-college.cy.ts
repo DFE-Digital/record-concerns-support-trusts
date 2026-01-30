@@ -26,7 +26,7 @@ describe('Creating a case for a city technology college', () => {
 
     beforeEach(() => {
         cy.login();
-		cy.acceptCookies();
+        cy.acceptCookies();
         now = new Date();
         email = Cypress.env(EnvUsername);
         var x = email.split('@')[0];

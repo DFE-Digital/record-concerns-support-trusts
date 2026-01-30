@@ -23,7 +23,7 @@ describe('User can add tte to an existing case', () => {
         cy.login({
             role: DeleteCaseGroupClaim,
         });
-		cy.acceptCookies();
+        cy.acceptCookies();
         now = new Date();
 
         cy.basicCreateCase();

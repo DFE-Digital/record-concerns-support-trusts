@@ -50,8 +50,8 @@ Cypress.Commands.add('loginWithCredentials', () => {
 });
 
 Cypress.Commands.add('acceptCookies', () => {
-	cy.setCookie('.ConcernsCasework.Consent', 'True');
-	cy.setCookie('.ConcernsCasework.Consent.Hide', 'True');
+    cy.setCookie('.ConcernsCasework.Consent', 'True');
+    cy.setCookie('.ConcernsCasework.Consent.Hide', 'True');
 });
 
 Cypress.Commands.add('excuteAccessibilityTests', () => {
