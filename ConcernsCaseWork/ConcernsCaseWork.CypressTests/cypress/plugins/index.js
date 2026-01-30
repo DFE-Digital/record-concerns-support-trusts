@@ -19,47 +19,44 @@ const azureLogin = require('./azureLogin').azureLogin;
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
+    const cache = {};
 
-  const cache = {};
+    // `on` is used to hook into various events Cypress emits
+    // `config` is the resolved Cypress config
+    on('task', {
+        azureLogin({ url, username, password }) {
+            const cookie = azureLogin(url, username, password);
 
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-  on('task', {
-    azureLogin({ url, username, password }) {
-      const cookie = azureLogin(url, username, password);
+            return cookie;
+        },
+    });
 
-      return cookie;
-    }
-  })
+    on('task', {
+        log(message) {
+            console.log(message);
+            return null;
+        },
+    });
 
-  on('task', {
+    // Global cache for storing data across tests
+    // Created when you run either cypress run or cypress open
+    // Usage: For storing the auth cookie so we don't need to log in on every test
+    on('task', {
+        setGlobalCacheItem({ name, value }) {
+            cache[name] = value;
 
-    log(message) {
+            return null;
+        },
+        getGlobalCacheItem(name) {
+            const value = cache[name];
 
-      console.log(message)
-      return null
-    },
-  })
+            const result = value ? value : null;
 
-  // Global cache for storing data across tests
-  // Created when you run either cypress run or cypress open
-  // Usage: For storing the auth cookie so we don't need to log in on every test
-  on('task', {
-     setGlobalCacheItem({ name, value }) {
-      cache[name] = value;
+            return result;
+        },
+    });
 
-      return null;
-    },
-    getGlobalCacheItem(name) {
-      const value = cache[name];
+    config.baseUrl = config.env.url;
 
-      const result = (value) ? value : null;
-
-      return result;
-    }
-  })
-
-  config.baseUrl = config.env.url;
-
-  return config;
-}
+    return config;
+};

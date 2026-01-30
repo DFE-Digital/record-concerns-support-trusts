@@ -1,12 +1,10 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
-
-export class DeleteTrustFinancialForecastPage
-{
+export class DeleteTrustFinancialForecastPage {
     public delete(): this {
-        Logger.log("Deleting the Trust financial forecast");
+        Logger.log('Deleting the Trust financial forecast');
 
-        cy.getByTestId("delete-tff-button").click();
+        cy.getByTestId('delete-tff-button').click();
 
         return this;
     }

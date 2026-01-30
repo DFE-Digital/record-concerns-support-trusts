@@ -1,4 +1,4 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
 export class EditSrmaPage {
     public withStatus(status: string) {
@@ -12,7 +12,7 @@ export class EditSrmaPage {
     public withDayTrustContacted(day: string): this {
         Logger.log(`With day trust contacted ${day}`);
 
-        cy.getByTestId("dtr-day-date-offered").clear().type(day);
+        cy.getByTestId('dtr-day-date-offered').clear().type(day);
 
         return this;
     }
@@ -20,7 +20,7 @@ export class EditSrmaPage {
     public withMonthTrustContacted(month: string): this {
         Logger.log(`With month trust contacted ${month}`);
 
-        cy.getByTestId("dtr-month-date-offered").clear().type(month);
+        cy.getByTestId('dtr-month-date-offered').clear().type(month);
 
         return this;
     }
@@ -28,29 +28,27 @@ export class EditSrmaPage {
     public withYearTrustContacted(year: string): this {
         Logger.log(`With year trust contacted ${year}`);
 
-        cy.getByTestId("dtr-year-date-offered").clear().type(year);
+        cy.getByTestId('dtr-year-date-offered').clear().type(year);
 
         return this;
     }
 
-    public clearDateTrustContacted(): this
-    {
-        cy.getByTestId("dtr-day-date-offered").clear();
-        cy.getByTestId("dtr-month-date-offered").clear();
-        cy.getByTestId("dtr-year-date-offered").clear();
+    public clearDateTrustContacted(): this {
+        cy.getByTestId('dtr-day-date-offered').clear();
+        cy.getByTestId('dtr-month-date-offered').clear();
+        cy.getByTestId('dtr-year-date-offered').clear();
 
         return this;
     }
 
-    public clearDateOfVisit(): this
-    {
-        cy.getByTestId("dtr-day-start").clear();
-        cy.getByTestId("dtr-month-start").clear();
-        cy.getByTestId("dtr-year-start").clear();
+    public clearDateOfVisit(): this {
+        cy.getByTestId('dtr-day-start').clear();
+        cy.getByTestId('dtr-month-start').clear();
+        cy.getByTestId('dtr-year-start').clear();
 
-        cy.getByTestId("dtr-day-end").clear();
-        cy.getByTestId("dtr-month-end").clear();
-        cy.getByTestId("dtr-year-end").clear();
+        cy.getByTestId('dtr-day-end').clear();
+        cy.getByTestId('dtr-month-end').clear();
+        cy.getByTestId('dtr-year-end').clear();
 
         return this;
     }
@@ -58,7 +56,7 @@ export class EditSrmaPage {
     public withNotes(notes: string) {
         Logger.log(`With notes ${notes}`);
 
-        cy.getById("srma-notes").clear({ force: true }).type(notes);
+        cy.getById('srma-notes').clear({ force: true }).type(notes);
 
         return this;
     }
@@ -66,7 +64,7 @@ export class EditSrmaPage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('srma-notes').clear().invoke("val", "x 1 D".repeat(1001));
+        cy.getById('srma-notes').clear().invoke('val', 'x 1 D'.repeat(1001));
 
         return this;
     }
@@ -175,29 +173,26 @@ export class EditSrmaPage {
         return this;
     }
 
-    public confirmComplete(): this
-    {
-        Logger.log("Confirming the SRMA is complete");
+    public confirmComplete(): this {
+        Logger.log('Confirming the SRMA is complete');
 
-        cy.getById("srma-confirm-check").check();
-
-        return this;
-    }
-
-    public confirmCancelled(): this
-    {
-        Logger.log("Confirming the SRMA is cancelled");
-        
-        cy.getById("srma-confirm-check").check();
+        cy.getById('srma-confirm-check').check();
 
         return this;
     }
 
-    public confirmDeclined(): this
-    {
-        Logger.log("Confirming the SRMA is declined");
-        
-        cy.getById("srma-confirm-check").check();
+    public confirmCancelled(): this {
+        Logger.log('Confirming the SRMA is cancelled');
+
+        cy.getById('srma-confirm-check').check();
+
+        return this;
+    }
+
+    public confirmDeclined(): this {
+        Logger.log('Confirming the SRMA is declined');
+
+        cy.getById('srma-confirm-check').check();
 
         return this;
     }
@@ -205,7 +200,7 @@ export class EditSrmaPage {
     public hasStatus(value: string): this {
         Logger.log(`With status ${value}`);
 
-        this.getStatus(value).should("be.checked");
+        this.getStatus(value).should('be.checked');
 
         return this;
     }
@@ -213,7 +208,7 @@ export class EditSrmaPage {
     public hasDayTrustContacted(value: string): this {
         Logger.log(`Has day trust contacted ${value}`);
 
-        cy.getById(`dtr-day-date-offered`).should("contain.value", value);
+        cy.getById(`dtr-day-date-offered`).should('contain.value', value);
 
         return this;
     }
@@ -221,7 +216,7 @@ export class EditSrmaPage {
     public hasMonthTrustContacted(value: string): this {
         Logger.log(`Has month trust contacted ${value}`);
 
-        cy.getById(`dtr-month-date-offered`).should("contain.value", value);
+        cy.getById(`dtr-month-date-offered`).should('contain.value', value);
 
         return this;
     }
@@ -229,7 +224,7 @@ export class EditSrmaPage {
     public hasYearTrustContacted(value: string): this {
         Logger.log(`Has year trust contacted ${value}`);
 
-        cy.getById(`dtr-year-date-offered`).should("contain.value", value);
+        cy.getById(`dtr-year-date-offered`).should('contain.value', value);
 
         return this;
     }
@@ -237,7 +232,7 @@ export class EditSrmaPage {
     public hasReason(value: string): this {
         Logger.log(`Has reason ${value}`);
 
-        this.getReason(value).should("be.checked", value);
+        this.getReason(value).should('be.checked', value);
 
         return this;
     }
@@ -245,7 +240,7 @@ export class EditSrmaPage {
     public hasDayAccepted(value: string): this {
         Logger.log(`Has day accepted ${value}`);
 
-        cy.getById(`dtr-day-date-accepted`).should("contain.value", value);
+        cy.getById(`dtr-day-date-accepted`).should('contain.value', value);
 
         return this;
     }
@@ -253,7 +248,7 @@ export class EditSrmaPage {
     public hasMonthAccepted(value: string): this {
         Logger.log(`Has month trust contacted ${value}`);
 
-        cy.getById(`dtr-month-date-accepted`).should("contain.value", value);
+        cy.getById(`dtr-month-date-accepted`).should('contain.value', value);
 
         return this;
     }
@@ -261,7 +256,7 @@ export class EditSrmaPage {
     public hasYearAccepted(value: string): this {
         Logger.log(`Has year trust contacted ${value}`);
 
-        cy.getById(`dtr-year-date-accepted`).should("contain.value", value);
+        cy.getById(`dtr-year-date-accepted`).should('contain.value', value);
 
         return this;
     }
@@ -269,7 +264,7 @@ export class EditSrmaPage {
     public hasStartDayOfVisit(value: string): this {
         Logger.log(`Has start day of visit ${value}`);
 
-        cy.getById(`dtr-day-start`).should("contain.value", value);
+        cy.getById(`dtr-day-start`).should('contain.value', value);
 
         return this;
     }
@@ -277,7 +272,7 @@ export class EditSrmaPage {
     public hasStartMonthOfVisit(value: string): this {
         Logger.log(`Has start month of visit ${value}`);
 
-        cy.getById(`dtr-month-start`).should("contain.value", value);
+        cy.getById(`dtr-month-start`).should('contain.value', value);
 
         return this;
     }
@@ -285,7 +280,7 @@ export class EditSrmaPage {
     public hasStartYearOfVisit(value: string): this {
         Logger.log(`Has start year of visit ${value}`);
 
-        cy.getById(`dtr-year-start`).should("contain.value", value);
+        cy.getById(`dtr-year-start`).should('contain.value', value);
 
         return this;
     }
@@ -293,7 +288,7 @@ export class EditSrmaPage {
     public hasEndDayOfVisit(value: string): this {
         Logger.log(`Has end day of visit ${value}`);
 
-        cy.getById(`dtr-day-end`).should("contain.value", value);
+        cy.getById(`dtr-day-end`).should('contain.value', value);
 
         return this;
     }
@@ -301,7 +296,7 @@ export class EditSrmaPage {
     public hasEndMonthOfVisit(value: string): this {
         Logger.log(`Has end month of visit ${value}`);
 
-        cy.getById(`dtr-month-end`).should("contain.value", value);
+        cy.getById(`dtr-month-end`).should('contain.value', value);
 
         return this;
     }
@@ -309,7 +304,7 @@ export class EditSrmaPage {
     public hasEndYearOfVisit(value: string): this {
         Logger.log(`Has end year of visit ${value}`);
 
-        cy.getById(`dtr-year-end`).should("contain.value", value);
+        cy.getById(`dtr-year-end`).should('contain.value', value);
 
         return this;
     }
@@ -317,7 +312,7 @@ export class EditSrmaPage {
     public hasDayReportSentToTrust(value: string): this {
         Logger.log(`Has day report sent to trust ${value}`);
 
-        cy.getById(`dtr-day-date-report-sent`).should("contain.value", value);
+        cy.getById(`dtr-day-date-report-sent`).should('contain.value', value);
 
         return this;
     }
@@ -325,7 +320,7 @@ export class EditSrmaPage {
     public hasMonthReportSentToTrust(value: string): this {
         Logger.log(`Has month report sent to trust ${value}`);
 
-        cy.getById(`dtr-month-date-report-sent`).should("contain.value", value);
+        cy.getById(`dtr-month-date-report-sent`).should('contain.value', value);
 
         return this;
     }
@@ -333,14 +328,14 @@ export class EditSrmaPage {
     public hasYearReportSentToTrust(value: string): this {
         Logger.log(`Has year report sent to trust ${value}`);
 
-        cy.getById(`dtr-year-date-report-sent`).should("contain.value", value);
+        cy.getById(`dtr-year-date-report-sent`).should('contain.value', value);
 
         return this;
     }
     public hasNotes(value: string): this {
         Logger.log(`Has notes ${value}`);
 
-        cy.getById(`srma-notes`).should("contain.value", value);
+        cy.getById(`srma-notes`).should('contain.value', value);
 
         return this;
     }
@@ -348,33 +343,31 @@ export class EditSrmaPage {
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should("contain.text", value);
+        cy.getById('errorSummary').should('contain.text', value);
 
         return this;
     }
 
     public save(): this {
-        Logger.log("Saving SRMA");
+        Logger.log('Saving SRMA');
 
-        cy.getById("add-srma-button").click();
-
-        return this;
-    }
-
-    public hasReasonHintText(): this
-    {
-        Logger.log("Verify Text Hint ");
-        
-        this.getReasonHintText().should("exist");
+        cy.getById('add-srma-button').click();
 
         return this;
     }
 
-    public hasNoReasonHintText(): this
-    {
-        Logger.log("Verify Text Hint is not displayed");
-        
-        this.getReasonHintText().should("not.exist");
+    public hasReasonHintText(): this {
+        Logger.log('Verify Text Hint ');
+
+        this.getReasonHintText().should('exist');
+
+        return this;
+    }
+
+    public hasNoReasonHintText(): this {
+        Logger.log('Verify Text Hint is not displayed');
+
+        this.getReasonHintText().should('not.exist');
 
         return this;
     }
@@ -384,13 +377,12 @@ export class EditSrmaPage {
     }
 
     private getReason(reason: string) {
-        const id = reason.split(" ").join("");
+        const id = reason.split(' ').join('');
 
-        return cy.getByTestId(id)
+        return cy.getByTestId(id);
     }
 
-    private getReasonHintText(): Cypress.Chainable<Element>
-    {
+    private getReasonHintText(): Cypress.Chainable<Element> {
         return cy.getByTestId('reason-hint-text');
     }
 }

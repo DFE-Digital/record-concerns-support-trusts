@@ -1,4 +1,4 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
 export class CloseNoticeToImprovePage {
     public withDayClosed(value: string): this {
@@ -36,7 +36,7 @@ export class CloseNoticeToImprovePage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear().invoke('val', 'x 1'.repeat(1001));
 
         return this;
     }
@@ -44,7 +44,7 @@ export class CloseNoticeToImprovePage {
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should("contain.text", value);
+        cy.getById('errorSummary').should('contain.text', value);
 
         return this;
     }
@@ -60,9 +60,9 @@ export class CloseNoticeToImprovePage {
     }
 
     public close(): this {
-        Logger.log("Confirming Close of Notice To Improve");
+        Logger.log('Confirming Close of Notice To Improve');
 
-        cy.getById("close-nti-button").click();
+        cy.getById('close-nti-button').click();
 
         return this;
     }

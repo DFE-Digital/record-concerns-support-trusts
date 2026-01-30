@@ -1,338 +1,295 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
-export class ViewDecisionPage
-{
-	public hasDateOpened(value: string): this {
-		Logger.log(`Has date opened ${value}`);
+export class ViewDecisionPage {
+    public hasDateOpened(value: string): this {
+        Logger.log(`Has date opened ${value}`);
 
-		cy.getByTestId("decision-open-text").should("contain.text", value);
+        cy.getByTestId('decision-open-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateClosed(value: string): this {
-		Logger.log(`Has date closed ${value}`);
+    public hasDateClosed(value: string): this {
+        Logger.log(`Has date closed ${value}`);
 
-		cy.getByTestId("decision-closed-text").should("contain.text", value);
+        cy.getByTestId('decision-closed-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
     public hasCrmEnquiry(crmNumber: string): this {
-		cy.task("log", `Has CRM enquiry ${crmNumber}`);
+        cy.task('log', `Has CRM enquiry ${crmNumber}`);
 
-		cy.getByTestId("crm-enquiry-text").should("contain.text", crmNumber);
+        cy.getByTestId('crm-enquiry-text').should('contain.text', crmNumber);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasCrmCase(hasCrmCase: string): this {
-		cy.task("log", `Has CRM enquiry ${hasCrmCase}`);
+    public hasCrmCase(hasCrmCase: string): this {
+        cy.task('log', `Has CRM enquiry ${hasCrmCase}`);
 
-		cy.getByTestId("has-crm-case").should("contain.text", hasCrmCase);
+        cy.getByTestId('has-crm-case').should('contain.text', hasCrmCase);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasRetrospectiveRequest(retrospectiveRequest: string): this {
-		cy.task("log", `Has retrospective request ${retrospectiveRequest}`);
+    public hasRetrospectiveRequest(retrospectiveRequest: string): this {
+        cy.task('log', `Has retrospective request ${retrospectiveRequest}`);
 
-		cy.getByTestId("retrospective-request-text").should(
-			"contain.text",
-			retrospectiveRequest
-		);
+        cy.getByTestId('retrospective-request-text').should('contain.text', retrospectiveRequest);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoRetrospectiveRequestField(): this {
-		Logger.log("Has no retrospective request");
-		cy.getByTestId("row-retrospective-request").should("not.exist");
+    public hasNoRetrospectiveRequestField(): this {
+        Logger.log('Has no retrospective request');
+        cy.getByTestId('row-retrospective-request').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasSubmissionRequired(submissionRequired: string): this {
-		cy.task("log", `Has Submission Required ${submissionRequired}`);
+    public hasSubmissionRequired(submissionRequired: string): this {
+        cy.task('log', `Has Submission Required ${submissionRequired}`);
 
-		cy.getByTestId("submission-required-text").should(
-			"contain.text",
-			submissionRequired
-		);
+        cy.getByTestId('submission-required-text').should('contain.text', submissionRequired);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasSubmissionLink(submissionLink: string): this {
-		cy.task("log", `Has Submission link ${submissionLink}`);
+    public hasSubmissionLink(submissionLink: string): this {
+        cy.task('log', `Has Submission link ${submissionLink}`);
 
-		cy.getByTestId("submission-link-text").should(
-			"contain.text",
-			submissionLink
-		);
+        cy.getByTestId('submission-link-text').should('contain.text', submissionLink);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateESFAReceivedRequest(dateESFAReceivedRequest: string): this {
-		cy.task("log", `Has Date SFSO Received Request ${dateESFAReceivedRequest}`);
+    public hasDateESFAReceivedRequest(dateESFAReceivedRequest: string): this {
+        cy.task('log', `Has Date SFSO Received Request ${dateESFAReceivedRequest}`);
 
-		cy.getByTestId("date-esfa-received-text").should(
-			"contain.text",
-			dateESFAReceivedRequest
-		);
+        cy.getByTestId('date-esfa-received-text').should('contain.text', dateESFAReceivedRequest);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoDateESFAReceivedRequestField(): this {
-		Logger.log("Has no date SFSO  received");
-		cy.getByTestId("row--date-requested").should("not.exist");
+    public hasNoDateESFAReceivedRequestField(): this {
+        Logger.log('Has no date SFSO  received');
+        cy.getByTestId('row--date-requested').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasTotalAmountRequested(totalAmountRequested: string): this {
-		cy.task("log", `Has total Amount Requested ${totalAmountRequested}`);
+    public hasTotalAmountRequested(totalAmountRequested: string): this {
+        cy.task('log', `Has total Amount Requested ${totalAmountRequested}`);
 
-		cy.getByTestId("amount-additional-financial-support-text").should(
-			"contain.text",
-			totalAmountRequested
-		);
+        cy.getByTestId('amount-additional-financial-support-text').should('contain.text', totalAmountRequested);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoTotalAmountRequestedField(): this {
-		Logger.log("Has no total amount requested");
-		cy.getByTestId("amount-additional-financial-support-text").should("not.exist");
+    public hasNoTotalAmountRequestedField(): this {
+        Logger.log('Has no total amount requested');
+        cy.getByTestId('amount-additional-financial-support-text').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasTypeOfDecision(typeOfDecision: string): this {
-		cy.task("log", `Has type of decision  ${typeOfDecision}`);
+    public hasTypeOfDecision(typeOfDecision: string): this {
+        cy.task('log', `Has type of decision  ${typeOfDecision}`);
 
-		cy.getByTestId("decision-type-text").should(
-			"contain.text",
-			typeOfDecision
-		);
+        cy.getByTestId('decision-type-text').should('contain.text', typeOfDecision);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasSupportingNotes(supportingNotes: string): this {
-		cy.task("log", `Has Supporting Notes ${supportingNotes}`);
+    public hasSupportingNotes(supportingNotes: string): this {
+        cy.task('log', `Has Supporting Notes ${supportingNotes}`);
 
-		cy.getByTestId("supporting-notes-text").should(
-			"contain.text",
-			supportingNotes
-		);
+        cy.getByTestId('supporting-notes-text').should('contain.text', supportingNotes);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasActionEdit(): this {
-		cy.task("log", `Has Edit Action`);
+    public hasActionEdit(): this {
+        cy.task('log', `Has Edit Action`);
 
-		cy.getByTestId("edit-decision-text").should(
-			"contain.text",
-			"Edit"
-		);
+        cy.getByTestId('edit-decision-text').should('contain.text', 'Edit');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasBusinessArea(businessArea: string): this
-	{
-		Logger.log(`Has business area ${businessArea}`);
+    public hasBusinessArea(businessArea: string): this {
+        Logger.log(`Has business area ${businessArea}`);
 
-		cy.getByTestId("business-areas-consulted-text").should("contain.text", businessArea);
+        cy.getByTestId('business-areas-consulted-text').should('contain.text', businessArea);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDecisionOutcomeStatus(status: string): this
-	{
-		Logger.log(`Has decision status ${status}`);
+    public hasDecisionOutcomeStatus(status: string): this {
+        Logger.log(`Has decision status ${status}`);
 
-		cy.getByTestId("decision-status-text").should("contain.text", status);
+        cy.getByTestId('decision-status-text').should('contain.text', status);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasMadeDate(madeDate: string): this
-	{
-		Logger.log(`Has made date ${madeDate}`);
+    public hasMadeDate(madeDate: string): this {
+        Logger.log(`Has made date ${madeDate}`);
 
-		cy.getByTestId("decision-made-date-text").should("contain.text", madeDate);
+        cy.getByTestId('decision-made-date-text').should('contain.text', madeDate);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasEffectiveFromDate(effectiveDate: string): this
-	{
-		Logger.log(`Has effective from date ${effectiveDate}`);
+    public hasEffectiveFromDate(effectiveDate: string): this {
+        Logger.log(`Has effective from date ${effectiveDate}`);
 
-		cy.getByTestId("decision-date-effective-text").should("contain.text", effectiveDate);
+        cy.getByTestId('decision-date-effective-text').should('contain.text', effectiveDate);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasTotalAmountApproved(total: string): this
-	{
-		Logger.log(`Has total amount approved ${total}`);
+    public hasTotalAmountApproved(total: string): this {
+        Logger.log(`Has total amount approved ${total}`);
 
-		cy.getByTestId("total-amount-approved-text").should("contain.text", total);
+        cy.getByTestId('total-amount-approved-text').should('contain.text', total);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoTotalAmountApprovedField(): this {
-		Logger.log("Has no total amount approved");
-		cy.getByTestId("row-total-amount-approved").should("not.exist");
+    public hasNoTotalAmountApprovedField(): this {
+        Logger.log('Has no total amount approved');
+        cy.getByTestId('row-total-amount-approved').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasAuthoriser(authoriser: string): this
-	{
-		Logger.log(`Has authoriser ${authoriser}`);
+    public hasAuthoriser(authoriser: string): this {
+        Logger.log(`Has authoriser ${authoriser}`);
 
-		cy.getByTestId("authoriser-text").should("contain.text", authoriser);
+        cy.getByTestId('authoriser-text').should('contain.text', authoriser);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasNoDecisionOutcome(): this
-	{
-		Logger.log(`Has no decision outcome displayed`);
+    public hasNoDecisionOutcome(): this {
+        Logger.log(`Has no decision outcome displayed`);
 
-		cy.getByTestId("decision-outcome-heading").should("not.exist");
-		cy.getByTestId("decision-outcome-table").should("not.exist");
+        cy.getByTestId('decision-outcome-heading').should('not.exist');
+        cy.getByTestId('decision-outcome-table').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public cannotCreateAnotherDecisionOutcome(): this
-	{
-		Logger.log("Checking we cannot create another decision outcome if one exists");
+    public cannotCreateAnotherDecisionOutcome(): this {
+        Logger.log('Checking we cannot create another decision outcome if one exists');
 
-		cy.getByTestId("continue-record-decision-button").should("not.exist");
+        cy.getByTestId('continue-record-decision-button').should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public editDecision(): this {
-		Logger.log("Editing decision");
+    public editDecision(): this {
+        Logger.log('Editing decision');
 
-		this.getEditDecision().children('a').click();
+        this.getEditDecision().children('a').click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public deleteDecision(): this {
-		Logger.log("Delete decision");
+    public deleteDecision(): this {
+        Logger.log('Delete decision');
 
-		this.getDeleteDecision().click();
+        this.getDeleteDecision().click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public canEditDecision(): this
-	{
-		Logger.log("Can edit decision");
+    public canEditDecision(): this {
+        Logger.log('Can edit decision');
 
-		this.getEditDecision();
+        this.getEditDecision();
 
-		return this;
-	}
+        return this;
+    }
 
-	public cannotEditDecision(): this
-	{
-		Logger.log("Cannot edit decision");
+    public cannotEditDecision(): this {
+        Logger.log('Cannot edit decision');
 
-		this.getEditDecision().should("not.exist");
+        this.getEditDecision().should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public editDecisionOutcome(): this
-	{
-		Logger.log(`Edit decision outcome`);
+    public editDecisionOutcome(): this {
+        Logger.log(`Edit decision outcome`);
 
-		this.getEditDecisionOutcome()
-			.children("a")
-			.should("contain.text", "Edit")
-			.click();
+        this.getEditDecisionOutcome().children('a').should('contain.text', 'Edit').click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public canEditDecisionOutcome(): this
-	{
-		Logger.log("Cannot edit a decision outcome");
+    public canEditDecisionOutcome(): this {
+        Logger.log('Cannot edit a decision outcome');
 
-		this.getEditDecisionOutcome();
+        this.getEditDecisionOutcome();
 
-		return this;
-	}
+        return this;
+    }
 
-	public cannotEditDecisionOutcome(): this
-	{
-		Logger.log("Cannot edit a decision outcome");
+    public cannotEditDecisionOutcome(): this {
+        Logger.log('Cannot edit a decision outcome');
 
-		this.getEditDecisionOutcome().should("not.exist");
+        this.getEditDecisionOutcome().should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public createDecisionOutcome(): this {
-		Logger.log("Creating decision outcome");
+    public createDecisionOutcome(): this {
+        Logger.log('Creating decision outcome');
 
-		cy.getByTestId('continue-record-decision-button').click();
+        cy.getByTestId('continue-record-decision-button').click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public closeDecision(): this {
-		Logger.log("Closing decision");
-		this.getCloseDecision().click();
+    public closeDecision(): this {
+        Logger.log('Closing decision');
+        this.getCloseDecision().click();
 
-		return this;
-	}
+        return this;
+    }
 
-	public canCloseDecision()
-	{
-		Logger.log("Can close a decision");
+    public canCloseDecision() {
+        Logger.log('Can close a decision');
 
-		this.getCloseDecision();
+        this.getCloseDecision();
 
-		return this;
-	}
+        return this;
+    }
 
-	public cannotCloseDecision(): this
-	{
-		Logger.log("Cannot close decision");
+    public cannotCloseDecision(): this {
+        Logger.log('Cannot close decision');
 
-		this.getCloseDecision().should("not.exist");
+        this.getCloseDecision().should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	private getEditDecision() {
-		return cy.getByTestId("edit-decision-text");
-	}
+    private getEditDecision() {
+        return cy.getByTestId('edit-decision-text');
+    }
 
-	private getDeleteDecision() {
-		return cy.getByTestId("delete-decision");
-	}
+    private getDeleteDecision() {
+        return cy.getByTestId('delete-decision');
+    }
 
-	private getEditDecisionOutcome() {
-		return cy.getByTestId("edit-decision-outcome-text");
-	}
+    private getEditDecisionOutcome() {
+        return cy.getByTestId('edit-decision-outcome-text');
+    }
 
-	private getCloseDecision() {
-		return cy.getByTestId('close-decision-button');
-	}
+    private getCloseDecision() {
+        return cy.getByTestId('close-decision-button');
+    }
 }

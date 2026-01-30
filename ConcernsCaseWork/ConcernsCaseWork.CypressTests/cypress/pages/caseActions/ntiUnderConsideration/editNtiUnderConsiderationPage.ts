@@ -1,4 +1,4 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
 export class EditNtiUnderConsiderationPage {
     public withReason(value: string): this {
@@ -20,15 +20,15 @@ export class EditNtiUnderConsiderationPage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
-		
+        cy.getById('nti-notes').clear().invoke('val', 'x 1'.repeat(1001));
+
         return this;
     }
 
     public hasReason(value: string): this {
         Logger.log(`Has reason ${value}`);
 
-        cy.getByTestId(`reason-${value}`).should("be.checked", value);
+        cy.getByTestId(`reason-${value}`).should('be.checked', value);
 
         return this;
     }
@@ -36,7 +36,7 @@ export class EditNtiUnderConsiderationPage {
     public hasNotes(value: string): this {
         Logger.log(`Has notes ${value}`);
 
-        cy.getById(`nti-notes`).should("contain.value", value);
+        cy.getById(`nti-notes`).should('contain.value', value);
 
         return this;
     }
@@ -44,17 +44,15 @@ export class EditNtiUnderConsiderationPage {
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should("contain.text", value);
+        cy.getById('errorSummary').should('contain.text', value);
 
         return this;
     }
 
-    public clearReasons(): this
-    {
-        Logger.log("Clearing the reasons");
+    public clearReasons(): this {
+        Logger.log('Clearing the reasons');
 
-        cy.get("[name='reason'").each(element =>
-        {
+        cy.get("[name='reason'").each((element) => {
             cy.wrap(element).uncheck();
         });
 
@@ -62,9 +60,9 @@ export class EditNtiUnderConsiderationPage {
     }
 
     public save(): this {
-        Logger.log("Saving NTI under consideration");
+        Logger.log('Saving NTI under consideration');
 
-        cy.getById("add-nti-uc-button").click();
+        cy.getById('add-nti-uc-button').click();
 
         return this;
     }

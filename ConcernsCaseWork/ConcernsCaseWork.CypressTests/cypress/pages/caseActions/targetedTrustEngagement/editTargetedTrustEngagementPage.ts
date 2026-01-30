@@ -1,142 +1,136 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
-export class EditTargetedTrustEngagementPage
-{
+export class EditTargetedTrustEngagementPage {
+    public withDateEngagementDay(dateEngagementStartDay: string): this {
+        Logger.log(`With Date Engagement start Day ${dateEngagementStartDay}`);
 
-	public withDateEngagementDay(dateEngagementStartDay: string): this {
-		Logger.log(`With Date Engagement start Day ${dateEngagementStartDay}`);
+        cy.getById('dtr-day-engagement-start').clear().type(dateEngagementStartDay);
 
-		cy.getById("dtr-day-engagement-start").clear().type(dateEngagementStartDay);
+        return this;
+    }
 
-		return this;
-	}
+    public hasDateEngagementStartDay(dateEngagementStartDay: string): this {
+        Logger.log(`Has Date Engagement start Day ${dateEngagementStartDay}`);
 
-	public hasDateEngagementStartDay(dateEngagementStartDay: string): this {
-		Logger.log(`Has Date Engagement start Day ${dateEngagementStartDay}`);
+        cy.getById('dtr-day-engagement-start').should('have.value', dateEngagementStartDay);
 
-		cy.getById("dtr-day-engagement-start").should("have.value", dateEngagementStartDay);
+        return this;
+    }
 
-		return this;
-	}
+    public withDateEngagementMonth(dateEngagementMonth: string): this {
+        Logger.log(`With Date Engagement Month ${dateEngagementMonth}`);
 
-	public withDateEngagementMonth(dateEngagementMonth: string): this {
-		Logger.log(`With Date Engagement Month ${dateEngagementMonth}`);
+        cy.getById('dtr-month-engagement-start').clear().type(dateEngagementMonth);
 
-		cy.getById("dtr-month-engagement-start").clear().type(dateEngagementMonth);
+        return this;
+    }
 
-		return this;
-	}
+    public hasDateEngagementStartMonth(dateEngagementStartMonth: string): this {
+        Logger.log(`Has Date Engagement Month ${dateEngagementStartMonth}`);
 
-	public hasDateEngagementStartMonth(dateEngagementStartMonth: string): this {
-		Logger.log(`Has Date Engagement Month ${dateEngagementStartMonth}`);
+        cy.getById('dtr-month-engagement-start').should('have.value', dateEngagementStartMonth);
 
-		cy.getById("dtr-month-engagement-start").should("have.value", dateEngagementStartMonth);
+        return this;
+    }
 
-		return this;
-	}
+    public withDateEngagementYear(dateEngagementStartYear: string): this {
+        Logger.log(`With Date Engagement Year ${dateEngagementStartYear}`);
 
-	public withDateEngagementYear(dateEngagementStartYear: string): this {
-		Logger.log(`With Date Engagement Year ${dateEngagementStartYear}`);
+        const element = cy.getById('dtr-year-engagement-start');
+        element.clear();
 
-		const element = cy.getById("dtr-year-engagement-start");
-		element.clear();
+        if (dateEngagementStartYear.length > 0) {
+            element.type(dateEngagementStartYear);
+        }
 
-		if (dateEngagementStartYear.length > 0) {
-			element.type(dateEngagementStartYear);
-		}
+        return this;
+    }
 
-		return this;
-	}
+    public hasDateEngagementStartYear(dateESFAYear: string): this {
+        Logger.log(`Has Date Engagement Year ${dateESFAYear}`);
 
-	public hasDateEngagementStartYear(dateESFAYear: string): this {
-		Logger.log(`Has Date Engagement Year ${dateESFAYear}`);
+        cy.getById('dtr-year-engagement-start').should('have.value', dateESFAYear);
 
-		cy.getById("dtr-year-engagement-start").should("have.value", dateESFAYear);
+        return this;
+    }
 
-		return this;
-	}
+    public withNotesExceedingLimit(): this {
+        cy.task('log', `With Notes exceeding limit`);
 
-	public withNotesExceedingLimit(): this {
-		cy.task("log", `With Notes exceeding limit`);
+        cy.getById('case-tte-notes').clear().invoke('val', 'x 1'.repeat(1001));
 
-		cy.getById("case-tte-notes").clear().invoke("val", "x 1".repeat(1001));
+        return this;
+    }
 
-		return this;
-	}
+    public withNotes(notes: string): this {
+        Logger.log(`With Notes ${notes}`);
 
-	public withNotes(notes: string): this {
-		Logger.log(`With Notes ${notes}`);
+        cy.getById('case-tte-notes').clear().type(notes);
 
-		cy.getById("case-tte-notes").clear().type(notes);
+        return this;
+    }
 
-		return this;
-	}
+    public hasNotes(notes: string): this {
+        Logger.log(`Has Notes ${notes}`);
 
-	public hasNotes(notes: string): this {
-		Logger.log(`Has Notes ${notes}`);
+        cy.getById('case-tte-notes').should('have.value', notes);
 
-		cy.getById("case-tte-notes").should("have.value", notes);
+        return this;
+    }
 
-		return this;
-	}
+    public withActivity(activity: string): this {
+        Logger.log(`With activity ${activity}`);
 
-	public withActivity(activity: string): this {
-		Logger.log(`With activity ${activity}`);
+        cy.getByTestId(activity).click();
 
-		cy.getByTestId(activity).click();
+        return this;
+    }
 
-		return this;
-	}
+    public hasActivity(activity: string): this {
+        Logger.log(`With activity ${activity}`);
 
-	public hasActivity(activity: string): this {
-		Logger.log(`With activity ${activity}`);
+        cy.getByTestId(activity).should('be.checked');
 
-		cy.getByTestId(activity).should("be.checked");
+        return this;
+    }
 
-		return this;
-	}
+    public withActivityType(typeOfActivity: string): this {
+        Logger.log(`With activity type ${typeOfActivity}`);
 
-	public withActivityType(typeOfActivity: string): this {
-		Logger.log(`With activity type ${typeOfActivity}`);
+        cy.getByTestId(typeOfActivity).click();
 
-		cy.getByTestId(typeOfActivity).click();
+        return this;
+    }
 
-		return this;
-	}
+    public hasActivityType(typeOfActivity: string): this {
+        Logger.log(`With activity type ${typeOfActivity}`);
 
-	public hasActivityType(typeOfActivity: string): this {
-		Logger.log(`With activity type ${typeOfActivity}`);
+        cy.getByTestId(typeOfActivity).should('be.checked');
 
-		cy.getByTestId(typeOfActivity).should("be.checked");
+        return this;
+    }
 
-		return this;
-	}
+    public save(): this {
+        Logger.log('Saving TTE');
 
-	public save(): this {
+        cy.getById('add-tte-button').click();
 
-		Logger.log("Saving TTE");
+        return this;
+    }
 
-		cy.getById('add-tte-button').click();
+    public cancel(): this {
+        Logger.log('Cancelling edit TTE');
 
-		return this;
-	}
+        cy.getById('cancel-link-event').click();
 
-	public cancel(): this {
-		Logger.log("Cancelling edit TTE");
+        return this;
+    }
 
-		cy.getById("cancel-link-event").click();
+    public hasValidationError(message: string): this {
+        cy.task('log', `Has Validation error ${message}`);
 
-		return this;
-	}
+        cy.getById('errorSummary').should('contain.text', message);
 
-	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
-
-		cy.getById("errorSummary").should(
-			"contain.text",
-			message
-		);
-
-		return this;
-	}
+        return this;
+    }
 }

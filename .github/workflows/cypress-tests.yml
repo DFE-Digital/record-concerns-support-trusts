@@ -17,8 +17,9 @@ on:
         required: true
       CYPRESS_TEST_SECRET:
         required: true
-      SLACK_WEBHOOK_URL:
+      TEAMS_WEBHOOK_URL:
         required: true
+
   workflow_dispatch:
     inputs:
       environment:
@@ -27,62 +28,138 @@ on:
         type: environment
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 env:
-  NODE_VERSION: 18.x
+  NODE_VERSION: '18'
+  BROWSER: 'edge'
+  WORKING_DIRECTORY: 'ConcernsCaseWork/ConcernsCaseWork.CypressTests'
 
 jobs:
   cypress-tests:
-    name: Run Cypress Tests
+    name: Cypress (${{ matrix.group }})
     if: inputs.environment == 'staging' || inputs.environment == 'dev'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    defaults:
-      run:
-        working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: case-actions-decisions
+            spec: cypress/e2e/casework-regression/case-actions-decisions/**/*.cy.ts
+          - group: case-actions-nti
+            spec: cypress/e2e/casework-regression/case-actions-nti/**/*.cy.ts
+          - group: case-actions-other
+            spec: cypress/e2e/casework-regression/case-actions-other/**/*.cy.ts
+          - group: case-creation
+            spec: cypress/e2e/casework-regression/case-creation/**/*.cy.ts
+          - group: case-management
+            spec: cypress/e2e/casework-regression/case-management/**/*.cy.ts
+          - group: navigation-ui
+            spec: cypress/e2e/casework-regression/navigation-ui/**/*.cy.ts
+
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
+        with:
+          browser: ${{ env.BROWSER }}
+          spec: ${{ matrix.spec }}
+          working-directory: ${{ env.WORKING_DIRECTORY }}
+        env:
+          CYPRESS_username: ${{ secrets.USERNAME }}
+          CYPRESS_password: ${{ secrets.PASSWORD }}
+          CYPRESS_url: ${{ secrets.AZURE_ENDPOINT }}
+          CYPRESS_api: ${{ secrets.AZURE_ENDPOINT }}
+          CYPRESS_apiKey: ${{ secrets.AZURE_API_KEY }}
+          CYPRESS_authKey: ${{ secrets.CYPRESS_TEST_SECRET }}
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/screenshots
+          retention-days: 5
+          if-no-files-found: ignore
+
+      - name: Prepare test results
+        id: prepare-results
+        if: always()
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          mkdir -p cypress/reports/merged
+          if [ -d "cypress/reports/mocha" ] && [ "$(find cypress/reports/mocha -name '*.json' 2>/dev/null | wc -l)" -gt 0 ]; then
+            for file in cypress/reports/mocha/*.json; do
+              filename=$(basename "$file")
+              cp "$file" "cypress/reports/merged/${{ matrix.group }}-$filename"
+            done
+            echo "results_found=true" >> $GITHUB_OUTPUT
+          else
+            echo '{"stats":{"suites":0,"tests":0,"passes":0,"pending":0,"failures":0,"start":"","end":"","duration":0}}' > "cypress/reports/merged/${{ matrix.group }}-placeholder.json"
+            echo "results_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.group }}
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/merged/*.json
+          retention-days: 1
+
+  generate-report:
+    name: Generate Combined Report
+    needs: cypress-tests
+    if: always() && (inputs.environment == 'staging' || inputs.environment == 'dev')
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
-      - name: Npm install
-        run: npm install
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci --ignore-scripts
 
-      - name: Run cypress
-        run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
-
-      - name: Upload screenshots
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Download all test results
+        uses: actions/download-artifact@v4
         with:
-          name: screenshots-${{ inputs.environment }}
-          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
+          pattern: test-results-*
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/mocha
+          merge-multiple: true
 
-      - name: Generate report
-        if: always()
+      - name: Generate combined HTML report
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          mkdir mochareports
+          mkdir -p mochareports
           npm run generate:html:report
 
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Upload combined report
+        uses: actions/upload-artifact@v4
         with:
-          name: reports-${{ inputs.environment }}
-          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+          name: cypress-report-${{ inputs.environment }}
+          path: ${{ env.WORKING_DIRECTORY }}/mochareports
+          retention-days: 30
 
       - name: Report results to Teams
         if: always()
-        run: |
-                  node scripts/send-teams-notification.js
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: node scripts/send-teams-notification.js
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           ENVIRONMENT: ${{ inputs.environment }}
-          INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
+          INFORMATION_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

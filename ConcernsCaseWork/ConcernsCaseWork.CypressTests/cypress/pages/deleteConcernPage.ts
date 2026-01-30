@@ -1,7 +1,6 @@
 class DeleteConcernPage {
-    confirmDeleteConcern()
-    {
-        cy.getByTestId("delete-concern-button").click();
+    confirmDeleteConcern() {
+        cy.getByTestId('delete-concern-button').click();
     }
 }
 

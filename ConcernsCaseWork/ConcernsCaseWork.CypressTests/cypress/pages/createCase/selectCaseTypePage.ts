@@ -1,7 +1,6 @@
-import { Logger } from "../../common/logger";
+import { Logger } from '../../common/logger';
 
 class SelectCaseTypePage {
-
     public withCaseType(value: string): this {
         Logger.log(`With NonConcernType ${value}`);
 
@@ -10,20 +9,16 @@ class SelectCaseTypePage {
         return this;
     }
 
-
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should(
-            "contain.text",
-            value
-        );
+        cy.getById('errorSummary').should('contain.text', value);
         return this;
     }
 
     public continue(): this {
-        Logger.log("Click continue button");
-        cy.getById("continue").click();
+        Logger.log('Click continue button');
+        cy.getById('continue').click();
 
         return this;
     }
@@ -32,4 +27,3 @@ class SelectCaseTypePage {
 var selectCaseTypePage = new SelectCaseTypePage();
 
 export default selectCaseTypePage;
-

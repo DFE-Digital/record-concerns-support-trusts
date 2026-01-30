@@ -1,13 +1,11 @@
-import { Logger } from "cypress/common/logger";
-import { ActionRow } from "./actionRow";
+import { Logger } from 'cypress/common/logger';
+import { ActionRow } from './actionRow';
 
 class CaseActionTable {
     public getRowByAction(action: string): Cypress.Chainable<ActionRow> {
         Logger.log(`Getting the case action row for ${action}`);
 
-        return cy.getByTestId(`row-${action}`)
-        .then((el) =>
-        {
+        return cy.getByTestId(`row-${action}`).then((el) => {
             return new ActionRow(el);
         });
     }

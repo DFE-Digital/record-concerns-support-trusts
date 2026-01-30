@@ -1,7 +1,6 @@
 class CloseConcernPage {
-    confirmCloseConcern()
-    {
-        cy.getByTestId("close-concern-button").click();
+    confirmCloseConcern() {
+        cy.getByTestId('close-concern-button').click();
     }
 }
 
