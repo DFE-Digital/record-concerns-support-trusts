@@ -46,6 +46,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - group: case-actions-decisions
+            spec: cypress/e2e/casework-regression/case-actions-decisions/**/*.cy.ts
           - group: case-actions-nti
             spec: cypress/e2e/casework-regression/case-actions-nti/**/*.cy.ts
           - group: case-actions-other
