@@ -14,6 +14,7 @@ namespace ConcernsCaseWork.API.Features.Case
 				ReviewAt = concernsCase.ReviewAt,
 				ClosedAt = concernsCase.ClosedAt,
 				CreatedBy = concernsCase.CreatedBy,
+				TeamLedBy = concernsCase.TeamLedBy,
 				Description = concernsCase.Description,
 				CrmEnquiry = concernsCase.CrmEnquiry,
 				TrustUkprn = concernsCase.TrustUkprn,

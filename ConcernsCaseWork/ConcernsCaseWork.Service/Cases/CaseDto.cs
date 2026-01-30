@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.Service.Cases
 		public DateTimeOffset ReviewAt { get; init; }
 		public DateTimeOffset? ClosedAt { get; init; }
 		public string CreatedBy { get; init; }
+		public string TeamLedBy { get; init; }
 		public string Description { get; init; }
 		public string CrmEnquiry { get; init; }
 		public string TrustUkPrn { get; init; }

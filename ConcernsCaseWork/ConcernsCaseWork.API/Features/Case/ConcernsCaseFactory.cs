@@ -15,6 +15,7 @@ namespace ConcernsCaseWork.API.Features.Case
 				ReviewAt = request.ReviewAt,
 				ClosedAt = request.ClosedAt,
 				CreatedBy = request.CreatedBy,
+				TeamLedBy = request.TeamLedBy,
 				Description = request.Description,
 				CrmEnquiry = request.CrmEnquiry,
 				TrustUkprn = request.TrustUkprn,
@@ -51,6 +52,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			original.ReviewAt = toMerge.ReviewAt;
 			original.ClosedAt = toMerge.ClosedAt;
 			original.CreatedBy = toMerge.CreatedBy ?? original.CreatedBy;
+			original.TeamLedBy = toMerge.TeamLedBy ?? original.TeamLedBy;
 			original.Description = toMerge.Description ?? original.Description;
 			original.CrmEnquiry = toMerge.CrmEnquiry ?? original.CrmEnquiry;
 			original.TrustUkprn = toMerge.TrustUkprn ?? original.TrustUkprn;

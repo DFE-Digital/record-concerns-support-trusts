@@ -76,6 +76,7 @@ namespace ConcernsCaseWork.Utils.Tests.Extensions
 		[TestCase("valid.user@education.gov.uk", "Valid User")]
 		[TestCase("concernscasework@education.gov.uk", "Concernscasework")]
 		[TestCase("concerns-casework@education.gov.uk", "Concerns-casework")]
+		[TestCase("", "")]
 		public void WhenFromEmailToFullName_ReturnsExpected(string email, string expectedName)
 		{
 			var result = email.FromEmailToFullName();

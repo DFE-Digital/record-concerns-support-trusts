@@ -276,6 +276,25 @@ else
 			</td>
 		</tr>
 
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table-case-details__header">Team leader</th>
+            <td class="govuk-table__cell" data-testid="case leader_field">
+                @if (!string.IsNullOrWhiteSpace(Model.CaseModel?.TeamLedBy))
+                {
+                    @Model.CaseModel.TeamLedBy.FromEmailToFullName()
+                }
+            </td>
+
+            <td class="govuk-table__cell govuk-table__header__right">
+                @if (Model.IsEditableCase)
+                {
+                    <a class="govuk-link" data-testid="edit-case-leader" href="@Request.Path/edit-team-leader" aria-label="Change team leader">
+                        Change
+                    </a>
+                }
+            </td>
+        </tr>
+
 		<tr class="govuk-table__row">
 			<th scope="row" class="govuk-table-case-details__header">Date created</th>
 			<td class="govuk-table__cell">
@@ -292,8 +311,6 @@ else
 		<h2 class="govuk-heading-m">Case details</h2>
 
 		<div class="govuk-accordion" data-module="govuk-accordion" id="accordion" data-testid="case-narritive-fields-container">
-
-
 			@* Issue *@
 			<div class="govuk-accordion__section">
 				<div class="govuk-accordion__section-header">

@@ -80,6 +80,11 @@ namespace ConcernsCaseWork.Utils.Extensions
 
 		public static string FromEmailToFullName(this string email)
 		{
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				return string.Empty;
+			}
+
 			var fullName = email.Split('@')[0];
 			var names = fullName.Split('.');
 

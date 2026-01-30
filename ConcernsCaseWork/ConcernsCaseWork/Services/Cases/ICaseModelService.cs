@@ -22,6 +22,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 		Task<long> PatchCase(int caseUrn,CreateCaseModel createCaseModel);
 		Task PatchOwner(int caseUrn, string owner);
+		Task PatchTeamLeader(int caseUrn, string teamLeader);
 
 		Task PatchRegion(int caseUrn, Region? region);
 		Task DeleteCase(int caseUrn);

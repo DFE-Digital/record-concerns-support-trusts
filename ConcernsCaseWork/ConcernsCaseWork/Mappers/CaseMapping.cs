@@ -43,6 +43,7 @@ namespace ConcernsCaseWork.Mappers
 				ReviewAt = caseDto.ReviewAt,
 				ClosedAt = caseDto.ClosedAt,
 				CreatedBy = caseDto.CreatedBy,
+				TeamLedBy = caseDto.TeamLedBy,
 				Description = caseDto.Description,
 				CrmEnquiry = caseDto.CrmEnquiry,
 				TrustUkPrn = caseDto.TrustUkPrn,
