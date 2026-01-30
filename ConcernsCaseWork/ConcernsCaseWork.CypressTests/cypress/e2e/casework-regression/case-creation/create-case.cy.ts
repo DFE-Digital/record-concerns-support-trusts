@@ -23,6 +23,7 @@ describe('Creating a case', () => {
 
     beforeEach(() => {
         cy.login();
+		cy.acceptCookies();
     });
 
     it('Should validate adding a case', () => {

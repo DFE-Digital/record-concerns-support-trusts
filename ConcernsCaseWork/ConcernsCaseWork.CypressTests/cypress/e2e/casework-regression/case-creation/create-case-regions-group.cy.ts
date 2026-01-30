@@ -43,6 +43,7 @@ describe('Creating a case', () => {
             cy.login({
                 role: DeleteCaseGroupClaim,
             });
+			cy.acceptCookies();
         });
 
         it('Should create a case with region group', () => {
@@ -245,6 +246,7 @@ describe('Creating a case', () => {
     describe('Case actions', () => {
         beforeEach(() => {
             cy.login();
+			cy.acceptCookies();
 
             cy.basicCreateCase(CaseBuilder.buildRegionsGroupCase());
         });

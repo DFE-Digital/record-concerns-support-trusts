@@ -49,6 +49,11 @@ Cypress.Commands.add('loginWithCredentials', () => {
     cy.visit('/');
 });
 
+Cypress.Commands.add('acceptCookies', () => {
+	cy.setCookie('.ConcernsCasework.Consent', 'True');
+	cy.setCookie('.ConcernsCasework.Consent.Hide', 'True');
+});
+
 Cypress.Commands.add('excuteAccessibilityTests', () => {
     Logger.log('Executing the command');
     const continueOnFail = false;

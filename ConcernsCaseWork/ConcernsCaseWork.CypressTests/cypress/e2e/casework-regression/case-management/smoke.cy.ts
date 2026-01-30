@@ -76,6 +76,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
 
     beforeEach(() => {
         cy.login();
+		cy.acceptCookies();
         // cy.loginWithCredentials();
         now = new Date();
 

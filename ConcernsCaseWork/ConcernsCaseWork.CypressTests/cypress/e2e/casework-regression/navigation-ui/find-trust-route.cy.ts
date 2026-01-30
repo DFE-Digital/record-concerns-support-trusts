@@ -25,6 +25,7 @@ describe('User interactions via Find Trust route', () => {
     describe('When we find a trust', () => {
         beforeEach(() => {
             cy.login();
+			cy.acceptCookies();
         });
 
         const trustName = "Accrington St Christopher's Church Of England High School";
@@ -145,6 +146,7 @@ describe('User interactions via Find Trust route', () => {
 
         beforeEach(() => {
             cy.login();
+			cy.acceptCookies();
 
             // Ensure we have enough cases
             caseApi.getOpenCasesByTrust(trustUkPrn).then((response) => {

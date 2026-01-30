@@ -21,6 +21,7 @@ describe('Testing the NTI warning letter action', () => {
         cy.login({
             role: DeleteCaseGroupClaim,
         });
+		cy.acceptCookies();
         now = new Date();
 
         cy.basicCreateCase();

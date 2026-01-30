@@ -25,6 +25,8 @@ describe('Testing case action NTI', () => {
         cy.login({
             role: DeleteCaseGroupClaim,
         });
+		cy.acceptCookies();
+
         now = new Date();
 
         cy.basicCreateCase();

@@ -16,8 +16,9 @@ describe('Your casework tests', () => {
         let now: Date;
 
         beforeEach(() => {
-            cy.login();
-            now = new Date();
+			cy.login();
+			cy.acceptCookies();
+			now = new Date();
 
             cy.basicCreateCase()
                 .then((caseResponse) => {
@@ -46,6 +47,7 @@ describe('Your casework tests', () => {
     describe('When we have many open cases', () => {
         beforeEach(() => {
             cy.login();
+			cy.acceptCookies();
 
             // Ensure we have enough cases
             caseApi.getOpenCasesByOwner(Cypress.env(EnvUsername)).then((response) => {

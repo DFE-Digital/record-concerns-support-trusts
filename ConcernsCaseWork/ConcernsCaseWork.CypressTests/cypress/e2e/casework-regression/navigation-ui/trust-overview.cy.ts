@@ -22,6 +22,7 @@ describe('Trust overview ', () => {
     describe('When we view a trust on a case', () => {
         beforeEach(() => {
             cy.login();
+			cy.acceptCookies();
             now = new Date();
         });
 

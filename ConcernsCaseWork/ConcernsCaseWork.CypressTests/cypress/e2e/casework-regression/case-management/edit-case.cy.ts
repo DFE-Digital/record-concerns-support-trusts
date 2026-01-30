@@ -36,6 +36,7 @@ describe('Editing a case', () => {
 
     beforeEach(() => {
         cy.login();
+		cy.acceptCookies();
     });
 
     it('Should be able to edit a case', () => {

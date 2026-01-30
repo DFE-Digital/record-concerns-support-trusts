@@ -22,6 +22,7 @@ describe.skip('User can add trust financial forecast to an existing case', () =>
         cy.login({
             role: DeleteCaseGroupClaim,
         });
+		cy.acceptCookies();
         now = new Date();
         cy.basicCreateCase();
         addTFFToCase();

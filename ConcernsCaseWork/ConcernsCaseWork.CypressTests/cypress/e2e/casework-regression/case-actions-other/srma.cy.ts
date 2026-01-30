@@ -20,6 +20,7 @@ describe('Testing the SRMA case action', () => {
         cy.login({
             role: DeleteCaseGroupClaim,
         });
+		cy.acceptCookies();
         now = new Date();
 
         cy.basicCreateCase();

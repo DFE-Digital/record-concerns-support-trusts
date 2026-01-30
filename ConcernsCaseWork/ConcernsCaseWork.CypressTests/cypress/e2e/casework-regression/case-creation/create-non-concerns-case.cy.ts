@@ -43,6 +43,7 @@ describe('Creating a non concerns case', () => {
 
     beforeEach(() => {
         cy.login();
+		cy.acceptCookies();
         email = Cypress.env(EnvUsername);
         name = email.split('@')[0];
         now = new Date();

@@ -22,6 +22,7 @@ describe('Team casework tests', () => {
         beforeEach(() => {
             // Ensure that the automation user has been registered in the system
             cy.login();
+			cy.acceptCookies();
 
             cy.visit('/');
 
@@ -115,6 +116,7 @@ describe('Team casework tests', () => {
 
             beforeEach(() => {
                 cy.login();
+				cy.acceptCookies();
 
                 const ownerid = Cypress.env(EnvUsername);
 
