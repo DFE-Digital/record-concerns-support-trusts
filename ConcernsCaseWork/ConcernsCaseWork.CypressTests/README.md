@@ -19,14 +19,10 @@ These tests behave like a user, all the steps are defined from the users perspec
 #### Avoiding waits
 
 ```javascript
-Logger.Log("Ensure that when the team member is removed, they can be selected again");
-teamCaseworkPage
-    .removeAddedColleagues()
-    .hasNoTeamMember(name);
+Logger.Log('Ensure that when the team member is removed, they can be selected again');
+teamCaseworkPage.removeAddedColleagues().hasNoTeamMember(name);
 
-teamCaseworkPage
-    .selectTeamMember(name);
-
+teamCaseworkPage.selectTeamMember(name);
 ```
 
 This test removes a college then makes sure they are selectable again
@@ -163,15 +159,15 @@ The `executeAccessibilityTests` command is implemented in Cypress and is used to
 To use this command, simply call `executeAccessibilityTests()` in your Cypress test code. Here's an example:
 
 ```javascript
-it("should perform accessibility tests", () => {
-  // Perform actions and assertions on your web application
-  // ...
+it('should perform accessibility tests', () => {
+    // Perform actions and assertions on your web application
+    // ...
 
-  // Execute accessibility tests
-  cy.executeAccessibilityTests();
+    // Execute accessibility tests
+    cy.executeAccessibilityTests();
 
-  // Continue with other test logic
-  // ...
+    // Continue with other test logic
+    // ...
 });
 ```
 

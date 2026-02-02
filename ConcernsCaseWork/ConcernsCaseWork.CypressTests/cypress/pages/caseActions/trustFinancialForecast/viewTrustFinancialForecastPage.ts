@@ -1,12 +1,10 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
-
-export class ViewTrustFinancialForecastPage
-{
+export class ViewTrustFinancialForecastPage {
     public hasDateOpened(value: string) {
         Logger.log(`Has date opened ${value}`);
 
-        cy.getByTestId("trust-financial-forecast-date-opened").should("contain.text", value);
+        cy.getByTestId('trust-financial-forecast-date-opened').should('contain.text', value);
 
         return this;
     }
@@ -14,7 +12,7 @@ export class ViewTrustFinancialForecastPage
     public hasForecastingTool(forecastingTool: string): this {
         Logger.log(`Has forecasting tool ${forecastingTool}`);
 
-        cy.getByTestId(`trust-financial-forecast-when-run`).should("contain.text", forecastingTool);
+        cy.getByTestId(`trust-financial-forecast-when-run`).should('contain.text', forecastingTool);
 
         return this;
     }
@@ -22,7 +20,7 @@ export class ViewTrustFinancialForecastPage
     public hasInitialReviewDate(reviewDate: string): this {
         Logger.log(`Has initial review date ${reviewDate}`);
 
-        cy.getByTestId(`trust-financial-forecast-when-reviewed`).should("contain.text", reviewDate);
+        cy.getByTestId(`trust-financial-forecast-when-reviewed`).should('contain.text', reviewDate);
 
         return this;
     }
@@ -30,7 +28,7 @@ export class ViewTrustFinancialForecastPage
     public hasTrustRespondedDate(respondedDate: string): this {
         Logger.log(`Has trust responded date ${respondedDate}`);
 
-        cy.getByTestId(`trust-financial-forecast-when-responded`).should("contain.text", respondedDate);
+        cy.getByTestId(`trust-financial-forecast-when-responded`).should('contain.text', respondedDate);
 
         return this;
     }
@@ -38,7 +36,7 @@ export class ViewTrustFinancialForecastPage
     public hasTrustResponse(trustResponse: string): this {
         Logger.log(`Has trust response ${trustResponse}`);
 
-        cy.getByTestId(`trust-financial-forecast-was-satisfactory`).should("contain.text", trustResponse);
+        cy.getByTestId(`trust-financial-forecast-was-satisfactory`).should('contain.text', trustResponse);
 
         return this;
     }
@@ -46,7 +44,7 @@ export class ViewTrustFinancialForecastPage
     public hasSRMABeenOffered(response: string): this {
         Logger.log(`Has SRMA been offered ${response}`);
 
-        cy.getByTestId(`trust-financial-forecast-srma-offered`).should("contain.text", response);
+        cy.getByTestId(`trust-financial-forecast-srma-offered`).should('contain.text', response);
 
         return this;
     }
@@ -54,7 +52,7 @@ export class ViewTrustFinancialForecastPage
     public hasNotes(notes: string): this {
         Logger.log(`Has notes ${notes}`);
 
-        cy.getByTestId(`trust-financial-forecast-notes`).should("contain.text", notes);
+        cy.getByTestId(`trust-financial-forecast-notes`).should('contain.text', notes);
 
         return this;
     }
@@ -62,29 +60,29 @@ export class ViewTrustFinancialForecastPage
     public hasDateClosed(value: string) {
         Logger.log(`Has date closed ${value}`);
 
-        cy.getByTestId("trust-financial-forecast-date-closed").should("contain.text", value);
+        cy.getByTestId('trust-financial-forecast-date-closed').should('contain.text', value);
 
         return this;
     }
 
     public canEdit(): this {
-        Logger.log("Can edit");
-        
+        Logger.log('Can edit');
+
         this.getEdit();
 
         return this;
     }
 
     public cannotEdit(): this {
-        Logger.log("Cannot edit");
+        Logger.log('Cannot edit');
 
-        this.getEdit().should("not.exist");
+        this.getEdit().should('not.exist');
 
         return this;
     }
 
     public canClose(): this {
-        Logger.log("Can close");
+        Logger.log('Can close');
 
         this.getClose();
 
@@ -92,15 +90,15 @@ export class ViewTrustFinancialForecastPage
     }
 
     public cannotClose(): this {
-        Logger.log("Cannot close");
+        Logger.log('Cannot close');
 
-        this.getClose().should("not.exist");
+        this.getClose().should('not.exist');
 
         return this;
     }
 
     public edit(): this {
-        Logger.log("Editing trust financial forecast");
+        Logger.log('Editing trust financial forecast');
 
         this.getEdit().click();
 
@@ -108,7 +106,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public close(): this {
-        Logger.log("Closing Trust financial forecast");
+        Logger.log('Closing Trust financial forecast');
 
         this.getClose().click();
 
@@ -116,7 +114,7 @@ export class ViewTrustFinancialForecastPage
     }
 
     public delete(): this {
-        Logger.log("Deleting Trust financial forecast");
+        Logger.log('Deleting Trust financial forecast');
 
         this.getDelete().click();
 
@@ -124,14 +122,14 @@ export class ViewTrustFinancialForecastPage
     }
 
     private getEdit() {
-        return cy.getById("trust-financial-forecast-edit-button");
+        return cy.getById('trust-financial-forecast-edit-button');
     }
 
     private getClose() {
-        return cy.getById("trust-financial-forecast-close-button");
+        return cy.getById('trust-financial-forecast-close-button');
     }
 
     private getDelete() {
-        return cy.getByTestId("delete-tff");
+        return cy.getByTestId('delete-tff');
     }
 }
