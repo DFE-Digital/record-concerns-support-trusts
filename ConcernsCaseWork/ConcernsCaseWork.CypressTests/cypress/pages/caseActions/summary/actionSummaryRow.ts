@@ -1,19 +1,14 @@
-import { Logger } from "cypress/common/logger";
+import { Logger } from 'cypress/common/logger';
 
 export class ActionSummaryRow {
-
-    constructor(private element: Element) 
-    {
-    }
+    constructor(private element: Element) {}
 
     public hasName(value: string): this {
         Logger.log(`Has name ${value}`);
 
-        cy.wrap(this.element)
-        .within(() => 
-        {
-            cy.getByTestId(value).should("contain.text", value);
-        })
+        cy.wrap(this.element).within(() => {
+            cy.getByTestId(value).should('contain.text', value);
+        });
 
         return this;
     }
@@ -21,10 +16,9 @@ export class ActionSummaryRow {
     public hasStatus(value: string): this {
         Logger.log(`Has status ${value}`);
 
-        cy.wrap(this.element)
-        .within(() => {
-            cy.getByTestId("status").should("contain.text", value);
-        })
+        cy.wrap(this.element).within(() => {
+            cy.getByTestId('status').should('contain.text', value);
+        });
 
         return this;
     }
@@ -32,10 +26,9 @@ export class ActionSummaryRow {
     public hasCreatedDate(value: string): this {
         Logger.log(`Has created date ${value}`);
 
-        cy.wrap(this.element)
-        .within(() => {
-            cy.getByTestId("opened-date").should("contain.text", value);
-        })
+        cy.wrap(this.element).within(() => {
+            cy.getByTestId('opened-date').should('contain.text', value);
+        });
 
         return this;
     }
@@ -43,10 +36,9 @@ export class ActionSummaryRow {
     public hasClosedDate(value: string): this {
         Logger.log(`Has closed date ${value}`);
 
-        cy.wrap(this.element)
-        .within(() => {
-            cy.getByTestId("closed-date").should("contain.text", value);
-        })
+        cy.wrap(this.element).within(() => {
+            cy.getByTestId('closed-date').should('contain.text', value);
+        });
 
         return this;
     }
@@ -54,13 +46,10 @@ export class ActionSummaryRow {
     public select(): this {
         Logger.log(`Selecting action`);
 
-        cy.wrap(this.element)
-        .within(() =>
-        {
+        cy.wrap(this.element).within(() => {
             cy.get('a').click();
-        })
+        });
 
         return this;
     }
 }
-

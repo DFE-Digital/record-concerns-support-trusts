@@ -5,18 +5,16 @@ const puppeteer = require('puppeteer');
 module.exports.azureLogin = async function azureLogin(url, username, password) {
     const browser = await puppeteer.launch({
         headless: false,
-        args: [
-            "--incognito"
-          ]
+        args: ['--incognito'],
     });
 
     const [page] = await browser.pages();
 
     await page.goto(url);
 
-    const submitSelector = "input[type=submit]";
-    const usernameSelector = "input[name=loginfmt]";
-    const passwordSelector = "input[name=passwd]";
+    const submitSelector = 'input[type=submit]';
+    const usernameSelector = 'input[name=loginfmt]';
+    const passwordSelector = 'input[name=passwd]';
     const timeout = 4000;
 
     await page.waitForSelector(usernameSelector);
@@ -33,13 +31,13 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     await page.waitForTimeout(timeout);
     await page.click(submitSelector);
 
-    await page.waitForSelector(".moj-header__logo");
+    await page.waitForSelector('.moj-header__logo');
 
     const cookies = await page.cookies();
 
-    const loginCookie = cookies.find(c => c.name === ".ConcernsCasework.Login");
+    const loginCookie = cookies.find((c) => c.name === '.ConcernsCasework.Login');
 
     await browser.close();
 
     return loginCookie.value;
-}
+};

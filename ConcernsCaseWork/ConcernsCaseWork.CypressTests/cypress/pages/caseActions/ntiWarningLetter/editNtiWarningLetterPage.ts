@@ -1,4 +1,4 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
 export class EditNtiWarningLetterPage {
     public withStatus(value: string): this {
@@ -52,7 +52,7 @@ export class EditNtiWarningLetterPage {
     public withNotesExceedingLimit(): this {
         Logger.log(`With notes exceeding limit`);
 
-        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+        cy.getById('nti-notes').clear().invoke('val', 'x 1'.repeat(1001));
 
         return this;
     }
@@ -68,7 +68,7 @@ export class EditNtiWarningLetterPage {
     public hasStatus(value: string): this {
         Logger.log(`Has status ${value}`);
 
-        cy.getByTestId(`${value}`).should("be.checked");
+        cy.getByTestId(`${value}`).should('be.checked');
 
         return this;
     }
@@ -76,7 +76,7 @@ export class EditNtiWarningLetterPage {
     public hasDaySent(value: string): this {
         Logger.log(`Has day sent ${value}`);
 
-        cy.getById(`dtr-day-date-sent`).should("contain.value", value);
+        cy.getById(`dtr-day-date-sent`).should('contain.value', value);
 
         return this;
     }
@@ -84,7 +84,7 @@ export class EditNtiWarningLetterPage {
     public hasMonthSent(value: string): this {
         Logger.log(`Has month sent ${value}`);
 
-        cy.getById(`dtr-month-date-sent`).should("contain.value", value);
+        cy.getById(`dtr-month-date-sent`).should('contain.value', value);
 
         return this;
     }
@@ -92,7 +92,7 @@ export class EditNtiWarningLetterPage {
     public hasYearSent(value: string): this {
         Logger.log(`Has year sent ${value}`);
 
-        cy.getById(`dtr-year-date-sent`).should("contain.value", value);
+        cy.getById(`dtr-year-date-sent`).should('contain.value', value);
 
         return this;
     }
@@ -100,7 +100,7 @@ export class EditNtiWarningLetterPage {
     public hasReason(value: string): this {
         Logger.log(`Has reason ${value}`);
 
-        cy.getByTestId(`reason-${value}`).should("be.checked");
+        cy.getByTestId(`reason-${value}`).should('be.checked');
 
         return this;
     }
@@ -108,7 +108,7 @@ export class EditNtiWarningLetterPage {
     public hasNotes(value: string): this {
         Logger.log(`Has notes ${value}`);
 
-        cy.getById(`nti-notes`).should("contain.value", value);
+        cy.getById(`nti-notes`).should('contain.value', value);
 
         return this;
     }
@@ -116,32 +116,27 @@ export class EditNtiWarningLetterPage {
     public hasCondition(value: string): this {
         Logger.log(`Has condition ${value}`);
 
-        cy.getByTestId(`condition-${value}`).should("be.checked");
+        cy.getByTestId(`condition-${value}`).should('be.checked');
 
         return this;
     }
 
-    public clearReasons(): this
-    {
-        Logger.log("Clearing the reason fields");
+    public clearReasons(): this {
+        Logger.log('Clearing the reason fields');
 
-        cy.get("[name='reason'").each(element =>
-        {
+        cy.get("[name='reason'").each((element) => {
             cy.wrap(element).uncheck();
         });
 
         return this;
     }
 
-    public clearConditions(): this
-    {
-        Logger.log("Clearing the conditions");
+    public clearConditions(): this {
+        Logger.log('Clearing the conditions');
 
-        cy.get("[name='condition'").each(element =>
-            {
-                cy.wrap(element).uncheck();
-            });
-    
+        cy.get("[name='condition'").each((element) => {
+            cy.wrap(element).uncheck();
+        });
 
         return this;
     }
@@ -149,7 +144,7 @@ export class EditNtiWarningLetterPage {
     public hasValidationError(value: string): this {
         Logger.log(`Has validation error ${value}`);
 
-        cy.getById("errorSummary").should("contain.text", value);
+        cy.getById('errorSummary').should('contain.text', value);
 
         return this;
     }
@@ -157,23 +152,23 @@ export class EditNtiWarningLetterPage {
     public editConditions(): this {
         Logger.log(`Editing conditions`);
 
-        cy.getByTestId("edit-conditions-button").click();
+        cy.getByTestId('edit-conditions-button').click();
 
         return this;
     }
 
     public save(): this {
-        Logger.log("Saving the NTI warning letter");
+        Logger.log('Saving the NTI warning letter');
 
-        cy.getById("add-nti-wl-button").click();
+        cy.getById('add-nti-wl-button').click();
 
         return this;
     }
 
     public saveConditions(): this {
-        Logger.log("Saving the conditions");
+        Logger.log('Saving the conditions');
 
-        cy.getById("add-nti-conditions-wl-button").click();
+        cy.getById('add-nti-conditions-wl-button').click();
 
         return this;
     }
