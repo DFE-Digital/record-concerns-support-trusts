@@ -101,6 +101,54 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 				Description = null,
 				CreatedAt = new DateTime(2023, 10, 30),
 				UpdatedAt = new DateTime(2023, 10, 30)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.ActualProjectedDeficit,
+				Name = "Actual and/or projected deficit",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.ActualProjectedCashShortfall,
+				Name = "Actual and/or projected cash shortfall",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.TrustColure,
+				Name = "Trust Closure",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.FinancialManagementCompliance,
+				Name = "Financial management/ATH compliance",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.LateFinancialReturns,
+				Name = "Late financial returns",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
+			},
+			new ConcernsType
+			{
+				Id = (int)API.Contracts.Concerns.ConcernType.IrregularitySelfReportedFraud,
+				Name = "Irregularity and/or self-reported fraud",
+				Description = null,
+				CreatedAt = new DateTime(2026, 2, 2),
+				UpdatedAt = new DateTime(2026, 2, 2)
 			}
 		);
 	}
