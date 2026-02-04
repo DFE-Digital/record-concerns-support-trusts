@@ -1,4 +1,5 @@
 import { Logger } from 'cypress/common/logger';
+import { ConcernType } from '../constants/concernTypes';
 
 export class CaseRow {
     constructor(private element: Element) {}
@@ -43,7 +44,7 @@ export class CaseRow {
         return this;
     }
 
-    public hasConcern(value: string): this {
+    public hasConcern(value: ConcernType): this {
         Logger.log(`Has concern ${value}`);
 
         this.containsText('concern', value);

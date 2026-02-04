@@ -100,7 +100,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
 
         Logger.log('Create a valid concern');
         createConcernPage
-            .withConcernType('Deficit')
+            .withConcernType('Actual and/or projected deficit')
             .withConcernRating('Red-Amber')
             .withMeansOfReferral(SourceOfConcernExternal)
             .addConcern();
@@ -109,7 +109,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber');
 
         createConcernPage.nextStep();
@@ -118,7 +118,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
@@ -128,7 +128,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         createCaseSummary
             .hasTrustSummaryDetails(trustName)
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber')
             .hasRiskToTrust('Red Plus');
 
@@ -430,7 +430,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
                 .hasCreatedDate(toDisplayDate(now))
                 .hasClosedDate(toDisplayDate(now))
                 .hasTrust(trustName)
-                .hasConcern('Deficit');
+                .hasConcern('Actual and/or projected deficit');
 
             Logger.log('Checking accessibility on Closed Case Details');
             cy.excuteAccessibilityTests();
@@ -440,7 +440,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
 
         Logger.log('Validate Closed Case has correct details');
         viewClosedCasePage
-            .hasConcerns('Deficit')
+            .hasConcerns('Actual and/or projected deficit')
             .hasManagedBy('SFSO', 'North - North East')
             .hasIssue('This is an issue')
             .hasCurrentStatus('This is the current status')

@@ -1,4 +1,5 @@
 import { Logger } from '../common/logger';
+import { ConcernType } from '../constants/concernTypes';
 
 class CaseManagementPage {
     getAddToCaseBtn() {
@@ -372,7 +373,7 @@ class CaseManagementPage {
         return this;
     }
 
-    public hasConcerns(concern: string, ratingTags: Array<string>): this {
+    public hasConcerns(concern: ConcernType, ratingTags: Array<string>): this {
         Logger.log(`Has concerns ${concern}`);
 
         cy.getByTestId(`concerns_Field`).should('contain.text', concern);

@@ -95,7 +95,7 @@ describe('User interactions via Find Trust route', () => {
 
             Logger.log('Create a valid concern');
             createConcernPage
-                .withConcernType('Deficit')
+                .withConcernType('Actual and/or projected deficit')
                 .withConcernRating('Red-Amber')
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
@@ -104,7 +104,7 @@ describe('User interactions via Find Trust route', () => {
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
                 .hasManagedBy('SFSO', 'North - North East')
-                .hasConcernType('Deficit')
+                .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber');
 
             createConcernPage.nextStep();
@@ -116,7 +116,7 @@ describe('User interactions via Find Trust route', () => {
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
                 .hasManagedBy('SFSO', 'North - North East')
-                .hasConcernType('Deficit')
+                .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber')
                 .hasRiskToTrust('Red Plus');
 
@@ -124,7 +124,7 @@ describe('User interactions via Find Trust route', () => {
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
                 .hasManagedBy('SFSO', 'North - North East')
-                .hasConcernType('Deficit')
+                .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber')
                 .hasRiskToTrust('Red Plus');
 
@@ -135,7 +135,7 @@ describe('User interactions via Find Trust route', () => {
             caseManagementPage
                 .hasTrust(trustName)
                 .hasRiskToTrust('Red Plus')
-                .hasConcerns('Deficit', ['Red', 'Amber'])
+                .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
                 .hasManagedBy('SFSO', 'North - North East')
                 .hasIssue('This is an issue');
         });

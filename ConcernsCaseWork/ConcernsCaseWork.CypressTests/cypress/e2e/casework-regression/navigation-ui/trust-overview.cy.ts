@@ -56,7 +56,7 @@ describe('Trust overview ', () => {
                 caseworkTable.getRowByCaseId(caseId).then((row) => {
                     row.hasCaseId(caseId)
                         .hasCreatedDate(toDisplayDate(now))
-                        .hasConcern('Financial compliance')
+                        .hasConcern('Financial management/ATH compliance')
                         .hasRiskToTrust('Amber')
                         .hasRiskToTrust('Green')
                         .hasManagedBy('SFSO', 'North - West Midlands');
@@ -78,7 +78,7 @@ describe('Trust overview ', () => {
                     row.hasCaseId(caseId)
                         .hasCreatedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
-                        .hasConcern('Financial compliance')
+                        .hasConcern('Financial management/ATH compliance')
                         .hasManagedBy('SFSO', 'North - West Midlands');
                 });
             });

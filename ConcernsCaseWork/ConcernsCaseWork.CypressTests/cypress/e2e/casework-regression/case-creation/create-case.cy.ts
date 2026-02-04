@@ -93,7 +93,7 @@ describe('Creating a case', () => {
 
         Logger.log('Create a valid concern');
         createConcernPage
-            .withConcernType('Deficit')
+            .withConcernType('Actual and/or projected deficit')
             .withConcernRating('Red-Amber')
             .withMeansOfReferral(SourceOfConcernExternal)
             .addConcern();
@@ -102,7 +102,7 @@ describe('Creating a case', () => {
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber');
 
         createConcernPage.nextStep();
@@ -116,7 +116,7 @@ describe('Creating a case', () => {
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
@@ -126,7 +126,7 @@ describe('Creating a case', () => {
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber')
             .hasRiskToTrust('Red Plus');
 
@@ -134,7 +134,7 @@ describe('Creating a case', () => {
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
             .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Deficit')
+            .hasConcernType('Actual and/or projected deficit')
             .hasConcernRiskRating('Red Amber')
             .hasRiskToTrust('Red Plus');
 
@@ -176,7 +176,7 @@ describe('Creating a case', () => {
         caseManagementPage
             .hasTrust('Ashton West End Primary Academy')
             .hasRiskToTrust('Red Plus')
-            .hasConcerns('Deficit', ['Red', 'Amber'])
+            .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
             .hasNumberOfConcerns(1)
             .hasManagedBy('SFSO', 'North - North East')
             .hasIssue('This is an issue')
@@ -299,7 +299,7 @@ describe('Creating a case', () => {
 
         Logger.log('Create a valid concern');
         createConcernPage
-            .withConcernType('Suspected fraud')
+            .withConcernType('Irregularity and/or self-reported fraud')
             .withConcernRating('Red Plus')
             .withMeansOfReferral(SourceOfConcernInternal)
             .addConcern();
@@ -307,7 +307,7 @@ describe('Creating a case', () => {
         Logger.log('Adding another concern during case creation');
         createConcernPage
             .addAnotherConcern()
-            .withConcernType('Financial compliance')
+            .withConcernType('Financial management/ATH compliance')
             .withConcernRating('Amber-Green')
             .withMeansOfReferral(SourceOfConcernExternal)
             .addConcern()
@@ -330,15 +330,15 @@ describe('Creating a case', () => {
             .hasValidationError('Select means of referral');
 
         createConcernPage
-            .withConcernType('Irregularity')
+            .withConcernType('Irregularity and/or self-reported fraud')
             .withConcernRating('Red-Amber')
             .withMeansOfReferral(SourceOfConcernExternal)
             .addConcern();
 
         caseManagementPage
-            .hasConcerns('Suspected fraud', ['Red Plus'])
-            .hasConcerns('Financial compliance', ['Amber', 'Green'])
-            .hasConcerns('Irregularity', ['Red', 'Amber'])
+            .hasConcerns('Irregularity and/or self-reported fraud', ['Red Plus'])
+            .hasConcerns('Financial management/ATH compliance', ['Amber', 'Green'])
+            .hasConcerns('Irregularity and/or self-reported fraud', ['Red', 'Amber'])
             .hasNumberOfConcerns(3);
     });
 

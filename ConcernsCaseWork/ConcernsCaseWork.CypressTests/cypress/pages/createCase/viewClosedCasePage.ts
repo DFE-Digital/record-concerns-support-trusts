@@ -1,7 +1,8 @@
 import { Logger } from '../../common/logger';
+import { ConcernType } from '../../constants/concernTypes';
 
 export class ViewClosedCasePage {
-    public hasConcerns(value: string): this {
+    public hasConcerns(value: ConcernType): this {
         Logger.log(`Has concerns ${value}`);
 
         cy.getByTestId(`concerns_field`).should(`contain.text`, value);

@@ -37,7 +37,7 @@ describe('Your casework tests', () => {
                     .hasCreatedDate(toDisplayDate(now))
                     .hasLastUpdatedDate(toDisplayDate(now))
                     .hasTrust(trustName)
-                    .hasConcern('Financial compliance')
+                    .hasConcern('Financial management/ATH compliance')
                     .hasRiskToTrust('Amber')
                     .hasRiskToTrust('Green');
             });
