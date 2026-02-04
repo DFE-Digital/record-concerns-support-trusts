@@ -1,5 +1,5 @@
 import { Logger } from 'cypress/common/logger';
-import { ConcernType } from '../constants/concernTypes';
+import { ConcernType } from '../../constants/concernTypes';
 
 export class CaseRow {
     constructor(private element: Element) {}

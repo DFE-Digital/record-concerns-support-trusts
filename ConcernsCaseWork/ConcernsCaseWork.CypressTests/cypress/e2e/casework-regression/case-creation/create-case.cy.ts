@@ -299,7 +299,7 @@ describe('Creating a case', () => {
 
         Logger.log('Create a valid concern');
         createConcernPage
-            .withConcernType('Irregularity and/or self-reported fraud')
+            .withConcernType('Late financial returns')
             .withConcernRating('Red Plus')
             .withMeansOfReferral(SourceOfConcernInternal)
             .addConcern();
@@ -336,7 +336,7 @@ describe('Creating a case', () => {
             .addConcern();
 
         caseManagementPage
-            .hasConcerns('Irregularity and/or self-reported fraud', ['Red Plus'])
+            .hasConcerns('Late financial returns', ['Red Plus'])
             .hasConcerns('Financial management/ATH compliance', ['Amber', 'Green'])
             .hasConcerns('Irregularity and/or self-reported fraud', ['Red', 'Amber'])
             .hasNumberOfConcerns(3);
