@@ -165,7 +165,7 @@ describe('Creating a non concerns case', () => {
 
             Logger.log('Create an invalid sub concern');
             createConcernPage
-                .withConcernType('Deficit')
+                .withConcernType('Actual and/or projected deficit')
                 .withConcernRating('Red-Amber')
                 .withMeansOfReferral(SourceOfConcernExternal)
                 .addConcern();
@@ -173,7 +173,7 @@ describe('Creating a non concerns case', () => {
             Logger.log('Adding another concern during case creation');
             createConcernPage
                 .addAnotherConcern()
-                .withConcernType('Financial compliance')
+                .withConcernType('Financial management/ATH compliance')
                 .withConcernRating('Amber-Green')
                 .withMeansOfReferral(SourceOfConcernInternal)
                 .addConcern()
@@ -220,8 +220,8 @@ describe('Creating a non concerns case', () => {
             caseManagementPage
                 .hasTrust('Ashton West End Primary Academy')
                 .hasRiskToTrust('Red Plus')
-                .hasConcerns('Financial compliance', ['Amber', 'Green'])
-                .hasConcerns('Deficit', ['Red', 'Amber'])
+                .hasConcerns('Financial management/ATH compliance', ['Amber', 'Green'])
+                .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
                 .hasNumberOfConcerns(2)
                 .hasManagedBy('SFSO', 'North - North East')
                 .hasIssue('This is an issue')
@@ -265,7 +265,7 @@ describe('Creating a non concerns case', () => {
                     createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
 
                     createConcernPage
-                        .withConcernType('Viability')
+                        .withConcernType('Actual and/or projected cash shortfall')
                         .withConcernRating('Amber-Green')
                         .withMeansOfReferral(SourceOfConcernExternal)
                         .addConcern();
@@ -280,7 +280,7 @@ describe('Creating a non concerns case', () => {
                     createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
 
                     createConcernPage
-                        .withConcernType('Deficit')
+                        .withConcernType('Actual and/or projected deficit')
                         .withConcernRating('Red-Amber')
                         .withMeansOfReferral(SourceOfConcernExternal)
                         .addConcern();
@@ -288,7 +288,7 @@ describe('Creating a non concerns case', () => {
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
                         .hasManagedBy('SFSO', 'North - North East')
-                        .hasConcernType('Deficit')
+                        .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber');
 
                     createConcernPage.nextStep();
@@ -296,7 +296,7 @@ describe('Creating a non concerns case', () => {
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
                         .hasManagedBy('SFSO', 'North - North East')
-                        .hasConcernType('Deficit')
+                        .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber');
 
                     createConcernPage.withConcernRating('Red Plus').nextStep();
@@ -304,7 +304,7 @@ describe('Creating a non concerns case', () => {
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
                         .hasManagedBy('SFSO', 'North - North East')
-                        .hasConcernType('Deficit')
+                        .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber')
                         .hasRiskToTrust('Red Plus');
 
@@ -314,7 +314,7 @@ describe('Creating a non concerns case', () => {
                     caseManagementPage
                         .hasTrust(trustName)
                         .hasRiskToTrust('Red Plus')
-                        .hasConcerns('Deficit', ['Red', 'Amber'])
+                        .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
                         .hasNumberOfConcerns(1);
                 });
             });

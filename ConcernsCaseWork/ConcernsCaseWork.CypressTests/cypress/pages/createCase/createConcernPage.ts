@@ -1,7 +1,7 @@
 import { Logger } from '../../common/logger';
 
 export default class CreateConcernPage {
-    public withConcernType(value: string): this {
+    public withConcernType(value: ConcernType): this {
         Logger.log(`With concernType ${value}`);
 
         cy.getByTestId(value).click();

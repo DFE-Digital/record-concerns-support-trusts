@@ -54,7 +54,7 @@ describe('Editing a case', () => {
 
         Logger.log('Create a valid concern');
         createConcernPage
-            .withConcernType('Deficit')
+            .withConcernType('Actual and/or projected deficit')
             .withConcernRating('Red')
             .withMeansOfReferral(SourceOfConcernExternal)
             .addConcern();
@@ -79,7 +79,7 @@ describe('Editing a case', () => {
         caseManagementPage
             .hasRiskToTrust('Red Plus')
             .hasDirectionOfTravel('Deteriorating')
-            .hasConcerns('Deficit', ['Red'])
+            .hasConcerns('Actual and/or projected deficit', ['Red'])
             .hasManagedBy('SFSO', 'North - North East')
             .hasIssue('This is an issue');
 
@@ -216,7 +216,7 @@ describe('Editing a case', () => {
         caseManagementPage
             .hasRiskToTrust('Red')
             .hasDirectionOfTravel('Improving')
-            .hasConcerns('Deficit', ['Amber', 'Green'])
+            .hasConcerns('Actual and/or projected deficit', ['Amber', 'Green'])
             .hasManagedBy('SFSO', 'North - North West')
             .hasIssue('New Issue')
             .hasCurrentStatus('New Status')

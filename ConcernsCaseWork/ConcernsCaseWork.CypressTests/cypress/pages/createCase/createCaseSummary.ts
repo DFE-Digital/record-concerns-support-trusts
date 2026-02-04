@@ -1,4 +1,5 @@
 import { Logger } from '../../common/logger';
+import { ConcernType } from '../../constants/concernTypes';
 
 export class CreateCaseSummary {
     public hasTrustSummaryDetails(value: string): this {
@@ -8,7 +9,7 @@ export class CreateCaseSummary {
         return this;
     }
 
-    public hasConcernType(value: string): this {
+    public hasConcernType(value: ConcernType): this {
         Logger.log(`Has Concern Type ${value}`);
 
         cy.getByTestId('concern-type').should('contain.text', value);
