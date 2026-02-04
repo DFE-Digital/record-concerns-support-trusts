@@ -30,7 +30,7 @@ class ConcernsApi extends ApiBase {
                 description: 'Compliance',
                 reason: 'Governance and compliance: Compliance',
                 caseUrn: caseId,
-                typeId: 23,
+                typeId: 30,
                 ratingId: 4,
                 statusId: 1,
                 meansOfReferralId: 1,
