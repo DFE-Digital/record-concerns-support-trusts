@@ -1,143 +1,126 @@
-import { Logger } from "../../../common/logger";
+import { Logger } from '../../../common/logger';
 
-export class ViewTargetedTrustEngagementPage
-{
-	public hasDateOpened(value: string): this {
-		Logger.log(`Has date opened ${value}`);
+export class ViewTargetedTrustEngagementPage {
+    public hasDateOpened(value: string): this {
+        Logger.log(`Has date opened ${value}`);
 
-		cy.getByTestId("engagement-open-text").should("contain.text", value);
+        cy.getByTestId('engagement-open-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateClosed(value: string): this {
-		Logger.log(`Has date closed ${value}`);
+    public hasDateClosed(value: string): this {
+        Logger.log(`Has date closed ${value}`);
 
-		cy.getByTestId("engagement-closed-text").should("contain.text", value);
+        cy.getByTestId('engagement-closed-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateBegan(value: string): this {
-		Logger.log(`Has date opened ${value}`);
+    public hasDateBegan(value: string): this {
+        Logger.log(`Has date opened ${value}`);
 
-		cy.getByTestId("engagement-began-text").should("contain.text", value);
+        cy.getByTestId('engagement-began-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
-	public hasDateEnded(value: string): this {
-		Logger.log(`Has date opened ${value}`);
+    public hasDateEnded(value: string): this {
+        Logger.log(`Has date opened ${value}`);
 
-		cy.getByTestId("engagement-ended-text").should("contain.text", value);
+        cy.getByTestId('engagement-ended-text').should('contain.text', value);
 
-		return this;
-	}
+        return this;
+    }
 
+    public hasTypeOfEngagement(typeOfEngagement: string): this {
+        cy.task('log', `Has type of engagement  ${typeOfEngagement}`);
 
+        cy.getByTestId('engagement-type-text').should('contain.text', typeOfEngagement);
 
-	public hasTypeOfEngagement(typeOfEngagement: string): this {
-		cy.task("log", `Has type of engagement  ${typeOfEngagement}`);
+        return this;
+    }
 
-		cy.getByTestId("engagement-type-text").should(
-			"contain.text",
-			typeOfEngagement
-		);
+    public hasSupportingNotes(supportingNotes: string): this {
+        cy.task('log', `Has Supporting Notes ${supportingNotes}`);
 
-		return this;
-	}
+        cy.getByTestId('supporting-notes-text').should('contain.text', supportingNotes);
 
-	public hasSupportingNotes(supportingNotes: string): this {
-		cy.task("log", `Has Supporting Notes ${supportingNotes}`);
+        return this;
+    }
 
-		cy.getByTestId("supporting-notes-text").should(
-			"contain.text",
-			supportingNotes
-		);
+    public hasActionEdit(): this {
+        cy.task('log', `Has Edit Action`);
 
-		return this;
-	}
+        cy.getByTestId('edit-engagement-text').should('contain.text', 'Edit');
 
-	public hasActionEdit(): this {
-		cy.task("log", `Has Edit Action`);
+        return this;
+    }
 
-		cy.getByTestId("edit-engagement-text").should(
-			"contain.text",
-			"Edit"
-		);
+    public hasAuthoriser(authoriser: string): this {
+        Logger.log(`Has authoriser ${authoriser}`);
 
-		return this;
-	}
+        cy.getByTestId('authoriser-text').should('contain.text', authoriser);
 
-	public hasAuthoriser(authoriser: string): this
-	{
-		Logger.log(`Has authoriser ${authoriser}`);
+        return this;
+    }
 
-		cy.getByTestId("authoriser-text").should("contain.text", authoriser);
+    public editTTE(): this {
+        Logger.log('Editing TTE');
 
-		return this;
-	}
+        this.getEditTTE().children('a').click();
 
-	public editTTE(): this {
-		Logger.log("Editing TTE");
+        return this;
+    }
 
-		this.getEditTTE().children('a').click();
+    public deleteTTE(): this {
+        Logger.log('Delete TTE');
 
-		return this;
-	}
+        this.getDeleteTTE().click();
 
-	public deleteTTE(): this {
-		Logger.log("Delete TTE");
+        return this;
+    }
 
-		this.getDeleteTTE().click();
+    public canEditTTE(): this {
+        Logger.log('Can edit TTE');
 
-		return this;
-	}
+        this.getEditTTE();
 
-	public canEditTTE(): this
-	{
-		Logger.log("Can edit TTE");
+        return this;
+    }
 
-		this.getEditTTE();
+    public cannotEditTTE(): this {
+        Logger.log('Cannot edit TTE');
 
-		return this;
-	}
+        this.getEditTTE().should('not.exist');
 
-	public cannotEditTTE(): this
-	{
-		Logger.log("Cannot edit TTE");
+        return this;
+    }
 
-		this.getEditTTE().should("not.exist");
+    public closeTTE(): this {
+        Logger.log('Closing TTE');
+        this.getCloseTTE().click();
 
-		return this;
-	}
+        return this;
+    }
 
+    public cannotCloseTTE(): this {
+        Logger.log('Cannot close TTE');
 
-	public closeTTE(): this {
-		Logger.log("Closing TTE");
-		this.getCloseTTE().click();
+        this.getCloseTTE().should('not.exist');
 
-		return this;
-	}
+        return this;
+    }
 
-	public cannotCloseTTE(): this
-	{
-		Logger.log("Cannot close TTE");
+    private getEditTTE() {
+        return cy.getByTestId('edit-engagement-text');
+    }
 
-		this.getCloseTTE().should("not.exist");
+    private getDeleteTTE() {
+        return cy.getByTestId('delete-engagement');
+    }
 
-		return this;
-	}
-
-	private getEditTTE() {
-		return cy.getByTestId("edit-engagement-text");
-	}
-
-	private getDeleteTTE() {
-		return cy.getByTestId("delete-engagement");
-	}
-
-	private getCloseTTE() {
-		return cy.getByTestId('close-engagement-button');
-	}
+    private getCloseTTE() {
+        return cy.getByTestId('close-engagement-button');
+    }
 }
