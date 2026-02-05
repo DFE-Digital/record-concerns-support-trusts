@@ -7,6 +7,7 @@
 		public DateTime ReviewAt { get; set; }
 		public DateTime? ClosedAt { get; set; }
 		public string CreatedBy { get; set; }
+		public string TeamLedBy { get; set; }
 		public string Description { get; set; }
 		public string CrmEnquiry { get; set; }
 		public string TrustUkprn { get; set; }

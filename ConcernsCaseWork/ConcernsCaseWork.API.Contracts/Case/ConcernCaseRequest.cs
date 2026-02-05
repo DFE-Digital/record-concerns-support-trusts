@@ -14,7 +14,10 @@ namespace ConcernsCaseWork.API.Contracts.Case
 		[StringLength(254)]
         public string CreatedBy { get; set; }
 
-        [StringLength(1000)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
+		[StringLength(254)]
+		public string TeamLedBy { get; set; }
+
+		[StringLength(1000)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
         public string Description { get; set; }
 
         [StringLength(500)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
