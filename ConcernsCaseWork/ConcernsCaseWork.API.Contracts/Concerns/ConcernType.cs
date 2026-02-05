@@ -35,6 +35,24 @@ namespace ConcernsCaseWork.API.Contracts.Concerns
 		GovernanceCapability = 25,
 
 		[Description("Non-compliance")]
-		NonCompliance = 26
+		NonCompliance = 26,
+
+		[Description("Actual and/or projected deficit")]
+		ActualProjectedDeficit = 27,
+
+		[Description("Actual and/or projected cash shortfall")]
+		ActualProjectedCashShortfall = 28,
+
+		[Description("Trust Closure")]
+		TrustColure = 29,
+
+		[Description("Financial management/ATH compliance")]
+		FinancialManagementCompliance = 30,
+
+		[Description("Late financial returns")]
+		LateFinancialReturns = 31,
+
+		[Description("Irregularity and/or self-reported fraud")]
+		IrregularitySelfReportedFraud = 32
 	}
 }

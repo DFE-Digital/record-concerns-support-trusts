@@ -70,7 +70,7 @@ describe('Team casework tests', () => {
             Logger.log('Ensure that the case for the user is displayed');
             caseworkTable.getRowByCaseId(caseId).then((row) => {
                 row.hasCaseId(caseId)
-                    .hasConcern('Financial compliance')
+                    .hasConcern('Financial management/ATH compliance')
                     .hasRiskToTrust('Amber')
                     .hasRiskToTrust('Green')
                     .hasManagedBy('SFSO', 'North - West Midlands')
