@@ -349,6 +349,23 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		public async Task PatchTeamLeader(int caseUrn, string teamLeader)
+		{
+			try
+			{
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
+
+				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, TeamLedBy = teamLeader };
+
+				await _caseService.PatchCaseByUrn(newCaseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+
+				throw;
+			}
+		}
 		private async Task PostConcerns(CreateCaseModel createCaseModel, long newCaseId)
 		{
 			// Create records
