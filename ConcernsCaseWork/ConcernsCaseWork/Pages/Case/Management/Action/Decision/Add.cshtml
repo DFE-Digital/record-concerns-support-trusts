@@ -100,37 +100,41 @@
                                 @if (decisionTypeQuestion.FinancialSupportPackageType != null)
                                 {
                                     <div class="govuk-radios__conditional" id="@decisionTypeQuestion.Id-subquestion-container" data-testid="@decisionTypeQuestion.Id-subquestion-container">
-                                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                            <h2 class="govuk-heading-s">
-                                                What are you recording?
-                                            </h2>
-                                        </legend>
+                                        <fieldset class="govuk-fieldset" aria-labelledby="@decisionTypeQuestion.Id-recording-legend">
+                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                <h2 class="govuk-heading-s">
+                                                    What are you recording?
+                                                </h2>
+                                            </legend>
                                         
-                                        @* Display old value as read-only if it exists *@
-                                        @if (!string.IsNullOrEmpty(decisionTypeQuestion.OldDrawdownFacilityAgreedValue))
-                                        {
-                                            <div class="govuk-inset-text" data-testid="@decisionTypeQuestion.Id-old-value">
-                                                <p class="govuk-body govuk-!-margin-bottom-1">
-                                                    <strong>Previous value:</strong> @decisionTypeQuestion.OldDrawdownFacilityAgreedValue
-                                                </p>
-                                                <p class="govuk-body govuk-!-margin-bottom-0 govuk-hint">
-                                                    This is a legacy value. Please select a new option below.
-                                                </p>
-                                            </div>
-                                            @* Hidden field to preserve old value ID during POST *@
-                                            <input type="hidden" name="DecisionTypeQuestions[@decisionTypeQuestion.Id].OldDrawdownFacilityAgreedId" value="@(decisionTypeQuestion.OldDrawdownFacilityAgreedId.HasValue ? decisionTypeQuestion.OldDrawdownFacilityAgreedId.Value.ToString() : "")" />
-                                        }
-                                        
-                                        <partial name="Components/_RadioList" model="decisionTypeQuestion.FinancialSupportPackageType" />
+                                            @* Display old value as read-only if it exists *@
+                                            @if (!string.IsNullOrEmpty(decisionTypeQuestion.OldDrawdownFacilityAgreedValue))
+                                            {
+                                                <div class="govuk-inset-text" data-testid="@decisionTypeQuestion.Id-old-value">
+                                                    <p class="govuk-body govuk-!-margin-bottom-1">
+                                                        <strong>Previous value:</strong> @decisionTypeQuestion.OldDrawdownFacilityAgreedValue
+                                                    </p>
+                                                    <p class="govuk-body govuk-!-margin-bottom-0 govuk-hint">
+                                                        This is a legacy value. Please select a new option below.
+                                                    </p>
+                                                </div>
+                                                @* Hidden field to preserve old value ID during POST *@
+                                                <input type="hidden" name="DecisionTypeQuestions[@decisionTypeQuestion.Id].OldDrawdownFacilityAgreedId" value="@(decisionTypeQuestion.OldDrawdownFacilityAgreedId.HasValue ? decisionTypeQuestion.OldDrawdownFacilityAgreedId.Value.ToString() : "")" />
+                                            }
+                                            
+                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.FinancialSupportPackageType" />
+                                        </fieldset>
 
                                         @if (decisionTypeQuestion.FrameworkCategory != null)
                                         {
-                                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                                <h2 class="govuk-heading-s">
-                                                    What is the framework category?
-                                                </h2>
-                                            </legend>
-                                            <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                            <fieldset class="govuk-fieldset govuk-!-margin-top-4" aria-labelledby="@decisionTypeQuestion.Id-framework-legend">
+                                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                                    <h2 class="govuk-heading-s">
+                                                        What is the framework category?
+                                                    </h2>
+                                                </legend>
+                                                <partial name="Components/_RadioList" model="decisionTypeQuestion.FrameworkCategory" />
+                                            </fieldset>
                                         }
                                     </div>
                                 }
