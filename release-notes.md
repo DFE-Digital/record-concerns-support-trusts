@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 ## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-01-20.989...HEAD)
 
+### Added
+- 257480 - added fieldset to correctly group radio buttons to legends on add to case > decision page
+
 ---
 
 ## [61.0.0][61.0.0] - 2026-01-20
