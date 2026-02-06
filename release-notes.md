@@ -6,10 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-01-20.989...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-06.1024...HEAD)
+
+
+---
+
+## [62.0.0][62.0.0] - 2026-02-06
 
 ### Added
 - 257480 - added fieldset to correctly group radio buttons to legends on add to case > decision page
+- 258005 - added ability to change the team leader selection
+
+### Changed
+- 142564 - Update SFSO concern types to match the RMF
+- 257483 - accessibility error summary update, add role alert for screen reader
+- 257481 - accessibility update, hint text had incorrect association
+
+### Fixed
+- 258984 - fix trust summary pupil capacity percentage calculation
 
 ---
 
@@ -439,6 +453,7 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+[62.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-06.1024
 [61.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-01-20.989
 [60.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-01-14.984
 [59.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2025-12-03.981
