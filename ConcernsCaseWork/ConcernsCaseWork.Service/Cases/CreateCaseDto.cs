@@ -71,17 +71,23 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("ratingId")]
 		public long RatingId { get; }
 
+		[JsonProperty("ratingRational")]
+		public bool RatingRational { get; }
+
+		[JsonProperty("ratingRationalCommentary")]
+		public string RatingRationalCommentary { get; }
+
 		[JsonConstructor]
 		public CreateCaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId, Territory? territory, string trustCompaniesHouseNumber, Division? division, Region? region) => 
+			long ratingId, bool ratingRational, string ratingRationalCommentary, Territory? territory, string trustCompaniesHouseNumber, Division? division, Region? region) => 
 			(CreatedAt, UpdatedAt, ReviewAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
-				StatusId, RatingId, Territory, TrustCompaniesHouseNumber, Division, Region) = 
+				StatusId, RatingId, RatingRational, RatingRationalCommentary, Territory, TrustCompaniesHouseNumber, Division, Region) = 
 			(createdAt, updatedAt, reviewAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
-				statusId, ratingId, territory, trustCompaniesHouseNumber, division, region);
+				statusId, ratingId, ratingRational, ratingRationalCommentary, territory, trustCompaniesHouseNumber, division, region);
 	}
 }

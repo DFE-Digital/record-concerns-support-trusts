@@ -14,6 +14,7 @@ public record SimpleRadioItem
 
 	public List<SubRadioItem> SubRadioItems { get; set; }
 	public List<SubCheckboxItem> SubCheckboxItems { get; set; }
+	public SubTextAreaItem SubTextAreaItem { get; set; }
 
 	public string Label { get; set; }
 

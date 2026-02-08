@@ -30,7 +30,13 @@ namespace ConcernsCaseWork.Service.Records
 
 		[JsonProperty("ratingId")]
 		public long RatingId { get; }
-		
+
+		[JsonProperty("ratingRational")]
+		public bool RatingRational { get; }
+
+		[JsonProperty("ratingRationalCommentary")]
+		public string RatingRationalCommentary { get; }
+
 		[JsonProperty("statusId")]
 		public long StatusId { get; }
 		
@@ -40,8 +46,8 @@ namespace ConcernsCaseWork.Service.Records
 		[JsonConstructor]
 		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			string name, string description, string reason, long caseUrn, long typeId, 
-			long ratingId, long statusId, long meansOfReferralId) => 
-			(CreatedAt, UpdatedAt, ReviewAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, StatusId, MeansOfReferralId) = 
-			(createdAt, updatedAt, reviewAt, name, description, reason, caseUrn, typeId, ratingId, statusId, meansOfReferralId);
+			long ratingId, bool ratingRational, string ratingRationalCommentary, long statusId, long meansOfReferralId) => 
+			(CreatedAt, UpdatedAt, ReviewAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, RatingRational, RatingRationalCommentary, StatusId, MeansOfReferralId) = 
+			(createdAt, updatedAt, reviewAt, name, description, reason, caseUrn, typeId, ratingId, ratingRational, ratingRationalCommentary, statusId, meansOfReferralId);
 	}
 }

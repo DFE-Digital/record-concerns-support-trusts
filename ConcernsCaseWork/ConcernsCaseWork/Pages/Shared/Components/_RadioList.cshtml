@@ -86,7 +86,7 @@
                             }
                         </div>
                     }
-                    
+
                     @if (@radioItem.SubRadioItems.Count > 0)
                     {
                         // Identify which options have sub items so we can validate them
@@ -102,12 +102,12 @@
 
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input @radioItemElementId"
-                                               id="sub-type-@subRadioItem.Label" 
-                                            name="@Model.Name.@nameof(Model.SelectedSubId)" 
-                                            value="@subRadioItem.Id" 
-                                            type="radio"
-                                            data-testid="@subRadioItem.TestId"
-                                            @subItemIsChecked>
+                                        id="sub-type-@subRadioItem.Label" 
+                                        name="@Model.Name.@nameof(Model.SelectedSubId)" 
+                                        value="@subRadioItem.Id" 
+                                        type="radio"
+                                        data-testid="@subRadioItem.TestId"
+                                        @subItemIsChecked>
 
                                         <label class="govuk-label govuk-radios__label" for="sub-type-@subRadioItem.Label">
                                             @subRadioItem.Label
@@ -135,12 +135,12 @@
                                     <div class="govuk-checkboxes" data-module="govuk-checkboxes">
                                         <div class="govuk-checkboxes__item">
                                             <input class="govuk-checkboxes__input @radioItemElementId"
-                                                   id="@checkBox.ElementRootId"
-                                                   data-testid="@checkBox.ElementRootId"
-                                                   name="@Model.Name.@nameof(Model.SelectedSubIds)"
-                                                   value="@checkBox.ElementRootId"
-                                                   type="checkbox"
-                                                   @subItemIsChecked>
+                                            id="@checkBox.ElementRootId"
+                                            data-testid="@checkBox.ElementRootId"
+                                            name="@Model.Name.@nameof(Model.SelectedSubIds)"
+                                            value="@checkBox.ElementRootId"
+                                            type="checkbox"
+                                            @subItemIsChecked>
                                             <label class="govuk-label govuk-checkboxes__label" for="@Model.ElementRootId">
                                                 @checkBox.Text
                                             </label>
@@ -156,6 +156,56 @@
 
                             </div>
                         </div>
+                    }
+
+                    @if (@radioItem.SubTextAreaItem != null)
+                    {
+                        <div class="govuk-radios__conditional" id="@radioItemSubContainerId" data-cy="@radioItemSubContainerId-sub-section">
+                            <div class="govuk-form-group @errorClass">
+                                @if (!string.IsNullOrEmpty(radioItem.SubTextAreaItem.Label))
+                                {
+                                    <label class="govuk-label">
+                                        @radioItem.SubTextAreaItem.Label
+                                    </label>
+                                }
+
+                                @if (!string.IsNullOrEmpty(radioItem.SubTextAreaItem.HintText))
+                                {
+                                    <div class="govuk-hint">@radioItem.SubTextAreaItem.HintText</div>
+                                }
+
+                                <div class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="100">
+                                    <div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
+                                        <partial name="Components/_ValidationErrorDetail" model="@errors" />
+                                        <textarea 
+                                            class="govuk-textarea govuk-js-concerns-character-count concern-auto-resize" 
+                                            id="@Model.ElementRootId" 
+                                            data-testid="@Model.ElementRootId" 
+                                            name="@radioItem.SubTextAreaItem.Name" 
+                                            rows="10" 
+                                            aria-label="@radioItem.SubTextAreaItem.Label"
+                                        >
+                                            @radioItem.SubTextAreaItem.Text
+                                         </textarea>
+                                    </div>
+                                    <div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                                        You can enter up to 100 characters
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* public static TextAreaUiComponent BuildCaseAim(string name, string? value = null) *@
+                        @*     => new("case-aim", name, "Case aim") *@
+                        @* { *@
+                        @*     HintFromPartialView = "_CaseAimHint", *@
+                        @*     Text = new ValidateableString() *@
+                        @*     { *@
+                        @*         MaxLength = 1000, *@
+                        @*         StringContents = value, *@
+                        @*         DisplayName = "Case aim" *@
+                        @*     } *@
+                        @* }; *@
                     }
                 </div>
 			}
