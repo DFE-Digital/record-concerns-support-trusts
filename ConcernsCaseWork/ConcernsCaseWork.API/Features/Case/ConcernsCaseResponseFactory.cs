@@ -29,6 +29,8 @@ namespace ConcernsCaseWork.API.Features.Case
 				DirectionOfTravel = concernsCase.DirectionOfTravel,
 				Urn = concernsCase.Urn,
 				StatusId = concernsCase.StatusId,
+				RatingRational = concernsCase.RatingRational,
+				RatingRationalCommentary = concernsCase.RatingRationalCommentary,
 				RatingId = concernsCase.RatingId,
 				Territory = concernsCase.Territory,
 				TrustCompaniesHouseNumber = concernsCase.TrustCompaniesHouseNumber,
