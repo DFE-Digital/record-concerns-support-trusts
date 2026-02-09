@@ -72,31 +72,6 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildRiskToTrustRational(string name, int? selectedId = null)
-		{
-			var radioItems = new List<SimpleRadioItem>()
-			{
-				new SimpleRadioItem("No, the RAG rationale commentary is not available yet", 0) { TestId = "0" },
-				new SimpleRadioItem("Yes", 1) {
-					SubTextAreaItem = new SubTextAreaItem(1, "1", "RAG rationale commentary", "", ""),
-					//SubTextAreaItem = new SubTextAreaItem(1, "1", "RAG rationale commentary", "") { 
-					//	Text = new ValidateableString() { 
-					//		StringContents = "" 
-					//	} 
-					//},
-					TestId = "1"
-				},
-			};
-
-			return new(ElementRootId: "risk-to-trust-rational", Name: name, "Do you have the RAG rationale commentary now?")
-			{
-				RadioItems = radioItems,
-				SelectedId = selectedId,
-				Required = true,
-				DisplayName = "risk to trust rational"
-			};
-		}
-
 		public static RadioButtonsUiComponent BuildConcernRiskRating(Division? division, string name, int? selectedId = null)
 		{
 			var radioItems = BuildRatingRadioItems();
