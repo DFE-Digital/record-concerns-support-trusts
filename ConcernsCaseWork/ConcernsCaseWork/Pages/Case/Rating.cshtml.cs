@@ -43,6 +43,8 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public string RatingRationalCommentary { get; set; }
 
+		public static int RationYesCommentaryMaxLength => 200;
+
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			ILogger<RatingPageModel> logger, 
@@ -73,9 +75,16 @@ namespace ConcernsCaseWork.Pages.Case
 				{
 					ModelState.AddModelError(nameof(YesCheckedRagRational), "Select RAG rationale commentary");
 				}
-				else if (YesCheckedRagRational is true && string.IsNullOrWhiteSpace(RatingRationalCommentary))
+				else if (YesCheckedRagRational is true)
 				{
-					ModelState.AddModelError(nameof(RatingRationalCommentary), "You must enter a RAG rationale commentary");
+					if (string.IsNullOrWhiteSpace(RatingRationalCommentary))
+					{
+						ModelState.AddModelError(nameof(RatingRationalCommentary), "You must enter a RAG rationale commentary");
+					}
+					else if (RatingRationalCommentary.Length > RationYesCommentaryMaxLength)
+					{
+						ModelState.AddModelError(nameof(RatingRationalCommentary), $"You have {RatingRationalCommentary.Length - RationYesCommentaryMaxLength} characters too many.");
+					}
 				}
 
 				if (!ModelState.IsValid)
