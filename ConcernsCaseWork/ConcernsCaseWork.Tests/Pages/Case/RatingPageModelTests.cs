@@ -211,8 +211,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			_ = await pageModel.OnPostAsync();
 
 			// Assert
-			Assert.That(pageModel.ModelState.IsValid, Is.False);
-			Assert.That(pageModel.ModelState.ContainsKey(nameof(pageModel.RatingRationalCommentary)), Is.True);
+			Assert.Multiple(() =>
+			{
+				Assert.That(pageModel.ModelState.IsValid, Is.False);
+				Assert.That(pageModel.ModelState.ContainsKey(nameof(pageModel.RatingRationalCommentary)), Is.True);
+			});
 			var error = pageModel.ModelState[nameof(pageModel.RatingRationalCommentary)].Errors[0];
 			Assert.That(error.ErrorMessage, Is.EqualTo("You must enter a RAG rationale commentary"));
 		}
