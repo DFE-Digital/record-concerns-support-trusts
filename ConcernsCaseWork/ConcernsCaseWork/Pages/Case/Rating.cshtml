@@ -14,6 +14,9 @@
 
     ModelValidationState ratingValidationState = ViewData.ModelState.GetFieldValidationState("YesCheckedRagRational");
     ModelValidationState rationalCommentryValidationState = ViewData.ModelState.GetFieldValidationState("RatingRationalCommentary");
+
+    var elementRootId = "rag-rational";
+    var rationYesCommentaryMaxLength = 200;
 }
 
 <partial name="_BannerError" />
@@ -48,7 +51,7 @@ else
         </div>
 
         <!-- Risk rational -->
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" id="container-@elementRootId">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 <h2 class="govuk-heading-m">
                     Do you have the RAG rationale commentary now?
@@ -75,24 +78,33 @@ else
                     </label>
                 </div>
 
-                <div class="govuk-radios__conditional" id="conditional-annexBsaved" data-cy="select-sharepoint-section">
+                <div class="govuk-radios__conditional" id="conditional-annexBsaved" data-cy="select-rag-rational-option">
                     <div class="govuk-form-group @ModelState.GetErrorStyleClass()">
                         <label class="govuk-label" for="application-form-url">
                             RAG rationale commentary
                         </label>
 
-                        @if (rationalCommentryValidationState == ModelValidationState.Invalid)
-                        {
-                            <span class="govuk-error-message">Select RAG rationale commentary</span>
-                        }
+                        <div class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="@rationYesCommentaryMaxLength">
+                            @if (rationalCommentryValidationState == ModelValidationState.Invalid)
+                            {
+                                <span class="govuk-error-message">Select RAG rationale commentary</span>
+                            }
+                            
+                            <textarea asp-for="@Model.RatingRationalCommentary"
+                                      class="govuk-textarea @ModelState.GetTextAreaErrorStyles(nameof(Model.RatingRationalCommentary)) govuk-js-concerns-character-count"
+                                      id="@elementRootId"
+                                      data-testid="rag-rational-commentary"
+                                      rows="5"
+                                      aria-describedby="RAG rationale commentary"
+                                      data-cy="select-risk-to-trust-rational"
+                                      aria-label="text-area-for-risk-to-trust-rational">
+                            </textarea>
 
-                        <textarea asp-for="@Model.RatingRationalCommentary"
-                                  class="govuk-textarea @ModelState.GetTextAreaErrorStyles(nameof(Model.RatingRationalCommentary))"
-                                  rows="5"
-                            aria-describedby="RAG rationale commentary"
-                            data-cy="select-risk-to-trust-rational"
-                            aria-label="text-area-for-risk-to-trust-rational">
-                        </textarea>
+                            <div id="@elementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                                You can enter up to @rationYesCommentaryMaxLength characters
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
