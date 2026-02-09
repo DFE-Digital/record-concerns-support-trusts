@@ -14,6 +14,8 @@ export default class AddDetailsPage {
 
         cy.getByTestId(value).click();
 
+        cy.getByTestId("rational-radio-no").click();
+        
         return this;
     }
 
