@@ -65,14 +65,14 @@ else
 
             <div class="govuk-radios" data-module="govuk-radios">
                 <div class="govuk-radios__item">
-                    <input asp-for="@Model.YesCheckedRagRational" class="govuk-radios__input" type="radio" value="false" id="radio-no" data-cy="select-radio-no">
+                    <input asp-for="@Model.YesCheckedRagRational" class="govuk-radios__input" type="radio" value="false" id="radio-no" data-testid="rational-radio-no">
                     <label class="govuk-label govuk-radios__label" for="radio-no">
                         No, the RAG rationale commentary is not available yet
                     </label>
                 </div>
 
                 <div class="govuk-radios__item">
-                    <input asp-for="@Model.YesCheckedRagRational" class="govuk-radios__input" type="radio" value="true" aria-controls="conditional-annexBsaved" id="radio-yes" data-cy="select-radio-yes">
+                    <input asp-for="@Model.YesCheckedRagRational" class="govuk-radios__input" type="radio" value="true" aria-controls="conditional-annexBsaved" id="radio-yes" data-testid="rational-radio-yes">
                     <label class="govuk-label govuk-radios__label" for="radio-yes">
                         Yes
                     </label>
