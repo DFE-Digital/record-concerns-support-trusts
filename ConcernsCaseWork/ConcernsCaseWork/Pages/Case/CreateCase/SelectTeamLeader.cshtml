@@ -1,0 +1,118 @@
+﻿@page "/case/create/team-leader"
+@using ConcernsCaseWork.Extensions;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@using System.ComponentModel.DataAnnotations;
+@model ConcernsCaseWork.Pages.Case.CreateCase.SelectTeamLeaderModel
+
+@{
+    ViewData["Title"] = "Create team leader";
+
+    var nonce = HttpContext.GetNonce();
+
+    var errors = ViewData.ModelState.ToValidationResult();
+    var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
+    var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+        {
+            <partial name="_Error" />
+        }
+        else
+        {
+            <form method="post" id="edit-case-team-leader-form" novalidate>
+
+                <partial name="_ValidationErrors" />
+
+                <div class="govuk-form-group @errorBannerClass" id="container-SelectedTeamLeader">
+                    <h1 class="govuk-heading-l">
+                        Create team leader
+                    </h1>
+                    <div class="govuk-hint">Find and select the email address of the person you want to assign the case to</div>
+
+                    <partial name="Components/_ValidationErrorDetail" model="@errors" />
+
+                    <label for="case-team-leader-input" class="govuk-visually-hidden">Enter the email address of the person you want to assign the case to</label>
+                    <div id="autocomplete-container" class="@inputErrorClass"></div>
+
+                    <div class="ccms-loader govuk-!-display-none"></div>
+
+                    <input type="hidden" id="selected-team-leader" name="selectedTeamLeader" required />
+                    <input type="hidden" id="current-team-leader" name="currentTeamLeader" value="@Model.CurrentTeamLeader" />
+                    <input type="hidden" id="in-list" name="valueInList" value="-1" />
+                </div>
+
+                <!--Button group-->
+                <div class="govuk-button-group govuk-!-margin-top-3">
+                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
+                        Continue
+                    </button>
+                    <partial name="_Cancel" />
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+<script type="application/javascript" nonce="@nonce">
+    $(document).ready(function () {
+        let autocompleteContainer = document.getElementById('autocomplete-container');
+        let results = null;
+        document.getElementById('selected-team-leader').value = document.getElementById("current-team-leader").value;
+        let currentTeamLeader = document.getElementById("current-team-leader").value;
+        $.get('?handler=UsersList')
+        .done((result) =>
+        {
+            accessibleAutocomplete({
+                element: autocompleteContainer,
+                id: "case-team-leader-input",
+                name: "case-team-leader",
+                defaultValue:currentTeamLeader,
+                source: result,
+                confirmOnBlur: false,
+                autoselect: true,
+                showNoOptonsFound: true,
+                onConfirm: (selected) => {
+                    document.getElementById('selected-team-leader').value = selected;
+                    if(selected)
+                    {
+                        document.getElementById('in-list').value = 1
+                    }
+                    else
+                    {
+                        document.getElementById('in-list').value = -1
+                    }
+                    results = result;
+                }
+            });
+
+            var indexInList = jQuery.inArray(currentTeamLeader, result);
+            document.getElementById('in-list').value = indexInList;
+            if(indexInList == -1)
+            {
+                 document.getElementById('selected-team-leader').value = ""
+            }
+        });
+
+        $("body").on('change','#case-team-leader-input',function(evt) {
+
+            var inputText = evt.target.value.trim();
+            if(inputText.length==0)
+            {
+                document.getElementById('selected-team-leader').value = ""
+                document.getElementById('in-list').value = -1
+            }
+            else
+            {
+                var indexInList = jQuery.inArray(inputText, results);
+                if(indexInList == -1)
+                {
+                    document.getElementById('selected-team-leader').value = ""
+                }
+                document.getElementById('in-list').value = indexInList
+            }
+        });
+    });
+</script>

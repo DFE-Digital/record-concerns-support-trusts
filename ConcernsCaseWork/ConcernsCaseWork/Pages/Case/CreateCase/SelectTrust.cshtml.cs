@@ -94,7 +94,7 @@ public class SelectTrustPageModel : CreateCaseBasePageModel
 
 			SetNextStep();
 
-			return RedirectToPage("SelectCaseDivision");
+			return RedirectToPage("SelectTeamLeader");
 		}
 		catch (Exception ex)
 		{

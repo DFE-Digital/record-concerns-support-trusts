@@ -310,9 +310,8 @@ namespace ConcernsCaseWork.Services.Cases
 					NextSteps = createCaseModel.NextSteps,
 					RatingId = createCaseModel.RatingId,
 					DeEscalationPoint = createCaseModel.DeEscalationPoint,
-					DirectionOfTravel = createCaseModel.DirectionOfTravel
-					
-					
+					DirectionOfTravel = createCaseModel.DirectionOfTravel,
+					TeamLedBy = createCaseModel.TeamLeader
 				};
 				createCaseModel.StatusId = caseDto.StatusId;
 				var urn =await _caseService.PatchCaseByUrn(newCaseDto);

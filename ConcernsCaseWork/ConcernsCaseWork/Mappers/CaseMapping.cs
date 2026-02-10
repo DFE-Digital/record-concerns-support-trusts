@@ -17,6 +17,7 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.CreatedBy,
 				createCaseModel.CrmEnquiry,
 				createCaseModel.TrustUkPrn,
+				createCaseModel.TeamLeader,
 				createCaseModel.ReasonAtReview,
 				createCaseModel.DeEscalation,
 				createCaseModel.Issue,
