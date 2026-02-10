@@ -6,16 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-06.1024...HEAD)
-
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-10.1031...HEAD)
 
 ---
 ## [62.1.0][62.1.0] - 2026-02-10
 
 ### Changed 
 - 257482 -Accessibility Add to case - Required field not indicated
-- update client secrets 
-
 
 ## [62.0.0][62.0.0] - 2026-02-06
 
