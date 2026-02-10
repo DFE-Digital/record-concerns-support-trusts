@@ -121,11 +121,16 @@ namespace ConcernsCaseWork.Models
 			};
 		}
 
-		public static RadioButtonsUiComponent BuildConcernType(Division? division, string name, int? selectedId = null)
+		public static RadioButtonsUiComponent BuildConcernType(Division? division, string name, int? selectedId = null, bool? isNewFormat = false)
 		{
 			if (division == Division.RegionsGroup)
 			{
 				return BuildConcernTypeRegionsGroup(name, selectedId);
+			}
+
+			if (isNewFormat == true)
+			{
+				return BuildConcernTypeSfsoForNewFormat(name);
 			}
 
 			return BuildConcernTypeSfso(name, selectedId);
@@ -236,6 +241,35 @@ namespace ConcernsCaseWork.Models
 			};
 
 			return result;
+		}
+
+		public static List<SimpleRadioItem> GetConcernTypeSfsoForNewFormat()
+		{
+			return
+			[
+				new(ConcernType.ActualProjectedDeficit.Description(), (int)ConcernType.ActualProjectedDeficit) { TestId = ConcernType.ActualProjectedDeficit.Description() },
+				new(ConcernType.ActualProjectedCashShortfall.Description(), (int)ConcernType.ActualProjectedCashShortfall) { TestId = ConcernType.ActualProjectedCashShortfall.Description() },
+				new(ConcernType.TrustColure.Description(), (int)ConcernType.TrustColure) { TestId = ConcernType.TrustColure.Description() },
+				new(ConcernType.FinancialGovernance.Description(), (int)ConcernType.FinancialGovernance) { TestId = ConcernType.FinancialGovernance.Description() },
+				new(ConcernType.FinancialManagementCompliance.Description(), (int)ConcernType.FinancialManagementCompliance) { TestId = ConcernType.FinancialManagementCompliance.Description() },
+				new(ConcernType.LateFinancialReturns.Description(), (int)ConcernType.LateFinancialReturns) { TestId = ConcernType.LateFinancialReturns.Description() },
+				new(ConcernType.IrregularitySelfReportedFraud.Description(), (int)ConcernType.IrregularitySelfReportedFraud) { TestId = ConcernType.IrregularitySelfReportedFraud.Description() },
+				new(ConcernType.ForceMajeure.Description(), (int)ConcernType.ForceMajeure) { TestId = ConcernType.ForceMajeure.Description() }
+			];
+		}
+
+		private static RadioButtonsUiComponent BuildConcernTypeSfsoForNewFormat(string name)
+		{
+			var radioItems = GetConcernTypeSfsoForNewFormat();
+
+			return new(ElementRootId: "concern-type", name, "Select concern type")
+			{
+				RadioItems = radioItems,
+				SelectedId = null,
+				Required = true,
+				DisplayName = "concern type",
+				HintFromPartialView = "_SfsoRiskManagementFramework"
+			};
 		}
 
 		private static RadioButtonsUiComponent BuildConcernTypeSfso(string name, int? selectedId = null)

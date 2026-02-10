@@ -9,6 +9,9 @@ using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.AzureAd.Factories;
+using ConcernsCaseWork.Service.AzureAd.Options;
+using ConcernsCaseWork.Service.AzureAd.Services;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Decision;
@@ -165,6 +168,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IApiCaseSummaryService, ApiCaseSummaryService>();
 			services.AddScoped<ICaseValidatorService, CaseValidatorService>();
 
+			services.AddScoped<IGraphClientFactory, GraphClientFactory>();
+			services.AddScoped<IGraphUserService, GraphUserService>();
+
 			// api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRecordService, RecordService>();
@@ -209,6 +215,8 @@ namespace ConcernsCaseWork.Extensions
 			services.Configure<TrustSearchOptions>(configuration.GetSection(TrustSearchOptions.Cache));
 			services.Configure<SiteOptions>(configuration.GetSection(SiteOptions.Site));
 			services.Configure<FakeTrustOptions>(configuration.GetSection("FakeTrusts"));
+			services.Configure<AzureAdGroupsOptions>(configuration.GetSection("AzureAdGroups"));
+			services.Configure<AzureAdOptions>(configuration.GetSection("AzureAd"));
 		}
 	}
 }
