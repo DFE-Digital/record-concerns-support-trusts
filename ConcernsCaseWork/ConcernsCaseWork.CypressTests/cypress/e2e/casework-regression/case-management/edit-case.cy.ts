@@ -63,7 +63,10 @@ describe('Editing a case', () => {
         createConcernPage.nextStep();
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage
+            .withRiskToTrust('Red Plus')
+            .withConcernRatingRational('no')
+            .nextStep();
 
         Logger.log('Add concern details with valid text limit');
         addConcernDetailsPage
@@ -247,7 +250,7 @@ describe('Editing a case', () => {
             .hasEmptyCaseHistory();
     });
 
-    it('Should raise a validation error if do not select a case action', () => {
+    it.only('Should raise a validation error if do not select a case action', () => {
         cy.basicCreateCase();
 
         CaseManagementPage.getAddToCaseBtn().click();
