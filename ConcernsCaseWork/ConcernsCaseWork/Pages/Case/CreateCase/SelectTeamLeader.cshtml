@@ -46,9 +46,17 @@
 
                 <!--Button group-->
                 <div class="govuk-button-group govuk-!-margin-top-3">
-                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
+                    <button data-prevent-double-click="true"
+                            class="govuk-button govuk-!-margin-top-6"
+                            data-module="govuk-button"
+                            type="submit"
+                            role="button"
+                            id="continue"
+                            name="action"
+                            value="continue">
                         Continue
                     </button>
+
                     <partial name="_Cancel" />
                 </div>
             </form>
