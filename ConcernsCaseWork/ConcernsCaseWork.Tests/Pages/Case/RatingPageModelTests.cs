@@ -249,9 +249,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(pageModel.ModelState.IsValid, Is.False);
-				Assert.That(pageModel.ModelState.ContainsKey(nameof(pageModel.RatingRationalCommentary)), Is.True);
+				Assert.That(pageModel.ModelState.ContainsKey("RationalCommentaryMaxLength"), Is.True);
 			});
-			var error = pageModel.ModelState[nameof(pageModel.RatingRationalCommentary)].Errors[0];
+			var error = pageModel.ModelState["RationalCommentaryMaxLength"].Errors[0];
 			Assert.That(error.ErrorMessage, Is.EqualTo($"You have {pageModel.RatingRationalCommentary.Length - RatingPageModel.RationYesCommentaryMaxLength} characters too many."));
 		}
 
