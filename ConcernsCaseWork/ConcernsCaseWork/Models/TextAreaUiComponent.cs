@@ -7,6 +7,7 @@ public record TextAreaUiComponent(string ElementRootId, string Name, string Head
 {
 	public ValidateableString Text { get; set; }
 	public string HintFromPartialView { get; set; }
+	public bool SupportsAriaRequired { get; set; } = false;
 }
 
 public class ValidateableString : IValidatableObject
