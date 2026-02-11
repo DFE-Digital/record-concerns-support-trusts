@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-06.1024...HEAD)
-
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-10.1031...HEAD)
 
 ---
+## [62.1.0][62.1.0] - 2026-02-10
+
+### Changed 
+- 257482 -Accessibility Add to case - Required field not indicated
 
 ## [62.0.0][62.0.0] - 2026-02-06
 
@@ -453,6 +456,7 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+[62.1.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-10.1031
 [62.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-06.1024
 [61.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-01-20.989
 [60.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-01-14.984
