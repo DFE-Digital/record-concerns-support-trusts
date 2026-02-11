@@ -91,21 +91,22 @@ else
                                     <span class="govuk-error-message">You must enter a RAG rationale commentary</span>
                                 }
 
-                                <textarea asp-for="@Model.RatingRationalCommentary"
-                                          class="govuk-textarea @ModelState.GetTextAreaErrorStyles(nameof(Model.RatingRationalCommentary)) govuk-js-concerns-character-count"
-                                          id="@elementRootId"
-                                          data-testid="rag-rational-commentary"
-                                          rows="5"
-                                          aria-describedby="RAG rationale commentary"
-                                          data-cy="select-risk-to-trust-rational"
-                                          aria-label="text-area-for-risk-to-trust-rational">
-                                </textarea>
+                                <div id="container-RationalCommentaryMaxLength">
+                                    <textarea asp-for="@Model.RatingRationalCommentary"
+                                              class="govuk-textarea @ModelState.GetTextAreaErrorStyles(nameof(Model.RatingRationalCommentary)) govuk-js-concerns-character-count"
+                                              id="@elementRootId"
+                                              data-testid="rag-rational-commentary"
+                                              rows="5"
+                                              aria-describedby="RAG rationale commentary"
+                                              data-cy="select-risk-to-trust-rational"
+                                              aria-label="text-area-for-risk-to-trust-rational">
+                                    </textarea>
 
-                                <div id="@elementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                                    You can enter up to @rationYesCommentaryMaxLength characters
+                                    <div id="@elementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                                        You can enter up to @rationYesCommentaryMaxLength characters
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

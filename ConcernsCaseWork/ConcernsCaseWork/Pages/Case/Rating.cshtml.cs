@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<RatingPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
-		private readonly TelemetryClient _telemetryClient;
+		private TelemetryClient _telemetryClient;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public CreateCaseModel CreateCaseModel { get; private set; }
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public string RatingRationalCommentary { get; set; }
 
-		public static int RationYesCommentaryMaxLength => 200;
+		public static int RationYesCommentaryMaxLength => 250;
 
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 					}
 					else if (RatingRationalCommentary.Length > RationYesCommentaryMaxLength)
 					{
-						ModelState.AddModelError("RationYesCommentaryMaxLength", "");
+						ModelState.AddModelError("RationalCommentaryMaxLength", $"You have {RatingRationalCommentary.Length - RationYesCommentaryMaxLength} characters too many.");
 					}
 				}
 
