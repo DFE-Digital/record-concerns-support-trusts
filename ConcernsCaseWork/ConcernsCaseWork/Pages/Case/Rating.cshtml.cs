@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<RatingPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
-		private TelemetryClient _telemetryClient;
+		private readonly TelemetryClient _telemetryClient;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public CreateCaseModel CreateCaseModel { get; private set; }
@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 				if (YesCheckedRagRational == null)
 				{
-					ModelState.AddModelError(nameof(YesCheckedRagRational), "Select RAG rationale commentary");
+					ModelState.AddModelError(nameof(YesCheckedRagRational), "Select RAG rationale");
 				}
 				else if (YesCheckedRagRational is true)
 				{
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 					}
 					else if (RatingRationalCommentary.Length > RationYesCommentaryMaxLength)
 					{
-						ModelState.AddModelError(nameof(RatingRationalCommentary), $"You have {RatingRationalCommentary.Length - RationYesCommentaryMaxLength} characters too many.");
+						ModelState.AddModelError("RationYesCommentaryMaxLength", "");
 					}
 				}
 
