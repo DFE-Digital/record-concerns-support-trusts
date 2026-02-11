@@ -44,7 +44,7 @@ public class GraphUserService : IGraphUserService
 		   .Select("givenName,surname,id,mail")
 		   .GetAsync();
 
-		users.AddRange(members.Cast<User>().ToList());
+		users.AddRange([.. members.Cast<User>().Where(x => x != null && x.Mail != null)]);
 
 		return users;
 	}
