@@ -146,7 +146,8 @@ namespace ConcernsCaseWork.Models
 				StringContents = value,
 				DisplayName = "Issue",
 				Required = true
-			}
+			},
+			SupportsAriaRequired = true
 		};
 
 		public static TextAreaUiComponent BuildCurrentStatus(string name, string? value = null)

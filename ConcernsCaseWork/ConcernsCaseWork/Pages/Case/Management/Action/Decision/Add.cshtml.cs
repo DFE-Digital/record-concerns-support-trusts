@@ -454,7 +454,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				StringContents = contents,
 				DisplayName = "Notes",
 				Required = true
-			}
+			},
+			SupportsAriaRequired = true
 		};
 
 		private static RadioButtonsUiComponent BuildDrawdownFacilityAgreedComponent(DecisionTypeQuestionModel model)
