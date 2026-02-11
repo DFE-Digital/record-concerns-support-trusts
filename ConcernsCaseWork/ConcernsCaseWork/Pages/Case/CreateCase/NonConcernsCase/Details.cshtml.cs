@@ -109,6 +109,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 			var userState = await GetUserState();
 
 			var result = userState.CreateCaseModel;
+			result.TeamLeader = userState.TeamLeader;
 
 			// get the trust being used for the case
 			var trust = await _trustService.GetTrustByUkPrn(userState.TrustUkPrn);
