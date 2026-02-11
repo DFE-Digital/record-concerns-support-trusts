@@ -53,6 +53,9 @@ describe('Creating a non concerns case', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+
         Logger.log('You must select a division error');
         selectCaseDivisionPage.continue().hasValidationError('Select case division');
 
@@ -137,6 +140,9 @@ describe('Creating a non concerns case', () => {
         it('Should make the case a concerns case', () => {
             Logger.log('Create a case');
             createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
+
+            Logger.log('Create team leader');
+            createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
 
             Logger.log('Create a valid case division');
             selectCaseDivisionPage.withCaseDivision('SFSO').continue();
@@ -245,6 +251,9 @@ describe('Creating a non concerns case', () => {
             it('Should create the concern against the correct case and trust', () => {
                 Logger.log('Create a case');
                 createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
+
+                Logger.log('Create team leader');
+                createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
 
                 selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 

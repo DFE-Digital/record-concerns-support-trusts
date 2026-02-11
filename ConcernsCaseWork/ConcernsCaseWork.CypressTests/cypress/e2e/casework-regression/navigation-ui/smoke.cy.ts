@@ -83,6 +83,9 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 

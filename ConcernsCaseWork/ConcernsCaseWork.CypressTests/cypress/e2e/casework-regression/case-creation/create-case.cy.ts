@@ -38,6 +38,9 @@ describe('Creating a case', () => {
 
         createCasePage.confirmOption();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+
         createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
         Logger.log('You must select a division error');
@@ -207,6 +210,9 @@ describe('Creating a case', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+
         createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
         Logger.log('Create a valid case division');
@@ -287,6 +293,9 @@ describe('Creating a case', () => {
     it('Should create additional concerns', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
