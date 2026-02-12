@@ -23,6 +23,8 @@
 		public int Urn { get; set; }
 		public int StatusId { get; set; }
 		public int RatingId { get; set; }
+		public bool RatingRational { get; set; }
+		public string RatingRationalCommentary { get; set; }
 		public Territory? Territory { get; set; }
 		public string TrustCompaniesHouseNumber { get; set; }
 		public DateTime? CaseLastUpdatedAt { get; set; }
