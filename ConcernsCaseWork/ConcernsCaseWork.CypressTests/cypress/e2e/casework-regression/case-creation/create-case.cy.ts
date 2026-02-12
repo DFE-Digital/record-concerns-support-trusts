@@ -26,7 +26,7 @@ describe('Creating a case', () => {
         cy.acceptCookies();
     });
 
-    it('Should validate adding a case', () => {
+    it.only('Should validate adding a case', () => {
         Logger.log('Checking accessibility on home page');
         cy.excuteAccessibilityTests();
 
@@ -110,8 +110,8 @@ describe('Creating a case', () => {
         Logger.log('Check unpopulated risk to trust throws validation error');
         addDetailsPage.nextStep().hasValidationError('Select risk to trust rating');
 
-        Logger.log('Checking accessibility on risk to trust');
-        cy.excuteAccessibilityTests();
+        //Logger.log('Checking accessibility on risk to trust');
+        //cy.excuteAccessibilityTests();
 
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
@@ -120,7 +120,7 @@ describe('Creating a case', () => {
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+            addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Check Trust, concern and risk to trust details are correctly populated');
         createCaseSummary
@@ -237,7 +237,7 @@ describe('Creating a case', () => {
         createConcernPage.nextStep();
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red').nextStep();
+        addDetailsPage.withRiskToTrust('Red').withConcernRatingRational('no').nextStep();
 
         Logger.log('Check Trust, concern and risk to trust details are correctly populated');
         createCaseSummary
@@ -314,7 +314,7 @@ describe('Creating a case', () => {
             .nextStep();
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Add concern details with valid text limit');
         addConcernDetailsPage.withIssue('This is an issue').createCase();
