@@ -191,6 +191,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				1,
 				2,
+				Fixture.Create<bool>(),
+				Fixture.Create<string>(),
 				Fixture.Create<Territory>(),
 				trustCompaniesHouseNumber ?? Fixture.CreateMany<char>(8).ToString(),
 				Fixture.Create<Division>(),

@@ -84,7 +84,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
         Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
@@ -125,7 +125,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Check Trust, concern, risk to trust details and territory are correctly populated');
         createCaseSummary

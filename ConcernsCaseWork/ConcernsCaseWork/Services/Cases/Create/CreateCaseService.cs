@@ -57,6 +57,8 @@ public class CreateCaseService : ICreateCaseService
 				null,
 				(int)CaseStatus.Live,
 				(int)ConcernRating.NotApplicable,
+				false,
+				null,
 				null,
 				trustCompaniesHouseNumber,
 				null,

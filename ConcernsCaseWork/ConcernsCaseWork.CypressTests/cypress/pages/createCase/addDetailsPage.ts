@@ -17,6 +17,14 @@ export default class AddDetailsPage {
         return this;
     }
 
+    public withConcernRatingRational(value: 'yes' | 'no'): this {
+        Logger.log(`With concern Rating rational: ${value}`);
+
+        cy.getByTestId(`rational-radio-${value}`).click();
+
+        return this;
+    }
+
     public hasValidationError(message: string): this {
         cy.task('log', `Has Validation error ${message}`);
 

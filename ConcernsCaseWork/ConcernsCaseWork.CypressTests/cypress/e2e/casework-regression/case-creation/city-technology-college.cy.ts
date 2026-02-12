@@ -61,7 +61,7 @@ describe('Creating a case for a city technology college', () => {
         createCasePage.createCase().withTrustName(ctcRequest.name).selectOption().confirmOption();
 
         Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();

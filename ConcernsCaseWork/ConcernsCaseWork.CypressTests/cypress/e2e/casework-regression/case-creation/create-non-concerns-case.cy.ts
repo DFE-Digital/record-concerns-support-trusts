@@ -54,7 +54,7 @@ describe('Creating a non concerns case', () => {
         createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
         Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('You must select a division error');
         selectCaseDivisionPage.continue().hasValidationError('Select case division');
@@ -142,7 +142,7 @@ describe('Creating a non concerns case', () => {
             createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
             Logger.log('Create team leader');
-            createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             Logger.log('Create a valid case division');
             selectCaseDivisionPage.withCaseDivision('SFSO').continue();
@@ -188,7 +188,7 @@ describe('Creating a non concerns case', () => {
             Logger.log('Check unpopulated risk to trust throws validation error');
             addConcernDetailsPage.nextStep().hasValidationError('Select risk to trust rating');
 
-            createConcernPage.withConcernRating('Red Plus').nextStep();
+            createConcernPage.withConcernRating('Red Plus').withConcernRatingRational('no').nextStep();
 
             Logger.log('Checking accessibility on create case concern page');
             cy.excuteAccessibilityTests();
@@ -253,7 +253,7 @@ describe('Creating a non concerns case', () => {
                 createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
                 Logger.log('Create team leader');
-                createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+                createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
                 selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 
@@ -308,7 +308,7 @@ describe('Creating a non concerns case', () => {
                         .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber');
 
-                    createConcernPage.withConcernRating('Red Plus').nextStep();
+                    createConcernPage.withConcernRating('Red Plus').withConcernRatingRational('no').nextStep();
 
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)

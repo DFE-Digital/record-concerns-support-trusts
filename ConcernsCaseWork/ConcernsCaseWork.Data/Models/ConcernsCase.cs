@@ -31,8 +31,9 @@ namespace ConcernsCaseWork.Data.Models
         public int Urn { get; set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
-
-        public Territory? Territory { get; set; }
+		public bool RatingRational { get; set; }
+		public string RatingRationalCommentary { get; set; }
+		public Territory? Territory { get; set; }
         public Division? DivisionId { get; set; }
         public Region? RegionId { get; set; }
 

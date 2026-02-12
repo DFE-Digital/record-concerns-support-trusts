@@ -46,12 +46,12 @@
 
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input"
-                    id="@radioItemElementId"
-                    name="@Model.Name.@nameof(Model.SelectedId)"
-                    type="radio"
-                    data-testid="@testId" 
-                    value="@radioItem.Id"
-                    disabled="@disabled"
+                           id="@radioItemElementId"
+                           name="@Model.Name.@nameof(Model.SelectedId)"
+                           type="radio"
+                           data-testid="@testId"
+                           value="@radioItem.Id"
+                           disabled="@disabled"
                     @dataAriaControls
                     @isChecked />
 
@@ -86,7 +86,7 @@
                             }
                         </div>
                     }
-                    
+
                     @if (@radioItem.SubRadioItems.Count > 0)
                     {
                         // Identify which options have sub items so we can validate them
@@ -102,12 +102,12 @@
 
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input @radioItemElementId"
-                                               id="sub-type-@subRadioItem.Label" 
-                                            name="@Model.Name.@nameof(Model.SelectedSubId)" 
-                                            value="@subRadioItem.Id" 
-                                            type="radio"
-                                            data-testid="@subRadioItem.TestId"
-                                            @subItemIsChecked>
+                                               id="sub-type-@subRadioItem.Label"
+                                               name="@Model.Name.@nameof(Model.SelectedSubId)"
+                                               value="@subRadioItem.Id"
+                                               type="radio"
+                                               data-testid="@subRadioItem.TestId"
+                                        @subItemIsChecked>
 
                                         <label class="govuk-label govuk-radios__label" for="sub-type-@subRadioItem.Label">
                                             @subRadioItem.Label
@@ -140,7 +140,7 @@
                                                    name="@Model.Name.@nameof(Model.SelectedSubIds)"
                                                    value="@checkBox.ElementRootId"
                                                    type="checkbox"
-                                                   @subItemIsChecked>
+                                            @subItemIsChecked>
                                             <label class="govuk-label govuk-checkboxes__label" for="@Model.ElementRootId">
                                                 @checkBox.Text
                                             </label>
@@ -158,9 +158,9 @@
                         </div>
                     }
                 </div>
-			}
-		</div>
-	</fieldset>
+            }
+        </div>
+    </fieldset>
     <input type="hidden" name="@(Model.Name).DisplayName" value="@Model.DisplayName" />
     <input type="hidden" name="@(Model.Name).SubItemDisplayName" value="@Model.SubItemDisplayName" />
     <input type="hidden" name="@(Model.Name).Required" value="@required" />

@@ -29,6 +29,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.DirectionOfTravel,
 				createCaseModel.StatusId,
 				createCaseModel.RatingId,
+				createCaseModel.RatingRational,
+				createCaseModel.RatingRationalCommentary,
 				createCaseModel.Territory,
 				createCaseModel.TrustCompaniesHouseNumber,
 				createCaseModel.Division,

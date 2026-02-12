@@ -13,6 +13,10 @@ namespace ConcernsCaseWork.Redis.Models
 
 		public long RatingId { get; set; }
 
+		public bool RatingRational { get; set; }
+
+		public string RatingRationalCommentary { get; set; }
+
 		public long StatusId { get; set; }
 
 		public long MeansOfReferralId { get; set; }

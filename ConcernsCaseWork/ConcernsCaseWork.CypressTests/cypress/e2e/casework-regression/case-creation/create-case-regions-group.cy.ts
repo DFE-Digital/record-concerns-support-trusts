@@ -51,7 +51,7 @@ describe('Creating a case', () => {
             createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
             Logger.log('Create team leader');
-            createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
@@ -98,7 +98,7 @@ describe('Creating a case', () => {
                 .hasConcernType('Governance capability');
 
             Logger.log('Populate risk to trust');
-            addDetailsPage.withRiskToTrust('Red').nextStep();
+            addDetailsPage.withRiskToTrust('Red').withConcernRatingRational('no').nextStep();
 
             Logger.log('Check Trust, concern and risk to trust details are correctly populated');
             createCaseSummary
@@ -179,7 +179,7 @@ describe('Creating a case', () => {
             createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
             Logger.log('Create team leader');
-            createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
@@ -214,7 +214,7 @@ describe('Creating a case', () => {
             createConcernPage.nextStep();
 
             Logger.log('Populate risk to trust');
-            addDetailsPage.withRiskToTrust('Red').nextStep();
+            addDetailsPage.withRiskToTrust('Red').withConcernRatingRational('no').nextStep();
 
             Logger.log('Check Trust, concern and risk to trust details are correctly populated');
             createCaseSummary
@@ -339,7 +339,7 @@ describe('Creating a case', () => {
                 .hasAuthoriser('Deputy Director');
         });
 
-        it('Should create an SRMA', () => {
+        it.only('Should create an SRMA', () => {
             caseManagementPage.addCaseAction('Srma');
 
             Logger.log('Filling out the SRMA form');

@@ -17,6 +17,14 @@ export default class CreateConcernPage {
         return this;
     }
 
+    public withConcernRatingRational(value: 'yes' | 'no'): this {
+        Logger.log(`With concern Rating rational: ${value}`);
+
+        cy.getByTestId(`rational-radio-${value}`).click();
+
+        return this;
+    }
+
     public withMeansOfReferral(value: string): this {
         Logger.log(`With Means of referral ${value}`);
 

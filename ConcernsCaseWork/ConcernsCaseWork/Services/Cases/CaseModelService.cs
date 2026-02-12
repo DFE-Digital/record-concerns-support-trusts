@@ -381,6 +381,8 @@ namespace ConcernsCaseWork.Services.Cases
 					newCaseId,
 					recordModel.TypeId,
 					recordModel.RatingId,
+					recordModel.RatingRational,
+					recordModel.RatingRationalCommentary,
 					createCaseModel.StatusId,
 					recordModel.MeansOfReferralId);
 

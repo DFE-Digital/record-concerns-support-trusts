@@ -44,7 +44,7 @@ describe('Editing a case', () => {
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
         Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('pa').selectNamedOption('case-team-leader-input').confirmOption();
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
@@ -66,7 +66,7 @@ describe('Editing a case', () => {
         createConcernPage.nextStep();
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Add concern details with valid text limit');
         addConcernDetailsPage
