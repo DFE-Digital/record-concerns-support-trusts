@@ -100,6 +100,8 @@ namespace ConcernsCaseWork.Services.Records
 				createRecordModel.CaseUrn, 
 				createRecordModel.TypeId,
 				createRecordModel.RatingId,
+				createRecordModel.RatingRational,
+				createRecordModel.RatingRationalCommentary,
 				(int)ConcernStatus.Live,
 				createRecordModel.MeansOfReferralId);
 			

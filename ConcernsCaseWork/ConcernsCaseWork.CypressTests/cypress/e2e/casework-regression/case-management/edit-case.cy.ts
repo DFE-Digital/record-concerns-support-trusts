@@ -63,7 +63,7 @@ describe('Editing a case', () => {
         createConcernPage.nextStep();
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Add concern details with valid text limit');
         addConcernDetailsPage

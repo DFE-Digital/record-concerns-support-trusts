@@ -70,7 +70,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, 
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeId, ratingId,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeId, 
+				ratingId, Fixture.Create<bool>(), Fixture.Create<string>(),
 				1, meansOfReferralId);
 		}
 		

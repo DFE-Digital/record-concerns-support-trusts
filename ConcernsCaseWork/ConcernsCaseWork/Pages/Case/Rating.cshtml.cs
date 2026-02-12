@@ -37,6 +37,14 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty(SupportsGet = true, Name = "Urn")]
 		public int? CaseUrn { get; set; }
 
+		[BindProperty]
+		public bool? YesCheckedRagRational { get; set; }
+
+		[BindProperty]
+		public string RatingRationalCommentary { get; set; }
+
+		public static int RationYesCommentaryMaxLength => 250;
+
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			ILogger<RatingPageModel> logger, 
@@ -63,6 +71,22 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogMethodEntered();
 
+				if (YesCheckedRagRational == null)
+				{
+					ModelState.AddModelError(nameof(YesCheckedRagRational), "Select RAG rationale");
+				}
+				else if (YesCheckedRagRational is true)
+				{
+					if (string.IsNullOrWhiteSpace(RatingRationalCommentary))
+					{
+						ModelState.AddModelError(nameof(RatingRationalCommentary), "You must enter a RAG rationale commentary");
+					}
+					else if (RatingRationalCommentary.Length > RationYesCommentaryMaxLength)
+					{
+						ModelState.AddModelError("RationalCommentaryMaxLength", $"You have {RatingRationalCommentary.Length - RationYesCommentaryMaxLength} characters too many.");
+					}
+				}
+
 				if (!ModelState.IsValid)
 				{
 					await LoadPage();
@@ -81,6 +105,10 @@ namespace ConcernsCaseWork.Pages.Case
 
 				// Update cache model
 				userState.CreateCaseModel.RatingId = (long)ragRatingId;
+
+				userState.CreateCaseModel.RatingRational = YesCheckedRagRational.Value;
+				userState.CreateCaseModel.RatingRationalCommentary = RatingRationalCommentary;
+
 				AppInsightsHelper.LogEvent(_telemetryClient, new AppInsightsModel()
 				{
 					EventName = "CREATE CASE",
@@ -88,13 +116,13 @@ namespace ConcernsCaseWork.Pages.Case
 					EventPayloadJson = "",
 					EventUserName = userState.UserName
 				});
+
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
 
 				if (CaseUrn.HasValue)
 				{
 					return RedirectToPage("details",new {urn = CaseUrn });
-					
 				}
 
 				return RedirectToPage("details");

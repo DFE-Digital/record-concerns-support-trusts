@@ -30,6 +30,8 @@ namespace ConcernsCaseWork.API.Features.Case
 				CaseHistory = request.CaseHistory,
 				StatusId = request.StatusId,
 				RatingId = request.RatingId,
+				RatingRational = request.RatingRational,
+				RatingRationalCommentary = request.RatingRationalCommentary,
 				Territory = request.Territory,
 				TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
 				DivisionId = request.Division,
@@ -67,6 +69,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			original.DirectionOfTravel = toMerge.DirectionOfTravel ?? original.DirectionOfTravel;
 			original.StatusId = toMerge.StatusId;
 			original.RatingId = toMerge.RatingId;
+			original.RatingRational = toMerge.RatingRational;
+			original.RatingRationalCommentary = toMerge.RatingRationalCommentary;
 			original.Territory = toMerge.Territory;
 			original.TrustCompaniesHouseNumber = toMerge.TrustCompaniesHouseNumber ?? original.TrustCompaniesHouseNumber; // doesn't for it to become null
 			original.DivisionId = toMerge.DivisionId;

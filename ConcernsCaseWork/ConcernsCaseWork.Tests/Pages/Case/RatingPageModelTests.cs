@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -143,13 +144,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.RiskToTrust.SelectedId = 1;
+			pageModel.YesCheckedRagRational = false;
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 			var pageResponseInstance = pageResponse as RedirectToPageResult;
 			
 			// assert
-			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance, Is.Not.Null);
 			Assert.That(pageResponseInstance.PageName, Is.EqualTo("details"));
 
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
@@ -175,14 +177,84 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.RiskToTrust.SelectedId = 101;
+			pageModel.YesCheckedRagRational = false;
 
 			// act
 			_ = await pageModel.OnPostAsync();
 			
 			// assert
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
-		}		
-		
+		}
+
+		[Test]
+		public async Task WhenOnPostAsync_And_RatingRational_Is_Yes_WithNoCommentry_Fails_Validation()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
+
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object,
+				mockUserStateCachedService.Object,
+				mockLogger.Object, true);
+
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 1;
+			pageModel.YesCheckedRagRational = true;
+
+			// act
+			_ = await pageModel.OnPostAsync();
+
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(pageModel.ModelState.IsValid, Is.False);
+				Assert.That(pageModel.ModelState.ContainsKey(nameof(pageModel.RatingRationalCommentary)), Is.True);
+			});
+			var error = pageModel.ModelState[nameof(pageModel.RatingRationalCommentary)].Errors[0];
+			Assert.That(error.ErrorMessage, Is.EqualTo("You must enter a RAG rationale commentary"));
+		}
+
+		[Test]
+		public async Task WhenOnPostAsync_And_RatingRational_Is_Yes_WithCommentry_Too_Long_Fails_Validation()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
+
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object,
+				mockUserStateCachedService.Object,
+				mockLogger.Object, true);
+
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 1;
+			pageModel.YesCheckedRagRational = true;
+			pageModel.RatingRationalCommentary = "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum";
+
+			// act
+			_ = await pageModel.OnPostAsync();
+
+			// Assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(pageModel.ModelState.IsValid, Is.False);
+				Assert.That(pageModel.ModelState.ContainsKey("RationalCommentaryMaxLength"), Is.True);
+			});
+			var error = pageModel.ModelState["RationalCommentaryMaxLength"].Errors[0];
+			Assert.That(error.ErrorMessage, Is.EqualTo($"You have {pageModel.RatingRationalCommentary.Length - RatingPageModel.RationYesCommentaryMaxLength} characters too many."));
+		}
+
 		private static RatingPageModel SetupRatingPageModel(
 			ITrustModelService mockTrustModelService, 
 			IUserStateCachedService mockUserStateCachedService,

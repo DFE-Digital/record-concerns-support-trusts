@@ -122,7 +122,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Check Trust, concern, risk to trust details and territory are correctly populated');
         createCaseSummary

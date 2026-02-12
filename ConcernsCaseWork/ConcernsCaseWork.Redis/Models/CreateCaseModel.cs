@@ -39,7 +39,11 @@ namespace ConcernsCaseWork.Redis.Models
 		public long StatusId { get; set; }
 		
 		public long RatingId { get; set; }
-		
+
+		public bool RatingRational { get; set; }
+
+		public string RatingRationalCommentary { get; set; }
+
 		public Territory? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();

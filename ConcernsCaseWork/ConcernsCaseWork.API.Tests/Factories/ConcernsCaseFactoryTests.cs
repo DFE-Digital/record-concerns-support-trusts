@@ -33,7 +33,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 3)
                 .With(c => c.RatingId = 3)
-                .With(c => c.Territory = Territory.South_And_South_East__South_East)
+				.With(c => c.RatingRational = false)
+				.With(c => c.RatingRationalCommentary = null)
+				.With(c => c.Territory = Territory.South_And_South_East__South_East)
                 .With(c => c.Division = Division.RegionsGroup)
                 .With(c => c.Region = Region.NorthWest)
                 .Build();
@@ -61,7 +63,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Territory = request.Territory,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId,
-                TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
+				RatingRational = request.RatingRational,
+				RatingRationalCommentary = null,
+				TrustCompaniesHouseNumber = request.TrustCompaniesHouseNumber,
 				DivisionId = request.Division,
 				CaseLastUpdatedAt = request.CreatedAt,
                 RegionId = request.Region
