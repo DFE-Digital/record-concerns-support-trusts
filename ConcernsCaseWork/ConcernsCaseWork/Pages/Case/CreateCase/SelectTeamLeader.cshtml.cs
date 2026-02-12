@@ -31,21 +31,6 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 
 		public async Task<IActionResult> OnGet()
 		{
-			//_logger.LogMethodEntered();
-
-			//try
-			//{
-			//	var userState = await GetUserState();
-
-			//	CurrentTeamLeader = userState.TeamLeader;
-			//}
-			//catch (Exception ex)
-			//{
-			//	_logger.LogErrorMsg(ex);
-
-			//	SetErrorMessage(ErrorOnGetPage);
-			//}
-
 			return Page();
 		}
 
