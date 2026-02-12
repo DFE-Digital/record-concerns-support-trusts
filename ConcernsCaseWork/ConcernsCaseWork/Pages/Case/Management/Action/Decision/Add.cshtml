@@ -43,13 +43,11 @@
 
                 @* CRM Enquiry Number *@
                 <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <div id="crm-enquiry-hint" class="govuk-hint">
-                            If yes, paste the CRM enquiry number below. If no, leave the field blank.
-                        </div>
+                    <label class="govuk-label" for="crm-enquiry-number">
+                        If yes, paste the CRM enquiry number below. If no, leave the field blank.
+                    </label>
 
-                        <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber" aria-label="Is this decision linked to a CRM case">
-                    </fieldset>
+                    <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
                 </div>
 
                 @if (isNotRegionsGroupCase)
