@@ -110,9 +110,6 @@ describe('Creating a case', () => {
         Logger.log('Check unpopulated risk to trust throws validation error');
         addDetailsPage.nextStep().hasValidationError('Select risk to trust rating');
 
-        //Logger.log('Checking accessibility on risk to trust');
-        //cy.excuteAccessibilityTests();
-
         createCaseSummary
             .hasTrustSummaryDetails('Ashton West End Primary Academy')
             .hasManagedBy('SFSO', 'North - North East')
