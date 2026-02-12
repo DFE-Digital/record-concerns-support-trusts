@@ -117,7 +117,7 @@ describe('Creating a case', () => {
             .hasConcernRiskRating('Red Amber');
 
         Logger.log('Populate risk to trust');
-            addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
+        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
 
         Logger.log('Check Trust, concern and risk to trust details are correctly populated');
         createCaseSummary
