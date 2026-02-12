@@ -64,7 +64,11 @@ else
                     <span class="govuk-error-message">Select RAG rationale</span>
                 }
 
-                <div class="govuk-radios" data-module="govuk-radios">
+                @{
+                    var noSelectionErrorCss = ratingValidationState == ModelValidationState.Invalid ? "govuk-form-group--error" : "";
+                }
+
+                <div class="govuk-radios @noSelectionErrorCss" data-module="govuk-radios">
                     <div class="govuk-radios__item">
                         <input asp-for="@Model.YesCheckedRagRational" class="govuk-radios__input" type="radio" value="false" id="radio-no" data-testid="rational-radio-no">
                         <label class="govuk-label govuk-radios__label" for="radio-no">
