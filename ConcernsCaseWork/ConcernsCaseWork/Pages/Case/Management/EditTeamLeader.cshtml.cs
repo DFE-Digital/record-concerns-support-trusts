@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				var adUsers = await _graphUserService.GetTeamleaders();
+				var adUsers = await _graphUserService.GetCaseWorkersAndAdmins();
 
 				return new JsonResult(adUsers.Select(u => u.Mail));
 			}

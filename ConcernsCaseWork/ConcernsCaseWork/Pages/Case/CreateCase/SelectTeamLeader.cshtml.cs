@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 			userState.TeamLeader = selectedTeamLeader;
 			await _cachedUserService.StoreData(userName, userState);
 
-			return RedirectToPage("SelectCaseDivision");
+			return Redirect("/case/create/type");
 		}
 
 		public async Task<ActionResult> OnGetUsersList()
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase
 
 			try
 			{
-				var adUsers = await _graphUserService.GetTeamleaders();
+				var adUsers = await _graphUserService.GetCaseWorkersAndAdmins();
 
 				return new JsonResult(adUsers.Select(u => u.Mail));
 			}
