@@ -26,7 +26,7 @@ describe('Creating a case', () => {
         cy.acceptCookies();
     });
 
-    it.only('Should validate adding a case', () => {
+    it('Should validate adding a case', () => {
         Logger.log('Checking accessibility on home page');
         cy.excuteAccessibilityTests();
 

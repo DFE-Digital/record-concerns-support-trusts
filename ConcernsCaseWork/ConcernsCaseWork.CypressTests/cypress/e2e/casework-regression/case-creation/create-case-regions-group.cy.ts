@@ -339,7 +339,7 @@ describe('Creating a case', () => {
                 .hasAuthoriser('Deputy Director');
         });
 
-        it.only('Should create an SRMA', () => {
+        it('Should create an SRMA', () => {
             caseManagementPage.addCaseAction('Srma');
 
             Logger.log('Filling out the SRMA form');
