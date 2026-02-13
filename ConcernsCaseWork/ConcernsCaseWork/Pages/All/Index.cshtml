@@ -24,11 +24,12 @@
     {
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
             <h1 class="govuk-fieldset__heading">
-                View all cases
+                All cases
             </h1>
         </legend>
 
-        <!-- Active casework -->
+        <partial name="_Filter" />
+
         <partial name="_CasesActive" model="Model.AllCases" />
 
         <partial name="_Pagination" model="Model.Pagination" />
