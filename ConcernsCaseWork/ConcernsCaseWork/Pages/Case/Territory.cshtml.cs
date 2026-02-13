@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.CreateCaseModel.Territory = (Territory)Territory.SelectedId;
 				await _userStateCache.StoreData(GetUserName(), userState);
 
-				return Redirect("/case/create/type");
+				return Redirect("/case/create/team-leader");
 			}
 			catch (Exception ex)
 			{

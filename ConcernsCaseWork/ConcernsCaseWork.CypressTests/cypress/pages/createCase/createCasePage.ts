@@ -15,6 +15,13 @@ export class CreateCasePage {
         return this;
     }
 
+    public withTeamLeaderEmail(value: string): this {
+        Logger.log(`With team leader email ${value}`);
+        cy.getById(`case-team-leader-input`).clear().type(value);
+
+        return this;
+    }
+
     public withTerritory(value: string): this {
         Logger.log(`With Territory ${value}`);
 
@@ -26,6 +33,13 @@ export class CreateCasePage {
     public selectOption(): this {
         Logger.log('Click first result');
         cy.get('#search__option--0').click();
+
+        return this;
+    }
+
+    public selectNamedOption(name: string): this {
+        Logger.log('Click first result');
+        cy.get(`#${name}__option--0`).click();
 
         return this;
     }

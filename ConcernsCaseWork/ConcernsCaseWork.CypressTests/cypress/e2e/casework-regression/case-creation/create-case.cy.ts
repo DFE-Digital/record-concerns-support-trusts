@@ -26,7 +26,7 @@ describe('Creating a case', () => {
         cy.acceptCookies();
     });
 
-    it.only('Should validate adding a case', () => {
+    it('Should validate adding a case', () => {
         Logger.log('Checking accessibility on home page');
         cy.excuteAccessibilityTests();
 
@@ -37,6 +37,9 @@ describe('Creating a case', () => {
         cy.excuteAccessibilityTests();
 
         createCasePage.confirmOption();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
@@ -204,6 +207,9 @@ describe('Creating a case', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
         createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
         Logger.log('Create a valid case division');
@@ -284,6 +290,9 @@ describe('Creating a case', () => {
     it('Should create additional concerns', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();

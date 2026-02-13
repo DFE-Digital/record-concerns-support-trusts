@@ -106,6 +106,7 @@ public class SelectTrustPageModel : CreateCaseBasePageModel
 			var userName = GetUserName();
 			var userState = await _cachedUserService.GetData(userName) ??  new UserState(GetUserName());
 			userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
+			userState.TeamLeader = null;
 			await _cachedUserService.StoreData(userName, userState);
 		}
 

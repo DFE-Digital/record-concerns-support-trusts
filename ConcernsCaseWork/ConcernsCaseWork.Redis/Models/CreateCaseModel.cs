@@ -18,7 +18,9 @@ namespace ConcernsCaseWork.Redis.Models
 		public string CrmEnquiry { get; set; }
 		
 		public string TrustUkPrn { get; set; }
-		
+
+		public string TeamLeader { get; set; }
+
 		public string ReasonAtReview { get; set; }
 		
 		public DateTimeOffset DeEscalation { get; set; }

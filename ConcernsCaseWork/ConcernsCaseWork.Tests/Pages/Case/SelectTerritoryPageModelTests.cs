@@ -204,7 +204,7 @@ public class SelectTerritoryPageModelTests
 		var page = pageResponse as RedirectResult;
 		
 		Assert.That(page, Is.Not.Null);
-		Assert.That(page.Url, Is.EqualTo($"/case/create/type"));
+		Assert.That(page.Url, Is.EqualTo($"/case/create/team-leader"));
 	}
 
 	[Test]
@@ -235,7 +235,7 @@ public class SelectTerritoryPageModelTests
 		var page = pageResponse as RedirectResult;
 
 		Assert.That(page, Is.Not.Null);
-		Assert.That(page.Url, Is.EqualTo("/case/create/type"));
+		Assert.That(page.Url, Is.EqualTo("/case/create/team-leader"));
 	}
 	
 	[Test]

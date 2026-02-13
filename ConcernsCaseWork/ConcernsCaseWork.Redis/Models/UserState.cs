@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.Redis.Models
 			UserName = userName;
 		}
 		public string TrustUkPrn { get; set; }
+		public string TeamLeader { get; set; }
 		public CreateCaseModel CreateCaseModel { get; set; } = new ();
 		public string UserName { get; private set; }
 	}
