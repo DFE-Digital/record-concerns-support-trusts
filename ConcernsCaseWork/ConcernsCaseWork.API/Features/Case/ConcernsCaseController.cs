@@ -23,6 +23,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		private readonly IDeleteConcernsCase _deleteConcernsCase;
 		private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
 		private readonly IGetActiveConcernsCaseSummariesForUsersTeam _getActiveConcernsCaseSummariesForUsersTeam;
+		private readonly IGetConcernsCaseSummariesByFilter _getConcernsCaseSummariesByFilter;
 		private readonly IGetActiveConcernsCaseSummariesByOwner _getActiveConcernsCaseSummariesByOwner;
 		private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
 		private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
@@ -40,7 +41,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			IGetActiveConcernsCaseSummariesByTrust getActiveConcernsCaseSummariesByTrust,
 			IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust,
 			IGetActiveConcernsCaseSummariesForUsersTeam getActiveConcernsCaseSummariesForUsersTeam,
-			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner)
+			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner,
+			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter)
 		{
 			_logger = logger;
 			_createConcernsCase = createConcernsCase;
@@ -54,6 +56,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			_getClosedConcernsCaseSummariesByTrust = getClosedConcernsCaseSummariesByTrust;
 			_getActiveConcernsCaseSummariesForUsersTeam = getActiveConcernsCaseSummariesForUsersTeam;
 			_getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
+			_getConcernsCaseSummariesByFilter = getConcernsCaseSummariesByFilter;
 		}
 
 		[HttpPost]
@@ -64,7 +67,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			var validationResult = validator.Validate(request);
 
-			if(!validationResult.IsValid)
+			if (!validationResult.IsValid)
 			{
 				_logger.LogInformation($"Failed to create Concerns Case due to bad request");
 				return new BadRequestObjectResult(validationResult.Errors);
@@ -139,7 +142,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
 
 			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
-			return Ok(response);			
+			return Ok(response);
 		}
 
 		[HttpGet]
@@ -154,6 +157,32 @@ namespace ConcernsCaseWork.API.Features.Case
 			_logger.LogDebug(JsonSerializer.Serialize(concernsCases));
 			var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
 			var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("summary/all")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetAllSummariesByFilter(
+			int? page = null,
+			int? count = null,
+			CancellationToken cancellationToken = default)
+		{
+			_logger.LogInformation($"Attempting to get all Concerns Case summaries page {page} count {count}");
+
+			var parameters = new GetCaseSummariesByFilterParameters()
+			{
+				Page = page,
+				Count = count
+			};
+
+			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getConcernsCaseSummariesByFilter.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation($"Returning Concerns cases, page {page} count {count}");
+			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
 		}
@@ -182,9 +211,9 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			_logger.LogInformation($"Returning active Concerns cases for User Id {ownerId} page {page} count {count}", ownerId);
 			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
-            
-	        return Ok(response);
-        }
+
+			return Ok(response);
+		}
 
 		[HttpGet]
 		[Route("summary/{userId}/active/team")]
@@ -214,15 +243,15 @@ namespace ConcernsCaseWork.API.Features.Case
 		}
 
 		[HttpGet]
-        [Route("summary/{ownerId}/closed")]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(
+		[Route("summary/{ownerId}/closed")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(
 			string ownerId,
 			int? page = null,
 			int? count = null,
 			CancellationToken cancellationToken = default)
-        {
-	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
+		{
+			_logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
 
 			var parameters = new GetCaseSummariesByOwnerParameters()
 			{
@@ -236,15 +265,15 @@ namespace ConcernsCaseWork.API.Features.Case
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
 			_logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId} page {page} count {count}");
-	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
-            
-	        return Ok(response);
-        }
-        
-        [HttpGet]
-        [Route("summary/bytrust/{trustukprn}/active")]
-        [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(
+			var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
+
+			return Ok(response);
+		}
+
+		[HttpGet]
+		[Route("summary/bytrust/{trustukprn}/active")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(
 			string trustukprn,
 			int? page = null,
 			int? count = null,

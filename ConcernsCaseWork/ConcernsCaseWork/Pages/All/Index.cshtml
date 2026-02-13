@@ -1,0 +1,37 @@
+﻿@page
+@using ConcernsCaseWork.API.Contracts.Configuration;
+@using ConcernsCaseWork.Enums
+@using ConcernsCaseWork.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ConcernsCaseWork.Pages.All.AllCasesPageModel
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
+
+@{
+    ViewData["Title"] = "View all cases";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        AllCasesTabActive = true
+    };
+}
+
+<div class="govuk-extra-width-container">
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_BannerError" />
+        <partial name="_Error" />
+    }
+    else
+    {
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+                View all cases
+            </h1>
+        </legend>
+
+        <!-- Active casework -->
+        <partial name="_CasesActive" model="Model.AllCases" />
+
+        <partial name="_Pagination" model="Model.Pagination" />
+
+    }
+</div>

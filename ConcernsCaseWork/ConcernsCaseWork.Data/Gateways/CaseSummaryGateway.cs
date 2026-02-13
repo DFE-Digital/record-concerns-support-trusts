@@ -7,6 +7,7 @@ namespace ConcernsCaseWork.Data.Gateways;
 
 public interface ICaseSummaryGateway
 {
+	Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters);
 	Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
@@ -31,6 +32,26 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.AsQueryable();
 
 		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -250,6 +271,12 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 public class GetCaseSummariesByTrustParameters
 {
 	public string TrustUkPrn { get; set; }
+	public int? Page { get; set; }
+	public int? Count { get; set; }
+}
+
+public class GetCaseSummariesByFilterParameters
+{
 	public int? Page { get; set; }
 	public int? Count { get; set; }
 }
