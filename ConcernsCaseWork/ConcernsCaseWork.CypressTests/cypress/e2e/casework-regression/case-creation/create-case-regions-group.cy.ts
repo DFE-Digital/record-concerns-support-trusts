@@ -50,9 +50,6 @@ describe('Creating a case', () => {
             Logger.log('Create a case');
             createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
-            Logger.log('Create team leader');
-            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
-
             createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 
             Logger.log('Create a valid case division');
@@ -177,9 +174,6 @@ describe('Creating a case', () => {
         it('Should delete a concern', () => {
             Logger.log('Create a case');
             createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
-
-            Logger.log('Create team leader');
-            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy');
 

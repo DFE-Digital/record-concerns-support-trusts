@@ -43,14 +43,14 @@ describe('Editing a case', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
-        Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
-
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid concerns case type');
         selectCaseTypePage.withCaseType('Concerns').continue();

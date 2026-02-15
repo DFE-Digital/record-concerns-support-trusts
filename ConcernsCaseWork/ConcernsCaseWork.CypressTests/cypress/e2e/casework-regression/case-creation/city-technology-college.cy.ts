@@ -60,14 +60,14 @@ describe('Creating a case for a city technology college', () => {
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName(ctcRequest.name).selectOption().confirmOption();
 
-        Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
-
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory(territory).nextStep();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid Non-concern case type');
         selectCaseTypePage.withCaseType('NonConcerns').continue();

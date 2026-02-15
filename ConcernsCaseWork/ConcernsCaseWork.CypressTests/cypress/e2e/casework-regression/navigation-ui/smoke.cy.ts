@@ -83,9 +83,6 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         Logger.log('Create a case');
         createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
-        Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
-
         Logger.log('Create a valid case division');
         selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 
@@ -93,6 +90,9 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
 
