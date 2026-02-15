@@ -14,8 +14,10 @@ import { PaginationComponent } from 'cypress/pages/paginationComponent';
 import { CreateCaseRequest } from 'cypress/api/apiDomain';
 import { SourceOfConcernExternal } from 'cypress/constants/selectorConstants';
 import selectCaseDivisionPage from 'cypress/pages/createCase/selectCaseDivisionPage';
+import { CreateCasePage } from 'cypress/pages/createCase/createCasePage';
 
 describe('User interactions via Find Trust route', () => {
+    const createCasePage = new CreateCasePage();
     const createConcernPage = new CreateConcernPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
@@ -86,6 +88,9 @@ describe('User interactions via Find Trust route', () => {
 
             Logger.log('Populate territory');
             addTerritoryPage.withTerritory('North - North East').nextStep();
+
+            Logger.log('Create team leader');
+            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
 
