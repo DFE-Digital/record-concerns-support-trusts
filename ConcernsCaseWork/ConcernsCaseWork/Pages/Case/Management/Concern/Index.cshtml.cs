@@ -115,9 +115,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			MeansOfReferral = CaseComponentBuilder.BuildMeansOfReferral(caseModel.Division, nameof(MeansOfReferral), MeansOfReferral?.SelectedId);
 			ConcernRiskRating = CaseComponentBuilder.BuildConcernRiskRating(caseModel.Division, nameof(ConcernRiskRating), ConcernRiskRating?.SelectedId);
 
-			var isNewFormat = CaseComponentBuilder.GetConcernTypeSfsoForNewFormat().Exists(x => x.Id == CreateRecordsModel[0].TypeId);
-
-			ConcernType = CaseComponentBuilder.BuildConcernType(caseModel.Division, nameof(ConcernType), ConcernType?.SelectedId, isNewFormat);
+			ConcernType = CaseComponentBuilder.BuildConcernType(caseModel.Division, nameof(ConcernType), ConcernType?.SelectedId, true);
 
 			CaseModel = caseModel;
 
