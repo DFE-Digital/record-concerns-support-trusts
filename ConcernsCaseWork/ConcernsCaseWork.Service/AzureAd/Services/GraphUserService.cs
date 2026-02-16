@@ -21,10 +21,10 @@ public class GraphUserService : IGraphUserService
 
 	public async Task<IEnumerable<User>> GetCaseWorkersAndAdmins()
 	{
-		var caseWorkers = await GetUsersInGroup(_azureAdGroupsOptions.CaseWorkerGroupId);
-		var admins = await GetUsersInGroup(_azureAdGroupsOptions.AdminGroupId);
+		var caseWorkers = await GetCaseWorkers();
+		var admins = await GetAdmins();
 
-		return caseWorkers.Union(admins);
+		return caseWorkers.Union(admins).DistinctBy(x => x.Mail, StringComparer.OrdinalIgnoreCase);
 	}
 
 	public async Task<IEnumerable<User>> GetCaseWorkers()
