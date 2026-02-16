@@ -66,6 +66,9 @@ describe('Creating a case for a city technology college', () => {
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory(territory).nextStep();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
         Logger.log('Create a valid Non-concern case type');
         selectCaseTypePage.withCaseType('NonConcerns').continue();
 

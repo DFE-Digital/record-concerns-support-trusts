@@ -108,6 +108,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await GetUserState();
 				
 				var createCaseModel = userState.CreateCaseModel;
+				createCaseModel.TeamLeader = userState.TeamLeader;
 				createCaseModel.Issue = Issue.Text.StringContents;
 				createCaseModel.CurrentStatus = CurrentStatus.Text.StringContents;
 				createCaseModel.NextSteps = NextSteps.Text.StringContents;
@@ -184,6 +185,9 @@ namespace ConcernsCaseWork.Pages.Case
 
 			var caseUrn = await _caseModelService.PostCase(model);
 			LogToAppInsights("CREATE CASE", $"Case created {caseUrn}", JsonSerializer.Serialize(model), userState.UserName);
+
+			// clear cache
+			_userStateCache.ToString();
 
 			return RedirectToPage("management/index", new { urn = caseUrn });
 		}

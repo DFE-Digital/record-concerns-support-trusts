@@ -179,6 +179,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				createdBy ?? Fixture.Create<string>(),
 				"",
 				trustUkprn ?? Fixture.Create<string>(),
+				null,
 				"",
 				dateTimeNow,
 				Fixture.Create<string>(),
