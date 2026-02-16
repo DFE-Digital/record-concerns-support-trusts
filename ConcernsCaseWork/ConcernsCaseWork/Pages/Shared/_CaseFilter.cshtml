@@ -1,0 +1,107 @@
+@using ConcernsCaseWork.API.Contracts.Case
+@using ConcernsCaseWork.Utils.Extensions
+@model ConcernsCaseWork.Models.CaseFilters
+
+@{
+    string BuildRemoveLink(Region toRemove)
+    {
+        var remaining = Model.SelectedRegionEnums.Where(r => r != toRemove).Select(r => ((int)r).ToString()).ToArray();
+
+        if (remaining.Length == 0)
+        {
+            return Url.RouteUrl(ViewContext.RouteData.Values) ?? "?";
+        }
+
+        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedRegionsKey}={Uri.EscapeDataString(v)}"));
+        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+    }
+
+    string ClearLink() => $"{Url.RouteUrl(ViewContext.RouteData.Values)}?clear=1";
+
+    var regions = Enum.GetValues(typeof(Region)).Cast<Region>().ToArray();
+}
+
+<div class="moj-filter">
+
+    <div class="moj-filter__header">
+        <div class="moj-filter__header-title">
+            <h2 class="govuk-heading-m">Filter</h2>
+        </div>
+    </div>
+
+    <div class="moj-filter__content">
+        @if (Model.IsVisible)
+        {
+            <div class="moj-filter__selected">
+                <div class="moj-filter__selected-heading">
+                    <div class="moj-filter__heading-title">
+                        <h2 class="govuk-heading-m">Selected filters</h2>
+                    </div>
+                    <div class="moj-filter__heading-action">
+                        <p>
+                            <a class="govuk-link govuk-link--no-visited-state" data-cy="clear-filter" href="@ClearLink()">Clear filters</a>
+                        </p>
+                    </div>
+                </div>
+
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Regions</h3>
+                <ul class="moj-filter-tags">
+                    @foreach (var region in Model.SelectedRegionEnums)
+                    {
+                        <li>
+                            <a class="moj-filter__tag" href="@BuildRemoveLink(region)">
+                                <span class="govuk-visually-hidden">Remove this filter</span>
+                                @region.Description()
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="moj-filter__options">
+            <form method="get" class="form">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                    Regions
+                                </legend>
+
+                                <div class="govuk-checkboxes" style="max-height: 200px; overflow-y: auto;">
+                                    @foreach (var region in regions)
+                                    {
+                                        var regionValue = ((int)region).ToString();
+                                        var isChecked = Model.SelectedRegionEnums.Contains(region);
+
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input"
+                                                   id="filter-case-region-@regionValue"
+                                                   name="@Models.CaseFilters._selectedRegionsKey"
+                                                   type="checkbox"
+                                                   value="@regionValue"
+                                                   data-cy="select-case-filter-region-@region"
+                                                   @(isChecked ? "checked" : null) />
+
+                                            <label class="govuk-label govuk-checkboxes__label" for="filter-case-region-@regionValue">
+                                                @region.Description()
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="govuk-button govuk-!-margin-top-4"
+                        data-module="govuk-button"
+                        data-test-id="submit-button"
+                        data-cy="select-case-filter-apply">
+                    Apply filters
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

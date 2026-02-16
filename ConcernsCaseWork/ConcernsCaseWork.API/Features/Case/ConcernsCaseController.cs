@@ -165,14 +165,17 @@ namespace ConcernsCaseWork.API.Features.Case
 		[Route("summary/all")]
 		[MapToApiVersion("2.0")]
 		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetAllSummariesByFilter(
+			[FromQuery] Region[] regions = null,
 			int? page = null,
 			int? count = null,
+			// TODO are we just blindly adding cancellation tokens?
 			CancellationToken cancellationToken = default)
 		{
 			_logger.LogInformation($"Attempting to get all Concerns Case summaries page {page} count {count}");
 
 			var parameters = new GetCaseSummariesByFilterParameters()
 			{
+				Regions = regions,
 				Page = page,
 				Count = count
 			};

@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -36,9 +37,9 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(int? page = 1)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(Region[] regions = null, int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(page);
+		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 

@@ -51,6 +51,11 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
+		if (parameters.Regions != null && parameters.Regions.Any())
+		{
+			queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
+		}
+
 		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
@@ -277,6 +282,7 @@ public class GetCaseSummariesByTrustParameters
 
 public class GetCaseSummariesByFilterParameters
 {
+	public Region[] Regions { get; set; }
 	public int? Page { get; set; }
 	public int? Count { get; set; }
 }

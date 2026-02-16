@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
@@ -17,9 +18,12 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 	}
 
 	public async Task<ApiListWrapper<ActiveCaseSummaryDto>> GetAllCaseSummariesByFilter(
+		Region[] regions = null,
 		int? page = 1)
 	{
-		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5");
+		var regionsQuery = regions != null ? $"&regions={string.Join(",", regions)}" : string.Empty;
+		// TODO check if we want to increase count in this scenario
+		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{regionsQuery}");
 
 		return result;
 	}

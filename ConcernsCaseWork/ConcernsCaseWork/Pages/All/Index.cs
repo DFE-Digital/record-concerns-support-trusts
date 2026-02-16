@@ -16,20 +16,20 @@ namespace ConcernsCaseWork.Pages.All;
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 public class AllCasesPageModel : AbstractPageModel
 {
-	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private readonly ICaseSummaryService _caseSummaryService;
 	private readonly ILogger<AllCasesPageModel> _logger;
 	public List<ActiveCaseSummaryModel> AllCases { get; private set; }
 
 	public PaginationModel Pagination { get; set; }
 
+	[BindProperty]
+	public CaseFilters Filters { get; set; } = new();
+
 	public AllCasesPageModel(
 		ILogger<AllCasesPageModel> logger,
-		ICaseSummaryService caseSummaryService,
-		IClaimsPrincipalHelper claimsPrincipalHelper)
+		ICaseSummaryService caseSummaryService)
 	{
 		_logger = Guard.Against.Null(logger);
-		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		_caseSummaryService = Guard.Against.Null(caseSummaryService);
 	}
 
@@ -39,7 +39,11 @@ public class AllCasesPageModel : AbstractPageModel
 
 		try
 		{
-			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(PageNumber);
+			// Initialize and persist filters using TempData
+			Filters.PopulateFrom(Request.Query);
+
+			// Get filtered cases
+			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(Filters.SelectedRegionEnums, PageNumber);
 			AllCases = activeCaseGroup.Cases;
 
 			Pagination = activeCaseGroup.Pagination;
@@ -51,5 +55,6 @@ public class AllCasesPageModel : AbstractPageModel
 
 		return Page();
 	}
+
 }
 
