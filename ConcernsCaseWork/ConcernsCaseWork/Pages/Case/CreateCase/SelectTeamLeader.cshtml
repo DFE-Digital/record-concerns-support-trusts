@@ -27,10 +27,13 @@
                 <partial name="_ValidationErrors" />
 
                 <div class="govuk-form-group @errorBannerClass" id="container-SelectedTeamLeader">
+                    <h1 class="govuk-heading-m">Create a case</h1>
+
                     <h1 class="govuk-heading-l">
-                        Create team leader
+                        Add team leader
                     </h1>
-                    <div class="govuk-hint">Find and select the email address of the person you want to assign the case to</div>
+
+                    <div class="govuk-hint">Find and select the email address of the team leader for this case</div>
 
                     <partial name="Components/_ValidationErrorDetail" model="@errors" />
 
@@ -47,7 +50,7 @@
                 <!--Button group-->
                 <div class="govuk-button-group govuk-!-margin-top-3">
                     <button data-prevent-double-click="true"
-                            class="govuk-button govuk-!-margin-top-6"
+                            class="govuk-button"
                             data-module="govuk-button"
                             type="submit"
                             role="button"
