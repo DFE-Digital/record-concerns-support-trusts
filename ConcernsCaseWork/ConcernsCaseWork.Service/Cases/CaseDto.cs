@@ -20,6 +20,8 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CurrentStatus { get; init; }
 		public string CaseAim { get; init; }
 		public string DeEscalationPoint { get; init; }
+		public bool RatingRational { get; init; }
+		public string RatingRationalCommentary { get; init; }
 		public string NextSteps { get; init; }
 		
 		/// <summary>
