@@ -6,10 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-11.1039..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-16.1060..HEAD)
 
 ---
 
+## [63.0.0][63.0.0] - 2026-02-17
+
+### Added
+- 257479 -  Add to case - Text field label not announcing via hint text
+- 260375 - Team Leader Selection - Creation Journey
+- 262054 - Inclusion of RAG Status Rational - Creation Journey
+
+## Fixed 
+- 264154 -Recast- Team leader - pull from 2 entra groups
+
+---
 ## [62.2.0][62.2.0] - 2026-02-12
 
 ### Fixed
@@ -466,6 +477,7 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+[63.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-16.1060
 [62.2.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-11.1039
 [62.1.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-10.1031
 [62.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-06.1024
