@@ -32,6 +32,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
 	{
 		public IEnumerable<Concern> ActiveConcerns { get; set; }
 		public ConcernsRatingResponse Rating { get; set; }
+		public string TeamLedBy { get; set; }
 	}
 
 	public record ClosedCaseSummaryResponse : CaseSummaryResponse

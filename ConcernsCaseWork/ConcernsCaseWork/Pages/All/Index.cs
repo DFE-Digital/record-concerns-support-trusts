@@ -14,10 +14,12 @@ namespace ConcernsCaseWork.Pages.All;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class AllCasesPageModel : AbstractPageModel
+public class AllCasesPageModel(
+	ILogger<AllCasesPageModel> logger,
+	ICaseSummaryService caseSummaryService) : AbstractPageModel
 {
-	private readonly ICaseSummaryService _caseSummaryService;
-	private readonly ILogger<AllCasesPageModel> _logger;
+	private readonly ICaseSummaryService _caseSummaryService = Guard.Against.Null(caseSummaryService);
+	private readonly ILogger<AllCasesPageModel> _logger = Guard.Against.Null(logger);
 	public List<ActiveCaseSummaryModel> AllCases { get; private set; }
 
 	public PaginationModel Pagination { get; set; }
@@ -25,21 +27,12 @@ public class AllCasesPageModel : AbstractPageModel
 	[BindProperty]
 	public CaseFilters Filters { get; set; } = new();
 
-	public AllCasesPageModel(
-		ILogger<AllCasesPageModel> logger,
-		ICaseSummaryService caseSummaryService)
-	{
-		_logger = Guard.Against.Null(logger);
-		_caseSummaryService = Guard.Against.Null(caseSummaryService);
-	}
-
 	public async Task<ActionResult> OnGetAsync()
 	{
 		_logger.LogInformation("AllCasesPageModel::OnGetAsync executed");
 
 		try
 		{
-			// Initialize and persist filters using TempData
 			Filters.PopulateFrom(Request.Query);
 
 			// Get filtered cases

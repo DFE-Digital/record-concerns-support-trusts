@@ -1,8 +1,5 @@
 ﻿@page
-@using ConcernsCaseWork.API.Contracts.Configuration;
-@using ConcernsCaseWork.Enums
 @using ConcernsCaseWork.Models
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.All.AllCasesPageModel
 @addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 
@@ -30,7 +27,7 @@
 
         <partial name="_CaseFilter" model="Model.Filters" />
 
-        <partial name="_CasesActive" model="Model.AllCases" />
+        <partial name="_CasesAllActive" model="Model.AllCases" />
 
         <partial name="_Pagination" model="Model.Pagination" />
 

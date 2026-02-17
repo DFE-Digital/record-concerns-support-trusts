@@ -21,7 +21,7 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		Region[] regions = null,
 		int? page = 1)
 	{
-		var regionsQuery = regions != null ? $"&regions={string.Join(",", regions)}" : string.Empty;
+		var regionsQuery = regions != null && regions.Length > 0 ? $"&regions={string.Join(",", regions)}" : string.Empty;
 		// TODO check if we want to increase count in this scenario
 		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{regionsQuery}");
 

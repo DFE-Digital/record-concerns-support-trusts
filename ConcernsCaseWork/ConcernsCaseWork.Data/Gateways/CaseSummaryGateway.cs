@@ -63,6 +63,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
 		}
 
+        // TODO review it 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
 
 		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
@@ -175,6 +176,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			CaseUrn = cases.Urn,
 			CreatedAt = cases.CreatedAt,
 			CreatedBy = cases.CreatedBy,
+			TeamLedBy = cases.TeamLedBy,
 			Rating = cases.Rating,
 			StatusName = cases.Status.Name,
 			TrustUkPrn = cases.TrustUkprn,

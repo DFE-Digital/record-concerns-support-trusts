@@ -117,6 +117,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
+					TeamLedBy = GetDisplayUserName(caseSummary.TeamLedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					RatingId = caseSummary.Rating.Id,
 					StatusName = caseSummary.StatusName,
