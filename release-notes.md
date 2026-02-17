@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 ## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-16.1060..HEAD)
 
+- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
 ---
 
 ## [63.0.0][63.0.0] - 2026-02-17
