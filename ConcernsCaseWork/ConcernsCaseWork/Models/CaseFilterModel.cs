@@ -15,12 +15,11 @@ public class CaseFilters
     public string[] SelectedRegions { get; private set; } = Array.Empty<string>();
 
     public Region[] SelectedRegionEnums =>
-        SelectedRegions
+		[.. SelectedRegions
             .Select(TryParseRegion)
             .Where(r => r.HasValue)
             .Select(r => r!.Value)
-            .Distinct()
-            .ToArray();
+            .Distinct()];
 
     public bool IsVisible => SelectedRegionEnums.Length > 0;
 

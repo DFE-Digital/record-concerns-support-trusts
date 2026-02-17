@@ -4,9 +4,12 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.All;
@@ -19,9 +22,9 @@ public class AllCasesPageModel(
 {
 	private readonly ICaseSummaryService _caseSummaryService = Guard.Against.Null(caseSummaryService);
 	private readonly ILogger<AllCasesPageModel> _logger = Guard.Against.Null(logger);
-	public List<ActiveCaseSummaryModel> AllCases { get; private set; }
+	public List<ActiveCaseSummaryModel> AllCases { get; private set; } = [];
 
-	public PaginationModel Pagination { get; set; }
+	public PaginationModel Pagination { get; set; } = new();
 
 	[BindProperty]
 	public CaseFilters Filters { get; set; } = new();
@@ -39,6 +42,7 @@ public class AllCasesPageModel(
 			AllCases = activeCaseGroup.Cases;
 
 			Pagination = activeCaseGroup.Pagination;
+			Pagination.Url = BuildBaseUrl("/All", Request.Query);
 		}
 		catch (Exception)
 		{
@@ -48,5 +52,15 @@ public class AllCasesPageModel(
 		return Page();
 	}
 
-}
+	public static string BuildBaseUrl(string path, IEnumerable<KeyValuePair<string, StringValues>> requestQuery)
+	{
+		var pairs = requestQuery
+			.Where(kvp =>
+				!kvp.Key.Equals(nameof(PageNumber), StringComparison.OrdinalIgnoreCase) &&
+				!kvp.Key.Equals("pageNumber", StringComparison.OrdinalIgnoreCase))
+			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string?>(kvp.Key, v))
+			.ToList();
 
+		return QueryHelpers.AddQueryString(path, pairs);
+	}
+}

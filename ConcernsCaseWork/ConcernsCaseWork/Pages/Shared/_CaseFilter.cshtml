@@ -16,7 +16,7 @@
         return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
     }
 
-    string ClearLink() => $"{Url.RouteUrl(ViewContext.RouteData.Values)}?clear=1";
+    string ClearLink() => $"{Url.RouteUrl(ViewContext.RouteData.Values)}?clear=1"; /* TODO don't need the clear */
 
     var regions = Enum.GetValues(typeof(Region)).Cast<Region>().ToArray();
 }

@@ -1,18 +1,41 @@
-﻿@using ConcernsCaseWork.Models;
-@using NetEscapades.AspNetCore.SecurityHeaders;
-@using System.Web;
+﻿@using ConcernsCaseWork.Models
+@using NetEscapades.AspNetCore.SecurityHeaders
+@using Microsoft.AspNetCore.WebUtilities
 @model PaginationModel
+
 @{
-    var prefix = !string.IsNullOrEmpty(Model.ElementIdPrefix) ? Model.ElementIdPrefix : "";
+	var prefix = !string.IsNullOrEmpty(Model.ElementIdPrefix) ? Model.ElementIdPrefix : "";
+	const string ariaDisabled = "aria-disabled=true";
 
-    var ariaDisabled = "aria-disabled=true";
+	string BuildPageUrl(int? pageNumber)
+	{
+		if (!pageNumber.HasValue) return "#";
 
-    var nextPageLink = $"{Model.Url}/?pageNumber={Model.Next}";
+		var url = Model.Url ?? "";
+		var qm = url.IndexOf('?');
+
+		var path = qm >= 0 ? url.Substring(0, qm) : url;
+		var rawQuery = qm >= 0 ? url.Substring(qm) : "";
+
+		var parsed = QueryHelpers.ParseQuery(rawQuery);
+
+		var pairs = parsed
+			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string?>(kvp.Key, v))
+			.ToList();
+
+		pairs.RemoveAll(kvp => kvp.Key.Equals("pageNumber", StringComparison.OrdinalIgnoreCase));
+		pairs.Add(new KeyValuePair<string, string?>("pageNumber", pageNumber.Value.ToString()));
+
+		return QueryHelpers.AddQueryString(path, pairs);
+    }
+
+    var nextPageLink = BuildPageUrl(Model.Next);
+    var previousPageLink = BuildPageUrl(Model.Previous);
+
     var nextDisabled = !Model.Next.HasValue;
     var nextDisabledStyle = nextDisabled ? "govuk-pagination__link-disabled aria-disabled=true" : "";
     var nextDisabledAria = nextDisabled ? ariaDisabled : "";
 
-    var previousPageLink = $"{Model.Url}/?pageNumber={Model.Previous}";
     var previousDisabled = !Model.Previous.HasValue;
     var previousDisabledStyle = previousDisabled ? "govuk-pagination__link-disabled aria-disabled=true" : "";
     var previousDisabledAria = previousDisabled ? ariaDisabled : "";
@@ -29,6 +52,8 @@
         pagesToDisplay.Add((int)Model.Previous);
     if (Model.Next.HasValue)
         pagesToDisplay.Add((int)Model.Next);
+
+	var ajaxTemplate = BuildPageUrl(1).Replace("pageNumber=1", "pageNumber=__PAGE__");
 }
 
 @if (Model.TotalPages > 1)
@@ -69,7 +94,7 @@
                             </li>
                         }
                         <li class="govuk-pagination__item @markAsSelected">
-                            <a class="govuk-link govuk-pagination__link" href="@Model.Url/?pageNumber=@pageNumber" @ariaCurrentPage
+                            <a class="govuk-link govuk-pagination__link" href="@BuildPageUrl(pageNumber)" @ariaCurrentPage
                                 aria-label="@ariaLabel" id="@pageNumberLinkId" data-testid="@pageNumberLinkId"
                                 data-page-number-link="@pageNumber">
                                 @pageNumber
@@ -85,7 +110,6 @@
                 }
             </ol>
         </nav>
-
 
         <div class="govuk-pagination__next @nextDisabledStyle">
             <input type="hidden" id="@nextPageValueId" value="@Model.Next" />
@@ -105,24 +129,19 @@
     if (!string.IsNullOrEmpty(Model.ContentContainerId))
     {
         <script type="application/javascript" nonce="@nonce">
-
             $(function () {
                 onPageMoved();
 
                 function onPageMoved() {
                     $("#@nextButtonId").on("click", function (e) {
                         e.preventDefault();
-
                         const pageNumber = $('#@nextPageValueId').val();
-
                         refreshContent(pageNumber);
                     });
 
                     $("#@previousButtonId").on("click", function (e) {
                         e.preventDefault();
-
                         const pageNumber = $('#@previousPageValueId').val();
-
                         refreshContent(pageNumber);
                     });
 
@@ -132,26 +151,22 @@
                         const pageNumber = $(this).data('page-number-link');
 
                         $(this).click(function (e) {
-
                             e.preventDefault();
-
                             refreshContent(pageNumber);
                         });
                     });
                 }
 
-                function refreshContent(pageNumber) {
+				function refreshContent(pageNumber) {
+					const url = "@Html.Raw(ajaxTemplate)".replace("__PAGE__", pageNumber);
 
-                    const url = `@Html.Raw(Model.Url)&pageNumber=${pageNumber}`;
-
-                    $.get(url)
-                        .done(function (response) {
-                            $("#@Model.ContentContainerId").html(response);
-                            onPageMoved();
-                        });
-                }
+					$.get(url)
+						.done(function (response) {
+							$("#@Model.ContentContainerId").html(response);
+							onPageMoved();
+						});
+				}
             });
         </script>
     }
 }
-
