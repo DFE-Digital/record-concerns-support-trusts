@@ -3,11 +3,17 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.EditRatingPageModel
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@using ConcernsCaseWork.Extensions
 
 @{
     ViewData["Title"] = "Change risk to trust rating";
     var nonce = HttpContext.GetNonce();
     ViewData[ViewDataConstants.CancelBackLink] = $"/case/{@RouteData.Values["urn"]}/management";
+
+    ModelValidationState commentryValidationState = ViewData.ModelState.GetFieldValidationState("RationalCommentary");
+
+    var elementRootId = "rag-rational";
 }
 
 <partial name="_BannerError" />
@@ -27,8 +33,40 @@
             </h1>
 
             <form asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
-
                 <partial name="Components/_RadioList" model="Model.RiskToTrust" />
+
+                <div class="govuk-form-group @ModelState.GetErrorStyleClass()">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                            <h2 class="govuk-heading-m">
+                                RAG rationale commentary
+                            </h2>
+                        </legend>
+
+                        <div id="container-RatingRationalCommentary" class="govuk-character-count" data-module="govuk-concerns-character-count" data-maxlength="@Model.CommentaryMaxLength">
+                            @if (commentryValidationState == ModelValidationState.Invalid)
+                            {
+                                <span class="govuk-error-message">You must enter a RAG rationale commentary</span>
+                            }
+
+                            <div id="container-RationalCommentaryMaxLength">
+                                <textarea asp-for="@Model.RatingRationalCommentary"
+                                          class="govuk-textarea @ModelState.GetTextAreaErrorStyles(nameof(Model.RatingRationalCommentary)) govuk-js-concerns-character-count"
+                                          id="@elementRootId"
+                                          data-testid="rag-rational-commentary"
+                                          rows="5"
+                                          aria-describedby="RAG rationale commentary"
+                                          data-cy="select-risk-to-trust-rational"
+                                          aria-label="text-area-for-risk-to-trust-rational">
+                                </textarea>
+
+                                <div id="@elementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                                    You can enter up to @Model.CommentaryMaxLength characters
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
 
                 <!--Button group-->
                 <div class="govuk-button-group">
