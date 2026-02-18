@@ -21,9 +21,8 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		Region[] regions = null,
 		int? page = 1)
 	{
-		var regionsQuery = regions != null && regions.Length > 0 ? $"&regions={string.Join(",", regions)}" : string.Empty;
-		// TODO check if we want to increase count in this scenario
-		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{regionsQuery}");
+		var queryString = BuildQueryString(regions);
+		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{queryString}");
 
 		return result;
 	}
@@ -73,4 +72,17 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 
         return result;
     }
+
+	private static string BuildQueryParametersString<T>(string key, T[] values)
+	{
+		if (values == null || values.Length == 0) return string.Empty;
+		return "&" + string.Join("&", values.Select(value => $"{key}={value}"));
+	}
+
+	private static string BuildQueryString(Region[] regions)
+	{
+		string queryString = string.Empty;
+		queryString += BuildQueryParametersString("regions", regions);
+		return queryString;
+	}
 }
