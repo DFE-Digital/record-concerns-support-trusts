@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-16.1060..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-18.1067..HEAD)
 
 - 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
 ---
+
+## [63.0.1][63.0.1] - 2026-02-18
+
+### Fixed
+- 266360 - Update Management API causing to make Data Null in DB
 
 ## [63.0.0][63.0.0] - 2026-02-17
 
@@ -478,6 +483,8 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+
+[63.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-18.1067
 [63.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-16.1060
 [62.2.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-11.1039
 [62.1.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-10.1031
