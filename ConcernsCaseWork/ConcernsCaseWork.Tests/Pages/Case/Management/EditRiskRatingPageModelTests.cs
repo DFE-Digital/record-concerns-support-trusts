@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
@@ -48,11 +50,44 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		[Test]
+		public async Task WhenOnPostEditRiskRating_When_Commentary_Not_Provided_Fails_Validation()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
+
+			mockCaseModelService.Setup(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()));
+
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
+
+			pageModel.CaseUrn = 1;
+
+			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
+			pageModel.RiskToTrust.SelectedId = 1;
+
+			// act
+			var pageResponse = await pageModel.OnPostEditRiskRating();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+
+			Assert.That(pageModel.ModelState.IsValid, Is.False);
+			Assert.That(pageModel.ModelState.Keys.Count(), Is.EqualTo(1));
+			Assert.That(pageModel.ModelState.First().Key, Is.EqualTo("RationalCommentary"));
+			Assert.That(pageModel.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo("You must enter a RAG rationale commentary"));
+
+			mockCaseModelService.Verify(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()), Times.Never);
+		}
+
+		[Test]
 		public async Task WhenOnPostEditRiskRating_RouteData_RequestForm_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()));
@@ -61,6 +96,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			pageModel.RiskToTrust = _fixture.Create<RadioButtonsUiComponent>();
 			pageModel.RiskToTrust.SelectedId = 1;
+
+			pageModel.RatingRationalCommentary = "This is my RAG commentary ....";
 
 			pageModel.CaseUrn = 1;
 			
