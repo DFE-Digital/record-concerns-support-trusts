@@ -72,14 +72,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			var page = pageResponse as PageResult;
+			Assert.Multiple(() =>
+			{
+				Assert.That(page, Is.Not.Null);
 
-			Assert.That(page, Is.Not.Null);
-
-			Assert.That(pageModel.ModelState.IsValid, Is.False);
-			Assert.That(pageModel.ModelState.Keys.Count(), Is.EqualTo(1));
-			Assert.That(pageModel.ModelState.First().Key, Is.EqualTo("RationalCommentary"));
-			Assert.That(pageModel.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo("You must enter a RAG rationale commentary"));
-
+				Assert.That(pageModel.ModelState.IsValid, Is.False);
+				Assert.That(pageModel.ModelState.Keys.Count(), Is.EqualTo(1));
+				Assert.That(pageModel.ModelState.First().Key, Is.EqualTo("RationalCommentary"));
+				Assert.That(pageModel.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo("You must enter a RAG rationale commentary"));
+			});
 			mockCaseModelService.Verify(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()), Times.Never);
 		}
 
