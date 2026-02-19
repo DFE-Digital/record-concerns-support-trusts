@@ -19,6 +19,11 @@ namespace ConcernsCaseWork.API.Features.Case
 
 		public ConcernsCaseResponse Execute(ConcernCaseRequest request)
 		{
+			if (!request.RatingRational)
+			{
+				request.RatingRationalCommentary = "The RAG rationale commentary is not available yet";
+			}
+
 			var concernsCaseToCreate = ConcernsCaseFactory.Create(request);
 			var createdConcernsCase = _concernsCaseGateway.SaveConcernsCase(concernsCaseToCreate);
 			return ConcernsCaseResponseFactory.Create(createdConcernsCase);

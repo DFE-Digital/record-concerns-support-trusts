@@ -41,6 +41,7 @@ namespace ConcernsCaseWork.Data
 		public virtual DbSet<ConcernsStatus> ConcernsStatus { get; set; }
 		public virtual DbSet<ConcernsCaseworkTeam> ConcernsTeamCaseworkTeam { get; set; }
 		public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
+		public virtual DbSet<ConcernsCaseRiskToTrustRatingHistory> ConcernsCaseRiskToTrustRatingHistory { get; set; }
 		public virtual DbSet<ConcernsType> ConcernsTypes { get; set; }
 		public virtual DbSet<DecisionOutcome> DecisionOutcomes { get; set; }
 		public virtual DbSet<Decision> Decisions { get; set; }
