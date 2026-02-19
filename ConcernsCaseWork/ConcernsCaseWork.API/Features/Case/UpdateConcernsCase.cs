@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Gateways;
+using System;
 
 namespace ConcernsCaseWork.API.Features.Case
 {
@@ -23,6 +24,13 @@ namespace ConcernsCaseWork.API.Features.Case
 		public ConcernsCaseResponse Execute(int urn, ConcernCaseRequest request)
 		{
 			var currentConcernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(urn);
+
+			if (!request.RatingRationalCommentary.Equals(currentConcernsCase.RatingRationalCommentary, StringComparison.OrdinalIgnoreCase))
+			{
+				request.RatingRational = true;
+			}
+
+			request.RatingRationalCommentary = request.RatingRationalCommentary ?? "The RAG rationale commentary is not available yet";
 
 			if (currentConcernsCase.RatingId != request.RatingId)
 			{

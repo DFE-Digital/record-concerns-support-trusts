@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Tests.Features.Case
 			var caseId = 1;
 			var ratingId = 2;
 			var concernsCase = new ConcernsCase { Id = caseId, RatingId = ratingId, RatingRationalCommentary = "Old" };
-			var request = new ConcernCaseRequest { RatingId = ratingId };
+			var request = new ConcernCaseRequest { RatingId = ratingId, RatingRationalCommentary = "New comment but with old rating" };
 
 			gatewayMock.Setup(g => g.GetConcernsCaseByUrn(It.IsAny<int>(), false)).Returns(concernsCase);
 			gatewayMock.Setup(g => g.Update(It.IsAny<ConcernsCase>())).Returns(concernsCase);
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Tests.Features.Case
 			var oldRatingId = 2;
 			var newRatingId = 3;
 			var concernsCase = new ConcernsCase { Id = caseId, RatingId = oldRatingId, RatingRationalCommentary = "Old" };
-			var request = new ConcernCaseRequest { RatingId = newRatingId };
+			var request = new ConcernCaseRequest { RatingId = newRatingId, RatingRationalCommentary = "Old comment with new rating" };
 
 			gatewayMock.Setup(g => g.GetConcernsCaseByUrn(It.IsAny<int>(), false)).Returns(concernsCase);
 			gatewayMock.Setup(g => g.Update(It.IsAny<ConcernsCase>())).Returns(concernsCase);
