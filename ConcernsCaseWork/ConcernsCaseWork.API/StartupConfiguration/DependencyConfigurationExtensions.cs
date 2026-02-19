@@ -77,6 +77,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetActiveConcernsCaseSummariesByTrust, GetActiveConcernsCaseSummariesByTrust>();
 			services.AddScoped<IGetClosedConcernsCaseSummariesByTrust, GetClosedConcernsCaseSummariesByTrust>();
 			services.AddScoped<IGetActiveConcernsCaseSummariesForUsersTeam, GetActiveConcernsCaseSummariesForUsersTeam>(); 
+			services.AddScoped<IGetConcernsCaseSummariesByFilter, GetConcernsCaseSummariesByFilter>(); 
 			services.AddScoped<IGetActiveConcernsCaseSummariesByOwner, GetActiveConcernsCaseSummariesByOwner>(); 
 
 			services.AddScoped<ISRMAGateway, SRMAGateway>();

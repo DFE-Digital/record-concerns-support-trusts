@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
@@ -16,8 +17,15 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 
 	}
 
-	//public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker)
-	//	=> await Get<IEnumerable<ActiveCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/{caseworker}/active/team");
+	public async Task<ApiListWrapper<ActiveCaseSummaryDto>> GetAllCaseSummariesByFilter(
+		Region[] regions = null,
+		int? page = 1)
+	{
+		var queryString = BuildQueryString(regions);
+		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{queryString}");
+
+		return result;
+	}
 
 	public async Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(
 		string caseworker,
@@ -64,4 +72,17 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 
         return result;
     }
+
+	private static string BuildQueryParametersString<T>(string key, T[] values)
+	{
+		if (values == null || values.Length == 0) return string.Empty;
+		return "&" + string.Join("&", values.Select(value => $"{key}={value}"));
+	}
+
+	private static string BuildQueryString(Region[] regions)
+	{
+		string queryString = string.Empty;
+		queryString += BuildQueryParametersString("regions", regions);
+		return queryString;
+	}
 }
