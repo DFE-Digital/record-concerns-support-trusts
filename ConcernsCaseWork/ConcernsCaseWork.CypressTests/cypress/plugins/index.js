@@ -58,5 +58,19 @@ module.exports = (on, config) => {
 
     config.baseUrl = config.env.url;
 
+    // Username for case-owner assertions (Cypress.env('username')):
+    // - E2E_USERNAME set (pipeline or env): use it.
+    // - Otherwise, if not running against localhost, assume pipeline E2E and use the service account.
+    // - Otherwise use cypress.env.json "username" (e.g. "cypress") for local runs.
+    const url = (config.env.url || config.baseUrl || '').toLowerCase();
+    const isLocal = url.includes('localhost') || url.startsWith('https://localhost') || url.startsWith('http://127.0.0.1');
+    const pipelineE2eUsername = 'svc-rdscc-e2etest@education.gov.uk';
+
+    if (process.env.E2E_USERNAME) {
+        config.env.username = process.env.E2E_USERNAME;
+    } else if (!isLocal) {
+        config.env.username = pipelineE2eUsername;
+    }
+
     return config;
 };
