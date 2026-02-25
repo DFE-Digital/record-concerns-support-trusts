@@ -1,12 +1,16 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Features.Case;
+using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Service.Base;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 using Moq;
+using Pipelines.Sockets.Unofficial.Buffers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -270,6 +274,56 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				TotalPages = 1
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
+			result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+		}
+
+		[Fact]
+		public async Task SearchActiveCasesSummaries_ReturnsCaseResponses()
+		{
+			var searchConcernCases = new Mock<ISearchConcernCases>();
+
+			var recordCount = 4;
+
+			SearchCasesParameters parameters = new()
+			{
+				Page = 1,
+				Count = recordCount
+			};
+
+			IList<ActiveCaseSummaryResponse> summaries = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(recordCount).Build();
+
+			(IList<ActiveCaseSummaryResponse>, int) response = (summaries, recordCount);
+
+			searchConcernCases.Setup(a => a.Execute(It.IsAny<SearchCasesParameters>()))
+				.ReturnsAsync(response);
+
+			var controller = new ConcernsCaseController(
+				_mockLogger.Object,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+			null,
+			null,
+			searchConcernCases.Object
+			);
+
+			var result = await controller.SearchActiveCasesSummaries(parameters.Page, recordCount);
+
+			var expectedPagingResponse = new PagingResponse
+			{
+				Page = parameters.Page.Value,
+				RecordCount = recordCount,
+				NextPageUrl = null,
+				TotalPages = 1
+			};
+
+			var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(summaries, expectedPagingResponse);
 			result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
 		}
 	}
