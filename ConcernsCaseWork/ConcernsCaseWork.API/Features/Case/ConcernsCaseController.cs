@@ -27,6 +27,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
 		private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
 		private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
+		private readonly ISearchConcernCases _searchConcernCases;
 
 		public ConcernsCaseController(
 			ILogger<ConcernsCaseController> logger,
@@ -40,7 +41,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			IGetActiveConcernsCaseSummariesByTrust getActiveConcernsCaseSummariesByTrust,
 			IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust,
 			IGetActiveConcernsCaseSummariesForUsersTeam getActiveConcernsCaseSummariesForUsersTeam,
-			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner)
+			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner,
+			ISearchConcernCases searchConcernCases)
 		{
 			_logger = logger;
 			_createConcernsCase = createConcernsCase;
@@ -54,6 +56,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			_getClosedConcernsCaseSummariesByTrust = getClosedConcernsCaseSummariesByTrust;
 			_getActiveConcernsCaseSummariesForUsersTeam = getActiveConcernsCaseSummariesForUsersTeam;
 			_getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
+			_searchConcernCases = searchConcernCases;
 		}
 
 		[HttpPost]
@@ -185,6 +188,32 @@ namespace ConcernsCaseWork.API.Features.Case
             
 	        return Ok(response);
         }
+
+		[HttpGet]
+		[Route("summary/search")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> SearchActiveCasesSummaries(
+			int? page = null,
+			int? count = null)
+		{
+			_logger.LogInformation("Attempting to search Concerns Cases, page {Page}, count {Count}", page, count);
+
+			var parameters = new SearchCasesParameters()
+			{
+				Page = page,
+				Count = count
+			};
+
+			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _searchConcernCases.Execute(parameters);
+
+			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+
+			_logger.LogInformation("Returning search Concerns Cases, page {Page}, count {Count}", page, count);
+
+			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
+
+			return Ok(response);
+		}
 
 		[HttpGet]
 		[Route("summary/{userId}/active/team")]

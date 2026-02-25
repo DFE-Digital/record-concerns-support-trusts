@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Data.Gateways
 				return concernsCase;
         }
 
-        public IList<ConcernsCase> GetConcernsCaseByTrustUkprn(string trustUkPrn, int page, int count)
+		public IList<ConcernsCase> GetConcernsCaseByTrustUkprn(string trustUkPrn, int page, int count)
         {
             return _concernsDbContext.ConcernsCase
                 .Where(c => c.TrustUkprn == trustUkPrn)

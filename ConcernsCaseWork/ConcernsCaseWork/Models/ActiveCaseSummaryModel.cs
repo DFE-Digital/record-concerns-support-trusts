@@ -14,6 +14,7 @@ public abstract record CaseSummaryModel
 
 	public Division? Division { get; set; }
 	public string? Area { get; set; }
+	public string TeamLedBy { get; set; }
 }
 
 public record ActiveCaseSummaryModel : CaseSummaryModel

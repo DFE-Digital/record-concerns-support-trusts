@@ -4,6 +4,7 @@ namespace ConcernsCaseWork.Service.Cases;
 
 public interface IApiCaseSummaryService
 {
+	Task<ApiListWrapper<ActiveCaseSummaryDto>> SearchActiveCaseSummaries(int? page = 1);
 	//Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker);
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker, int? page);
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page);

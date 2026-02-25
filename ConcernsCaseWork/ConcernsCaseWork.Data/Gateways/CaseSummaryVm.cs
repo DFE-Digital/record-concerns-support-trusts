@@ -23,6 +23,7 @@ public abstract record CaseSummaryVm
 	public Division? Division { get; set; }
 	public Region? Region { get; set; }
 	public Territory? Territory { get; set; }
+	public string TeamLedBy { get; set; }
 
 	public record Action(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 	public record Concern(string Name, ConcernsRating Rating, DateTime CreatedAt);

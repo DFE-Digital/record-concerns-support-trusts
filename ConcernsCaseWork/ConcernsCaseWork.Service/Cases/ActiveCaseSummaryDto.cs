@@ -24,7 +24,8 @@ public record CaseSummaryDto
 
 	public Division? Division { get; set; }
 	public string? Area { get; set; }
-	
+	public string TeamLedBy { get; set; }
+
 	public record ActionDecisionSummaryDto(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 
 	public record ConcernSummaryDto(string Name, RatingDto Rating, DateTime CreatedAt);
