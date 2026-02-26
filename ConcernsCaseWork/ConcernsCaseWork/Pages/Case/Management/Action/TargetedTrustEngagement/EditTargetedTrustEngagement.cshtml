@@ -1,0 +1,141 @@
+﻿@page "/case/{urn:long}/management/action/targeted-trust-engagement/edit"
+@using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement
+@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.Models
+@using ConcernsCaseWork.Utils.Extensions
+@model EditTargetedTrustEngagementModel
+@{
+    ViewData[ViewDataConstants.Title] = "Add targeted trust engagement";
+}
+
+<partial name="_BannerError" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+        <partial name="_ValidationErrors" />
+
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+            Targeted trust engagement
+        </h1>
+
+        <div class="govuk-hint" id="financial-plan-hint">
+            <a target="_blank" href="#" class="govuk-link" rel="noreferrer noopener">
+                SFSO Knowledge: Pro-active engagement
+            </a>
+        </div>
+
+        <form method="post" novalidate>
+
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Which activity was taken forward?
+                        </h1>
+                    </legend>
+                    <div class="govuk-radios" data-module="govuk-radios">
+
+                        <govuk-radios-item id="budget-forecast"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.BudgetForecast)"
+                                           label="@TrustEngagementActivity.BudgetForecast.Description()"
+                                           hint="Engagement with any trusts identified at potential risk" />
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@Model.BudgetForecastSubActivities" />
+                        </div>
+
+                        <govuk-radios-item id="executive-pay-engagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.ExecutivePayEngagement)"
+                                           label="@TrustEngagementActivity.ExecutivePayEngagement.Description()"
+                                           hint="(Enter test here)" />
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@Model.ExecutivePayEngagementSubActivities" />
+                        </div>
+
+                        <govuk-radios-item id="financial-returns-assurance"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.FinanceReturnsAssurance)"
+                                           label="@TrustEngagementActivity.FinanceReturnsAssurance.Description()"
+                                           hint="Following up with trusts on issues flagged in their latest financial statements" />
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@Model.FinancialReturnsAssuranceSubActivities" />
+                        </div>
+
+                        <govuk-radios-item id="reserves-oversight-assurance"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.ReservesOversightAssurance)"
+                                           label="@TrustEngagementActivity.ReservesOversightAssurance.Description()"
+                                           hint="Engaging with trusts" />
+                        <div class="govuk-radios__conditional">
+                            <partial name="Components/_RadioList" model="@Model.ReservesOversightAssuranceSubActivities" />
+                        </div>
+
+                        <govuk-radios-item id="local-proactive-enagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.LocalProactiveEngagement)"
+                                           label="@TrustEngagementActivity.LocalProactiveEngagement.Description()"
+                                           hint="Division-led work" />
+
+                        <govuk-radios-item id="other-vulnerability"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.OtherVulnerability)"
+                                           label="@TrustEngagementActivity.OtherVulnerability.Description()"
+                                           hint="Other national processes" />
+
+                        <govuk-radios-item id="no-engagement"
+                                           name="activity-id"
+                                           value="@((int)TrustEngagementActivity.NoEngagement)"
+                                           label="@TrustEngagementActivity.NoEngagement.Description()"
+                                           hint="No engagement activity taken forward" />
+                        <div class="govuk-radios__conditional">
+                            <div class="govuk-form-group">
+                                <fieldset class="govuk-fieldset">
+                                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste" name="sub-activity-id" type="checkbox" value="carcasses">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste">
+                                                Waste from animal carcasses
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste-2" name="sub-activity-id" type="checkbox" value="mines">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste-2">
+                                                Waste from mines or quarries
+                                            </label>
+                                        </div>
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input" id="waste-3" name="sub-activity-id" type="checkbox" value="farm">
+                                            <label class="govuk-label govuk-checkboxes__label" for="waste-3">
+                                                Farm or agricultural waste
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button data-prevent-double-click="true"
+                        class="govuk-button"
+                        data-module="govuk-button"
+                        role="button"
+                        id="save-trust-financial-forecast-button"
+                        data-testid="save-trust-financial-forecast-button"
+                        name="action">
+                    Save and return to case overview
+                </button>
+                <a data-prevent-double-click="true" class="govuk-link" data-module="govuk-button" role="button" href="/case/@Model.CaseUrn/management">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
