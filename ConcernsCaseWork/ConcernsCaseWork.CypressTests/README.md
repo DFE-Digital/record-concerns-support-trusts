@@ -57,6 +57,12 @@ The Cypress tests are designed to run against the front-end of the application. 
 
 While it is possible to pass these configurations through commands, it is easier to store them in the configuration file.
 
+**Pipeline vs local (case-owner assertions)**  
+Tests that check the case owner use `Cypress.env('username')`:
+
+- **Pipeline:** Set the environment variable `E2E_USERNAME=svc-rdscc-e2etest@education.gov.uk` (or the service account your E2E login uses) so assertions match the logged-in user.
+- **Local:** Do not set `E2E_USERNAME`. The `username` from `cypress.env.json` (e.g. `"cypress"`) is used for the user running the tests.
+
 #### Authentication
 
 There are two mechanisms of authentication supported:
