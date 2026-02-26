@@ -23,6 +23,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
 		public Division? Division { get; set; }
 
 		public string? Area { get; set; }
+		public string TeamLedBy { get; set; }
 
 		public record ActionOrDecision(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 		public record Concern(string Name, ConcernsRatingResponse Rating, DateTime CreatedAt);

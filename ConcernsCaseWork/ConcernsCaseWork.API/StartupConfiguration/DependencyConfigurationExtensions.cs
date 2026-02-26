@@ -56,6 +56,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 		{
 			services.AddScoped<ICreateConcernsCase, CreateConcernsCase>();
 			services.AddScoped<IConcernsCaseGateway, ConcernsCaseGateway>();
+			services.AddScoped<ISearchConcernCases, SearchConcernCases>();
 			services.AddScoped<IGetConcernsCaseByUrn, GetConcernsCaseByUrn>();
 			services.AddScoped<IGetConcernsCaseByTrustUkprn, GetConcernsCaseByTrustUkprn>();
 			services.AddScoped<IIndexConcernsStatuses, IndexConcernsStatuses>();

@@ -36,6 +36,12 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> SearchActiveCaseSummaries(int? page = 1)
+	{
+		var caseSummaries = await _caseSummaryService.SearchActiveCaseSummaries(page);
+		return await BuildActiveCaseSummaryModel(caseSummaries);
+	}
+
 	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page = 1)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker, page);
@@ -117,7 +123,8 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt),
 					CaseLastUpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CaseLastUpdatedAt),
 					Division = caseSummary.Division,
-					Area = caseSummary.Area
+					Area = caseSummary.Area,
+					TeamLedBy = caseSummary.TeamLedBy
 				};
 			
 			sortedCaseSummaries.Add(summary);
@@ -258,6 +265,4 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 
 		return userName.Contains('@') ? userName[..userName.IndexOf('@')].Replace(".", " ").ToTitle() : userName;
 	}
-
-
 }

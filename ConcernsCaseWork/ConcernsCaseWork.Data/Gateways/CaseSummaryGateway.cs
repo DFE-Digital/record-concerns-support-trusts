@@ -8,6 +8,7 @@ namespace ConcernsCaseWork.Data.Gateways;
 public interface ICaseSummaryGateway
 {
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
+	Task<(IList<ActiveCaseSummaryVm>, int)> SearchActiveCases(SearchCasesParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters);
 	Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTrust(GetCaseSummariesByTrustParameters parameters);
@@ -52,6 +53,27 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.AsQueryable();
 
 		var recordCount = queryBuilder.Count();
+
+		if (parameters.Page.HasValue && parameters.Count.HasValue)
+		{
+			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+		}
+
+		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+		return (cases, recordCount);
+	}
+
+	public async Task<(IList<ActiveCaseSummaryVm>, int)> SearchActiveCases(SearchCasesParameters parameters)
+	{
+		var queryBuilder = _concernsDbContext.ConcernsCase
+			.Where(cases => cases.Status.Name == "Live")
+			.OrderByDescending(c => c.CreatedAt)
+			.AsQueryable();
+
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -157,6 +179,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			Division = cases.DivisionId,
 			Region = cases.RegionId,
 			Territory = cases.Territory,
+			TeamLedBy = cases.TeamLedBy,
 			ActiveConcerns = from concerns
 				in cases.ConcernsRecords
 							 where concerns.StatusId == 1
@@ -265,6 +288,12 @@ public class GetCaseSummariesForUsersTeamParameters
 {
 	public string UserID { get; set; }
 	public string[] teamMemberIds { get; set; }
+	public int? Page { get; set; }
+	public int? Count { get; set; }
+}
+
+public class SearchCasesParameters
+{
 	public int? Page { get; set; }
 	public int? Count { get; set; }
 }

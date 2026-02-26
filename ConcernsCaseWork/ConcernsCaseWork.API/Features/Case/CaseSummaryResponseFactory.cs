@@ -30,7 +30,8 @@ public static class CaseSummaryResponseFactory
 			UpdatedAt = caseSummary.UpdatedAt,
 			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt,
 			Division = caseSummary.Division,
-			Area = getArea(caseSummary)
+			Area = getArea(caseSummary),
+			TeamLedBy = caseSummary.TeamLedBy
 		};
 	}
 
