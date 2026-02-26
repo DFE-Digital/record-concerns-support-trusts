@@ -23,6 +23,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty]
 		public RadioButtonsUiComponent RiskToTrust { get; set; }
 
+		[BindProperty]
+		public string RatingRationalCommentary { get; set; }
+
+		public int CommentaryMaxLength => 250;
+
 		public EditRatingPageModel(
 			ICaseModelService caseModelService, 
 			ILogger<EditRatingPageModel> logger)
@@ -56,6 +61,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				_logger.LogMethodEntered();
 
+				if (string.IsNullOrWhiteSpace(RatingRationalCommentary))
+				{
+					ModelState.AddModelError("RationalCommentary", "You must enter a RAG rationale commentary");
+				} 
+				else if (RatingRationalCommentary.Length > CommentaryMaxLength)
+				{
+					ModelState.AddModelError("CommentaryMaxLength", $"You have {RatingRationalCommentary.Length - CommentaryMaxLength} characters too many.");
+				}
+
 				if (!ModelState.IsValid)
 				{
 					LoadPage();
@@ -66,7 +80,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				{
 					Urn = CaseUrn,
 					UpdatedAt = DateTimeOffset.Now,
-					RatingId = (long)RiskToTrust.SelectedId
+					RatingId = (long)RiskToTrust.SelectedId,
+					RatingRationalCommentary = RatingRationalCommentary
 				};
 					
 				await _caseModelService.PatchCaseRating(patchCaseModel);
@@ -86,6 +101,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			LoadPage();
 			RiskToTrust.SelectedId = (int)model.RatingId;
+			RatingRationalCommentary = model.RatingRationalCommentary;
 		}
 		
 		private void LoadPage()
