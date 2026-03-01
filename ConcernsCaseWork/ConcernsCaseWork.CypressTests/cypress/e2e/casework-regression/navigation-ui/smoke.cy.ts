@@ -91,6 +91,9 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
         createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
 
         Logger.log('Create a valid concerns case type');

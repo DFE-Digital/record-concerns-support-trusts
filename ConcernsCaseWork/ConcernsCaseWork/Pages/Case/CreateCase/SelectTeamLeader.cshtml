@@ -1,16 +1,15 @@
-﻿@page "/case/{urn:long}/management/edit-team-leader";
+﻿@page "/case/create/team-leader"
 @using ConcernsCaseWork.Extensions;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using System.ComponentModel.DataAnnotations;
-@model ConcernsCaseWork.Pages.Case.Management.EditTeamLeaderPageModel;
+@model ConcernsCaseWork.Pages.Case.CreateCase.SelectTeamLeaderModel
 
 @{
+    ViewData["Title"] = "Create team leader";
+
     var nonce = HttpContext.GetNonce();
 
     var errors = ViewData.ModelState.ToValidationResult();
-
-    ViewData["Title"] = "Change team leader";
-
     var errorBannerClass = errors.Any() ? " govuk-form-group--error" : string.Empty;
     var inputErrorClass = errors.Any() ? "autocomplete__error" : string.Empty;
 }
@@ -27,15 +26,13 @@
 
                 <partial name="_ValidationErrors" />
 
-                <h1 class="govuk-heading-l" name="caseID">
-                    <span class="govuk-caption-m">Case ID</span>
-                    @Model.Urn
-                </h1>
-
                 <div class="govuk-form-group @errorBannerClass" id="container-SelectedTeamLeader">
+                    <h1 class="govuk-heading-m">Create a case</h1>
+
                     <h1 class="govuk-heading-l">
-                        Change team leader
+                        Add team leader
                     </h1>
+
                     <div class="govuk-hint">Find and select the email address of the team leader for this case</div>
 
                     <partial name="Components/_ValidationErrorDetail" model="@errors" />
@@ -52,9 +49,17 @@
 
                 <!--Button group-->
                 <div class="govuk-button-group govuk-!-margin-top-3">
-                    <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
+                    <button data-prevent-double-click="true"
+                            class="govuk-button"
+                            data-module="govuk-button"
+                            type="submit"
+                            role="button"
+                            id="continue"
+                            name="action"
+                            value="continue">
                         Continue
                     </button>
+
                     <partial name="_Cancel" />
                 </div>
             </form>

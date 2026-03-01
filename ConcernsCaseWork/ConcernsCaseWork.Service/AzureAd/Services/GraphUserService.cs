@@ -19,9 +19,12 @@ public class GraphUserService : IGraphUserService
 		_azureAdGroupsOptions = azureAdGroupsOptions.Value;
 	}
 
-	public async Task<IEnumerable<User>> GetTeamleaders()
+	public async Task<IEnumerable<User>> GetCaseWorkersAndAdmins()
 	{
-		return await GetUsersInGroup(_azureAdGroupsOptions.TeamleaderGroupId);
+		var caseWorkers = await GetCaseWorkers();
+		var admins = await GetAdmins();
+
+		return caseWorkers.Union(admins).DistinctBy(x => x.Mail, StringComparer.OrdinalIgnoreCase);
 	}
 
 	public async Task<IEnumerable<User>> GetCaseWorkers()

@@ -26,7 +26,7 @@ describe('Creating a case', () => {
         cy.acceptCookies();
     });
 
-    it.only('Should validate adding a case', () => {
+    it('Should validate adding a case', () => {
         Logger.log('Checking accessibility on home page');
         cy.excuteAccessibilityTests();
 
@@ -60,6 +60,9 @@ describe('Creating a case', () => {
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Check territory details are correctly populated');
         createCaseSummary
@@ -212,6 +215,9 @@ describe('Creating a case', () => {
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
         Logger.log('Create a valid concerns case type');
         selectCaseTypePage.withCaseType('Concerns').continue();
 
@@ -290,6 +296,9 @@ describe('Creating a case', () => {
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
+
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
         Logger.log('Create a valid concerns case type');
         selectCaseTypePage.withCaseType('Concerns').continue();

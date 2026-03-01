@@ -65,6 +65,9 @@ describe('Creating a non concerns case', () => {
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory(territory).nextStep();
 
+        Logger.log('Create team leader');
+        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
         Logger.log('Create a valid Non-concern case type');
         selectCaseTypePage.withCaseType('NonConcerns').continue();
 
@@ -143,6 +146,9 @@ describe('Creating a non concerns case', () => {
 
             Logger.log('Populate territory');
             addTerritoryPage.withTerritory(territory).nextStep();
+
+            Logger.log('Create team leader');
+            createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
             Logger.log('Create a valid Non-concern case type');
             selectCaseTypePage.withCaseType('NonConcerns').continue();
@@ -249,6 +255,10 @@ describe('Creating a non concerns case', () => {
                 selectCaseDivisionPage.withCaseDivision('SFSO').continue();
 
                 addTerritoryPage.withTerritory(territory).nextStep();
+
+                Logger.log('Create team leader');
+                createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
+
                 selectCaseTypePage.withCaseType('NonConcerns').continue();
                 addConcernDetailsPage.createCase();
 
