@@ -1,9 +1,7 @@
 ﻿@using ConcernsCaseWork.Utils.Extensions;
 @model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
+
 <table class="govuk-table" id="active-cases">
-    <caption class="govuk-table__caption govuk-table__caption--s dfe-u-font-weight-normal govuk-!-margin-bottom-3">
-        Cases owned by others
-    </caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row tr__large">
             <th class="govuk-table__header govuk-table__cell__cases" scope="col">
@@ -25,7 +23,7 @@
                 Owned by
             </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
-                Case manager
+                Team leader
             </th>
         </tr>
     </thead>

@@ -2,9 +2,7 @@ using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
 using ConcernsCaseWork.API.Features.Paging;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -28,6 +26,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
 		private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
 		private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
+		private readonly IGetCaseFilterParameters _getCaseFilterParameters;
 
 		public ConcernsCaseController(
 			ILogger<ConcernsCaseController> logger,
@@ -42,7 +41,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust,
 			IGetActiveConcernsCaseSummariesForUsersTeam getActiveConcernsCaseSummariesForUsersTeam,
 			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner,
-			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter)
+			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter,
+			IGetCaseFilterParameters getCaseFilterParameters)
 		{
 			_logger = logger;
 			_createConcernsCase = createConcernsCase;
@@ -57,6 +57,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			_getActiveConcernsCaseSummariesForUsersTeam = getActiveConcernsCaseSummariesForUsersTeam;
 			_getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
 			_getConcernsCaseSummariesByFilter = getConcernsCaseSummariesByFilter;
+			_getCaseFilterParameters = getCaseFilterParameters;
 		}
 
 		[HttpPost]
@@ -81,39 +82,39 @@ namespace ConcernsCaseWork.API.Features.Case
 		[HttpGet]
 		[Route("urn/{urn}")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> GetByUrn(int urn, CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
-			var concernsCase = _getConcernsCaseByUrn.Execute(urn);
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> GetByUrn(int urn, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation("Attempting to get Concerns Case by Urn {Urn}", urn);
+            var concernsCase = _getConcernsCaseByUrn.Execute(urn);
 
-			if (concernsCase == null)
-			{
-				_logger.LogInformation($"No Concerns case found for URN {urn}");
-				return NotFound();
-			}
+            if (concernsCase == null)
+            {
+                _logger.LogInformation("No Concerns case found for URN {Urn}", urn);
+                return NotFound();
+            }
 
-			_logger.LogInformation($"Returning Concerns case with Urn {urn}");
-			_logger.LogDebug(JsonSerializer.Serialize(concernsCase));
-			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCase);
+            _logger.LogInformation("Returning Concerns case with Urn {Urn}", urn);
+            _logger.LogDebug(JsonSerializer.Serialize(concernsCase));
+            var response = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCase);
 
-			return Ok(response);
-		}
+            return Ok(response);
+        }
 
 		[HttpGet]
 		[Route("ukprn/{trustUkprn}")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to get Concerns Cases by Trust Ukprn {trustUkprn}, page {page}, count {count}");
-			var concernsCases = _getConcernsCaseByTrustUkprn.Execute(trustUkprn, page, count);
+        public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation("Attempting to get Concerns Cases by Trust Ukprn {TrustUkprn}, page {Page}, count {Count}", trustUkprn, page, count);
+            var concernsCases = _getConcernsCaseByTrustUkprn.Execute(trustUkprn, page, count);
 
-			_logger.LogInformation($"Returning Concerns cases with Trust Ukprn {trustUkprn}, page {page}, count {count}");
-			_logger.LogDebug(JsonSerializer.Serialize(concernsCases));
-			var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
-			var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
+            _logger.LogInformation("Returning Concerns cases with Trust Ukprn {TrustUkprn}, page {Page}, count {Count}", trustUkprn, page, count);
+            _logger.LogDebug(JsonSerializer.Serialize(concernsCases));
+            var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
+            var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
 
-			return Ok(response);
-		}
+            return Ok(response);
+        }
 
 		[HttpPatch("{urn}")]
 		[MapToApiVersion("2.0")]
@@ -148,47 +149,57 @@ namespace ConcernsCaseWork.API.Features.Case
 		[HttpGet]
 		[Route("owner/{ownerId}")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByOwnerId(string ownerId, int? status = null, int page = 1, int count = 50, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByOwnerId(string ownerId, int? status = null, int page = 1, int count = 50, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation("Attempting to get Concerns Cases by Owner Id {OwnerId}, page {Page}, count {Count}", ownerId, page, count);
+            var concernsCases = _getConcernsCasesByOwnerId.Execute(ownerId, status, page, count);
+
+            _logger.LogInformation("Returning Concerns cases with Owner Id {OwnerId}, page {Page}, count {Count}", ownerId, page, count);
+            _logger.LogDebug(JsonSerializer.Serialize(concernsCases));
+            var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
+            var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
+
+            return Ok(response);
+        }
+
+		[HttpGet]
+		[Route("summary/searh-filters")]
+		[MapToApiVersion("2.0")]
+		public async Task<ActionResult<ApiResponseV2<CaseFilterParameters>>> GetCaseFiltersParameters()
 		{
-			_logger.LogInformation($"Attempting to get Concerns Cases by Owner Id {ownerId}, page {page}, count {count}");
-			var concernsCases = _getConcernsCasesByOwnerId.Execute(ownerId, status, page, count);
+			var result = await _getCaseFilterParameters.Execute();
 
-			_logger.LogInformation($"Returning Concerns cases with Owner Id {ownerId}, page {page}, count {count}");
-			_logger.LogDebug(JsonSerializer.Serialize(concernsCases));
-			var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
-			var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
-
-			return Ok(response);
+			return Ok(result);
 		}
 
 		[HttpGet]
 		[Route("summary/all")]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetAllSummariesByFilter(
-			[FromQuery] Region[] regions = null,
-			int? page = null,
-			int? count = null,
-			// TODO are we just blindly adding cancellation tokens?
-			CancellationToken cancellationToken = default)
-		{
-			_logger.LogInformation($"Attempting to get all Concerns Case summaries page {page} count {count}");
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetAllSummariesByFilter(
+        [FromQuery] Region[] regions = null,
+        [FromQuery] CaseStatus[] statuses = null,
+        int? page = null,
+        int? count = null)
+        {
+            _logger.LogInformation("Attempting to get all Concerns Case summaries page {Page} count {Count}", page, count);
 
-			var parameters = new GetCaseSummariesByFilterParameters()
-			{
-				Regions = regions,
+            var parameters = new GetCaseSummariesByFilterParameters()
+            {
+                Regions = regions,
+				Statuses = statuses,
 				Page = page,
-				Count = count
-			};
+                Count = count
+            };
 
-			(IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getConcernsCaseSummariesByFilter.Execute(parameters);
+            (IList<ActiveCaseSummaryResponse> caseSummaries, int recordCount) = await _getConcernsCaseSummariesByFilter.Execute(parameters);
 
-			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
+            PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
-			_logger.LogInformation($"Returning Concerns cases, page {page} count {count}");
-			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
+            _logger.LogInformation("Returning Concerns cases, page {Page} count {Count}", page, count);
+            var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
 
-			return Ok(response);
-		}
+            return Ok(response);
+        }
 
 		[HttpGet]
 		[Route("summary/{ownerId}/active")]

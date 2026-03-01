@@ -38,7 +38,7 @@ public class AllCasesPageModel(
 			Filters.PopulateFrom(Request.Query);
 
 			// Get filtered cases
-			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(Filters.SelectedRegionEnums, PageNumber);
+			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(Filters.SelectedRegionEnums, Filters.SelectedStatusEnums, PageNumber);
 			AllCases = activeCaseGroup.Cases;
 
 			Pagination = activeCaseGroup.Pagination;

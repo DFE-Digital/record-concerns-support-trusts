@@ -3,7 +3,7 @@
 @model ConcernsCaseWork.Models.CaseFilters
 
 @{
-    string BuildRemoveLink(Region toRemove)
+    string BuildRemoveRegionLink(Region toRemove)
     {
         var remaining = Model.SelectedRegionEnums.Where(r => r != toRemove).Select(r => ((int)r).ToString()).ToArray();
 
@@ -16,9 +16,23 @@
         return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
     }
 
+    string BuildRemoveStatusLink(CaseStatus toRemove)
+    {
+        var remaining = Model.SelectedStatusEnums.Where(r => r != toRemove).Select(r => ((int)r).ToString()).ToArray();
+
+        if (remaining.Length == 0)
+        {
+            return Url.RouteUrl(ViewContext.RouteData.Values) ?? "?";
+        }
+
+        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedStatusesKey}={Uri.EscapeDataString(v)}"));
+        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+    }
+
     string ClearLink() => $"{Url.RouteUrl(ViewContext.RouteData.Values)}?clear=1"; /* TODO don't need the clear */
 
     var regions = Enum.GetValues(typeof(Region)).Cast<Region>().ToArray();
+    var statuses = Enum.GetValues(typeof(CaseStatus)).Cast<CaseStatus>().Where(x => x != CaseStatus.Unknown).ToArray();
 }
 
 <div class="moj-filter">
@@ -44,20 +58,40 @@
                     </div>
                 </div>
 
-                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Regions</h3>
-                <ul class="moj-filter-tags">
-                    @foreach (var region in Model.SelectedRegionEnums)
-                    {
-                        <li>
-                            <a class="moj-filter__tag" href="@BuildRemoveLink(region)">
-                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                @region.Description()
-                            </a>
-                        </li>
-                    }
-                </ul>
+                @if(Model.SelectedRegionEnums.Length > 0)
+                {
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Regions</h3>
+                    <ul class="moj-filter-tags">
+                        @foreach (var region in Model.SelectedRegionEnums)
+                        {
+                            <li>
+                                <a class="moj-filter__tag" href="@BuildRemoveRegionLink(region)">
+                                    <span class="govuk-visually-hidden">Remove this filter</span>
+                                    @region.Description()
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                @if (Model.SelectedStatusEnums.Length > 0)
+                {
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Statuses</h3>
+                    <ul class="moj-filter-tags">
+                        @foreach (var status in Model.SelectedStatusEnums)
+                        {
+                            <li>
+                                <a class="moj-filter__tag" href="@BuildRemoveStatusLink(status)">
+                                    <span class="govuk-visually-hidden">Remove this filter</span>
+                                    @status.Description()
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
         }
+
 
         <div class="moj-filter__options">
             <form method="get" class="form">
@@ -69,7 +103,11 @@
                                     Regions
                                 </legend>
 
-                                <div class="govuk-checkboxes" style="max-height: 200px; overflow-y: auto;">
+                                <div id="filter-regions-hint" class="govuk-hint">
+                                    Select all that apply.
+                                </div>
+
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes" style="max-height: 200px; overflow-y: auto; padding: 0 .5rem;">
                                     @foreach (var region in regions)
                                     {
                                         var regionValue = ((int)region).ToString();
@@ -86,6 +124,40 @@
 
                                             <label class="govuk-label govuk-checkboxes__label" for="filter-case-region-@regionValue">
                                                 @region.Description()
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="govuk-grid-column-one-half">
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                    Status
+                                </legend>
+
+                                <div id="filter-regions-hint" class="govuk-hint">
+                                    Select all that apply.
+                                </div>
+
+                                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes" style="max-height: 200px; overflow-y: auto; padding: 0 .5rem;">
+                                    @foreach (var status in statuses)
+                                    {
+                                        var statusValue = ((int)status).ToString();
+                                        var isChecked = Model.SelectedStatusEnums.Contains(status);
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input"
+                                                   id="filter-case-status-@statusValue"
+                                                   name="@Models.CaseFilters._selectedStatusesKey"
+                                                   type="checkbox"
+                                                   value="@statusValue"
+                                                   data-cy="select-case-filter-status-@status"
+                                            @(isChecked ? "checked" : null) />
+                                            <label class="govuk-label govuk-checkboxes__label" for="filter-case-status-@statusValue">
+                                                @status.Description()
                                             </label>
                                         </div>
                                     }

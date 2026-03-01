@@ -37,9 +37,12 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
-	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(Region[] regions = null, int? page = 1)
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(
+		Region[] regions = null,
+		CaseStatus[] statuses = null,
+		int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, page);
+		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, statuses, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 

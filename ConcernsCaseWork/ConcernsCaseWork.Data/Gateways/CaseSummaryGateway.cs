@@ -2,11 +2,13 @@ using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ConcernsCaseWork.Data.Gateways;
 
 public interface ICaseSummaryGateway
 {
+	Task<CaseFilterParameters> GetCaseFilterParameters();
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters);
@@ -22,6 +24,20 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public CaseSummaryGateway(ConcernsDbContext concernsDbContext)
 	{
 		_concernsDbContext = concernsDbContext;
+	}
+
+    public async Task<CaseFilterParameters> GetCaseFilterParameters()
+    {
+        var statuses = await _concernsDbContext.ConcernsStatus
+            .Select(s => new { s.Id, s.Name })
+            .ToListAsync();
+
+        var response = new CaseFilterParameters
+        {
+            Statuses = [.. statuses.Select(s => new KeyValuePair<int, string>(s.Id, s.Name))]
+		};
+
+        return response;
 	}
 
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters )
@@ -45,31 +61,37 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		return (cases, recordCount);
 	}
 
-	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters)
-	{
-		var queryBuilder = _concernsDbContext.ConcernsCase
-			.OrderByDescending(c => c.CreatedAt)
-			.AsQueryable();
+    public async Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters)
+    {
+        var queryBuilder = _concernsDbContext.ConcernsCase
+            .OrderByDescending(c => c.CreatedAt)
+            .AsQueryable();
 
-		if (parameters.Regions != null && parameters.Regions.Any())
-		{
-			queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
-		}
+        if (parameters.Regions != null && parameters.Regions.Any())
+        {
+            queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
+        }
 
-		var recordCount = await queryBuilder.CountAsync();
+        if (parameters.Statuses != null && parameters.Statuses.Length > 0)
+        {
+			var statusIds = parameters.Statuses.Select(s => (int)s).ToArray();
 
-		if (parameters.Page.HasValue && parameters.Count.HasValue)
-		{
-			queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
-		}
+			queryBuilder = queryBuilder.Where(c => statusIds.Contains(c.StatusId));
+        }
 
-        // TODO review it 
-		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+        var recordCount = await queryBuilder.CountAsync();
 
-		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+        if (parameters.Page.HasValue && parameters.Count.HasValue)
+        {
+            queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+        }
 
-		return (cases, recordCount);
-	}
+        var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+        var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+        return (cases, recordCount);
+    }
 
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
 	{
@@ -285,6 +307,7 @@ public class GetCaseSummariesByTrustParameters
 public class GetCaseSummariesByFilterParameters
 {
 	public Region[] Regions { get; set; }
+	public CaseStatus[] Statuses { get; set; }
 	public int? Page { get; set; }
 	public int? Count { get; set; }
 }

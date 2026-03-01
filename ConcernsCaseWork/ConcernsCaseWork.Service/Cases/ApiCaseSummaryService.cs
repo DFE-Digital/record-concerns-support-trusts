@@ -3,6 +3,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 
 namespace ConcernsCaseWork.Service.Cases;
 
@@ -19,9 +20,10 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 
 	public async Task<ApiListWrapper<ActiveCaseSummaryDto>> GetAllCaseSummariesByFilter(
 		Region[] regions = null,
+		CaseStatus[] statuses = null,
 		int? page = 1)
 	{
-		var queryString = BuildQueryString(regions);
+		var queryString = BuildQueryString(regions, statuses);
 		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{queryString}");
 
 		return result;
@@ -79,10 +81,13 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		return "&" + string.Join("&", values.Select(value => $"{key}={value}"));
 	}
 
-	private static string BuildQueryString(Region[] regions)
+	private static string BuildQueryString(Region[] regions, CaseStatus[] statuses)
 	{
 		string queryString = string.Empty;
+
 		queryString += BuildQueryParametersString("regions", regions);
+		queryString += BuildQueryParametersString("statuses", statuses);
+
 		return queryString;
 	}
 }
