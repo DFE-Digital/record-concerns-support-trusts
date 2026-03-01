@@ -20,11 +20,11 @@
 		var parsed = QueryHelpers.ParseQuery(rawQuery);
 
 		var pairs = parsed
-			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string?>(kvp.Key, v))
+			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string>(kvp.Key, v))
 			.ToList();
 
 		pairs.RemoveAll(kvp => kvp.Key.Equals("pageNumber", StringComparison.OrdinalIgnoreCase));
-		pairs.Add(new KeyValuePair<string, string?>("pageNumber", pageNumber.Value.ToString()));
+		pairs.Add(new KeyValuePair<string, string>("pageNumber", pageNumber.Value.ToString()));
 
 		return QueryHelpers.AddQueryString(path, pairs);
     }

@@ -58,7 +58,7 @@ public class AllCasesPageModel(
 			.Where(kvp =>
 				!kvp.Key.Equals(nameof(PageNumber), StringComparison.OrdinalIgnoreCase) &&
 				!kvp.Key.Equals("pageNumber", StringComparison.OrdinalIgnoreCase))
-			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string?>(kvp.Key, v))
+			.SelectMany(kvp => kvp.Value, (kvp, v) => new KeyValuePair<string, string>(kvp.Key, v))
 			.ToList();
 
 		return QueryHelpers.AddQueryString(path, pairs);
