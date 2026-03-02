@@ -2,13 +2,11 @@ using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace ConcernsCaseWork.Data.Gateways;
 
 public interface ICaseSummaryGateway
 {
-	Task<CaseFilterParameters> GetCaseFilterParameters();
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters);
@@ -24,20 +22,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 	public CaseSummaryGateway(ConcernsDbContext concernsDbContext)
 	{
 		_concernsDbContext = concernsDbContext;
-	}
-
-    public async Task<CaseFilterParameters> GetCaseFilterParameters()
-    {
-        var statuses = await _concernsDbContext.ConcernsStatus
-            .Select(s => new { s.Id, s.Name })
-            .ToListAsync();
-
-        var response = new CaseFilterParameters
-        {
-            Statuses = [.. statuses.Select(s => new KeyValuePair<int, string>(s.Id, s.Name))]
-		};
-
-        return response;
 	}
 
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters )

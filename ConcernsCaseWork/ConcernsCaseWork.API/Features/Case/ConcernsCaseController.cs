@@ -26,7 +26,6 @@ namespace ConcernsCaseWork.API.Features.Case
 		private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
 		private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
 		private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
-		private readonly IGetCaseFilterParameters _getCaseFilterParameters;
 
 		public ConcernsCaseController(
 			ILogger<ConcernsCaseController> logger,
@@ -41,8 +40,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust,
 			IGetActiveConcernsCaseSummariesForUsersTeam getActiveConcernsCaseSummariesForUsersTeam,
 			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner,
-			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter,
-			IGetCaseFilterParameters getCaseFilterParameters)
+			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter)
 		{
 			_logger = logger;
 			_createConcernsCase = createConcernsCase;
@@ -57,7 +55,6 @@ namespace ConcernsCaseWork.API.Features.Case
 			_getActiveConcernsCaseSummariesForUsersTeam = getActiveConcernsCaseSummariesForUsersTeam;
 			_getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
 			_getConcernsCaseSummariesByFilter = getConcernsCaseSummariesByFilter;
-			_getCaseFilterParameters = getCaseFilterParameters;
 		}
 
 		[HttpPost]
@@ -161,16 +158,6 @@ namespace ConcernsCaseWork.API.Features.Case
 
             return Ok(response);
         }
-
-		[HttpGet]
-		[Route("summary/searh-filters")]
-		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiResponseV2<CaseFilterParameters>>> GetCaseFiltersParameters()
-		{
-			var result = await _getCaseFilterParameters.Execute();
-
-			return Ok(result);
-		}
 
 		[HttpGet]
 		[Route("summary/all")]

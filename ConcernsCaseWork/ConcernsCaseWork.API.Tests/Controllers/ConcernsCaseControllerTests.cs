@@ -1,6 +1,8 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Contracts.Common;
+using ConcernsCaseWork.API.Contracts.Concerns;
 using ConcernsCaseWork.API.Features.Case;
+using ConcernsCaseWork.Data.Gateways;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +17,43 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 {
 	public class ConcernsCaseControllerTests
 	{
-		private readonly Mock<ILogger<ConcernsCaseController>> _mockLogger = new Mock<ILogger<ConcernsCaseController>>();
+		private readonly Mock<ILogger<ConcernsCaseController>> _mockLogger = new();
+		private readonly Mock<ICreateConcernsCase> _createConcernsCase = new();
+		private readonly Mock<IGetConcernsCaseByUrn> _getConcernsCaseByUrn = new();
+		private readonly Mock<IGetConcernsCaseByTrustUkprn> _getConcernsCaseByTrustUkprn = new();
+		private readonly Mock<IUpdateConcernsCase> _updateConcernsCase = new();
+		private readonly Mock<IDeleteConcernsCase> _deleteConcernsCase = new();
+		private readonly Mock<IGetConcernsCasesByOwnerId> _getConcernsCasesByOwnerId = new();
+		private readonly Mock<IGetActiveConcernsCaseSummariesForUsersTeam> _getActiveConcernsCaseSummariesForUsersTeam = new();
+		private readonly Mock<IGetConcernsCaseSummariesByFilter> _getConcernsCaseSummariesByFilter = new();
+		private readonly Mock<IGetActiveConcernsCaseSummariesByOwner> _getActiveConcernsCaseSummariesByOwner = new();
+		private readonly Mock<IGetClosedConcernsCaseSummariesByOwner> _getClosedConcernsCaseSummariesByOwner = new();
+		private readonly Mock<IGetActiveConcernsCaseSummariesByTrust> _getActiveConcernsCaseSummariesByTrust = new();
+		private readonly Mock<IGetClosedConcernsCaseSummariesByTrust> _getClosedConcernsCaseSummariesByTrust = new();
+
+		private ConcernsCaseController CreateController()
+		{
+			var controller = new ConcernsCaseController(
+				_mockLogger.Object,
+				_createConcernsCase.Object,
+				_getConcernsCaseByUrn.Object,
+				_getConcernsCaseByTrustUkprn.Object,
+				_updateConcernsCase.Object,
+				_deleteConcernsCase.Object,
+				_getConcernsCasesByOwnerId.Object,
+				_getClosedConcernsCaseSummariesByOwner.Object,
+				_getActiveConcernsCaseSummariesByTrust.Object,
+				_getClosedConcernsCaseSummariesByTrust.Object,
+				_getActiveConcernsCaseSummariesForUsersTeam.Object,
+				_getActiveConcernsCaseSummariesByOwner.Object,
+				_getConcernsCaseSummariesByFilter.Object
+			);
+			controller.ControllerContext = new ControllerContext
+			{
+				HttpContext = new DefaultHttpContext()
+			};
+			return controller;
+		}
 
 		[Fact]
 		public async Task CreateConcernsCase_Returns201WhenSuccessfullyCreatesAConcernsCase()
@@ -35,7 +73,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var controller = new ConcernsCaseController(
 				_mockLogger.Object,
 				createConcernsCase.Object,
-				null,
 				null,
 				null,
 				null,
@@ -80,7 +117,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
-				null,
 				null
 			);
 
@@ -104,7 +140,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				_mockLogger.Object,
 				null,
 				getConcernsCaseByUrn.Object,
-				null,
 				null,
 				null,
 				null,
@@ -141,7 +176,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				getConcernsCaseByTrustUkprn.Object,
-				null,
 				null,
 				null,
 				null,
@@ -194,7 +228,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
-				null,
 				null
 			);
 
@@ -224,7 +257,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				updateConcernsCase.Object,
-				null,
 				null,
 				null,
 				null,
@@ -264,7 +296,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
-				null,
 				null
 			);
 			var result = await controller.GetByOwnerId(ownerId, statusId, 1, 50);
@@ -278,6 +309,40 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			};
 			var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
 			result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+		}
+
+		[Fact]
+		public async Task GetAllSummariesByFilter_ReturnsOk_WithPaging()
+		{
+			// Arrange
+			var regions = new[] { Region.London };
+			var statuses = new[] { CaseStatus.Live };
+			int? page = 1;
+			int? count = 10;
+
+			var summaries = new List<ActiveCaseSummaryResponse>
+			{
+				new() { TeamLedBy = "A", Rating = new ConcernsRatingResponse { Name = "High" } }
+			};
+
+			int recordCount = 1;
+
+			_getConcernsCaseSummariesByFilter
+				.Setup(x => x.Execute(It.IsAny<GetCaseSummariesByFilterParameters>()))
+				.ReturnsAsync((summaries, recordCount));
+
+			var controller = CreateController();
+
+			// Act
+			var result = await controller.GetAllSummariesByFilter(regions, statuses, page, count);
+
+			// Assert
+			var okResult = Assert.IsType<OkObjectResult>(result.Result);
+			var apiResponse = Assert.IsType<ApiResponseV2<ActiveCaseSummaryResponse>>(okResult.Value);
+
+			Assert.Single(apiResponse.Data);
+			Assert.NotNull(apiResponse.Paging);
+			Assert.Equal(recordCount, apiResponse.Paging.RecordCount);
 		}
 	}
 }

@@ -73,7 +73,6 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IIndexConcernsMeansOfReferrals, IndexConcernsMeansOfReferrals>();
 			services.AddScoped<IConcernsMeansOfReferralGateway, ConcernsMeansOfReferralGateway>();
 
-			services.AddScoped<IGetCaseFilterParameters, GetCaseFilterParameters>();
 			services.AddScoped<IGetConcernsCasesByOwnerId, GetConcernsCasesByOwnerId>();
 			services.AddScoped<IGetClosedConcernsCaseSummariesByOwner, GetClosedConcernsCaseSummariesByOwner>();
 			services.AddScoped<IGetActiveConcernsCaseSummariesByTrust, GetActiveConcernsCaseSummariesByTrust>();
