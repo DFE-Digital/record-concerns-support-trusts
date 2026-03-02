@@ -326,6 +326,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			// Arrange
 			var regions = new[] { Region.London };
 			var statuses = new[] { CaseStatus.Live };
+			var caseOwners = new[] { "joe.bloggs@education.gov.uk" };
+			var teamLeaders = new[] { "tester.tester@education.gov.uk" };
 			int? page = 1;
 			int? count = 10;
 
@@ -343,7 +345,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var controller = CreateController();
 
 			// Act
-			var result = await controller.GetAllSummariesByFilter(regions, statuses, page, count);
+			var result = await controller.GetAllSummariesByFilter(regions, statuses, caseOwners, teamLeaders, page, count);
 
 			// Assert
 			var okResult = Assert.IsType<OkObjectResult>(result.Result);
