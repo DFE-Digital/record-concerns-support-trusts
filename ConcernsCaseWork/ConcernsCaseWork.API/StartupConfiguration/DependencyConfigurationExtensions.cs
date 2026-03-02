@@ -63,6 +63,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IConcernsRecordGateway, ConcernsRecordGateway>();
 			services.AddScoped<IConcernsTypeGateway, ConcernsTypeGateway>();
 			services.AddScoped<IConcernsRatingGateway, ConcernsRatingsGateway>();
+			services.AddScoped<IConcernsCaseRiskToTrustRatingHistoryGateway, ConcernsCaseRiskToTrustRatingHistoryGateway>();
 			services.AddScoped<IIndexConcernsRatings, IndexConcernsRatings>();
 			services.AddScoped<IUpdateConcernsCase, UpdateConcernsCase>();
 			services.AddScoped<IDeleteConcernsCase, DeleteConcernsCase>();

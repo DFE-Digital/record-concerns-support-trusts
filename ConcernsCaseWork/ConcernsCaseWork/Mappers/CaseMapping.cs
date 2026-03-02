@@ -63,6 +63,8 @@ namespace ConcernsCaseWork.Mappers
 				Urn = caseDto.Urn,
 				StatusId = caseDto.StatusId,
 				RatingId = caseDto.RatingId,
+				RatingRational = caseDto.RatingRational,
+				RatingRationalCommentary = caseDto.RatingRationalCommentary,
 				IsArchived = caseDto.Urn.ToString().StartsWith("1"),
 				Division = caseDto.Division,
 				Region = caseDto.Region,
@@ -99,6 +101,6 @@ namespace ConcernsCaseWork.Mappers
 			=> caseDto with { UpdatedAt = patchCaseModel.UpdatedAt, NextSteps = patchCaseModel.NextSteps };
 
 		public static CaseDto MapRating(PatchCaseModel patchCaseModel, CaseDto caseDto)
-			=> caseDto with { UpdatedAt = patchCaseModel.UpdatedAt, RatingId = patchCaseModel.RatingId };
+			=> caseDto with { UpdatedAt = patchCaseModel.UpdatedAt, RatingId = patchCaseModel.RatingId, RatingRationalCommentary = patchCaseModel.RatingRationalCommentary };
 	}
 }

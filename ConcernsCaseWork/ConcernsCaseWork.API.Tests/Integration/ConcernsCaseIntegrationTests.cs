@@ -58,9 +58,13 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		ConcernCaseRequest createRequest = CreateConcernCaseCreateRequest();
 		createRequest.Division = Division.SFSO;
 		createRequest.Territory = Territory.Midlands_And_West__SouthWest;
+		createRequest.RatingRational = true;
+		createRequest.RatingRationalCommentary = "this is my commentary";
 
 		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+		expectedConcernsCaseResponse.RatingRational = createRequest.RatingRational;
+		expectedConcernsCaseResponse.RatingRationalCommentary = createRequest.RatingRationalCommentary;
 
 		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
 
@@ -87,12 +91,16 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		createRequest.TrustUkprn = DatabaseModelBuilder.CreateUkPrn();
 		createRequest.StatusId = 1;
 		createRequest.RatingId = (int)ConcernRating.NotApplicable;
+		createRequest.RatingRational = true;
+		createRequest.RatingRationalCommentary = "this is my commentary";
 		createRequest.Region = Region.EastOfEngland;
 		createRequest.Division = Division.RegionsGroup;
 
 		var caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
 		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
+		expectedConcernsCaseResponse.RatingRational = createRequest.RatingRational;
+		expectedConcernsCaseResponse.RatingRationalCommentary = createRequest.RatingRationalCommentary;
 
 		var createResponse = await _client.PostAsync($"/v2/concerns-cases/", createRequest.ConvertToJson());
 		createResponse.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -116,11 +124,15 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		createRequest.TrustUkprn = DatabaseModelBuilder.CreateUkPrn();
 		createRequest.StatusId = 1;
 		createRequest.RatingId = 2;
+		createRequest.RatingRational = true;
+		createRequest.RatingRationalCommentary = "this is my commentary";
 		createRequest.Division = Division.SFSO;
 		createRequest.Territory = Territory.Midlands_And_West__SouthWest;
 
 		ConcernsCase caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
 		ConcernsCaseResponse expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
+		expectedConcernsCaseResponse.RatingRational = createRequest.RatingRational;
+		expectedConcernsCaseResponse.RatingRationalCommentary = createRequest.RatingRationalCommentary;
 
 		ApiSingleResponseV2<ConcernsCaseResponse> expected = new(expectedConcernsCaseResponse);
 
@@ -383,12 +395,16 @@ public class ConcernsCaseIntegrationTests : IDisposable
 			.With(cr => cr.TrustCompaniesHouseNumber = "87654321")
 			.With(cr => cr.Division = Division.RegionsGroup)
 			.With(cr => cr.RatingId = 1)
+			.With(cr => cr.RatingRational = true)
+			.With(cr => cr.RatingRationalCommentary = "This is my rationale commentary ...")
 			.With(cr => cr.Region = Region.NorthWest)
 			.Build();
 
 		ConcernsCase expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
 		expectedConcernsCase.Urn = urn;
 		ConcernsCaseResponse expectedContent = ConcernsCaseResponseFactory.Create(expectedConcernsCase);
+		expectedContent.RatingRational = updateRequest.RatingRational;
+		expectedContent.RatingRationalCommentary = updateRequest.RatingRationalCommentary;
 
 		HttpRequestMessage httpRequestMessage = new()
 		{

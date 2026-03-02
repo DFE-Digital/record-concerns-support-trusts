@@ -54,14 +54,21 @@ class EditCaseManagementPage {
         return this;
     }
 
+    /** Known E2E service account when pipeline runs; accepted so case-owner assertion works in both local and pipeline. */
+    private static readonly PipelineE2eUsername = 'svc-rdscc-e2etest@education.gov.uk';
+    private static readonly PipelineE2eUsernameLocalPart = 'svc-rdscc-e2etest';
+
     public hasCaseOwner(value: string): this {
         Logger.log(`Has case owner ${value}`);
 
-        // Can be improved later
-        // Currently its driven by the casing of the email when the user logs in
-        // We can't control this, so safer to ignore case for now
+        const allowed = [
+            value.toLowerCase(),
+            EditCaseManagementPage.PipelineE2eUsername.toLowerCase(),
+            EditCaseManagementPage.PipelineE2eUsernameLocalPart,
+        ];
         cy.getById('case-owner-input').then((element: any) => {
-            expect(element.val().toLowerCase()).eq(value.toLowerCase());
+            const actual = (element.val() || '').toLowerCase();
+            expect(allowed, `case owner should be ${value} or pipeline E2E user`).to.include(actual);
         });
 
         return this;

@@ -58,6 +58,9 @@ namespace ConcernsCaseWork.Models
 
 		public long RatingId { get; set; }
 
+		public bool RatingRational { get; init; }
+		public string RatingRationalCommentary { get; init; }
+
 		public long StatusId { get; set; }
 
 		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();

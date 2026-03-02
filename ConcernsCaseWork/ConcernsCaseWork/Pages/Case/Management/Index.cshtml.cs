@@ -44,6 +44,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public CaseModel CaseModel { get; private set; }
 
+		//public string RatingRationalCommentary { get; set; }
+
 		public TrustOverviewModel TrustOverviewModel { get; set; }
 
 		public bool IsEditableCase { get; private set; }
@@ -87,6 +89,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
+
+				//RatingRationalCommentary = CaseModel.RatingRationalCommentary;
 
 				if (CaseModel.IsClosed())
 				{
@@ -240,7 +244,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return false;
 		}
-
 
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 		

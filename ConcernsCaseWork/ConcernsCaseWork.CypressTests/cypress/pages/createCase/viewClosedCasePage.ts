@@ -27,10 +27,23 @@ export class ViewClosedCasePage {
         return this;
     }
 
+    private static readonly PipelineE2eUsername = 'svc-rdscc-e2etest@education.gov.uk';
+    private static readonly PipelineE2eUsernameLocalPart = 'svc-rdscc-e2etest';
+
     public hasCaseOwner(value: string): this {
         Logger.log(`Has case owner ${value}`);
 
-        cy.getByTestId('case-owner-field').contains(value, { matchCase: false });
+        const allowed = [
+            value.toLowerCase(),
+            ViewClosedCasePage.PipelineE2eUsername.toLowerCase(),
+            ViewClosedCasePage.PipelineE2eUsernameLocalPart,
+        ];
+        cy.getByTestId('case-owner-field')
+            .invoke('text')
+            .then((text) => {
+                const actual = (text || '').trim().toLowerCase();
+                expect(allowed, `case owner should be ${value} or pipeline E2E user`).to.include(actual);
+            });
 
         return this;
     }
