@@ -30,6 +30,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		private readonly Mock<IGetClosedConcernsCaseSummariesByOwner> _getClosedConcernsCaseSummariesByOwner = new();
 		private readonly Mock<IGetActiveConcernsCaseSummariesByTrust> _getActiveConcernsCaseSummariesByTrust = new();
 		private readonly Mock<IGetClosedConcernsCaseSummariesByTrust> _getClosedConcernsCaseSummariesByTrust = new();
+		private readonly Mock<IGetConcernSearchCriterias> _getConcernSearchCriterias = new();
 
 		private ConcernsCaseController CreateController()
 		{
@@ -46,7 +47,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				_getClosedConcernsCaseSummariesByTrust.Object,
 				_getActiveConcernsCaseSummariesForUsersTeam.Object,
 				_getActiveConcernsCaseSummariesByOwner.Object,
-				_getConcernsCaseSummariesByFilter.Object
+				_getConcernsCaseSummariesByFilter.Object,
+				_getConcernSearchCriterias.Object
 			);
 			controller.ControllerContext = new ControllerContext
 			{
@@ -73,6 +75,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var controller = new ConcernsCaseController(
 				_mockLogger.Object,
 				createConcernsCase.Object,
+				null,
 				null,
 				null,
 				null,
@@ -117,6 +120,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -140,6 +144,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				_mockLogger.Object,
 				null,
 				getConcernsCaseByUrn.Object,
+				null,
 				null,
 				null,
 				null,
@@ -176,6 +181,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				getConcernsCaseByTrustUkprn.Object,
+				null,
 				null,
 				null,
 				null,
@@ -228,6 +234,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -264,6 +271,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				null,
+				null,
 				null
 			);
 
@@ -291,6 +299,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 				null,
 				getConcernsCaseByOwnerId.Object,
+				null,
 				null,
 				null,
 				null,

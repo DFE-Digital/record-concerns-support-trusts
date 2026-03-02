@@ -14,6 +14,8 @@ namespace ConcernsCaseWork.Data.Gateways
 		Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase);
 		Task<bool> CaseExists(int urn, CancellationToken cancellationToken = default);
 		Task<string[]> GetOwnersOfOpenCases(CancellationToken cancellationToken = default);
+		string[] GetOwnersOfCases();
+		string[] GetTeamLeadersOfCases();
 	}
 
 	public class ConcernsCaseGateway : IConcernsCaseGateway
@@ -124,5 +126,21 @@ namespace ConcernsCaseWork.Data.Gateways
 		        .Distinct()
 		        .ToArrayAsync(cancellationToken);
         }
+
+		public string[] GetOwnersOfCases()
+		{
+			return [.. _concernsDbContext.ConcernsCase
+				.Select(x => x.CreatedBy)
+				.Where(x => !string.IsNullOrWhiteSpace(x))
+				.Distinct()];
+		}
+
+		public string[] GetTeamLeadersOfCases()
+		{
+			return [.. _concernsDbContext.ConcernsCase
+				.Select(x => x.TeamLedBy)
+				.Where(x => !string.IsNullOrWhiteSpace(x))
+				.Distinct()];
+		}
 	}
 }

@@ -37,12 +37,19 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		_trustCachedService = trustCachedService;
 	}
 
+	public async Task<CaseSearchParametersDto> GetCaseSearchCriterias()
+	{
+		return await _caseSummaryService.GetCaseSearchCriterias();
+	}
+
 	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(
 		Region[] regions = null,
+		string[] caseOwners = null,
+		string[] caseTeamLeaders = null,
 		CaseStatus[] statuses = null,
 		int? page = 1)
 	{
-		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, statuses, page);
+		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, caseOwners, caseTeamLeaders, statuses, page);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 

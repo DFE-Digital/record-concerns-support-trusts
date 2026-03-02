@@ -35,10 +35,20 @@ public class AllCasesPageModel(
 
 		try
 		{
+			var criterias = await _caseSummaryService.GetCaseSearchCriterias();
+			Filters.SetCaseOwners(criterias.CaseOwners);
+			Filters.SetCaseTeamLeaders(criterias.TeamLeaders);
+
 			Filters.PopulateFrom(Request.Query);
 
 			// Get filtered cases
-			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(Filters.SelectedRegionEnums, Filters.SelectedStatusEnums, PageNumber);
+			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(
+				Filters.SelectedRegionEnums, 
+				Filters.SelectedCaseOwners,
+				Filters.SelectedTeamLeaders,
+				Filters.SelectedStatusEnums,
+				PageNumber);
+			
 			AllCases = activeCaseGroup.Cases;
 
 			Pagination = activeCaseGroup.Pagination;

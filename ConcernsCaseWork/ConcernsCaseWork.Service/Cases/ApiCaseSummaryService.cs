@@ -18,12 +18,20 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 
 	}
 
+	public async Task<CaseSearchParametersDto> GetCaseSearchCriterias()
+	{
+		var result = await Get<CaseSearchParametersDto>($"/{EndpointsVersion}/concerns-cases/search/criterias");
+		return result;
+	}
+
 	public async Task<ApiListWrapper<ActiveCaseSummaryDto>> GetAllCaseSummariesByFilter(
 		Region[] regions = null,
+		string[] caseOwners = null,
+		string[] caseTeamLeaders = null,
 		CaseStatus[] statuses = null,
 		int? page = 1)
 	{
-		var queryString = BuildQueryString(regions, statuses);
+		var queryString = BuildQueryString(regions, caseOwners, caseTeamLeaders, statuses);
 		var result = await GetByPagination<ActiveCaseSummaryDto>($"/{EndpointsVersion}/concerns-cases/summary/all?page={page}&count=5{queryString}");
 
 		return result;
@@ -81,11 +89,17 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 		return "&" + string.Join("&", values.Select(value => $"{key}={value}"));
 	}
 
-	private static string BuildQueryString(Region[] regions, CaseStatus[] statuses)
+	private static string BuildQueryString(
+		Region[] regions,
+		string[] caseOwners,
+		string[] caseTeamLeaders,
+		CaseStatus[] statuses)
 	{
 		string queryString = string.Empty;
 
 		queryString += BuildQueryParametersString("regions", regions);
+		queryString += BuildQueryParametersString("owners", caseOwners);
+		queryString += BuildQueryParametersString("teamLeaders", caseTeamLeaders);
 		queryString += BuildQueryParametersString("statuses", statuses);
 
 		return queryString;

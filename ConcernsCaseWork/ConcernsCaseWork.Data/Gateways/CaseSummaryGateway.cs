@@ -56,7 +56,17 @@ public class CaseSummaryGateway : ICaseSummaryGateway
             queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
         }
 
-        if (parameters.Statuses != null && parameters.Statuses.Length > 0)
+		if (parameters.Owners != null && parameters.Owners.Any())
+		{
+			queryBuilder = queryBuilder.Where(c => parameters.Owners.Contains(c.CreatedBy));
+		}
+
+		if (parameters.TeamLeaders != null && parameters.TeamLeaders.Any())
+		{
+			queryBuilder = queryBuilder.Where(c => parameters.TeamLeaders.Contains(c.TeamLedBy));
+		}
+
+		if (parameters.Statuses != null && parameters.Statuses.Length > 0)
         {
 			var statusIds = parameters.Statuses.Select(s => (int)s).ToArray();
 
@@ -291,6 +301,8 @@ public class GetCaseSummariesByTrustParameters
 public class GetCaseSummariesByFilterParameters
 {
 	public Region[] Regions { get; set; }
+	public string[] Owners { get; set; }
+	public string[] TeamLeaders { get; set; }
 	public CaseStatus[] Statuses { get; set; }
 	public int? Page { get; set; }
 	public int? Count { get; set; }

@@ -10,10 +10,17 @@ namespace ConcernsCaseWork.Models;
 public class CaseFilters
 {
     public const string _selectedRegionsKey = nameof(SelectedRegions);
+	public const string _selectedCaseOwnerKey = "owner";
+	public const string _selectedCaseTeamLeaderKey = "teamleader";
 	public const string _selectedStatusesKey = nameof(SelectedStatuses);
 
 	public string[] SelectedRegions { get; private set; } = [];
+	public string[] SelectedCaseOwners { get; private set; } = [];
+	public string[] SelectedTeamLeaders { get; private set; } = [];
 	public string[] SelectedStatuses { get; private set; } = [];
+
+	public List<string> CaseOwners { get; private set; } = [];
+	public List<string> TeamLeaders { get; private set; } = [];
 
 	public Region[] SelectedRegionEnums =>
 		[.. SelectedRegions
@@ -29,9 +36,19 @@ public class CaseFilters
 			.Select(r => r!.Value)
 			.Distinct()];
 
-	public bool IsVisible => SelectedRegionEnums.Length > 0 || SelectedStatusEnums.Length > 0;
+	public bool IsVisible => SelectedRegionEnums.Length > 0 || SelectedCaseOwners.Length > 0 || SelectedTeamLeaders.Length > 0 || SelectedStatuses.Length > 0;
 
-    public void PopulateFrom(IEnumerable<KeyValuePair<string, StringValues>> requestQuery)
+    public void SetCaseOwners(List<string> caseOwners)
+    {
+        CaseOwners = [.. caseOwners, .. new[] { "joe.bloggs@education.gov.uk", "luther.king@education.gov.uk" }];
+    }
+
+	public void SetCaseTeamLeaders(List<string> teamLeaders)
+	{
+		TeamLeaders = teamLeaders;
+	}
+
+	public void PopulateFrom(IEnumerable<KeyValuePair<string, StringValues>> requestQuery)
     {
         var query = new Dictionary<string, StringValues>(requestQuery, StringComparer.OrdinalIgnoreCase);
 
@@ -39,6 +56,8 @@ public class CaseFilters
         if (query.ContainsKey("clear"))
         {
             SelectedRegions = [];
+			SelectedCaseOwners = [];
+			SelectedTeamLeaders = [];
 			SelectedStatuses = [];
 
 			return;
@@ -47,23 +66,49 @@ public class CaseFilters
 		if (query.TryGetValue(_selectedRegionsKey, out var regions) && regions.Count > 0)
 		{
 			SelectedRegions = regions
-			.Select(v => v?.Trim())
-			.Where(v => !string.IsNullOrWhiteSpace(v))
-			.Distinct(StringComparer.OrdinalIgnoreCase)
-			.ToArray()!;
+				.Select(v => v?.Trim())
+				.Where(v => !string.IsNullOrWhiteSpace(v))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray()!;
 		}
 		else
 		{
 			SelectedRegions = [];
 		}
 
+		if (query.TryGetValue(_selectedCaseOwnerKey, out var owners) && owners.Count > 0)
+		{
+			SelectedCaseOwners = owners
+				.Select(v => v?.Trim())
+				.Where(v => !string.IsNullOrWhiteSpace(v))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray()!;
+		}
+		else
+		{
+			SelectedCaseOwners = [];
+		}
+
+		if (query.TryGetValue(_selectedCaseTeamLeaderKey, out var teamLeaders) && teamLeaders.Count > 0)
+		{
+			SelectedTeamLeaders = teamLeaders
+				.Select(v => v?.Trim())
+				.Where(v => !string.IsNullOrWhiteSpace(v))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray()!;
+		}
+		else
+		{
+			SelectedTeamLeaders = [];
+		}
+
 		if (query.TryGetValue(_selectedStatusesKey, out var statuses) && statuses.Count > 0)
 		{
 			SelectedStatuses = statuses
-			.Select(v => v?.Trim())
-			.Where(v => !string.IsNullOrWhiteSpace(v) && !v.Equals("Unknown"))
-			.Distinct(StringComparer.OrdinalIgnoreCase)
-			.ToArray()!;
+				.Select(v => v?.Trim())
+				.Where(v => !string.IsNullOrWhiteSpace(v) && !v.Equals("Unknown"))
+				.Distinct(StringComparer.OrdinalIgnoreCase)
+				.ToArray()!;
 		}
 		else
 		{

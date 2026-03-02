@@ -14,7 +14,7 @@
                 Trust
             </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
-                Managed by
+                Managed by / Region
             </th>
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
                 Last updated
@@ -24,6 +24,9 @@
             </th>
             <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
                 Team leader
+            </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+                Status
             </th>
         </tr>
     </thead>
@@ -102,6 +105,9 @@
                     </td>
                     <td class="govuk-table__cell" data-testid="managed-by">
                         @activeCase.TeamLedBy
+                    </td>
+                    <td class="govuk-table__cell" data-testid="status">
+                        @activeCase.StatusName
                     </td>
                 </tr>
             }

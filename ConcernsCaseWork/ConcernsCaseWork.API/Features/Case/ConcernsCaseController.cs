@@ -26,6 +26,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
 		private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
 		private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
+		private readonly IGetConcernSearchCriterias _getConcernSearchCriterias;
 
 		public ConcernsCaseController(
 			ILogger<ConcernsCaseController> logger,
@@ -40,7 +41,8 @@ namespace ConcernsCaseWork.API.Features.Case
 			IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust,
 			IGetActiveConcernsCaseSummariesForUsersTeam getActiveConcernsCaseSummariesForUsersTeam,
 			IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner,
-			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter)
+			IGetConcernsCaseSummariesByFilter getConcernsCaseSummariesByFilter,
+			IGetConcernSearchCriterias getConcernSearchCriterias)
 		{
 			_logger = logger;
 			_createConcernsCase = createConcernsCase;
@@ -55,6 +57,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			_getActiveConcernsCaseSummariesForUsersTeam = getActiveConcernsCaseSummariesForUsersTeam;
 			_getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
 			_getConcernsCaseSummariesByFilter = getConcernsCaseSummariesByFilter;
+			_getConcernSearchCriterias = getConcernSearchCriterias;
 		}
 
 		[HttpPost]
@@ -160,12 +163,25 @@ namespace ConcernsCaseWork.API.Features.Case
         }
 
 		[HttpGet]
+		[Route("search/criterias")]
+		[MapToApiVersion("2.0")]
+		public ActionResult<ApiSingleResponseV2<CaseSearchParametersResponse>> GetCaseSearchCriterias()
+		{
+			var criterias = _getConcernSearchCriterias.Execute();
+
+			var response = new ApiSingleResponseV2<CaseSearchParametersResponse>(criterias);
+			return Ok(response);
+		}
+
+		[HttpGet]
 		[Route("summary/all")]
 		[MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetAllSummariesByFilter(
         [FromQuery] Region[] regions = null,
         [FromQuery] CaseStatus[] statuses = null,
-        int? page = null,
+		[FromQuery] string[] owners = null,
+		[FromQuery] string[] teamLeaders = null,
+		int? page = null,
         int? count = null)
         {
             _logger.LogInformation("Attempting to get all Concerns Case summaries page {Page} count {Count}", page, count);
@@ -173,6 +189,8 @@ namespace ConcernsCaseWork.API.Features.Case
             var parameters = new GetCaseSummariesByFilterParameters()
             {
                 Regions = regions,
+				Owners = owners,
+				TeamLeaders = teamLeaders,
 				Statuses = statuses,
 				Page = page,
                 Count = count
