@@ -16,6 +16,7 @@ public static class CaseSummaryResponseFactory
 			CaseUrn = caseSummary.CaseUrn,
 			CreatedAt = caseSummary.CreatedAt,
 			CreatedBy = caseSummary.CreatedBy,
+			TeamLedBy = caseSummary.TeamLedBy,
 			Decisions = Create(caseSummary.Decisions),
 			FinancialPlanCases = Create(caseSummary.FinancialPlanCases),
 			NtiWarningLetters = Create(caseSummary.NtiWarningLetters),

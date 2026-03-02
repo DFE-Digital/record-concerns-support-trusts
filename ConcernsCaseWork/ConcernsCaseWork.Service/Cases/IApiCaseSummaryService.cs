@@ -1,10 +1,11 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Service.Base;
 
 namespace ConcernsCaseWork.Service.Cases;
 
 public interface IApiCaseSummaryService
 {
-	//Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker);
+	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetAllCaseSummariesByFilter(Region[] regions = null, CaseStatus[] statuses = null, int? page = 1);
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker, int? page);
 	Task<ApiListWrapper<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page);
 	Task<ApiListWrapper<ClosedCaseSummaryDto>> GetClosedCaseSummariesByCaseworker(string caseworker, int? page);

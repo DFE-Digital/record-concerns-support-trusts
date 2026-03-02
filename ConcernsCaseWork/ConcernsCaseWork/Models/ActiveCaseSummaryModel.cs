@@ -22,6 +22,7 @@ public record ActiveCaseSummaryModel : CaseSummaryModel
 	public IEnumerable<string> ActiveConcerns { get; set; }
 	public long RatingId { get; set; }
 	public string CaseLastUpdatedAt { get; internal set; }
+    public string TeamLedBy { get; set; }
 }
 
 public record ClosedCaseSummaryModel : CaseSummaryModel

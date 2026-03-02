@@ -7,6 +7,7 @@ namespace ConcernsCaseWork.Data.Gateways;
 
 public interface ICaseSummaryGateway
 {
+	Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
 	Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters);
 	Task<(IList<ClosedCaseSummaryVm>, int)> GetClosedCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters);
@@ -43,6 +44,38 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
 		return (cases, recordCount);
 	}
+
+    public async Task<(IList<ActiveCaseSummaryVm>, int)> GetCaseSummariesByFilter(GetCaseSummariesByFilterParameters parameters)
+    {
+        var queryBuilder = _concernsDbContext.ConcernsCase
+            .OrderByDescending(c => c.CreatedAt)
+            .AsQueryable();
+
+        if (parameters.Regions != null && parameters.Regions.Any())
+        {
+            queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
+        }
+
+        if (parameters.Statuses != null && parameters.Statuses.Length > 0)
+        {
+			var statusIds = parameters.Statuses.Select(s => (int)s).ToArray();
+
+			queryBuilder = queryBuilder.Where(c => statusIds.Contains(c.StatusId));
+        }
+
+        var recordCount = await queryBuilder.CountAsync();
+
+        if (parameters.Page.HasValue && parameters.Count.HasValue)
+        {
+            queryBuilder = queryBuilder.Paginate(parameters.Page.Value, parameters.Count.Value);
+        }
+
+        var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
+
+        var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+
+        return (cases, recordCount);
+    }
 
 	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByOwner(GetCaseSummariesByOwnerParameters parameters)
 	{
@@ -149,6 +182,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			CaseUrn = cases.Urn,
 			CreatedAt = cases.CreatedAt,
 			CreatedBy = cases.CreatedBy,
+			TeamLedBy = cases.TeamLedBy,
 			Rating = cases.Rating,
 			StatusName = cases.Status.Name,
 			TrustUkPrn = cases.TrustUkprn,
@@ -250,6 +284,14 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 public class GetCaseSummariesByTrustParameters
 {
 	public string TrustUkPrn { get; set; }
+	public int? Page { get; set; }
+	public int? Count { get; set; }
+}
+
+public class GetCaseSummariesByFilterParameters
+{
+	public Region[] Regions { get; set; }
+	public CaseStatus[] Statuses { get; set; }
 	public int? Page { get; set; }
 	public int? Count { get; set; }
 }

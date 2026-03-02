@@ -33,6 +33,7 @@ public record ActiveCaseSummaryVm : CaseSummaryVm
 	public IEnumerable<Concern> ActiveConcerns { get; set; }
 	public ConcernsRating Rating { get; set; }
 	public DateTime? CaseLastUpdatedAt { get; set; }
+	public string TeamLedBy { get; set; }
 }
 
 public record ClosedCaseSummaryVm : CaseSummaryVm

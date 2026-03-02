@@ -1,12 +1,10 @@
 ﻿@using ConcernsCaseWork.Utils.Extensions;
 @model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
-<table class="govuk-table" id="active-cases" aria-label="Active cases">
-    <caption class="govuk-table__caption govuk-table__caption--s dfe-u-font-weight-normal govuk-!-margin-bottom-3">
-        Active cases
-    </caption>
+
+<table class="govuk-table" id="active-cases">
     <thead class="govuk-table__head">
         <tr class="govuk-table__row tr__large">
-            <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-label="Case identification number">
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col">
                 Case ID
             </th>
             <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
@@ -24,14 +22,17 @@
             <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
                 Owned by
             </th>
+            <th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+                Team leader
+            </th>
         </tr>
     </thead>
     <tbody class="govuk-table__body">
         @if (Model.Count == 0)
         {
             <tr class="govuk-table__row tr__large">
-                <td class="govuk-table__cell__cases govuk-oneline-row" colspan="6" data-testid="no-cases" aria-live="polite">
-                    <span>There are no active cases available at this time.</span>
+                <td class="govuk-table__cell__cases govuk-oneline-row" data-testid="no-cases">
+                    <span>There are no cases available.</span>
                 </td>
             </tr>
         }
@@ -41,19 +42,19 @@
             {
                 <tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
                     <td class="govuk-table__cell" data-testid="case-id">
-                        <a class="govuk-link" href="/case/@activeCase.CaseUrn/management" aria-label="View case @activeCase.CaseUrn details">@activeCase.CaseUrn</a>
+                        <a class="govuk-link" href="/case/@activeCase.CaseUrn/management" data-cy="case-management-link">@activeCase.CaseUrn</a>
                     </td>
                     @if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
                     {
                         <td class="govuk-table__cell">
-                            <span aria-label="No active case content">There are no active concerns, actions or decisions.</span>
+                            <span>There are no active concerns, actions or decisions.</span>
                         </td>
                     }
 
                     @if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
                     {
                         <td class="govuk-table__cell">
-                            <h4 class="concerns-secondary-text-colour">Actions and decisions</h4>
+                            <div class="concerns-secondary-text-colour">Actions and decisions</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var action in activeCase.ActiveActionsAndDecisions)
                                 {
@@ -72,15 +73,15 @@
                     @if (activeCase.ActiveConcerns.Any())
                     {
                         <td class="govuk-table__cell">
-                            <h4 class="concerns-secondary-text-colour">Concerns</h4>
+                            <div class="concerns-secondary-text-colour">Concerns</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var concern in activeCase.ActiveConcerns)
                                 {
                                     <li data-testid="concern">@concern</li>
                                 }
                             </ul>
-                            <h4 class="concerns-secondary-text-colour">Risk to trust</h4>
-                            <div class="govuk-label-wrapper" data-testid="risk-to-trust-list" aria-label="Trust risk rating">
+                            <div class="concerns-secondary-text-colour">Risk to trust</div>
+                            <div class="govuk-label-wrapper" data-testid="risk-to-trust-list">
                                 <partial name="_RatingLabel" model="@activeCase.RatingId" />
                             </div>
                         </td>
@@ -98,6 +99,9 @@
                     </td>
                     <td class="govuk-table__cell" data-testid="created-by">
                         @activeCase.CreatedBy
+                    </td>
+                    <td class="govuk-table__cell" data-testid="managed-by">
+                        @activeCase.TeamLedBy
                     </td>
                 </tr>
             }

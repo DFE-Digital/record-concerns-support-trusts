@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -34,6 +35,15 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 	{
 		_caseSummaryService = caseSummaryService;
 		_trustCachedService = trustCachedService;
+	}
+
+	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetCaseSummariesByFilter(
+		Region[] regions = null,
+		CaseStatus[] statuses = null,
+		int? page = 1)
+	{
+		var caseSummaries = await _caseSummaryService.GetAllCaseSummariesByFilter(regions, statuses, page);
+		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
 	public async Task<CaseSummaryGroupModel<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker, int? page = 1)
@@ -110,6 +120,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
+					TeamLedBy = GetDisplayUserName(caseSummary.TeamLedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					RatingId = caseSummary.Rating.Id,
 					StatusName = caseSummary.StatusName,
