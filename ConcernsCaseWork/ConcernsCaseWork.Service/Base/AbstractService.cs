@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Service.Base
 
 		}
 
-		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
+		public virtual Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
