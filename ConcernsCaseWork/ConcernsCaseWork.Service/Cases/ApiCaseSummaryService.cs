@@ -3,7 +3,6 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 
 namespace ConcernsCaseWork.Service.Cases;
 

@@ -13,6 +13,45 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public static readonly Fixture _fixture = new();
 
 		[Test]
+		public async Task GetCaseSearchCriterias_ReturnsCaseSearchParametersDto()
+		{
+			// Arrange
+			var loggerMock = new Mock<ILogger<ApiCaseSummaryService>>();
+			var correlationContextMock = new Mock<ICorrelationContext>();
+			var clientFactoryMock = new Mock<IHttpClientFactory>();
+			var userInfoServiceMock = new Mock<IClientUserInfoService>();
+
+			var serviceMock = new Mock<ApiCaseSummaryService>(
+				loggerMock.Object,
+				correlationContextMock.Object,
+				clientFactoryMock.Object,
+				userInfoServiceMock.Object
+			)
+			{ CallBase = true };
+
+			var expectedDto = new CaseSearchParametersDto
+			{
+				CaseOwners = ["owner1", "owner2"],
+				TeamLeaders = ["leader1", "leader2"]
+			};
+
+			serviceMock
+				.Setup(x => x.Get<CaseSearchParametersDto>(It.IsAny<string>(), false))
+				.ReturnsAsync(expectedDto);
+
+			// Act
+			var result = await serviceMock.Object.GetCaseSearchCriterias();
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.Multiple(() =>
+			{
+				Assert.That(expectedDto.CaseOwners, Is.EqualTo(result.CaseOwners));
+				Assert.That(expectedDto.TeamLeaders, Is.EqualTo(result.TeamLeaders));
+			});
+		}
+
+		[Test]
 		public async Task GetAllCaseSummariesByFilter_ReturnsExpectedResult()
 		{
 			// Arrange
