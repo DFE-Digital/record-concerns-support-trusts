@@ -40,8 +40,8 @@ public class CaseFilters
 
     public void SetCaseOwners(List<string> caseOwners)
     {
-        CaseOwners = [.. caseOwners, .. new[] { "joe.bloggs@education.gov.uk", "luther.king@education.gov.uk" }];
-    }
+		CaseOwners = caseOwners;
+	}
 
 	public void SetCaseTeamLeaders(List<string> teamLeaders)
 	{
