@@ -6,10 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-18.1067..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-03.1083..HEAD)
 
-- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
 ---
+
+## [64.0.0][64.0.0] - 2026-03-03
+
+### Added
+- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
+- 265489 - Update link to new RMF framework - create a case
+- 256985 - Inclusion of RAG Status Rational
 
 ## [63.0.1][63.0.1] - 2026-02-18
 
