@@ -1,8 +1,9 @@
 ﻿@using ConcernsCaseWork.Constants;
-
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 <div class="govuk-hint">
     Use the 
-    <a target="_blank" href="https://educationgovuk.sharepoint.com/:p:/s/lveefa00003/ERdAuIIBtxNKrt-QHPcwEdEBWUWUj993tjSa8CleF5prOw?e=hTuwVW" class="govuk-link" rel="noreferrer noopener">
+    <a target="_blank" href="@Configuration["Links:RiskManagementFramework"]" class="govuk-link" rel="noreferrer noopener">
         Risk Management Framework (opens in new tab)
     </a>to assess the concern.
 </div>
