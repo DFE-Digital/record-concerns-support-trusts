@@ -1,7 +1,7 @@
 import { getUkLocalDateFormatted } from 'cypress/support/formatDate';
 import { EnvApi } from '../constants/cypressConstants';
 import { ApiBase } from './apiBase';
-import { GetConcernResponse, ResponseWrapper } from './apiDomain';
+import { CreateConcernOptions, GetConcernResponse, ResponseWrapper } from './apiDomain';
 
 class ConcernsApi extends ApiBase {
     public get(caseId: number): Cypress.Chainable<Array<GetConcernResponse>> {
@@ -16,7 +16,7 @@ class ConcernsApi extends ApiBase {
             });
     }
 
-    public post(caseId: number): Cypress.Chainable {
+    public post(caseId: number, options?: CreateConcernOptions): Cypress.Chainable {
         const currentDate = getUkLocalDateFormatted();
 
         return cy.request({
@@ -26,14 +26,14 @@ class ConcernsApi extends ApiBase {
             body: {
                 createdAt: currentDate,
                 reviewAt: currentDate,
-                name: 'Governance and compliance',
-                description: 'Compliance',
-                reason: 'Governance and compliance: Compliance',
+                name: options?.name ?? 'Governance and compliance',
+                description: options?.description ?? 'Compliance',
+                reason: options?.reason ?? 'Governance and compliance: Compliance',
                 caseUrn: caseId,
-                typeId: 30,
-                ratingId: 4,
+                typeId: options?.typeId ?? 30,
+                ratingId: options?.ratingId ?? 4,
                 statusId: 1,
-                meansOfReferralId: 1,
+                meansOfReferralId: options?.meansOfReferralId ?? 1,
             },
         });
     }

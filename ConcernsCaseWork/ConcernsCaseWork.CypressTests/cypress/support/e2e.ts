@@ -16,7 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import { AuthenticationInterceptorParams } from 'cypress/auth/authenticationInterceptor';
 import './commands';
-import { CreateCaseRequest, CreateCaseResponse } from 'cypress/api/apiDomain';
+import { CreateCaseRequest, CreateCaseResponse, CreateConcernOptions } from 'cypress/api/apiDomain';
 
 declare global {
     namespace Cypress {
@@ -28,7 +28,7 @@ declare global {
             loginWithCredentials(): Chainable<Element>;
             acceptCookies(): Chainable<Element>;
             excuteAccessibilityTests(): Chainable<Element>;
-            basicCreateCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
+            basicCreateCase(request?: CreateCaseRequest, concernOptions?: CreateConcernOptions): Chainable<CreateCaseResponse>;
             createNonConcernsCase(request?: CreateCaseRequest): Chainable<CreateCaseResponse>;
             closeCase(): Chainable<Element>;
         }

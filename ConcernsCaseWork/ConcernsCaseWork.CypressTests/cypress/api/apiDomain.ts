@@ -43,6 +43,15 @@ export type GetConcernResponse = {
     meansOfReferralId: number;
 };
 
+export type CreateConcernOptions = {
+    typeId?: number;
+    ratingId?: number;
+    meansOfReferralId?: number;
+    name?: string;
+    description?: string;
+    reason?: string;
+};
+
 export type GetOpenCasesByOwnerResponse = {};
 
 export type GetOpenCasesForTeamByOwnerResponse = {};
