@@ -6,10 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-02-18.1067..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-05.1091..HEAD)
 
-- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
+
 ---
+
+## [65.0.0][65.0.0] - 2026-03-05
+
+### Added
+- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
+- 265489 - Update link to new RMF framework - create a case
+- 256985 - Inclusion of RAG Status Rational
+
+
+## [64.0.1][64.0.1] - 2026-03-03
+
+### Removed
+- Roll back of release 64.0.0 - WAF issue raised. 
+
+## [64.0.0][64.0.0] - 2026-03-03
+
+### Added
+- 265506 - Recast RMF Categories Selectable on Concerns added to existing cases
+- 265489 - Update link to new RMF framework - create a case
+- 256985 - Inclusion of RAG Status Rational
 
 ## [63.0.1][63.0.1] - 2026-02-18
 
@@ -483,7 +503,9 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
-
+[65.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-05.1091
+[64.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-03.1086
+[64.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-03.1083
 [63.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-18.1067
 [63.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-16.1060
 [62.2.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-02-11.1039
