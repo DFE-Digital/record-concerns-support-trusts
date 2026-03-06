@@ -1,0 +1,48 @@
+﻿@page
+@using ConcernsCaseWork.Models
+@model ConcernsCaseWork.Pages.All.AllCasesPageModel
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
+
+@{
+    ViewData["Title"] = "View all cases";
+    ViewBag.LayoutModel = new LayoutModel()
+    {
+        AllCasesTabActive = true
+    };
+}
+
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<main class="govuk-extra-width-container" aria-labelledby="main-heading" id="main-content">
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <div role="alert" aria-live="assertive" aria-atomic="true">
+            <partial name="_BannerError" />
+            <partial name="_Error" />
+        </div>
+    }
+    else
+    {
+        <header role="banner">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading" id="main-heading">
+                    All cases
+                </h1>
+            </legend>
+        </header>
+
+        <section role="search" aria-labelledby="filter-heading">
+            <h2 id="filter-heading" class="govuk-visually-hidden">Filter cases</h2>
+            <partial name="_CaseFilter" model="Model.Filters" />
+        </section>
+
+        <section aria-labelledby="cases-heading" aria-live="polite" class="govuk-!-margin-top-4">
+            <h2 id="cases-heading" class="govuk-visually-hidden">Cases list</h2>
+            <partial name="_CasesAllActive" model="Model.AllCases" />
+        </section>
+
+        <nav role="navigation" aria-label="Pagination navigation">
+            <partial name="_Pagination" model="Model.Pagination" />
+        </nav>
+    }
+</main>

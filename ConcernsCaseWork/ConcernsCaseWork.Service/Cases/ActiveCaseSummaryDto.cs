@@ -33,6 +33,7 @@ public record CaseSummaryDto
 public record ActiveCaseSummaryDto : CaseSummaryDto
 {
 	public IEnumerable<ConcernSummaryDto> ActiveConcerns { get; set; }
+	public string TeamLedBy { get; set; }
 }
 
 public record ClosedCaseSummaryDto : CaseSummaryDto
