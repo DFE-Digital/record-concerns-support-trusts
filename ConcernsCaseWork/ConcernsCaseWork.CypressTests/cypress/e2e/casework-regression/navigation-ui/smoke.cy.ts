@@ -27,26 +27,12 @@ import caseworkTable from 'cypress/pages/caseRows/caseworkTable';
 import actionTable from 'cypress/pages/caseRows/caseActionTable';
 import { toDisplayDate } from 'cypress/support/formatDate';
 import actionSummaryTable from 'cypress/pages/caseActions/summary/actionSummaryTable';
-import { CreateCasePage } from 'cypress/pages/createCase/createCasePage';
-import CreateConcernPage from 'cypress/pages/createCase/createConcernPage';
-import AddTerritoryPage from 'cypress/pages/createCase/addTerritoryPage';
-import AddConcernDetailsPage from 'cypress/pages/createCase/addConcernDetailsPage';
-import AddDetailsPage from 'cypress/pages/createCase/addDetailsPage';
-import createCaseSummary from 'cypress/pages/createCase/createCaseSummary';
-import selectCaseTypePage from 'cypress/pages/createCase/selectCaseTypePage';
-import { SourceOfConcernExternal } from 'cypress/constants/selectorConstants';
-import selectCaseDivisionPage from 'cypress/pages/createCase/selectCaseDivisionPage';
+import { CaseBuilder } from '../../../api/caseBuilder';
 
 describe('Smoke - Testing closing of cases when there are case actions and concerns', () => {
     let caseId: string;
     let trustName: string = 'Production Smoke Test Trust';
     let now: Date;
-
-    const createCasePage = new CreateCasePage();
-    const createConcernPage = new CreateConcernPage();
-    const addTerritoryPage = new AddTerritoryPage();
-    const addConcernDetailsPage = new AddConcernDetailsPage();
-    const addDetailsPage = new AddDetailsPage();
 
     const editFinancialPlanPage = new EditFinancialPlanPage();
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
@@ -77,76 +63,22 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
     beforeEach(() => {
         cy.login();
         cy.acceptCookies();
-        // cy.loginWithCredentials();
         now = new Date();
 
-        Logger.log('Create a case');
-        createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
+        const caseRequest = CaseBuilder.buildOpenCase();
+        caseRequest.trustUkprn = '91674356';
+        caseRequest.territory = 3;
+        caseRequest.issue = 'This is an issue';
 
-        Logger.log('Create a valid case division');
-        selectCaseDivisionPage.withCaseDivision('SFSO').continue();
-
-        createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', '');
-
-        Logger.log('Populate territory');
-        addTerritoryPage.withTerritory('North - North East').nextStep();
-
-        Logger.log('Create team leader');
-        createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
-
-        createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
-
-        Logger.log('Create a valid concerns case type');
-        selectCaseTypePage.withCaseType('Concerns').continue();
-
-        createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
-
-        Logger.log('Create a valid concern');
-        createConcernPage
-            .withConcernType('Actual and/or projected deficit')
-            .withConcernRating('Red-Amber')
-            .withMeansOfReferral(SourceOfConcernExternal)
-            .addConcern();
-
-        Logger.log('Check Concern details are correctly populated');
-        createCaseSummary
-            .hasTrustSummaryDetails(trustName)
-            .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Actual and/or projected deficit')
-            .hasConcernRiskRating('Red Amber');
-
-        createConcernPage.nextStep();
-
-        Logger.log('Check Trust, concern and risk to trust details are correctly populated');
-        createCaseSummary
-            .hasTrustSummaryDetails(trustName)
-            .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Actual and/or projected deficit')
-            .hasConcernRiskRating('Red Amber');
-
-        Logger.log('Populate risk to trust');
-        addDetailsPage.withRiskToTrust('Red Plus').withConcernRatingRational('no').nextStep();
-
-        Logger.log('Check Trust, concern, risk to trust details and territory are correctly populated');
-        createCaseSummary
-            .hasTrustSummaryDetails(trustName)
-            .hasManagedBy('SFSO', 'North - North East')
-            .hasConcernType('Actual and/or projected deficit')
-            .hasConcernRiskRating('Red Amber')
-            .hasRiskToTrust('Red Plus');
-
-        Logger.log('Add concern details with valid text limit');
-        addConcernDetailsPage
-            .withIssue('This is an issue')
-            .withCurrentStatus('This is the current status')
-            .withCaseAim('This is the case aim')
-            .withDeEscalationPoint('This is the de-escalation point')
-            .withNextSteps('This is the next steps')
-            .withCaseHistory('This is the case history')
-            .createCase();
-
-        CaseManagementPage.getCaseIDText().then((id: string) => {
-            caseId = id;
+        cy.basicCreateCase(caseRequest, {
+            typeId: 27,
+            ratingId: 3,
+            meansOfReferralId: 2,
+            name: 'Actual and/or projected deficit',
+            description: 'Actual and/or projected deficit',
+            reason: 'Actual and/or projected deficit',
+        }).then((caseResponse) => {
+            caseId = caseResponse.urn.toString();
         });
     });
 
@@ -446,11 +378,11 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
             .hasConcerns('Actual and/or projected deficit')
             .hasManagedBy('SFSO', 'North - North East')
             .hasIssue('This is an issue')
-            .hasCurrentStatus('This is the current status')
-            .hasCaseAim('This is the case aim')
-            .hasDeEscalationPoint('This is the de-escalation point')
-            .hasNextSteps('This is the next steps')
-            .hasCaseHistory('This is the case history')
+            .hasCurrentStatus('current status')
+            .hasCaseAim('case aim')
+            .hasDeEscalationPoint('de-escalation point')
+            .hasNextSteps('next steps')
+            .hasCaseHistory('case history')
             .hasRationaleForClosure('Closing case');
 
         Logger.log('Checking accessibility on close case details');

@@ -7,7 +7,7 @@ import { Logger } from '../common/logger';
 import { AuthenticationComponent } from '../auth/authenticationComponent';
 import { CaseBuilder } from 'cypress/api/caseBuilder';
 import caseMangementPage from 'cypress/pages/caseMangementPage';
-import { CreateCaseRequest } from 'cypress/api/apiDomain';
+import { CreateCaseRequest, CreateConcernOptions } from 'cypress/api/apiDomain';
 
 Cypress.Commands.add('getByTestId', (id) => {
     cy.get(`[data-testid="${id}"]`);
@@ -92,14 +92,14 @@ Cypress.Commands.add('createNonConcernsCase', (request?: CreateCaseRequest) => {
     });
 });
 
-Cypress.Commands.add('basicCreateCase', (request?: CreateCaseRequest) => {
+Cypress.Commands.add('basicCreateCase', (request?: CreateCaseRequest, concernOptions?: CreateConcernOptions) => {
     if (request == null) {
         request = CaseBuilder.buildOpenCase();
     }
 
     caseApi.post(request).then((caseResponse) => {
         const caseId = caseResponse.urn;
-        concernsApi.post(caseId);
+        concernsApi.post(caseId, concernOptions);
 
         cy.visit(`/case/${caseId}/management`);
         cy.reload();
