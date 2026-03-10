@@ -32,7 +32,6 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
-      <ProjectReference Include="..\ConcernsCaseWork\ConcernsCaseWork.csproj" />
     </ItemGroup>
 
     <ItemGroup>
