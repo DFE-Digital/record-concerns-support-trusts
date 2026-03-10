@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿#nullable enable
+using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Models;
 using FluentAssertions;
