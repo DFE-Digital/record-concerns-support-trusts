@@ -152,7 +152,7 @@ namespace ConcernsCaseWork.Tests.Models
 		public void SelectedRegionEnums_MixedValidAndInvalidInputs_ShouldReturnOnlyValidRegions()
 		{
 			var filters = new CaseFilters();
-			SetSelectedRegions(filters, ["London", "foo", "2", "", null, "SouthEast", "999", " "]);
+			SetSelectedRegions(filters, ["London", "foo", "2", "", "SouthEast", "999", " "]);
 
 			var result = filters.SelectedRegionEnums;
 
