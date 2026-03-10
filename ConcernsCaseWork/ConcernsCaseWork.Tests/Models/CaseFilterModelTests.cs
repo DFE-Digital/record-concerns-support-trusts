@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Tests.Models
 		public void PersistUsing_EmptyFilterStore_AllSelectedProperties_ShouldBeEmpty()
 		{
 			var filters = new CaseFilters();
-			var filterStore = new Dictionary<string, object>();
+			var filterStore = new Dictionary<string, object?>();
 
 			var result = filters.PersistUsing(filterStore);
 
@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var filters = new CaseFilters();
 			var expectedRegions = new[] { nameof(Region.EastMidlands), nameof(Region.London) };
 
-			var filterStore = new Dictionary<string, object> { { CaseFilters.FilterRegions, expectedRegions } };
+			var filterStore = new Dictionary<string, object?> { { CaseFilters.FilterRegions, expectedRegions } };
 
 			filters.PersistUsing(filterStore);
 
@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var expectedOwners = new[] { "Alice", "Bob" };
 			var expectedLeaders = new[] { "Carol" };
 			var expectedStatuses = new[] { nameof(CaseStatus.Close), nameof(CaseStatus.Live) };
-			var filterStore = new Dictionary<string, object>
+			var filterStore = new Dictionary<string, object?>
 			{
 				{ CaseFilters.FilterRegions, expectedRegions },
 				{ CaseFilters.FilterCaseOwners, expectedOwners },
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Models
 		public void PersistUsing_KeyWithNullValue_SelectedProperty_ShouldBeEmpty(string key)
 		{
 			var filters = new CaseFilters();
-			var filterStore = new Dictionary<string, object> { { key, null } };
+			var filterStore = new Dictionary<string, object?> { { key, null } };
 
 			filters.PersistUsing(filterStore);
 
@@ -91,7 +91,7 @@ namespace ConcernsCaseWork.Tests.Models
 		public void PersistUsing_KeyWithWrongTypeValue_SelectedProperty_ShouldBeEmpty(string key)
 		{
 			var filters = new CaseFilters();
-			var filterStore = new Dictionary<string, object> { { key, 123 } };
+			var filterStore = new Dictionary<string, object?> { { key, 123 } };
 
 			filters.PersistUsing(filterStore);
 
@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Tests.Models
 		{
 			var filters = new CaseFilters();
 			var expectedOwners = new[] { "Owner1" };
-			var filterStore = new Dictionary<string, object> { { "UnexpectedKey", new[] { "Value" } }, { CaseFilters.FilterCaseOwners, expectedOwners } };
+			var filterStore = new Dictionary<string, object?> { { "UnexpectedKey", new[] { "Value" } }, { CaseFilters.FilterCaseOwners, expectedOwners } };
 
 			filters.PersistUsing(filterStore);
 
@@ -306,7 +306,7 @@ namespace ConcernsCaseWork.Tests.Models
 		[TestCase(null, new string[0], new string[0], TestName = "SetCaseTeamLeaders_EmptyList_ShouldAssignEmptyList")]
 		[TestCase(null, new[] { "A" }, new[] { "A" }, TestName = "SetCaseTeamLeaders_SingleItem_ShouldAssignCorrectly")]
 		[TestCase(null, new[] { "A", "B", "C" }, new[] { "A", "B", "C" }, TestName = "SetCaseTeamLeaders_MultipleItems_ShouldAssignCorrectly")]
-		public void SetCaseTeamLeaders_VariousInputs_ShouldAssignCorrectly(string[] initialList, string[] inputList, string[] expectedList)
+		public void SetCaseTeamLeaders_VariousInputs_ShouldAssignCorrectly(string[]? initialList, string[]? inputList, string[]? expectedList)
 		{
 			var model = new CaseFilters();
 			if (initialList != null)
@@ -314,7 +314,7 @@ namespace ConcernsCaseWork.Tests.Models
 				model.SetCaseTeamLeaders([..initialList]);
 			}
 
-			List<string> input = inputList == null ? null : [..inputList];
+			List<string> input = inputList == null ? [] : [..inputList];
 
 			model.SetCaseTeamLeaders(input);
 
