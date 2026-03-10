@@ -1,3 +1,4 @@
+@using System.Web
 @using ConcernsCaseWork.API.Contracts.Case
 @using ConcernsCaseWork.Utils.Extensions
 @model ConcernsCaseWork.Models.CaseFilters
@@ -5,42 +6,22 @@
 @{
     string BuildRemoveRegionLink(Region toRemove)
     {
-        var remaining = Model.SelectedRegionEnums.Where(r => r != toRemove).Select(r => ((int)r).ToString()).ToArray();
-
-        if (remaining.Length == 0)
-        {
-            return Url.RouteUrl(ViewContext.RouteData.Values) ?? "?";
-        }
-
-        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedRegionsKey}={Uri.EscapeDataString(v)}"));
-        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedRegions={(int)toRemove}";
     }
 
     string BuildRemoveCaseOwnerLink(string toRemove)
     {
-        var remaining = Model.SelectedCaseOwners.Where(r => r != toRemove).ToArray();
-        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedCaseOwnerKey}={Uri.EscapeDataString(v)}"));
-        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+	    return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedCaseOwners={HttpUtility.UrlEncode(toRemove)}";
     }
 
     string BuildRemoveCaseTeamLeaderLink(string toRemove)
     {
-        var remaining = Model.SelectedTeamLeaders.Where(r => r != toRemove).ToArray();
-        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedCaseTeamLeaderKey}={Uri.EscapeDataString(v)}"));
-        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedTeamLeaders={HttpUtility.UrlEncode(toRemove)}";
     }
 
     string BuildRemoveStatusLink(CaseStatus toRemove)
     {
-        var remaining = Model.SelectedStatusEnums.Where(r => r != toRemove).Select(r => ((int)r).ToString()).ToArray();
-
-        if (remaining.Length == 0)
-        {
-            return Url.RouteUrl(ViewContext.RouteData.Values) ?? "?";
-        }
-
-        var qs = string.Join("&", remaining.Select(v => $"{Models.CaseFilters._selectedStatusesKey}={Uri.EscapeDataString(v)}"));
-        return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?{qs}";
+	    return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedStatuses={(int)toRemove}";
     }
 
     string ClearLink() => $"{Url.RouteUrl(ViewContext.RouteData.Values)}?clear=1"; /* TODO don't need the clear */

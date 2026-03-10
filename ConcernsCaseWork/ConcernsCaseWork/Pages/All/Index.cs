@@ -39,7 +39,7 @@ public class AllCasesPageModel(
 			Filters.SetCaseOwners(criterias.CaseOwners);
 			Filters.SetCaseTeamLeaders(criterias.TeamLeaders);
 
-			Filters.PopulateFrom(Request.Query);
+			Filters.PersistUsing(TempData).PopulateFrom(Request.Query);
 
 			// Get filtered cases
 			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(

@@ -44,9 +44,16 @@
             foreach (var activeCase in Model)
             {
                 <tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
-                    <td class="govuk-table__cell" data-testid="case-id">
-                        <a class="govuk-link" href="/case/@activeCase.CaseUrn/management" data-cy="case-management-link">@activeCase.CaseUrn</a>
-                    </td>
+	                <td class="govuk-table__cell" data-testid="case-id">
+                        @if (activeCase.IsClosed)
+                        {
+                            <a class="govuk-link" href="/case/@activeCase.CaseUrn/closed" data-cy="case-management-link">@activeCase.CaseUrn</a>
+                        }
+                        else
+                        {
+							<a class="govuk-link" href="/case/@activeCase.CaseUrn/management" data-cy="case-management-link">@activeCase.CaseUrn</a>
+                        }
+	                </td>
                     @if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
                     {
                         <td class="govuk-table__cell">

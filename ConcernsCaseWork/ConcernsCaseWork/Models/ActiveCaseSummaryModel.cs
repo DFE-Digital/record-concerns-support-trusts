@@ -14,6 +14,8 @@ public abstract record CaseSummaryModel
 
 	public Division? Division { get; set; }
 	public string? Area { get; set; }
+
+	public bool IsClosed => StatusName == nameof(CaseStatus.Close);
 }
 
 public record ActiveCaseSummaryModel : CaseSummaryModel
