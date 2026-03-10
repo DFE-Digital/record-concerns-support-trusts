@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Utils.Extensions;
 
 public static class EnumExtensions
 {
-	public static string Description(this Enum value)
+	public static string? Description(this Enum value)
 	{
 		FieldInfo fi = value.GetType().GetField(value.ToString());
 
