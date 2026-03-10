@@ -320,7 +320,7 @@ namespace ConcernsCaseWork.Tests.Models
 
 			if (expectedList == null)
 			{
-				model.TeamLeaders.Should().BeNull();
+				model.TeamLeaders.Should().BeEmpty();
 			}
 			else
 			{
