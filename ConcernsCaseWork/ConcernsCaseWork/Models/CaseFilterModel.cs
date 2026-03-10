@@ -1,7 +1,6 @@
 #nullable enable
 using ConcernsCaseWork.API.Contracts.Case;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -33,14 +32,14 @@ public class CaseFilters
 
 	public Region[] SelectedRegionEnums =>
 		[.. SelectedRegions
-            .Select(TryParseRegion)
+            .Select(TryParseAs<Region>)
             .Where(r => r.HasValue)
             .Select(r => r!.Value)
             .Distinct()];
 
 	public CaseStatus[] SelectedStatusEnums =>
 		[.. SelectedStatuses
-			.Select(TryParseStatus)
+			.Select(TryParseAs<CaseStatus>)
 			.Where(r => r.HasValue)
 			.Select(r => r!.Value)
 			.Distinct()];
@@ -141,28 +140,15 @@ public class CaseFilters
 
 		return value;
 	}
-
-	private static Region? TryParseRegion(string? input)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return null;
-
-        if (int.TryParse(input, out var i) && Enum.IsDefined(typeof(Region), i))
-            return (Region)i;
-
-        if (Enum.TryParse<Region>(input, ignoreCase: true, out var r) && Enum.IsDefined(typeof(Region), r))
-            return r;
-
-        return null;
-    }
-
-	private static CaseStatus? TryParseStatus(string? input)
+	
+	private static T? TryParseAs<T>(string? input) where T : struct, Enum
 	{
 		if (string.IsNullOrWhiteSpace(input)) return null;
 
-		if (int.TryParse(input, out var i) && Enum.IsDefined(typeof(CaseStatus), i))
-			return (CaseStatus)i;
+		if (int.TryParse(input, out var i) && Enum.IsDefined(typeof(T), i))
+				return (T)Enum.ToObject(typeof(T), i);
 
-		if (Enum.TryParse<CaseStatus>(input, ignoreCase: true, out var r) && Enum.IsDefined(typeof(CaseStatus), r))
+		if (Enum.TryParse<T>(input, ignoreCase: true, out var r) && Enum.IsDefined(typeof(T), r))
 			return r;
 
 		return null;
