@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 ## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-05.1091..HEAD)
 
+### Changed
+- 270399 - Changed Risk management URL
 
 ---
 
