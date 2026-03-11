@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [65.0.1][65.0.1] - 2026-03-05
+## [65.0.1][65.0.1] - 2026-03-11
 ### Changed
 - 270399 - Changed Risk management URL
 
