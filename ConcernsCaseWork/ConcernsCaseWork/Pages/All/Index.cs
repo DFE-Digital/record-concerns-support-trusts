@@ -44,7 +44,7 @@ public class AllCasesPageModel(
 			// Get filtered cases
 			var activeCaseGroup = await _caseSummaryService.GetCaseSummariesByFilter(
 				Filters.SelectedRegionEnums, 
-				Filters.SelectedCaseOwners,
+				Filters.SelectedOwners,
 				Filters.SelectedTeamLeaders,
 				Filters.SelectedStatusEnums,
 				PageNumber);

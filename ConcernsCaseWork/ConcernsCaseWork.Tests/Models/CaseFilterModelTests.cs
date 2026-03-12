@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var result = filters.PersistUsing(filterStore);
 
 			filters.SelectedRegions.Should().BeEmpty();
-			filters.SelectedCaseOwners.Should().BeEmpty();
+			filters.SelectedOwners.Should().BeEmpty();
 			filters.SelectedTeamLeaders.Should().BeEmpty();
 			filters.SelectedStatuses.Should().BeEmpty();
 			result.Should().BeSameAs(filters);
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PersistUsing(filterStore);
 
 			filters.SelectedRegions.Should().Equal(expectedRegions);
-			filters.SelectedCaseOwners.Should().BeEmpty();
+			filters.SelectedOwners.Should().BeEmpty();
 			filters.SelectedTeamLeaders.Should().BeEmpty();
 			filters.SelectedStatuses.Should().BeEmpty();
 		}
@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var filterStore = new Dictionary<string, object?>
 			{
 				{ CaseFilters.FilterRegions, expectedRegions },
-				{ CaseFilters.FilterCaseOwners, expectedOwners },
+				{ CaseFilters.FilterOwners, expectedOwners },
 				{ CaseFilters.FilterTeamLeaders, expectedLeaders },
 				{ CaseFilters.FilterStatuses, expectedStatuses }
 			};
@@ -65,13 +65,13 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PersistUsing(filterStore);
 
 			filters.SelectedRegions.Should().Equal(expectedRegions);
-			filters.SelectedCaseOwners.Should().Equal(expectedOwners);
+			filters.SelectedOwners.Should().Equal(expectedOwners);
 			filters.SelectedTeamLeaders.Should().Equal(expectedLeaders);
 			filters.SelectedStatuses.Should().Equal(expectedStatuses);
 		}
 
 		[TestCase(CaseFilters.FilterRegions)]
-		[TestCase(CaseFilters.FilterCaseOwners)]
+		[TestCase(CaseFilters.FilterOwners)]
 		[TestCase(CaseFilters.FilterTeamLeaders)]
 		[TestCase(CaseFilters.FilterStatuses)]
 		public void PersistUsing_KeyWithNullValue_SelectedProperty_ShouldBeEmpty(string key)
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Models
 		}
 
 		[TestCase(CaseFilters.FilterRegions)]
-		[TestCase(CaseFilters.FilterCaseOwners)]
+		[TestCase(CaseFilters.FilterOwners)]
 		[TestCase(CaseFilters.FilterTeamLeaders)]
 		[TestCase(CaseFilters.FilterStatuses)]
 		public void PersistUsing_KeyWithWrongTypeValue_SelectedProperty_ShouldBeEmpty(string key)
@@ -103,11 +103,11 @@ namespace ConcernsCaseWork.Tests.Models
 		{
 			var filters = new CaseFilters();
 			var expectedOwners = new[] { "Owner1" };
-			var filterStore = new Dictionary<string, object?> { { "UnexpectedKey", new[] { "Value" } }, { CaseFilters.FilterCaseOwners, expectedOwners } };
+			var filterStore = new Dictionary<string, object?> { { "UnexpectedKey", new[] { "Value" } }, { CaseFilters.FilterOwners, expectedOwners } };
 
 			filters.PersistUsing(filterStore);
 
-			filters.SelectedCaseOwners.Should().Equal(expectedOwners);
+			filters.SelectedOwners.Should().Equal(expectedOwners);
 			filters.SelectedRegions.Should().BeEmpty();
 			filters.SelectedTeamLeaders.Should().BeEmpty();
 			filters.SelectedStatuses.Should().BeEmpty();
@@ -118,7 +118,7 @@ namespace ConcernsCaseWork.Tests.Models
 			return key switch
 			{
 				CaseFilters.FilterRegions => filters.SelectedRegions,
-				CaseFilters.FilterCaseOwners => filters.SelectedCaseOwners,
+				CaseFilters.FilterOwners => filters.SelectedOwners,
 				CaseFilters.FilterTeamLeaders => filters.SelectedTeamLeaders,
 				CaseFilters.FilterStatuses => filters.SelectedStatuses,
 				_ => throw new ArgumentException("Invalid key", nameof(key))
@@ -219,7 +219,7 @@ namespace ConcernsCaseWork.Tests.Models
 		public void IsVisible_CaseOwnersOnly_ShouldReturnTrue()
 		{
 			var filters = new CaseFilters();
-			var query = new List<KeyValuePair<string, StringValues>> { new(nameof(CaseFilters.SelectedCaseOwners), new StringValues("owner1")) };
+			var query = new List<KeyValuePair<string, StringValues>> { new(nameof(CaseFilters.SelectedOwners), new StringValues("owner1")) };
 
 			filters.PopulateFrom(query);
 
@@ -261,7 +261,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var query = new List<KeyValuePair<string, StringValues>>
 			{
 				new(nameof(CaseFilters.SelectedRegions), new StringValues(nameof(Region.London))),
-				new(nameof(CaseFilters.SelectedCaseOwners), new StringValues("owner1")),
+				new(nameof(CaseFilters.SelectedOwners), new StringValues("owner1")),
 				new(nameof(CaseFilters.SelectedTeamLeaders), new StringValues("leader1")),
 				new(nameof(CaseFilters.SelectedStatuses), new StringValues(nameof(CaseStatus.Live)))
 			};
@@ -288,7 +288,7 @@ namespace ConcernsCaseWork.Tests.Models
 			if (regions.Length > 0)
 				query.Add(new KeyValuePair<string, StringValues>(nameof(CaseFilters.SelectedRegions), new StringValues(regions)));
 			if (caseOwners.Length > 0)
-				query.Add(new KeyValuePair<string, StringValues>(nameof(CaseFilters.SelectedCaseOwners), new StringValues(caseOwners)));
+				query.Add(new KeyValuePair<string, StringValues>(nameof(CaseFilters.SelectedOwners), new StringValues(caseOwners)));
 			if (teamLeaders.Length > 0)
 				query.Add(new KeyValuePair<string, StringValues>(nameof(CaseFilters.SelectedTeamLeaders), new StringValues(teamLeaders)));
 			if (statuses.Length > 0)
@@ -349,7 +349,7 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PopulateFrom(query);
 
 			filters.SelectedRegions.Should().BeEmpty();
-			filters.SelectedCaseOwners.Should().BeEmpty();
+			filters.SelectedOwners.Should().BeEmpty();
 			filters.SelectedTeamLeaders.Should().BeEmpty();
 			filters.SelectedStatuses.Should().BeEmpty();
 		}
@@ -370,7 +370,7 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PopulateFrom(query);
 
 			filters.SelectedRegions.Should().BeEmpty();
-			filters.SelectedCaseOwners.Should().BeEmpty();
+			filters.SelectedOwners.Should().BeEmpty();
 			filters.SelectedTeamLeaders.Should().BeEmpty();
 			filters.SelectedStatuses.Should().BeEmpty();
 		}
@@ -381,7 +381,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var filters = new CaseFilters();
 			filters.PopulateFrom([
 				new(nameof(CaseFilters.SelectedRegions), new StringValues([nameof(Region.EastMidlands), nameof(Region.WestMidlands)])),
-				new(nameof(CaseFilters.SelectedCaseOwners), new StringValues(["Owner1", "Owner2"])),
+				new(nameof(CaseFilters.SelectedOwners), new StringValues(["Owner1", "Owner2"])),
 				new(nameof(CaseFilters.SelectedTeamLeaders), new StringValues(["Leader1", "Leader2"])),
 				new(nameof(CaseFilters.SelectedStatuses), new StringValues([nameof(CaseStatus.Live), nameof(CaseStatus.Close)]))
 			]);
@@ -390,7 +390,7 @@ namespace ConcernsCaseWork.Tests.Models
 			{
 				new KeyValuePair<string, StringValues>("remove", new StringValues("true")),
 				new KeyValuePair<string, StringValues>("SelectedRegions", new StringValues(nameof(Region.EastMidlands))),
-				new KeyValuePair<string, StringValues>("SelectedCaseOwners", new StringValues("Owner2")),
+				new KeyValuePair<string, StringValues>("SelectedOwners", new StringValues("Owner2")),
 				new KeyValuePair<string, StringValues>("SelectedTeamLeaders", new StringValues("Leader1")),
 				new KeyValuePair<string, StringValues>("SelectedStatuses", new StringValues(nameof(CaseStatus.Close)))
 			};
@@ -398,13 +398,13 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PopulateFrom(query);
 
 			filters.SelectedRegions.Should().BeEquivalentTo(nameof(Region.WestMidlands));
-			filters.SelectedCaseOwners.Should().BeEquivalentTo("Owner1");
+			filters.SelectedOwners.Should().BeEquivalentTo("Owner1");
 			filters.SelectedTeamLeaders.Should().BeEquivalentTo("Leader2");
 			filters.SelectedStatuses.Should().BeEquivalentTo(nameof(CaseStatus.Live));
 		}
 
 		[TestCase("SelectedRegions", new[] { nameof(Region.EastMidlands), nameof(Region.WestMidlands) }, TestName = "PopulateFrom_OnlySelectedRegions_UpdatesRegions")]
-		[TestCase("SelectedCaseOwners", new[] { "Alice", "Bob" }, TestName = "PopulateFrom_OnlySelectedCaseOwners_UpdatesCaseOwners")]
+		[TestCase("SelectedOwners", new[] { "Alice", "Bob" }, TestName = "PopulateFrom_OnlySelectedCaseOwners_UpdatesCaseOwners")]
 		[TestCase("SelectedTeamLeaders", new[] { "TL1", "TL2" }, TestName = "PopulateFrom_OnlySelectedTeamLeaders_UpdatesTeamLeaders")]
 		[TestCase("SelectedStatuses", new[] { nameof(CaseStatus.Live), nameof(CaseStatus.Close) }, TestName = "PopulateFrom_OnlySelectedStatuses_UpdatesStatuses")]
 		public void PopulateFrom_SingleFilterKey_OnlyThatArrayUpdated(string key, string[] values)
@@ -415,7 +415,7 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PopulateFrom(query);
 
 			filters.SelectedRegions.Should().BeEquivalentTo(key == "SelectedRegions" ? values : []);
-			filters.SelectedCaseOwners.Should().BeEquivalentTo(key == "SelectedCaseOwners" ? values : []);
+			filters.SelectedOwners.Should().BeEquivalentTo(key == "SelectedOwners" ? values : []);
 			filters.SelectedTeamLeaders.Should().BeEquivalentTo(key == "SelectedTeamLeaders" ? values : []);
 			filters.SelectedStatuses.Should().BeEquivalentTo(key == "SelectedStatuses" ? values : []);
 		}
@@ -427,7 +427,7 @@ namespace ConcernsCaseWork.Tests.Models
 			var query = new[]
 			{
 				new KeyValuePair<string, StringValues>("SelectedRegions", new StringValues([nameof(Region.EastMidlands), nameof(Region.WestMidlands)])),
-				new KeyValuePair<string, StringValues>("SelectedCaseOwners", new StringValues(["OwnerA"])),
+				new KeyValuePair<string, StringValues>("SelectedOwners", new StringValues(["OwnerA"])),
 				new KeyValuePair<string, StringValues>("SelectedTeamLeaders", new StringValues(["LeaderB"])),
 				new KeyValuePair<string, StringValues>("SelectedStatuses", new StringValues([nameof(CaseStatus.Live), nameof(CaseStatus.Close)]))
 			};
@@ -435,7 +435,7 @@ namespace ConcernsCaseWork.Tests.Models
 			filters.PopulateFrom(query);
 
 			filters.SelectedRegions.Should().BeEquivalentTo(nameof(Region.EastMidlands), nameof(Region.WestMidlands));
-			filters.SelectedCaseOwners.Should().BeEquivalentTo("OwnerA");
+			filters.SelectedOwners.Should().BeEquivalentTo("OwnerA");
 			filters.SelectedTeamLeaders.Should().BeEquivalentTo("LeaderB");
 			filters.SelectedStatuses.Should().BeEquivalentTo(nameof(CaseStatus.Live), nameof(CaseStatus.Close));
 		}

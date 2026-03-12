@@ -11,19 +11,19 @@ namespace ConcernsCaseWork.Models;
 public class CaseFilters
 {
 	public const string FilterRegions = nameof(FilterRegions);
-	public const string FilterCaseOwners = nameof(FilterCaseOwners);
+	public const string FilterOwners = nameof(FilterOwners);
 	public const string FilterTeamLeaders = nameof(FilterTeamLeaders);
 	public const string FilterStatuses = nameof(FilterStatuses);
 
 	private IDictionary<string, object?> _filterStore = new Dictionary<string, object?>();
 
 	public const string _selectedRegionsKey = nameof(SelectedRegions);
-	public const string _selectedCaseOwnerKey = nameof(SelectedCaseOwners);
+	public const string _selectedOwnerKey = nameof(SelectedOwners);
 	public const string _selectedCaseTeamLeaderKey = nameof(SelectedTeamLeaders);
 	public const string _selectedStatusesKey = nameof(SelectedStatuses);
 
 	[BindProperty] public string[] SelectedRegions { get; private set; } = [];
-	[BindProperty] public string[] SelectedCaseOwners { get; private set; } = [];
+	[BindProperty] public string[] SelectedOwners { get; private set; } = [];
 	[BindProperty] public string[] SelectedTeamLeaders { get; private set; } = [];
 	[BindProperty] public string[] SelectedStatuses { get; private set; } = [];
 
@@ -44,7 +44,7 @@ public class CaseFilters
 			.Select(r => r!.Value)
 			.Distinct()];
 
-	public bool IsVisible => SelectedRegionEnums.Length > 0 || SelectedCaseOwners.Length > 0 || SelectedTeamLeaders.Length > 0 || SelectedStatuses.Length > 0;
+	public bool IsVisible => SelectedRegionEnums.Length > 0 || SelectedOwners.Length > 0 || SelectedTeamLeaders.Length > 0 || SelectedStatuses.Length > 0;
 
     public void SetCaseOwners(List<string> caseOwners)
     {
@@ -61,7 +61,7 @@ public class CaseFilters
 		_filterStore = filterStore;
 
 		SelectedRegions = GetFilters(FilterRegions);
-		SelectedCaseOwners = GetFilters(FilterCaseOwners);
+		SelectedOwners = GetFilters(FilterOwners);
 		SelectedTeamLeaders = GetFilters(FilterTeamLeaders);
 		SelectedStatuses = GetFilters(FilterStatuses);
 
@@ -76,36 +76,33 @@ public class CaseFilters
 	}
 
 	public void PopulateFrom(IEnumerable<KeyValuePair<string, StringValues>> requestQuery)
-    {
-        var query = new Dictionary<string, StringValues>(requestQuery, StringComparer.OrdinalIgnoreCase);
+	{
+		var query = new Dictionary<string, StringValues>(requestQuery, StringComparer.OrdinalIgnoreCase);
 
-        // Explicit clear
-        if (query.ContainsKey("clear"))
-        {
-            SelectedRegions = [];
-			SelectedCaseOwners = [];
+		// Explicit clear
+		if (query.ContainsKey("clear"))
+		{
+			SelectedRegions = [];
+			SelectedOwners = [];
 			SelectedTeamLeaders = [];
 			SelectedStatuses = [];
-
 			return;
-        }
-
-        if (query.ContainsKey("remove"))
-        {
-	        SelectedRegions = RemoveValuesFromFilters(FilterRegions, ExtractQueryItems(nameof(SelectedRegions)));
-	        SelectedCaseOwners = RemoveValuesFromFilters(FilterCaseOwners, ExtractQueryItems(nameof(SelectedCaseOwners)));
-	        SelectedTeamLeaders = RemoveValuesFromFilters(FilterTeamLeaders, ExtractQueryItems(nameof(SelectedTeamLeaders)));
-	        SelectedStatuses = RemoveValuesFromFilters(FilterStatuses, ExtractQueryItems(nameof(SelectedStatuses)));
-			return;
-        }
-
-        if (query.ContainsKey(nameof(SelectedRegions)) || query.ContainsKey(nameof(SelectedCaseOwners)) || query.ContainsKey(nameof(SelectedTeamLeaders)) || query.ContainsKey(nameof(SelectedStatuses)))
-        {
-	        SelectedRegions = UpdateAndGetStore(FilterRegions, ExtractQueryItems(nameof(SelectedRegions)));
-			SelectedCaseOwners = UpdateAndGetStore(FilterCaseOwners, ExtractQueryItems(nameof(SelectedCaseOwners)));
-			SelectedTeamLeaders = UpdateAndGetStore(FilterTeamLeaders, ExtractQueryItems(nameof(SelectedTeamLeaders)));
-			SelectedStatuses = UpdateAndGetStore(FilterStatuses, ExtractQueryItems(nameof(SelectedStatuses)));
 		}
+
+		if (query.ContainsKey("remove"))
+		{
+			SelectedRegions = RemoveValuesFromFilters(FilterRegions, ExtractQueryItems(nameof(SelectedRegions)));
+			SelectedOwners = RemoveValuesFromFilters(FilterOwners, ExtractQueryItems(nameof(SelectedOwners)));
+			SelectedTeamLeaders = RemoveValuesFromFilters(FilterTeamLeaders, ExtractQueryItems(nameof(SelectedTeamLeaders)));
+			SelectedStatuses = RemoveValuesFromFilters(FilterStatuses, ExtractQueryItems(nameof(SelectedStatuses)));
+			return;
+		}
+
+
+		SelectedRegions = UpdateAndGetStore(FilterRegions, ExtractQueryItems(nameof(SelectedRegions)));
+		SelectedOwners = UpdateAndGetStore(FilterOwners, ExtractQueryItems(nameof(SelectedOwners)));
+		SelectedTeamLeaders = UpdateAndGetStore(FilterTeamLeaders, ExtractQueryItems(nameof(SelectedTeamLeaders)));
+		SelectedStatuses = UpdateAndGetStore(FilterStatuses, ExtractQueryItems(nameof(SelectedStatuses)));
 
 		
 		string[] ExtractQueryItems(string key)

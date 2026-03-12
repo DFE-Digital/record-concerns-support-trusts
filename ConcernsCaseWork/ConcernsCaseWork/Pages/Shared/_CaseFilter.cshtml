@@ -69,11 +69,11 @@
                     </ul>
                 }
 
-                @if (Model.SelectedCaseOwners.Length > 0)
+                @if (Model.SelectedOwners.Length > 0)
                 {
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Case owners</h3>
                     <ul class="moj-filter-tags">
-                        @foreach (var owner in Model.SelectedCaseOwners)
+                        @foreach (var owner in Model.SelectedOwners)
                         {
                             <li>
                                 <a class="moj-filter__tag" href="@BuildRemoveCaseOwnerLink(owner)">
@@ -172,11 +172,11 @@
                                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes" style="max-height: 200px; overflow-y: auto; padding: 0 .5rem;">
                                     @foreach (var owner in Model.CaseOwners)
                                     {
-                                        var isChecked = Model.SelectedCaseOwners.Contains(owner);
+                                        var isChecked = Model.SelectedOwners.Contains(owner);
                                         <div class="govuk-checkboxes__item">
                                             <input class="govuk-checkboxes__input"
                                                    id="filter-case-owner-@owner"
-                                                   name="@Models.CaseFilters._selectedCaseOwnerKey"
+                                                   name="@Models.CaseFilters._selectedOwnerKey"
                                                    type="checkbox"
                                                    value="@owner"
                                                    data-cy="select-case-filter-pwner-@owner"
