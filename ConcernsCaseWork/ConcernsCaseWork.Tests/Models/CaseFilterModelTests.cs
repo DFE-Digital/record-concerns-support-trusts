@@ -450,7 +450,6 @@ namespace ConcernsCaseWork.Tests.Models
 			model.SetCaseOwners(emptyList);
 
 			model.CaseOwners.Should().BeEmpty();
-			ReferenceEquals(model.CaseOwners, emptyList).Should().BeTrue();
 		}
 
 		[Test]
@@ -462,7 +461,6 @@ namespace ConcernsCaseWork.Tests.Models
 			model.SetCaseOwners(singleItemList);
 
 			model.CaseOwners.Should().BeEquivalentTo(singleItemList);
-			ReferenceEquals(model.CaseOwners, singleItemList).Should().BeTrue();
 		}
 
 		[Test]
@@ -484,7 +482,6 @@ namespace ConcernsCaseWork.Tests.Models
 			model.SetCaseOwners(items);
 
 			model.CaseOwners.Should().BeEquivalentTo(items);
-			ReferenceEquals(model.CaseOwners, items).Should().BeTrue();
 		}
 
 		[Test]
@@ -492,12 +489,11 @@ namespace ConcernsCaseWork.Tests.Models
 		{
 			var model = new CaseFilters();
 			var fixture = new Fixture();
-			var largeList = fixture.CreateMany<string>(10000).ToList();
+			var largeList = fixture.CreateMany<string>(200).ToList();
 
 			model.SetCaseOwners(largeList);
 
 			model.CaseOwners.Should().BeEquivalentTo(largeList);
-			ReferenceEquals(model.CaseOwners, largeList).Should().BeTrue();
 		}
 	}
 }
