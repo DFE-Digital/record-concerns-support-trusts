@@ -48,12 +48,12 @@ public class CaseFilters
 
     public void SetCaseOwners(List<string> caseOwners)
     {
-		CaseOwners = caseOwners;
-	}
+	    CaseOwners = caseOwners.OrderBy(x => x).ToList();
+    }
 
 	public void SetCaseTeamLeaders(List<string> teamLeaders)
 	{
-		TeamLeaders = teamLeaders;
+		TeamLeaders = teamLeaders.OrderBy(x => x).ToList();
 	}
 
 	public CaseFilters PersistUsing(IDictionary<string, object?> filterStore)
