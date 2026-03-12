@@ -23,14 +23,14 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		_concernsDbContext = concernsDbContext;
 	}
 
-	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters )
+	public async Task<(IList<ActiveCaseSummaryVm>, int)> GetActiveCaseSummariesByTeamMembers(GetCaseSummariesForUsersTeamParameters parameters)
 	{
 		var queryBuilder = _concernsDbContext.ConcernsCase
 			.Where(cases => parameters.teamMemberIds.Contains(cases.CreatedBy) && cases.Status.Name == "Live")
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
-		var recordCount = queryBuilder.Count();
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -38,8 +38,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		}
 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
-
-		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+		var cases = await BuildActiveCaseSummaries(caseIds);
 
 		return (cases, recordCount);
 	}
@@ -51,7 +50,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
-		var recordCount = queryBuilder.Count();
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -59,8 +58,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		}
 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
-
-		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+		var cases = await BuildActiveCaseSummaries(caseIds);
 
 		return (cases, recordCount);
 	}
@@ -72,7 +70,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
-		var recordCount = queryBuilder.Count();
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -80,8 +78,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		}
 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
-
-		var cases = await SelectOpenCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+		var cases = await BuildActiveCaseSummaries(caseIds);
 
 		return (cases, recordCount);
 	}
@@ -93,7 +90,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
-		var recordCount = queryBuilder.Count();
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -101,8 +98,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		}
 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
-
-		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+		var cases = await BuildClosedCaseSummaries(caseIds);
 
 		return (cases, recordCount);
 	}
@@ -114,7 +110,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.OrderByDescending(c => c.CreatedAt)
 			.AsQueryable();
 
-		var recordCount = queryBuilder.Count();
+		var recordCount = await queryBuilder.CountAsync();
 
 		if (parameters.Page.HasValue && parameters.Count.HasValue)
 		{
@@ -122,128 +118,211 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		}
 
 		var caseIds = await queryBuilder.Select(c => c.Id).ToListAsync();
-
-		var cases = await SelectClosedCaseSummary(caseIds).AsSplitQuery().ToListAsync();
+		var cases = await BuildClosedCaseSummaries(caseIds);
 
 		return (cases, recordCount);
 	}
 
-	private IOrderedQueryable<ConcernsCase> GetCases(List<int> caseIds)
+	private async Task<List<ActiveCaseSummaryVm>> BuildActiveCaseSummaries(List<int> caseIds)
 	{
-		return _concernsDbContext.ConcernsCase.Where(c => caseIds.Contains(c.Id)).OrderByDescending(c => c.CreatedAt);
-	}
+		if (caseIds.Count == 0)
+			return new List<ActiveCaseSummaryVm>();
 
-	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(List<int> caseIds)
-	{
-		var query = GetCases(caseIds);
+		var cases = await _concernsDbContext.ConcernsCase
+			.Where(c => caseIds.Contains(c.Id))
+			.Include(c => c.Rating)
+			.Include(c => c.Status)
+			.Include(c => c.ConcernsRecords).ThenInclude(cr => cr.ConcernsType)
+			.Include(c => c.ConcernsRecords).ThenInclude(cr => cr.ConcernsRating)
+			.OrderByDescending(c => c.CreatedAt)
+			.AsSplitQuery()
+			.AsNoTracking()
+			.ToListAsync();
 
-		var result = SelectOpenCaseSummary(query);
+		var caseUrns = cases.Select(c => c.Urn).ToList();
 
-		return result;
-	}
+		var decisions = await _concernsDbContext.Decisions
+			.Where(d => caseIds.Contains(d.ConcernsCaseId) && !d.ClosedAt.HasValue)
+			.Include(d => d.DecisionTypes)
+			.AsNoTracking()
+			.ToListAsync();
 
-	private IQueryable<ActiveCaseSummaryVm> SelectOpenCaseSummary(IQueryable<ConcernsCase> query)
-	{
-		return query.Select(cases => new ActiveCaseSummaryVm
+		var financialPlans = await _concernsDbContext.FinancialPlanCases
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var ntisUnderConsideration = await _concernsDbContext.NTIUnderConsiderations
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var ntiWarningLetters = await _concernsDbContext.NTIWarningLetters
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var noticesToImprove = await _concernsDbContext.NoticesToImprove
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var srmaCases = await _concernsDbContext.SRMACases
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var trustFinancialForecasts = await _concernsDbContext.TrustFinancialForecasts
+			.Where(x => caseUrns.Contains(x.CaseUrn) && !x.ClosedAt.HasValue)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var targetedTrustEngagements = await _concernsDbContext.TargetedTrustEngagements
+			.Where(t => caseIds.Contains(t.CaseUrn) && !t.ClosedAt.HasValue)
+			.Include(at => at.ActivityTypes)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var decisionsByCase = decisions.ToLookup(d => d.ConcernsCaseId);
+		var financialPlansByUrn = financialPlans.ToLookup(x => x.CaseUrn);
+		var ntisUCByUrn = ntisUnderConsideration.ToLookup(x => x.CaseUrn);
+		var ntiWLByUrn = ntiWarningLetters.ToLookup(x => x.CaseUrn);
+		var ntisByUrn = noticesToImprove.ToLookup(x => x.CaseUrn);
+		var srmaByUrn = srmaCases.ToLookup(x => x.CaseUrn);
+		var tffByUrn = trustFinancialForecasts.ToLookup(x => x.CaseUrn);
+		var tteByCase = targetedTrustEngagements.ToLookup(t => t.CaseUrn);
+
+		return cases.Select(c => new ActiveCaseSummaryVm
 		{
-			CaseUrn = cases.Urn,
-			CreatedAt = cases.CreatedAt,
-			CreatedBy = cases.CreatedBy,
-			Rating = cases.Rating,
-			StatusName = cases.Status.Name,
-			TrustUkPrn = cases.TrustUkprn,
-			UpdatedAt = cases.UpdatedAt,
-			CaseLastUpdatedAt = cases.CaseLastUpdatedAt,
-			Division = cases.DivisionId,
-			Region = cases.RegionId,
-			Territory = cases.Territory,
-			ActiveConcerns = from concerns
-				in cases.ConcernsRecords
-							 where concerns.StatusId == 1
-							 select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
-			Decisions = _concernsDbContext.Decisions.Where(d => d.ConcernsCaseId == cases.Id && !d.ClosedAt.HasValue).Include(d => d.DecisionTypes).ToArray(),
-			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.FinancialPlan))
-				.ToArray(),
-			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiUnderConsideration))
-				.ToArray(),
-			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.NtiWarningLetter))
-				.ToArray(),
-			NoticesToImprove = _concernsDbContext.NoticesToImprove
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Nti))
-				.ToArray(),
-			SrmaCases = _concernsDbContext.SRMACases
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt, null, CaseSummaryConstants.Srma))
-				.ToArray(),
-			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
-				.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
-				.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast))
-				.ToArray(),
-			TargetTrustEngagements = _concernsDbContext.TargetedTrustEngagements.Where(t => t.CaseUrn == cases.Id && !t.ClosedAt.HasValue).Include(at => at.ActivityTypes).ToArray(),
-		});
+			CaseUrn = c.Urn,
+			CreatedAt = c.CreatedAt,
+			CreatedBy = c.CreatedBy,
+			Rating = c.Rating,
+			StatusName = c.Status.Name,
+			TrustUkPrn = c.TrustUkprn,
+			UpdatedAt = c.UpdatedAt,
+			CaseLastUpdatedAt = c.CaseLastUpdatedAt,
+			Division = c.DivisionId,
+			Region = c.RegionId,
+			Territory = c.Territory,
+			ActiveConcerns = c.ConcernsRecords
+				.Where(cr => cr.StatusId == 1)
+				.Select(cr => new CaseSummaryVm.Concern(cr.ConcernsType.ToString(), cr.ConcernsRating, cr.CreatedAt)),
+			Decisions = decisionsByCase[c.Id].ToArray(),
+			FinancialPlanCases = financialPlansByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, null, CaseSummaryConstants.FinancialPlan)).ToArray(),
+			NtisUnderConsideration = ntisUCByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, null, CaseSummaryConstants.NtiUnderConsideration)).ToArray(),
+			NtiWarningLetters = ntiWLByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, null, CaseSummaryConstants.NtiWarningLetter)).ToArray(),
+			NoticesToImprove = ntisByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, null, CaseSummaryConstants.Nti)).ToArray(),
+			SrmaCases = srmaByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, null, CaseSummaryConstants.Srma)).ToArray(),
+			TrustFinancialForecasts = tffByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt.Date, null, CaseSummaryConstants.TrustFinancialForecast)).ToArray(),
+			TargetTrustEngagements = tteByCase[c.Id].ToArray(),
+		}).ToList();
 	}
 
-	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(List<int> caseIds)
+	private async Task<List<ClosedCaseSummaryVm>> BuildClosedCaseSummaries(List<int> caseIds)
 	{
-		var query = GetCases(caseIds);
+		if (caseIds.Count == 0)
+			return new List<ClosedCaseSummaryVm>();
 
-		var result = SelectClosedCaseSummary(query);
+		var cases = await _concernsDbContext.ConcernsCase
+			.Where(c => caseIds.Contains(c.Id))
+			.Include(c => c.Status)
+			.Include(c => c.ConcernsRecords).ThenInclude(cr => cr.ConcernsType)
+			.Include(c => c.ConcernsRecords).ThenInclude(cr => cr.ConcernsRating)
+			.OrderByDescending(c => c.CreatedAt)
+			.AsSplitQuery()
+			.AsNoTracking()
+			.ToListAsync();
 
-		return result;
-	}
+		var caseUrns = cases.Select(c => c.Urn).ToList();
 
-	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
-	{
-		return query.Select(cases => new ClosedCaseSummaryVm
+		var decisions = await _concernsDbContext.Decisions
+			.Where(d => caseIds.Contains(d.ConcernsCaseId) && d.ClosedAt.HasValue)
+			.Include(d => d.DecisionTypes)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var financialPlans = await _concernsDbContext.FinancialPlanCases
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var ntisUnderConsideration = await _concernsDbContext.NTIUnderConsiderations
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var ntiWarningLetters = await _concernsDbContext.NTIWarningLetters
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var noticesToImprove = await _concernsDbContext.NoticesToImprove
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var srmaCases = await _concernsDbContext.SRMACases
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var trustFinancialForecasts = await _concernsDbContext.TrustFinancialForecasts
+			.Where(x => caseUrns.Contains(x.CaseUrn))
+			.AsNoTracking()
+			.ToListAsync();
+
+		var targetedTrustEngagements = await _concernsDbContext.TargetedTrustEngagements
+			.Where(t => caseIds.Contains(t.CaseUrn) && t.ClosedAt.HasValue)
+			.Include(at => at.ActivityTypes)
+			.AsNoTracking()
+			.ToListAsync();
+
+		var decisionsByCase = decisions.ToLookup(d => d.ConcernsCaseId);
+		var financialPlansByUrn = financialPlans.ToLookup(x => x.CaseUrn);
+		var ntisUCByUrn = ntisUnderConsideration.ToLookup(x => x.CaseUrn);
+		var ntiWLByUrn = ntiWarningLetters.ToLookup(x => x.CaseUrn);
+		var ntisByUrn = noticesToImprove.ToLookup(x => x.CaseUrn);
+		var srmaByUrn = srmaCases.ToLookup(x => x.CaseUrn);
+		var tffByUrn = trustFinancialForecasts.ToLookup(x => x.CaseUrn);
+		var tteByCase = targetedTrustEngagements.ToLookup(t => t.CaseUrn);
+
+		return cases.Select(c => new ClosedCaseSummaryVm
 		{
-			CaseUrn = cases.Urn,
-			ClosedAt = cases.ClosedAt.Value,
-			CreatedAt = cases.CreatedAt,
-			CreatedBy = cases.CreatedBy,
-			StatusName = cases.Status.Name,
-			TrustUkPrn = cases.TrustUkprn,
-			UpdatedAt = cases.UpdatedAt,
-			Division = cases.DivisionId,
-			Region = cases.RegionId,
-			Territory = cases.Territory,
-			ClosedConcerns =
-							from concerns in cases.ConcernsRecords
-							where concerns.StatusId == 3
-							select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
-			Decisions = _concernsDbContext.Decisions.Where(d => d.ConcernsCaseId == cases.Id && d.ClosedAt.HasValue).Include(d => d.DecisionTypes).ToArray(),
-			FinancialPlanCases = _concernsDbContext.FinancialPlanCases
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.FinancialPlan))
-							.ToArray(),
-			NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiUnderConsideration))
-							.ToArray(),
-			NtiWarningLetters = _concernsDbContext.NTIWarningLetters
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.NtiWarningLetter))
-							.ToArray(),
-			NoticesToImprove = _concernsDbContext.NoticesToImprove
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Nti))
-							.ToArray(),
-			SrmaCases = _concernsDbContext.SRMACases
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, CaseSummaryConstants.Srma))
-							.ToArray(),
-			TrustFinancialForecasts = _concernsDbContext.TrustFinancialForecasts
-							.Where(x => x.CaseUrn == cases.Urn)
-							.Select(action => new CaseSummaryVm.Action(action.CreatedAt.Date, action.ClosedAt.Value.DateTime, CaseSummaryConstants.TrustFinancialForecast))
-							.ToArray(),
-			TargetTrustEngagements = _concernsDbContext.TargetedTrustEngagements.Where(t => t.CaseUrn == cases.Id && t.ClosedAt.HasValue).Include(at => at.ActivityTypes).ToArray(),
-		});
+			CaseUrn = c.Urn,
+			ClosedAt = c.ClosedAt.Value,
+			CreatedAt = c.CreatedAt,
+			CreatedBy = c.CreatedBy,
+			StatusName = c.Status.Name,
+			TrustUkPrn = c.TrustUkprn,
+			UpdatedAt = c.UpdatedAt,
+			Division = c.DivisionId,
+			Region = c.RegionId,
+			Territory = c.Territory,
+			ClosedConcerns = c.ConcernsRecords
+				.Where(cr => cr.StatusId == 3)
+				.Select(cr => new CaseSummaryVm.Concern(cr.ConcernsType.ToString(), cr.ConcernsRating, cr.CreatedAt)),
+			Decisions = decisionsByCase[c.Id].ToArray(),
+			FinancialPlanCases = financialPlansByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, x.ClosedAt, CaseSummaryConstants.FinancialPlan)).ToArray(),
+			NtisUnderConsideration = ntisUCByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, x.ClosedAt, CaseSummaryConstants.NtiUnderConsideration)).ToArray(),
+			NtiWarningLetters = ntiWLByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, x.ClosedAt, CaseSummaryConstants.NtiWarningLetter)).ToArray(),
+			NoticesToImprove = ntisByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, x.ClosedAt, CaseSummaryConstants.Nti)).ToArray(),
+			SrmaCases = srmaByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt, x.ClosedAt, CaseSummaryConstants.Srma)).ToArray(),
+			TrustFinancialForecasts = tffByUrn[c.Urn]
+				.Select(x => new CaseSummaryVm.Action(x.CreatedAt.Date, x.ClosedAt?.DateTime, CaseSummaryConstants.TrustFinancialForecast)).ToArray(),
+			TargetTrustEngagements = tteByCase[c.Id].ToArray(),
+		}).ToList();
 	}
 }
 
