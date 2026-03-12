@@ -11,7 +11,7 @@
 
     string BuildRemoveCaseOwnerLink(string toRemove)
     {
-	    return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedCaseOwners={HttpUtility.UrlEncode(toRemove)}";
+	    return $"{Url.RouteUrl(ViewContext.RouteData.Values)}?remove&SelectedOwners={HttpUtility.UrlEncode(toRemove)}";
     }
 
     string BuildRemoveCaseTeamLeaderLink(string toRemove)
