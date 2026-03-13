@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-11.1112..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-13.1130..HEAD)
 
 ---
+## [66.0.0][66.0.0] - 2026-03-13
+### Added
+- 256986 - find cases by LA etc...
+- 264134 - find cases - all cases and filter by Region
 
+---
 ## [65.0.1][65.0.1] - 2026-03-11
 ### Changed
 - 270399 - Changed Risk management URL
@@ -23,12 +28,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 265489 - Update link to new RMF framework - create a case
 - 256985 - Inclusion of RAG Status Rational
 
-
+---
 ## [64.0.1][64.0.1] - 2026-03-03
 
 ### Removed
-- Roll back of release 64.0.0 - WAF issue raised. 
-
+- Roll back of release 64.0.0 - WAF issue raised.
+  
+---
 ## [64.0.0][64.0.0] - 2026-03-03
 
 ### Added
@@ -36,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 265489 - Update link to new RMF framework - create a case
 - 256985 - Inclusion of RAG Status Rational
 - 264134 - Search engine (Region, Case owner, Team leader and Statuses) - Added new columns to search result table
+  
 ---
 
 ## [63.0.1][63.0.1] - 2026-02-18
@@ -510,6 +517,7 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+[66.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-13.1130
 [65.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-11.1112
 [65.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-05.1091
 [64.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-03.1086
