@@ -6,15 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
   
-## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-11.1112..HEAD)
+## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-13.1130..HEAD)
 
 ---
+## [66.0.0][66.0.0] - 2026-03-13
+### Added
+- 256986 - find cases by LA etc...
+- 264134 - find cases - all cases and filter by Region
+
 
 ## [65.0.1][65.0.1] - 2026-03-11
 ### Changed
 - 270399 - Changed Risk management URL
-
----
 
 ## [65.0.0][65.0.0] - 2026-03-05
 
@@ -510,6 +513,7 @@ NOTE: potentiall missing releases here
 Initial Release of the Record-Concerns-and-Decisions system into production.
 For full details see project documentation.
 
+[66.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-13.1130
 [65.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-11.1112
 [65.0.0]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-05.1091
 [64.0.1]: https://github.com/DFE-Digital/record-concerns-support-trusts/releases/tag/production-2026-03-03.1086
