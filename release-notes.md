@@ -13,12 +13,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - 256986 - find cases by LA etc...
 - 264134 - find cases - all cases and filter by Region
-
-
+  
+---
 ## [65.0.1][65.0.1] - 2026-03-11
 ### Changed
 - 270399 - Changed Risk management URL
-
+  
+---
 ## [65.0.0][65.0.0] - 2026-03-05
 
 ### Added
@@ -26,12 +27,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 265489 - Update link to new RMF framework - create a case
 - 256985 - Inclusion of RAG Status Rational
 
-
+---
 ## [64.0.1][64.0.1] - 2026-03-03
 
 ### Removed
-- Roll back of release 64.0.0 - WAF issue raised. 
-
+- Roll back of release 64.0.0 - WAF issue raised.
+  
+---
 ## [64.0.0][64.0.0] - 2026-03-03
 
 ### Added
