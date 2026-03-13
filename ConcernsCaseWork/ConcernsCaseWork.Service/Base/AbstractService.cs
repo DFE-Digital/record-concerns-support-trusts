@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.Service.Base
 			HttpClientName = httpClientName;
 		}
 
-		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
+		public virtual Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Service.Base
 
 		}
 
-		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
+		public virtual Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 

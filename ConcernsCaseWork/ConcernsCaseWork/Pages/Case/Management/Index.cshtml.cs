@@ -90,8 +90,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
 
-				//RatingRationalCommentary = CaseModel.RatingRationalCommentary;
-
 				if (CaseModel.IsClosed())
 				{
 					return Redirect($"/case/{CaseModel.Urn}/closed");

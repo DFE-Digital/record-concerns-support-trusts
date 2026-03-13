@@ -1,8 +1,8 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.API.Features.ConcernsRating;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.Utils.Extensions;
+using JetBrains.Annotations;
 
 namespace ConcernsCaseWork.API.Features.Case;
 
@@ -16,6 +16,7 @@ public static class CaseSummaryResponseFactory
 			CaseUrn = caseSummary.CaseUrn,
 			CreatedAt = caseSummary.CreatedAt,
 			CreatedBy = caseSummary.CreatedBy,
+			TeamLedBy = caseSummary.TeamLedBy,
 			Decisions = Create(caseSummary.Decisions),
 			FinancialPlanCases = Create(caseSummary.FinancialPlanCases),
 			NtiWarningLetters = Create(caseSummary.NtiWarningLetters),
@@ -30,7 +31,7 @@ public static class CaseSummaryResponseFactory
 			UpdatedAt = caseSummary.UpdatedAt,
 			CaseLastUpdatedAt = caseSummary.CaseLastUpdatedAt,
 			Division = caseSummary.Division,
-			Area = getArea(caseSummary)
+			Area = GetArea(caseSummary)
 		};
 	}
 
@@ -55,11 +56,12 @@ public static class CaseSummaryResponseFactory
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt,
 			Division = caseSummary.Division,
-			Area = getArea(caseSummary)
+			Area = GetArea(caseSummary)
 		};
 	}
 
-	private static string getArea(CaseSummaryVm caseSummary)
+	[CanBeNull]
+	private static string GetArea(CaseSummaryVm caseSummary)
 	{
 		return caseSummary.Division == Division.RegionsGroup ? caseSummary.Region?.Description() : caseSummary.Territory?.Description();
 	}

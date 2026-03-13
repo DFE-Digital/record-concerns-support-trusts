@@ -27,6 +27,7 @@
     var path = Context.Request.Path;
 
     var yourCasesTabCurrent = "";
+    var allCasesTabCurrent = "";
     var otherCasesTabCurrent = "";
     var findTrustTabCurrent = "";
 
@@ -35,6 +36,7 @@
     if (model != null)
     {
         yourCasesTabCurrent = model.YourCasesTabActive == true ? classCurrentPage : "";
+        allCasesTabCurrent = model.AllCasesTabActive == true ? classCurrentPage : "";
         otherCasesTabCurrent = model.OtherCasesTabActive == true ? classCurrentPage : "";
         findTrustTabCurrent = model.FindTrustTabActive == true ? classCurrentPage : "";
     }
@@ -141,6 +143,11 @@
                         <li class="govuk-service-navigation__item @yourCasesTabCurrent">
                             <a class="govuk-service-navigation__link" aria-current="true" href="/">
                                 <strong class="govuk-service-navigation__active-fallback">Your cases</strong>
+                            </a>
+                        </li>
+                        <li class="govuk-service-navigation__item @allCasesTabCurrent">
+                            <a class="govuk-service-navigation__link" href="/All" data-testid="all-cases-tab">
+                                <strong class="govuk-service-navigation__active-fallback">All cases</strong>
                             </a>
                         </li>
                         <li class="govuk-service-navigation__item @otherCasesTabCurrent">
