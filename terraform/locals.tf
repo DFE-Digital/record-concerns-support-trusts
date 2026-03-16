@@ -31,6 +31,7 @@ locals {
   mssql_sku_name                                           = var.mssql_sku_name
   mssql_server_admin_password                              = var.mssql_server_admin_password
   mssql_database_name                                      = var.mssql_database_name
+  mssql_max_size_gb                                        = var.mssql_max_size_gb
   mssql_firewall_ipv4_allow_list                           = var.mssql_firewall_ipv4_allow_list
   mssql_azuread_admin_username                             = var.mssql_azuread_admin_username
   mssql_azuread_admin_object_id                            = var.mssql_azuread_admin_object_id

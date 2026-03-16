@@ -356,6 +356,12 @@ variable "mssql_database_name" {
   type        = string
 }
 
+variable "mssql_max_size_gb" {
+  description = "The max size of the database in gigabytes"
+  type        = number
+  default     = 2
+}
+
 variable "mssql_server_public_access_enabled" {
   description = "Enable public internet access to your MSSQL instance. Be sure to specify 'mssql_firewall_ipv4_allow_list' to restrict inbound connections"
   type        = bool
