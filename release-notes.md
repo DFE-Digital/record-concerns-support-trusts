@@ -8,9 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 ## [Unreleased](https://github.com/DFE-Digital/record-concerns-support-trusts/compare/production-2026-03-20.1137..HEAD)
 
+### Changed
+- 272606 - add SFSO concerns to the 'All cases' - region filter 
+
 ---
 ## [66.0.1][66.0.1] - 2026-03-20
-### Change
+
+### Changed
 - 257478 - Case landing page > about the case - error messaging- Accessibility 
 
 ---
