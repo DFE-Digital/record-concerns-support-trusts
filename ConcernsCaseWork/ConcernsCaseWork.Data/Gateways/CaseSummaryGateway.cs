@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
+using ConcernsCaseWork.Data.Helpers;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,7 +55,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
         if (parameters.Regions != null && parameters.Regions.Any())
         {
             var selectedRegions = parameters.Regions;
-            var territoriesForSelectedRegions = GetTerritoriesForRegions(selectedRegions);
+            var territoriesForSelectedRegions = RegionTerritoryMapping.GetTerritoriesForRegions(selectedRegions);
             queryBuilder = queryBuilder.Where(c =>
                 (c.RegionId.HasValue && selectedRegions.Contains(c.RegionId.Value))
                 || (c.Territory.HasValue && territoriesForSelectedRegions.Contains(c.Territory.Value)));
@@ -245,37 +246,6 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		var result = SelectClosedCaseSummary(query);
 
 		return result;
-	}
-
-	private static Territory[] GetTerritoriesForRegions(IReadOnlyList<Region> regions)
-	{
-		var set = new HashSet<Territory>();
-		foreach (var region in regions)
-		{
-			foreach (var territory in MapRegionToTerritories(region))
-			{
-				set.Add(territory);
-			}
-		}
-
-		return set.ToArray();
-	}
-
-	private static IEnumerable<Territory> MapRegionToTerritories(Region region)
-	{
-		return region switch
-		{
-			Region.EastMidlands => new[] { Territory.Midlands_And_West__East_Midlands },
-			Region.EastOfEngland => new[] { Territory.South_And_South_East__East_Of_England },
-			Region.London => new[] { Territory.South_And_South_East__London },
-			Region.NorthEast => new[] { Territory.North_And_Utc__North_East },
-			Region.NorthWest => new[] { Territory.North_And_Utc__North_West },
-			Region.SouthEast => new[] { Territory.South_And_South_East__South_East },
-			Region.SouthWest => new[] { Territory.Midlands_And_West__SouthWest },
-			Region.WestMidlands => new[] { Territory.Midlands_And_West__West_Midlands },
-			Region.YorkshireAndTheHumber => new[] { Territory.North_And_Utc__Yorkshire_And_Humber },
-			_ => Array.Empty<Territory>()
-		};
 	}
 
 	private IQueryable<ClosedCaseSummaryVm> SelectClosedCaseSummary(IQueryable<ConcernsCase> query)
