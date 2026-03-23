@@ -95,7 +95,7 @@ public class SelectCaseTypePageModel : CreateCaseBasePageModel
 		var enumValues = new[]
 		{
 			new { CaseType = API.Contracts.Case.CaseType.Concerns, HintText = "This includes narrative, actions or decisions related to any new concern(s)." },
-			new { CaseType = API.Contracts.Case.CaseType.NonConcerns, HintText = "This includes proactive SRMA (School Resource Management Adviser), TFF (Trust Financial Forecast) activity and decisions." }
+			new { CaseType = API.Contracts.Case.CaseType.NonConcerns, HintText = "This includes proactive SRMA (School Resource Management Adviser), TTE (Targeted trust engagement) activity and decisions." }
 		};
 
 		var radioItems = enumValues.Select(v =>
