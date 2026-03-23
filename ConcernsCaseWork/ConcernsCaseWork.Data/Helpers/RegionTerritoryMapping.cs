@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.Data.Helpers;
 
 public static class RegionTerritoryMapping
 {
-	public static Territory[] GetTerritoriesForRegions(IReadOnlyList<Region> regions)
+	public static HashSet<Territory> GetTerritoriesForRegions(IReadOnlyList<Region> regions)
 	{
 		var set = new HashSet<Territory>();
 		foreach (var region in regions)
@@ -16,7 +16,7 @@ public static class RegionTerritoryMapping
 			}
 		}
 
-		return set.ToArray();
+		return set;
 	}
 
 	private static Territory? MapRegionToTerritory(Region region)

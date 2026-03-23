@@ -54,12 +54,13 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
         if (parameters.Regions != null && parameters.Regions.Any())
         {
-            var selectedRegions = parameters.Regions;
-            var territoriesForSelectedRegions = RegionTerritoryMapping.GetTerritoriesForRegions(selectedRegions);
-            queryBuilder = queryBuilder.Where(c =>
-                (c.RegionId.HasValue && selectedRegions.Contains(c.RegionId.Value))
-                || (c.Territory.HasValue && territoriesForSelectedRegions.Contains(c.Territory.Value)));
-        }
+	        var selectedRegionIds = parameters.Regions.Cast<int>().ToArray();
+	        var territoriesForSelectedRegions = RegionTerritoryMapping.GetTerritoriesForRegions(parameters.Regions);
+
+	        queryBuilder = queryBuilder.Where(c =>
+		        (c.RegionId.HasValue && selectedRegionIds.Contains((int)c.RegionId.Value))
+		        || (c.Territory.HasValue && territoriesForSelectedRegions.Contains(c.Territory.Value)));
+		}
 
 		if (parameters.Owners != null && parameters.Owners.Any())
 		{
