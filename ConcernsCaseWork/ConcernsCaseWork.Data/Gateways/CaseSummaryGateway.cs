@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.Case;
 using ConcernsCaseWork.Data.Extensions;
+using ConcernsCaseWork.Data.Helpers;
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,8 +54,13 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 
         if (parameters.Regions != null && parameters.Regions.Any())
         {
-            queryBuilder = queryBuilder.Where(c => parameters.Regions.Contains(c.RegionId.Value));
-        }
+	        var selectedRegionIds = parameters.Regions.Cast<int>().ToArray();
+	        var territoriesForSelectedRegions = RegionTerritoryMapping.GetTerritoriesForRegions(parameters.Regions);
+
+	        queryBuilder = queryBuilder.Where(c =>
+		        (c.RegionId.HasValue && selectedRegionIds.Contains((int)c.RegionId.Value))
+		        || (c.Territory.HasValue && territoriesForSelectedRegions.Contains(c.Territory.Value)));
+		}
 
 		if (parameters.Owners != null && parameters.Owners.Any())
 		{
