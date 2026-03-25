@@ -72,14 +72,14 @@
                     @if (activeCase.ActiveConcerns.Any())
                     {
                         <td class="govuk-table__cell">
-                            <h4 class="concerns-secondary-text-colour">Concerns</h4>
+                            <div class="concerns-secondary-text-colour">Concerns</div>
                             <ul class="govuk-list govuk-list--bullet">
                                 @foreach (var concern in activeCase.ActiveConcerns)
                                 {
                                     <li data-testid="concern">@concern</li>
                                 }
                             </ul>
-                            <h4 class="concerns-secondary-text-colour">Risk to trust</h4>
+                            <div class="concerns-secondary-text-colour">Risk to trust</div>
                             <div class="govuk-label-wrapper" data-testid="risk-to-trust-list" aria-label="Trust risk rating">
                                 <partial name="_RatingLabel" model="@activeCase.RatingId" />
                             </div>
