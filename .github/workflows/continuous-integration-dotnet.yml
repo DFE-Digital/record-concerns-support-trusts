@@ -7,7 +7,7 @@ on:
 
 env:
   JAVA_VERSION: '21'
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 10.0.x
 
 jobs:
   build-test:
