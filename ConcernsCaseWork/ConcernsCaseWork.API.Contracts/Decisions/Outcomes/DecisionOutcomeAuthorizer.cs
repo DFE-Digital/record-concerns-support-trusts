@@ -28,6 +28,15 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		Minister = 7,
 
 		[Description("Secretary of State ")]
-		SecretaryOfState = 8
+		SecretaryOfState = 8,
+
+		[Description("Director General")]
+		DirectorGeneral = 9,
+
+		[Description("HMT (His Majesty’s Treasury)")]
+		HMT = 10,
+
+		[Description("FGT (Financial Governance Team)")]
+		FGT = 11
 	}
 }
