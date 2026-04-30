@@ -166,7 +166,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			DecisionEffectiveFromDate = BuildDecisionEffectiveFromDateComponent(DecisionEffectiveFromDate?.Date);
 			DecisionOutcomeAuthorizer = BuildDecisionAuthorizerComponent(DecisionOutcomeAuthorizer?.SelectedId);
 
-			DateTime cutOffDate = new(2026, 5, 4, 23, 59, 59, DateTimeKind.Utc);
+			// On the 6th May 2026 at 23:59:59 is the cut-off date
+			DateTime cutOffDate = new(2026, 5, 6, 23, 59, 59, DateTimeKind.Utc);
 			BusinessAreaCheckBoxes = Division == API.Contracts.Case.Division.RegionsGroup ? BuildRegionsGroupBusinessAreaCheckboxes() : BuildBusinessAreaCheckBoxes(cutOffDate);
 		}
 
