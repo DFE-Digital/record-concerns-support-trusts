@@ -461,7 +461,7 @@ describe('User can add decisions to an existing case', () => {
             .withDecisionTakeEffectYear('2024')
             .withDecisionAuthouriser('Minister')
             .deselectAllBusinessAreas()
-            .withBusinessArea('Funding')
+            .withBusinessArea('Capital')
             .withBusinessArea('RegionsGroup')
             .saveDecisionOutcome();
 
@@ -473,7 +473,7 @@ describe('User can add decisions to an existing case', () => {
             .hasEffectiveFromDate('14 January 2024')
             .hasAuthoriser('Minister')
             .hasBusinessArea('Regions Group')
-            .hasBusinessArea('Funding');
+            .hasBusinessArea('Capital');
     });
 
     it('Creating and deleting a decision', function () {
