@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260420122847_Add_To_DecisionOutcomeBusinessArea_Enum")]
+    partial class Add_To_DecisionOutcomeBusinessArea_Enum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1247,21 +1250,6 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 8,
                             Name = "SecretaryOfState"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "DirectorGeneral"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "HMT"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "FGT"
                         });
                 });
 

@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using Azure;
 using ConcernsCaseWork.API.Contracts.Decisions;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
@@ -63,7 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
 
-			getDecisionResponse.Outcome.Status = DecisionOutcomeStatus.PartiallyApproved;
+			getDecisionResponse.Outcome.Status = API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus.PartiallyApproved;
 
 			getDecisionResponse.Outcome.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 05, 02));
 			getDecisionResponse.Outcome.DecisionEffectiveFromDate = new DateTimeOffset(new DateTime(2022, 06, 16));
@@ -170,8 +172,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 				.WithOutcomeId(expectedOutcomeId)
 				.BuildSut();
 
-			sut.DecisionOutcome.BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> {
-				DecisionOutcomeBusinessArea.Funding
+			sut.DecisionOutcome.BusinessAreasConsulted = new List<API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea> {
+				API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea.Funding
 			};
 
 			sut.DecisionMadeDate = _fixture.Create<OptionalDateTimeUiComponent>();
@@ -193,9 +195,226 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			var page = await sut.OnPostAsync() as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/3");
-			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(DecisionOutcomeBusinessArea.Funding);
+			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea.Funding);
 			sut.DecisionOutcome.DecisionMadeDate.Should().NotBeNull();
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().NotBeNull();
+		}
+
+		[Test]
+		public void GetOldDecisionOutcomeBusinessAreaList_Hides_Funding_Option_When_No_DecisionOutcome()
+		{
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+			var funding = API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea.Funding;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// No DecisionOutcome
+			sut.DecisionOutcome = null;
+
+			var result = sut.GetOldDecisionOutcomeBusinessAreaList();
+
+			var fundingSelected = result.Exists(x => x == funding);
+
+			Assert.That(fundingSelected, Is.False);
+		}
+
+		[Test]
+		public void GetOldDecisionOutcomeBusinessAreaList_Displays_Funding_Option_When_Previously_Selected()
+		{
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+			var funding = API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea.Funding;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// Funding previously selected
+			sut.DecisionOutcome.BusinessAreasConsulted = [funding];
+
+			var result = sut.GetOldDecisionOutcomeBusinessAreaList();
+
+			var fundingSelected = result.Exists(x => x == funding);
+
+			Assert.That(fundingSelected, Is.True);
+		}
+
+		[Test]
+		public void GetOldDecisionOutcomeBusinessAreaList_Hides_Funding_Option_When_Not_Previously_Selected()
+		{
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+			var funding = API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea.Funding;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// No Funding previously selected
+			sut.DecisionOutcome.BusinessAreasConsulted = [];
+
+			var result = sut.GetOldDecisionOutcomeBusinessAreaList();
+
+			var fundingSelected = result.Exists(x => x == funding);
+
+			Assert.That(fundingSelected, Is.False);
+		}
+
+		[Test]
+		public void BuildBusinessAreaCheckBoxes_When_BeforeCutOffDate_Returns_Old_List()
+		{
+			DateTime cutOffDate = DateTime.UtcNow.AddDays(10);  // Cut-off is in the future
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			var expected = sut.BuildBusinessAreaCheckBoxes(cutOffDate);
+			var actual = sut.GetOldDecisionOutcomeBusinessAreaList();
+
+			Assert.That(actual, Is.EqualTo(expected));
+		}
+
+		[Test]
+		public void BuildBusinessAreaCheckBoxes_When_AfterCutOffDate_But_Live_Decision_Created_Before_CutOffDate_Returns_Old_List()
+		{
+			DateTime cutOffDate = DateTime.UtcNow.AddDays(-10);  // Cut-off is in the past
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			sut.DecisionOutcome = new EditDecisionOutcomeModel
+			{
+				DecisionCreatedAt = cutOffDate.AddDays(-5) // Decision created before cut-off date
+			};
+
+			var expected = sut.BuildBusinessAreaCheckBoxes(cutOffDate);
+			var actual = sut.GetOldDecisionOutcomeBusinessAreaList();
+
+			Assert.That(actual, Is.EqualTo(expected));
+		}
+
+		[Test]
+		public void BuildBusinessAreaCheckBoxes_When_AfterCuttOffDate_And_Live_Decision_Created_After_CutOffDate_Returns_New_List()
+		{
+			DateTime cutOffDate = DateTime.UtcNow.AddDays(-10);  // Cut-off is in the past
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			sut.DecisionOutcome = new EditDecisionOutcomeModel
+			{
+				DecisionCreatedAt = cutOffDate.AddDays(2) // Decision created after cut-off date
+			};
+
+			var expected = sut.BuildBusinessAreaCheckBoxes(cutOffDate);
+			var actual = AddPageModel.GetNewDecisionOutcomeBusinessAreaList();
+
+			Assert.That(actual, Is.EqualTo(expected));
+		}
+
+		[Test]
+		public void BuildBusinessAreaCheckBoxes_When_AfterCuttOffDate_And_New_Decision_Created_Returns_New_List()
+		{
+			DateTime cutOffDate = DateTime.UtcNow.AddDays(-10);  // Cut-off is in the past
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+
+			const int expectedCaseUrn = 1;
+			const int expectedDecisionId = 2;
+			const int expectedOutcomeId = 3;
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedCaseUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithOutcomeId(expectedOutcomeId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			sut.DecisionOutcome = null; // new decision outcome being created after cut-off date
+
+			var expected = sut.BuildBusinessAreaCheckBoxes(cutOffDate);
+			var actual = AddPageModel.GetNewDecisionOutcomeBusinessAreaList();
+
+			Assert.That(actual, Is.EqualTo(expected));
 		}
 
 		private class TestBuilder

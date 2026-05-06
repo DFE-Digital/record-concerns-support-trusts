@@ -9,14 +9,16 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
+using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Utils.Extensions;
+
 
 #nullable disable
 
@@ -57,6 +59,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		[BindProperty]
 		public Division? Division { get; set; }
 
+		public DateTimeOffset? CaseCreatedAt { get; set; }
+
 		public string SaveAndContinueButtonText { get; set; }
 
 		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes { get; set; }
@@ -81,6 +85,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 				
 				var caseModel = await _caseModelService.GetCaseByUrn(CaseUrn);
 				Division = caseModel.Division;
+				CaseCreatedAt = caseModel.CreatedAt;
 
 				LoadPageComponents(DecisionOutcome);
 
@@ -104,6 +109,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			{
 				if (!ModelState.IsValid)
 				{
+					DecisionOutcome = await CreateDecisionOutcomeModel();
+
 					LoadPageComponents();
 					return Page();
 				}
@@ -158,21 +165,86 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			DecisionMadeDate = BuildDecisionMadeDateComponent(DecisionMadeDate?.Date);
 			DecisionEffectiveFromDate = BuildDecisionEffectiveFromDateComponent(DecisionEffectiveFromDate?.Date);
 			DecisionOutcomeAuthorizer = BuildDecisionAuthorizerComponent(DecisionOutcomeAuthorizer?.SelectedId);
-			BusinessAreaCheckBoxes = Division == API.Contracts.Case.Division.RegionsGroup ? BuildRegionsGroupBusinessAreaCheckboxes() : BuildBusinessAreaCheckBoxes();
+
+			// On the 6th May 2026 at 23:59:59 is the cut-off date
+			DateTime cutOffDate = new(2026, 5, 6, 23, 59, 59, DateTimeKind.Utc);
+			BusinessAreaCheckBoxes = Division == API.Contracts.Case.Division.RegionsGroup ? BuildRegionsGroupBusinessAreaCheckboxes() : BuildBusinessAreaCheckBoxes(cutOffDate);
 		}
 
-		private List<DecisionOutcomeBusinessArea> BuildRegionsGroupBusinessAreaCheckboxes()
+		public static List<DecisionOutcomeBusinessArea> BuildRegionsGroupBusinessAreaCheckboxes()
 		{
-			return new List<DecisionOutcomeBusinessArea>
-			{
+			return
+			[
 				DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight,
-				DecisionOutcomeBusinessArea.RegionsGroup
-			};
+				DecisionOutcomeBusinessArea.SchoolDeliveryTeams
+			];
 		}
 
-		private List<DecisionOutcomeBusinessArea> BuildBusinessAreaCheckBoxes()
+		public List<DecisionOutcomeBusinessArea> GetOldDecisionOutcomeBusinessAreaList()
 		{
-			return Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
+			var result = new List<DecisionOutcomeBusinessArea>();
+
+			result.AddRange([
+				DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight,
+					DecisionOutcomeBusinessArea.BusinessPartner,
+					DecisionOutcomeBusinessArea.Capital
+			]);
+
+			if (DecisionOutcome != null)
+			{
+				var fundingSelected = DecisionOutcome.BusinessAreasConsulted.Exists(x => x == DecisionOutcomeBusinessArea.Funding);
+				if (fundingSelected)
+				{
+					result.Add(DecisionOutcomeBusinessArea.Funding);
+				}
+			}
+
+			result.AddRange([
+				DecisionOutcomeBusinessArea.FinancialProviderMarketOversight,
+					DecisionOutcomeBusinessArea.RegionsGroup
+			]);
+
+			return result;
+		}
+
+		public static List<DecisionOutcomeBusinessArea> GetNewDecisionOutcomeBusinessAreaList()
+		{
+			return [
+				DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight,
+				DecisionOutcomeBusinessArea.FinancialBusinessPartner,
+				DecisionOutcomeBusinessArea.EducationEstates,
+				DecisionOutcomeBusinessArea.FundingAndFinancialOversight,
+				DecisionOutcomeBusinessArea.SchoolDeliveryTeams,
+				DecisionOutcomeBusinessArea.FinancialGovernanceTeam
+			];
+		}
+
+		public List<DecisionOutcomeBusinessArea> BuildBusinessAreaCheckBoxes(DateTime cutOffDate)
+		{
+			bool isAfterCuttOffDate = DateTime.Compare(cutOffDate, DateTime.UtcNow) <= 0;
+
+			if (isAfterCuttOffDate) // we are after the cut off date
+			{
+				if (DecisionOutcome != null) // this is an existing outcome
+				{
+					bool decisionCreatedBeforeCutOffDate = DateTime.Compare(cutOffDate, DecisionOutcome.DecisionCreatedAt.Value.DateTime) >= 0;
+
+					if (decisionCreatedBeforeCutOffDate) // we are after the cut off date but this decision was created before the cut off date
+					{
+						return GetOldDecisionOutcomeBusinessAreaList();
+					}
+					else // we are after the cut off date and this decision was created after the cut off date
+					{
+						return GetNewDecisionOutcomeBusinessAreaList();
+					}
+				} else // this is a new outcome
+				{
+					return GetNewDecisionOutcomeBusinessAreaList();
+				}
+			} else // we are before the cut off date
+			{
+				return GetOldDecisionOutcomeBusinessAreaList();
+			}
 		}
 
 		private void SetupPage()

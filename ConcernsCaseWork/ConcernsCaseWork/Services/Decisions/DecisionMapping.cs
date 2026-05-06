@@ -159,7 +159,8 @@ namespace ConcernsCaseWork.Services.Decisions
 				DecisionMadeDate = ToOptionaDateModel(decisionOutcomeResponse.DecisionMadeDate),
 				DecisionEffectiveFromDate = ToOptionaDateModel(decisionOutcomeResponse.DecisionEffectiveFromDate),
 				Authorizer = decisionOutcomeResponse.Authorizer,
-				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted
+				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted,
+				DecisionCreatedAt = decisionResponse.CreatedAt
 			};
 
 			return result;

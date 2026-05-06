@@ -20,6 +20,23 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		FinancialProviderMarketOversight = 5,
 
 		[Description("RG (Regions Group)")]
-		RegionsGroup = 6
+		RegionsGroup = 6,
+
+		// NEW
+
+		[Description("Financial Business Partner")]
+		FinancialBusinessPartner = 7,
+
+		[Description("Education Estates")]
+		EducationEstates = 8,
+
+		[Description("FFO (Funding and Financial Oversight)")]
+		FundingAndFinancialOversight = 9,
+
+		[Description("School Delivery Teams")]
+		SchoolDeliveryTeams = 10,
+
+		[Description("FGT (Financial Governance Team)")]
+		FinancialGovernanceTeam = 11
 	}
 }
