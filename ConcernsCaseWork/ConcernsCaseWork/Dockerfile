@@ -9,7 +9,7 @@ EXPOSE 5000
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0-azurelinux3.0@sha256:aa5e8bb6f35d537e82416c8d134481cf91f5da6023c662b6299931adc7cd20a3 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0@sha256:aa5e8bb6f35d537e82416c8d134481cf91f5da6023c662b6299931adc7cd20a3 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ConcernsCaseWork/ConcernsCaseWork.csproj", "ConcernsCaseWork/"]
