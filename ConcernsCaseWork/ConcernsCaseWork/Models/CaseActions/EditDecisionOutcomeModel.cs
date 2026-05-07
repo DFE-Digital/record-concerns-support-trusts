@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.Models.Validatable;
 using System.ComponentModel;
+using System;
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
@@ -30,5 +31,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public DecisionOutcomeAuthorizer? Authorizer { get; set; }
 
 		public List<DecisionOutcomeBusinessArea> BusinessAreasConsulted { get; set; }
+
+		public DateTimeOffset? DecisionCreatedAt { get; set; }
 	}
 }

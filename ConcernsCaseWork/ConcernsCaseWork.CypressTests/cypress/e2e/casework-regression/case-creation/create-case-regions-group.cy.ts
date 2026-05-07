@@ -287,7 +287,7 @@ describe('Creating a case', () => {
 
             decisionOutcomePage.hasBusinessAreaOptions([
                 'SFSO (Schools Financial Support and Oversight)',
-                'RG (Regions Group)',
+                'School Delivery Teams',
             ]);
 
             Logger.log('Fill out the remaining fields');
@@ -301,7 +301,7 @@ describe('Creating a case', () => {
                 .withDecisionTakeEffectYear('2023')
                 .withDecisionAuthouriser('DeputyDirector')
                 .withBusinessArea('SchoolsFinancialSupportAndOversight')
-                .withBusinessArea('RegionsGroup')
+                .withBusinessArea('SchoolDeliveryTeams')
                 .saveDecisionOutcome();
 
             Logger.log('Viewing the decision changes');
@@ -329,7 +329,7 @@ describe('Creating a case', () => {
                 .hasMadeDate('24 November 2022')
                 .hasEffectiveFromDate('11 December 2023')
                 .hasBusinessArea('SFSO')
-                .hasBusinessArea('Regions Group')
+                .hasBusinessArea('School Delivery Teams')
                 .hasAuthoriser('Deputy Director');
         });
 
