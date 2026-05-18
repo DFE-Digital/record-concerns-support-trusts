@@ -238,9 +238,8 @@ describe('User can add decisions to an existing case', () => {
             .withDecisionTakeEffectMonth('12')
             .withDecisionTakeEffectYear('2023')
             .withDecisionAuthouriser('DeputyDirector')
-            .withBusinessArea('BusinessPartner')
-            .withBusinessArea('Capital')
-            .withBusinessArea('FinancialProviderMarketOversight')
+            .withBusinessArea('FinancialBusinessPartner')
+            .withBusinessArea('FundingAndFinancialOversight')
             .saveDecisionOutcome();
 
         Logger.log('Selecting Decision from open actions');
@@ -290,8 +289,7 @@ describe('User can add decisions to an existing case', () => {
             .hasTypeOfDecision('Section 128 (S128)')
             .hasSupportingNotes('This is a test for closed decision')
             .hasBusinessArea('Business Partner')
-            .hasBusinessArea('Capital')
-            .hasBusinessArea('FPMO (Financial Provider Market Oversight)')
+            .hasBusinessArea('FFO (Funding and Financial Oversight)')
             .hasDecisionOutcomeStatus('Approved with conditions')
             .hasMadeDate('24 November 2022')
             .hasEffectiveFromDate('11 December 2023')
@@ -406,9 +404,8 @@ describe('User can add decisions to an existing case', () => {
             .withDecisionTakeEffectMonth('12')
             .withDecisionTakeEffectYear('2023')
             .withDecisionAuthouriser('DeputyDirector')
-            .withBusinessArea('BusinessPartner')
-            .withBusinessArea('Capital')
-            .withBusinessArea('FinancialProviderMarketOversight')
+            .withBusinessArea('FinancialBusinessPartner')
+            .withBusinessArea('FundingAndFinancialOversight')
             .saveDecisionOutcome();
 
         actionSummaryTable.getOpenAction('Decision: No Decision Types').then((row) => {
@@ -423,8 +420,7 @@ describe('User can add decisions to an existing case', () => {
             .hasMadeDate('24 November 2022')
             .hasEffectiveFromDate('11 December 2023')
             .hasBusinessArea('Business Partner')
-            .hasBusinessArea('Capital')
-            .hasBusinessArea('FPMO (Financial Provider Market Oversight)')
+            .hasBusinessArea('FFO (Funding and Financial Oversight)')
             .hasAuthoriser('Deputy Director')
             .cannotCreateAnotherDecisionOutcome();
 
@@ -442,9 +438,8 @@ describe('User can add decisions to an existing case', () => {
             .hasDateEffectiveFromMonth('12')
             .hasDateEffectiveFromYear('2023')
             .hasDecisionAuthouriser('DeputyDirector')
-            .hasBusinessArea('BusinessPartner')
-            .hasBusinessArea('Capital')
-            .hasBusinessArea('FinancialProviderMarketOversight');
+            .hasBusinessArea('FinancialBusinessPartner')
+            .hasBusinessArea('FundingAndFinancialOversight');
 
         Logger.log('Checking accessibility on Edit Decision Outcome');
         cy.excuteAccessibilityTests();
@@ -461,8 +456,7 @@ describe('User can add decisions to an existing case', () => {
             .withDecisionTakeEffectYear('2024')
             .withDecisionAuthouriser('Minister')
             .deselectAllBusinessAreas()
-            .withBusinessArea('Capital')
-            .withBusinessArea('RegionsGroup')
+            .withBusinessArea('SchoolDeliveryTeams')
             .saveDecisionOutcome();
 
         Logger.log('View Updated Decision Outcome');
@@ -472,8 +466,7 @@ describe('User can add decisions to an existing case', () => {
             .hasMadeDate('12 May 2023')
             .hasEffectiveFromDate('14 January 2024')
             .hasAuthoriser('Minister')
-            .hasBusinessArea('Regions Group')
-            .hasBusinessArea('Capital');
+            .hasBusinessArea('School Delivery Teams');
     });
 
     it('Creating and deleting a decision', function () {
