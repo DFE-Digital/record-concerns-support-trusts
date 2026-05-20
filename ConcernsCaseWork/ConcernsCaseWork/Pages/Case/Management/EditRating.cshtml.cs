@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[BindProperty]
 		public string RatingRationalCommentary { get; set; }
 
-		public int CommentaryMaxLength => 250;
+		public int CommentaryMaxLength => 1250;
 
 		public EditRatingPageModel(
 			ICaseModelService caseModelService, 
