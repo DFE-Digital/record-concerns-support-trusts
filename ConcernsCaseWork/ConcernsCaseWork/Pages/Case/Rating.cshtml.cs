@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Pages.Case
 		[BindProperty]
 		public string RatingRationalCommentary { get; set; }
 
-		public static int RationYesCommentaryMaxLength => 250;
+		public static int RationYesCommentaryMaxLength => 1250;
 
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
