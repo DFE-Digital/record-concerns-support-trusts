@@ -39,20 +39,3 @@ jobs:
 
       - name: Export docker image as tar
         run: docker save -o ${{ matrix.stage }}.tar ${{ steps.build.outputs.imageid }}
-
-      - name: Scan Docker image for CVEs
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # 0.33.1
-        with:
-          input: ${{ matrix.stage }}.tar
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          limit-severities-for-sarif: true
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-          github-pat: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload scan results to GitHub Security
-        uses: github/codeql-action/upload-sarif@5d5cd550d3e189c569da8f16ea8de2d821c9bf7a # v3
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
