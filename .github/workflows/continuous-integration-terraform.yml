@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        # Updated to latest v4 SHA
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Check for terraform version mismatch
         run: |
@@ -58,7 +59,8 @@ jobs:
           args: -chdir=terraform fmt -check=true -diff=true
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4
+        # Updated to latest v4 SHA
+        uses: terraform-linters/setup-tflint@b480b8f1074e0f6e5200f40f2523267794b29239 # v4.1.0
         with:
           tflint_version: v0.44.1
 
