@@ -56,8 +56,8 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
-        # Updated to latest v4 SHA
-        uses: actions/setup-java@5ee7db4b2d8c3847b0c0e5b5f1a0bd4b0c3f0f1d # v4.8.0
+        # Updated to latest v5 SHA
+        uses: actions/setup-java@b622de13160e1d14cfffa16e3b9406972e796078 # v5.x
         with:
           distribution: 'microsoft'
           java-version: ${{ env.JAVA_VERSION }}
