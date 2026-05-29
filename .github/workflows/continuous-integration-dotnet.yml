@@ -57,7 +57,7 @@ jobs:
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         # Updated to latest v5 SHA
-        uses: actions/setup-java@b622de13160e1d14cfffa16e3b9406972e796078 # v5.x
+        uses: actions/setup-java@v5 # v5.x
         with:
           distribution: 'microsoft'
           java-version: ${{ env.JAVA_VERSION }}
