@@ -142,8 +142,8 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Download all test results
-        # Updated to latest v4 SHA
-        uses: actions/download-artifact@v4
+        # Updated to latest v8 SHA
+        uses: actions/download-artifact@v8
         with:
           pattern: test-results-*
           path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/mocha
@@ -156,7 +156,7 @@ jobs:
           npm run generate:html:report
 
       - name: Upload combined report
-        # Updated to latest v4 SHA
+        # Updated to latest v7 SHA
         uses: actions/upload-artifact@v7
         with:
           name: cypress-report-${{ inputs.environment }}

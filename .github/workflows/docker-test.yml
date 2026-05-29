@@ -25,8 +25,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        # Updated to latest v4 SHA
-        uses: docker/setup-buildx-action@f7ce87c531ee0303fd7a9c7d2f21786dca876008 # v4.0.0
+        # Updated to latest v3 SHA
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
         # Updated to latest v4 SHA

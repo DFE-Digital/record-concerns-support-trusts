@@ -59,8 +59,8 @@ jobs:
           args: -chdir=terraform fmt -check=true -diff=true
 
       - name: Setup TFLint
-        # Updated to latest v4 SHA
-        uses: terraform-linters/setup-tflint@b480b8f1074e0f6e5200f40f2523267794b29239 # v4.1.0
+        # Updated to latest v6 SHA
+        uses: terraform-linters/setup-tflint@v6
         with:
           tflint_version: v0.44.1
 

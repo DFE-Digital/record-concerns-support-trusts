@@ -54,7 +54,7 @@ jobs:
 
       - name: Set up NodeJS
         # Updated to latest v4 SHA
-        uses: actions/setup-node@1d429dc21bdc97609b522027b735145f223bb02e # v4.2.1
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
