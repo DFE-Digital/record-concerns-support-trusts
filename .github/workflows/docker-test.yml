@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout code
         # Updated to latest v4 SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         # Updated to latest v4 SHA
@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Docker image
         # Updated to latest v4 SHA
-        uses: docker/build-push-action@ca8ad3047d765e9719da65957351c9934bb5a96c # v7.0.0
+        uses: docker/build-push-action@v7
         id: build
         with:
           secrets: github_token=${{ secrets.GITHUB_TOKEN }}

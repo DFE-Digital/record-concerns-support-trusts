@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout code
         # Updated to latest v4 SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
 
       - name: Create directory on runner
         run: |
@@ -36,7 +36,7 @@ jobs:
       - name: Restore ZAP container from cache if exists
         id: cache-docker-zap
         # Updated to latest v4 SHA
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
+        uses: actions/cache@v4
         with:
           path: ~/ci/cache/docker/softwaresecurityproject
           key: cache-docker-zap-${{ env.ZAP_VERSION }}

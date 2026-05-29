@@ -62,13 +62,13 @@ jobs:
     steps:
       - name: Checkout code
         # Updated to latest v4 SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
       - name: Run Cypress tests
         # Updated to latest v4 SHA
-        uses: cypress-io/github-action@646f990666271960da708174f88e17621213df65 # v7.x
+        uses: cypress-io/github-action@v7
         with:
           browser: ${{ env.BROWSER }}
           spec: ${{ matrix.spec }}
@@ -83,8 +83,8 @@ jobs:
 
       - name: Upload screenshots on failure
         if: failure()
-        # Updated to latest v4 SHA
-        uses: actions/upload-artifact@043fb467c69994c65349e54a36270d14b4334f59 # v7.0.1
+        # Updated to latest v7 SHA
+        uses: actions/upload-artifact@v7
         with:
           name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
           path: ${{ env.WORKING_DIRECTORY }}/cypress/screenshots
@@ -110,8 +110,8 @@ jobs:
 
       - name: Upload test results
         if: always()
-       # Updated to latest v4 SHA
-        uses: actions/upload-artifact@043fb467c69994c65349e54a36270d14b4334f59 # v7.0.1
+       # Updated to latest v7 SHA
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-${{ matrix.group }}
           path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/merged/*.json
@@ -127,11 +127,11 @@ jobs:
     steps:
       - name: Checkout code
         # Updated to latest v4 SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         # Updated to latest v4 SHA
-        uses: actions/setup-node@1d429dc21bdc97609b522027b735145f223bb02e # v4.2.1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -143,7 +143,7 @@ jobs:
 
       - name: Download all test results
         # Updated to latest v4 SHA
-        uses: actions/download-artifact@cc20e330508535a39626e25773177987ca991b11 # v4.1.7
+        uses: actions/download-artifact@v4
         with:
           pattern: test-results-*
           path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/mocha
@@ -157,7 +157,7 @@ jobs:
 
       - name: Upload combined report
         # Updated to latest v4 SHA
-        uses: actions/upload-artifact@043fb467c69994c65349e54a36270d14b4334f59 # v7.0.1
+        uses: actions/upload-artifact@v7
         with:
           name: cypress-report-${{ inputs.environment }}
           path: ${{ env.WORKING_DIRECTORY }}/mochareports

@@ -38,7 +38,7 @@ jobs:
 
       - name: Checkout repository
         # Updated to latest v4 SHA
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }}
         # Updated to latest v4 SHA
-        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Cache SonarCloud packages
         # Updated to latest v4 SHA
-        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
+        uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
