@@ -68,7 +68,7 @@ jobs:
 
       - name: Run Cypress tests
         # Updated to latest v4 SHA
-        uses: cypress-io/github-action@v7
+        uses: cypress-io/github-action@b7a744158dbb24a3e9c56fa76916fb296765796f
         with:
           browser: ${{ env.BROWSER }}
           spec: ${{ matrix.spec }}
