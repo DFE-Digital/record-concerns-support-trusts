@@ -60,7 +60,7 @@ jobs:
 
       - name: Setup TFLint
         # Updated to latest v6 SHA
-        uses: terraform-linters/setup-tflint@v6
+        uses: terraform-linters/setup-tflint@b480b8f352bfd3554fb338f7b9a1511e570a048c
         with:
           tflint_version: v0.44.1
 
