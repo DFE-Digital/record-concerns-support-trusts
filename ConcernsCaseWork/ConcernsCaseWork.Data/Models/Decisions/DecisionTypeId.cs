@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Data.Models.Decisions
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+
+namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	// reference table, not required by app in normal use, but used to give context to the data
 	public class DecisionTypeId

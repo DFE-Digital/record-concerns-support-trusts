@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Data.Models.Decisions.Outcome;
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+using ConcernsCaseWork.Data.Models.Decisions.Outcome;
 using System.ComponentModel.DataAnnotations;
 using ConcernsCaseWork.Utils.Extensions;
 

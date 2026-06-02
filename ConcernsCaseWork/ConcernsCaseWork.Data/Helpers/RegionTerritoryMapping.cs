@@ -1,4 +1,5 @@
 using ConcernsCaseWork.API.Contracts.Case;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.Data.Helpers;
 

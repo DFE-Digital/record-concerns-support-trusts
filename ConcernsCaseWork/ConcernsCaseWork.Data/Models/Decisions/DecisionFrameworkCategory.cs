@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Data.Models.Decisions
+﻿using ConcernsCaseWork.API.Contracts.Decisions;
+
+namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionFrameworkCategory
 	{
