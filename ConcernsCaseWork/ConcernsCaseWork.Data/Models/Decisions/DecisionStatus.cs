@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions;
-
-namespace ConcernsCaseWork.Data.Models.Decisions
+﻿namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionStatus
 	{

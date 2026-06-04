@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 
 namespace ConcernsCaseWork.Data.Models.Decisions.Outcome
 {

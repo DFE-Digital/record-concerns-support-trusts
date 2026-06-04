@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-
-namespace ConcernsCaseWork.Data.Models.Decisions.Outcome
+﻿namespace ConcernsCaseWork.Data.Models.Decisions.Outcome
 {
 	public record DecisionOutcomeBusinessArea
 	{

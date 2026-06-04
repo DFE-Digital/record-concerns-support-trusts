@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.TargetedTrustEngagement;
-
-namespace ConcernsCaseWork.Data.Models
+﻿namespace ConcernsCaseWork.Data.Models
 {
 	public class TargetedTrustEngagementType
 	{
