@@ -21,7 +21,8 @@ jobs:
         working-directory: ConcernsCasework/ConcernsCasework.CypressTests
     steps:
       - name: Checkout code
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        # Updated to latest v5 SHA
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
       - name: Create directory on runner
         run: |
@@ -34,7 +35,8 @@ jobs:
 
       - name: Restore ZAP container from cache if exists
         id: cache-docker-zap
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        # Updated to latest v5 SHA
+        uses: actions/cache@v5
         with:
           path: ~/ci/cache/docker/softwaresecurityproject
           key: cache-docker-zap-${{ env.ZAP_VERSION }}
@@ -51,7 +53,8 @@ jobs:
         run: docker run --name zap_container --rm -d -v ${{ github.workspace }}/zapoutput/:/zap/wrk:rw -u zap -p ${{ env.ZAP_PORT }}:${{ env.ZAP_PORT }} -i softwaresecurityproject/zap-stable zap.sh -daemon -port ${{ env.ZAP_PORT }} -host 0.0.0.0 -config api.key=${{ secrets.ZAP_API_KEY }} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config network.localServers.mainProxy.alpn.enabled=false -config network.localServers.mainProxy.address=0.0.0.0
 
       - name: Set up NodeJS
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        # Updated to latest v5 SHA
+        uses: actions/setup-node@a0853c24544627f39e4f0d1df4e3f2dca4ea0c52
         with:
           node-version: 18
 
