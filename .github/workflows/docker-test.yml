@@ -21,16 +21,17 @@ jobs:
       image: ${{ steps.build.outputs.imageid }}
     steps:
       - name: Checkout code
-        # Updated to latest v5 SHA
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
       - name: Set up Docker Buildx
-        # Updated to latest v3 SHA
-        uses: docker/setup-buildx-action@b5ca514842bbda0d7c86c1e96d5c4c7fc297ef53
+        uses: docker/setup-buildx-action@v4
+        with:
+          version: v4.1.0
 
       - name: Build Docker image
-        # Updated to latest v4 SHA
-        uses: docker/build-push-action@d08e5c3acec8b8b9dfc9e5f30b1a8b0a07d35e1d
+        uses: docker/build-push-action@v7
+        with:
+          version: v7.2.0
         id: build
         with:
           secrets: github_token=${{ secrets.GITHUB_TOKEN }}
