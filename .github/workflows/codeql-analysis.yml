@@ -37,16 +37,19 @@ jobs:
 
     steps:
     - name: Setup .NET
-      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+      # Updated to latest v5 SHA
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
           
     - name: Checkout repository
-      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+      # Updated to latest v5 SHA
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@5d5cd550d3e189c569da8f16ea8de2d821c9bf7a # v3
+      # Updated to latest v4 SHA
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -72,4 +75,5 @@ jobs:
         dotnet build ConcernsCaseWork.sln --no-restore
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@5d5cd550d3e189c569da8f16ea8de2d821c9bf7a # v3
+      # Updated to latest v4 SHA
+      uses: github/codeql-action/analyze@v4

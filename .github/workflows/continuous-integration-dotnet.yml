@@ -37,7 +37,8 @@ jobs:
             redis-server --requirepass "my-secureP@SS1"
 
       - name: Checkout repository
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        # Updated to latest v5 SHA
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
 
@@ -49,18 +50,21 @@ jobs:
           done
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        # Updated to latest v5 SHA
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
+        # Updated to latest v5 SHA
+        uses: actions/setup-java@d9cee638f295eca3c446655c8785a383cf94bbc3
         with:
           distribution: 'microsoft'
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        # Updated to latest v5 SHA
+        uses: actions/cache@v5
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
