@@ -68,7 +68,7 @@ jobs:
 
       - name: Run Cypress tests
         # Updated to latest v4 SHA
-        uses: cypress-io/github-action@b7a744158dbb24a3e9c56fa76916fb296765796f
+        uses: cypress-io/github-action@8d89af9addfc8a23501c9e8581d517caa7010719
         with:
           browser: ${{ env.BROWSER }}
           spec: ${{ matrix.spec }}
@@ -84,7 +84,7 @@ jobs:
       - name: Upload screenshots on failure
         if: failure()
         # Updated to latest v6 SHA
-        uses: actions/upload-artifact@b7c566a76332e75d38525f3abaf626f401d466f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
           path: ${{ env.WORKING_DIRECTORY }}/cypress/screenshots
@@ -111,7 +111,7 @@ jobs:
       - name: Upload test results
         if: always()
        # Updated to latest v6 SHA
-        uses: actions/upload-artifact@b7c566a76332e75d38525f3abaf626f401d466f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: test-results-${{ matrix.group }}
           path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/merged/*.json
@@ -131,7 +131,7 @@ jobs:
 
       - name: Setup Node.js
         # Updated to latest v5 SHA
-        uses: actions/setup-node@a0853c24544627f39e4f0d1df4e3f2dca4ea0c52
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -157,7 +157,7 @@ jobs:
 
       - name: Upload combined report
         # Updated to latest v6 SHA
-        uses: actions/upload-artifact@b7c566a76332e75d38525f3abaf626f401d466f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: cypress-report-${{ inputs.environment }}
           path: ${{ env.WORKING_DIRECTORY }}/mochareports
