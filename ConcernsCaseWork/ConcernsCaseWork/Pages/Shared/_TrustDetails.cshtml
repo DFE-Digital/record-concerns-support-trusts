@@ -50,6 +50,17 @@
 			@*@trustContactNumber*@
 		</dd>
 	</div>
+
+    @if (Model.SharepointLink is not null)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">SharePoint folder (opens in a new tab)</dt>
+            <dd class="govuk-summary-list__value" data-testid="sharepoint-link">
+                <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.SharepointLink">Find this trust's SharePoint folder</a>
+            </dd>
+        </div>
+    }
+    
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Companies House</dt>
 		<dd class="govuk-summary-list__value" data-testid="trust-company-house-number">

@@ -46,6 +46,14 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 
+		public string SharepointLink
+		{
+			get
+			{
+				return GiasData.GroupId != null ? $"https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners={{\"FileType\":[\"other\"]}}&q={GiasData.GroupId}&v=/search" : "";
+			}
+		}
+
 		public TrustDetailsModel()
 		{
 			
