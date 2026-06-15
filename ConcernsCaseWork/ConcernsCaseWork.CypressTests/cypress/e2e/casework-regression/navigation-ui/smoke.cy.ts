@@ -323,10 +323,10 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
             Logger.log('Checking accessibility on Close case');
             cy.excuteAccessibilityTests();
 
-            Logger.log('Validating rationale for closure is 200 characters');
+            Logger.log('Validating rationale for closure is 1250 characters');
             CaseManagementPage.withRationaleForClosureExceedingLimit();
             CaseManagementPage.getCloseCaseBtn().click();
-            CaseManagementPage.hasValidationError('Rationale for closure must be 200 characters or less');
+            CaseManagementPage.hasValidationError('Rationale for closure must be 1250 characters or less');
 
             CaseManagementPage.withRationaleForClosure('Closing case');
             CaseManagementPage.getCloseCaseBtn().click();

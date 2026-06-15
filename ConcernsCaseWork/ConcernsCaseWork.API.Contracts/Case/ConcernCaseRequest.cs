@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.API.Contracts.Case
         [StringLength(12)]
         public string TrustUkprn { get; set; }
 
-        [StringLength(200)]
+        [StringLength(1250)]
         public string ReasonAtReview { get; set; }
         public DateTime? DeEscalation { get; set; }
 
