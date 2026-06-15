@@ -484,7 +484,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		request.NextSteps = new string('a', 4001);
 		request.CaseHistory = new string('a', 4301);
 		request.DirectionOfTravel = new string('a', 101);
-		request.ReasonAtReview = new string('a', 201);
+		request.ReasonAtReview = new string('a', 1251);
 		request.CreatedBy = new string('a', 255);
 		request.TrustCompaniesHouseNumber = new string('1', 9);
 		request.Division = 0;
@@ -502,7 +502,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 		error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
 		error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4300.");
 		error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
-		error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 200.");
+		error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 1250.");
 		error.Should().Contain("The field CreatedBy must be a string with a maximum length of 254.");
 		error.Should().Contain("The field TrustCompaniesHouseNumber must be a string with a maximum length of 8.");
 	}

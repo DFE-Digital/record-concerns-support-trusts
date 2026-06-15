@@ -247,7 +247,7 @@ class CaseManagementPage {
 
     public withRationaleForClosureExceedingLimit(): this {
         Logger.log(`With rationale for closure that exceeds the limit`);
-        cy.getById('case-outcomes').clear().invoke('val', 'x1'.repeat(200));
+        cy.getById('case-outcomes').clear().invoke('val', 'x1'.repeat(1250));
 
         return this;
     }
