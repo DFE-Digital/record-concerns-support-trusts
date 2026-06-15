@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			Text = new ValidateableString()
 			{
-				MaxLength = 200,
+				MaxLength = 1250,
 				StringContents = contents,
 				DisplayName = "Rationale for closure",
 				Required = true
