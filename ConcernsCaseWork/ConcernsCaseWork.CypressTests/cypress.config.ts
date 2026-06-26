@@ -27,8 +27,8 @@ export default defineConfig({
         // You may want to clean this up later by importing these.
         setupNodeEvents(on, config) {
             on('before:run', () => {
-                // Map cypress env vars to process env vars for usage outside of Cypress run environment
-                process.env = config.env;
+                // Merge cypress env vars into process env for usage outside of the Cypress run environment
+                Object.assign(process.env, config.env);
             });
 
             on('after:run', async () => {
