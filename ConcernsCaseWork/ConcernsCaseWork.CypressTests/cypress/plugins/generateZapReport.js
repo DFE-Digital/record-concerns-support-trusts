@@ -1,53 +1,62 @@
 const ZapClient = require('zaproxy');
-const fs = require('fs');
+
+const PROXY_ENV_VARS = ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy'];
+
+function withoutHttpProxyEnv() {
+    const saved = {};
+    for (const key of PROXY_ENV_VARS) {
+        saved[key] = process.env[key];
+        delete process.env[key];
+    }
+    return saved;
+}
+
+function restoreHttpProxyEnv(saved) {
+    for (const key of PROXY_ENV_VARS) {
+        if (saved[key] === undefined) {
+            delete process.env[key];
+        } else {
+            process.env[key] = saved[key];
+        }
+    }
+}
+
+function createZapClient() {
+    return new ZapClient({
+        apiKey: process.env.ZAP_API_KEY,
+        proxy: {
+            host: process.env.ZAP_ADDRESS,
+            port: parseInt(process.env.ZAP_PORT, 10),
+        },
+    });
+}
 
 module.exports = {
     generateZapReport: async () => {
         console.log('Generating ZAP report');
 
-        const zapOptions = {
-            apiKey: process.env.ZAP_API_KEY,
-            proxy: {
-                host: process.env.ZAP_ADDRESS,
-                port: process.env.ZAP_PORT,
-            },
-        };
-        const zaproxy = new ZapClient(zapOptions);
-        // Wait for passive scanner to finish scanning before generating report
-        let recordsRemaining = 100;
-        while (recordsRemaining !== 0) {
-            await zaproxy.pscan
-                .recordsToScan()
-                .then((resp) => {
-                    try {
-                        recordsRemaining = parseInt(resp.recordsToScan, 10);
-                    } catch (err) {
-                        if (err instanceof Error) {
-                            console.log(`Error converting result: ${err.message}`);
-                        } else {
-                            console.log('Unknown error during results conversion');
-                        }
-                        recordsRemaining = 0;
-                    }
-                })
-                .catch((err) => {
-                    console.log(`Error from the ZAP Passive Scan API: ${err}`);
-                    recordsRemaining = 0;
-                });
-        }
+        const savedProxyEnv = withoutHttpProxyEnv();
+        try {
+            const zaproxy = createZapClient();
 
-        await zaproxy.reports
-            .generate({
+            let recordsRemaining = 1;
+            while (recordsRemaining > 0) {
+                const resp = await zaproxy.pscan.recordsToScan();
+                recordsRemaining = parseInt(resp.recordsToScan, 10);
+                if (Number.isNaN(recordsRemaining)) {
+                    throw new Error(`Unexpected recordsToScan response: ${JSON.stringify(resp)}`);
+                }
+            }
+
+            const resp = await zaproxy.reports.generate({
                 title: 'Report',
                 template: 'traditional-html',
                 reportfilename: 'ZAP-Report.html',
                 reportdir: '/zap/wrk',
-            })
-            .then((resp) => {
-                console.log(`${JSON.stringify(resp)}`);
-            })
-            .catch((err) => {
-                console.log(`Error from ZAP Report API: ${err}`);
             });
+            console.log(JSON.stringify(resp));
+        } finally {
+            restoreHttpProxyEnv(savedProxyEnv);
+        }
     },
 };

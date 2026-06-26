@@ -34,7 +34,7 @@ on:
   workflow_dispatch:
 
 env:
-  ZAP_ADDRESS: localhost
+  ZAP_ADDRESS: 127.0.0.1
   ZAP_PORT: 9876
   ZAP_IMAGE: zaproxy/zap-stable
   ZAP_VERSION: latest
@@ -126,7 +126,7 @@ jobs:
           AUTH_KEY: ${{ secrets.CYPRESS_TEST_SECRET }}
           API_KEY: ${{ secrets.AZURE_API_KEY }}
           HTTP_PROXY: http://${{ env.ZAP_ADDRESS }}:${{ env.ZAP_PORT }}
-          NO_PROXY: "*.google-analytics.com,*.googletagmanager.com,*.microsoftonline.com,*.gvt1.com"
+          NO_PROXY: "localhost,127.0.0.1,zap,*.google-analytics.com,*.googletagmanager.com,*.microsoftonline.com,*.gvt1.com"
           PASSWORD: ${{ secrets.PASSWORD }}
           URL: ${{ secrets.AZURE_ENDPOINT }}
           USERNAME: ${{ secrets.USERNAME }}
@@ -135,6 +135,16 @@ jobs:
           ZAP_ADDRESS: ${{ env.ZAP_ADDRESS }}
           ZAP_PORT: ${{ env.ZAP_PORT }}
         run: npm run cy:zap:smoke -- --env username=$USERNAME,password=$PASSWORD,url=$URL,api=$URL,apiKey=$API_KEY,authKey=$AUTH_KEY
+
+      - name: Verify ZAP report
+        if: ${{ !cancelled() }}
+        env:
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+        run: |
+          docker ps --filter name=zap_container
+          curl -sf "http://${{ env.ZAP_ADDRESS }}:${{ env.ZAP_PORT }}/JSON/core/view/version/?apikey=${ZAP_API_KEY}"
+          ls -la "${{ github.workspace }}/zapoutput/"
+          test -f "${{ github.workspace }}/zapoutput/ZAP-Report.html"
 
       - name: Azure login with OIDC
         if: ${{ !cancelled() }}
