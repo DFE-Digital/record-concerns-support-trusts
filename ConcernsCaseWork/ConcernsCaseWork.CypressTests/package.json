@@ -7,6 +7,7 @@
         "cy:open": "cypress open --browser edge",
         "cy:run": "npm run clean:reports && cypress run --browser edge",
         "cy:zap": "npm run clean:reports && cypress run --browser electron",
+        "cy:zap:smoke": "npm run clean:reports && cypress run --browser electron --spec cypress/e2e/casework-regression/navigation-ui/smoke.cy.ts",
         "clean:reports": "rm -rf cypress/reports/mocha/*.json",
         "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
         "create:html:report": "marge  mochareports/report.json -f report -o mochareports",

@@ -134,7 +134,7 @@ jobs:
           ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
           ZAP_ADDRESS: ${{ env.ZAP_ADDRESS }}
           ZAP_PORT: ${{ env.ZAP_PORT }}
-        run: npm run cy:zap -- --env username=$USERNAME,password=$PASSWORD,url=$URL,api=$URL,apiKey=$API_KEY,authKey=$AUTH_KEY
+        run: npm run cy:zap:smoke -- --env username=$USERNAME,password=$PASSWORD,url=$URL,api=$URL,apiKey=$API_KEY,authKey=$AUTH_KEY
 
       - name: Azure login with OIDC
         if: ${{ !cancelled() }}
