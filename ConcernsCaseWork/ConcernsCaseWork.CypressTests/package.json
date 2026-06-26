@@ -11,6 +11,7 @@
         "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> mochareports/report.json",
         "create:html:report": "marge  mochareports/report.json -f report -o mochareports",
         "generate:html:report": "npm run combine:reports && npm run create:html:report",
+        "zap:report:teams": "node scripts/send-zap-teams-notification.js",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "prettier:check": "prettier . --check",
@@ -26,6 +27,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "axios": "^1.18.1",
         "@types/luxon": "3.6.2",
         "@typescript-eslint/parser": "8.54.0",
         "axe-core": "4.11.1",

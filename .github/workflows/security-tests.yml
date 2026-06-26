@@ -1,62 +1,122 @@
 name: Security scanner tests
 
 on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+    secrets:
+      USERNAME:
+        required: true
+      PASSWORD:
+        required: true
+      AZURE_ENDPOINT:
+        required: true
+      AZURE_API_KEY:
+        required: true
+      CYPRESS_TEST_SECRET:
+        required: true
+      ZAP_API_KEY:
+        required: true
+      AZURE_OWASP_CLIENT_ID:
+        required: true
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      OWASP_STORAGE_CONTAINER_NAME:
+        required: true
+      OWASP_STORAGE_ACCOUNT_NAME:
+        required: true
+      TEAMS_OWASP_SCAN_WEBHOOK_URL:
+        required: true
   workflow_dispatch:
-  # workflow_run:
-  #   workflows: ["Deploy to environment"]
-  #   types:
-  #     - completed
 
 env:
   ZAP_ADDRESS: localhost
   ZAP_PORT: 9876
+  ZAP_IMAGE: zaproxy/zap-stable
+  ZAP_VERSION: latest
+  WORKING_DIRECTORY: ConcernsCaseWork/ConcernsCaseWork.CypressTests
 
 jobs:
   run-tests-with-zap:
     name: Run Cypress tests with OWASP ZAP
-    environment: development
-    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'dev' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
     defaults:
       run:
-        working-directory: ConcernsCasework/ConcernsCasework.CypressTests
+        working-directory: ${{ env.WORKING_DIRECTORY }}
     steps:
       - name: Checkout code
-        # Updated to latest v5 SHA
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ github.ref }}
 
       - name: Create directory on runner
-        run: |
-          mkdir -m 777 ${{ github.workspace }}/zapoutput
-
-      - name: Get latest ZAP container version
-        run: |
-          ZAP_VERSION="$(wget -q -O - "https://hub.docker.com/v2/repositories/softwaresecurityproject/zap-stable/tags?page_size=2" | grep -o '"name": *"[^"]*' | grep -o '[^"]*$' | tail -n 1)"
-          echo "ZAP_VERSION=${ZAP_VERSION}">> $GITHUB_ENV
+        run: mkdir -m 777 ${{ github.workspace }}/zapoutput
 
       - name: Restore ZAP container from cache if exists
         id: cache-docker-zap
-        # Updated to latest v5 SHA
-        uses: actions/cache@v5
+        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6
         with:
-          path: ~/ci/cache/docker/softwaresecurityproject
-          key: cache-docker-zap-${{ env.ZAP_VERSION }}
+          path: ~/ci/cache/docker/zaproxy
+          key: cache-docker-zap-${{ env.ZAP_IMAGE }}-${{ env.ZAP_VERSION }}
 
       - name: Use cached image if hit
         if: steps.cache-docker-zap.outputs.cache-hit == 'true'
-        run: docker image load --input ~/ci/cache/docker/softwaresecurityproject/zap-stable-${{ env.ZAP_VERSION }}.tar
+        run: docker image load --input ~/ci/cache/docker/zaproxy/zap-stable-${{ env.ZAP_VERSION }}.tar
 
       - name: Pull image if no cache hit
         if: steps.cache-docker-zap.outputs.cache-hit != 'true'
-        run: docker pull softwaresecurityproject/zap-stable:latest && mkdir -p ~/ci/cache/docker/softwaresecurityproject && docker image save softwaresecurityproject/zap-stable:latest --output ~/ci/cache/docker/softwaresecurityproject/zap-stable-${{ env.ZAP_VERSION }}.tar
+        run: |
+          docker pull ${{ env.ZAP_IMAGE }}:${{ env.ZAP_VERSION }}
+          mkdir -p ~/ci/cache/docker/zaproxy
+          docker image save ${{ env.ZAP_IMAGE }}:${{ env.ZAP_VERSION }} \
+            --output ~/ci/cache/docker/zaproxy/zap-stable-${{ env.ZAP_VERSION }}.tar
 
       - name: Start ZAP container
-        run: docker run --name zap_container --rm -d -v ${{ github.workspace }}/zapoutput/:/zap/wrk:rw -u zap -p ${{ env.ZAP_PORT }}:${{ env.ZAP_PORT }} -i softwaresecurityproject/zap-stable zap.sh -daemon -port ${{ env.ZAP_PORT }} -host 0.0.0.0 -config api.key=${{ secrets.ZAP_API_KEY }} -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config network.localServers.mainProxy.alpn.enabled=false -config network.localServers.mainProxy.address=0.0.0.0
+        env:
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+        run: |
+          docker run --name zap_container --rm -d \
+            -v ${{ github.workspace }}/zapoutput/:/zap/wrk:rw \
+            -u zap \
+            -e ZAP_PORT=${{ env.ZAP_PORT }} \
+            -p ${{ env.ZAP_PORT }}:${{ env.ZAP_PORT }} \
+            -i ${{ env.ZAP_IMAGE }}:${{ env.ZAP_VERSION }} \
+            zap.sh -daemon -port ${{ env.ZAP_PORT }} -host 0.0.0.0 \
+            -config api.key=${ZAP_API_KEY} \
+            -config api.addrs.addr.name=.* \
+            -config api.addrs.addr.regex=true \
+            -config network.localServers.mainProxy.alpn.enabled=false \
+            -config network.localServers.mainProxy.address=0.0.0.0
+
+      - name: Wait for ZAP to be ready
+        run: |
+          for attempt in $(seq 1 30); do
+            status=$(docker inspect --format='{{.State.Health.Status}}' zap_container 2>/dev/null || echo "starting")
+            if [ "$status" = "healthy" ]; then
+              echo "ZAP is ready"
+              exit 0
+            fi
+            echo "Waiting for ZAP... (${attempt}/30, status=${status})"
+            sleep 2
+          done
+          echo "ZAP failed to start"
+          docker logs zap_container
+          exit 1
 
       - name: Set up NodeJS
-        # Updated to latest v5 SHA
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
-          node-version: 18
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -64,8 +124,8 @@ jobs:
       - name: Run tests with scanner
         env:
           AUTH_KEY: ${{ secrets.CYPRESS_TEST_SECRET }}
-          API_KEY: ${{ secrets.API_KEY }}
-          HTTP_PROXY:  http://${{ env.ZAP_ADDRESS }}:${{ env.ZAP_PORT }}
+          API_KEY: ${{ secrets.AZURE_API_KEY }}
+          HTTP_PROXY: http://${{ env.ZAP_ADDRESS }}:${{ env.ZAP_PORT }}
           NO_PROXY: "*.google-analytics.com,*.googletagmanager.com,*.microsoftonline.com,*.gvt1.com"
           PASSWORD: ${{ secrets.PASSWORD }}
           URL: ${{ secrets.AZURE_ENDPOINT }}
@@ -76,33 +136,39 @@ jobs:
           ZAP_PORT: ${{ env.ZAP_PORT }}
         run: npm run cy:zap -- --env username=$USERNAME,password=$PASSWORD,url=$URL,api=$URL,apiKey=$API_KEY,authKey=$AUTH_KEY
 
-      - name: Get git sha
-        if: '!cancelled()'
-        run: |
-          CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
-          echo "checked_out_sha=${CHECKED_OUT_SHA}" >> $GITHUB_ENV
-
-      - name: Azure login with SPN
-        if: '!cancelled()'
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2
+      - name: Azure login with OIDC
+        if: ${{ !cancelled() }}
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3
         with:
-          creds: ${{ secrets.OWASP_AZ_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_OWASP_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Push report to blob storage
-        if: '!cancelled()'
-        uses: azure/CLI@089eac9d8cc39f5d003e94f8b65efc51076c9cbd # v2
-        id: azure
+        if: ${{ !cancelled() }}
+        uses: azure/CLI@9eb25b8360668fb0ecbafa808d40e2197b2f5f52 # v3
         with:
-          azcliversion: 2.49.0
+          azcliversion: 2.87.0
           inlineScript: |
             az storage blob upload \
               --container-name ${{ secrets.OWASP_STORAGE_CONTAINER_NAME }} \
               --account-name ${{ secrets.OWASP_STORAGE_ACCOUNT_NAME }} \
               --file "${{ github.workspace }}/zapoutput/ZAP-Report.html" \
-              --name "ConcernsCaseWork/${{ env.checked_out_sha }}/ZAP-Report.html" \
+              --name "record-concerns-support-trusts/${{ github.sha }}/ZAP-Report.html" \
               --auth-mode login \
               --overwrite
 
+      - name: Report results to Teams
+        if: ${{ !cancelled() }}
+        run: npm run zap:report:teams
+        env:
+          TEAMS_OWASP_SCAN_WEBHOOK_URL: ${{ secrets.TEAMS_OWASP_SCAN_WEBHOOK_URL }}
+          ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+          ZAP_ADDRESS: ${{ env.ZAP_ADDRESS }}
+          ZAP_PORT: ${{ env.ZAP_PORT }}
+          REPORT_LINK: https://${{ secrets.OWASP_STORAGE_ACCOUNT_NAME }}.blob.core.windows.net/${{ secrets.OWASP_STORAGE_CONTAINER_NAME }}/record-concerns-support-trusts/${{ github.sha }}/ZAP-Report.html
+          INFORMATION_LINK: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       - name: Stop ZAP container
         if: always()
-        run: docker stop zap_container
+        run: docker stop zap_container || true

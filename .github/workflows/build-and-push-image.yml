@@ -158,3 +158,24 @@ jobs:
     with:
       environment: ${{ needs.set-env.outputs.environment }}
     secrets: inherit
+
+  security-tests:
+    name: Run Security Scanner Tests
+    needs: [ set-env, deploy, cypress-tests ]
+    if: needs.set-env.outputs.environment == 'dev'
+    uses: ./.github/workflows/security-tests.yml
+    with:
+      environment: ${{ needs.set-env.outputs.environment }}
+    secrets:
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      AZURE_ENDPOINT: ${{ secrets.AZURE_ENDPOINT }}
+      AZURE_API_KEY: ${{ secrets.AZURE_API_KEY }}
+      CYPRESS_TEST_SECRET: ${{ secrets.CYPRESS_TEST_SECRET }}
+      ZAP_API_KEY: ${{ secrets.ZAP_API_KEY }}
+      AZURE_OWASP_CLIENT_ID: ${{ secrets.AZURE_OWASP_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      OWASP_STORAGE_CONTAINER_NAME: ${{ secrets.OWASP_STORAGE_CONTAINER_NAME }}
+      OWASP_STORAGE_ACCOUNT_NAME: ${{ secrets.OWASP_STORAGE_ACCOUNT_NAME }}
+      TEAMS_OWASP_SCAN_WEBHOOK_URL: ${{ secrets.TEAMS_OWASP_SCAN_WEBHOOK_URL }}
