@@ -38,7 +38,7 @@ jobs:
     steps:
     - name: Setup .NET
       # Updated to latest v5 SHA
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
       with:
         dotnet-version: 10.0.x
           
@@ -49,7 +49,7 @@ jobs:
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       # Updated to latest v4 SHA
-      uses: github/codeql-action/init@v4
+      uses: github/codeql-action/init@54f647b7e1bb85c95cddabcd46b0c578ec92bc1a # v4
       with:
         languages: ${{ matrix.language }}
         # If you wish to specify custom queries, you can do so here or in a config file.
@@ -76,4 +76,4 @@ jobs:
 
     - name: Perform CodeQL Analysis
       # Updated to latest v4 SHA
-      uses: github/codeql-action/analyze@v4
+      uses: github/codeql-action/analyze@54f647b7e1bb85c95cddabcd46b0c578ec92bc1a # v4
