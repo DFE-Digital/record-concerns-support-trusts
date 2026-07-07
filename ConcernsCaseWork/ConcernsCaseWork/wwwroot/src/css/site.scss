@@ -25,3 +25,19 @@ for details on configuring this project to bundle and minify static web assets. 
 	margin-bottom: 30px;
 }
 
+.govuk-header__logotype {
+	height: 30px;
+}
+
+.govuk-footer .govuk-section-break--visible {
+	border-color: #1d70b8;
+}
+
+.govuk-footer .app-section-break--short {
+	max-width: 30rem;
+}
+
+.govuk-footer .app-footer__meta-break {
+	margin-top: 0;
+	margin-bottom: 45px;
+}
