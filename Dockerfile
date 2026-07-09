@@ -84,6 +84,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION}-azurelinux3.0 AS final
 LABEL org.opencontainers.image.source="https://github.com/DFE-Digital/record-concerns-support-trusts"
 COPY --from=builder /app /app
 COPY --from=frontend /app/wwwroot /app/wwwroot
+RUN find /app/wwwroot -type f -name 'package-lock.json' -delete
 
 # Entrypoint script
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
