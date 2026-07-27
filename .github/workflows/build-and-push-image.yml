@@ -50,7 +50,8 @@ jobs:
         uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@v1
         with:
           environment: ${{ needs.set-env.outputs.environment }}
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          
   build-import:
     name: Build & Import
     runs-on: ubuntu-24.04
