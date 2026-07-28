@@ -23,7 +23,7 @@ services:
       - local-dev
 
    recastsqldb.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:46e454273ee7f971f804cfc367b2f0aeaafd258f65b77d34ac6acca85fcb8bc9
+    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:ba4c8329f48fb8f02e1416be6a930ebfd71268caee78aa985f3af4315e457c89
     volumes:
       - ./init:/initdb.d
     networks:

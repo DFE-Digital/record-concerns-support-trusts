@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-24.04
     services:
       sql-server:
-        image: mcr.microsoft.com/mssql/server:2022-latest@sha256:ea73825f3d88a23c355ac2f9fdc6bd960fec90171c12c572109b36a558f77bb8
+        image: mcr.microsoft.com/mssql/server:2022-latest@sha256:ba4c8329f48fb8f02e1416be6a930ebfd71268caee78aa985f3af4315e457c89
         ports:
         - 1433:1433
         env:
