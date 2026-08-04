@@ -6,8 +6,8 @@
 @inject IConfiguration Configuration
 
 @{
-    var unifiedIntakeBaseUrl = Configuration["UnifiedIntake:baseUrl"];
-    var unifiedIntakeServiceCode = Configuration["UnifiedIntake:code"];
+    var unifiedIntakeBaseUrl = Configuration["UnifiedIntake:baseUrl"] ?? "https://unified-intake.rsd.education.gov.uk/";
+    var unifiedIntakeServiceCode = Configuration["UnifiedIntake:code"] ?? "RECAST";
     var unifiedIntakeUrl = $"{unifiedIntakeBaseUrl}?serviceCode={unifiedIntakeServiceCode}";
 }
 
