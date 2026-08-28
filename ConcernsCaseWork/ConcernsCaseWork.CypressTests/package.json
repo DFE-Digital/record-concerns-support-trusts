@@ -31,7 +31,7 @@
         "axe-core": "4.11.1",
         "cypress": "15.9.0",
         "cypress-axe": "1.7.0",
-        "cypress-localstorage-commands": "2.2.7",
+        "cypress-localstorage-commands": "2.2.8",
         "cypress-multi-reporters": "2.0.5",
         "eslint": "9.39.2",
         "eslint-plugin-cypress": "4.3.0",
