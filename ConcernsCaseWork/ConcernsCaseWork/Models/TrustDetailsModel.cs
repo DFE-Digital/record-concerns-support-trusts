@@ -10,6 +10,8 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class TrustDetailsModel
 	{
+		private const string SharepointBaseUrl = "https://educationgovuk.sharepoint.com";
+
 		public GiasDataModel GiasData { get; set; }
 
 		public IfdDataModel IfdData { get; set; }
@@ -50,7 +52,7 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return GiasData.GroupId != null ? $"https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners={{\"FileType\":[\"other\"]}}&q={GiasData.GroupId}&v=/search" : "";
+				return GiasData.GroupId != null ? $"{SharepointBaseUrl}/_layouts/15/sharepoint.aspx/search?q={GiasData.GroupId}" : "";
 			}
 		}
 
