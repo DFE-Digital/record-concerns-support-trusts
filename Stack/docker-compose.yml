@@ -15,7 +15,7 @@ services:
     restart: always
     
    recast.redis:
-    image: redis:latest@sha256:5c7c0445ed86918cb9efb96d95a6bfc03ed2059fe2c5f02b4d74f477ffe47915
+    image: redis:latest@sha256:c88d347edef6249a6d2293f926f1eeb48bd40c57cbcd02c07f52e7f1fd2cb46b
     restart: always
     ports:
      - "6379:6379"
