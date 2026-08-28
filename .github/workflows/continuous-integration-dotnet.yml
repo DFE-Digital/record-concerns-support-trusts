@@ -51,7 +51,7 @@ jobs:
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }}
         # Updated to latest v5 SHA
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Cache SonarCloud packages
         # Updated to latest v5 SHA
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
