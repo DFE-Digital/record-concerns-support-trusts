@@ -15,7 +15,6 @@ using ConcernsCaseWork.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,7 +135,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		private List<CaseActionEnum> GetSupportedActions(CaseModel caseModel)
 		{
-			if (caseModel.RecordsModel.IsNullOrEmpty())
+			if (caseModel.RecordsModel == null || caseModel.RecordsModel.Count == 0)
 			{
 				return new List<CaseActionEnum>()
 				{
