@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 		[Fact]
 		public void Given_Invalid_AcademyTrustPayApproval_Constructor_Throws_Exception()
 		{
-			Action action = () => new DecisionType(Contracts.Decisions.DecisionType.AcademyTrustPayApproval, null, null, 0) { DecisionId = 1 };
+			Func<DecisionType> action = () => new DecisionType(Contracts.Decisions.DecisionType.AcademyTrustPayApproval, null, null, 0) { DecisionId = 1 };
 
 			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionAcademyTrustPayApproval");
 		}
