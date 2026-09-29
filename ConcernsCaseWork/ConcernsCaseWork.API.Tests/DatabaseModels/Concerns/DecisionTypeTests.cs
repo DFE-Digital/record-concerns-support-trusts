@@ -74,6 +74,24 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionFrameworkCategory");
 		}
 
+		[Fact]
+		public void AcademyTrustPayApproval_SetByConstructor()
+		{
+			var expectedPayApprovalId = Contracts.Decisions.AcademyTrustPayApproval.PerformanceRelatedExceedingThreshold;
+
+			var sut = new DecisionType(Contracts.Decisions.DecisionType.AcademyTrustPayApproval, null, null, expectedPayApprovalId) { DecisionId = 1 };
+
+			sut.DecisionAcademyTrustPayApprovalId.Should().Be(expectedPayApprovalId);
+		}
+
+		[Fact]
+		public void Given_Invalid_AcademyTrustPayApproval_Constructor_Throws_Exception()
+		{
+			Action action = () => new DecisionType(Contracts.Decisions.DecisionType.AcademyTrustPayApproval, null, null, 0) { DecisionId = 1 };
+
+			action.Should().ThrowExactly<ArgumentOutOfRangeException>().And.ParamName.Should().Be("decisionAcademyTrustPayApproval");
+		}
+
 		public static IEnumerable<object[]> EnumValues()
 		{
 			foreach (var number in Enum.GetValues(typeof(Contracts.Decisions.DecisionType)))

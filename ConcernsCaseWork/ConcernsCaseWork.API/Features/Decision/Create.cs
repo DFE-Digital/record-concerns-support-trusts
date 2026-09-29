@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.Features.Decision
 					throw new NotFoundException($"Concerns case {request.ConcernsCaseUrn}");
 				}
 
-				var decisionTypes = request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId)).Distinct().ToArray();
+				var decisionTypes = request.DecisionTypes.Select(x => new Data.Models.Decisions.DecisionType(x.Id, x.DecisionDrawdownFacilityAgreedId, x.DecisionFrameworkCategoryId, x.DecisionAcademyTrustPayApprovalId)).Distinct().ToArray();
 
 				var decision = Decision.CreateNew(new DecisionParameters()
 				{

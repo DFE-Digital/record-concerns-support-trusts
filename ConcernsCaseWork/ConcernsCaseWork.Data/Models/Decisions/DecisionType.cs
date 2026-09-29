@@ -1,16 +1,17 @@
-﻿namespace ConcernsCaseWork.Data.Models.Decisions
+namespace ConcernsCaseWork.Data.Models.Decisions
 {
 	public class DecisionType
 	{
 		public API.Contracts.Decisions.DecisionType DecisionTypeId { get; set; }
 		public API.Contracts.Decisions.DrawdownFacilityAgreed? DecisionDrawdownFacilityAgreedId { get; set; }
 		public API.Contracts.Decisions.FrameworkCategory? DecisionFrameworkCategoryId { get; set; }
+		public API.Contracts.Decisions.AcademyTrustPayApproval? DecisionAcademyTrustPayApprovalId { get; set; }
 
 		private DecisionType()
 		{
 		}
 
-		public DecisionType(API.Contracts.Decisions.DecisionType decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed? decisionDrawdownFacilityAgreed, API.Contracts.Decisions.FrameworkCategory? decisionFrameworkCategory) : this()
+		public DecisionType(API.Contracts.Decisions.DecisionType decisionType, API.Contracts.Decisions.DrawdownFacilityAgreed? decisionDrawdownFacilityAgreed, API.Contracts.Decisions.FrameworkCategory? decisionFrameworkCategory, API.Contracts.Decisions.AcademyTrustPayApproval? decisionAcademyTrustPayApproval = null) : this()
 		{
 			if (!Enum.IsDefined(typeof(API.Contracts.Decisions.DecisionType), decisionType))
 				throw new ArgumentOutOfRangeException(nameof(decisionType),
@@ -25,9 +26,14 @@
 				throw new ArgumentOutOfRangeException(nameof(decisionFrameworkCategory),
 					$"{decisionFrameworkCategory} value is not one of the supported decision category");
 
+			if (decisionAcademyTrustPayApproval.HasValue && !Enum.IsDefined(typeof(API.Contracts.Decisions.AcademyTrustPayApproval), decisionAcademyTrustPayApproval))
+				throw new ArgumentOutOfRangeException(nameof(decisionAcademyTrustPayApproval),
+					$"{decisionAcademyTrustPayApproval} value is not one of the supported decision academy trust pay approval");
+
 			DecisionTypeId = decisionType;
 			DecisionDrawdownFacilityAgreedId = decisionDrawdownFacilityAgreed;
 			DecisionFrameworkCategoryId = decisionFrameworkCategory;
+			DecisionAcademyTrustPayApprovalId = decisionAcademyTrustPayApproval;
 		}
 
 		public int DecisionId { get; set; }
