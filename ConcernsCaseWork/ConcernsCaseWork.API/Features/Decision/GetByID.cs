@@ -59,7 +59,8 @@ namespace ConcernsCaseWork.API.Features.Decision
 						{
 							Id = (DecisionType)x.DecisionTypeId,
 							DecisionDrawdownFacilityAgreedId = x.DecisionDrawdownFacilityAgreedId,
-							DecisionFrameworkCategoryId = x.DecisionFrameworkCategoryId
+							DecisionFrameworkCategoryId = x.DecisionFrameworkCategoryId,
+							DecisionAcademyTrustPayApprovalId = x.DecisionAcademyTrustPayApprovalId
 						};
 					}).ToArray(),
 					TotalAmountRequested = decision.TotalAmountRequested,

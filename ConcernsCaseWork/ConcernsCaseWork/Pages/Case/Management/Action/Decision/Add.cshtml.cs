@@ -258,7 +258,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					Id = (DecisionType)q.Id,
 					DecisionDrawdownFacilityAgreedId = drawdownValue,
-					DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null
+					DecisionFrameworkCategoryId = (FrameworkCategory?)q.FrameworkCategory?.SelectedId ?? null,
+					DecisionAcademyTrustPayApprovalId = (AcademyTrustPayApproval?)q.AcademyTrustPayApproval?.SelectedId ?? null
 				};
 			}).ToArray();
 
@@ -283,6 +284,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				{
 					Id = DecisionType.QualifiedFloatingCharge,
 					Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
+				},
+				new DecisionTypeQuestionModel()
+				{
+					Id = DecisionType.AcademyTrustPayApproval,
+					Hint = "An academy trust is seeking departmental approval in regard to one of the pay controls set out in the Academy Trust Handbook."
 				},
 				new DecisionTypeQuestionModel()
 				{
@@ -380,6 +386,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 						question.FrameworkCategory = BuildFrameworkCategoryComponent(question, frameworkCategoryList);
 					}
 				}
+
+				if (question.Id == DecisionType.AcademyTrustPayApproval)
+				{
+					List<AcademyTrustPayApproval> academyTrustPayApprovalList =
+					[
+						AcademyTrustPayApproval.RemunerationExceedingThreshold,
+						AcademyTrustPayApproval.PerformanceRelatedExceedingThreshold,
+						AcademyTrustPayApproval.IncreaseOfExecutivePayAtFasterRate
+					];
+
+					question.AcademyTrustPayApproval = BuildAcademyTrustPayApprovalComponent(question, academyTrustPayApprovalList);
+				}
 			});
 
 			return result;
@@ -430,6 +448,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				if (question.FrameworkCategory != null)
 				{
 					question.FrameworkCategory.SelectedId = (int?)answer.DecisionFrameworkCategoryId ?? 0;
+				}
+
+				if (question.AcademyTrustPayApproval != null)
+				{
+					question.AcademyTrustPayApproval.SelectedId = (int?)answer.DecisionAcademyTrustPayApprovalId ?? 0;
 				}
 			});
 		}
@@ -520,6 +543,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
+		private static RadioButtonsUiComponent BuildAcademyTrustPayApprovalComponent(DecisionTypeQuestionModel model, List<AcademyTrustPayApproval> academyTrustPayApprovalList)
+		{
+			var id = $"academy-trust-pay-approval-{model.Id}";
+
+			var result = new RadioButtonsUiComponent(id, $"{nameof(DecisionTypeQuestions)}[{model.Id}].AcademyTrustPayApproval", "");
+
+			result.RadioItems = academyTrustPayApprovalList.Select(value =>
+			{
+				return new SimpleRadioItem(value.Description(), (int)value)
+				{
+					TestId = $"{model.Id}-{value}"
+				};
+			});
+
+			return result;
+		}
+
 		private static RadioButtonsUiComponent BuildHasCrmCaseComponent(int? selectedId = null)
 		{
 			var result = new RadioButtonsUiComponent("has-crm-case", nameof(HasCrmCase), "Is the decision linked to a CRM case?");
@@ -575,6 +615,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public RadioButtonsUiComponent DrawdownFacilityAgreed { get; set; }
 		public RadioButtonsUiComponent FinancialSupportPackageType { get; set; }
 		public RadioButtonsUiComponent FrameworkCategory { get; set; }
+		public RadioButtonsUiComponent AcademyTrustPayApproval { get; set; }
 		public string Hint { get; set; }
 		public bool IsChecked { get; set; }
 		public string OldDrawdownFacilityAgreedValue { get; set; }
