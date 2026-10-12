@@ -19,22 +19,37 @@ export type CreateCaseRequest = {
     deEscalationPoint?: string;
     nextSteps?: string;
     caseHistory?: string;
-    statusId: number;
-    ratingId: number;
-    territory: number;
+    statusId?: number;
+    ratingId?: number;
+    territory?: number;
     division?: number;
+    region?: number;
 };
 
 export type CreateCaseResponse = {
     urn: number;
     createdBy: string;
+    createdAt: string;
     trustCompaniesHouseNumber: string;
     trustUkprn: string;
+    division?: number;
+    territory?: number;
+    region?: number;
+    statusId?: number;
+    ratingId?: number;
 };
 
 export type PatchCaseRequest = {
     urn: number;
+    trustUkprn?: string;
     createdBy: string;
+    division?: number;
+    territory?: number;
+    region?: number;
+    statusId?: number;
+    ratingId?: number;
+    // Must be non-null: UpdateConcernsCase dereferences it before null-coalescing it.
+    ratingRationalCommentary?: string;
 };
 
 export type PatchCaseResponse = {};
