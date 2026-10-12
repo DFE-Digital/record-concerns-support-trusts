@@ -57,8 +57,7 @@ class CaseApi extends ApiBase {
             })
             .then((response) => {
                 if (response.status < 200 || response.status >= 300) {
-                    const body =
-                        typeof response.body === 'string' ? response.body : JSON.stringify(response.body);
+                    const body = typeof response.body === 'string' ? response.body : JSON.stringify(response.body);
 
                     // Cypress.log/console.log render immediately; cy.log would be queued
                     // and discarded by the throw below.
