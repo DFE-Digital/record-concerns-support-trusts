@@ -20,7 +20,7 @@
 		<PackageReference Include="Microsoft.Graph" Version="4.54.0" />
 		<PackageReference Include="Microsoft.Graph.Core" Version="2.0.15" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.81.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 
     <ItemGroup>
