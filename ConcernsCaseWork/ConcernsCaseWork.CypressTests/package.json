@@ -43,6 +43,6 @@
         "prettier": "3.8.1",
         "puppeteer": "24.36.1",
         "typescript": "5.9.3",
-        "zaproxy": "2.0.0-rc.5"
+        "zaproxy": "2.0.0-rc.7"
     }
 }
