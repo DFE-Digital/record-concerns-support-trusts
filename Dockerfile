@@ -39,7 +39,8 @@ RUN dotnet build ${PROJECT_NAME} "/p:customBuildMessage=Manifest commit SHA... $
 
 # Set release tag in appsettings
 COPY ./script/set-appsettings-release-tag.sh /build/set-appsettings-release-tag.sh
-RUN chmod +x /build/set-appsettings-release-tag.sh && \
+RUN sed -i 's/\r$//' /build/set-appsettings-release-tag.sh && \
+    chmod +x /build/set-appsettings-release-tag.sh && \
     echo "Setting appsettings releasetag=${COMMIT_SHA}" && \
     /build/set-appsettings-release-tag.sh "$COMMIT_SHA"
 
@@ -89,5 +90,6 @@ RUN find /app/wwwroot -type f -name 'package-lock.json' -delete
 # Entrypoint script
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 WORKDIR /app
-RUN chmod +x ./docker-entrypoint.sh
+RUN sed -i 's/\r$//' ./docker-entrypoint.sh && \
+    chmod +x ./docker-entrypoint.sh
 USER $APP_UID

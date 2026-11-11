@@ -132,6 +132,20 @@ Update config values in .env.database and .env.development.local as necessary
 Then run the following to build and start the docker containers:
 ```docker-compose -f docker-compose.yml up --build```
 
+The root docker compose now includes a one-shot `datamigration` service which applies EF Core migrations to the local `sip` database before `webapi` starts.
+
+To enable HTTPS for the `webapi` docker service on `https://localhost`:
+1. Generate a local development certificate PFX file:
+```powershell
+dotnet dev-certs https -ep "$env:APPDATA/ASP.NET/Https/concernscasework.pfx" -p "<your-local-dev-cert-password>"
+dotnet dev-certs https --trust
+```
+2. Set matching values in `.env.development.local`:
+```text
+ASPNETCORE_Kestrel__Certificates__Default__Path="/https/concernscasework.pfx"
+ASPNETCORE_Kestrel__Certificates__Default__Password="<your-local-dev-cert-password>"
+```
+
 Note that you may need to update the line feed character type to LF if running on Windows, on files in the /scripts folder. 
 Try this if the webapi container exits with error.
 

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   webapi:
     build:
@@ -7,12 +6,25 @@ services:
     command: /bin/bash -c "./docker-entrypoint.sh dotnet ConcernsCaseWork.dll"
     ports:
       - 80:8080/tcp
+      - 443:8443/tcp
+    environment:
+      - ASPNETCORE_URLS=http://+:8080;https://+:8443
+      - ASPNETCORE_HTTPS_PORT=443
     depends_on:
-      - db
-      - sqlcmd
-      - redis
+      db:
+        condition: service_started
+      sqlcmd:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+      datamigration:
+        condition: service_completed_successfully
     env_file:
        - .env.development.local
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     networks:
       - dev
 
@@ -21,7 +33,7 @@ services:
     image: mcr.microsoft.com/azure-sql-edge:latest@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
     env_file: .env.database
     ports:
-      - 1433:1433
+      - 14330:1433
     networks:
       - dev
 
@@ -30,10 +42,29 @@ services:
     env_file: .env.database
     command: /etc/docker-entrypoint.sh
     depends_on:
-      - db
+      db:
+        condition: service_started
     stdin_open: true
     volumes:
       - ./script/sqlcmd-docker-entrypoint.sh:/etc/docker-entrypoint.sh
+    networks:
+      - dev
+
+  datamigration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: efbuilder
+    command:
+      - /sql/migratedb
+      - --connection
+      - Server=db;Database=sip;User Id=sa;Password=Your_password123;TrustServerCertificate=True;Encrypt=False
+    depends_on:
+      db:
+        condition: service_started
+      sqlcmd:
+        condition: service_completed_successfully
+    restart: "no"
     networks:
       - dev
 
