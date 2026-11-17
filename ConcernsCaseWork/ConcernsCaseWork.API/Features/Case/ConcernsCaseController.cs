@@ -84,23 +84,17 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> GetByUrn(int urn, CancellationToken cancellationToken = default)
         {
-			#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging - urn is an integer and is inexpensive
             _logger.LogInformation("Attempting to get Concerns Case by Urn {Urn}", urn);
-			#pragma warning restore CA1873
 
             var concernsCase = _getConcernsCaseByUrn.Execute(urn);
 
             if (concernsCase == null)
             {
-				#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging - urn is an integer and is inexpensive
                 _logger.LogInformation("No Concerns case found for URN {Urn}", urn);
-				#pragma warning restore CA1873
                 return NotFound();
             }
 
-			#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging - urn is an integer and is inexpensive
             _logger.LogInformation("Returning Concerns case with Urn {Urn}", urn);
-			#pragma warning restore CA1873
             _logger.LogDebug(JsonSerializer.Serialize(concernsCase));
             var response = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCase);
 
@@ -112,15 +106,11 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
         {
-			#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging -trustUkprn, page, count are inexpensive
             _logger.LogInformation("Attempting to get Concerns Cases by Trust Ukprn {TrustUkprn}, page {Page}, count {Count}", trustUkprn, page, count);
-			#pragma warning restore CA1873
 
             var concernsCases = _getConcernsCaseByTrustUkprn.Execute(trustUkprn, page, count);
 
-			#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging -trustUkprn, page, count are inexpensive
             _logger.LogInformation("Returning Concerns cases with Trust Ukprn {TrustUkprn}, page {Page}, count {Count}", trustUkprn, page, count);
-			#pragma warning restore CA1873
             _logger.LogDebug(JsonSerializer.Serialize(concernsCases));
             var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
             var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
@@ -132,9 +122,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Update(int urn, ConcernCaseRequest request, CancellationToken cancellationToken = default)
 		{
-			#pragma warning disable CA1873 // Suppress warning for potentially unnecessary logging - urn is an integer and is inexpensive
 			_logger.LogInformation("Attempting to update Concerns Case {urn}", urn);
-			#pragma warning restore CA1873
 			var validator = new ConcernsCaseRequestValidator();
 
 			var validationResult = validator.Validate(request);
