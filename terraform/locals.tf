@@ -28,6 +28,10 @@ locals {
   init_container_command                                   = var.init_container_command
   enable_redis_cache                                       = var.enable_redis_cache
   enable_mssql_database                                    = var.enable_mssql_database
+  enable_mssql_audit_logs                                  = var.enable_mssql_audit_logs
+  enable_mssql_security_audit_events                       = var.enable_mssql_security_audit_events
+  mssql_server_name_override                               = var.mssql_server_name_override
+  mssql_private_endpoint_subnet_cidr                       = var.mssql_private_endpoint_subnet_cidr
   mssql_sku_name                                           = var.mssql_sku_name
   mssql_server_admin_password                              = var.mssql_server_admin_password
   mssql_database_name                                      = var.mssql_database_name
@@ -39,6 +43,7 @@ locals {
   mssql_managed_identity_assign_role                       = var.mssql_managed_identity_assign_role
   redis_cache_sku                                          = var.redis_cache_sku
   redis_cache_capacity                                     = var.redis_cache_capacity
+  redis_cache_subnet_cidr                                  = var.redis_cache_subnet_cidr
   enable_cdn_frontdoor                                     = var.enable_cdn_frontdoor
   enable_dns_zone                                          = var.enable_dns_zone
   dns_zone_domain_name                                     = var.dns_zone_domain_name
