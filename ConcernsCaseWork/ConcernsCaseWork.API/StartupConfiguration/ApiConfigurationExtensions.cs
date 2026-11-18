@@ -60,7 +60,7 @@ public static class ApiConfigurationExtensions
 			|| string.Equals(host, "127.0.0.1", StringComparison.OrdinalIgnoreCase);
 	}
 
-	private static HttpMessageHandler CreateConcernsClientHandler(bool allowLocalDevChainErrors)
+	private static HttpClientHandler CreateConcernsClientHandler(bool allowLocalDevChainErrors)
 	{
 		var handler = new HttpClientHandler();
 		if (!allowLocalDevChainErrors)
