@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Update(int urn, ConcernCaseRequest request, CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation("Attempting to update Concerns Case {urn}", urn);
+			_logger.LogInformation("Attempting to update Concerns Case {Urn}", urn);
 			var validator = new ConcernsCaseRequestValidator();
 
 			var validationResult = validator.Validate(request);
@@ -354,8 +354,6 @@ namespace ConcernsCaseWork.API.Features.Case
 		{
 			_logger.LogInformation("Attempting to delete Concerns Case {Urn}", urn);
 
-
-			_logger.LogInformation("Attempting to get Concerns Case by Urn {Urn}", urn);
 			var concernsCase = _getConcernsCaseByUrn.Execute(urn);
 
 			if (concernsCase == null)
@@ -363,8 +361,6 @@ namespace ConcernsCaseWork.API.Features.Case
 				_logger.LogInformation("Deleting Concerns Case failed: No Concerns Case matching Urn {Urn} was found", urn);
 				return NotFound();
 			}
-
-			_logger.LogInformation("Found Concerns case with Urn {Urn}", urn);
 
 			var result = _deleteConcernsCase.Execute(urn);
 			if (result.IsFailure)
