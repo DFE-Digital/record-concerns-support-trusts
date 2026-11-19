@@ -1,7 +1,7 @@
 # See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:10.0-azurelinux3.0@sha256:5f261110c876eb9db148e99482117090767a0b67e98d813cfa1a4aab1f85b230 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-azurelinux3.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 3001
@@ -9,7 +9,7 @@ EXPOSE 3000
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0@sha256:dbcd91573287583286212aaa14ae39ccf04f80818b33e2770dbbd5d948d23230 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-azurelinux3.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ConcernsCaseWork.API/ConcernsCaseWork.API.csproj", "ConcernsCaseWork.API/"]
