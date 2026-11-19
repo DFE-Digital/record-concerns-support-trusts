@@ -6,6 +6,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		public DecisionType Id { get; set; }
 		public DrawdownFacilityAgreed? DecisionDrawdownFacilityAgreedId { get; set; }
 		public FrameworkCategory? DecisionFrameworkCategoryId { get; set; }
+		public AcademyTrustPayApproval? DecisionAcademyTrustPayApprovalId { get; set; }
 
 		public DecisionTypeQuestion()
 		{

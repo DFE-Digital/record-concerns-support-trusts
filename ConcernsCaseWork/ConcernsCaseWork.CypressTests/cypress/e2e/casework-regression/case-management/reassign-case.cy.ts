@@ -3,6 +3,7 @@ import { Logger } from 'cypress/common/logger';
 import { AdminClaim, EnvUsername } from 'cypress/constants/cypressConstants';
 import caseMangementPage from '../../../pages/caseMangementPage';
 import editCaseMangementPage from '../../../pages/editCaseManagementPage';
+import { PatchCaseRequest } from 'cypress/api/apiDomain';
 
 describe('Testing reassigning cases', () => {
     let caseId: number;
@@ -67,8 +68,19 @@ describe('Testing reassigning cases', () => {
 
     function updateCaseOwner(caseId: number) {
         caseApi.get(caseId).then((caseResponse) => {
-            caseResponse.createdBy = 'Automation.User@education.gov.uk';
-            caseApi.patch(caseId, caseResponse);
+            const request: PatchCaseRequest = {
+                ...caseResponse,
+                createdBy: 'Automation.User@education.gov.uk',
+                // The API stamps every case with "The RAG rationale commentary is not
+                // available yet". Echoing that back makes the Front Door WAF reject the
+                // PATCH with a 403 (its SQLi ruleset matches "<word> is not <word>"), so
+                // the request never reaches the app. Overwrite it with WAF-safe text --
+                // it cannot be null, as UpdateConcernsCase dereferences it first.
+                ratingRationalCommentary: 'Overwritten by automated test',
+            };
+
+            caseApi.patch(caseId, request);
+
             cy.reload();
         });
     }

@@ -38,6 +38,9 @@ namespace ConcernsCaseWork.API.Contracts.Decisions
 		FreedomOfInformationExemptions = 11,
 
 		[Description("Financial Recovery of Fraud or irregularity")]
-		FinancialRecoveryOfFraudOrIrregularity = 12
+		FinancialRecoveryOfFraudOrIrregularity = 12,
+
+		[Description("Academy Trust Pay Approval")]
+		AcademyTrustPayApproval = 13,
 	}
 }

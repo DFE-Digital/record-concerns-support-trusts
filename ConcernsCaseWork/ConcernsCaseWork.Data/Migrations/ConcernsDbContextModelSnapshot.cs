@@ -906,6 +906,41 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionAcademyTrustPayApproval", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConcernsDecisionAcademyTrustPayApproval", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionAcademyTrustPayApproval_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "RemunerationExceedingThreshold"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "PerformanceRelatedExceedingThreshold"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "IncreaseOfExecutivePayAtFasterRate"
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Decisions.DecisionDrawdownFacilityAgreed", b =>
                 {
                     b.Property<int>("Id")
@@ -1049,6 +1084,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<int>("DecisionTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DecisionAcademyTrustPayApprovalId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DecisionDrawdownFacilityAgreedId")
                         .HasColumnType("int");
 
@@ -1142,6 +1180,11 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 12,
                             Name = "FinancialRecoveryOfFraudOrIrregularity"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "AcademyTrustPayApproval"
                         });
                 });
 
