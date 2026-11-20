@@ -285,10 +285,7 @@ describe('Creating a case', () => {
             Logger.log('Decision outcome for RG does not have total amount approved');
             decisionOutcomePage.hasNoTotalAmountApprovedField();
 
-            decisionOutcomePage.hasBusinessAreaOptions([
-                'Trust Regulation',
-                'School Delivery Teams',
-            ]);
+            decisionOutcomePage.hasBusinessAreaOptions(['Trust Regulation', 'School Delivery Teams']);
 
             Logger.log('Fill out the remaining fields');
             decisionOutcomePage

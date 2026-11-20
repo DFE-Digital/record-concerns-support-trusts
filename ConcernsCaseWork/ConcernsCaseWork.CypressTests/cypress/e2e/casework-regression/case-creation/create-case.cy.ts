@@ -50,7 +50,9 @@ describe('Creating a case', () => {
         selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
         Logger.log('Check division details are correctly populated');
-        createCaseSummary.hasTrustSummaryDetails('Ashton West End Primary Academy').hasManagedBy('Trust Regulation', '');
+        createCaseSummary
+            .hasTrustSummaryDetails('Ashton West End Primary Academy')
+            .hasManagedBy('Trust Regulation', '');
 
         Logger.log('Check unpopulated territory throws validation error');
         addTerritoryPage.nextStep().hasValidationError('Select Trust Regulation Operational Delivery Division');

@@ -76,6 +76,9 @@ describe('Creating a case for a city technology college', () => {
         addConcernDetailsPage.createCase();
 
         Logger.log('Verify case details');
-        caseManagementPage.hasTrustContain(ctcRequest.name).hasManagedBy('Trust Regulation', territory).hasCaseOwner(name);
+        caseManagementPage
+            .hasTrustContain(ctcRequest.name)
+            .hasManagedBy('Trust Regulation', territory)
+            .hasCaseOwner(name);
     });
 });

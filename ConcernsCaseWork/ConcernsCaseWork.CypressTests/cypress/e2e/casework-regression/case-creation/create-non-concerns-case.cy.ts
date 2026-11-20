@@ -272,7 +272,9 @@ describe('Creating a non concerns case', () => {
                     cy.visit(`/case/${caseId}/management`);
                     caseManagementPage.addAnotherConcernForNonConcern();
 
-                    createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('Trust Regulation', 'North - North East');
+                    createCaseSummary
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy('Trust Regulation', 'North - North East');
 
                     createConcernPage
                         .withConcernType('Actual and/or projected cash shortfall')
@@ -287,7 +289,9 @@ describe('Creating a non concerns case', () => {
 
                     Logger.log('It should show us the trust for the case we are on');
 
-                    createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('Trust Regulation', 'North - North East');
+                    createCaseSummary
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy('Trust Regulation', 'North - North East');
 
                     createConcernPage
                         .withConcernType('Actual and/or projected deficit')
