@@ -31,12 +31,12 @@ namespace ConcernsCaseWork.Models
 					return new SimpleRadioItem(v.Description(), (int)v) { TestId = v.Description() };
 				}).ToArray();
 
-			return new(ElementRootId: "territory", name, "Which SFSO Operational Delivery Division is managing this case?")
+			return new(ElementRootId: "territory", name, "Which Trust Regulation Operational Delivery Division is managing this case?")
 			{
 				RadioItems = radioItems,
 				SelectedId = selectedId,
 				Required = true,
-				DisplayName = "SFSO Operational Delivery Division"
+				DisplayName = "Trust Regulation Operational Delivery Division"
 			};
 		}
 
@@ -335,14 +335,14 @@ namespace ConcernsCaseWork.Models
 			{
 				return "Regions Group activity including Schools Complaints and Compliance Unit, or other departmental activity";
 			}
-			return "SFSO activity or other departmental activity such as a review of trust information.";
+			return "Trust Regulation activity or other departmental activity such as a review of trust information.";
 		}
 
 		private static string GetExternalMeansOfReferralHintText(Division? division)
 		{
 			if (division == Division.RegionsGroup)
 			{
-				return "Self-reported by trust, SFSO, Ofsted or other government bodies";
+				return "Self-reported by trust, Trust Regulation, Ofsted or other government bodies";
 			}
 			return
 				"External activity, for example, findings from external advisers (School Resource Management, External Review of Governance, Education Estates etc), Regional Director (RG), Ofsted or other government bodies, or self-reported.";

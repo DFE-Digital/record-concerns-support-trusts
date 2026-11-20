@@ -73,7 +73,7 @@ describe('Team casework tests', () => {
                     .hasConcern('Financial management/ATH compliance')
                     .hasRiskToTrust('Amber')
                     .hasRiskToTrust('Green')
-                    .hasManagedBy('SFSO', 'North - West Midlands')
+                    .hasManagedBy('Trust Regulation', 'North - West Midlands')
                     .hasTrust('Westfield Academy')
                     .hasLastUpdatedDate(toDisplayDate(now))
                     .hasOwner(name);

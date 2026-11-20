@@ -18,7 +18,7 @@ public class CaseDivisionConfiguration : IEntityTypeConfiguration<CaseDivision>
 			new CaseDivision
 			{
 				Id = Division.SFSO,
-				Name = "SFSO (Schools Financial Support and Oversight)",
+				Name = "Trust Regulation",
 				CreatedAt = new DateTime(2023, 9, 27),
 				UpdatedAt = new DateTime(2023, 9, 27)
 			},

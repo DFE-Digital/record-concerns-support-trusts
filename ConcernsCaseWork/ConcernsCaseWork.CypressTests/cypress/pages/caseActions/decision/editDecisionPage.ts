@@ -89,7 +89,7 @@ export class EditDecisionPage {
     }
 
     public hasNoDateESFAField(): this {
-        Logger.log('Has no date SFSO field');
+        Logger.log('Has no date Trust Regulation field');
 
         cy.getById('container-request-received').should('not.exist');
 
@@ -97,7 +97,7 @@ export class EditDecisionPage {
     }
 
     public withDateESFADay(dateESFADay: string): this {
-        Logger.log(`With Date SFSO  Day ${dateESFADay}`);
+        Logger.log(`With Date Trust Regulation  Day ${dateESFADay}`);
 
         cy.getById('dtr-day-request-received').clear().type(dateESFADay);
 
@@ -105,7 +105,7 @@ export class EditDecisionPage {
     }
 
     public hasDateESFADay(dateESFADay: string): this {
-        Logger.log(`Has Date SFSO Day ${dateESFADay}`);
+        Logger.log(`Has Date Trust Regulation Day ${dateESFADay}`);
 
         cy.getById('dtr-day-request-received').should('have.value', dateESFADay);
 
@@ -113,7 +113,7 @@ export class EditDecisionPage {
     }
 
     public withDateESFAMonth(dateESFAMonth: string): this {
-        Logger.log(`With Date SFSO Month ${dateESFAMonth}`);
+        Logger.log(`With Date Trust Regulation Month ${dateESFAMonth}`);
 
         cy.getById('dtr-month-request-received').clear().type(dateESFAMonth);
 
@@ -121,7 +121,7 @@ export class EditDecisionPage {
     }
 
     public hasDateESFAMonth(dateESFAMonth: string): this {
-        Logger.log(`Has Date SFSO Month ${dateESFAMonth}`);
+        Logger.log(`Has Date Trust Regulation Month ${dateESFAMonth}`);
 
         cy.getById('dtr-month-request-received').should('have.value', dateESFAMonth);
 
@@ -129,7 +129,7 @@ export class EditDecisionPage {
     }
 
     public withDateESFAYear(dateESFAYear: string): this {
-        Logger.log(`With Date SFSO Year ${dateESFAYear}`);
+        Logger.log(`With Date Trust Regulation Year ${dateESFAYear}`);
 
         const element = cy.getById('dtr-year-request-received');
         element.clear();
@@ -142,7 +142,7 @@ export class EditDecisionPage {
     }
 
     public hasDateESFAYear(dateESFAYear: string): this {
-        Logger.log(`Has Date SFSO Year ${dateESFAYear}`);
+        Logger.log(`Has Date Trust Regulation Year ${dateESFAYear}`);
 
         cy.getById('dtr-year-request-received').should('have.value', dateESFAYear);
 

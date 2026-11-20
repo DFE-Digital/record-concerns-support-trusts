@@ -285,10 +285,7 @@ describe('Creating a case', () => {
             Logger.log('Decision outcome for RG does not have total amount approved');
             decisionOutcomePage.hasNoTotalAmountApprovedField();
 
-            decisionOutcomePage.hasBusinessAreaOptions([
-                'SFSO (Schools Financial Support and Oversight)',
-                'School Delivery Teams',
-            ]);
+            decisionOutcomePage.hasBusinessAreaOptions(['Trust Regulation', 'School Delivery Teams']);
 
             Logger.log('Fill out the remaining fields');
             decisionOutcomePage
@@ -328,7 +325,7 @@ describe('Creating a case', () => {
                 .hasDecisionOutcomeStatus('Approved with conditions')
                 .hasMadeDate('24 November 2022')
                 .hasEffectiveFromDate('11 December 2023')
-                .hasBusinessArea('SFSO')
+                .hasBusinessArea('Trust Regulation')
                 .hasBusinessArea('School Delivery Teams')
                 .hasAuthoriser('Deputy Director');
         });

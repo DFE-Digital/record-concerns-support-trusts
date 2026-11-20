@@ -61,7 +61,7 @@ describe('Creating a case for a city technology college', () => {
         createCasePage.createCase().withTrustName(ctcRequest.name).selectOption().confirmOption();
 
         Logger.log('Create a valid case division');
-        selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+        selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory(territory).nextStep();
@@ -76,6 +76,9 @@ describe('Creating a case for a city technology college', () => {
         addConcernDetailsPage.createCase();
 
         Logger.log('Verify case details');
-        caseManagementPage.hasTrustContain(ctcRequest.name).hasManagedBy('SFSO', territory).hasCaseOwner(name);
+        caseManagementPage
+            .hasTrustContain(ctcRequest.name)
+            .hasManagedBy('Trust Regulation', territory)
+            .hasCaseOwner(name);
     });
 });
