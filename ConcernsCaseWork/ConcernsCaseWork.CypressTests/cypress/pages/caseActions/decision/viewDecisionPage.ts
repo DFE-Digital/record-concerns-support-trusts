@@ -65,7 +65,7 @@ export class ViewDecisionPage {
     }
 
     public hasDateESFAReceivedRequest(dateESFAReceivedRequest: string): this {
-        cy.task('log', `Has Date SFSO Received Request ${dateESFAReceivedRequest}`);
+        cy.task('log', `Has Date Trust Regulation Received Request ${dateESFAReceivedRequest}`);
 
         cy.getByTestId('date-esfa-received-text').should('contain.text', dateESFAReceivedRequest);
 
@@ -73,7 +73,7 @@ export class ViewDecisionPage {
     }
 
     public hasNoDateESFAReceivedRequestField(): this {
-        Logger.log('Has no date SFSO  received');
+        Logger.log('Has no date Trust Regulation  received');
         cy.getByTestId('row--date-requested').should('not.exist');
 
         return this;

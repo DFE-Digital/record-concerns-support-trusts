@@ -692,7 +692,7 @@ public class ConcernsCaseIntegrationTests : IDisposable
 
 		var internalMeansOfReferral = content.Data.ElementAt(0);
 		internalMeansOfReferral.Name.Should().Be("Internal");
-		internalMeansOfReferral.Description.Should().Be("SFSO activity, TFF or other departmental activity.");
+		internalMeansOfReferral.Description.Should().Be("Trust Regulation activity, TFF or other departmental activity.");
 		internalMeansOfReferral.Id.Should().Be(1);
 
 		var external = content.Data.ElementAt(1);

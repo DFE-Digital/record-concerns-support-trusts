@@ -59,7 +59,7 @@ describe('Trust overview ', () => {
                         .hasConcern('Financial management/ATH compliance')
                         .hasRiskToTrust('Amber')
                         .hasRiskToTrust('Green')
-                        .hasManagedBy('SFSO', 'North - West Midlands');
+                        .hasManagedBy('Trust Regulation', 'North - West Midlands');
                 });
 
                 Logger.log('Check on a closed case');
@@ -79,7 +79,7 @@ describe('Trust overview ', () => {
                         .hasCreatedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
                         .hasConcern('Financial management/ATH compliance')
-                        .hasManagedBy('SFSO', 'North - West Midlands');
+                        .hasManagedBy('Trust Regulation', 'North - West Midlands');
                 });
             });
         });

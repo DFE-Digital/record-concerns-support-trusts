@@ -462,7 +462,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return new OptionalDateTimeUiComponent("request-received", nameof(ReceivedRequestDate), "When did the department receive the request?")
 			{
 				Date = date,
-				DisplayName = "Date SFSO received request"
+				DisplayName = "Date Trust Regulation received request"
 			};
 		}
 

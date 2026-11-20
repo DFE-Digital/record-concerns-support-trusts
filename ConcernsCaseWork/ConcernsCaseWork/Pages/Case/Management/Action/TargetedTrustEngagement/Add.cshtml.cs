@@ -266,7 +266,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TargetedTrustEngagement
 				{
 					Id = TargetedTrustEngagementActivity.ReservesOversightAndAssuranceProject,
 					Hint = "",
-					HintLinkTitle = "SFSO Knowledge: ROAP",
+					HintLinkTitle = "Trust Regulation Knowledge: ROAP",
 					HintLink = "https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Reserves--Oversight-%26-Assurance-Project-(ROAP).aspx?csf=1&web=1&e=yomR4Z&cid=59072d93-d6cb-4cf8-bd89-c81e2e3891e5#process",
 					SubOptions = new List<SubEngagementActivityModel>()
 					{

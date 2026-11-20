@@ -88,10 +88,10 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		};
 		
 	private static OptionalDateTimeUiComponent BuildSFSOInitialReviewHappenedAtComponent([CanBeNull] OptionalDateModel selectedDate = default)
-		=> new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did SFSO initial review happen?")
+		=> new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did Trust Regulation initial review happen?")
 		{
 			Date = selectedDate,
-			DisplayName = "Date SFSO initial review happened",
+			DisplayName = "Date Trust Regulation initial review happened",
 			SortOrder = 1
 		};
 }

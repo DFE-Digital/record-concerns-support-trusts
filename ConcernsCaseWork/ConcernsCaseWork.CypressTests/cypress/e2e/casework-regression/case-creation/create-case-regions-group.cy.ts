@@ -286,7 +286,7 @@ describe('Creating a case', () => {
             decisionOutcomePage.hasNoTotalAmountApprovedField();
 
             decisionOutcomePage.hasBusinessAreaOptions([
-                'SFSO (Schools Financial Support and Oversight)',
+                'Trust Regulation',
                 'School Delivery Teams',
             ]);
 
@@ -328,7 +328,7 @@ describe('Creating a case', () => {
                 .hasDecisionOutcomeStatus('Approved with conditions')
                 .hasMadeDate('24 November 2022')
                 .hasEffectiveFromDate('11 December 2023')
-                .hasBusinessArea('SFSO')
+                .hasBusinessArea('Trust Regulation')
                 .hasBusinessArea('School Delivery Teams')
                 .hasAuthoriser('Deputy Director');
         });
