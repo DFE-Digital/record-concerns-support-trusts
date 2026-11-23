@@ -120,14 +120,14 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
 		public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Update(int urn, ConcernCaseRequest request, CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to update Concerns Case {urn}");
+			_logger.LogInformation("Attempting to update Concerns Case {Urn}", urn);
 			var validator = new ConcernsCaseRequestValidator();
 
 			var validationResult = validator.Validate(request);
 
 			if (!validationResult.IsValid)
 			{
-				_logger.LogInformation($"Failed to update Concerns Case due to bad request");
+				_logger.LogInformation("Failed to update Concerns Case due to bad request");
 				return new BadRequestObjectResult(validationResult.Errors);
 			}
 
@@ -135,11 +135,11 @@ namespace ConcernsCaseWork.API.Features.Case
 			if (updatedAcademyConcernsCase == null)
 			{
 				_logger.LogInformation(
-					$"Updating Concerns Case failed: No Concerns Case matching Urn {urn} was found");
+					"Updating Concerns Case failed: No Concerns Case matching Urn {Urn} was found", urn);
 				return NotFound();
 			}
 
-			_logger.LogInformation($"Successfully Updated Concerns Case {urn}");
+			_logger.LogInformation("Successfully Updated Concerns Case {Urn}", urn);
 			_logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsCase));
 
 			var response = new ApiSingleResponseV2<ConcernsCaseResponse>(updatedAcademyConcernsCase);
@@ -215,7 +215,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			int? count = null,
 			CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to get active Concerns Case summaries for User Id {ownerId} page {page} count {count}");
+			_logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {OwnerId} page {Page} count {Count}", ownerId, page, count);
 
 			var parameters = new GetCaseSummariesByOwnerParameters()
 			{
@@ -228,7 +228,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
-			_logger.LogInformation($"Returning active Concerns cases for User Id {ownerId} page {page} count {count}", ownerId);
+			_logger.LogInformation("Returning active Concerns cases for User Id {OwnerId} page {Page} count {Count}", ownerId, page, count);
 			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
@@ -270,7 +270,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			int? count = null,
 			CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId} page {page} count {count}");
+			_logger.LogInformation("Attempting to get closed Concerns Case summaries by Owner Id {OwnerId} page {Page} count {Count}", ownerId, page, count);
 
 			var parameters = new GetCaseSummariesByOwnerParameters()
 			{
@@ -283,7 +283,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
-			_logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId} page {page} count {count}");
+			_logger.LogInformation("Returning closed Concerns cases with Owner Id {OwnerId} page {Page} count {Count}", ownerId, page, count);
 			var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
@@ -298,7 +298,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			int? count = null,
 			CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn} page {page} count {count}");
+			_logger.LogInformation("Attempting to get active Concerns Case summaries by Trust {TrustUkPrn} page {Page} count {Count}", trustukprn, page, count);
 
 			var parameters = new GetCaseSummariesByTrustParameters()
 			{
@@ -311,7 +311,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
-			_logger.LogInformation($"Returning Concerns active cases with Trust {trustukprn} page {page} count {count}");
+			_logger.LogInformation("Returning Concerns active cases with Trust {TrustUkPrn} page {Page} count {Count}", trustukprn, page, count);
 			var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
@@ -326,7 +326,7 @@ namespace ConcernsCaseWork.API.Features.Case
 			int? count = null,
 			CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn} page {page} count {count}");
+			_logger.LogInformation("Attempting to get closed Concerns Case summaries by Trust {TrustUkPrn} page {Page} count {Count}", trustukprn, page, count);
 
 			var parameters = new GetCaseSummariesByTrustParameters()
 			{
@@ -339,7 +339,7 @@ namespace ConcernsCaseWork.API.Features.Case
 
 			PagingResponse pagingResponse = BuildPaginationResponse(recordCount, page, count);
 
-			_logger.LogInformation($"Returning closed Concerns cases with Trust {trustukprn} page {page} count {count}");
+			_logger.LogInformation("Returning closed Concerns cases with Trust {TrustUkPrn} page {Page} count {Count}", trustukprn, page, count);
 			var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, pagingResponse);
 
 			return Ok(response);
@@ -350,28 +350,24 @@ namespace ConcernsCaseWork.API.Features.Case
 		[MapToApiVersion("2.0")]
 		public async Task<IActionResult> Delete(int urn, CancellationToken cancellationToken = default)
 		{
-			_logger.LogInformation($"Attempting to delete Concerns Case {urn}");
 
-
-			_logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
+			_logger.LogInformation("Attempting to get Concerns Case by Urn {Urn}", urn);
 			var concernsCase = _getConcernsCaseByUrn.Execute(urn);
 
 			if (concernsCase == null)
 			{
-				_logger.LogInformation($"Deleting Concerns Case failed: No Concerns Case matching Urn {urn} was found");
+				_logger.LogInformation("Deleting Concerns Case failed: No Concerns Case matching Urn {Urn} was found", urn);
 				return NotFound();
 			}
-
-			_logger.LogInformation($"Found Concerns case with Urn {urn}");
 
 			var result = _deleteConcernsCase.Execute(urn);
 			if (result.IsFailure)
 			{
-				_logger.LogInformation($"Failed to delete Concerns Case due to bad request");
+				_logger.LogInformation("Failed to delete Concerns Case due to bad request");
 				return BadRequest(result.Error.Message);
 			}
 
-			_logger.LogInformation($"Successfully deleted Concerns Case for URN {urn}");
+			_logger.LogInformation("Successfully deleted Concerns Case for URN {Urn}", urn);
 
 			return NoContent();
 		}
