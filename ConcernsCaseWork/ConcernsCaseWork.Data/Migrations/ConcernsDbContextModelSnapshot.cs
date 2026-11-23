@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 1,
                             CreatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "SFSO (Schools Financial Support and Oversight)",
+                            Name = "Trust Regulation",
                             UpdatedAt = new DateTime(2023, 9, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -481,7 +481,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 1,
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "SFSO activity, TFF or other departmental activity.",
+                            Description = "Trust Regulation activity, TFF or other departmental activity.",
                             Name = "Internal",
                             UpdatedAt = new DateTime(2023, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
