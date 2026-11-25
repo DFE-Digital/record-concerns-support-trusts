@@ -11,6 +11,9 @@ initMOJ();
 // See the js file for more information
 import CharacterCount from "./characterCounter";
 
+// Global Application Insights event tracking (GOV.UK details components)
+import "./application-insights";
+
 let characterCounts = document.querySelectorAll('[data-module="govuk-concerns-character-count"]');
 
 characterCounts.forEach((characterCount) => {
