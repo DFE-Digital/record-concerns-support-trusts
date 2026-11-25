@@ -41,13 +41,26 @@ public class GraphUserService : IGraphUserService
 	{
 		List<User> users = new();
 
-		IGroupMembersCollectionWithReferencesPage members = await _client.Groups[groupId.ToString()].Members
+		// Request the largest page Graph allows for a member collection; without $top it
+		// defaults to 100, which silently truncated larger groups.
+		IGroupMembersCollectionWithReferencesPage page = await _client.Groups[groupId.ToString()].Members
 		   .Request()
 		   .Header("ConsistencyLevel", "eventual")
 		   .Select("givenName,surname,id,mail")
+		   .Top(999)
 		   .GetAsync();
 
-		users.AddRange([.. members.Cast<User>().Where(x => x != null && x.Mail != null)]);
+		// Graph returns group members in pages; follow NextPageRequest so no members are dropped
+		while (page != null)
+		{
+			// OfType rather than Cast: a group can contain non-user members (a nested group or
+			// a service principal), and Cast would throw on the first one.
+			users.AddRange(page.OfType<User>().Where(x => x.Mail != null));
+
+			page = page.NextPageRequest != null
+				? await page.NextPageRequest.GetAsync()
+				: null;
+		}
 
 		return users;
 	}
