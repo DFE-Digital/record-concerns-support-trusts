@@ -376,7 +376,7 @@ describe('Smoke - Testing closing of cases when there are case actions and conce
         Logger.log('Validate Closed Case has correct details');
         viewClosedCasePage
             .hasConcerns('Actual and/or projected deficit')
-            .hasManagedBy('SFSO', 'North - North East')
+            .hasManagedBy('Trust Regulation', 'North - North East')
             .hasIssue('This is an issue')
             .hasCurrentStatus('current status')
             .hasCaseAim('case aim')

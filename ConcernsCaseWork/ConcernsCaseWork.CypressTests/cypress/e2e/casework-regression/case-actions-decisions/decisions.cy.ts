@@ -52,7 +52,7 @@ describe('User can add decisions to an existing case', () => {
             .withDateESFAYear('2022')
             .withSupportingNotes('Test notes')
             .save()
-            .hasValidationError(DateInvalidError.replace('{0}', 'Date SFSO received request'));
+            .hasValidationError(DateInvalidError.replace('{0}', 'Date Trust Regulation received request'));
 
         editDecisionPage
             .withDateESFADay('23')
@@ -60,7 +60,7 @@ describe('User can add decisions to an existing case', () => {
             .withDateESFAYear('')
             .withSupportingNotesExceedingLimit()
             .save()
-            .hasValidationError(DateIncompleteError.replace('{0}', 'Date SFSO received request'))
+            .hasValidationError(DateIncompleteError.replace('{0}', 'Date Trust Regulation received request'))
             .hasValidationError(NotesError);
 
         Logger.log('Ensure the decision type sub questions do not display if not selected');

@@ -60,7 +60,7 @@ describe('Creating a non concerns case', () => {
         cy.excuteAccessibilityTests();
 
         Logger.log('Create a valid case division');
-        selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+        selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory(territory).nextStep();
@@ -78,7 +78,7 @@ describe('Creating a non concerns case', () => {
         addConcernDetailsPage.createCase();
 
         Logger.log('Verify case details');
-        caseManagementPage.hasTrust(trustName).hasManagedBy('SFSO', territory).hasCaseOwner(name);
+        caseManagementPage.hasTrust(trustName).hasManagedBy('Trust Regulation', territory).hasCaseOwner(name);
 
         Logger.log('Ensure we cannot see the narritive fields');
         caseManagementPage.hasNoCaseNarritiveFields();
@@ -142,7 +142,7 @@ describe('Creating a non concerns case', () => {
             createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
             Logger.log('Create a valid case division');
-            selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+            selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
             Logger.log('Populate territory');
             addTerritoryPage.withTerritory(territory).nextStep();
@@ -229,7 +229,7 @@ describe('Creating a non concerns case', () => {
                 .hasConcerns('Financial management/ATH compliance', ['Amber', 'Green'])
                 .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
                 .hasNumberOfConcerns(2)
-                .hasManagedBy('SFSO', 'North - North East')
+                .hasManagedBy('Trust Regulation', 'North - North East')
                 .hasIssue('This is an issue')
                 .hasCurrentStatus('This is the current status')
                 .hasCaseAim('This is the case aim')
@@ -252,7 +252,7 @@ describe('Creating a non concerns case', () => {
                 Logger.log('Create a case');
                 createCasePage.createCase().withTrustName(trustName).selectOption().confirmOption();
 
-                selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+                selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
                 addTerritoryPage.withTerritory(territory).nextStep();
 
@@ -272,7 +272,9 @@ describe('Creating a non concerns case', () => {
                     cy.visit(`/case/${caseId}/management`);
                     caseManagementPage.addAnotherConcernForNonConcern();
 
-                    createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
+                    createCaseSummary
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy('Trust Regulation', 'North - North East');
 
                     createConcernPage
                         .withConcernType('Actual and/or projected cash shortfall')
@@ -287,7 +289,9 @@ describe('Creating a non concerns case', () => {
 
                     Logger.log('It should show us the trust for the case we are on');
 
-                    createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
+                    createCaseSummary
+                        .hasTrustSummaryDetails(trustName)
+                        .hasManagedBy('Trust Regulation', 'North - North East');
 
                     createConcernPage
                         .withConcernType('Actual and/or projected deficit')
@@ -297,7 +301,7 @@ describe('Creating a non concerns case', () => {
 
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
-                        .hasManagedBy('SFSO', 'North - North East')
+                        .hasManagedBy('Trust Regulation', 'North - North East')
                         .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber');
 
@@ -305,7 +309,7 @@ describe('Creating a non concerns case', () => {
 
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
-                        .hasManagedBy('SFSO', 'North - North East')
+                        .hasManagedBy('Trust Regulation', 'North - North East')
                         .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber');
 
@@ -313,7 +317,7 @@ describe('Creating a non concerns case', () => {
 
                     createCaseSummary
                         .hasTrustSummaryDetails(trustName)
-                        .hasManagedBy('SFSO', 'North - North East')
+                        .hasManagedBy('Trust Regulation', 'North - North East')
                         .hasConcernType('Actual and/or projected deficit')
                         .hasConcernRiskRating('Red Amber')
                         .hasRiskToTrust('Red Plus');
@@ -357,7 +361,7 @@ describe('Creating a non concerns case', () => {
         Logger.log('Validate Closed Case has correct details');
         viewClosedCasePage
             .hasTrust(trustName)
-            .hasManagedBy('SFSO', territory)
+            .hasManagedBy('Trust Regulation', territory)
             .hasCaseOwner(name)
             .hasRationaleForClosure('Closing non concerns case')
             .hasNoCaseNarritiveFields();

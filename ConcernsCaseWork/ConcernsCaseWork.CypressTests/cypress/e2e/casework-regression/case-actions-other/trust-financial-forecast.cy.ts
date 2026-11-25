@@ -268,7 +268,7 @@ describe.skip('User can add trust financial forecast to an existing case', () =>
 
         // Ensure errors appear in field order
         validationComponent.hasValidationErrorsInOrder([
-            DateIncompleteError.replace('{0}', 'Date SFSO initial review happened'),
+            DateIncompleteError.replace('{0}', 'Date Trust Regulation initial review happened'),
             DateIncompleteError.replace('{0}', 'Date trust responded'),
         ]);
 
@@ -281,7 +281,7 @@ describe.skip('User can add trust financial forecast to an existing case', () =>
             .save();
 
         validationComponent.hasValidationErrorsInOrder([
-            DateInvalidError.replace('{0}', 'Date SFSO initial review happened'),
+            DateInvalidError.replace('{0}', 'Date Trust Regulation initial review happened'),
             DateInvalidError.replace('{0}', 'Date trust responded'),
             NotesError,
         ]);

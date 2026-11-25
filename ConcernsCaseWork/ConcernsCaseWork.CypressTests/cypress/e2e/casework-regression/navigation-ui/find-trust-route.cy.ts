@@ -82,9 +82,9 @@ describe('User interactions via Find Trust route', () => {
             createCaseSummary.hasTrustSummaryDetails(trustName);
 
             Logger.log('Create a valid case division');
-            selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+            selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
-            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', '');
+            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('Trust Regulation', '');
 
             Logger.log('Populate territory');
             addTerritoryPage.withTerritory('North - North East').nextStep();
@@ -92,11 +92,11 @@ describe('User interactions via Find Trust route', () => {
             Logger.log('Create team leader');
             createCasePage.withTeamLeaderEmail('m').selectNamedOption('case-team-leader-input').confirmOption();
 
-            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
+            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('Trust Regulation', 'North - North East');
 
             selectCaseTypePage.withCaseType('Concerns').continue();
 
-            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('SFSO', 'North - North East');
+            createCaseSummary.hasTrustSummaryDetails(trustName).hasManagedBy('Trust Regulation', 'North - North East');
 
             Logger.log('Create a valid concern');
             createConcernPage
@@ -108,7 +108,7 @@ describe('User interactions via Find Trust route', () => {
             Logger.log('Check Concern details are correctly populated');
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
-                .hasManagedBy('SFSO', 'North - North East')
+                .hasManagedBy('Trust Regulation', 'North - North East')
                 .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber');
 
@@ -120,7 +120,7 @@ describe('User interactions via Find Trust route', () => {
             Logger.log('Check Trust, concern and risk to trust details are correctly populated');
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
-                .hasManagedBy('SFSO', 'North - North East')
+                .hasManagedBy('Trust Regulation', 'North - North East')
                 .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber')
                 .hasRiskToTrust('Red Plus');
@@ -128,7 +128,7 @@ describe('User interactions via Find Trust route', () => {
             Logger.log('Check Trust, concern, risk to trust details and territory are correctly populated');
             createCaseSummary
                 .hasTrustSummaryDetails(trustName)
-                .hasManagedBy('SFSO', 'North - North East')
+                .hasManagedBy('Trust Regulation', 'North - North East')
                 .hasConcernType('Actual and/or projected deficit')
                 .hasConcernRiskRating('Red Amber')
                 .hasRiskToTrust('Red Plus');
@@ -141,7 +141,7 @@ describe('User interactions via Find Trust route', () => {
                 .hasTrust(trustName)
                 .hasRiskToTrust('Red Plus')
                 .hasConcerns('Actual and/or projected deficit', ['Red', 'Amber'])
-                .hasManagedBy('SFSO', 'North - North East')
+                .hasManagedBy('Trust Regulation', 'North - North East')
                 .hasIssue('This is an issue');
         });
     });

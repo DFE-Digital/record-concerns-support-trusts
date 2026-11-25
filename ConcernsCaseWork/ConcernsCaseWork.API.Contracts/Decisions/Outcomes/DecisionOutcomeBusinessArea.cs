@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 {
 	public enum DecisionOutcomeBusinessArea
 	{
-		[Description("SFSO (Schools Financial Support and Oversight)")]
+		[Description("Trust Regulation")]
 		SchoolsFinancialSupportAndOversight = 1,
 
 		[Description("Business Partner")]

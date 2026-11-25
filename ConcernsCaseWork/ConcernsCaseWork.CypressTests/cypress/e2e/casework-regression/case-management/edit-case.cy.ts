@@ -44,7 +44,7 @@ describe('Editing a case', () => {
         createCasePage.createCase().withTrustName('Ashton West End Primary Academy').selectOption().confirmOption();
 
         Logger.log('Create a valid case division');
-        selectCaseDivisionPage.withCaseDivision('SFSO').continue();
+        selectCaseDivisionPage.withCaseDivision('Trust Regulation').continue();
 
         Logger.log('Populate territory');
         addTerritoryPage.withTerritory('North - North East').nextStep();
@@ -83,7 +83,7 @@ describe('Editing a case', () => {
             .hasRiskToTrust('Red Plus')
             .hasDirectionOfTravel('Deteriorating')
             .hasConcerns('Actual and/or projected deficit', ['Red'])
-            .hasManagedBy('SFSO', 'North - North East')
+            .hasManagedBy('Trust Regulation', 'North - North East')
             .hasIssue('This is an issue');
 
         Logger.log('Edit risk to trust');
@@ -220,7 +220,7 @@ describe('Editing a case', () => {
             .hasRiskToTrust('Red')
             .hasDirectionOfTravel('Improving')
             .hasConcerns('Actual and/or projected deficit', ['Amber', 'Green'])
-            .hasManagedBy('SFSO', 'North - North West')
+            .hasManagedBy('Trust Regulation', 'North - North West')
             .hasIssue('New Issue')
             .hasCurrentStatus('New Status')
             .hasCaseAim('New Case aim')
