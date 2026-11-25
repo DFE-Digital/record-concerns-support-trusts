@@ -1,5 +1,5 @@
 module "azure_container_apps_hosting" {
-  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v2.1.0"
+  source = "github.com/DFE-Digital/terraform-azurerm-container-apps-hosting?ref=v2.11.2"
 
   environment    = local.environment
   project_name   = local.project_name
@@ -15,6 +15,10 @@ module "azure_container_apps_hosting" {
   registry_server                       = local.registry_server
 
   enable_mssql_database              = local.enable_mssql_database
+  enable_mssql_audit_logs            = local.enable_mssql_audit_logs
+  enable_mssql_security_audit_events = local.enable_mssql_security_audit_events
+  mssql_server_name_override         = local.mssql_server_name_override
+  mssql_private_endpoint_subnet_cidr = local.mssql_private_endpoint_subnet_cidr
   mssql_sku_name                     = local.mssql_sku_name
   mssql_server_admin_password        = local.mssql_server_admin_password
   mssql_database_name                = local.mssql_database_name
@@ -54,9 +58,10 @@ module "azure_container_apps_hosting" {
   health_insights_api_cors_origins    = local.health_insights_api_cors_origins
   health_insights_api_ipv4_allow_list = local.health_insights_api_ipv4_allow_list
 
-  enable_redis_cache   = local.enable_redis_cache
-  redis_cache_sku      = local.redis_cache_sku
-  redis_cache_capacity = local.redis_cache_capacity
+  enable_redis_cache      = local.enable_redis_cache
+  redis_cache_sku         = local.redis_cache_sku
+  redis_cache_capacity    = local.redis_cache_capacity
+  redis_cache_subnet_cidr = local.redis_cache_subnet_cidr
 
   enable_cdn_frontdoor                            = local.enable_cdn_frontdoor
   cdn_frontdoor_forwarding_protocol               = local.cdn_frontdoor_forwarding_protocol
